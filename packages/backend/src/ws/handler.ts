@@ -1,5 +1,5 @@
 import type { WebSocket } from 'ws';
-import type { WorkspaceEvent } from '@afw/shared';
+import type { WorkspaceEvent, SessionId } from '@afw/shared';
 import type { Storage } from '../storage';
 
 /**
@@ -47,7 +47,7 @@ export function handleWebSocket(
         case 'subscribe':
           if (message.sessionId) {
             subscribedSessionId = message.sessionId;
-            storage.addClient(clientId, message.sessionId);
+            storage.addClient(clientId, message.sessionId as SessionId);
 
             const confirmSubscription: WSBroadcast = {
               type: 'subscription_confirmed',
@@ -69,7 +69,7 @@ export function handleWebSocket(
 
         case 'input':
           if (message.sessionId && message.payload) {
-            await Promise.resolve(storage.queueInput(message.sessionId, message.payload));
+            await Promise.resolve(storage.queueInput(message.sessionId as SessionId, message.payload));
             console.log(`[WS] Input received for session ${message.sessionId}:`, message.payload);
           }
           break;

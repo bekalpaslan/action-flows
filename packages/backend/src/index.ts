@@ -9,12 +9,13 @@ import { storage, isAsyncStorage } from './storage';
 import { handleWebSocket } from './ws/handler';
 import { cleanupService } from './services/cleanup';
 import { setBroadcastFunction, shutdownAllWatchers } from './services/fileWatcher';
+import terminalRouter, { setBroadcastTerminalFunction } from './routes/terminal';
 import eventsRouter from './routes/events';
 import sessionsRouter from './routes/sessions';
 import commandsRouter from './routes/commands';
 import historyRouter from './routes/history';
 import filesRouter from './routes/files';
-import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent } from '@afw/shared';
+import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent } from '@afw/shared';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
@@ -43,6 +44,7 @@ app.use('/api/sessions', sessionsRouter);
 app.use('/api/commands', commandsRouter);
 app.use('/api/history', historyRouter);
 app.use('/api/files', filesRouter);
+app.use('/api/terminal', terminalRouter);
 
 // Create HTTP server
 const server = createServer(app);
@@ -102,6 +104,24 @@ function broadcastFileEvent(
   });
 }
 
+// Broadcast terminal output events to WebSocket clients
+function broadcastTerminalEvent(
+  sessionId: SessionId,
+  event: TerminalOutputEvent
+) {
+  const message = JSON.stringify({
+    type: 'event',
+    sessionId,
+    payload: event,
+  });
+
+  wsConnectedClients.forEach((client) => {
+    if (client.readyState === 1) { // 1 = OPEN
+      client.send(message);
+    }
+  });
+}
+
 // Initialize Redis Pub/Sub if using Redis storage
 async function initializeRedisPubSub() {
   if (isAsyncStorage(storage) && storage.subscribe) {
@@ -146,6 +166,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
     // Initialize file watcher broadcast function
     setBroadcastFunction(broadcastFileEvent);
+
+    // Initialize terminal broadcast function
+    setBroadcastTerminalFunction(broadcastTerminalEvent);
 
     // Start cleanup service
     cleanupService.start();

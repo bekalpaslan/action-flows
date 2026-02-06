@@ -3,7 +3,7 @@
  * Defines commands that can be issued to control session, chains, and steps
  */
 
-import type { StepNumber, Timestamp } from './types';
+import type { StepNumber, Timestamp, SessionId, ChainId, UserId } from './types';
 
 /**
  * Command types that can be issued
@@ -130,13 +130,13 @@ export interface CommandPayload {
   issuedAt: Timestamp;
 
   /** Session this command targets */
-  sessionId?: string;
+  sessionId?: SessionId;
 
   /** Chain this command targets */
-  chainId?: string;
+  chainId?: ChainId;
 
   /** User who issued the command */
-  userId?: string;
+  userId?: UserId;
 
   /** Additional context */
   context?: Record<string, unknown>;

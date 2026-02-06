@@ -5,6 +5,7 @@
 
 import type {
   SessionId,
+  ChainId,
   StepNumber,
   UserId,
   Timestamp,
@@ -63,7 +64,7 @@ export interface ChainStep {
  */
 export interface Chain {
   /** Unique identifier for this chain */
-  id: string;
+  id: ChainId;
 
   /** Session this chain belongs to */
   sessionId: SessionId;

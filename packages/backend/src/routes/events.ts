@@ -64,11 +64,11 @@ router.get('/:sessionId', async (req, res) => {
     const { sessionId } = req.params;
     const { since } = req.query;
 
-    let events = await Promise.resolve(storage.getEvents(sessionId));
+    let events = await Promise.resolve(storage.getEvents(sessionId as SessionId));
 
     // Filter by timestamp if provided
     if (since && typeof since === 'string') {
-      events = await Promise.resolve(storage.getEventsSince(sessionId, since));
+      events = await Promise.resolve(storage.getEventsSince(sessionId as SessionId, since));
     }
 
     res.json({
@@ -94,7 +94,7 @@ router.get('/:sessionId/recent', async (req, res) => {
     const { sessionId } = req.params;
     const { limit = 50, seconds = 60 } = req.query;
 
-    const events = await Promise.resolve(storage.getEvents(sessionId));
+    const events = await Promise.resolve(storage.getEvents(sessionId as SessionId));
     const limitNum = Math.min(parseInt(limit as string) || 50, 1000);
     const secondsNum = parseInt(seconds as string) || 60;
 

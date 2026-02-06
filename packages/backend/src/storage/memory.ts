@@ -1,5 +1,4 @@
-import type { Session, Chain, CommandPayload } from '@afw/shared';
-import { brandedTypes } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent } from '@afw/shared';
 
 /**
  * In-memory storage for sessions, chains, events, commands, and input
@@ -7,51 +6,51 @@ import { brandedTypes } from '@afw/shared';
  */
 export interface MemoryStorage {
   // Session storage
-  sessions: Map<string, Session>;
-  getSession(sessionId: string): Session | undefined;
+  sessions: Map<SessionId, Session>;
+  getSession(sessionId: SessionId): Session | undefined;
   setSession(session: Session): void;
-  deleteSession(sessionId: string): void;
+  deleteSession(sessionId: SessionId): void;
 
   // User session tracking
-  sessionsByUser: Map<string, Set<string>>;
-  getSessionsByUser(userId: string): string[];
-  getUsersWithActiveSessions(): string[];
+  sessionsByUser: Map<UserId, Set<SessionId>>;
+  getSessionsByUser(userId: UserId): SessionId[];
+  getUsersWithActiveSessions(): UserId[];
 
   // Events storage
-  events: Map<string, unknown[]>;
-  addEvent(sessionId: string, event: unknown): void;
-  getEvents(sessionId: string): unknown[];
-  getEventsSince(sessionId: string, timestamp: string): unknown[];
+  events: Map<SessionId, WorkspaceEvent[]>;
+  addEvent(sessionId: SessionId, event: WorkspaceEvent): void;
+  getEvents(sessionId: SessionId): WorkspaceEvent[];
+  getEventsSince(sessionId: SessionId, timestamp: string): WorkspaceEvent[];
 
   // Chains storage
-  chains: Map<string, Chain[]>;
-  addChain(sessionId: string, chain: Chain): void;
-  getChains(sessionId: string): Chain[];
-  getChain(chainId: string): Chain | undefined;
+  chains: Map<SessionId, Chain[]>;
+  addChain(sessionId: SessionId, chain: Chain): void;
+  getChains(sessionId: SessionId): Chain[];
+  getChain(chainId: ChainId): Chain | undefined;
 
   // Commands queue per session
-  commandsQueue: Map<string, CommandPayload[]>;
-  queueCommand(sessionId: string, command: CommandPayload): void;
-  getCommands(sessionId: string): CommandPayload[];
-  clearCommands(sessionId: string): void;
+  commandsQueue: Map<SessionId, CommandPayload[]>;
+  queueCommand(sessionId: SessionId, command: CommandPayload): void;
+  getCommands(sessionId: SessionId): CommandPayload[];
+  clearCommands(sessionId: SessionId): void;
 
   // Input queue per session
-  inputQueue: Map<string, unknown[]>;
-  queueInput(sessionId: string, input: unknown): void;
-  getInput(sessionId: string): unknown[];
-  clearInput(sessionId: string): void;
+  inputQueue: Map<SessionId, unknown[]>;
+  queueInput(sessionId: SessionId, input: unknown): void;
+  getInput(sessionId: SessionId): unknown[];
+  clearInput(sessionId: SessionId): void;
 
   // Connected WebSocket clients
-  clients: Set<{ clientId: string; sessionId?: string }>;
-  addClient(clientId: string, sessionId?: string): void;
+  clients: Set<{ clientId: string; sessionId?: SessionId }>;
+  addClient(clientId: string, sessionId?: SessionId): void;
   removeClient(clientId: string): void;
-  getClientsForSession(sessionId: string): string[];
+  getClientsForSession(sessionId: SessionId): string[];
 }
 
 export const storage: MemoryStorage = {
   // Sessions
   sessions: new Map(),
-  getSession(sessionId: string) {
+  getSession(sessionId: SessionId) {
     return this.sessions.get(sessionId);
   },
   setSession(session: Session) {
@@ -63,7 +62,7 @@ export const storage: MemoryStorage = {
       this.sessionsByUser.set(session.user, userSessions);
     }
   },
-  deleteSession(sessionId: string) {
+  deleteSession(sessionId: SessionId) {
     const session = this.sessions.get(sessionId);
     this.sessions.delete(sessionId);
     // Remove from user tracking
@@ -80,7 +79,7 @@ export const storage: MemoryStorage = {
 
   // User session tracking
   sessionsByUser: new Map(),
-  getSessionsByUser(userId: string) {
+  getSessionsByUser(userId: UserId) {
     const sessionSet = this.sessionsByUser.get(userId);
     return sessionSet ? Array.from(sessionSet) : [];
   },
@@ -90,19 +89,19 @@ export const storage: MemoryStorage = {
 
   // Events
   events: new Map(),
-  addEvent(sessionId: string, event: unknown) {
+  addEvent(sessionId: SessionId, event: WorkspaceEvent) {
     const events = this.events.get(sessionId) || [];
     events.push(event);
     this.events.set(sessionId, events);
   },
-  getEvents(sessionId: string) {
+  getEvents(sessionId: SessionId) {
     return this.events.get(sessionId) || [];
   },
-  getEventsSince(sessionId: string, timestamp: string) {
+  getEventsSince(sessionId: SessionId, timestamp: string) {
     const events = this.events.get(sessionId) || [];
     // Filter events since timestamp
     // Events should have a timestamp field
-    return events.filter((event: any) => {
+    return events.filter((event: WorkspaceEvent) => {
       if (event?.timestamp && typeof event.timestamp === 'string') {
         return new Date(event.timestamp) >= new Date(timestamp);
       }
@@ -112,15 +111,15 @@ export const storage: MemoryStorage = {
 
   // Chains
   chains: new Map(),
-  addChain(sessionId: string, chain: Chain) {
+  addChain(sessionId: SessionId, chain: Chain) {
     const chains = this.chains.get(sessionId) || [];
     chains.push(chain);
     this.chains.set(sessionId, chains);
   },
-  getChains(sessionId: string) {
+  getChains(sessionId: SessionId) {
     return this.chains.get(sessionId) || [];
   },
-  getChain(chainId: string) {
+  getChain(chainId: ChainId) {
     for (const chainArray of this.chains.values()) {
       const chain = chainArray.find((c) => c.id === chainId);
       if (chain) return chain;
@@ -130,41 +129,41 @@ export const storage: MemoryStorage = {
 
   // Commands
   commandsQueue: new Map(),
-  queueCommand(sessionId: string, command: CommandPayload) {
+  queueCommand(sessionId: SessionId, command: CommandPayload) {
     const commands = this.commandsQueue.get(sessionId) || [];
     commands.push(command);
     this.commandsQueue.set(sessionId, commands);
   },
-  getCommands(sessionId: string) {
+  getCommands(sessionId: SessionId) {
     const commands = this.commandsQueue.get(sessionId) || [];
     // Clear commands after fetching (they're polled)
     this.commandsQueue.set(sessionId, []);
     return commands;
   },
-  clearCommands(sessionId: string) {
+  clearCommands(sessionId: SessionId) {
     this.commandsQueue.delete(sessionId);
   },
 
   // Input
   inputQueue: new Map(),
-  queueInput(sessionId: string, input: unknown) {
+  queueInput(sessionId: SessionId, input: unknown) {
     const inputs = this.inputQueue.get(sessionId) || [];
     inputs.push(input);
     this.inputQueue.set(sessionId, inputs);
   },
-  getInput(sessionId: string) {
+  getInput(sessionId: SessionId) {
     const inputs = this.inputQueue.get(sessionId) || [];
     // Clear input after fetching (they're polled)
     this.inputQueue.set(sessionId, []);
     return inputs;
   },
-  clearInput(sessionId: string) {
+  clearInput(sessionId: SessionId) {
     this.inputQueue.delete(sessionId);
   },
 
   // Clients
   clients: new Set(),
-  addClient(clientId: string, sessionId?: string) {
+  addClient(clientId: string, sessionId?: SessionId) {
     this.clients.add({ clientId, sessionId });
   },
   removeClient(clientId: string) {
@@ -174,7 +173,7 @@ export const storage: MemoryStorage = {
       }
     });
   },
-  getClientsForSession(sessionId: string) {
+  getClientsForSession(sessionId: SessionId) {
     const clients: string[] = [];
     this.clients.forEach((client) => {
       if (client.sessionId === sessionId) {

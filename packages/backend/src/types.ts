@@ -33,15 +33,3 @@ export interface PaginationQuery {
   offset?: number;
   since?: string;
 }
-
-/**
- * Storage interface (for dependency injection)
- */
-export interface Storage {
-  sessions: Map<string, any>;
-  events: Map<string, unknown[]>;
-  chains: Map<string, any[]>;
-  commandsQueue: Map<string, unknown[]>;
-  inputQueue: Map<string, unknown[]>;
-  clients: Set<{ clientId: string; sessionId?: string }>;
-}

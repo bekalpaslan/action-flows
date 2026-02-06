@@ -11,6 +11,12 @@
 /** Unique identifier for a session */
 export type SessionId = string & { readonly __brand: 'SessionId' };
 
+/** Unique identifier for a chain */
+export type ChainId = string & { readonly __brand: 'ChainId' };
+
+/** Unique identifier for a step (composite: chainId + stepNumber) */
+export type StepId = string & { readonly __brand: 'StepId' };
+
 /** Step number within a chain (1-indexed) */
 export type StepNumber = number & { readonly __brand: 'StepNumber' };
 
@@ -24,12 +30,45 @@ export type Timestamp = string & { readonly __brand: 'Timestamp' };
  * Factory functions for creating branded types
  */
 export const brandedTypes = {
-  sessionId: (value: string): SessionId => value as SessionId,
-  stepNumber: (value: number): StepNumber => value as StepNumber,
-  userId: (value: string): UserId => value as UserId,
+  sessionId: (value: string): SessionId => {
+    if (!value || value.trim().length === 0) {
+      throw new Error('SessionId cannot be empty');
+    }
+    return value as SessionId;
+  },
+  chainId: (value: string): ChainId => {
+    if (!value || value.trim().length === 0) {
+      throw new Error('ChainId cannot be empty');
+    }
+    return value as ChainId;
+  },
+  stepId: (value: string): StepId => {
+    if (!value || value.trim().length === 0) {
+      throw new Error('StepId cannot be empty');
+    }
+    return value as StepId;
+  },
+  stepNumber: (value: number): StepNumber => {
+    if (!Number.isFinite(value) || value < 1) {
+      throw new Error('StepNumber must be a positive integer >= 1');
+    }
+    return value as StepNumber;
+  },
+  userId: (value: string): UserId => {
+    if (!value || value.trim().length === 0) {
+      throw new Error('UserId cannot be empty');
+    }
+    return value as UserId;
+  },
   timestamp: (value: string | Date): Timestamp => {
     if (value instanceof Date) {
+      if (isNaN(value.getTime())) {
+        throw new Error('Timestamp: invalid Date');
+      }
       return value.toISOString() as Timestamp;
+    }
+    if (!value || value.trim().length === 0) {
+      throw new Error('Timestamp cannot be empty');
     }
     return value as Timestamp;
   },

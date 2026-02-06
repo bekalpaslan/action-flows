@@ -7,7 +7,7 @@ import type { Chain } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 
 export const sampleChain: Chain = {
-  id: 'chain-sample-001',
+  id: brandedTypes.chainId('chain-sample-001'),
   sessionId: brandedTypes.sessionId('session-001'),
   userId: brandedTypes.userId('user-001'),
   title: 'Code Review and Test Flow',
@@ -105,7 +105,7 @@ export const sampleChain: Chain = {
  */
 
 export const sequentialChain: Chain = {
-  id: 'chain-sequential-001',
+  id: brandedTypes.chainId('chain-sequential-001'),
   sessionId: brandedTypes.sessionId('session-002'),
   userId: brandedTypes.userId('user-001'),
   title: 'Sequential Deployment Pipeline',
@@ -172,7 +172,7 @@ export const sequentialChain: Chain = {
 };
 
 export const complexParallelChain: Chain = {
-  id: 'chain-complex-001',
+  id: brandedTypes.chainId('chain-complex-001'),
   sessionId: brandedTypes.sessionId('session-003'),
   userId: brandedTypes.userId('user-001'),
   title: 'Comprehensive Audit and Fix Pipeline',
@@ -287,7 +287,7 @@ export const complexParallelChain: Chain = {
  * OpenSpec chain example with explicit Type field
  */
 export const openspecChain: Chain = {
-  id: 'chain-openspec-001',
+  id: brandedTypes.chainId('chain-openspec-001'),
   sessionId: brandedTypes.sessionId('session-004'),
   userId: brandedTypes.userId('user-001'),
   title: 'OpenSpec: Feature Architecture Review',

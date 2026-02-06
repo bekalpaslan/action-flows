@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import type { Session, Chain, CommandPayload } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent } from '@afw/shared';
 
 /**
  * Redis storage adapter for sessions, chains, events, commands, and input
@@ -7,34 +7,34 @@ import type { Session, Chain, CommandPayload } from '@afw/shared';
  */
 export interface RedisStorage {
   // Session storage
-  getSession(sessionId: string): Promise<Session | undefined>;
+  getSession(sessionId: SessionId): Promise<Session | undefined>;
   setSession(session: Session): Promise<void>;
-  deleteSession(sessionId: string): Promise<void>;
+  deleteSession(sessionId: SessionId): Promise<void>;
 
   // Events storage
-  addEvent(sessionId: string, event: unknown): Promise<void>;
-  getEvents(sessionId: string): Promise<unknown[]>;
-  getEventsSince(sessionId: string, timestamp: string): Promise<unknown[]>;
+  addEvent(sessionId: SessionId, event: WorkspaceEvent): Promise<void>;
+  getEvents(sessionId: SessionId): Promise<WorkspaceEvent[]>;
+  getEventsSince(sessionId: SessionId, timestamp: string): Promise<WorkspaceEvent[]>;
 
   // Chains storage
-  addChain(sessionId: string, chain: Chain): Promise<void>;
-  getChains(sessionId: string): Promise<Chain[]>;
-  getChain(chainId: string): Promise<Chain | undefined>;
+  addChain(sessionId: SessionId, chain: Chain): Promise<void>;
+  getChains(sessionId: SessionId): Promise<Chain[]>;
+  getChain(chainId: ChainId): Promise<Chain | undefined>;
 
   // Commands queue per session
-  queueCommand(sessionId: string, command: CommandPayload): Promise<void>;
-  getCommands(sessionId: string): Promise<CommandPayload[]>;
-  clearCommands(sessionId: string): Promise<void>;
+  queueCommand(sessionId: SessionId, command: CommandPayload): Promise<void>;
+  getCommands(sessionId: SessionId): Promise<CommandPayload[]>;
+  clearCommands(sessionId: SessionId): Promise<void>;
 
   // Input queue per session
-  queueInput(sessionId: string, input: unknown): Promise<void>;
-  getInput(sessionId: string): Promise<unknown[]>;
-  clearInput(sessionId: string): Promise<void>;
+  queueInput(sessionId: SessionId, input: unknown): Promise<void>;
+  getInput(sessionId: SessionId): Promise<unknown[]>;
+  clearInput(sessionId: SessionId): Promise<void>;
 
   // Connected WebSocket clients
-  addClient(clientId: string, sessionId?: string): void;
+  addClient(clientId: string, sessionId?: SessionId): void;
   removeClient(clientId: string): void;
-  getClientsForSession(sessionId: string): string[];
+  getClientsForSession(sessionId: SessionId): string[];
 
   // Pub/Sub support
   subscribe(channel: string, callback: (message: string) => void): Promise<void>;
@@ -55,7 +55,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
   const subClient = new Redis(url);
 
   // In-memory client registry (not persisted, for current instance only)
-  const localClients = new Map<string, string | undefined>();
+  const localClients = new Map<string, SessionId | undefined>();
 
   // TTL for sessions (24 hours in seconds)
   const SESSION_TTL = 86400;
@@ -63,7 +63,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
   const storage: RedisStorage = {
     // === Sessions ===
-    async getSession(sessionId: string) {
+    async getSession(sessionId: SessionId) {
       try {
         const key = `${keyPrefix}sessions:${sessionId}`;
         const data = await redis.get(key);
@@ -83,7 +83,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       }
     },
 
-    async deleteSession(sessionId: string) {
+    async deleteSession(sessionId: SessionId) {
       try {
         const key = `${keyPrefix}sessions:${sessionId}`;
         await redis.del(key);
@@ -93,7 +93,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     },
 
     // === Events ===
-    async addEvent(sessionId: string, event: unknown) {
+    async addEvent(sessionId: SessionId, event: WorkspaceEvent) {
       try {
         const key = `${keyPrefix}events:${sessionId}`;
         const eventData = JSON.stringify(event);
@@ -113,26 +113,26 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       }
     },
 
-    async getEvents(sessionId: string) {
+    async getEvents(sessionId: SessionId) {
       try {
         const key = `${keyPrefix}events:${sessionId}`;
         const events = await redis.lrange(key, 0, -1);
-        return events.map((e) => JSON.parse(e));
+        return events.map((e) => JSON.parse(e) as WorkspaceEvent);
       } catch (error) {
         console.error(`[Redis] Error getting events for session ${sessionId}:`, error);
         return [];
       }
     },
 
-    async getEventsSince(sessionId: string, timestamp: string) {
+    async getEventsSince(sessionId: SessionId, timestamp: string) {
       try {
         const key = `${keyPrefix}events:${sessionId}`;
         const events = await redis.lrange(key, 0, -1);
         const targetTime = new Date(timestamp).getTime();
 
         return events
-          .map((e) => JSON.parse(e))
-          .filter((event: any) => {
+          .map((e) => JSON.parse(e) as WorkspaceEvent)
+          .filter((event: WorkspaceEvent) => {
             if (event?.timestamp && typeof event.timestamp === 'string') {
               return new Date(event.timestamp).getTime() >= targetTime;
             }
@@ -145,7 +145,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     },
 
     // === Chains ===
-    async addChain(sessionId: string, chain: Chain) {
+    async addChain(sessionId: SessionId, chain: Chain) {
       try {
         const key = `${keyPrefix}chains:${sessionId}`;
         await redis.rpush(key, JSON.stringify(chain));
@@ -159,22 +159,22 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       }
     },
 
-    async getChains(sessionId: string) {
+    async getChains(sessionId: SessionId) {
       try {
         const key = `${keyPrefix}chains:${sessionId}`;
         const chains = await redis.lrange(key, 0, -1);
-        return chains.map((c) => JSON.parse(c));
+        return chains.map((c) => JSON.parse(c) as Chain);
       } catch (error) {
         console.error(`[Redis] Error getting chains for session ${sessionId}:`, error);
         return [];
       }
     },
 
-    async getChain(chainId: string) {
+    async getChain(chainId: ChainId) {
       try {
         const key = `${keyPrefix}chain:${chainId}`;
         const data = await redis.get(key);
-        return data ? JSON.parse(data) : undefined;
+        return data ? (JSON.parse(data) as Chain) : undefined;
       } catch (error) {
         console.error(`[Redis] Error getting chain ${chainId}:`, error);
         return undefined;
@@ -182,7 +182,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     },
 
     // === Commands ===
-    async queueCommand(sessionId: string, command: CommandPayload) {
+    async queueCommand(sessionId: SessionId, command: CommandPayload) {
       try {
         const key = `${keyPrefix}commands:${sessionId}`;
         await redis.rpush(key, JSON.stringify(command));
@@ -192,20 +192,20 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       }
     },
 
-    async getCommands(sessionId: string) {
+    async getCommands(sessionId: SessionId) {
       try {
         const key = `${keyPrefix}commands:${sessionId}`;
         const commands = await redis.lrange(key, 0, -1);
         // Clear after fetching
         await redis.del(key);
-        return commands.map((c) => JSON.parse(c));
+        return commands.map((c) => JSON.parse(c) as CommandPayload);
       } catch (error) {
         console.error(`[Redis] Error getting commands for session ${sessionId}:`, error);
         return [];
       }
     },
 
-    async clearCommands(sessionId: string) {
+    async clearCommands(sessionId: SessionId) {
       try {
         const key = `${keyPrefix}commands:${sessionId}`;
         await redis.del(key);
@@ -215,7 +215,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     },
 
     // === Input ===
-    async queueInput(sessionId: string, input: unknown) {
+    async queueInput(sessionId: SessionId, input: unknown) {
       try {
         const key = `${keyPrefix}input:${sessionId}`;
         await redis.rpush(key, JSON.stringify(input));
@@ -225,20 +225,20 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       }
     },
 
-    async getInput(sessionId: string) {
+    async getInput(sessionId: SessionId) {
       try {
         const key = `${keyPrefix}input:${sessionId}`;
         const inputs = await redis.lrange(key, 0, -1);
         // Clear after fetching
         await redis.del(key);
-        return inputs.map((i) => JSON.parse(i));
+        return inputs.map((i) => JSON.parse(i) as unknown);
       } catch (error) {
         console.error(`[Redis] Error getting input for session ${sessionId}:`, error);
         return [];
       }
     },
 
-    async clearInput(sessionId: string) {
+    async clearInput(sessionId: SessionId) {
       try {
         const key = `${keyPrefix}input:${sessionId}`;
         await redis.del(key);
@@ -248,7 +248,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     },
 
     // === Clients (in-memory per instance) ===
-    addClient(clientId: string, sessionId?: string) {
+    addClient(clientId: string, sessionId?: SessionId) {
       localClients.set(clientId, sessionId);
     },
 
@@ -256,7 +256,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       localClients.delete(clientId);
     },
 
-    getClientsForSession(sessionId: string) {
+    getClientsForSession(sessionId: SessionId) {
       const clients: string[] = [];
       localClients.forEach((sessionIdValue, clientId) => {
         if (sessionIdValue === sessionId) {

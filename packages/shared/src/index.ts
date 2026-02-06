@@ -16,6 +16,8 @@
 // ============================================================================
 export type {
   SessionId,
+  ChainId,
+  StepId,
   StepNumber,
   UserId,
   Timestamp,

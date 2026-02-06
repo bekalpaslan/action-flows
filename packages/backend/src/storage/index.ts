@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent } from '@afw/shared';
 import { storage as memoryStorage } from './memory';
 import { createRedisStorage } from './redis';
 
@@ -8,40 +8,40 @@ import { createRedisStorage } from './redis';
  */
 export interface Storage {
   // Session storage
-  sessions?: Map<string, Session>; // Memory only
-  getSession(sessionId: string): Session | undefined | Promise<Session | undefined>;
+  sessions?: Map<SessionId, Session>; // Memory only
+  getSession(sessionId: SessionId): Session | undefined | Promise<Session | undefined>;
   setSession(session: Session): void | Promise<void>;
-  deleteSession(sessionId: string): void | Promise<void>;
+  deleteSession(sessionId: SessionId): void | Promise<void>;
 
   // Events storage
-  events?: Map<string, unknown[]>; // Memory only
-  addEvent(sessionId: string, event: unknown): void | Promise<void>;
-  getEvents(sessionId: string): unknown[] | Promise<unknown[]>;
-  getEventsSince(sessionId: string, timestamp: string): unknown[] | Promise<unknown[]>;
+  events?: Map<SessionId, WorkspaceEvent[]>; // Memory only
+  addEvent(sessionId: SessionId, event: WorkspaceEvent): void | Promise<void>;
+  getEvents(sessionId: SessionId): WorkspaceEvent[] | Promise<WorkspaceEvent[]>;
+  getEventsSince(sessionId: SessionId, timestamp: string): WorkspaceEvent[] | Promise<WorkspaceEvent[]>;
 
   // Chains storage
-  chains?: Map<string, Chain[]>; // Memory only
-  addChain(sessionId: string, chain: Chain): void | Promise<void>;
-  getChains(sessionId: string): Chain[] | Promise<Chain[]>;
-  getChain(chainId: string): Chain | undefined | Promise<Chain | undefined>;
+  chains?: Map<SessionId, Chain[]>; // Memory only
+  addChain(sessionId: SessionId, chain: Chain): void | Promise<void>;
+  getChains(sessionId: SessionId): Chain[] | Promise<Chain[]>;
+  getChain(chainId: ChainId): Chain | undefined | Promise<Chain | undefined>;
 
   // Commands queue per session
-  commandsQueue?: Map<string, CommandPayload[]>; // Memory only
-  queueCommand(sessionId: string, command: CommandPayload): void | Promise<void>;
-  getCommands(sessionId: string): CommandPayload[] | Promise<CommandPayload[]>;
-  clearCommands(sessionId: string): void | Promise<void>;
+  commandsQueue?: Map<SessionId, CommandPayload[]>; // Memory only
+  queueCommand(sessionId: SessionId, command: CommandPayload): void | Promise<void>;
+  getCommands(sessionId: SessionId): CommandPayload[] | Promise<CommandPayload[]>;
+  clearCommands(sessionId: SessionId): void | Promise<void>;
 
   // Input queue per session
-  inputQueue?: Map<string, unknown[]>; // Memory only
-  queueInput(sessionId: string, input: unknown): void | Promise<void>;
-  getInput(sessionId: string): unknown[] | Promise<unknown[]>;
-  clearInput(sessionId: string): void | Promise<void>;
+  inputQueue?: Map<SessionId, unknown[]>; // Memory only
+  queueInput(sessionId: SessionId, input: unknown): void | Promise<void>;
+  getInput(sessionId: SessionId): unknown[] | Promise<unknown[]>;
+  clearInput(sessionId: SessionId): void | Promise<void>;
 
   // Connected WebSocket clients
-  clients?: Set<{ clientId: string; sessionId?: string }>; // Memory only
-  addClient(clientId: string, sessionId?: string): void;
+  clients?: Set<{ clientId: string; sessionId?: SessionId }>; // Memory only
+  addClient(clientId: string, sessionId?: SessionId): void;
   removeClient(clientId: string): void;
-  getClientsForSession(sessionId: string): string[];
+  getClientsForSession(sessionId: SessionId): string[];
 
   // Pub/Sub support (Redis only)
   subscribe?(channel: string, callback: (message: string) => void): Promise<void>;

@@ -9,6 +9,7 @@ import { FileExplorer } from './FileExplorer';
 import { SplitPaneLayout } from './SplitPaneLayout';
 import { NotificationManager } from './NotificationManager';
 import { CodeEditor } from './CodeEditor';
+import { TerminalTabs } from './Terminal';
 
 /**
  * Main app content component that displays real-time WebSocket connection status
@@ -20,6 +21,9 @@ export default function AppContent() {
   const [statusDisplay, setStatusDisplay] = useState<string>('Connecting...');
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>();
   const [fileToOpen, setFileToOpen] = useState<string | null>(null);
+  const [terminalHeight, setTerminalHeight] = useState<number>(250);
+  const [terminalCollapsed, setTerminalCollapsed] = useState<boolean>(false);
+  const [terminalCombinedMode, setTerminalCombinedMode] = useState<boolean>(false);
 
   // Manage attached sessions
   const {
@@ -131,6 +135,19 @@ export default function AppContent() {
           />
         )}
       </div>
+
+      {/* Terminal Panel */}
+      {attachedSessionIds.length > 0 && (
+        <TerminalTabs
+          sessionIds={attachedSessionIds}
+          height={terminalHeight}
+          onHeightChange={setTerminalHeight}
+          isCollapsed={terminalCollapsed}
+          onToggleCollapse={() => setTerminalCollapsed(!terminalCollapsed)}
+          combinedMode={terminalCombinedMode}
+          onToggleCombinedMode={() => setTerminalCombinedMode(!terminalCombinedMode)}
+        />
+      )}
     </div>
   );
 }

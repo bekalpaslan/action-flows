@@ -5,6 +5,7 @@
 
 import type {
   SessionId,
+  ChainId,
   StepNumber,
   UserId,
   Timestamp,
@@ -76,7 +77,7 @@ export interface ChainCompiledEvent extends BaseEvent {
   type: 'chain:compiled';
 
   // Automatic fields
-  chainId?: string;
+  chainId?: ChainId;
 
   // Parsed fields (nullable)
   title?: string | null;
@@ -103,7 +104,7 @@ export interface ChainStartedEvent extends BaseEvent {
   type: 'chain:started';
 
   // Automatic fields
-  chainId: string;
+  chainId: ChainId;
 
   // Parsed fields (nullable)
   title?: string | null;
@@ -117,7 +118,7 @@ export interface ChainCompletedEvent extends BaseEvent {
   type: 'chain:completed';
 
   // Automatic fields
-  chainId: string;
+  chainId: ChainId;
   duration: DurationMs;
 
   // Parsed fields (nullable)
@@ -349,6 +350,26 @@ export interface ExecutionLogCreatedEvent extends BaseEvent {
 }
 
 /**
+ * Terminal output events
+ */
+
+export interface TerminalOutputEvent extends BaseEvent {
+  type: 'terminal:output';
+
+  // Automatic fields
+  sessionId: SessionId;
+  output: string;
+  stream: 'stdout' | 'stderr';
+
+  // Parsed fields (nullable)
+  stepNumber?: StepNumber | null;
+  action?: string | null;
+
+  // Inferred fallbacks
+  timestamp: Timestamp;
+}
+
+/**
  * Error and diagnostic events
  */
 
@@ -404,6 +425,7 @@ export type WorkspaceEvent =
   | FileDeletedEvent
   | RegistryLineUpdatedEvent
   | ExecutionLogCreatedEvent
+  | TerminalOutputEvent
   | ErrorOccurredEvent
   | WarningOccurredEvent;
 
@@ -439,6 +461,8 @@ export const eventGuards = {
     event.type === 'file:modified',
   isFileDeleted: (event: WorkspaceEvent): event is FileDeletedEvent =>
     event.type === 'file:deleted',
+  isTerminalOutput: (event: WorkspaceEvent): event is TerminalOutputEvent =>
+    event.type === 'terminal:output',
   isError: (event: WorkspaceEvent): event is ErrorOccurredEvent =>
     event.type === 'error:occurred',
   isWarning: (event: WorkspaceEvent): event is WarningOccurredEvent =>
