@@ -1,0 +1,170 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ActionFlows Workspace Settings",
+  "description": "Configuration for ActionFlows Workspace integration in .claude/settings.json",
+  "type": "object",
+  "properties": {
+    "workspace": {
+      "type": "object",
+      "description": "ActionFlows Workspace integration settings",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable Workspace integration (hooks will be installed and activated)",
+          "default": true
+        },
+        "backendUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the ActionFlows Workspace backend server",
+          "examples": [
+            "http://localhost:3001",
+            "http://192.168.1.100:3001"
+          ]
+        },
+        "user": {
+          "type": "string",
+          "description": "Username for session attribution (defaults to system username if omitted)",
+          "examples": [
+            "alice",
+            "bob"
+          ]
+        },
+        "hooks": {
+          "type": "object",
+          "description": "Individual hook enable/disable toggles",
+          "properties": {
+            "formatCheck": {
+              "type": "boolean",
+              "description": "Enable format enforcement warnings (afw-format-check hook)",
+              "default": true
+            },
+            "chainParse": {
+              "type": "boolean",
+              "description": "Enable chain compilation parsing (afw-chain-parse hook)",
+              "default": true
+            },
+            "stepTracking": {
+              "type": "boolean",
+              "description": "Enable step spawn/complete tracking (afw-step-spawned, afw-step-completed hooks)",
+              "default": true
+            },
+            "controlCommands": {
+              "type": "boolean",
+              "description": "Enable Dashboard control commands (afw-control-check hook)",
+              "default": true
+            },
+            "inputInjection": {
+              "type": "boolean",
+              "description": "Enable Dashboard input injection (afw-input-inject hook)",
+              "default": true
+            },
+            "terminalOutput": {
+              "type": "boolean",
+              "description": "Enable terminal output capture (afw-output-capture hook)",
+              "default": true
+            },
+            "sessionLifecycle": {
+              "type": "boolean",
+              "description": "Enable session start/end tracking (afw-session-start, afw-session-end hooks)",
+              "default": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "formatEnforcement": {
+          "type": "object",
+          "description": "Format enforcement configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable format checking",
+              "default": true
+            },
+            "warnOnly": {
+              "type": "boolean",
+              "description": "Only warn on violations (never block execution)",
+              "default": true
+            },
+            "ignoreViolations": {
+              "type": "array",
+              "description": "List of violation types to ignore",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "missing-chain-header",
+                  "missing-step-numbers",
+                  "missing-table-columns",
+                  "missing-execution-mode",
+                  "missing-metadata"
+                ]
+              },
+              "default": []
+            }
+          },
+          "additionalProperties": false
+        },
+        "polling": {
+          "type": "object",
+          "description": "Polling and timeout configuration",
+          "properties": {
+            "inputTimeoutMs": {
+              "type": "integer",
+              "description": "Timeout in milliseconds for Dashboard input polling",
+              "default": 30000,
+              "minimum": 5000,
+              "maximum": 300000
+            },
+            "commandCheckIntervalMs": {
+              "type": "integer",
+              "description": "How often to check for control commands (not currently used - hooks check on every tool call)",
+              "default": 1000,
+              "minimum": 100,
+              "maximum": 10000
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "enabled",
+        "backendUrl"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true,
+  "examples": [
+    {
+      "workspace": {
+        "enabled": true,
+        "backendUrl": "http://localhost:3001",
+        "user": "alice",
+        "hooks": {
+          "formatCheck": true,
+          "chainParse": true,
+          "stepTracking": true,
+          "controlCommands": true,
+          "inputInjection": true,
+          "terminalOutput": true,
+          "sessionLifecycle": true
+        },
+        "formatEnforcement": {
+          "enabled": true,
+          "warnOnly": true,
+          "ignoreViolations": []
+        },
+        "polling": {
+          "inputTimeoutMs": 30000,
+          "commandCheckIntervalMs": 1000
+        }
+      }
+    },
+    {
+      "workspace": {
+        "enabled": false,
+        "backendUrl": "http://localhost:3001"
+      }
+    }
+  ]
+}
