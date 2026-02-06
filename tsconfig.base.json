@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@afw/shared": ["packages/shared/src/index.ts"],
+      "@afw/shared/*": ["packages/shared/src/*"],
+      "@afw/hooks": ["packages/hooks/src/index.ts"],
+      "@afw/hooks/*": ["packages/hooks/src/*"],
+      "@afw/backend": ["packages/backend/src/index.ts"],
+      "@afw/backend/*": ["packages/backend/src/*"],
+      "@afw/app": ["packages/app/src/index.ts"],
+      "@afw/app/*": ["packages/app/src/*"]
+    }
+  },
+  "include": ["packages/*/src"],
+  "exclude": ["node_modules", "dist"]
+}

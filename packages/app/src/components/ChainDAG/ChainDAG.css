@@ -1,0 +1,529 @@
+/**
+ * ChainDAG Styles
+ * Styling for DAG visualization, nodes, edges, and status indicators
+ */
+
+.chain-dag-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chain-dag-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chain-dag-header {
+  padding: 16px;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chain-dag-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.chain-dag-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  flex: 1;
+}
+
+.chain-dag-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: #666;
+}
+
+.chain-dag-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chain-dag-stat-value {
+  font-weight: 600;
+  color: #333;
+}
+
+.chain-dag-canvas {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
+
+/* React Flow overrides */
+.reactflow-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.react-flow {
+  background-color: #f5f5f5;
+}
+
+.react-flow__viewport {
+  background: linear-gradient(
+    45deg,
+    #f5f5f5 25%,
+    transparent 25%,
+    transparent 75%,
+    #f5f5f5 75%,
+    #f5f5f5
+  ),
+  linear-gradient(
+    45deg,
+    #f5f5f5 25%,
+    transparent 25%,
+    transparent 75%,
+    #f5f5f5 75%,
+    #f5f5f5
+  );
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  background-color: #e8e8e8;
+}
+
+/* Step Nodes */
+.step-node {
+  padding: 12px;
+  border-radius: 8px;
+  background-color: white;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.step-node:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.step-node.selected {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+  background-color: #f0f7ff;
+}
+
+.step-node.parallel {
+  border-style: dashed;
+}
+
+.step-node.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Status colors */
+.step-node.status-pending {
+  border-color: #bdbdbd;
+  background-color: #fafafa;
+}
+
+.step-node.status-in_progress {
+  border-color: #fbc02d;
+  background-color: #fffde7;
+  animation: pulse-border 2s ease-in-out infinite, pulse-glow 1.5s ease-out infinite;
+}
+
+.step-node.status-completed {
+  border-color: #4caf50;
+  background-color: #f1f8e9;
+}
+
+.step-node.status-failed {
+  border-color: #f44336;
+  background-color: #ffebee;
+}
+
+.step-node.status-skipped {
+  border-color: #9e9e9e;
+  background-color: #f5f5f5;
+  opacity: 0.7;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    box-shadow: 0 2px 4px rgba(251, 192, 45, 0.3);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(251, 192, 45, 0.6);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(251, 192, 45, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(251, 192, 45, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(251, 192, 45, 0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Node content */
+.step-node-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.step-node-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: #333;
+}
+
+.step-number {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+.parallel-indicator {
+  font-size: 14px;
+  color: #ff6f00;
+  font-weight: bold;
+  title: 'Parallel execution';
+}
+
+.step-node-action {
+  font-weight: 600;
+  color: #1976d2;
+  word-break: break-word;
+}
+
+.step-node-model {
+  display: flex;
+  gap: 4px;
+}
+
+.model-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.model-haiku {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.model-sonnet {
+  background-color: #f3e5f5;
+  color: #6a1b9a;
+}
+
+.model-opus {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.step-node-duration {
+  font-size: 10px;
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.step-node-error {
+  font-size: 10px;
+  color: #f44336;
+  font-weight: 600;
+  padding: 2px 4px;
+  background-color: rgba(244, 67, 54, 0.1);
+  border-radius: 2px;
+}
+
+.step-node-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(251, 192, 45, 0.3);
+  border-top-color: #fbc02d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* React Flow handles */
+.react-flow__handle {
+  background-color: #1976d2;
+  border: 2px solid white;
+  width: 8px;
+  height: 8px;
+}
+
+.react-flow__handle.connectingNode {
+  background-color: #ff6f00;
+}
+
+.react-flow__handle.valid {
+  background-color: #4caf50;
+}
+
+/* Edges */
+.react-flow__edge-path {
+  stroke: #bdbdbd;
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #1976d2;
+  stroke-width: 3;
+}
+
+.react-flow__edge-smoothstep path {
+  stroke: #bdbdbd;
+}
+
+/* Animated edges for in-progress steps */
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke: #fbc02d;
+  stroke-dasharray: 5, 5;
+  animation: dash 20s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+/* Controls */
+.chain-dag-controls {
+  padding: 12px;
+  background-color: white;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.chain-dag-button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.chain-dag-button:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+.chain-dag-button.primary {
+  background-color: #1976d2;
+  color: white;
+  border-color: #1565c0;
+}
+
+.chain-dag-button.primary:hover {
+  background-color: #1565c0;
+}
+
+.chain-dag-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Parallel group background */
+.parallel-group {
+  position: absolute;
+  border: 2px dashed #ff6f00;
+  border-radius: 8px;
+  background-color: rgba(255, 111, 0, 0.03);
+  pointer-events: none;
+}
+
+.parallel-group-label {
+  position: absolute;
+  top: -16px;
+  left: 8px;
+  background-color: #ff6f00;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  z-index: 100;
+}
+
+/* Old details panel removed - now using StepInspector component */
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-badge.status-pending {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.status-badge.status-in_progress {
+  background-color: #fffde7;
+  color: #f57f17;
+}
+
+.status-badge.status-completed {
+  background-color: #f1f8e9;
+  color: #33691e;
+}
+
+.status-badge.status-failed {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-badge.status-skipped {
+  background-color: #f5f5f5;
+  color: #616161;
+}
+
+.error-message {
+  color: #f44336 !important;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 11px !important;
+}
+
+/* Legend */
+.chain-dag-legend {
+  padding: 12px;
+  background-color: #fafafa;
+  border-top: 1px solid #e0e0e0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  font-size: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 2px solid;
+}
+
+.legend-indicator.pending {
+  background-color: #fafafa;
+  border-color: #bdbdbd;
+}
+
+.legend-indicator.in-progress {
+  background-color: #fffde7;
+  border-color: #fbc02d;
+}
+
+.legend-indicator.completed {
+  background-color: #f1f8e9;
+  border-color: #4caf50;
+}
+
+.legend-indicator.failed {
+  background-color: #ffebee;
+  border-color: #f44336;
+}
+
+.legend-indicator.skipped {
+  background-color: #f5f5f5;
+  border-color: #9e9e9e;
+  opacity: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .chain-dag-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .chain-dag-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chain-dag-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .step-node {
+    min-width: 140px;
+    font-size: 11px;
+    padding: 10px;
+  }
+
+  .chain-dag-legend {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  }
+
+  .chain-dag-container {
+    flex-direction: column;
+  }
+}

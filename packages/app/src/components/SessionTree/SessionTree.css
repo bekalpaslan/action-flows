@@ -1,0 +1,296 @@
+/* SessionTree Component Styles */
+
+.session-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+/* Toggle Button */
+.session-tree-toggle {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  color: #808080;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+  user-select: none;
+  border-left: 2px solid transparent;
+  margin-left: 0.5rem;
+}
+
+.session-tree-toggle:hover {
+  color: #b0b0b0;
+  background: rgba(187, 134, 252, 0.05);
+  border-left-color: #bb86fc;
+}
+
+.tree-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 0.6rem;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tree-chevron.expanded {
+  transform: rotate(90deg);
+}
+
+.tree-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tree Content */
+.session-tree-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 600px;
+  overflow-y: auto;
+  border-left: 1px solid #303030;
+  margin-left: 0.75rem;
+}
+
+.session-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.session-item {
+  margin: 0;
+  padding: 0;
+}
+
+/* Session Button */
+.session-button {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  background: transparent;
+  border: none;
+  color: #909090;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+  position: relative;
+  border-left: 2px solid transparent;
+  font-size: 0.75rem;
+  text-align: left;
+}
+
+.session-button:hover {
+  background: rgba(187, 134, 252, 0.06);
+  color: #b0b0b0;
+  border-left-color: rgba(187, 134, 252, 0.4);
+}
+
+.session-button.attached {
+  background: rgba(187, 134, 252, 0.1);
+  color: #bb86fc;
+  border-left-color: #bb86fc;
+}
+
+.session-button.attached:hover {
+  background: rgba(187, 134, 252, 0.15);
+}
+
+/* Session Content Layout */
+.session-content {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Session ID */
+.session-id-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.session-id {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.7rem;
+  background: rgba(187, 134, 252, 0.08);
+  padding: 0.15rem 0.3rem;
+  border-radius: 3px;
+  color: #bb86fc;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.attached-checkmark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  background: #4caf50;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.6rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* Session Details */
+.session-details {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Status Indicator */
+.status-indicator {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: none;
+}
+
+.status-indicator.status-active {
+  background: #4caf50;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
+  animation: pulse-session-active 2s infinite;
+}
+
+.status-indicator.status-idle {
+  background: #ffc107;
+}
+
+.status-indicator.status-ended {
+  background: #757575;
+}
+
+@keyframes pulse-session-active {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+  }
+}
+
+.status-label {
+  font-size: 0.65rem;
+  color: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* Current Chain */
+.current-chain {
+  font-size: 0.7rem;
+  color: #9366ff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+  font-weight: 400;
+}
+
+/* Session Timestamp */
+.session-timestamp {
+  font-size: 0.65rem;
+  color: #707070;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+/* Empty State */
+.session-tree-empty {
+  padding: 1rem 0.75rem;
+  color: #606060;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+/* Tree Content Scrollbar */
+.session-tree-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.session-tree-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.session-tree-content::-webkit-scrollbar-thumb {
+  background: #353535;
+  border-radius: 2px;
+}
+
+.session-tree-content::-webkit-scrollbar-thumb:hover {
+  background: #454545;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .session-button {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .session-id {
+    font-size: 0.65rem;
+  }
+
+  .status-label {
+    display: none;
+  }
+
+  .current-chain {
+    display: none;
+  }
+
+  .session-timestamp {
+    display: none;
+  }
+}
+
+/* Collapsed sidebar adjustments */
+.user-sidebar.collapsed .session-tree {
+  padding: 0;
+}
+
+.user-sidebar.collapsed .session-tree-toggle {
+  padding: 0.25rem 0.25rem;
+  margin-left: 0;
+  justify-content: center;
+}
+
+.user-sidebar.collapsed .tree-label {
+  display: none;
+}
+
+.user-sidebar.collapsed .session-tree-content {
+  display: none;
+}

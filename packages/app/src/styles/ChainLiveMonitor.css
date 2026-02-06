@@ -1,0 +1,171 @@
+/**
+ * ChainLiveMonitor Styles
+ * Styling for the real-time chain monitoring component
+ */
+
+.chain-live-monitor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.monitor-header {
+  padding: 16px;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  border-bottom: 2px solid #0d47a1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.monitor-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.event-status {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.indicator-dot.online {
+  background-color: #4caf50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(76, 175, 80, 0.1);
+  }
+}
+
+.indicator-text {
+  font-weight: 500;
+}
+
+.event-counter {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.event-counter strong {
+  font-weight: 600;
+}
+
+/* Monitor Content */
+.monitor-content {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Monitor Footer */
+.monitor-footer {
+  padding: 12px 16px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #e0e0e0;
+  font-size: 12px;
+  color: #666;
+}
+
+.event-info {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.event-info span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.event-info code {
+  background-color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 11px;
+  color: #333;
+}
+
+/* Loading State */
+.chain-monitor-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.chain-monitor-loading .spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.chain-monitor-loading p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .monitor-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .event-status {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .event-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

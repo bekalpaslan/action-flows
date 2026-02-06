@@ -1,0 +1,27 @@
+{
+  "name": "@afw/hooks",
+  "version": "0.0.1",
+  "description": "Claude Code hook scripts for ActionFlows",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "dev": "node --watch src/index.ts"
+  },
+  "dependencies": {
+    "@afw/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.6"
+  }
+}

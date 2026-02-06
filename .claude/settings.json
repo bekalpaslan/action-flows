@@ -1,0 +1,7 @@
+{
+  "workspace": {
+    "enabled": true,
+    "backendUrl": "http://localhost:3001",
+    "user": "alice"
+  }
+}

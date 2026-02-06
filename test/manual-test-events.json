@@ -1,0 +1,173 @@
+{
+  "events": [
+    {
+      "type": "SessionStarted",
+      "sessionId": "demo-session-001",
+      "timestamp": 1707194400000,
+      "data": {
+        "userId": "user-test-001",
+        "orchestratorModel": "haiku",
+        "requestSummary": "Manual test event injection"
+      }
+    },
+    {
+      "type": "ChainCompiled",
+      "sessionId": "demo-session-001",
+      "chainId": "chain-compile-001",
+      "timestamp": 1707194401000,
+      "data": {
+        "chainName": "Manual Test Chain",
+        "description": "Testing Phase 2 event injection via curl",
+        "numSteps": 3,
+        "executionStrategy": "sequential",
+        "steps": [
+          {
+            "stepId": "step-1",
+            "actionName": "analyze/",
+            "model": "sonnet",
+            "inputs": {
+              "scope": "backend",
+              "aspect": "security"
+            }
+          },
+          {
+            "stepId": "step-2",
+            "actionName": "review/",
+            "model": "opus",
+            "inputs": {
+              "scope": "security findings"
+            }
+          },
+          {
+            "stepId": "step-3",
+            "actionName": "notify/",
+            "model": "haiku",
+            "inputs": {
+              "channel": "#cityzen-dev",
+              "summary": "Security review complete"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "StepSpawned",
+      "sessionId": "demo-session-001",
+      "chainId": "chain-compile-001",
+      "stepId": "step-1",
+      "timestamp": 1707194402000,
+      "data": {
+        "actionName": "analyze/",
+        "model": "sonnet",
+        "inputs": {
+          "scope": "backend",
+          "aspect": "security"
+        },
+        "status": "in-progress"
+      }
+    },
+    {
+      "type": "StepCompleted",
+      "sessionId": "demo-session-001",
+      "chainId": "chain-compile-001",
+      "stepId": "step-1",
+      "timestamp": 1707194403500,
+      "data": {
+        "actionName": "analyze/",
+        "status": "complete",
+        "duration": 1500,
+        "result": "Analysis complete: 3 security issues found in authentication layer",
+        "errors": []
+      }
+    },
+    {
+      "type": "StepSpawned",
+      "sessionId": "demo-session-001",
+      "chainId": "chain-compile-001",
+      "stepId": "step-2",
+      "timestamp": 1707194404500,
+      "data": {
+        "actionName": "review/",
+        "model": "opus",
+        "inputs": {
+          "scope": "security findings"
+        },
+        "status": "in-progress"
+      }
+    },
+    {
+      "type": "StepCompleted",
+      "sessionId": "demo-session-001",
+      "chainId": "chain-compile-001",
+      "stepId": "step-2",
+      "timestamp": 1707194406000,
+      "data": {
+        "actionName": "review/",
+        "status": "complete",
+        "duration": 1500,
+        "result": "Review complete: All issues are HIGH priority and require immediate attention",
+        "errors": []
+      }
+    },
+    {
+      "type": "StepSpawned",
+      "sessionId": "demo-session-001",
+      "chainId": "chain-compile-001",
+      "stepId": "step-3",
+      "timestamp": 1707194407000,
+      "data": {
+        "actionName": "notify/",
+        "model": "haiku",
+        "inputs": {
+          "channel": "#cityzen-dev",
+          "summary": "Security review complete"
+        },
+        "status": "in-progress"
+      }
+    },
+    {
+      "type": "StepCompleted",
+      "sessionId": "demo-session-001",
+      "chainId": "chain-compile-001",
+      "stepId": "step-3",
+      "timestamp": 1707194407800,
+      "data": {
+        "actionName": "notify/",
+        "status": "complete",
+        "duration": 800,
+        "result": "Notification posted to #cityzen-dev",
+        "errors": []
+      }
+    },
+    {
+      "type": "ChainCompleted",
+      "sessionId": "demo-session-001",
+      "chainId": "chain-compile-001",
+      "timestamp": 1707194408000,
+      "data": {
+        "chainName": "Manual Test Chain",
+        "status": "complete",
+        "totalDuration": 8000,
+        "stepsCompleted": 3,
+        "stepsFailed": 0,
+        "summary": "Chain executed successfully with all steps complete"
+      }
+    }
+  ],
+  "notes": {
+    "description": "This file contains sample events for testing Phase 2 event injection",
+    "usage": "Use curl-commands.sh to send events sequentially with realistic delays",
+    "eventTypes": [
+      "SessionStarted - Marks the beginning of a new orchestration session",
+      "ChainCompiled - Defines the execution plan with all steps",
+      "StepSpawned - A step begins execution",
+      "StepCompleted - A step finishes with result or error",
+      "ChainCompleted - The entire chain finishes"
+    ],
+    "alternativeEventTypes": [
+      "StepFailed - Step execution failed",
+      "ChainFailed - Chain execution failed",
+      "ChainCancelled - Chain was cancelled mid-execution"
+    ]
+  }
+}

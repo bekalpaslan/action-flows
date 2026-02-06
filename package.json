@@ -1,0 +1,26 @@
+{
+  "name": "@afw/workspace",
+  "version": "0.0.1",
+  "description": "ActionFlows Dashboard - Multi-package monorepo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@8.0.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r --parallel dev",
+    "dev:backend": "pnpm -F @afw/backend dev",
+    "dev:app": "pnpm -F @afw/app dev",
+    "type-check": "pnpm -r type-check",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "test:e2e": "bash test/curl-commands.sh",
+    "test:e2e:docs": "echo 'See E2E_TEST_GUIDE.md for complete testing instructions'"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.6"
+  }
+}
