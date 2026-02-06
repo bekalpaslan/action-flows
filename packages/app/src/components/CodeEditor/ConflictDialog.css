@@ -1,0 +1,182 @@
+/* ConflictDialog Styles */
+
+.conflict-dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.conflict-dialog {
+  background: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.conflict-dialog-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.conflict-dialog-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ff9800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.conflict-dialog-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.conflict-message {
+  margin: 0 0 16px 0;
+  color: #cccccc;
+  line-height: 1.5;
+}
+
+.conflict-message strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.conflict-details {
+  margin: 16px 0;
+  padding: 12px;
+  background: #2d2d2d;
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+}
+
+.version-info {
+  display: flex;
+  gap: 12px;
+}
+
+.version-card {
+  flex: 1;
+  padding: 12px;
+  background: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+}
+
+.version-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #569cd6;
+}
+
+.version-card p {
+  margin: 0;
+  font-size: 12px;
+  color: #9cdcfe;
+}
+
+.show-details-btn {
+  margin: 12px 0;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+  color: #569cd6;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.show-details-btn:hover {
+  background: #2d2d2d;
+  border-color: #569cd6;
+}
+
+.conflict-instructions {
+  margin: 16px 0 12px 0;
+  color: #cccccc;
+  font-size: 14px;
+}
+
+.conflict-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: #0e639c;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: #1177bb;
+}
+
+.btn-secondary {
+  background: #3c3c3c;
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background: #4c4c4c;
+}
+
+.btn-tertiary {
+  background: transparent;
+  border: 1px solid #569cd6;
+  color: #569cd6;
+}
+
+.btn-tertiary:hover {
+  background: rgba(86, 156, 214, 0.1);
+}
+
+.btn-text {
+  background: transparent;
+  color: #cccccc;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.btn-text:hover {
+  background: #2d2d2d;
+}
+
+.conflict-dialog-footer {
+  padding: 12px 20px;
+  border-top: 1px solid #3c3c3c;
+  display: flex;
+  justify-content: flex-end;
+}

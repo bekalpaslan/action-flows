@@ -8,11 +8,13 @@ import type { Socket } from 'net';
 import { storage, isAsyncStorage } from './storage';
 import { handleWebSocket } from './ws/handler';
 import { cleanupService } from './services/cleanup';
+import { setBroadcastFunction, shutdownAllWatchers } from './services/fileWatcher';
 import eventsRouter from './routes/events';
 import sessionsRouter from './routes/sessions';
 import commandsRouter from './routes/commands';
 import historyRouter from './routes/history';
 import filesRouter from './routes/files';
+import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent } from '@afw/shared';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
@@ -82,6 +84,24 @@ wss.on('connection', (ws, request) => {
   });
 });
 
+// Broadcast file change events to WebSocket clients
+function broadcastFileEvent(
+  sessionId: SessionId,
+  event: FileCreatedEvent | FileModifiedEvent | FileDeletedEvent
+) {
+  const message = JSON.stringify({
+    type: 'event',
+    sessionId,
+    payload: event,
+  });
+
+  wsConnectedClients.forEach((client) => {
+    if (client.readyState === 1) { // 1 = OPEN
+      client.send(message);
+    }
+  });
+}
+
 // Initialize Redis Pub/Sub if using Redis storage
 async function initializeRedisPubSub() {
   if (isAsyncStorage(storage) && storage.subscribe) {
@@ -124,6 +144,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     // Initialize Redis Pub/Sub after server starts
     await initializeRedisPubSub();
 
+    // Initialize file watcher broadcast function
+    setBroadcastFunction(broadcastFileEvent);
+
     // Start cleanup service
     cleanupService.start();
 
@@ -134,6 +157,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 ║   WS:  ws://localhost:${PORT}/ws           ║
 ║   Storage: ${isAsyncStorage(storage) ? 'Redis' : 'Memory'}             ║
 ║   Cleanup: Daily (7-day retention)        ║
+║   File Watcher: Active                    ║
 ╚════════════════════════════════════════════╝
     `);
   });
@@ -144,6 +168,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
     // Stop cleanup service
     cleanupService.stop();
+
+    // Shutdown file watchers
+    await shutdownAllWatchers();
 
     // Close WebSocket connections
     wsConnectedClients.forEach((client) => {

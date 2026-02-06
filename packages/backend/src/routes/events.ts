@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
-import type { WorkspaceEvent } from '@afw/shared';
+import type { WorkspaceEvent, SessionId, StepNumber } from '@afw/shared';
 import { storage, isAsyncStorage } from '../storage';
+import { setActiveStep, clearActiveStep } from '../services/fileWatcher';
 
 const router = Router();
 
@@ -22,6 +23,16 @@ router.post('/', async (req, res) => {
 
     // Store event (handles both async Redis and sync Memory)
     await Promise.resolve(storage.addEvent(event.sessionId, event));
+
+    // Update active step for file change attribution
+    if (event.type === 'step:spawned' || event.type === 'step:started') {
+      const stepEvent = event as any;
+      if (stepEvent.stepNumber && stepEvent.action) {
+        setActiveStep(event.sessionId, stepEvent.stepNumber, stepEvent.action);
+      }
+    } else if (event.type === 'step:completed' || event.type === 'step:failed') {
+      clearActiveStep(event.sessionId);
+    }
 
     // Broadcast to clients (WebSocket handler subscribes to Redis pub/sub)
     console.log(`[API] Event received and stored:`, {

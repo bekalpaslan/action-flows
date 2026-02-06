@@ -3,6 +3,7 @@ import type { Session, Chain, SessionId } from '@afw/shared';
 import { brandedTypes, Status } from '@afw/shared';
 import { storage } from '../storage';
 import { filePersistence } from '../storage/file-persistence';
+import { startWatching, stopWatching } from '../services/fileWatcher';
 
 const router = Router();
 
@@ -33,7 +34,14 @@ router.post('/', async (req, res) => {
 
     await Promise.resolve(storage.setSession(session));
 
-    console.log(`[API] Session created: ${session.id}`);
+    // Start file watching for this session
+    try {
+      await startWatching(session.id, cwd);
+      console.log(`[API] Session created: ${session.id} (file watching enabled)`);
+    } catch (error) {
+      console.error(`[API] Failed to start file watching for session ${session.id}:`, error);
+      // Don't fail session creation if file watching fails
+    }
 
     res.status(201).json(session);
   } catch (error) {
@@ -133,6 +141,14 @@ router.put('/:id', async (req, res) => {
 
     if (status === 'completed' || status === 'failed') {
       session.endedAt = brandedTypes.currentTimestamp();
+
+      // Stop file watching for this session
+      try {
+        await stopWatching(id as SessionId);
+        console.log(`[API] File watching stopped for session ${id}`);
+      } catch (error) {
+        console.error(`[API] Error stopping file watching for session ${id}:`, error);
+      }
 
       // Persist session to file storage for history
       try {

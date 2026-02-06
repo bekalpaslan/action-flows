@@ -19,7 +19,8 @@ Enforce consistent code style and maintainability conventions. Makes codebase pr
 | 7 | Dead Code Removed | No commented-out code. No unused exports. No unreachable statements. Linter enabled to catch automatically. | **LOW** |
 | 8 | Console Logs Removed | No `console.log`, `console.warn`, `console.error` in production code. Logging through proper logger (if configured). Debug logs removed before commit. | **LOW** |
 | 9 | Consistent Brace/Quote Style | Single quotes for strings (enforced by prettier). Braces on same line (one-true-brace style). No trailing commas unless in multiline. | **LOW** |
-| 10 | No Trailing Whitespace | Files end with newline. No trailing spaces. Formatting tool (prettier) auto-fixes. | **LOW** |
+| 10 | Monorepo Build Order | Build scripts respect dependency order (shared → backend → app), tsconfig references configured correctly. Build succeeds without circular dependency errors. | **LOW** |
+| 11 | No Trailing Whitespace | Files end with newline. No trailing spaces. Formatting tool (prettier) auto-fixes. | **LOW** |
 
 ---
 

@@ -19,7 +19,9 @@ Validate that code runs efficiently on client and server. Checks for unnecessary
 | 7 | Backend Response Times | P95 response time <200ms for most endpoints. Database queries indexed. N+1 queries eliminated. Response caching considered. Load test results documented. | **MEDIUM** |
 | 8 | No Synchronous Blocking | Async/await used for I/O operations. No synchronous file reads/writes in handlers. Event loop not blocked by long-running computations. | **MEDIUM** |
 | 9 | Database Query Optimization | Queries select only needed fields. JOINs efficient. Pagination implemented for large result sets. Slow query logs reviewed. | **MEDIUM** |
-| 10 | Frontend State Efficiency | State updates batched (React 18 automatic batching). Context selectors used to prevent unnecessary renders. Large state split across multiple contexts. | **MEDIUM** |
+| 10 | Redis Connection Pool | Redis client uses connection pooling, handles connection errors gracefully with reconnect strategy. Connection pool size configured appropriately for concurrency. | **MEDIUM** |
+| 11 | ReactFlow Custom Nodes | Custom ReactFlow nodes wrapped in React.memo, nodeTypes object defined outside component to prevent re-registration. Node rendering optimized for large graphs. | **MEDIUM** |
+| 12 | Frontend State Efficiency | State updates batched (React 18 automatic batching). Context selectors used to prevent unnecessary renders. Large state split across multiple contexts. | **MEDIUM** |
 
 ---
 

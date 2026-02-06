@@ -5,6 +5,10 @@ import { EditorTabs } from './EditorTabs';
 import { useEditorFiles } from '../../hooks/useEditorFiles';
 import type { SessionId } from '@afw/shared';
 import { configureMonaco } from '../../monaco-config';
+import { useWebSocketContext } from '../../contexts/WebSocketContext';
+import { useFileSyncManager, type FileConflict } from '../../hooks/useFileSyncManager';
+import { ConflictDialog } from './ConflictDialog';
+import { ToastContainer, type ToastMessage } from '../Toast/Toast';
 import './CodeEditor.css';
 
 // Configure Monaco workers on module load
@@ -72,11 +76,14 @@ export function CodeEditor({ sessionId, initialFiles = [], fileToOpen, onFileOpe
   const [openFiles, setOpenFiles] = useState<EditorFile[]>([]);
   const [activeFilePath, setActiveFilePath] = useState<string | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [conflict, setConflict] = useState<FileConflict | null>(null);
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null);
   // Use ref to always have the current openFiles state for save operations
   const openFilesRef = useRef<EditorFile[]>([]);
 
   const { readFile, writeFile, isLoading, error } = useEditorFiles(sessionId);
+  const { onEvent } = useWebSocketContext();
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -85,6 +92,140 @@ export function CodeEditor({ sessionId, initialFiles = [], fileToOpen, onFileOpe
 
   // Get the active file
   const activeFile = openFiles.find((f) => f.path === activeFilePath);
+
+  /**
+   * Toast management functions (C2 fix)
+   */
+  const showToast = useCallback((message: string, type: 'info' | 'success' | 'warning' | 'error') => {
+    const id = `${Date.now()}-${Math.random()}`;
+    const toast: ToastMessage = { id, message, type };
+    setToasts((prev) => [...prev, toast]);
+  }, []);
+
+  const dismissToast = useCallback((id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  /**
+   * File sync callbacks (C1 fix)
+   */
+  const handleFileModified = useCallback((path: string, newContent: string) => {
+    setOpenFiles((prev) =>
+      prev.map((file) =>
+        file.path === path
+          ? {
+              ...file,
+              content: newContent,
+              originalContent: newContent,
+              isDirty: false,
+            }
+          : file
+      )
+    );
+  }, []);
+
+  const handleFileDeleted = useCallback((path: string) => {
+    setOpenFiles((prev) =>
+      prev.map((file) =>
+        file.path === path
+          ? {
+              ...file,
+              isDeleted: true,
+            }
+          : file
+      )
+    );
+  }, []);
+
+  const handleConflictDetected = useCallback((detectedConflict: FileConflict) => {
+    setConflict(detectedConflict);
+  }, []);
+
+  /**
+   * Initialize file sync manager (C1 fix)
+   */
+  const { handleFileSystemEvent } = useFileSyncManager({
+    onFileModified: handleFileModified,
+    onFileDeleted: handleFileDeleted,
+    onConflictDetected: handleConflictDetected,
+    readFileContent: async (path: string) => {
+      const result = await readFile(path);
+      return result?.content || '';
+    },
+    showToast,
+  });
+
+  /**
+   * Subscribe to WebSocket file events (C1 fix)
+   */
+  useEffect(() => {
+    if (!onEvent) return;
+
+    const unsubscribe = onEvent((event) => {
+      // Only handle file events
+      if (
+        event.type === 'file:modified' ||
+        event.type === 'file:deleted' ||
+        event.type === 'file:created'
+      ) {
+        handleFileSystemEvent(event, openFiles);
+      }
+    });
+
+    return unsubscribe;
+  }, [onEvent, handleFileSystemEvent, openFiles]);
+
+  /**
+   * Conflict resolution handlers (C1 fix)
+   */
+  const handleConflictResolve = useCallback(
+    (resolution: 'keep-mine' | 'take-theirs') => {
+      if (!conflict) return;
+
+      if (resolution === 'take-theirs') {
+        // Discard user changes, use external version
+        handleFileModified(conflict.filePath, conflict.externalVersion);
+        showToast(`File "${conflict.filePath}" updated with external version`, 'success');
+      } else {
+        // Keep user changes, mark as dirty
+        setOpenFiles((prev) =>
+          prev.map((file) =>
+            file.path === conflict.filePath
+              ? {
+                  ...file,
+                  content: conflict.userVersion,
+                  isDirty: true,
+                }
+              : file
+          )
+        );
+        showToast(`Kept your changes to "${conflict.filePath}"`, 'info');
+      }
+
+      setConflict(null);
+    },
+    [conflict, handleFileModified, showToast]
+  );
+
+  const handleShowDiff = useCallback(() => {
+    if (!conflict) return;
+
+    // For now, just show an alert with line counts
+    // In a full implementation, this would open a diff viewer
+    const userLines = conflict.userVersion.split('\n').length;
+    const externalLines = conflict.externalVersion.split('\n').length;
+
+    alert(
+      `Diff View (simplified):\n\n` +
+        `Your version: ${userLines} lines\n` +
+        `External version: ${externalLines} lines\n\n` +
+        `Full diff viewer coming soon...`
+    );
+  }, [conflict]);
+
+  const handleConflictCancel = useCallback(() => {
+    setConflict(null);
+  }, []);
 
   /**
    * Open a file in the editor
@@ -304,6 +445,21 @@ export function CodeEditor({ sessionId, initialFiles = [], fileToOpen, onFileOpe
           </div>
         </>
       )}
+
+      {/* Conflict resolution dialog (C1 fix) */}
+      {conflict && (
+        <ConflictDialog
+          filePath={conflict.filePath}
+          userVersion={conflict.userVersion}
+          externalVersion={conflict.externalVersion}
+          onResolve={handleConflictResolve}
+          onShowDiff={handleShowDiff}
+          onCancel={handleConflictCancel}
+        />
+      )}
+
+      {/* Toast notifications (C2 fix) */}
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </aside>
   );
 }

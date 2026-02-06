@@ -19,7 +19,9 @@ Ensure RESTful API follows consistent patterns, error handling, naming conventio
 | 7 | API Versioning Strategy | Clear versioning approach documented (URL prefix, header, or body). Version bumping policy defined. Backwards compatibility considered. | **HIGH** |
 | 8 | Content-Type Headers | Requests/responses correctly set `Content-Type: application/json`. Negotiation handled for multiple formats if supported. No mismatched headers. | **HIGH** |
 | 9 | Status Code Consistency | 200/201 for success, 204 for no-content, 400 for bad request, 401 for auth failure, 403 for forbidden, 404 for not-found, 500 for server error. | **HIGH** |
-| 10 | API Documentation | Endpoints documented (JSDoc, OpenAPI, or inline comments). Error cases documented. Request/response examples provided. | **MEDIUM** |
+| 10 | Express Error Middleware Order | Error-handling middleware registered last in Express middleware chain, uses 4-param signature (err, req, res, next). Error handler catches all errors from routes and other middleware. | **HIGH** |
+| 11 | pnpm Workspace Patterns | Cross-package imports use workspace protocol (workspace:*), no hardcoded versions for internal packages. Build order respected: shared → backend → app. | **HIGH** |
+| 12 | API Documentation | Endpoints documented (JSDoc, OpenAPI, or inline comments). Error cases documented. Request/response examples provided. | **MEDIUM** |
 
 ---
 

@@ -265,9 +265,9 @@ export interface FileCreatedEvent extends BaseEvent {
 
   // Automatic fields
   path: string;
+  sessionId: SessionId; // REQUIRED - file watching is always in context of a session
 
   // Parsed fields (nullable)
-  sessionId?: SessionId;
   stepNumber?: StepNumber | null;
   content?: string | null;
   size?: number | null;
@@ -283,9 +283,9 @@ export interface FileModifiedEvent extends BaseEvent {
 
   // Automatic fields
   path: string;
+  sessionId: SessionId; // REQUIRED - file watching is always in context of a session
 
   // Parsed fields (nullable)
-  sessionId?: SessionId;
   stepNumber?: StepNumber | null;
   changeType?: 'content' | 'metadata' | 'both' | null;
   changes?: Record<string, unknown> | null;
@@ -302,9 +302,9 @@ export interface FileDeletedEvent extends BaseEvent {
 
   // Automatic fields
   path: string;
+  sessionId: SessionId; // REQUIRED - file watching is always in context of a session
 
   // Parsed fields (nullable)
-  sessionId?: SessionId;
   stepNumber?: StepNumber | null;
   reason?: string | null;
 

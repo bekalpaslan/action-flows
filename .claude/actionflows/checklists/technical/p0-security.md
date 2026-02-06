@@ -20,6 +20,8 @@ Validate critical security controls for the ActionFlows Dashboard. These items p
 | 8 | Sensitive Data Exposure | No credentials/tokens logged in info/debug logs. Passwords not included in error responses. Sensitive fields excluded from API responses. Session IDs not exposed in URLs. | **CRITICAL** |
 | 9 | Electron Security | `nodeIntegration` disabled. `contextIsolation` enabled. Preload scripts use secure APIs only. No `require()` of arbitrary modules in renderer. | **CRITICAL** |
 | 10 | Command Injection Prevention | Step parameters not passed directly to shell/exec commands. User-supplied data validated as safe values or escaped. Shell metacharacters not interpreted. | **CRITICAL** |
+| 11 | Electron Preload Security | Preload scripts use contextBridge.exposeInMainWorld, no direct Node.js API exposure to renderer. Preload scripts validated against injection attacks. | **CRITICAL** |
+| 12 | WebSocket Message Validation | All incoming WebSocket messages validated against expected schema before processing. Invalid messages rejected with error. No malformed data reaches business logic. | **CRITICAL** |
 
 ---
 

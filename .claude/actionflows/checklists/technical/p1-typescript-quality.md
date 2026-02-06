@@ -18,8 +18,9 @@ Enforce strict TypeScript practices across the codebase. Validates use of brande
 | 6 | Shared Types Imported | Types re-used from `@afw/shared/src/index.ts` (e.g., `SessionId`, `ChainId`, `Step`, `Command`). No duplicate type definitions in packages. | **HIGH** |
 | 7 | Public API Return Types Explicit | All exported functions/methods have explicit return type declarations. Type inference not relied on for public APIs. Arrow functions with explicit return type. | **HIGH** |
 | 8 | Generic Constraints Applied | Generics use `extends` constraints where applicable (e.g., `<T extends Record<string, unknown>>`). Prevents misuse. Type parameters meaningfully constrained. | **HIGH** |
-| 9 | No Unused Variables | Unused imports, variables, parameters removed. Underscore prefix for intentionally unused parameters (`_unused`). | **MEDIUM** |
-| 10 | Type Inference Leverage | Where safe, type inference allows cleaner code (e.g., function call return types). No redundancy without value. Balance readability with strictness. | **MEDIUM** |
+| 9 | Branded ID Constructor Safety | Branded ID types (SessionId, ChainId, StepId, UserId) use factory functions that validate input, not raw type assertions. Branded types prevent accidental ID mixing. | **HIGH** |
+| 10 | No Unused Variables | Unused imports, variables, parameters removed. Underscore prefix for intentionally unused parameters (`_unused`). | **MEDIUM** |
+| 11 | Type Inference Leverage | Where safe, type inference allows cleaner code (e.g., function call return types). No redundancy without value. Balance readability with strictness. | **MEDIUM** |
 
 ---
 
