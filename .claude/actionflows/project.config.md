@@ -1,0 +1,118 @@
+# ActionFlows Dashboard — Project Configuration
+
+> Single source of truth for project-specific values. Orchestrator reads this at session start.
+
+---
+
+## Project
+
+- **Name:** ActionFlows Dashboard
+- **Description:** Real-time monitoring and control dashboard for AI agent orchestration flows
+- **Repository:** ActionFlows Dashboard monorepo (pnpm workspaces)
+
+---
+
+## Notification
+
+- **Platform:** Not configured
+- **Channel:** N/A
+- **Channel ID:** N/A
+- **MCP Tool:** N/A
+
+---
+
+## Tech Stack
+
+### Backend
+- **Framework:** Express 4.18 + TypeScript
+- **WebSocket:** ws 8.14.2
+- **Storage:** MemoryStorage (dev) / Redis 5.3 (prod)
+- **Package:** packages/backend/
+- **Entry:** packages/backend/src/index.ts
+
+### Frontend
+- **Framework:** React 18.2 + TypeScript + Vite 5
+- **Desktop:** Electron 28
+- **Visualization:** ReactFlow 11.10
+- **Package:** packages/app/
+- **Entry:** packages/app/src/main.tsx
+
+### Shared
+- **Types:** Branded strings, discriminated unions, ES modules
+- **Package:** packages/shared/
+- **Entry:** packages/shared/src/index.ts
+
+### MCP Server
+- **Protocol:** Model Context Protocol 1.0
+- **Package:** packages/mcp-server/
+- **Entry:** packages/mcp-server/src/index.ts
+
+### Hooks
+- **Purpose:** Claude Code hook scripts
+- **Package:** packages/hooks/
+
+---
+
+## Architecture
+
+### Paths
+- **Backend routes:** packages/backend/src/routes/
+- **Backend storage:** packages/backend/src/storage/
+- **Backend WebSocket:** packages/backend/src/ws/
+- **Frontend components:** packages/app/src/components/
+- **Frontend hooks:** packages/app/src/hooks/
+- **Frontend contexts:** packages/app/src/contexts/
+- **Shared types:** packages/shared/src/
+- **Tests:** packages/backend/src/__tests__/
+- **E2E specs:** test/e2e/
+
+### Ports
+- **Backend:** 3001 (configurable via PORT env var)
+- **Vite dev:** 5173
+- **Electron:** Desktop app (no port)
+
+---
+
+## Domain Concepts
+
+- **Session:** A user's orchestration session (branded SessionId)
+- **Chain:** A sequence of steps within a session (branded ChainId)
+- **Step:** An individual action within a chain (branded StepId)
+- **User:** The human operating the session (branded UserId)
+- **Command:** Control instruction (pause, resume, cancel, retry, skip)
+- **Event:** State change broadcast via WebSocket
+
+---
+
+## Development Commands
+
+```bash
+pnpm install              # Install all dependencies
+pnpm build                # Build all packages
+pnpm dev                  # Run all dev servers
+pnpm dev:backend          # Backend only (port 3001)
+pnpm dev:app              # Frontend only (port 5173)
+pnpm type-check           # TypeScript check across all packages
+pnpm lint                 # Run linter
+pnpm test                 # Run tests (Vitest)
+pnpm test:e2e             # Run E2E tests
+```
+
+### Package-specific
+```bash
+pnpm -F @afw/backend dev          # Backend dev server
+pnpm -F @afw/backend test         # Backend tests
+pnpm -F @afw/backend type-check   # Backend type check
+pnpm -F @afw/app dev              # Frontend dev server
+pnpm -F @afw/app type-check       # Frontend type check
+```
+
+---
+
+## Git Conventions
+
+- **Commit style:** Conventional commits (feat:, fix:, refactor:, docs:, test:, chore:)
+- **Co-author:** Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+- **Current branch:** master
+- **Main branch:** main (PR target)
+- **Working directory:** D:/ActionFlowsDashboard

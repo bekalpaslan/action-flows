@@ -223,19 +223,142 @@ router.post('/:id/input', async (req, res) => {
 });
 
 /**
+ * POST /api/sessions/:id/awaiting
+ * Mark session as awaiting input (called by Stop hook)
+ */
+router.post('/:id/awaiting', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { promptType, promptText, quickResponses } = req.body;
+
+    const session = await Promise.resolve(storage.getSession(id as SessionId));
+
+    if (!session) {
+      return res.status(404).json({
+        error: 'Session not found',
+        sessionId: id,
+      });
+    }
+
+    // Update session conversation state
+    session.conversationState = 'awaiting_input';
+    session.lastPrompt = {
+      text: promptText || 'Awaiting input...',
+      type: promptType || 'text',
+      quickResponses,
+      timestamp: brandedTypes.currentTimestamp(),
+    };
+
+    await Promise.resolve(storage.setSession(session));
+
+    console.log(`[API] Session ${id} marked as awaiting input`);
+
+    // TODO: Broadcast awaiting_input event via WebSocket
+
+    res.json({
+      status: 'awaiting',
+      sessionId: id,
+      conversationState: session.conversationState,
+    });
+  } catch (error) {
+    console.error('[API] Error marking session as awaiting:', error);
+    res.status(500).json({
+      error: 'Failed to mark session as awaiting',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
  * GET /api/sessions/:id/input
  * Get pending input for a session (hook polling endpoint)
+ * Supports long-polling with timeout parameter
  */
 router.get('/:id/input', async (req, res) => {
   try {
     const { id } = req.params;
-    const inputs = await Promise.resolve(storage.getInput(id as SessionId));
+    const timeout = parseInt(req.query.timeout as string) || 0;
 
-    res.json({
-      sessionId: id,
-      count: inputs.length,
-      inputs,
-    });
+    const session = await Promise.resolve(storage.getSession(id as SessionId));
+
+    if (!session) {
+      return res.status(404).json({
+        error: 'Session not found',
+        sessionId: id,
+      });
+    }
+
+    // Function to check for input
+    const checkInput = async (): Promise<any[] | null> => {
+      const inputs = await Promise.resolve(storage.getInput(id as SessionId));
+      return inputs.length > 0 ? inputs : null;
+    };
+
+    // If no timeout, return immediately
+    if (timeout === 0) {
+      const inputs = await checkInput();
+      if (inputs) {
+        // Clear the input from queue after retrieval
+        await Promise.resolve(storage.clearInput(id as SessionId));
+
+        // Update session state
+        session.conversationState = 'idle';
+        delete session.lastPrompt;
+        await Promise.resolve(storage.setSession(session));
+
+        return res.json({
+          available: true,
+          input: inputs[0],
+          sessionId: id,
+        });
+      }
+
+      return res.json({
+        available: false,
+        sessionId: id,
+      });
+    }
+
+    // Long-polling with timeout
+    const startTime = Date.now();
+    const pollInterval = 500; // Poll every 500ms
+
+    const poll = async (): Promise<void> => {
+      const elapsed = Date.now() - startTime;
+
+      if (elapsed >= timeout) {
+        return res.json({
+          available: false,
+          sessionId: id,
+          timedOut: true,
+        });
+      }
+
+      const inputs = await checkInput();
+
+      if (inputs) {
+        // Clear the input from queue after retrieval
+        await Promise.resolve(storage.clearInput(id as SessionId));
+
+        // Update session state
+        session.conversationState = 'idle';
+        delete session.lastPrompt;
+        await Promise.resolve(storage.setSession(session));
+
+        // TODO: Broadcast input_received event via WebSocket
+
+        return res.json({
+          available: true,
+          input: inputs[0],
+          sessionId: id,
+        });
+      }
+
+      // Continue polling
+      setTimeout(() => poll(), pollInterval);
+    };
+
+    await poll();
   } catch (error) {
     console.error('[API] Error fetching input:', error);
     res.status(500).json({

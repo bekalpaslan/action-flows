@@ -172,6 +172,22 @@
   overflow: hidden;
   position: relative;
   background: var(--pane-background, #1a1a1a);
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+  gap: 0;
+}
+
+.visualization-section {
+  grid-row: 1;
+  overflow: hidden;
+  position: relative;
+  border-bottom: 1px solid var(--border-color, #333);
+}
+
+.conversation-section {
+  grid-row: 2;
+  overflow: hidden;
+  display: flex;
 }
 
 .visualization-wrapper {

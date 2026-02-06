@@ -2,6 +2,10 @@ import { useState } from 'react';
 import type { Session } from '@afw/shared';
 import { ChainDAG } from '../ChainDAG';
 import { TimelineView } from '../TimelineView';
+import { ControlButtons } from '../ControlButtons/ControlButtons';
+import { StepInspector } from '../StepInspector/StepInspector';
+import { ConversationPanel } from '../ConversationPanel';
+import { useSessionInput } from '../../hooks/useSessionInput';
 import './SessionPane.css';
 
 export interface SessionPaneProps {
@@ -23,6 +27,7 @@ export interface SessionPaneProps {
 export function SessionPane({ session, onDetach, position }: SessionPaneProps) {
   const [selectedStep, setSelectedStep] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'dag' | 'timeline'>('dag');
+  const { submitInput } = useSessionInput();
 
   const handleDetach = () => {
     if (!session.id) {
@@ -93,6 +98,7 @@ export function SessionPane({ session, onDetach, position }: SessionPaneProps) {
           </div>
         </div>
         <div className="session-pane-controls">
+          <ControlButtons session={session} />
           {session.currentChain && (
             <div className="view-toggle">
               <button
@@ -123,27 +129,46 @@ export function SessionPane({ session, onDetach, position }: SessionPaneProps) {
       </div>
 
       <div className="session-pane-content">
-        {session.currentChain ? (
-          <div className="visualization-wrapper">
-            {viewMode === 'dag' ? (
-              <ChainDAG
-                chain={session.currentChain}
-                onStepSelected={setSelectedStep}
-              />
-            ) : (
-              <TimelineView
-                chain={session.currentChain}
-                onStepSelected={setSelectedStep}
-              />
-            )}
-          </div>
-        ) : (
-          <div className="session-pane-empty">
-            <p>No active chain</p>
-            <p className="empty-hint">
-              Waiting for orchestrator to compile a chain...
-            </p>
-          </div>
+        <div className="visualization-section">
+          {session.currentChain ? (
+            <div className="visualization-wrapper">
+              {viewMode === 'dag' ? (
+                <ChainDAG
+                  chain={session.currentChain}
+                  onStepSelected={setSelectedStep}
+                />
+              ) : (
+                <TimelineView
+                  chain={session.currentChain}
+                  onStepSelected={setSelectedStep}
+                />
+              )}
+            </div>
+          ) : (
+            <div className="session-pane-empty">
+              <p>No active chain</p>
+              <p className="empty-hint">
+                Waiting for orchestrator to compile a chain...
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="conversation-section">
+          <ConversationPanel
+            session={session}
+            onSubmitInput={async (input) => {
+              await submitInput(session.id, input, session.lastPrompt?.text);
+            }}
+          />
+        </div>
+
+        {selectedStep !== null && session.currentChain && (
+          <StepInspector
+            step={session.currentChain.steps.find(s => s.stepNumber === selectedStep) || null}
+            sessionId={session.id}
+            onClose={() => setSelectedStep(null)}
+          />
         )}
       </div>
 

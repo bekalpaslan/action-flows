@@ -148,6 +148,17 @@ export interface Session {
   /** Overall status of the session */
   status: StatusString;
 
+  /** Conversation state for input handling */
+  conversationState?: 'idle' | 'awaiting_input' | 'receiving_input' | 'active';
+
+  /** Last prompt shown to user (if awaiting input) */
+  lastPrompt?: {
+    text: string;
+    type: 'binary' | 'text' | 'chain_approval';
+    quickResponses?: string[];
+    timestamp: Timestamp;
+  };
+
   /** When the session started */
   startedAt: Timestamp;
 

@@ -81,3 +81,26 @@ export const duration = {
   fromSeconds: (seconds: number): DurationMs => (seconds * 1000) as DurationMs,
   fromMinutes: (minutes: number): DurationMs => (minutes * 60 * 1000) as DurationMs,
 };
+
+/**
+ * Session interaction state for conversation interface
+ */
+export enum SessionState {
+  IDLE = 'idle',
+  AWAITING_INPUT = 'awaiting_input',
+  RECEIVING_INPUT = 'receiving_input',
+  ACTIVE = 'active',
+}
+
+export type SessionStateString = keyof typeof SessionState | 'idle' | 'awaiting_input' | 'receiving_input' | 'active';
+
+/**
+ * Input prompt types
+ */
+export enum PromptType {
+  BINARY = 'binary',
+  TEXT = 'text',
+  CHAIN_APPROVAL = 'chain_approval',
+}
+
+export type PromptTypeString = keyof typeof PromptType | 'binary' | 'text' | 'chain_approval';

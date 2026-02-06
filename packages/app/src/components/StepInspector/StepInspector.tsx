@@ -3,12 +3,14 @@
  * Shows step details, inputs, outputs, and learning information
  */
 
-import { useEffect } from 'react';
-import type { ChainStep } from '@afw/shared';
+import { useEffect, useState } from 'react';
+import type { ChainStep, SessionId } from '@afw/shared';
+import { useSessionControls } from '../../hooks/useSessionControls';
 import './StepInspector.css';
 
 interface StepInspectorProps {
   step: ChainStep | null;
+  sessionId?: SessionId;
   onClose?: () => void;
 }
 
@@ -79,7 +81,46 @@ function getStatusColor(status: string): string {
   }
 }
 
-export const StepInspector: React.FC<StepInspectorProps> = ({ step, onClose }) => {
+export const StepInspector: React.FC<StepInspectorProps> = ({ step, sessionId, onClose }) => {
+  const controls = useSessionControls();
+  const [isRetrying, setIsRetrying] = useState(false);
+  const [isSkipping, setIsSkipping] = useState(false);
+
+  const handleRetry = async () => {
+    if (!step || !sessionId || isRetrying) return;
+
+    setIsRetrying(true);
+    try {
+      await controls.retry(sessionId, step.stepNumber);
+      console.log(`[StepInspector] Retry command sent for step ${step.stepNumber}`);
+    } catch (error) {
+      console.error('[StepInspector] Failed to retry step:', error);
+      alert('Failed to retry step. See console for details.');
+    } finally {
+      setIsRetrying(false);
+    }
+  };
+
+  const handleSkip = async () => {
+    if (!step || !sessionId || isSkipping) return;
+
+    const confirmed = window.confirm(
+      `Skip step ${step.stepNumber}? This will mark the step as skipped and continue execution.`
+    );
+    if (!confirmed) return;
+
+    setIsSkipping(true);
+    try {
+      await controls.skip(sessionId, step.stepNumber);
+      console.log(`[StepInspector] Skip command sent for step ${step.stepNumber}`);
+    } catch (error) {
+      console.error('[StepInspector] Failed to skip step:', error);
+      alert('Failed to skip step. See console for details.');
+    } finally {
+      setIsSkipping(false);
+    }
+  };
+
   // Handle keyboard shortcuts
   useEffect(() => {
     if (!step) return;
@@ -141,6 +182,32 @@ export const StepInspector: React.FC<StepInspectorProps> = ({ step, onClose }) =
             </span>
           )}
         </div>
+
+        {/* Step Control Buttons */}
+        {sessionId && (
+          <div className="inspector-step-controls">
+            {step.status === 'failed' && (
+              <button
+                className="inspector-control-btn retry-btn"
+                onClick={handleRetry}
+                disabled={isRetrying}
+                title="Retry this step with same inputs"
+              >
+                {isRetrying ? 'Retrying...' : '🔄 Retry'}
+              </button>
+            )}
+            {(step.status === 'failed' || step.status === 'pending') && (
+              <button
+                className="inspector-control-btn skip-btn"
+                onClick={handleSkip}
+                disabled={isSkipping}
+                title="Skip this step and continue"
+              >
+                {isSkipping ? 'Skipping...' : '⏭ Skip'}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Scrollable content */}
