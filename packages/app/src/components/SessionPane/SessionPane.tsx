@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Session } from '@afw/shared';
 import { ChainDAG } from '../ChainDAG';
+import { TimelineView } from '../TimelineView';
 import './SessionPane.css';
 
 export interface SessionPaneProps {
@@ -15,12 +16,13 @@ export interface SessionPaneProps {
  *
  * Features:
  * - Session header with user, session ID, and detach button
- * - DAG visualization of current chain
+ * - DAG/Timeline visualization toggle
  * - Status indicator
  * - Adaptive sizing based on grid position
  */
 export function SessionPane({ session, onDetach, position }: SessionPaneProps) {
   const [selectedStep, setSelectedStep] = useState<number | null>(null);
+  const [viewMode, setViewMode] = useState<'dag' | 'timeline'>('dag');
 
   const handleDetach = () => {
     if (!session.id) {
@@ -90,23 +92,50 @@ export function SessionPane({ session, onDetach, position }: SessionPaneProps) {
             <span className="status-text">{statusLabel}</span>
           </div>
         </div>
-        <button
-          className="session-detach-btn"
-          onClick={handleDetach}
-          title="Detach session"
-          aria-label="Detach this session from view"
-        >
-          ×
-        </button>
+        <div className="session-pane-controls">
+          {session.currentChain && (
+            <div className="view-toggle">
+              <button
+                className={`view-toggle-btn ${viewMode === 'dag' ? 'active' : ''}`}
+                onClick={() => setViewMode('dag')}
+                title="DAG View"
+              >
+                DAG
+              </button>
+              <button
+                className={`view-toggle-btn ${viewMode === 'timeline' ? 'active' : ''}`}
+                onClick={() => setViewMode('timeline')}
+                title="Timeline View"
+              >
+                Timeline
+              </button>
+            </div>
+          )}
+          <button
+            className="session-detach-btn"
+            onClick={handleDetach}
+            title="Detach session"
+            aria-label="Detach this session from view"
+          >
+            ×
+          </button>
+        </div>
       </div>
 
       <div className="session-pane-content">
         {session.currentChain ? (
-          <div className="dag-wrapper">
-            <ChainDAG
-              chain={session.currentChain}
-              onStepSelected={setSelectedStep}
-            />
+          <div className="visualization-wrapper">
+            {viewMode === 'dag' ? (
+              <ChainDAG
+                chain={session.currentChain}
+                onStepSelected={setSelectedStep}
+              />
+            ) : (
+              <TimelineView
+                chain={session.currentChain}
+                onStepSelected={setSelectedStep}
+              />
+            )}
           </div>
         ) : (
           <div className="session-pane-empty">
