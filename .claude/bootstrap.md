@@ -448,7 +448,7 @@ The framework has two layers: **universal infrastructure** (same for every proje
 | Registry structure | ACTIONS.md, FLOWS.md, ORGANIZATION.md | Orchestrator needs these to route work |
 | Log structure | INDEX.md, LEARNINGS.md | Continuous improvement requires execution history |
 | Framework flows | flow-creation, action-creation, action-deletion, framework-health | Framework must be able to maintain itself |
-| Orchestration guide | `.claude/CLAUDE.md` with Rules 1-11 | Orchestrator behavior is project-independent |
+| Orchestration guide | `.claude/actionflows/ORCHESTRATOR.md` with Rules 1-11 | Orchestrator behavior is project-independent |
 
 ### Discovered (Decide Per-Project)
 
@@ -2187,7 +2187,7 @@ CLAUDE.md should reference this config file for detailed values (not embed them 
 
 **IMPORTANT:** This file is read ONLY by the orchestrator at session start. Spawned subagents never read this file.
 
-Create this file with ALL orchestrator content from Part 8:
+Create this file with ALL orchestrator content from Part 8.2:
 - **Session-Start Protocol** — What to read first (project.config.md, ORGANIZATION.md, FLOWS.md, INDEX.md)
 - **Core Philosophy** — The 11 rules (Delegate Everything, Stay Lightweight, etc.)
 - **Pre-Action Gate** — The 3-gate checklist before any tool call

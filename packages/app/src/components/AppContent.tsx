@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useWebSocketContext } from '../contexts/WebSocketContext';
 import type { ConnectionStatus } from '../hooks/useWebSocket';
 import { useUsers } from '../hooks/useUsers';
@@ -8,6 +8,7 @@ import { UserSidebar } from './UserSidebar';
 import { FileExplorer } from './FileExplorer';
 import { SplitPaneLayout } from './SplitPaneLayout';
 import { NotificationManager } from './NotificationManager';
+import { CodeEditor } from './CodeEditor';
 
 /**
  * Main app content component that displays real-time WebSocket connection status
@@ -18,6 +19,7 @@ export default function AppContent() {
   const { sessions: allSessions } = useAllSessions();
   const [statusDisplay, setStatusDisplay] = useState<string>('Connecting...');
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>();
+  const [fileToOpen, setFileToOpen] = useState<string | null>(null);
 
   // Manage attached sessions
   const {
@@ -29,6 +31,11 @@ export default function AppContent() {
     maxAttached: 6,
     persistToStorage: true,
   });
+
+  // Handle file opening from explorer
+  const handleFileOpen = useCallback((path: string) => {
+    setFileToOpen(path);
+  }, []);
 
   // Map WebSocket status to display text
   useEffect(() => {
@@ -92,7 +99,7 @@ export default function AppContent() {
             <FileExplorer
               sessionId={attachedSessionIds[0]}
               onFileSelect={(path) => console.log('File selected:', path)}
-              onFileOpen={(path) => console.log('File opened:', path)}
+              onFileOpen={handleFileOpen}
             />
           )}
         </div>
@@ -115,6 +122,14 @@ export default function AppContent() {
             onSessionDetach={detachSession}
           />
         </main>
+
+        {attachedSessionIds.length > 0 && (
+          <CodeEditor
+            sessionId={attachedSessionIds[0]}
+            fileToOpen={fileToOpen}
+            onFileOpened={() => setFileToOpen(null)}
+          />
+        )}
       </div>
     </div>
   );

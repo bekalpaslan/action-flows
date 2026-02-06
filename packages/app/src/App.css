@@ -200,6 +200,7 @@
   padding: 2rem;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .dag-container {

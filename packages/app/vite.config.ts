@@ -32,10 +32,25 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Bundle Monaco Editor and workers separately
+          'monaco-editor': ['monaco-editor'],
+        },
+      },
+    },
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+  },
+  optimizeDeps: {
+    include: ['monaco-editor'],
+  },
+  // Ensure Monaco Editor workers are correctly loaded
+  worker: {
+    format: 'es',
   },
 })

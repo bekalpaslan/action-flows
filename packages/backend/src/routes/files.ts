@@ -246,4 +246,117 @@ router.get('/:sessionId/read', validatePath, async (req, res) => {
   }
 });
 
+/**
+ * POST /api/files/:sessionId/write
+ * Write file contents
+ */
+router.post('/:sessionId/write', validatePath, async (req, res) => {
+  try {
+    const absolutePath = (req as any).validatedPath;
+    const { content } = req.body;
+
+    if (content === undefined) {
+      return res.status(400).json({
+        error: 'Missing content in request body',
+      });
+    }
+
+    if (typeof content !== 'string') {
+      return res.status(400).json({
+        error: 'Content must be a string',
+      });
+    }
+
+    // Check content size limit (10MB to match read endpoint)
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    const contentSize = Buffer.byteLength(content, 'utf-8');
+
+    if (contentSize > maxSize) {
+      return res.status(413).json({
+        error: 'Content too large',
+        path: req.query.path,
+        size: contentSize,
+        maxSize,
+        message: `Content size (${(contentSize / 1024 / 1024).toFixed(2)}MB) exceeds maximum allowed size (${maxSize / 1024 / 1024}MB)`,
+      });
+    }
+
+    // Write file content
+    await fs.writeFile(absolutePath, content, 'utf-8');
+
+    // Get updated file stats
+    const stats = await fs.stat(absolutePath);
+
+    res.json({
+      sessionId: req.params.sessionId,
+      path: req.query.path,
+      size: stats.size,
+      modified: stats.mtime.toISOString(),
+      success: true,
+    });
+  } catch (error) {
+    console.error('[Files] Error writing file:', error);
+    res.status(500).json({
+      error: 'Failed to write file',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
+/**
+ * GET /api/files/:sessionId/diff
+ * Get diff between current and previous version of a file
+ *
+ * Note: This is a placeholder implementation. Full diff tracking requires
+ * file snapshots (to be implemented in Phase 10 with file watching).
+ * For now, we return the current content as "after" and empty string as "before".
+ */
+router.get('/:sessionId/diff', validatePath, async (req, res) => {
+  try {
+    const absolutePath = (req as any).validatedPath;
+
+    // Check if file exists
+    try {
+      const stats = await fs.stat(absolutePath);
+
+      if (!stats.isFile()) {
+        return res.status(400).json({
+          error: 'Path is not a file',
+          path: req.query.path,
+        });
+      }
+
+      // Read current file content
+      const currentContent = await fs.readFile(absolutePath, 'utf-8');
+
+      // TODO: In Phase 10, retrieve previous snapshot from file watcher
+      // For now, we return empty string as "before" (no snapshot available)
+      const previousContent = '';
+
+      res.json({
+        sessionId: req.params.sessionId,
+        path: req.query.path,
+        before: previousContent,
+        after: currentContent,
+        hasPreviousVersion: false,
+        message: 'Snapshot tracking not yet implemented. Showing current content only.',
+      });
+    } catch (error: any) {
+      if (error.code === 'ENOENT') {
+        return res.status(404).json({
+          error: 'File not found',
+          path: req.query.path,
+        });
+      }
+      throw error;
+    }
+  } catch (error) {
+    console.error('[Files] Error getting diff:', error);
+    res.status(500).json({
+      error: 'Failed to get file diff',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+});
+
 export default router;

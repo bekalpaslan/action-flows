@@ -20,7 +20,9 @@
     "react-dom": "^18.2.0",
     "@afw/shared": "workspace:*",
     "reactflow": "^11.10.0",
-    "@reactflow/core": "^11.10.0"
+    "@reactflow/core": "^11.10.0",
+    "@monaco-editor/react": "^4.7.0",
+    "monaco-editor": "^0.45.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.0",
