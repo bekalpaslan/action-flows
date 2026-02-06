@@ -6,6 +6,7 @@ import { useAllSessions } from '../hooks/useAllSessions';
 import { useAttachedSessions } from '../hooks/useAttachedSessions';
 import { UserSidebar } from './UserSidebar';
 import { SplitPaneLayout } from './SplitPaneLayout';
+import { NotificationManager } from './NotificationManager';
 
 /**
  * Main app content component that displays real-time WebSocket connection status
@@ -57,6 +58,13 @@ export default function AppContent() {
 
   return (
     <div className="app">
+      {/* Background notification manager */}
+      <NotificationManager
+        sessionIds={attachedSessionIds}
+        enableStepFailures={true}
+        enableChainCompletions={true}
+      />
+
       <header className="app-header">
         <h1>ActionFlows Workspace</h1>
         <div className="status-indicator">

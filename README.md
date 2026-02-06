@@ -1,0 +1,307 @@
+# ActionFlows Workspace
+
+> An agentic IDE for real-time visualization, file editing, and control of ActionFlows orchestration chains
+
+## Overview
+
+ActionFlows Workspace is a self-hosted desktop application that provides complete visibility and control over ActionFlows execution chains. It serves as a collaborative workspace where teams can observe chains, edit files, view agent output, and control execution in real-time.
+
+### Key Features
+
+- **Real-time Chain Visualization** - DAG and Timeline views of execution chains
+- **Multi-Session Support** - Monitor multiple team members' sessions simultaneously
+- **Desktop Notifications** - Native notifications for critical events (step failures, completions)
+- **System Tray Integration** - Runs in background with quick access
+- **Session History** - 7-day retention of past executions
+- **Conversation Interface** - Respond to Claude prompts directly from the UI
+- **Control Interface** - Pause, cancel, and retry steps via MCP integration
+
+## Architecture
+
+```
+Dev Machines (Claude Code + Hooks)
+       | POST /events
+       v
++------------------------------+
+|   ActionFlows Workspace      |
+|        Backend               |
+|  - Express HTTP (events)     |
+|  - WebSocket (broadcast)     |
+|  - Redis (real-time state)   |
+|  - JSON files (7-day history)|
++------------------------------+
+       | WebSocket
+       v
+Electron Apps (team members)
+  - Chain visualization
+  - History browser
+  - Conversation interface
+```
+
+## Prerequisites
+
+- **Node.js** 18+ (LTS recommended)
+- **pnpm** 8+ (install via `npm install -g pnpm`)
+- **Redis** (optional, for multi-instance support)
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd ActionFlowsDashboard
+```
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+This installs all dependencies across the monorepo packages:
+- `@afw/shared` - Shared types and utilities
+- `@afw/hooks` - Claude Code hook scripts
+- `@afw/backend` - Express + WebSocket backend
+- `@afw/app` - Electron desktop application
+- `@afw/mcp-server` - MCP server for control interface
+
+### 3. Configure Environment
+
+The backend uses environment variables for configuration. Create a `.env` file in `packages/backend/`:
+
+```env
+# Backend Configuration
+PORT=3001
+NODE_ENV=development
+
+# Redis (optional - falls back to in-memory storage)
+REDIS_URL=redis://localhost:6379
+
+# Storage
+HISTORY_RETENTION_DAYS=7
+```
+
+## Running the Application
+
+### Development Mode
+
+Run both backend and frontend in development:
+
+```bash
+# Terminal 1: Start backend
+cd packages/backend
+pnpm run dev
+
+# Terminal 2: Start Electron app
+cd packages/app
+pnpm run dev
+```
+
+The backend starts on `http://localhost:3001` and the Electron app connects automatically.
+
+### Production Build
+
+Build distributable Electron apps for all platforms:
+
+```bash
+# Build all packages
+pnpm run build
+
+# Create Electron distributables
+cd packages/app
+pnpm run electron-build
+```
+
+Distributables are created in `packages/app/dist/`:
+- Windows: `.exe` installer
+- macOS: `.dmg` image
+- Linux: `.AppImage` package
+
+## Usage
+
+### Setting Up Hooks
+
+To integrate ActionFlows Workspace with your Claude Code sessions:
+
+1. **Copy hook scripts** from `packages/hooks/` to your project's `.claude/hooks/` directory
+
+2. **Enable hooks** in your Claude Code settings (`.claude/settings.json`):
+
+```json
+{
+  "hooks": {
+    "enabled": true,
+    "directory": ".claude/hooks"
+  }
+}
+```
+
+3. **Configure hooks** to point to your backend URL. Edit each hook script's `BACKEND_URL`:
+
+```typescript
+const BACKEND_URL = 'http://localhost:3001' // Change if backend is on different machine
+```
+
+### Running the Workspace
+
+1. **Start the backend** (if not already running):
+   ```bash
+   cd packages/backend
+   pnpm start
+   ```
+
+2. **Launch the Electron app**:
+   - Development: `pnpm run dev`
+   - Production: Open the installed application
+
+3. **Start a Claude Code session** in your project with hooks enabled
+
+4. **View the session** in the Workspace - it appears automatically under your username
+
+### Using the Interface
+
+#### Main Layout
+
+- **Left Sidebar**: Users and their sessions
+- **Center**: Chain visualization (DAG/Timeline toggle)
+- **Bottom**: Conversation panel for responding to Claude prompts
+- **Right**: Session inspector with step details
+
+#### Desktop Notifications
+
+Notifications appear for:
+- Step failures (critical urgency)
+- Chain completions (normal urgency)
+- Session ended (low urgency)
+
+Click a notification to bring the Workspace to focus.
+
+#### System Tray
+
+Minimize to system tray:
+- **Windows**: Right-click tray icon for menu
+- **macOS**: Click menu bar icon for menu
+- **Linux**: Right-click system tray icon
+
+Tray menu options:
+- Show App
+- Quit
+
+#### History Browser
+
+Access past sessions (up to 7 days):
+
+1. Click "History" in the sidebar (if implemented in UI)
+2. Select a date from the calendar
+3. Choose a session to view
+4. Inspect chains, events, and step details
+
+## Configuration
+
+### Backend Configuration
+
+Edit `packages/backend/src/index.ts` for advanced options:
+
+- **Port**: Change `PORT` environment variable (default: 3001)
+- **Storage**: Toggle between Redis and in-memory via `REDIS_URL` presence
+- **Retention**: Change `HISTORY_RETENTION_DAYS` (default: 7)
+- **WebSocket**: Configure in WebSocket handler
+
+### Electron App Configuration
+
+Edit `packages/app/electron/main.ts` for app behavior:
+
+- **Window size**: `width`, `height` in `createWindow()`
+- **Notifications**: Urgency levels in notification handler
+- **Tray**: Customize menu items in `createTray()`
+
+## API Reference
+
+See [API_REFERENCE.md](./API_REFERENCE.md) for complete REST API documentation.
+
+### Core Endpoints
+
+- `POST /api/events` - Submit execution events
+- `GET /api/sessions` - List active sessions
+- `GET /api/sessions/:id` - Get session details
+- `POST /api/sessions/:id/input` - Submit user input
+- `GET /api/history/dates` - List available history dates
+- `GET /api/history/sessions/:date` - List sessions for date
+
+## Development
+
+### Project Structure
+
+```
+ActionFlowsDashboard/
+├── packages/
+│   ├── shared/       # Shared TypeScript types
+│   ├── hooks/        # Claude Code hook scripts
+│   ├── backend/      # Express backend
+│   ├── app/          # Electron app
+│   └── mcp-server/   # MCP control interface
+├── docs/             # Additional documentation
+├── test/             # Integration tests
+└── pnpm-workspace.yaml
+```
+
+### Adding Features
+
+1. **Backend routes**: Add in `packages/backend/src/routes/`
+2. **React components**: Add in `packages/app/src/components/`
+3. **Shared types**: Add in `packages/shared/src/types.ts`
+4. **Hooks**: Add in `packages/hooks/`
+
+### Testing
+
+```bash
+# Run backend tests
+cd packages/backend
+pnpm test
+
+# Run integration tests
+cd test
+pnpm test
+```
+
+## Troubleshooting
+
+### Backend not starting
+
+- Check Redis is running: `redis-cli ping` should return `PONG`
+- Check port 3001 is available: `lsof -i :3001` (macOS/Linux) or `netstat -ano | findstr :3001` (Windows)
+- Check logs: `packages/backend/logs/`
+
+### Electron app not connecting
+
+- Verify backend is running: `curl http://localhost:3001/health`
+- Check WebSocket URL in app settings
+- Check firewall isn't blocking connections
+
+### Hooks not sending events
+
+- Verify hooks are in `.claude/hooks/` directory
+- Check hooks have execute permissions: `chmod +x .claude/hooks/*.ts`
+- Verify `BACKEND_URL` in hook scripts is correct
+- Test hook manually: `node .claude/hooks/afw-step-spawned.ts`
+
+### History not persisting
+
+- Check `data/history/` directory exists and is writable
+- Verify disk space available
+- Check backend logs for persistence errors
+
+## Contributing
+
+Contributions welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
+## License
+
+MIT License - see [LICENSE](./LICENSE) for details.
+
+## Support
+
+- **Issues**: GitHub Issues
+- **Discussions**: GitHub Discussions
+- **Email**: support@actionflows.dev

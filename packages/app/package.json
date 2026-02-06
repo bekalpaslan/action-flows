@@ -9,7 +9,11 @@
     "build": "vite build && electron-builder",
     "preview": "vite preview",
     "electron-dev": "vite && electron .",
-    "electron-build": "vite build && electron-builder --publish never"
+    "electron-build": "vite build && electron-builder --publish never",
+    "electron-build:win": "vite build && electron-builder --win --x64 --publish never",
+    "electron-build:mac": "vite build && electron-builder --mac --x64 --arm64 --publish never",
+    "electron-build:linux": "vite build && electron-builder --linux --x64 --publish never",
+    "electron-build:all": "vite build && electron-builder --win --mac --linux --publish never"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -29,14 +33,91 @@
     "vite-plugin-electron": "^0.28.0"
   },
   "build": {
-    "appId": "com.actionflows.app",
-    "productName": "ActionFlows",
+    "appId": "com.actionflows.workspace",
+    "productName": "ActionFlows Workspace",
+    "copyright": "Copyright © 2026 ActionFlows",
     "files": [
       "dist/**/*",
-      "dist-electron/**/*"
+      "dist-electron/**/*",
+      "!node_modules/**/*",
+      "!src/**/*"
     ],
     "directories": {
-      "buildResources": "public"
+      "buildResources": "public",
+      "output": "dist"
+    },
+    "compression": "maximum",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "public/icon.ico",
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ActionFlows Workspace"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "public/icon.icns",
+      "category": "public.app-category.developer-tools",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "title": "ActionFlows Workspace ${version}"
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        },
+        {
+          "target": "rpm",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "public/icon.png",
+      "category": "Development",
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
     }
   }
 }

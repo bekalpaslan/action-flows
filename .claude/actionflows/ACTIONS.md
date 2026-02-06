@@ -45,6 +45,10 @@ Task(
   prompt="""
 Read your definition in .claude/actionflows/actions/{action}/agent.md
 
+IMPORTANT: You are a spawned subagent executor.
+Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
+Do NOT delegate work or compile chains. Execute your agent.md directly.
+
 Project Context:
 - Name: ActionFlows Dashboard
 - Notification: Not configured

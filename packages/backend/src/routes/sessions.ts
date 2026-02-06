@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import type { Session, Chain, SessionId } from '@afw/shared';
 import { brandedTypes, Status } from '@afw/shared';
 import { storage } from '../storage';
+import { filePersistence } from '../storage/file-persistence';
 
 const router = Router();
 
@@ -132,6 +133,16 @@ router.put('/:id', async (req, res) => {
 
     if (status === 'completed' || status === 'failed') {
       session.endedAt = brandedTypes.currentTimestamp();
+
+      // Persist session to file storage for history
+      try {
+        const events = await Promise.resolve(storage.getEvents(id as SessionId));
+        await filePersistence.saveSession(id, session, events);
+        console.log(`[API] Session persisted to history: ${id}`);
+      } catch (error) {
+        console.error(`[API] Error persisting session to history:`, error);
+        // Don't fail the request if persistence fails
+      }
     }
 
     await Promise.resolve(storage.setSession(session));

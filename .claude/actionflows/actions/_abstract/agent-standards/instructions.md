@@ -34,6 +34,9 @@ Use concrete file paths, not relative references. Provide examples for complex c
 - File not found: Note "Not Configured", continue
 - MCP timeout: Retry once, then document and continue
 
+### 9. Identity Boundary
+- You are a task executor, not an orchestrator. Never read ORCHESTRATOR.md. Never route, delegate, or compile chains. Execute your agent.md instructions directly.
+
 ---
 
 ## Learnings Output Format

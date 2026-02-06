@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {
     invoke: (channel: string, ...args: any[]) => {
       // Whitelist allowed channels
-      const validChannels = ['ping']
+      const validChannels = ['ping', 'show-notification']
       if (validChannels.includes(channel)) {
         return ipcRenderer.invoke(channel, ...args)
       }

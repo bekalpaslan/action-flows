@@ -7,9 +7,11 @@ import type { Socket } from 'net';
 
 import { storage, isAsyncStorage } from './storage';
 import { handleWebSocket } from './ws/handler';
+import { cleanupService } from './services/cleanup';
 import eventsRouter from './routes/events';
 import sessionsRouter from './routes/sessions';
 import commandsRouter from './routes/commands';
+import historyRouter from './routes/history';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
@@ -36,6 +38,7 @@ app.get('/health', (req, res) => {
 app.use('/api/events', eventsRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/api/commands', commandsRouter);
+app.use('/api/history', historyRouter);
 
 // Create HTTP server
 const server = createServer(app);
@@ -119,12 +122,16 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     // Initialize Redis Pub/Sub after server starts
     await initializeRedisPubSub();
 
+    // Start cleanup service
+    cleanupService.start();
+
     console.log(`
 ╔════════════════════════════════════════════╗
 ║   ActionFlows Backend Server Running      ║
 ║   API: http://localhost:${PORT}             ║
 ║   WS:  ws://localhost:${PORT}/ws           ║
 ║   Storage: ${isAsyncStorage(storage) ? 'Redis' : 'Memory'}             ║
+║   Cleanup: Daily (7-day retention)        ║
 ╚════════════════════════════════════════════╝
     `);
   });
@@ -132,6 +139,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   // Graceful shutdown
   async function gracefulShutdown() {
     console.log('[Server] Shutting down gracefully...');
+
+    // Stop cleanup service
+    cleanupService.stop();
 
     // Close WebSocket connections
     wsConnectedClients.forEach((client) => {
