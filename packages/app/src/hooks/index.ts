@@ -25,3 +25,5 @@ export type { UseAttachedSessionsReturn } from './useAttachedSessions';
 
 export { useAllSessions } from './useAllSessions';
 export type { UseAllSessionsReturn } from './useAllSessions';
+
+export { useFileTree } from './useFileTree';

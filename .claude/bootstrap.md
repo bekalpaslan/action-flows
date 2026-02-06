@@ -15,11 +15,12 @@ During Steps 1-10, you will:
 - ✅ Write agent.md and instructions.md files with concrete content
 - ✅ Create directories, registries, checklists, and templates
 - ✅ Populate templates with actual project-specific values
-- ✅ Write CLAUDE.md with orchestration rules for the FUTURE orchestrator
+- ✅ Write CLAUDE.md with lean project context
+- ✅ Write ORCHESTRATOR.md with orchestration rules for the FUTURE orchestrator
 
 **You are a worker, not a coordinator.** Your job is to produce content and create files.
 
-**Important exemption:** The orchestrator rules you'll see below (Parts 2-8) are NOT for you to follow NOW — they are for you to UNDERSTAND and ENCODE into the CLAUDE.md file you create in Step 9.
+**Important exemption:** The orchestrator rules you'll see below (Parts 2-8) are NOT for you to follow NOW — they are for you to UNDERSTAND and ENCODE into the ORCHESTRATOR.md file you create in Step 9.
 
 During bootstrapping (Steps 1-10), you are exempt from orchestrator prohibitions. You will read project code, write framework files, and produce content freely. This is correct and expected.
 
@@ -29,7 +30,7 @@ During bootstrapping (Steps 1-10), you are exempt from orchestrator prohibitions
 
 **The section below applies to the orchestrator who USES the framework, not to you who are CREATING it.**
 
-You will copy these rules into CLAUDE.md in Step 9. During bootstrapping, you are exempt. Read the following sections to UNDERSTAND what rules to encode, not to FOLLOW them now.
+You will copy these rules into ORCHESTRATOR.md in Step 9. During bootstrapping, you are exempt. Read the following sections to UNDERSTAND what rules to encode, not to FOLLOW them now.
 
 ---
 
@@ -41,11 +42,11 @@ You will copy these rules into CLAUDE.md in Step 9. During bootstrapping, you ar
 2. **Identify** what actions, flows, and departments this project needs
 3. **Create** the framework structure (Steps 3-10)
 
-**The Session-Start Protocol below is NOT for you.** It's what you'll write into CLAUDE.md so that FUTURE orchestrators execute it. During bootstrapping, you're a builder — read project code freely, write files directly, create content.
+**The Session-Start Protocol below is NOT for you.** It's what you'll write into ORCHESTRATOR.md so that FUTURE orchestrators execute it. During bootstrapping, you're a builder — read project code freely, write files directly, create content.
 
 ---
 
-## Session-Start Protocol (For Orchestrator — Encode This Into CLAUDE.md)
+## Session-Start Protocol (For Orchestrator — Encode This Into ORCHESTRATOR.md)
 
 **For the FUTURE orchestrator:** The FIRST thing you do in every session, before responding to the human:
 
@@ -77,8 +78,9 @@ You are bootstrapping the **ActionFlows orchestration framework** into this proj
 
 After you finish, the project will have:
 1. A `.claude/actionflows/` directory with actions, flows, registries, and logs
-2. An updated `.claude/CLAUDE.md` with orchestration rules
-3. A working system where any future orchestrator agent can compile chains and spawn workers
+2. A lean `.claude/CLAUDE.md` with project context only
+3. A comprehensive `.claude/actionflows/ORCHESTRATOR.md` with orchestration rules
+4. A working system where any future orchestrator agent can compile chains and spawn workers
 
 ---
 
@@ -102,11 +104,11 @@ Three layers:
 ## Part 2: Philosophy (Orchestrator Enforcement Rules)
 
 **IMPORTANT FOR THE BUILDER:**
-The philosophy below defines how the FUTURE orchestrator behaves. You will encode these rules into the CLAUDE.md file you create in Step 9. But during bootstrapping, YOU are exempt — your job is to produce content, read code, and write files. You are the builder, not the orchestrator.
+The philosophy below defines how the FUTURE orchestrator behaves. You will encode these rules into the ORCHESTRATOR.md file you create in Step 9. But during bootstrapping, YOU are exempt — your job is to produce content, read code, and write files. You are the builder, not the orchestrator.
 
 **Read this section to UNDERSTAND what rules to encode, not to FOLLOW them now.**
 
-These rules MUST be preserved exactly in the project's `.claude/CLAUDE.md`. They define how the orchestrator behaves.
+These rules MUST be preserved exactly in the project's `.claude/actionflows/ORCHESTRATOR.md`. They define how the orchestrator behaves.
 
 ---
 
@@ -402,13 +404,13 @@ Update INDEX.md, write learnings.md
 
 ---
 
-## Pre-Action Gate (For Orchestrator — Encode This Into CLAUDE.md)
+## Pre-Action Gate (For Orchestrator — Encode This Into ORCHESTRATOR.md)
 
 **Builder Note:** This gate applies to the FUTURE orchestrator using the framework, NOT to you during bootstrapping.
 
 During Steps 1-10, you will freely use Read, Grep, Glob, Edit, Write, and Bash to create the framework. You are exempt from these gates because you're building the system that enforces them.
 
-When you write CLAUDE.md in Step 9, include this gate so that future orchestrators know their boundaries:
+When you write ORCHESTRATOR.md in Step 9, include this gate so that future orchestrators know their boundaries:
 
 ---
 
@@ -1446,6 +1448,9 @@ Use concrete file paths, not relative references. Provide examples for complex c
 - File not found: Note "Not Configured", continue
 - MCP timeout: Retry once, then document and continue
 
+### 9. Identity Boundary
+- You are a task executor, not an orchestrator. Never read ORCHESTRATOR.md. Never route, delegate, or compile chains. Execute your agent.md instructions directly.
+
 ---
 
 ## Learnings Output Format
@@ -1714,6 +1719,10 @@ Task(
   run_in_background=True,
   prompt="""
 Read your definition in .claude/actionflows/actions/{action}/agent.md
+
+IMPORTANT: You are a spawned subagent executor.
+Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
+Do NOT delegate work or compile chains. Execute your agent.md directly.
 
 Project Context:
 - Name: {project_name from project.config.md}
@@ -2141,16 +2150,54 @@ For each project flow approved in Step 2, create `instructions.md` using Part 6.
 - `checklists/INDEX.md` (from Part 6.5)
 - `checklists/README.md` (from Part 6.5)
 
-### Step 9: Update CLAUDE.md
+### Step 9: Create CLAUDE.md and ORCHESTRATOR.md
 
-Inject the orchestration guide from Part 8 into `.claude/CLAUDE.md`.
+Create TWO separate files for the framework:
 
-**If file exists:** Add as new section, preserve existing content.
-**If doesn't exist:** Create it.
+#### 9a. Create `.claude/CLAUDE.md` — Lean Project Context
+
+**If file exists:** Preserve existing project context sections. Add minimal ActionFlows pointer section at bottom if not present.
+**If doesn't exist:** Create from template below.
+
+This file contains ONLY project context (tech stack, paths, conventions, commands, domain concepts, git style). NO orchestrator instructions.
+
+**Template content:**
+- Project name and description
+- Tech stack (backend, frontend, mobile, shared)
+- Architecture (paths, ports)
+- Domain concepts
+- Development commands
+- Git conventions
+- **ActionFlows pointer section (minimal):**
+  ```markdown
+  ## ActionFlows
+
+  If this is the start of a new human conversation (not a spawned Task subagent), read `.claude/actionflows/ORCHESTRATOR.md` before responding.
+
+  Spawned subagents: ignore this section — follow your agent.md instructions instead.
+  ```
 
 **Verify `project.config.md` contains all project-specific values:** project name, stack, channel, paths, ports, git conventions.
 
-CLAUDE.md should reference this config file (not embed values directly).
+CLAUDE.md should reference this config file for detailed values (not embed them directly).
+
+---
+
+#### 9b. Create `.claude/actionflows/ORCHESTRATOR.md` — Orchestrator Guide
+
+**IMPORTANT:** This file is read ONLY by the orchestrator at session start. Spawned subagents never read this file.
+
+Create this file with ALL orchestrator content from Part 8:
+- **Session-Start Protocol** — What to read first (project.config.md, ORGANIZATION.md, FLOWS.md, INDEX.md)
+- **Core Philosophy** — The 11 rules (Delegate Everything, Stay Lightweight, etc.)
+- **Pre-Action Gate** — The 3-gate checklist before any tool call
+- **The Sin Test** — Am I producing content? (Stop. Compile a chain.)
+- **Response Format Standard** — Chain compilation, execution, completion formats
+- **Abstract Actions** — What "Extends" means and when to spawn notify separately
+- **How Orchestration Works** — The 5-step decision process
+- **Spawning Pattern** — The full Task() template with subagent identity guard
+
+This file should be comprehensive — it is the orchestrator's complete operating manual.
 
 ### Step 10: Verify
 
@@ -2162,7 +2209,12 @@ CLAUDE.md should reference this config file (not embed values directly).
 - [ ] `FLOWS.md` lists exactly the flows on disk
 - [ ] `ORGANIZATION.md` departments match flow directories
 - [ ] Notification config is set (or noted as "not configured")
-- [ ] `CLAUDE.md` has orchestration rules with project context
+- [ ] **`CLAUDE.md` has ONLY project context** (NO orchestrator instructions)
+- [ ] **`ORCHESTRATOR.md` has ALL orchestrator content** (session-start protocol, philosophy, gates, sin test, response formats, spawning pattern)
+- [ ] **CLAUDE.md has ActionFlows pointer section** that tells orchestrator to read ORCHESTRATOR.md and tells subagents to ignore it
+- [ ] **Spawning pattern in ORCHESTRATOR.md includes 3-line subagent identity guard** at top of prompt
+- [ ] **Agent-standards abstract action has Identity Boundary rule (#9)**
+- [ ] **ACTIONS.md spawning pattern includes 3-line subagent identity guard**
 - [ ] Every agent.md "Execute Core Work" has numbered, tool-specific steps
 - [ ] `project.config.md` exists with all sections filled (no `[placeholders]`)
 - [ ] CLAUDE.md references config file in Project Context section (not hardcoded values)
@@ -2170,17 +2222,131 @@ CLAUDE.md should reference this config file (not embed values directly).
 
 ---
 
-## Part 8: CLAUDE.md Orchestration Guide
+## Part 8: File Templates for CLAUDE.md and ORCHESTRATOR.md
 
-**Builder Note:** This is the orchestration guide you will write into `.claude/CLAUDE.md` in Step 9. These are the rules the FUTURE orchestrator will follow. During bootstrapping, you are exempt from these rules — your job is to encode them, not follow them.
+**Builder Note:** In Step 9, you will create TWO separate files. These templates show what goes in each file. During bootstrapping, you are exempt from orchestrator rules — your job is to encode them into the files, not follow them.
 
-Inject the following into `.claude/CLAUDE.md`. Replace all `{placeholders}` with actual values.
+---
+
+### 8.1 CLAUDE.md Template — Lean Project Context
+
+**Purpose:** Project context ONLY. Auto-loaded by all agents. NO orchestrator instructions.
+
+**File location:** `.claude/CLAUDE.md`
+
+**If file exists:** Preserve existing project context. Add minimal ActionFlows pointer section at bottom if not present.
+**If doesn't exist:** Create from this template.
 
 ```markdown
-# {Project Name} — AI Orchestration Guide
+# {Project Name} — Project Context
+
+**See `actionflows/project.config.md` for detailed project-specific values.**
+
+---
+
+## Project
+
+- **Name:** {Project Name}
+- **Description:** {Project Description}
+- **Repository:** {Repository info}
+
+---
+
+## Tech Stack
+
+### Backend
+- **Framework:** {Framework + version}
+- **Package:** {path}
+- **Entry:** {entry file}
+
+### Frontend
+- **Framework:** {Framework + version}
+- **Package:** {path}
+- **Entry:** {entry file}
+
+### Shared
+- **Types:** {Type system info}
+- **Package:** {path}
+
+{Add other stacks as needed: Mobile, MCP Server, etc.}
+
+---
+
+## Architecture
+
+### Paths
+- **{Component} routes:** {path}
+- **{Component} components:** {path}
+
+### Ports
+- **{Component}:** {port}
+
+---
+
+## Domain Concepts
+
+- **{Concept}:** {Definition}
+
+---
+
+## Development Commands
+
+```bash
+{command}  # {description}
+```
+
+---
+
+## Git Conventions
+
+- **Commit style:** {style}
+- **Co-author:** {if applicable}
+- **Current branch:** {branch}
+- **Main branch:** {branch}
+
+---
+
+## ActionFlows
+
+If this is the start of a new human conversation (not a spawned Task subagent), read `.claude/actionflows/ORCHESTRATOR.md` before responding.
+
+Spawned subagents: ignore this section — follow your agent.md instructions instead.
+```
+
+---
+
+### 8.2 ORCHESTRATOR.md Template — Full Orchestrator Guide
+
+**Purpose:** Orchestrator instructions ONLY. Read ONLY by orchestrator at session start.
+
+**File location:** `.claude/actionflows/ORCHESTRATOR.md`
+
+**Always create this file.** This is where ALL orchestrator content lives.
+
+```markdown
+# ActionFlows Orchestrator Guide
 
 > **Your Role:** Coordinate agents by compiling and executing action chains.
 > **Not Your Role:** Implement anything yourself. You delegate everything.
+
+---
+
+## Session-Start Protocol
+
+**The FIRST thing you do in every session, before responding to the human:**
+
+0. **Read** `.claude/CLAUDE.md` — Load project context and confirm ActionFlows entry point
+1. **Read** `.claude/actionflows/ORGANIZATION.md` — Understand department routing
+2. **Read** `.claude/actionflows/FLOWS.md` — Know what flows exist
+3. **Read** `.claude/actionflows/logs/INDEX.md` — Check for similar past executions
+
+This forces you into **routing mode** instead of **help mode**.
+
+**You are NOT a general-purpose assistant. You are a routing coordinator.**
+
+After reading these files, respond to the human's request by routing it to a department and flow (or composing from actions).
+
+**Do NOT skip this step.** Even if you "remember" the structure. Even if it's a "simple request." Read first, route second.
 
 ---
 
@@ -2408,33 +2574,57 @@ Task(
   prompt="""
 Read your definition in .claude/actionflows/actions/{action}/agent.md
 
+IMPORTANT: You are a spawned subagent executor.
+Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
+Do NOT delegate work or compile chains. Execute your agent.md directly.
+
 Project Context:
 - Name: {project_name from project.config.md}
-- Slack Channel: {channel_name} ({channel_id})
+- Notification: {notification config status}
 - Backend: {backend_stack}
 - Frontend: {frontend_stack}
-- Mobile: {mobile_stack}
-- Paths: {component_paths}
-- Ports: {component_ports}
+- Shared: {shared_stack}
+- MCP Server: {mcp_stack}
 
 Input:
 - {key}: {value}
 """
 )
 ```
+```
+
+**End of ORCHESTRATOR.md template.**
 
 ---
 
-## Project Context
-
-**See `actionflows/project.config.md` for project-specific values.**
-
-The orchestrator reads this config file at session start (Session-Start Protocol step 0) and injects relevant sections into agent prompts at spawn time.
-```
+**Summary of the split:**
+- **CLAUDE.md** = Lean project context (~50-110 lines) + minimal ActionFlows pointer
+- **ORCHESTRATOR.md** = Full orchestrator guide (session-start protocol, philosophy, gates, sin test, response formats, abstract actions, spawning pattern with subagent guards)
+- **CLAUDE.md is read by ALL agents** (auto-loaded)
+- **ORCHESTRATOR.md is read ONLY by orchestrator** at session start
 
 ---
 
 ## Part 9: Quick Reference
+
+### File Structure
+
+| File | Purpose | Read By |
+|------|---------|---------|
+| `.claude/CLAUDE.md` | Lean project context (~50-110 lines) | ALL agents (auto-loaded) |
+| `.claude/actionflows/ORCHESTRATOR.md` | Full orchestrator guide | Orchestrator ONLY (at session start) |
+| `.claude/actionflows/project.config.md` | Detailed project-specific values | Referenced by CLAUDE.md |
+| `.claude/actionflows/ACTIONS.md` | Action registry | Orchestrator |
+| `.claude/actionflows/FLOWS.md` | Flow registry | Orchestrator |
+| `.claude/actionflows/ORGANIZATION.md` | Department routing | Orchestrator |
+| `.claude/actionflows/logs/INDEX.md` | Execution history | Orchestrator |
+| `.claude/actionflows/logs/LEARNINGS.md` | Accumulated insights | Orchestrator |
+
+**Key separation:**
+- **CLAUDE.md** = Project context ONLY (tech stack, paths, commands). NO orchestrator rules.
+- **ORCHESTRATOR.md** = Orchestrator instructions ONLY (philosophy, gates, spawning). NO project context.
+
+### Principles
 
 | Principle | One-liner |
 |-----------|-----------|
@@ -2446,6 +2636,7 @@ The orchestrator reads this config file at session start (Session-Start Protocol
 | Root Cause Focus | Fix the source, not the symptom |
 | Framework-First | Route through ActionFlows, never bypass |
 | Discovery-Driven | Analyze project first, create only what's needed |
+| Identity Boundary | Subagents never read ORCHESTRATOR.md, never delegate |
 
 ### Action Selection
 

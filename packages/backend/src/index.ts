@@ -12,6 +12,7 @@ import eventsRouter from './routes/events';
 import sessionsRouter from './routes/sessions';
 import commandsRouter from './routes/commands';
 import historyRouter from './routes/history';
+import filesRouter from './routes/files';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
@@ -39,6 +40,7 @@ app.use('/api/events', eventsRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/api/commands', commandsRouter);
 app.use('/api/history', historyRouter);
+app.use('/api/files', filesRouter);
 
 // Create HTTP server
 const server = createServer(app);

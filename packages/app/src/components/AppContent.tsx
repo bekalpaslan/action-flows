@@ -5,6 +5,7 @@ import { useUsers } from '../hooks/useUsers';
 import { useAllSessions } from '../hooks/useAllSessions';
 import { useAttachedSessions } from '../hooks/useAttachedSessions';
 import { UserSidebar } from './UserSidebar';
+import { FileExplorer } from './FileExplorer';
 import { SplitPaneLayout } from './SplitPaneLayout';
 import { NotificationManager } from './NotificationManager';
 
@@ -76,15 +77,25 @@ export default function AppContent() {
       </header>
 
       <div className="app-container">
-        <UserSidebar
-          users={users}
-          selectedUserId={selectedUserId}
-          onUserSelect={setSelectedUserId}
-          currentUserId={currentUserId}
-          attachedSessionIds={attachedSessionIds}
-          onSessionAttach={attachSession}
-          onSessionDetach={detachSession}
-        />
+        <div className="left-sidebar-group">
+          <UserSidebar
+            users={users}
+            selectedUserId={selectedUserId}
+            onUserSelect={setSelectedUserId}
+            currentUserId={currentUserId}
+            attachedSessionIds={attachedSessionIds}
+            onSessionAttach={attachSession}
+            onSessionDetach={detachSession}
+          />
+
+          {attachedSessionIds.length > 0 && (
+            <FileExplorer
+              sessionId={attachedSessionIds[0]}
+              onFileSelect={(path) => console.log('File selected:', path)}
+              onFileOpen={(path) => console.log('File opened:', path)}
+            />
+          )}
+        </div>
 
         <aside className="app-sidebar">
           <nav className="sidebar-nav">
