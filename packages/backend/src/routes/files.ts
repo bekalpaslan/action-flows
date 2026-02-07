@@ -1,74 +1,16 @@
-import express, { Router, Request, Response, NextFunction } from 'express';
+import express, { Router } from 'express';
 import type { SessionId } from '@afw/shared';
-import { storage } from '../storage';
+import { storage } from '../storage/index.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
+// Error sanitization (Agent A)
+import { sanitizeError } from '../middleware/errorHandler.js';
+
+// Import reusable path validation middleware (Fix 6)
+import { validateFilePath } from '../middleware/validatePath.js';
+
 const router = Router();
-
-/**
- * Path Security Validation Middleware
- * Validates all file paths are within session cwd
- * Blocks directory traversal attacks
- */
-async function validatePath(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { sessionId } = req.params;
-    const { path: filePath } = req.query;
-
-    if (!sessionId) {
-      return res.status(400).json({
-        error: 'Missing sessionId parameter',
-      });
-    }
-
-    // Get session to validate cwd
-    const session = await Promise.resolve(storage.getSession(sessionId as SessionId));
-
-    if (!session) {
-      return res.status(404).json({
-        error: 'Session not found',
-        sessionId,
-      });
-    }
-
-    if (!filePath || typeof filePath !== 'string') {
-      return res.status(400).json({
-        error: 'Missing or invalid file path',
-      });
-    }
-
-    // Resolve the absolute path
-    const absolutePath = path.resolve(session.cwd, filePath);
-
-    // Verify the path is within the session's working directory
-    if (!absolutePath.startsWith(path.resolve(session.cwd))) {
-      console.warn(`[Security] Path traversal attempt blocked:`, {
-        sessionId,
-        cwd: session.cwd,
-        requestedPath: filePath,
-        resolvedPath: absolutePath,
-      });
-
-      return res.status(403).json({
-        error: 'Access denied: path outside session working directory',
-        requestedPath: filePath,
-      });
-    }
-
-    // Attach validated path to request for use in route handlers
-    (req as any).validatedPath = absolutePath;
-    (req as any).session = session;
-
-    next();
-  } catch (error) {
-    console.error('[Files] Error validating path:', error);
-    res.status(500).json({
-      error: 'Failed to validate path',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
-  }
-}
 
 /**
  * Directory Entry Type
@@ -181,7 +123,7 @@ router.get('/:sessionId/tree', async (req, res) => {
     console.error('[Files] Error building file tree:', error);
     res.status(500).json({
       error: 'Failed to build file tree',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -190,7 +132,7 @@ router.get('/:sessionId/tree', async (req, res) => {
  * GET /api/files/:sessionId/read
  * Read file contents
  */
-router.get('/:sessionId/read', validatePath, async (req, res) => {
+router.get('/:sessionId/read', validateFilePath('path'), async (req, res) => {
   try {
     const absolutePath = (req as any).validatedPath;
     const session = (req as any).session;
@@ -241,7 +183,7 @@ router.get('/:sessionId/read', validatePath, async (req, res) => {
     console.error('[Files] Error reading file:', error);
     res.status(500).json({
       error: 'Failed to read file',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -250,7 +192,7 @@ router.get('/:sessionId/read', validatePath, async (req, res) => {
  * POST /api/files/:sessionId/write
  * Write file contents
  */
-router.post('/:sessionId/write', validatePath, async (req, res) => {
+router.post('/:sessionId/write', validateFilePath('path'), async (req, res) => {
   try {
     const absolutePath = (req as any).validatedPath;
     const { content } = req.body;
@@ -298,7 +240,7 @@ router.post('/:sessionId/write', validatePath, async (req, res) => {
     console.error('[Files] Error writing file:', error);
     res.status(500).json({
       error: 'Failed to write file',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -311,7 +253,7 @@ router.post('/:sessionId/write', validatePath, async (req, res) => {
  * file snapshots (to be implemented in Phase 10 with file watching).
  * For now, we return the current content as "after" and empty string as "before".
  */
-router.get('/:sessionId/diff', validatePath, async (req, res) => {
+router.get('/:sessionId/diff', validateFilePath('path'), async (req, res) => {
   try {
     const absolutePath = (req as any).validatedPath;
 
@@ -354,7 +296,7 @@ router.get('/:sessionId/diff', validatePath, async (req, res) => {
     console.error('[Files] Error getting diff:', error);
     res.status(500).json({
       error: 'Failed to get file diff',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });

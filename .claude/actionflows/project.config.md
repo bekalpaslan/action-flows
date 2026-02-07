@@ -1,6 +1,6 @@
 # ActionFlows Dashboard — Project Configuration
 
-> Single source of truth for project-specific values. Orchestrator reads this at session start.
+> Single source of truth for project-specific values. Referenced by CLAUDE.md and injected into agent prompts by the orchestrator.
 
 ---
 
@@ -9,41 +9,51 @@
 - **Name:** ActionFlows Dashboard
 - **Description:** Real-time monitoring and control dashboard for AI agent orchestration flows
 - **Repository:** ActionFlows Dashboard monorepo (pnpm workspaces)
+- **Working Directory:** D:/ActionFlowsDashboard
 
 ---
 
 ## Notification
 
-- **Platform:** Not configured
-- **Channel:** N/A
-- **Channel ID:** N/A
-- **MCP Tool:** N/A
+- **Status:** Disabled. Notifications stripped from all actions. Re-enable by adding a `notify/` action and extending agents.
 
 ---
 
 ## Tech Stack
 
 ### Backend
-- **Framework:** Express 4.18 + TypeScript
+- **Language:** TypeScript 5.3
+- **Framework:** Express 4.18
 - **WebSocket:** ws 8.14.2
-- **Storage:** MemoryStorage (dev) / Redis 5.3 (prod)
+- **Storage:** MemoryStorage (dev) / Redis via ioredis 5.3 (prod)
+- **Validation:** Zod 3.22
+- **Rate Limiting:** express-rate-limit 7.1
+- **File Watching:** chokidar 3.5
+- **Testing:** Vitest 1.0
 - **Package:** packages/backend/
 - **Entry:** packages/backend/src/index.ts
 
 ### Frontend
-- **Framework:** React 18.2 + TypeScript + Vite 5
+- **Language:** TypeScript 5.4
+- **Framework:** React 18.2
+- **Build Tool:** Vite 5
 - **Desktop:** Electron 28
 - **Visualization:** ReactFlow 11.10
+- **Code Editor:** Monaco Editor 0.45
+- **Terminal:** xterm 5.3
 - **Package:** packages/app/
 - **Entry:** packages/app/src/main.tsx
 
 ### Shared
-- **Types:** Branded strings, discriminated unions, ES modules
+- **Language:** TypeScript 5.3
+- **Types:** Branded strings (SessionId, ChainId, StepId, UserId), discriminated unions
+- **Module System:** ES modules
 - **Package:** packages/shared/
 - **Entry:** packages/shared/src/index.ts
 
 ### MCP Server
 - **Protocol:** Model Context Protocol 1.0
+- **SDK:** @modelcontextprotocol/sdk 1.0
 - **Package:** packages/mcp-server/
 - **Entry:** packages/mcp-server/src/index.ts
 
@@ -55,20 +65,24 @@
 
 ## Architecture
 
-### Paths
+### Component Paths
 - **Backend routes:** packages/backend/src/routes/
+- **Backend services:** packages/backend/src/services/
 - **Backend storage:** packages/backend/src/storage/
 - **Backend WebSocket:** packages/backend/src/ws/
+- **Backend middleware:** packages/backend/src/middleware/
+- **Backend schemas:** packages/backend/src/schemas/
+- **Backend tests:** packages/backend/src/__tests__/
 - **Frontend components:** packages/app/src/components/
 - **Frontend hooks:** packages/app/src/hooks/
 - **Frontend contexts:** packages/app/src/contexts/
+- **Electron main:** packages/app/electron/main.ts
 - **Shared types:** packages/shared/src/
-- **Tests:** packages/backend/src/__tests__/
-- **E2E specs:** test/e2e/
+- **E2E tests:** test/e2e/
 
 ### Ports
-- **Backend:** 3001 (configurable via PORT env var)
-- **Vite dev:** 5173
+- **Backend API:** 3001 (configurable via PORT env var)
+- **Vite dev server:** 5173
 - **Electron:** Desktop app (no port)
 
 ---
@@ -98,15 +112,6 @@ pnpm test                 # Run tests (Vitest)
 pnpm test:e2e             # Run E2E tests
 ```
 
-### Package-specific
-```bash
-pnpm -F @afw/backend dev          # Backend dev server
-pnpm -F @afw/backend test         # Backend tests
-pnpm -F @afw/backend type-check   # Backend type check
-pnpm -F @afw/app dev              # Frontend dev server
-pnpm -F @afw/app type-check       # Frontend type check
-```
-
 ---
 
 ## Git Conventions
@@ -115,4 +120,4 @@ pnpm -F @afw/app type-check       # Frontend type check
 - **Co-author:** Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
 - **Current branch:** master
 - **Main branch:** main (PR target)
-- **Working directory:** D:/ActionFlowsDashboard
+- **Branch format:** feature/*, fix/*, refactor/*

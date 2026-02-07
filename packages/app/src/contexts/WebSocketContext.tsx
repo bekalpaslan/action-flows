@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useRef, useCallback, type ReactNode } from 'react';
 import { useWebSocket, type ConnectionStatus } from '../hooks/useWebSocket';
 import type { WorkspaceEvent, SessionId } from '@afw/shared';
 
@@ -29,7 +29,7 @@ export function WebSocketProvider({
   url = 'ws://localhost:3001/ws',
 }: WebSocketProviderProps) {
   // Store multiple event callbacks
-  const eventCallbacksRef = React.useRef<Set<(event: WorkspaceEvent) => void>>(new Set());
+  const eventCallbacksRef = useRef<Set<(event: WorkspaceEvent) => void>>(new Set());
 
   const handleEvent = useCallback((event: WorkspaceEvent) => {
     eventCallbacksRef.current.forEach(callback => callback(event));

@@ -1,6 +1,6 @@
 # Backend Code Agent
 
-You are the backend code implementation agent for ActionFlows Dashboard. You implement backend changes in the Express + WebSocket + Redis stack.
+You are the backend code implementation agent for ActionFlows Dashboard. You implement backend changes following Express + TypeScript patterns.
 
 ---
 
@@ -9,18 +9,15 @@ You are the backend code implementation agent for ActionFlows Dashboard. You imp
 This agent follows these abstract action standards:
 - `_abstract/agent-standards` — Core behavioral principles
 - `_abstract/create-log-folder` — Datetime log folder for outputs
-- `_abstract/post-notification` — Notify on completion
-
 **When you need to:**
 - Follow behavioral standards → Read: `.claude/actionflows/actions/_abstract/agent-standards/instructions.md`
 - Create log folder → Read: `.claude/actionflows/actions/_abstract/create-log-folder/instructions.md`
-- Post notification → Read: `.claude/actionflows/actions/_abstract/post-notification/instructions.md`
 
 ---
 
 ## Your Mission
 
-Implement backend code changes following Express Router patterns, WebSocket handler conventions, and TypeScript strict mode.
+Implement backend code changes following Express Router patterns, Zod validation, and the project's TypeScript conventions. Produce working, type-safe backend code.
 
 ---
 
@@ -36,66 +33,64 @@ Create folder: `.claude/actionflows/logs/code/{description}_{YYYY-MM-DD-HH-MM-SS
 
 Read inputs from the orchestrator's prompt:
 - `task` — What to implement in the backend
-- `context` — Relevant backend files and modules
-- `component` — (optional) Specific area: routes, storage, ws, middleware
+- `context` — Relevant backend files, routes, or services
 
 ### 3. Execute Core Work
 
-1. Use Grep to find related files in `packages/backend/src/`
-2. Read found files — understand route patterns, middleware chains, storage interface
-3. Use Glob for similar routes: `packages/backend/src/routes/*.ts`, `packages/backend/src/storage/*.ts`
-4. Plan the implementation:
-   - Routes: Follow Express Router() pattern with typed request/response
-   - Storage: Implement both MemoryStorage and RedisStorage if adding new data
-   - WebSocket: Follow ws handler pattern in `packages/backend/src/ws/`
-   - Types: Import from @afw/shared, use branded strings
-5. Implement using Edit/Write:
-   - Express routes: `Router()` with typed handlers, proper error handling
-   - Storage interface: Abstract class with memory + Redis implementations
-   - WebSocket: Message handlers with typed payloads
-   - Validation: Validate request params/body at route level
-6. Run `pnpm -F @afw/backend type-check` to verify
-7. Write change summary to log folder
+1. Use Grep to find backend files related to the task in `packages/backend/src/`
+2. Read found files to understand existing route/service/storage patterns
+3. Use Glob for similar patterns: `packages/backend/src/routes/*.ts`, `packages/backend/src/services/*.ts`, `packages/backend/src/storage/*.ts`
+4. Implement using Edit (modifications) and Write (new files only when needed):
+   - **Routes:** Follow Express Router pattern with middleware chain
+   - **Validation:** Use Zod schemas in `packages/backend/src/schemas/`
+   - **Storage:** Use StorageProvider interface (MemoryStorage / RedisStorage)
+   - **WebSocket:** Follow ws handler pattern in `packages/backend/src/ws/`
+   - **Types:** Import from `@afw/shared` for branded IDs and event types
+   - **Middleware:** Use existing middleware in `packages/backend/src/middleware/`
+5. Run `pnpm -F @afw/backend type-check` to verify TypeScript correctness
+6. Write change summary to log folder
 
 ### 4. Generate Output
 
-Write results to `.claude/actionflows/logs/code/{datetime}/changes.md`
-
-### 5. Post Notification
-
-Notification not configured — note "Notification skipped — not configured" in output.
+Write results to `.claude/actionflows/logs/code/{description}_{datetime}/changes.md`
 
 ---
 
 ## Project Context
 
-- **Package:** packages/backend/
-- **Framework:** Express 4.18 with TypeScript
-- **WebSocket:** ws 8.14.2 with typed message handlers
-- **Storage:** MemoryStorage (dev) / RedisStorage (prod) via abstract interface
-- **Routes:** `/api/sessions`, `/api/events`, `/api/commands`, `/api/health`
-- **Types:** Import from @afw/shared — SessionId, UserId, ChainId, StepId, CommandType
-- **Entry:** packages/backend/src/index.ts
-- **Tests:** packages/backend/src/__tests__/ using Vitest + Supertest
-- **Port:** 3001 (configurable via PORT env var)
+- **Framework:** Express 4.18 + TypeScript
+- **WebSocket:** ws 8.14.2
+- **Storage:** MemoryStorage (dev) / Redis via ioredis 5.3 (prod)
+- **Validation:** Zod 3.22
+- **Rate Limiting:** express-rate-limit 7.1
+- **File Watching:** chokidar 3.5
+- **Entry:** `packages/backend/src/index.ts`
+- **Routes:** `packages/backend/src/routes/` — commands.ts, events.ts, files.ts, history.ts, sessions.ts, terminal.ts
+- **Services:** `packages/backend/src/services/` — cleanup.ts, fileWatcher.ts
+- **Storage:** `packages/backend/src/storage/` — index.ts, memory.ts, redis.ts
+- **WebSocket:** `packages/backend/src/ws/` — handler.ts, clientRegistry.ts
+- **Middleware:** `packages/backend/src/middleware/`
+- **Schemas:** `packages/backend/src/schemas/`
+- **Tests:** `packages/backend/src/__tests__/` — Vitest
 
 ---
 
 ## Constraints
 
 ### DO
-- Follow Express Router() pattern with typed request/response handlers
-- Implement both MemoryStorage and RedisStorage for new data operations
-- Use branded string types from @afw/shared for all IDs
-- Add proper error handling (try/catch with typed error responses)
-- Broadcast WebSocket events for state changes
+- Follow Express Router with middleware chain pattern
+- Use Zod schemas for all request validation
+- Use StorageProvider interface for data access
+- Import branded types from `@afw/shared` (SessionId, ChainId, etc.)
+- Use async/await for all async operations
+- Run backend type-check after changes
 
 ### DO NOT
-- Use `any` type — always explicit types
-- Skip Redis implementation (always implement both storage backends)
-- Import frontend code or use browser APIs
-- Change the port or server startup logic without instruction
-- Skip type-check verification
+- Use `any` type
+- Bypass Zod validation
+- Access storage directly (use StorageProvider interface)
+- Create new route files without registering in index.ts
+- Use synchronous I/O operations
 
 ---
 

@@ -1,24 +1,18 @@
 import type { WebSocket } from 'ws';
 import type { WorkspaceEvent, SessionId } from '@afw/shared';
-import type { Storage } from '../storage';
-
-/**
- * WebSocket message format for client->server
- */
-interface WSMessage {
-  type: 'subscribe' | 'unsubscribe' | 'input' | 'ping';
-  sessionId?: string;
-  payload?: unknown;
-}
+import type { Storage } from '../storage/index.js';
+import { clientRegistry } from './clientRegistry.js';
+import { wsMessageSchema, type ValidatedWSMessage } from '../schemas/ws.js';
 
 /**
  * WebSocket message format for server->client
  */
 interface WSBroadcast {
-  type: 'event' | 'command' | 'pong' | 'subscription_confirmed';
+  type: 'event' | 'command' | 'pong' | 'subscription_confirmed' | 'error';
   sessionId?: string;
   payload?: unknown;
   clientId?: string;
+  details?: unknown;
 }
 
 /**
@@ -29,8 +23,6 @@ export function handleWebSocket(
   clientId: string,
   storage: Storage
 ): void {
-  let subscribedSessionId: string | undefined;
-
   // Send connection confirmation
   const confirmation: WSBroadcast = {
     type: 'subscription_confirmed',
@@ -40,37 +32,83 @@ export function handleWebSocket(
 
   // Handle incoming messages
   ws.on('message', async (data: Buffer) => {
+    // Per-message API key validation (Fix 1: Security)
+    const currentApiKey = process.env.AFW_API_KEY;
+    if (!clientRegistry.validateApiKey(ws, currentApiKey)) {
+      ws.send(JSON.stringify({ type: 'error', payload: 'Authentication failed - API key invalid or rotated' }));
+      ws.close(1008, 'Authentication failed');
+      return;
+    }
+
+    // Rate limit check
+    if (clientRegistry.checkRateLimit(ws)) {
+      ws.send(JSON.stringify({ type: 'error', payload: 'Rate limit exceeded' }));
+      return;
+    }
+
     try {
-      const message: WSMessage = JSON.parse(data.toString('utf-8'));
+      const raw = JSON.parse(data.toString('utf-8'));
+      const result = wsMessageSchema.safeParse(raw);
+
+      if (!result.success) {
+        ws.send(JSON.stringify({
+          type: 'error',
+          payload: 'Invalid message format',
+          details: result.error.issues.map((i) => i.message),
+        }));
+        return;
+      }
+
+      const message = result.data as ValidatedWSMessage;
 
       switch (message.type) {
-        case 'subscribe':
-          if (message.sessionId) {
-            subscribedSessionId = message.sessionId;
-            storage.addClient(clientId, message.sessionId as SessionId);
-
-            const confirmSubscription: WSBroadcast = {
-              type: 'subscription_confirmed',
+        case 'subscribe': {
+          // Fix 2: Validate session ownership before subscribing
+          const session = await Promise.resolve(storage.getSession(message.sessionId as SessionId));
+          if (!session) {
+            ws.send(JSON.stringify({
+              type: 'error',
+              payload: 'Session not found',
               sessionId: message.sessionId,
-              payload: { message: `Subscribed to session ${message.sessionId}` },
-            };
-            ws.send(JSON.stringify(confirmSubscription));
-            console.log(`[WS] Client ${clientId} subscribed to session ${message.sessionId}`);
+            }));
+            break;
           }
+
+          // If session has a user requirement, check that client's userId matches
+          const clientInfo = clientRegistry.getClientInfo(ws);
+          if (session.user && clientInfo?.userId && clientInfo.userId !== session.user) {
+            console.warn(`[WS] Access denied: client ${clientId} attempted to subscribe to session ${message.sessionId} owned by ${session.user}`);
+            ws.send(JSON.stringify({
+              type: 'error',
+              payload: 'Access denied: session belongs to another user',
+              sessionId: message.sessionId,
+            }));
+            break;
+          }
+
+          clientRegistry.subscribe(ws, message.sessionId as SessionId);
+          storage.addClient(clientId, message.sessionId as SessionId);
+
+          const confirmSubscription: WSBroadcast = {
+            type: 'subscription_confirmed',
+            sessionId: message.sessionId,
+            payload: { message: `Subscribed to session ${message.sessionId}` },
+          };
+          ws.send(JSON.stringify(confirmSubscription));
+          console.log(`[WS] Client ${clientId} subscribed to session ${message.sessionId}`);
           break;
+        }
 
         case 'unsubscribe':
-          if (message.sessionId) {
-            storage.removeClient(clientId);
-            subscribedSessionId = undefined;
-            console.log(`[WS] Client ${clientId} unsubscribed from session ${message.sessionId}`);
-          }
+          clientRegistry.unsubscribe(ws, message.sessionId as SessionId);
+          storage.removeClient(clientId);
+          console.log(`[WS] Client ${clientId} unsubscribed from session ${message.sessionId}`);
           break;
 
         case 'input':
-          if (message.sessionId && message.payload) {
+          if (message.payload) {
             await Promise.resolve(storage.queueInput(message.sessionId as SessionId, message.payload));
-            console.log(`[WS] Input received for session ${message.sessionId}:`, message.payload);
+            console.log(`[WS] Input received for session ${message.sessionId}`);
           }
           break;
 
@@ -79,16 +117,22 @@ export function handleWebSocket(
           break;
 
         default:
-          console.warn(`[WS] Unknown message type: ${message.type}`);
+          // TypeScript ensures this is unreachable, but kept for safety
+          console.warn(`[WS] Unknown message type received`);
       }
     } catch (error) {
-      console.error('[WS] Error parsing message:', error);
-      ws.send(JSON.stringify({ type: 'error', payload: 'Invalid message format' }));
+      if (error instanceof SyntaxError) {
+        ws.send(JSON.stringify({ type: 'error', payload: 'Invalid JSON' }));
+      } else {
+        console.error('[WS] Error processing message:', error);
+        ws.send(JSON.stringify({ type: 'error', payload: 'Message processing error' }));
+      }
     }
   });
 
   // Handle disconnection
   ws.on('close', () => {
+    clientRegistry.unregister(ws);
     storage.removeClient(clientId);
     console.log(`[WS] Client ${clientId} connection closed`);
   });

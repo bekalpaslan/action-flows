@@ -1,6 +1,6 @@
-# Code/Backend Action
+# Backend Code Action
 
-> Implement backend code changes in Express + WebSocket + Redis stack.
+> Implement backend code changes following Express + TypeScript + Zod patterns.
 
 ---
 
@@ -13,45 +13,37 @@
 This agent is **explicitly instructed** to execute:
 - `_abstract/agent-standards` — Core behavioral principles
 - `_abstract/create-log-folder` → Creates `.claude/actionflows/logs/code/{datetime}/`
-- `_abstract/post-notification` → Posts completion notification (currently not configured)
-
 ---
 
 ## Inputs
 
 | Input | Required | Description | Default |
 |-------|----------|-------------|---------|
-| task | YES | Backend feature/fix to implement. Example: "Add rate limiting middleware for command endpoints" | — |
-| context | YES | Relevant backend files. Example: "packages/backend/src/routes/commands.ts, packages/backend/src/ws/" | — |
-| component | NO | Specific area: routes, storage, ws, middleware | — |
+| task | YES | Backend implementation task — e.g., "Add session expiry endpoint" | — |
+| context | YES | Relevant backend files — e.g., "packages/backend/src/routes/sessions.ts" | — |
 
 ---
 
 ## Model
 
-**haiku** — Fast, well-defined backend implementation tasks.
+**haiku** — Fast, well-defined task execution for backend code implementation.
 
 ---
 
 ## How Orchestrator Spawns This
 
 1. Collect inputs:
-   - `task`: From human request (backend-specific portion)
-   - `context`: Backend files from human request or plan/ output
+   - `task`: From human request
+   - `context`: From human request or routing knowledge
 
 2. Spawn:
 
 ```
 Read your definition in .claude/actionflows/actions/code/backend/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express + WebSocket + Redis (packages/backend/)
-- Port: 3001
-
 Input:
-- task: Add rate limiting middleware for command endpoints
-- context: packages/backend/src/routes/commands.ts
+- task: Add session expiry cleanup endpoint
+- context: packages/backend/src/routes/sessions.ts, packages/backend/src/services/cleanup.ts
 ```
 
 ---
@@ -64,6 +56,6 @@ Backend changes implemented, `pnpm -F @afw/backend type-check` passes, change su
 
 ## Notes
 
-- Always implement both MemoryStorage and RedisStorage when adding data operations
-- WebSocket broadcasts should use existing ws handler pattern
-- Test files in packages/backend/src/__tests__/ may need updates
+- Preferred over generic `code/` when work is purely backend
+- Uses Express Router + Zod + StorageProvider patterns
+- All IDs use branded types from @afw/shared

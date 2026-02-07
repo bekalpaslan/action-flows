@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  max-width: 100vw;
+  overflow-x: hidden;
   background: #1a1a1a;
   color: #e0e0e0;
 }
@@ -14,6 +16,7 @@
   background: #242424;
   border-bottom: 1px solid #404040;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
 }
 
 .app-header h1 {
@@ -21,16 +24,25 @@
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 0.5px;
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.status-indicator {
+.app-header .status-indicator {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-shrink: 0;
+  margin-left: auto;
+  width: auto;
+  height: auto;
+  border-radius: 0;
 }
 
-.status {
-  display: inline-flex;
+.app-header .status {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
@@ -38,45 +50,47 @@
   font-size: 0.875rem;
   font-weight: 500;
   background: #2a2a2a;
+  white-space: nowrap;
 }
 
-.status::before {
+.app-header .status::before {
   content: '';
   display: inline-block;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: #ff9800;
+  flex-shrink: 0;
 }
 
-.status.connected {
+.app-header .status.connected {
   background: rgba(76, 175, 80, 0.1);
   color: #4caf50;
 }
 
-.status.connected::before {
+.app-header .status.connected::before {
   background: #4caf50;
 }
 
-.status.error {
+.app-header .status.error {
   background: rgba(244, 67, 54, 0.1);
   color: #f44336;
 }
 
-.status.error::before {
+.app-header .status.error::before {
   background: #f44336;
 }
 
-.status.disconnected {
+.app-header .status.disconnected {
   background: rgba(255, 152, 0, 0.1);
   color: #ff9800;
 }
 
-.status.disconnected::before {
+.app-header .status.disconnected::before {
   background: #ff9800;
 }
 
-.status.connecting::before {
+.app-header .status.connecting::before {
   animation: pulse 1.5s infinite;
 }
 

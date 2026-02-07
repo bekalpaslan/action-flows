@@ -1,5 +1,5 @@
-import { Router } from 'express'
-import { filePersistence } from '../storage/file-persistence'
+import { Router } from 'express';
+import { filePersistence } from '../storage/file-persistence.js';
 
 const router = Router()
 

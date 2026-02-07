@@ -1,23 +1,95 @@
 import express, { Router } from 'express';
 import type { Session, Chain, SessionId } from '@afw/shared';
 import { brandedTypes, Status } from '@afw/shared';
-import { storage } from '../storage';
-import { filePersistence } from '../storage/file-persistence';
-import { startWatching, stopWatching } from '../services/fileWatcher';
+import { storage } from '../storage/index.js';
+import { filePersistence } from '../storage/file-persistence.js';
+import { startWatching, stopWatching } from '../services/fileWatcher.js';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+
+// Validation and rate limiting (Agent A)
+import { validateBody } from '../middleware/validate.js';
+import {
+  createSessionSchema,
+  updateSessionSchema,
+  sessionInputSchema,
+  sessionAwaitingSchema,
+} from '../schemas/api.js';
+import { writeLimiter, sessionCreateLimiter } from '../middleware/rateLimit.js';
+import { sanitizeError } from '../middleware/errorHandler.js';
 
 const router = Router();
+
+/**
+ * Sensitive system directories that should not be accessible
+ * Includes common Unix and Windows system paths (Fix 5)
+ */
+const DENIED_PATHS = [
+  // Unix system directories
+  '/etc',
+  '/sys',
+  '/proc',
+  '/dev',
+  '/root',
+  '/boot',
+  '/bin',
+  '/sbin',
+  '/usr/bin',
+  '/usr/sbin',
+  '/usr/local/bin',
+  '/lib',
+  '/lib64',
+  '/usr/lib',
+  '/var/log',
+  '/var/www',
+
+  // Windows system directories
+  'C:\\Windows',
+  'C:\\Program Files',
+  'C:\\Program Files (x86)',
+  'C:\\ProgramData',
+  'C:\\System Volume Information',
+  'C:\\$Recycle.Bin',
+];
+
+/**
+ * Check if a path is in the denied list
+ */
+function isPathDenied(filePath: string): boolean {
+  const normalizedPath = path.resolve(filePath).toLowerCase();
+
+  return DENIED_PATHS.some(deniedPath => {
+    const normalizedDenied = path.resolve(deniedPath).toLowerCase();
+    // Check if the path starts with a denied directory
+    return normalizedPath.startsWith(normalizedDenied) &&
+           (normalizedPath.length === normalizedDenied.length ||
+            normalizedPath[normalizedDenied.length] === path.sep);
+  });
+}
 
 /**
  * POST /api/sessions
  * Create a new session
  */
-router.post('/', async (req, res) => {
+router.post('/', sessionCreateLimiter, validateBody(createSessionSchema), async (req, res) => {
   try {
     const { cwd, hostname, platform, userId } = req.body;
 
-    if (!cwd) {
-      return res.status(400).json({
-        error: 'Missing required field: cwd',
+    // Validate that directory exists (Agent A security fix)
+    try {
+      const stat = await fs.stat(cwd);
+      if (!stat.isDirectory()) {
+        return res.status(400).json({ error: 'cwd must be a directory' });
+      }
+    } catch {
+      return res.status(400).json({ error: 'cwd directory does not exist or is not accessible' });
+    }
+
+    // Check if cwd is a sensitive system directory (Fix 5)
+    if (isPathDenied(cwd)) {
+      return res.status(403).json({
+        error: 'Access denied: system directory is protected',
+        cwd,
       });
     }
 
@@ -48,7 +120,7 @@ router.post('/', async (req, res) => {
     console.error('[API] Error creating session:', error);
     res.status(500).json({
       error: 'Failed to create session',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -68,7 +140,7 @@ router.get('/', (req, res) => {
       sessions: sessions.map((s) => ({
         id: s.id,
         status: s.status,
-        cwd: s.cwd,
+        // cwd omitted from list response for security (Agent A)
         startedAt: s.startedAt,
         endedAt: s.endedAt,
         chainsCount: s.chains.length,
@@ -79,7 +151,7 @@ router.get('/', (req, res) => {
     console.error('[API] Error listing sessions:', error);
     res.status(500).json({
       error: 'Failed to list sessions',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -111,7 +183,7 @@ router.get('/:id', async (req, res) => {
     console.error('[API] Error fetching session:', error);
     res.status(500).json({
       error: 'Failed to fetch session',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -120,7 +192,7 @@ router.get('/:id', async (req, res) => {
  * PUT /api/sessions/:id
  * Update session (e.g., status, summary)
  */
-router.put('/:id', async (req, res) => {
+router.put('/:id', writeLimiter, validateBody(updateSessionSchema), async (req, res) => {
   try {
     const { id } = req.params;
     const { status, summary, endReason } = req.body;
@@ -170,7 +242,7 @@ router.put('/:id', async (req, res) => {
     console.error('[API] Error updating session:', error);
     res.status(500).json({
       error: 'Failed to update session',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -202,7 +274,7 @@ router.get('/:id/chains', async (req, res) => {
     console.error('[API] Error fetching chains:', error);
     res.status(500).json({
       error: 'Failed to fetch chains',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -211,7 +283,7 @@ router.get('/:id/chains', async (req, res) => {
  * POST /api/sessions/:id/input
  * Submit user input for a session (from Dashboard)
  */
-router.post('/:id/input', async (req, res) => {
+router.post('/:id/input', writeLimiter, validateBody(sessionInputSchema), async (req, res) => {
   try {
     const { id } = req.params;
     const { input, prompt } = req.body;
@@ -244,7 +316,7 @@ router.post('/:id/input', async (req, res) => {
     console.error('[API] Error queueing input:', error);
     res.status(500).json({
       error: 'Failed to queue input',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -253,7 +325,7 @@ router.post('/:id/input', async (req, res) => {
  * POST /api/sessions/:id/awaiting
  * Mark session as awaiting input (called by Stop hook)
  */
-router.post('/:id/awaiting', async (req, res) => {
+router.post('/:id/awaiting', writeLimiter, validateBody(sessionAwaitingSchema), async (req, res) => {
   try {
     const { id } = req.params;
     const { promptType, promptText, quickResponses } = req.body;
@@ -291,7 +363,7 @@ router.post('/:id/awaiting', async (req, res) => {
     console.error('[API] Error marking session as awaiting:', error);
     res.status(500).json({
       error: 'Failed to mark session as awaiting',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -304,7 +376,8 @@ router.post('/:id/awaiting', async (req, res) => {
 router.get('/:id/input', async (req, res) => {
   try {
     const { id } = req.params;
-    const timeout = parseInt(req.query.timeout as string) || 0;
+    // Cap timeout at 60 seconds (Agent A security fix)
+    const timeout = Math.min(parseInt(req.query.timeout as string) || 0, 60000);
 
     const session = await Promise.resolve(storage.getSession(id as SessionId));
 
@@ -354,11 +427,12 @@ router.get('/:id/input', async (req, res) => {
       const elapsed = Date.now() - startTime;
 
       if (elapsed >= timeout) {
-        return res.json({
+        res.json({
           available: false,
           sessionId: id,
           timedOut: true,
         });
+        return;
       }
 
       const inputs = await checkInput();
@@ -374,11 +448,12 @@ router.get('/:id/input', async (req, res) => {
 
         // TODO: Broadcast input_received event via WebSocket
 
-        return res.json({
+        res.json({
           available: true,
           input: inputs[0],
           sessionId: id,
         });
+        return;
       }
 
       // Continue polling
@@ -390,7 +465,7 @@ router.get('/:id/input', async (req, res) => {
     console.error('[API] Error fetching input:', error);
     res.status(500).json({
       error: 'Failed to fetch input',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -401,18 +476,18 @@ router.get('/:id/input', async (req, res) => {
  */
 router.get('/users', (req, res) => {
   try {
-    const users = storage.getUsersWithActiveSessions();
+    const users = storage.getUsersWithActiveSessions?.() || [];
 
-    const userStats = users.map((userId) => {
-      const sessionIds = storage.getSessionsByUser(userId);
-      const sessions = sessionIds
-        .map((id) => storage.getSession(id as SessionId))
-        .filter((s) => s !== undefined) as Session[];
+    const userStats = users.map((userId: string) => {
+      const sessionIds = storage.getSessionsByUser?.(userId as any) || [];
+      const sessions = (sessionIds
+        .map((id: string) => storage.getSession(id as SessionId)) as any[])
+        .filter((s: any): s is Session => s !== undefined && typeof s === 'object' && 'id' in s);
 
       return {
         user: userId,
         sessionCount: sessions.length,
-        sessions: sessions.map((s) => ({
+        sessions: sessions.map((s: Session) => ({
           id: s.id,
           status: s.status,
           startedAt: s.startedAt,
@@ -429,7 +504,7 @@ router.get('/users', (req, res) => {
     console.error('[API] Error fetching users:', error);
     res.status(500).json({
       error: 'Failed to fetch users',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -441,10 +516,10 @@ router.get('/users', (req, res) => {
 router.get('/users/:userId/sessions', (req, res) => {
   try {
     const { userId } = req.params;
-    const sessionIds = storage.getSessionsByUser(userId);
-    const sessions = sessionIds
-      .map((id) => storage.getSession(id as SessionId))
-      .filter((s) => s !== undefined) as Session[];
+    const sessionIds = storage.getSessionsByUser?.(userId as any) || [];
+    const sessions = (sessionIds
+      .map((id: string) => storage.getSession(id as SessionId)) as any[])
+      .filter((s: any): s is Session => s !== undefined && typeof s === 'object' && 'id' in s);
 
     res.json({
       user: userId,
@@ -455,7 +530,7 @@ router.get('/users/:userId/sessions', (req, res) => {
     console.error('[API] Error fetching user sessions:', error);
     res.status(500).json({
       error: 'Failed to fetch user sessions',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });

@@ -1,0 +1,136 @@
+import { z } from 'zod';
+import * as path from 'path';
+
+/**
+ * Zod Schemas for REST API Request Bodies
+ *
+ * These schemas validate all POST/PUT request bodies across routes.
+ * They serve as both runtime validation and API documentation.
+ */
+
+// ============================================================================
+// Session Schemas
+// ============================================================================
+
+export const createSessionSchema = z.object({
+  cwd: z
+    .string()
+    .min(1, 'cwd is required')
+    .max(500, 'cwd path too long')
+    .refine(
+      (p) => path.isAbsolute(p),
+      'cwd must be an absolute path'
+    ),
+  hostname: z.string().max(255, 'hostname too long').optional(),
+  platform: z
+    .enum(['win32', 'darwin', 'linux', 'aix', 'freebsd', 'openbsd', 'sunos'])
+    .optional(),
+  userId: z.string().max(100, 'userId too long').optional(),
+});
+
+export type CreateSessionRequest = z.infer<typeof createSessionSchema>;
+
+export const updateSessionSchema = z.object({
+  status: z
+    .enum(['pending', 'in_progress', 'completed', 'failed', 'skipped'])
+    .optional(),
+  summary: z.string().max(5000, 'summary too long').optional(),
+  endReason: z.string().max(1000, 'endReason too long').optional(),
+});
+
+export type UpdateSessionRequest = z.infer<typeof updateSessionSchema>;
+
+export const sessionInputSchema = z.object({
+  input: z.unknown(),
+  prompt: z.string().max(5000, 'prompt too long').optional(),
+});
+
+export type SessionInputRequest = z.infer<typeof sessionInputSchema>;
+
+export const sessionAwaitingSchema = z.object({
+  promptType: z
+    .enum(['binary', 'text', 'chain_approval'])
+    .optional(),
+  promptText: z.string().max(5000, 'promptText too long').optional(),
+  quickResponses: z
+    .array(z.string().max(500, 'response too long'))
+    .max(20, 'too many quick responses')
+    .optional(),
+});
+
+export type SessionAwaitingRequest = z.infer<typeof sessionAwaitingSchema>;
+
+// ============================================================================
+// Event Schemas
+// ============================================================================
+
+const VALID_EVENT_TYPES = [
+  'session:started',
+  'session:ended',
+  'chain:compiled',
+  'chain:started',
+  'chain:completed',
+  'step:spawned',
+  'step:started',
+  'step:completed',
+  'step:failed',
+  'interaction:awaiting-input',
+  'interaction:input-received',
+  'file:created',
+  'file:modified',
+  'file:deleted',
+  'registry:line-updated',
+  'execution:log-created',
+  'terminal:output',
+  'error:occurred',
+  'warning:occurred',
+] as const;
+
+export const createEventSchema = z.object({
+  sessionId: z.string().min(1, 'sessionId required').max(200, 'sessionId too long'),
+  type: z.enum(VALID_EVENT_TYPES),
+  timestamp: z.string().min(1, 'timestamp required').max(50, 'timestamp too long'),
+}).passthrough(); // Allow additional event-specific fields
+
+export type CreateEventRequest = z.infer<typeof createEventSchema>;
+
+// ============================================================================
+// Terminal Schemas
+// ============================================================================
+
+export const terminalOutputSchema = z.object({
+  output: z.string().max(1_000_000, 'output too large (max 1MB)'),
+  stream: z.enum(['stdout', 'stderr']),
+  stepNumber: z.union([z.string(), z.number()]).optional(),
+  action: z.string().max(200, 'action too long').optional(),
+});
+
+export type TerminalOutputRequest = z.infer<typeof terminalOutputSchema>;
+
+// ============================================================================
+// Command Schemas
+// ============================================================================
+
+export const createCommandSchema = z.object({
+  type: z.enum(['pause', 'resume', 'cancel', 'abort', 'retry', 'skip']),
+  payload: z.record(z.unknown()).optional(),
+});
+
+export type CreateCommandRequest = z.infer<typeof createCommandSchema>;
+
+export const ackCommandSchema = z.object({
+  result: z.unknown().optional(),
+  error: z.string().max(5000, 'error message too long').optional(),
+});
+
+export type AckCommandRequest = z.infer<typeof ackCommandSchema>;
+
+// ============================================================================
+// File Schemas
+// ============================================================================
+
+export const fileWriteSchema = z.object({
+  content: z.string().max(10 * 1024 * 1024, 'file too large (max 10MB)'),
+});
+
+export type FileWriteRequest = z.infer<typeof fileWriteSchema>;

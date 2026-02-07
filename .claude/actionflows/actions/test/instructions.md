@@ -1,6 +1,6 @@
 # Test Action
 
-> Execute tests and report results.
+> Execute tests and report results with pass/fail counts and failure details.
 
 ---
 
@@ -13,62 +13,51 @@
 This agent is **explicitly instructed** to execute:
 - `_abstract/agent-standards` — Core behavioral principles
 - `_abstract/create-log-folder` → Creates `.claude/actionflows/logs/test/{datetime}/`
-- `_abstract/post-notification` → Posts test results notification (currently not configured)
-
-**You don't need to spawn a separate `notify` action after this action.**
-
 ---
 
 ## Inputs
 
 | Input | Required | Description | Default |
 |-------|----------|-------------|---------|
-| scope | YES | What to test — file paths, test directory, module name, or "all". Example: "packages/backend/src/__tests__/" | — |
-| type | YES | Test type: `unit`, `integration`, `e2e`, `smoke`. Example: "integration" | — |
+| scope | YES | What to test — e.g., "packages/backend/src/__tests__/" or "all" | — |
+| type | YES | `unit`, `integration`, `smoke` | — |
 | coverage | NO | Report coverage metrics | false |
-| context | NO | What was changed — helps identify relevant failures. Example: "Modified session route handlers" | — |
+| context | NO | What was changed — helps identify relevant failures | none |
 
 ---
 
 ## Model
 
-**haiku** — Fast, well-defined task. Run command, parse output, report.
+**haiku** — Fast, well-defined test execution.
 
 ---
 
 ## How Orchestrator Spawns This
 
 1. Collect inputs:
-   - `scope`: From human request or inferred from code/ action output
-   - `type`: From human or inferred from scope
-   - `context`: From previous code/ action summary
+   - `scope`: From human request or previous action's changed files
+   - `type`: From human request context
 
 2. Spawn:
 
 ```
 Read your definition in .claude/actionflows/actions/test/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Test framework: Vitest + Supertest
-- Test location: packages/backend/src/__tests__/
-
 Input:
 - scope: packages/backend/src/__tests__/
 - type: integration
-- context: Modified session route handlers
+- context: Changed session routes and cleanup service
 ```
 
 ---
 
 ## Gate
 
-Tests executed and results reported (even if some fail). Report includes pass/fail counts and failure details.
+Tests executed and results reported (even if some fail). Test results written to log folder.
 
 ---
 
 ## Notes
 
-- Currently only backend has automated tests (Vitest + Supertest)
-- E2E tests are specification documents, not automated suites
-- Type checking via `pnpm type-check` serves as a smoke test
+- Vitest for backend unit/integration tests
+- Always reports ALL failures, not just the first one

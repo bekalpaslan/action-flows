@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// @ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import type { WorkspaceEvent, StepSpawnedEvent, StepCompletedEvent, Session } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
-import { createTestServer, createWebSocketClient, createMockEvent, cleanup } from './helpers';
+import { createTestServer, createWebSocketClient, createMockEvent, cleanup } from './helpers.js';
 
 describe('Integration Tests: Hook → Backend → WebSocket Flow', () => {
   let testServerUrl: string;
@@ -38,7 +40,7 @@ describe('Integration Tests: Hook → Backend → WebSocket Flow', () => {
         }),
       });
 
-      const session: Session = await sessionRes.json();
+      const session: Session = await sessionRes.json() as any;
       expect(sessionRes.status).toBe(201);
       expect(session.id).toBeDefined();
 
@@ -58,12 +60,12 @@ describe('Integration Tests: Hook → Backend → WebSocket Flow', () => {
       });
 
       expect(eventRes.status).toBe(201);
-      const eventResponse = await eventRes.json();
-      expect(eventResponse.success).toBe(true);
+      const eventResponse = await eventRes.json() as any;
+      expect((eventResponse as any).success).toBe(true);
 
       // 4. Verify event stored in storage
       const eventsRes = await fetch(`${testServerUrl}/api/events/${session.id}`);
-      const { events, count } = await eventsRes.json();
+      const { events, count } = await eventsRes.json() as any;
 
       expect(count).toBeGreaterThan(0);
       expect(events).toContainEqual(expect.objectContaining({

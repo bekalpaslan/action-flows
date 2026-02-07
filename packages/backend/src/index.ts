@@ -5,17 +5,23 @@ import { WebSocketServer } from 'ws';
 import type { IncomingMessage } from 'http';
 import type { Socket } from 'net';
 
-import { storage, isAsyncStorage } from './storage';
-import { handleWebSocket } from './ws/handler';
-import { cleanupService } from './services/cleanup';
-import { setBroadcastFunction, shutdownAllWatchers } from './services/fileWatcher';
-import terminalRouter, { setBroadcastTerminalFunction } from './routes/terminal';
-import eventsRouter from './routes/events';
-import sessionsRouter from './routes/sessions';
-import commandsRouter from './routes/commands';
-import historyRouter from './routes/history';
-import filesRouter from './routes/files';
+import { storage, isAsyncStorage } from './storage/index.js';
+import { handleWebSocket } from './ws/handler.js';
+import { clientRegistry } from './ws/clientRegistry.js';
+import { cleanupService } from './services/cleanup.js';
+import { setBroadcastFunction, shutdownAllWatchers } from './services/fileWatcher.js';
+import terminalRouter, { setBroadcastTerminalFunction } from './routes/terminal.js';
+import eventsRouter from './routes/events.js';
+import sessionsRouter from './routes/sessions.js';
+import commandsRouter from './routes/commands.js';
+import historyRouter from './routes/history.js';
+import filesRouter from './routes/files.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent } from '@afw/shared';
+
+// Middleware imports (Agent A)
+import { authMiddleware } from './middleware/auth.js';
+import { generalLimiter } from './middleware/rateLimit.js';
+import { globalErrorHandler } from './middleware/errorHandler.js';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 
@@ -23,11 +29,29 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 const app = express();
 
 // Middleware
+// Configure CORS with whitelist (Agent A fix)
+const ALLOWED_ORIGINS = (process.env.AFW_CORS_ORIGINS || 'http://localhost:5173,http://localhost:3001').split(',');
+
 app.use(cors({
-  origin: '*', // Allow all origins for Electron app
+  origin: (origin, callback) => {
+    // Allow requests with no origin (Electron, server-to-server, curl)
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS: Origin not allowed'));
+    }
+  },
   credentials: true,
 }));
-app.use(express.json());
+
+// Body size limit (Agent A fix)
+app.use(express.json({ limit: '1mb' }));
+
+// Apply authentication middleware (Agent A)
+app.use(authMiddleware);
+
+// Apply general rate limiting to all /api routes (Agent A)
+app.use('/api', generalLimiter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -46,18 +70,31 @@ app.use('/api/history', historyRouter);
 app.use('/api/files', filesRouter);
 app.use('/api/terminal', terminalRouter);
 
+// Global error handler (must be after all routes) (Agent A)
+app.use(globalErrorHandler);
+
 // Create HTTP server
 const server = createServer(app);
 
-// Create WebSocket server
-const wss = new WebSocketServer({ server });
-
-// Store connected WebSocket clients for Redis pub/sub broadcasting
-const wsConnectedClients = new Set<any>();
+// Create WebSocket server with max payload limit (1MB) for security
+const wss = new WebSocketServer({ noServer: true, maxPayload: 1024 * 1024 });
 
 // Handle WebSocket upgrade
 server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) => {
-  if (request.url === '/ws') {
+  if (request.url?.startsWith('/ws')) {
+    // Check API key authentication if configured
+    const apiKey = process.env.AFW_API_KEY;
+    if (apiKey) {
+      const url = new URL(request.url, `http://${request.headers.host}`);
+      const providedKey = url.searchParams.get('apiKey')
+        || request.headers.authorization?.replace('Bearer ', '');
+      if (providedKey !== apiKey) {
+        socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
+        socket.destroy();
+        return;
+      }
+    }
+
     wss.handleUpgrade(request, socket, head, (ws) => {
       wss.emit('connection', ws, request);
     });
@@ -71,22 +108,34 @@ wss.on('connection', (ws, request) => {
   const clientId = `client-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   console.log(`[WS] Client connected: ${clientId}`);
 
-  wsConnectedClients.add(ws);
+  // Extract API key from handshake for per-message validation (Fix 1 & 4)
+  const apiKey = process.env.AFW_API_KEY;
+  const url = new URL((request.url || '/ws'), `http://${request.headers.host || 'localhost'}`);
+  const providedApiKey = url.searchParams.get('apiKey') || (request.headers.authorization?.replace('Bearer ', '') ?? undefined);
+
+  // Try to register the client (will fail if at max capacity - Fix 4)
+  const registered = clientRegistry.register(ws, clientId, providedApiKey || apiKey, undefined);
+  if (!registered) {
+    console.warn(`[WS] Client rejected: max connections reached`);
+    ws.send(JSON.stringify({ type: 'error', payload: 'Server at maximum capacity' }));
+    ws.close(1008, 'Server at max capacity');
+    return;
+  }
 
   handleWebSocket(ws, clientId, storage);
 
   ws.on('close', () => {
     console.log(`[WS] Client disconnected: ${clientId}`);
-    wsConnectedClients.delete(ws);
+    clientRegistry.unregister(ws);
   });
 
   ws.on('error', (error) => {
-    console.error(`[WS] Error for client ${clientId}:`, error);
-    wsConnectedClients.delete(ws);
+    console.error(`[WS] Error for client ${clientId}:`, error.message);
+    clientRegistry.unregister(ws);
   });
 });
 
-// Broadcast file change events to WebSocket clients
+// Broadcast file change events to WebSocket clients subscribed to this session
 function broadcastFileEvent(
   sessionId: SessionId,
   event: FileCreatedEvent | FileModifiedEvent | FileDeletedEvent
@@ -97,14 +146,10 @@ function broadcastFileEvent(
     payload: event,
   });
 
-  wsConnectedClients.forEach((client) => {
-    if (client.readyState === 1) { // 1 = OPEN
-      client.send(message);
-    }
-  });
+  clientRegistry.broadcastToSession(sessionId, message);
 }
 
-// Broadcast terminal output events to WebSocket clients
+// Broadcast terminal output events to WebSocket clients subscribed to this session
 function broadcastTerminalEvent(
   sessionId: SessionId,
   event: TerminalOutputEvent
@@ -115,11 +160,7 @@ function broadcastTerminalEvent(
     payload: event,
   });
 
-  wsConnectedClients.forEach((client) => {
-    if (client.readyState === 1) { // 1 = OPEN
-      client.send(message);
-    }
-  });
+  clientRegistry.broadcastToSession(sessionId, message);
 }
 
 // Initialize Redis Pub/Sub if using Redis storage
@@ -141,11 +182,8 @@ async function initializeRedisPubSub() {
             payload: eventData.event,
           });
 
-          wsConnectedClients.forEach((client) => {
-            if (client.readyState === 1) { // 1 = OPEN
-              client.send(broadcastMessage);
-            }
-          });
+          const eventSessionId = eventData.sessionId as SessionId;
+          clientRegistry.broadcastToSession(eventSessionId, broadcastMessage);
         } catch (error) {
           console.error('[Redis] Error processing pub/sub message:', error);
         }
@@ -159,7 +197,9 @@ async function initializeRedisPubSub() {
 }
 
 // Only start server if this is the main module (not when imported for testing)
-if (import.meta.url === `file://${process.argv[1]}`) {
+const isMainModule = import.meta.url === `file://${process.argv[1]}` ||
+  import.meta.url === new URL(`file:///${process.argv[1]?.replace(/\\/g, '/')}`).href;
+if (isMainModule) {
   server.listen(PORT, async () => {
     // Initialize Redis Pub/Sub after server starts
     await initializeRedisPubSub();
@@ -196,7 +236,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     await shutdownAllWatchers();
 
     // Close WebSocket connections
-    wsConnectedClients.forEach((client) => {
+    clientRegistry.getAllClients().forEach((client) => {
       client.close();
     });
 

@@ -6,10 +6,9 @@
 
 ## When to Use
 
-- Periodic health check
-- After major framework changes
-- When something seems wrong with routing or action execution
-- "Check framework health"
+- Periodic health check (recommended: after every 5-10 chain executions)
+- After bulk framework changes
+- When orchestrator suspects structural inconsistencies
 
 ---
 
@@ -23,7 +22,7 @@
 
 ## Action Sequence
 
-### Step 1: Framework Analysis
+### Step 1: Drift Analysis
 
 **Action:** `.claude/actionflows/actions/analyze/`
 **Model:** sonnet
@@ -32,13 +31,10 @@
 ```
 Read your definition in .claude/actionflows/actions/analyze/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-
 Input:
 - aspect: drift
 - scope: .claude/actionflows/
-- context: Verify framework structure matches registries. Check: (1) Every action in ACTIONS.md has agent.md + instructions.md on disk, (2) Every flow in FLOWS.md has instructions.md on disk, (3) No stale registry entries, (4) No orphan directories, (5) ORGANIZATION.md departments match flow directory structure
+- context: Verify structure matches registries. Check: every action in ACTIONS.md has agent.md + instructions.md on disk; every flow in FLOWS.md has instructions.md on disk; no stale entries; no orphan directories; ORGANIZATION.md departments match flow directory structure.
 ```
 
 **Gate:** Health report delivered with pass/fail for each check.
@@ -48,7 +44,7 @@ Input:
 ## Dependencies
 
 ```
-Step 1 (single step)
+Step 1
 ```
 
 **Parallel groups:** None — single step.
@@ -57,4 +53,5 @@ Step 1 (single step)
 
 ## Chains With
 
-- Standalone flow — does not chain with post-completion (read-only)
+- ← Any flow can trigger this as a follow-up
+- → `action-creation/` or `action-deletion/` if drift is found

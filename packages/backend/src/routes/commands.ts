@@ -1,7 +1,13 @@
 import express, { Router } from 'express';
 import type { SessionId } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
-import { storage } from '../storage';
+import { storage } from '../storage/index.js';
+
+// Validation and rate limiting (Agent A)
+import { validateBody } from '../middleware/validate.js';
+import { createCommandSchema, ackCommandSchema } from '../schemas/api.js';
+import { writeLimiter } from '../middleware/rateLimit.js';
+import { sanitizeError } from '../middleware/errorHandler.js';
 
 const router = Router();
 
@@ -9,7 +15,7 @@ const router = Router();
  * POST /api/sessions/:id/commands
  * Queue a command for a session (from Dashboard)
  */
-router.post('/:id/commands', async (req, res) => {
+router.post('/:id/commands', writeLimiter, validateBody(createCommandSchema), async (req, res) => {
   try {
     const { id } = req.params;
     const { type, payload } = req.body;
@@ -23,38 +29,31 @@ router.post('/:id/commands', async (req, res) => {
       });
     }
 
-    // Validate command type
-    const validTypes = ['pause', 'resume', 'cancel', 'abort', 'retry', 'skip'];
-    if (!validTypes.includes(type)) {
-      return res.status(400).json({
-        error: 'Invalid command type',
-        validTypes,
-        received: type,
-      });
-    }
-
-    const command = {
-      id: `cmd-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      type,
-      payload: payload || {},
-      timestamp: brandedTypes.currentTimestamp(),
+    const commandId = `cmd-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const commandPayload = {
+      commandId,
+      command: {
+        type,
+        payload: payload || {},
+      },
+      issuedAt: brandedTypes.currentTimestamp(),
     };
 
-    await Promise.resolve(storage.queueCommand(id as SessionId, command));
+    await Promise.resolve(storage.queueCommand(id as SessionId, commandPayload as any));
 
     console.log(`[API] Command queued for session ${id}:`, type);
 
     res.status(201).json({
       success: true,
       sessionId: id,
-      commandId: command.id,
-      command,
+      commandId,
+      command: commandPayload,
     });
   } catch (error) {
     console.error('[API] Error queueing command:', error);
     res.status(500).json({
       error: 'Failed to queue command',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -77,7 +76,7 @@ router.get('/:id/commands', async (req, res) => {
     console.error('[API] Error fetching commands:', error);
     res.status(500).json({
       error: 'Failed to fetch commands',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -86,12 +85,13 @@ router.get('/:id/commands', async (req, res) => {
  * POST /api/commands/:commandId/ack
  * Acknowledge that a command was received and processed
  */
-router.post('/:commandId/ack', (req, res) => {
+router.post('/:commandId/ack', validateBody(ackCommandSchema), (req, res) => {
   try {
     const { commandId } = req.params;
     const { result, error } = req.body;
 
-    console.log(`[API] Command acknowledged: ${commandId}`, { result, error });
+    // Log without user input (Agent A security fix - sanitize log output)
+    console.log(`[API] Command acknowledged: ${commandId}`);
 
     res.json({
       success: true,
@@ -102,7 +102,7 @@ router.post('/:commandId/ack', (req, res) => {
     console.error('[API] Error acknowledging command:', error);
     res.status(500).json({
       error: 'Failed to acknowledge command',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });

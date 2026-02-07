@@ -1,6 +1,6 @@
 # Commit Action
 
-> Stage, commit, and push git changes.
+> Stage, commit, and push git changes with conventional commit messages.
 
 ---
 
@@ -12,8 +12,6 @@
 
 This agent is **explicitly instructed** to execute:
 - `_abstract/agent-standards` — Core behavioral principles
-- `_abstract/create-log-folder` → Creates `.claude/actionflows/logs/commit/{datetime}/`
-- `_abstract/post-notification` → Posts commit notification (currently not configured)
 
 ---
 
@@ -21,37 +19,33 @@ This agent is **explicitly instructed** to execute:
 
 | Input | Required | Description | Default |
 |-------|----------|-------------|---------|
-| summary | YES | What was done — used to generate commit message. Example: "Add WebSocket reconnection with exponential backoff" | — |
-| files | YES | List of changed files to stage. Example: "packages/app/src/hooks/useWebSocket.ts, packages/app/src/contexts/WebSocketContext.tsx" | — |
-| push | NO | Whether to push after commit | true |
+| summary | YES | What was done — e.g., "Add WebSocket reconnection with exponential backoff" | — |
+| files | YES | Files to stage — e.g., "packages/app/src/hooks/useWebSocket.ts packages/app/src/contexts/WebSocketContext.tsx" | — |
+| push | NO | Push after commit | true |
 
 ---
 
 ## Model
 
-**haiku** — Fast, mechanical task. Stage files, commit, push.
+**haiku** — Fast, well-defined mechanical task.
 
 ---
 
 ## How Orchestrator Spawns This
 
 1. Collect inputs:
-   - `summary`: From human or from previous action's change summary
-   - `files`: From previous action's output listing changed files
-   - `push`: From human preference or default true
+   - `summary`: From previous action's output or human description
+   - `files`: From previous action's changed files list
+   - `push`: From human request (default true)
 
 2. Spawn:
 
 ```
 Read your definition in .claude/actionflows/actions/commit/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Working directory: D:/ActionFlowsDashboard
-
 Input:
 - summary: Add WebSocket reconnection with exponential backoff
-- files: packages/app/src/hooks/useWebSocket.ts, packages/app/src/contexts/WebSocketContext.tsx
+- files: packages/app/src/hooks/useWebSocket.ts packages/app/src/contexts/WebSocketContext.tsx
 - push: true
 ```
 
@@ -59,12 +53,12 @@ Input:
 
 ## Gate
 
-Commit created (and pushed if requested). Commit hash reported.
+Commit created with conventional commit message and Co-Authored-By line. Push completed if requested.
 
 ---
 
 ## Notes
 
-- Never stages files broadly — always specific file paths
-- Follows conventional commits matching project history
+- Always includes `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
+- Never force pushes or amends previous commits
 - Reports commit hash in output for tracking

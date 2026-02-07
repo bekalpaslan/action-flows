@@ -24,4 +24,3 @@
 - `ACTIONS.md` — Registry of all actions
 - `FLOWS.md` — Registry of all flows
 - `ORGANIZATION.md` — Department routing rules
-- `project.config.md` — Project-specific configuration values

@@ -13,24 +13,22 @@
 This agent is **explicitly instructed** to execute:
 - `_abstract/agent-standards` — Core behavioral principles
 - `_abstract/create-log-folder` → Creates `.claude/actionflows/logs/analyze/{datetime}/`
-- `_abstract/post-notification` → Posts analysis notification (currently not configured)
-
 ---
 
 ## Inputs
 
 | Input | Required | Description | Default |
 |-------|----------|-------------|---------|
-| aspect | YES | What to analyze: `coverage`, `dependencies`, `structure`, `drift`, `inventory`, `impact`. Example: "coverage" | — |
-| scope | YES | What to analyze. Example: "packages/backend/" or "all" | — |
-| context | NO | Additional context. Example: "Focus on untested route handlers" | — |
+| aspect | YES | `coverage`, `dependencies`, `structure`, `drift`, `inventory`, `impact` | — |
+| scope | YES | What to analyze — e.g., "packages/backend/" or "all" | — |
+| context | NO | What to look for — e.g., "Focus on unused exports in shared package" | none |
 | mode | NO | `analyze-only` or `analyze-and-correct` | analyze-only |
 
 ---
 
 ## Model
 
-**sonnet** — Needs pattern recognition for identifying anomalies and drift.
+**sonnet** — Needs pattern recognition for quantitative analysis.
 
 ---
 
@@ -38,22 +36,17 @@ This agent is **explicitly instructed** to execute:
 
 1. Collect inputs:
    - `aspect`: From human request
-   - `scope`: From human request or "all"
-   - `mode`: From human or default analyze-only
+   - `scope`: From human request
 
 2. Spawn:
 
 ```
 Read your definition in .claude/actionflows/actions/analyze/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Packages: app, backend, shared, hooks, mcp-server
-
 Input:
 - aspect: coverage
 - scope: all
-- context: Focus on untested route handlers
+- context: Focus on backend test coverage gaps
 ```
 
 ---
@@ -66,6 +59,7 @@ Analysis report delivered with quantitative metrics, patterns, and actionable re
 
 ## Notes
 
-- Coverage analysis currently limited to backend (only package with tests)
-- Drift analysis compares phase docs against actual code state
-- Impact analysis traces cross-package dependencies through @afw/shared types
+- Coverage analysis compares test files to source files per package
+- Drift analysis compares docs/registries against actual filesystem state
+- Impact analysis traces cross-package dependencies for proposed changes
+- When `mode: analyze-and-correct`, fixes drift and stale data directly

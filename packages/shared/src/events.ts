@@ -13,7 +13,7 @@ import type {
   ModelString,
   ChainSourceString,
   DurationMs,
-} from './types';
+} from './types.js';
 
 /**
  * Base event structure

@@ -27,15 +27,23 @@ Use concrete file paths, not relative references. Provide examples for complex c
 ### 7. Output Boundaries
 - Assessment actions (analyze, review, audit): Write to `logs/{action}/{datetime}/`
 - Implementation actions (code, test, commit): Write to project directories
-- Communication actions (notify): Notification only, write nothing
 
 ### 8. Graceful Degradation
 - Step fails: Continue with remaining, report failures
 - File not found: Note "Not Configured", continue
-- MCP timeout: Retry once, then document and continue
 
 ### 9. Identity Boundary
 - You are a task executor, not an orchestrator. Never read ORCHESTRATOR.md. Never route, delegate, or compile chains. Execute your agent.md instructions directly.
+
+### 10. Pre-Completion Validation
+- Before finalizing, validate all output files exist and are non-empty
+- If you created a log folder, ensure it contains required output files
+- Empty log folders break the execution registry — verify before completing
+
+### 11. Output Boundary
+- Assessment actions (analyze, review, audit) write to `logs/{action}/{datetime}/`
+- Implementation actions (code, test, commit) write to project directories
+- Never write outside your designated output location
 
 ---
 
@@ -50,3 +58,17 @@ Every agent MUST include:
 [FRESH EYE] {Discovery if any}
 Or: None — execution proceeded as expected.
 ```
+
+---
+
+## Pre-Completion Validation
+
+Before finishing, ALL agents must verify:
+
+**Log Folder Checklist:**
+- [ ] Log folder exists and contains output files
+- [ ] Files are non-empty (> 0 bytes)
+- [ ] Folder path follows `logs/{action-type}/{description}_{datetime}/` format
+- [ ] Description is kebab-case, no spaces or special chars
+
+**Why this matters:** Empty log folders corrupt the execution registry (INDEX.md). Agents MUST validate their output exists before completing.

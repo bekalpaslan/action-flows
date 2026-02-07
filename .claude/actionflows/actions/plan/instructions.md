@@ -13,23 +13,21 @@
 This agent is **explicitly instructed** to execute:
 - `_abstract/agent-standards` — Core behavioral principles
 - `_abstract/create-log-folder` → Creates `.claude/actionflows/logs/plan/{datetime}/`
-- `_abstract/post-notification` → Posts planning notification (currently not configured)
-
 ---
 
 ## Inputs
 
 | Input | Required | Description | Default |
 |-------|----------|-------------|---------|
-| requirements | YES | What needs to be planned. Example: "Phase 6 conversation interface with user input injection" | — |
-| context | YES | Constraints and related code. Example: "Must integrate with WebSocketContext, SessionPane component, existing command infrastructure" | — |
+| requirements | YES | What needs to be planned — e.g., "Add real-time chain status updates via WebSocket" | — |
+| context | YES | Constraints, related areas — e.g., "packages/shared/src/events.ts, packages/backend/src/ws/" | — |
 | depth | NO | `high-level` or `detailed` | detailed |
 
 ---
 
 ## Model
 
-**opus** — Deep reasoning needed for comprehensive planning and risk assessment.
+**sonnet** — Good reasoning for architectural planning and risk assessment.
 
 ---
 
@@ -37,24 +35,16 @@ This agent is **explicitly instructed** to execute:
 
 1. Collect inputs:
    - `requirements`: From human request
-   - `context`: From human request or framework knowledge
-   - `depth`: From human or default detailed
+   - `context`: From human request or routing knowledge
 
 2. Spawn:
 
 ```
 Read your definition in .claude/actionflows/actions/plan/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express + WebSocket + Redis (packages/backend/)
-- Frontend: React + Vite + Electron (packages/app/)
-- Shared: TypeScript types (packages/shared/)
-- Current phase: Phase 5 complete
-
 Input:
-- requirements: Phase 6 conversation interface with user input injection
-- context: Must integrate with WebSocketContext, SessionPane component, existing command infrastructure
+- requirements: Add real-time chain status updates via WebSocket
+- context: packages/shared/src/events.ts, packages/backend/src/ws/handler.ts, packages/app/src/hooks/useWebSocket.ts
 - depth: detailed
 ```
 
@@ -62,12 +52,12 @@ Input:
 
 ## Gate
 
-Plan delivered with actionable, ordered steps. Each step includes file paths, change descriptions, and dependencies.
+Plan delivered with actionable, ordered steps. Each step has file paths, change descriptions, and dependencies.
 
 ---
 
 ## Notes
 
-- Planning agent explores codebase extensively — may take longer than other actions
-- Output includes a suggested ActionFlows chain for implementing the plan
-- Risk assessment considers cross-package impacts
+- Plans follow data flow order: shared types → backend → frontend
+- Cross-package dependencies are always identified
+- Risk assessment included for breaking changes

@@ -1,6 +1,6 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent } from '@afw/shared';
-import { storage as memoryStorage } from './memory';
-import { createRedisStorage } from './redis';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId } from '@afw/shared';
+import { storage as memoryStorage } from './memory.js';
+import { createRedisStorage } from './redis.js';
 
 /**
  * Unified storage interface that can use either memory or Redis backend
@@ -12,6 +12,11 @@ export interface Storage {
   getSession(sessionId: SessionId): Session | undefined | Promise<Session | undefined>;
   setSession(session: Session): void | Promise<void>;
   deleteSession(sessionId: SessionId): void | Promise<void>;
+
+  // User session tracking (Memory only)
+  sessionsByUser?: Map<UserId, Set<SessionId>>; // Memory only
+  getSessionsByUser?(userId: UserId): SessionId[];
+  getUsersWithActiveSessions?(): UserId[];
 
   // Events storage
   events?: Map<SessionId, WorkspaceEvent[]>; // Memory only
@@ -76,5 +81,3 @@ export const storage = createStorage();
 export function isAsyncStorage(storageInstance: Storage): boolean {
   return !('sessions' in storageInstance);
 }
-
-export type { Storage };

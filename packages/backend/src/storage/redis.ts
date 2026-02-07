@@ -50,9 +50,9 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
   const keyPrefix = prefix || process.env.REDIS_PREFIX || 'afw:';
 
   // Redis clients for regular operations and pub/sub
-  const redis = new Redis(url);
-  const pubClient = new Redis(url);
-  const subClient = new Redis(url);
+  const redis = new (Redis as any)({ url });
+  const pubClient = new (Redis as any)({ url });
+  const subClient = new (Redis as any)({ url });
 
   // In-memory client registry (not persisted, for current instance only)
   const localClients = new Map<string, SessionId | undefined>();
@@ -117,7 +117,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       try {
         const key = `${keyPrefix}events:${sessionId}`;
         const events = await redis.lrange(key, 0, -1);
-        return events.map((e) => JSON.parse(e) as WorkspaceEvent);
+        return events.map((e: string) => JSON.parse(e) as WorkspaceEvent);
       } catch (error) {
         console.error(`[Redis] Error getting events for session ${sessionId}:`, error);
         return [];
@@ -131,7 +131,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         const targetTime = new Date(timestamp).getTime();
 
         return events
-          .map((e) => JSON.parse(e) as WorkspaceEvent)
+          .map((e: string) => JSON.parse(e) as WorkspaceEvent)
           .filter((event: WorkspaceEvent) => {
             if (event?.timestamp && typeof event.timestamp === 'string') {
               return new Date(event.timestamp).getTime() >= targetTime;
@@ -163,7 +163,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       try {
         const key = `${keyPrefix}chains:${sessionId}`;
         const chains = await redis.lrange(key, 0, -1);
-        return chains.map((c) => JSON.parse(c) as Chain);
+        return chains.map((c: string) => JSON.parse(c) as Chain);
       } catch (error) {
         console.error(`[Redis] Error getting chains for session ${sessionId}:`, error);
         return [];
@@ -198,7 +198,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         const commands = await redis.lrange(key, 0, -1);
         // Clear after fetching
         await redis.del(key);
-        return commands.map((c) => JSON.parse(c) as CommandPayload);
+        return commands.map((c: string) => JSON.parse(c) as CommandPayload);
       } catch (error) {
         console.error(`[Redis] Error getting commands for session ${sessionId}:`, error);
         return [];
@@ -231,7 +231,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         const inputs = await redis.lrange(key, 0, -1);
         // Clear after fetching
         await redis.del(key);
-        return inputs.map((i) => JSON.parse(i) as unknown);
+        return inputs.map((i: string) => JSON.parse(i) as unknown);
       } catch (error) {
         console.error(`[Redis] Error getting input for session ${sessionId}:`, error);
         return [];
@@ -269,7 +269,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     // === Pub/Sub ===
     async subscribe(channel: string, callback: (message: string) => void) {
       try {
-        subClient.on('message', (subscribeChannel, message) => {
+        subClient.on('message', (subscribeChannel: string, message: string) => {
           if (subscribeChannel === channel) {
             callback(message);
           }

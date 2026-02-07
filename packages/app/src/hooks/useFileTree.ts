@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import type { DirectoryEntry } from '../components/FileExplorer/FileTree';
 import type { WorkspaceEvent } from '@afw/shared';
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001') + '/api';
 
 // Debounce delay for refreshing after file changes (ms)
 const REFRESH_DEBOUNCE_MS = 500;

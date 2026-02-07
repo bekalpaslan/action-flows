@@ -6,21 +6,21 @@
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
-| framework/flow-creation/ | Create a new flow | plan → human gate → code → review |
-| framework/action-creation/ | Create a new action | plan → human gate → code → review |
-| framework/action-deletion/ | Remove action safely | analyze → code → review |
-| framework/framework-health/ | Validate structure | analyze (drift check) |
+| flow-creation/ | Create a new flow | plan → human gate → code → review |
+| action-creation/ | Create a new action | plan → human gate → code → review |
+| action-deletion/ | Remove action safely | analyze → code → review |
+| framework-health/ | Validate structure | analyze |
 
 ## Engineering
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
-| engineering/code-and-review/ | Implement + review + commit | code → review → (loop if needed) → post-completion |
-| engineering/post-completion/ | Standardized wrap-up | commit → status-update |
-| engineering/bug-triage/ | Investigate and fix bugs | analyze → code → test → review → post-completion |
+| code-and-review/ | Implement and review code | code → review → (loop if needed) |
+| bug-triage/ | Structured bug fix | analyze → code → test → review |
+| post-completion/ | Wrap-up after work | commit → registry update |
 
 ## QA
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
-| qa/audit-and-fix/ | Deep audit with remediation | audit → review → post-completion |
+| audit-and-fix/ | Audit and remediate | audit → review |

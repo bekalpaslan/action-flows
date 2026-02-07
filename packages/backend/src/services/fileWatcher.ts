@@ -9,7 +9,7 @@ import chokidar, { type FSWatcher } from 'chokidar';
 import * as path from 'path';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, StepNumber } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
-import { storage } from '../storage';
+import { storage } from '../storage/index.js';
 
 /**
  * Active watchers per session
@@ -85,6 +85,7 @@ export async function startWatching(sessionId: SessionId, cwd: string): Promise<
     ignored: IGNORE_PATTERNS,
     persistent: true,
     ignoreInitial: true, // Don't emit events for existing files
+    depth: 10, // Limit watch depth to prevent resource exhaustion (Agent A security fix)
     awaitWriteFinish: {
       stabilityThreshold: 100, // Wait 100ms after last change
       pollInterval: 50,

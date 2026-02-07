@@ -1,39 +1,80 @@
-# Action Registry
+# Actions Registry
 
-> Orchestrator reads this to compose chains.
-
-## Actions
-
-| Action | Purpose | Model | Required Inputs | Extends |
-|--------|---------|-------|-----------------|---------|
-| code/ | Implement code changes — features, bug fixes, refactors | haiku | task, context | agent-standards, create-log-folder, post-notification |
-| code/backend/ | Backend implementation — Express, WebSocket, Redis | haiku | task, context | agent-standards, create-log-folder, post-notification |
-| code/frontend/ | Frontend implementation — React, Vite, Electron | haiku | task, context | agent-standards, create-log-folder, post-notification |
-| review/ | Review code/docs for quality and pattern adherence | sonnet | scope, type | agent-standards, create-log-folder, post-notification |
-| test/ | Execute tests and report results | haiku | scope, type | agent-standards, create-log-folder, post-notification |
-| commit/ | Stage, commit, and push git changes | haiku | summary, files | agent-standards, create-log-folder, post-notification |
-| plan/ | Create detailed implementation plans | opus | requirements, context | agent-standards, create-log-folder, post-notification |
-| audit/ | Comprehensive deep-dive audits | opus | type, scope | agent-standards, create-log-folder, post-notification |
-| analyze/ | Data-driven analysis and metrics | sonnet | aspect, scope | agent-standards, create-log-folder, post-notification |
-| status-update/ | Update project progress/status files | haiku | what | agent-standards, create-log-folder, post-notification |
-
-## Action Modes
-
-| Action | Default | Extended | Behavior |
-|--------|---------|----------|----------|
-| review/ | review-only | review-and-fix | Reviews AND fixes bugs, typos, missing imports |
-| audit/ | audit-only | audit-and-remediate | Audits AND remediates CRITICAL/HIGH findings |
-| analyze/ | analyze-only | analyze-and-correct | Analyzes AND corrects drift, stale data |
+> Atomic building blocks. Orchestrator reads this to find actions for dynamic chaining.
 
 ## Abstract Actions
 
-| Abstract | Purpose | Used By |
-|----------|---------|---------|
-| _abstract/agent-standards | Core behavioral standards (8 rules) | All agents |
-| _abstract/create-log-folder | Datetime log folder creation | All actions |
-| _abstract/post-notification | Completion notifications | All actions |
-| _abstract/update-queue | Queue status tracking | code, review |
-| _abstract/post-completion | Commit + notify + update status | Implementation actions |
+Abstract actions are **reusable behavior patterns** that agents are explicitly instructed to follow. They don't have agents — just instructions that define "how we do things."
+
+| Abstract Action | Purpose | Used By |
+|-----------------|---------|---------|
+| `_abstract/agent-standards/` | Core behavioral standards for all agents | All agents |
+| `_abstract/post-completion/` | Post-implementation workflow (commit, registry update) | Orchestrator (post-completion flow) |
+| `_abstract/create-log-folder/` | Datetime folder creation | code, review, audit, analyze, test, plan |
+| `_abstract/update-queue/` | Queue.md status updates | code, review |
+
+## Generic Actions
+
+These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
+
+| Action | Purpose | Requires Input? | Required Inputs | Model |
+|--------|---------|-----------------|-----------------|-------|
+| code/ | Implement code changes (generic) | YES | task, context | haiku |
+| review/ | Review anything | YES | scope, type | sonnet |
+| audit/ | Comprehensive audits | YES | type, scope | opus |
+| test/ | Execute tests | YES | scope, type | haiku |
+| analyze/ | Codebase analysis | YES | aspect, scope | sonnet |
+| plan/ | Implementation planning | YES | requirements, context | sonnet |
+| commit/ | Git commit + push | YES | summary, files | haiku |
+
+## Stack-Specific Code Actions
+
+**Prefer these over generic `code/` when the target stack is known.**
+
+| Action | Stack | Required Inputs | Model |
+|--------|-------|-----------------|-------|
+| `code/backend/` | Express 4.18 + TypeScript + Zod | task, context | haiku |
+| `code/frontend/` | React 18.2 + Vite 5 + Electron 28 | task, context | haiku |
+
+## Action Modes
+
+Actions like review/, audit/, and analyze/ support a `mode` input that controls behavior:
+
+| Action | Default Mode | Extended Mode | Behavior |
+|--------|-------------|---------------|----------|
+| review/ | review-only | review-and-fix | Reviews AND fixes bugs, doc errors |
+| audit/ | audit-only | audit-and-remediate | Audits AND remediates CRITICAL/HIGH findings |
+| analyze/ | analyze-only | analyze-and-correct | Analyzes AND corrects drift, mismatches |
+
+Use extended mode when fixes are straightforward and don't require architecture decisions.
+
+## Model Selection Guidelines
+
+| Action Type | Model | Why |
+|-------------|-------|-----|
+| code, code/backend, code/frontend, test, commit | haiku | Fast, simple execution |
+| review, analyze, plan | sonnet | Needs judgment |
+| audit | opus | Deep analysis needed |
+
+## Input Requirement Types
+
+### Requires Input = YES
+Orchestrator MUST provide inputs. Without them, agent cannot do its job.
+
+```
+Read your definition in .claude/actionflows/actions/code/agent.md
+
+Input:
+- task: Fix login validation bug      <- REQUIRED
+- context: packages/backend/src/routes/sessions.ts    <- REQUIRED
+```
+
+### Requires Input = NO
+Agent is autonomous. Orchestrator just spawns it.
+
+```
+Read your definition in .claude/actionflows/actions/{action}/agent.md
+```
 
 ## Spawning Pattern
 
@@ -51,11 +92,11 @@ Do NOT delegate work or compile chains. Execute your agent.md directly.
 
 Project Context:
 - Name: ActionFlows Dashboard
-- Notification: Not configured
-- Backend: Express + WebSocket + Redis (packages/backend/, port 3001)
-- Frontend: React + Vite + Electron (packages/app/, port 5173)
-- Shared: TypeScript types (packages/shared/)
-- MCP Server: packages/mcp-server/
+- Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
+- Frontend: React 18.2 + Vite 5 + Electron 28 + ReactFlow + Monaco + xterm
+- Shared: Branded types, discriminated unions, ES modules
+- Paths: backend=packages/backend/, frontend=packages/app/, shared=packages/shared/
+- Ports: backend=3001, vite=5173
 
 Input:
 - {input}: {value}

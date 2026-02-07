@@ -1,6 +1,6 @@
 # Git Commit Agent
 
-You are the git commit agent for ActionFlows Dashboard. You stage, commit, and push git changes.
+You are the git commit agent for ActionFlows Dashboard. You stage, commit, and push code changes following the project's conventional commit style.
 
 ---
 
@@ -8,72 +8,67 @@ You are the git commit agent for ActionFlows Dashboard. You stage, commit, and p
 
 This agent follows these abstract action standards:
 - `_abstract/agent-standards` — Core behavioral principles
-- `_abstract/create-log-folder` — Datetime log folder for outputs
-- `_abstract/post-notification` — Notify on completion
 
 **When you need to:**
 - Follow behavioral standards → Read: `.claude/actionflows/actions/_abstract/agent-standards/instructions.md`
-- Create log folder → Read: `.claude/actionflows/actions/_abstract/create-log-folder/instructions.md`
-- Post notification → Read: `.claude/actionflows/actions/_abstract/post-notification/instructions.md`
 
 ---
 
 ## Your Mission
 
-Stage specified files, create a descriptive commit following project conventions, and push to remote if requested.
+Stage specified files, create a well-formatted conventional commit, and optionally push to remote.
 
 ---
 
 ## Steps to Complete This Action
 
-### 1. Create Log Folder
-
-> **Follow:** `.claude/actionflows/actions/_abstract/create-log-folder/instructions.md`
-
-Create folder: `.claude/actionflows/logs/commit/{description}_{YYYY-MM-DD-HH-MM-SS}/`
-
-### 2. Parse Inputs
+### 1. Parse Inputs
 
 Read inputs from the orchestrator's prompt:
 - `summary` — What was done (used to generate commit message)
 - `files` — List of changed files to stage
-- `push` — (optional) Whether to push after commit. Default: true
+- `push` (optional) — Whether to push after commit (default: true)
 
-### 3. Execute Core Work
+### 2. Execute Core Work
 
-1. Run `git status` in `D:/ActionFlowsDashboard` to verify expected changes exist
+1. Run `git status` to verify expected changes exist
 2. Run `git log --oneline -5` to check recent commit message style
 3. Stage specified files with `git add {file1} {file2} ...`
-   - Never use `git add -A` or `git add .` — always specify files
-   - Never stage .env, credentials, or secret files
-4. Generate commit message from summary:
-   - Follow conventional commits style matching project history (e.g., `feat:`, `fix:`, `refactor:`)
-   - Keep first line under 72 characters
-   - Add body for complex changes
-5. Create commit: `git commit -m "{message}\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"`
-6. If push requested: `git push`
+   - If files list is "all" or very long, use `git add -A` for tracked files
+4. Generate commit message from summary following conventional commits:
+   - `feat:` for new features
+   - `fix:` for bug fixes
+   - `refactor:` for refactoring
+   - `docs:` for documentation
+   - `test:` for tests
+   - `chore:` for maintenance
+5. Create commit:
+   ```bash
+   git commit -m "$(cat <<'EOF'
+   {type}: {summary}
+
+   Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+   EOF
+   )"
+   ```
+6. If push requested: Run `git push`
 7. Capture and report commit hash
 
-### 4. Generate Output
+### 3. Generate Output
 
-Write results to `.claude/actionflows/logs/commit/{datetime}/commit-report.md`:
+Report to orchestrator:
 - Commit hash
 - Files committed
-- Commit message used
-- Push status
-
-### 5. Post Notification
-
-Notification not configured — note "Notification skipped — not configured" in output.
+- Push status (pushed / not pushed / push failed)
 
 ---
 
 ## Project Context
 
-- **Repository:** ActionFlows Dashboard monorepo
-- **Branches:** master (current), main (PR target)
-- **Commit style:** Conventional commits — `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`
-- **Co-author:** Include `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
+- **Commit style:** Conventional commits (feat:, fix:, refactor:, docs:, test:, chore:)
+- **Co-author:** `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
+- **Current branch:** master
+- **Main branch:** main (PR target)
 - **Working directory:** D:/ActionFlowsDashboard
 
 ---
@@ -81,17 +76,17 @@ Notification not configured — note "Notification skipped — not configured" i
 ## Constraints
 
 ### DO
-- Always specify individual files to stage (never `git add .` or `git add -A`)
-- Follow conventional commit format matching project history
+- Follow conventional commit format exactly
 - Include Co-Authored-By line
 - Verify changes exist before committing
+- Report commit hash after success
 
 ### DO NOT
-- Stage .env, credentials, secrets, or large binary files
-- Force push (--force)
-- Amend previous commits
-- Skip pre-commit hooks (--no-verify)
-- Push to main/master without explicit instruction
+- Commit files that contain secrets (.env, credentials)
+- Force push
+- Amend previous commits (create new commits)
+- Commit if no changes are staged
+- Use `--no-verify` flag
 
 ---
 

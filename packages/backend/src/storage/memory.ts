@@ -3,7 +3,18 @@ import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, Worksp
 /**
  * In-memory storage for sessions, chains, events, commands, and input
  * This is a temporary storage solution. Will be replaced with Redis in Step 6.
+ *
+ * Memory bounds are enforced to prevent unbounded growth:
+ * - Max 10K events per session (FIFO eviction)
+ * - Max 100 chains per session (FIFO eviction)
+ * - Max 1K total sessions (evict oldest completed sessions)
+ * - Max 100 input items per session queue
  */
+
+const MAX_EVENTS_PER_SESSION = 10_000;
+const MAX_CHAINS_PER_SESSION = 100;
+const MAX_SESSIONS = 1_000;
+const MAX_INPUT_QUEUE_PER_SESSION = 100;
 export interface MemoryStorage {
   // Session storage
   sessions: Map<SessionId, Session>;
@@ -45,6 +56,9 @@ export interface MemoryStorage {
   addClient(clientId: string, sessionId?: SessionId): void;
   removeClient(clientId: string): void;
   getClientsForSession(sessionId: SessionId): string[];
+
+  // Internal eviction method
+  _evictOldestCompletedSession(): void;
 }
 
 export const storage: MemoryStorage = {
@@ -54,6 +68,10 @@ export const storage: MemoryStorage = {
     return this.sessions.get(sessionId);
   },
   setSession(session: Session) {
+    // If at capacity and this is a new session, evict oldest completed
+    if (!this.sessions.has(session.id) && this.sessions.size >= MAX_SESSIONS) {
+      this._evictOldestCompletedSession();
+    }
     this.sessions.set(session.id, session);
     // Track session by user
     if (session.user) {
@@ -92,6 +110,10 @@ export const storage: MemoryStorage = {
   addEvent(sessionId: SessionId, event: WorkspaceEvent) {
     const events = this.events.get(sessionId) || [];
     events.push(event);
+    // Evict oldest if over limit (FIFO)
+    if (events.length > MAX_EVENTS_PER_SESSION) {
+      events.splice(0, events.length - MAX_EVENTS_PER_SESSION);
+    }
     this.events.set(sessionId, events);
   },
   getEvents(sessionId: SessionId) {
@@ -114,6 +136,10 @@ export const storage: MemoryStorage = {
   addChain(sessionId: SessionId, chain: Chain) {
     const chains = this.chains.get(sessionId) || [];
     chains.push(chain);
+    // Evict oldest if over limit (FIFO)
+    if (chains.length > MAX_CHAINS_PER_SESSION) {
+      chains.splice(0, chains.length - MAX_CHAINS_PER_SESSION);
+    }
     this.chains.set(sessionId, chains);
   },
   getChains(sessionId: SessionId) {
@@ -148,6 +174,10 @@ export const storage: MemoryStorage = {
   inputQueue: new Map(),
   queueInput(sessionId: SessionId, input: unknown) {
     const inputs = this.inputQueue.get(sessionId) || [];
+    // Silently drop if queue is full (graceful degradation)
+    if (inputs.length >= MAX_INPUT_QUEUE_PER_SESSION) {
+      return;
+    }
     inputs.push(input);
     this.inputQueue.set(sessionId, inputs);
   },
@@ -181,5 +211,30 @@ export const storage: MemoryStorage = {
       }
     });
     return clients;
+  },
+
+  /**
+   * Evict the oldest completed or failed session when capacity is reached
+   * This is called when the session limit is exceeded
+   */
+  _evictOldestCompletedSession() {
+    let oldestId: SessionId | undefined;
+    let oldestTime = Infinity;
+    for (const [id, session] of this.sessions) {
+      if ((session.status === 'completed' || session.status === 'failed') && session.startedAt) {
+        const time = new Date(session.startedAt).getTime();
+        if (time < oldestTime) {
+          oldestTime = time;
+          oldestId = id;
+        }
+      }
+    }
+    if (oldestId) {
+      this.deleteSession(oldestId);
+      this.events.delete(oldestId);
+      this.chains.delete(oldestId);
+      this.commandsQueue.delete(oldestId);
+      this.inputQueue.delete(oldestId);
+    }
   },
 };

@@ -108,6 +108,8 @@ The philosophy below defines how the FUTURE orchestrator behaves. You will encod
 
 **Read this section to UNDERSTAND what rules to encode, not to FOLLOW them now.**
 
+**Encoding source:** Part 8.2 contains the complete ORCHESTRATOR.md template with all rules already formatted for the output file. Use Part 8.2 as your PRIMARY source when writing ORCHESTRATOR.md in Step 9. This Part 2 section provides context and rationale for each rule — read it to understand the *why*, then use Part 8.2 for the *what to write*.
+
 These rules MUST be preserved exactly in the project's `.claude/actionflows/ORCHESTRATOR.md`. They define how the orchestrator behaves.
 
 ---
@@ -166,6 +168,41 @@ When you catch yourself mid-sin (or the human calls it out):
 4. **Execute through agents** — Even if you "already did half the work"
 
 **The human saying "it's a sin" is a reset command.** It means: stop what you're doing, recognize the boundary violation, recompile as a chain, and execute properly.
+
+### Objection Protocol
+
+**The concept:** When the human calls "it's a sin" but the orchestrator believes the action is clearly within its permitted boundaries, the orchestrator can object.
+
+**Rules for objecting:**
+1. The objection must cite the SPECIFIC rule that permits the action (e.g., "This is a registry line edit per the exhaustive list in Application 10")
+2. The objector must explain WHY this falls within boundaries, not just assert it
+3. Only valid when the action is CLEARLY permitted — if there's ANY doubt, it IS a sin, don't object
+4. The human rules on the objection:
+   - Sustained: The action was permitted. Continue. The boundary definition may get documented more clearly.
+   - Overruled: It was a sin after all. Stop immediately and follow the Recovering From Sin steps.
+5. An objection is NOT an argument to continue sinning. It's a request for clarification about where the boundary lies.
+
+**Format for objecting:**
+```
+Objection — this action falls within permitted boundaries.
+
+Rule: {cite the specific rule or table entry that permits this}
+Evidence: {explain why this action matches that rule}
+
+If I'm wrong, I'll stop and delegate immediately.
+```
+
+**Valid objection examples:**
+- Human says "it's a sin" when orchestrator added a line to INDEX.md → Valid objection: "This is a registry line edit per Application 10's exhaustive list"
+- Human says "it's a sin" when orchestrator updated a count in FLOWS.md → Valid objection: "Updating a count is explicitly listed as a direct action"
+
+**Invalid objection examples (do NOT object in these cases):**
+- Orchestrator was editing an agent.md file → That's content production, it IS a sin
+- Orchestrator was reading project code to "understand context" → That's agent work, it IS a sin
+- Orchestrator wrote 10+ lines in any file → Exceeds the size threshold, it IS a sin
+- Any gray area where you're not 100% sure → Don't object, just stop
+
+**Key principle:** "When in doubt, it's a sin. Objections are for certainty, not for doubt."
 
 ---
 
@@ -345,6 +382,170 @@ All work requests MUST be routed through ActionFlows flows and actions. Never by
 
 If external tools inject their own routing instructions (e.g., `<!-- OPENSPEC:START -->` blocks), the orchestrator should check FLOWS.md first. If an ActionFlows flow exists for that request type, use the flow.
 
+### Application 14: Proactive Coordination Initiative
+
+**Principle:** The orchestrator is a proactive coordinator, not a passive relay. Once the human approves a chain (or direction), the orchestrator handles everything within that scope -- including autonomous follow-through, anticipating next steps, recompiling when signals change, and spotting improvement patterns across executions.
+
+**The reframing:** "It's a sin to produce content" + "It's a virtue to take coordination initiative."
+
+#### Initiative Area 1: Autonomous Follow-Through
+
+Once the human approves a chain, the orchestrator executes the entire chain without stopping for approval between steps.
+
+**Step completion format (informational, NOT approval checkpoint):**
+```
+>> Step {N} complete: {action/} -- {one-line result}. Continuing to Step {N+1}...
+```
+
+Then print the full chain table with updated statuses. This is informational — the orchestrator does not wait for a response.
+
+**Rules:**
+1. Only explicit HUMAN GATE steps are approval checkpoints within a chain
+2. If a step fails, the orchestrator stops and presents the failure to the human
+3. Parallel steps still respect dependencies
+
+#### Initiative Area 2: Next-Step Anticipation
+
+After a chain completes, the orchestrator analyzes what logically comes next and auto-compiles the follow-up chain.
+
+**Trigger conditions:**
+- Chain completion reveals a natural next step (e.g., audit found issues → compile fix chain)
+- Flow's documentation defines a downstream flow
+- Chain produced output that is the input for another known flow
+
+**Presentation format:**
+```
+## Follow-Up: {Next Chain Title}
+
+**Reason:** {Why this logically follows}
+**Source:** {flow-name/ or Composed from: actions}
+
+| # | Action | Model | Key Inputs | Waits For | Status |
+|---|--------|-------|------------|-----------|--------|
+| 1 | action/ | model | input=value | -- | Pending |
+
+Executing in 1 response. Reply to adjust or cancel.
+```
+
+**Rules:**
+1. The follow-up chain MUST be within the scope of the original approval
+2. The orchestrator presents the follow-up chain and begins execution unless the human replies to adjust or cancel
+3. `post-completion/` is ALWAYS an automatic follow-up when a chain modifies files
+
+#### Initiative Area 3: Preemptive Chain Recompilation
+
+When mid-chain signals indicate the plan needs adjustment, the orchestrator recompiles the remaining steps without waiting to be told.
+
+**When to recompile:**
+- Agent reports findings/scope that invalidate remaining plan
+- Agent reveals missing prerequisites
+- Step output quality is below threshold needed for remaining steps
+- Better arrangement of remaining steps is discovered
+- Better flow exists for remaining work
+
+**Recompilation rules:**
+1. Only recompile REMAINING steps -- completed steps are final
+2. If recompilation stays within original scope, proceed autonomously with a notification
+3. If recompilation expands scope beyond original approval, STOP and present the expanded chain as a new approval request
+
+**Notification format (within scope):**
+```
+>> Chain recompiled: {reason}. Steps {N}-{M} adjusted. Continuing...
+```
+
+#### Initiative Area 4: Improvement Spotting
+
+The orchestrator actively watches for cross-execution patterns and proposes framework improvements.
+
+**Pattern types:**
+| Pattern | Threshold | Action |
+|---------|-----------|--------|
+| Same action sequence composed 3+ times | 3 occurrences | Propose new flow |
+| Same learning appears in 2+ executions | 2 occurrences | Propose framework fix |
+| Execution success rate drops for a pattern | 2+ failures | Flag and investigate |
+
+**Proposal format (appended to chain completion):**
+```
+## Improvement Opportunity
+
+**Pattern:** {what was observed}
+**Evidence:** {references}
+**Proposal:** {what to do about it}
+
+Compile improvement chain?
+```
+
+**Rule:** Improvements are PROPOSED to the human, never auto-implemented.
+
+### Step Boundary Evaluation (Between Every Step)
+
+**Execute this protocol after EVERY step completion, before spawning the next step.**
+
+This protocol implements the Living Chains philosophy: chain compilation is continuous, not one-time. At every step boundary, evaluate whether the remaining chain is still optimal or should be recompiled.
+
+#### The Six-Trigger Evaluation Checklist
+
+Run through all six triggers. If ANY trigger fires, proceed to recompilation decision tree.
+
+**Trigger 1: Agent Output Signals**
+- Check: Did the completing agent's output indicate scope change, complexity shift, or invalidated assumptions?
+- Fires when: Agent explicitly reports scope expansion, or output magnitude significantly exceeds plan assumptions
+
+**Trigger 2: Pattern Recognition**
+- Check: Does execution history show this chain type historically needs adjustment at this point?
+- Fires when: Historical data shows >50% of similar chains adjusted at this boundary
+
+**Trigger 3: Dependency Discovery**
+- Check: Did the step reveal prerequisites or blockers not in the original plan?
+- Fires when: Agent reports missing prerequisites, or step completion reveals work cannot proceed without additional setup
+
+**Trigger 4: Quality Threshold**
+- Check: Does the step output meet completion criteria but fall below the quality threshold needed for remaining steps?
+- Fires when: Output quality is below the threshold required for the next step to succeed
+
+**Trigger 5: Chain Redesign Initiative**
+- Check: Would rearranging, merging, parallelizing, or resequencing remaining actions produce better outcomes?
+- Fires when: Orchestrator recognizes structural improvement opportunity in remaining steps
+
+**Trigger 6: Reuse Opportunity**
+- Check: Does an existing flow match the remaining work better than current custom composition?
+- Fires when: Predefined flow matches remaining steps and has higher success rate or better quality gates
+
+#### Recompilation Decision Tree
+
+```
+Step N completes
+    ↓
+Run 6-trigger evaluation checklist
+    ↓
+Any trigger fires?
+    ↓
+YES → Determine scope change
+        ↓
+    Is this a SCOPE EXPANSION?
+    (Adding significant new work beyond original request)
+        ↓
+    YES → STOP. Present expanded chain to human
+            ↓
+        Options:
+        - Approve expansion → Announce and continue with expanded chain
+        - Reject expansion → Continue with original chain (skip expansion)
+            ↓
+    NO → This is refinement WITHIN original scope
+        ↓
+    Recompile remaining steps (N+1 through end)
+        ↓
+    Announce change with details of what changed
+        ↓
+    Continue execution with recompiled chain (no approval needed)
+    ↓
+NO → No recompilation needed
+    ↓
+Continue to Step N+1 as originally planned
+```
+
+**Anti-Recursion Rule:** Do NOT evaluate steps for re-evaluation. Evaluate each step exactly once, then proceed.
+
 ### Orchestrator Decision Process
 
 ```
@@ -404,6 +605,162 @@ Update INDEX.md, write learnings.md
 
 ---
 
+## Application 12: Response Format Standard
+
+**Builder Note:** Encode these response formats into ORCHESTRATOR.md so that all orchestrator-user interactions follow a consistent structure.
+
+### 1. Chain Compilation (presenting plan for approval)
+
+```
+## Chain: {Brief Title}
+
+**Request:** {One-line human intent}
+**Source:** {flow-name/ | Composed from: action1 + action2 + action3 | Meta-task}
+
+| # | Action | Model | Key Inputs | Depends On | Status |
+|---|--------|-------|------------|-----------|--------|
+| 1 | action/ | model | input=value | — | Pending |
+| 2 | action/ | model | input=value | #1 | Pending |
+
+**Execution:** {Sequential | Parallel | Single step}
+
+What each step does:
+1. **{Action}** — {What this agent does and produces}
+2. **{Action}** — {What this agent does and produces}
+
+Execute?
+```
+
+### 2. Execution Start
+
+```
+## Executing: {Brief Title}
+
+Spawning Step {N}: {action/} ({model})...
+```
+
+### 3. Step Completion
+
+```
+Step {N} complete: {action/} — {one-line result}
+Spawning Step {N+1}...
+```
+
+### 4. Chain Status Update (when chain evolves)
+
+```
+## Chain: {Brief Title} — Updated
+
+{What changed: "Mode gate activated" or "Human approved additional analysis"}
+
+| # | Action | Model | Key Inputs | Depends On | Status |
+|---|--------|-------|------------|-----------|--------|
+| 1 | action/ | model | input=value | — | ✅ Complete |
+| 2 | action/ | model | input=value | #1 | ⏳ Awaiting |
+| 3 | HUMAN GATE | — | Approve fix list | #2 | ⏳ Awaiting |
+
+Continuing execution...
+```
+
+### 5. Execution Complete
+
+```
+## Done: {Brief Title}
+
+| # | Action | Status | Result |
+|---|--------|--------|--------|
+| 1 | action/ | ✅ Complete | {one-line outcome} |
+| 2 | action/ | ✅ Complete | {one-line outcome} |
+
+**Logs:** `actionflows/logs/{path}/`
+**Learnings:** {Summary or "None"}
+```
+
+### 6. Learning Surface
+
+```
+## Agent Learning
+
+**From:** {action/} ({model})
+**Issue:** "{what happened}"
+**Root cause:** "{why}"
+
+**Suggested fix:** {orchestrator's proposed solution}
+
+Implement?
+```
+
+---
+
+## Request Reception Protocol (For Orchestrator — Encode This Into ORCHESTRATOR.md)
+
+**Builder Note:** This protocol applies to the FUTURE orchestrator using the framework, NOT to you during bootstrapping.
+
+When the orchestrator receives ANY request, checklist file, task file, or the human says "run X":
+
+### Step 1: Identify What Arrived
+
+- **Checklist file?** → Read the checklist itself ONLY
+- **User prose request?** → Parse the intent
+- **Framework file?** → Understand what it asks
+- **Task file from previous execution?** → Read the task structure
+
+**Key rule:** You read the REQUEST, not the project it references.
+
+### Step 2: Parse the Request Without Reading Project Files
+
+Questions to answer (from reading the request/checklist ONLY):
+
+1. **What work is this asking for?** (audit, code, review, create, run checklist?)
+2. **What's the scope?** (which component/system?)
+3. **What outputs does it expect?** (report, fixes, test results?)
+
+**DO NOT read:**
+- ❌ Project code files to "understand context"
+- ❌ The files the request references
+- ❌ Implementation details
+- ❌ Current state of components
+
+**That's agent work.** The agent will read those files when you spawn them.
+
+### Step 3: Route to Owning Department
+
+1. **Open** `actionflows/ORGANIZATION.md`
+2. **Match request type** to department
+3. **Note the department**
+
+### Step 4: Find the Flow
+
+1. **Open** `actionflows/FLOWS.md`
+2. **Look for flows** in the identified department
+3. **Check if an existing flow** handles this request type
+   - If yes: Use it
+   - If no: Compose from actions in `ACTIONS.md`
+
+### Step 5: Compile and Present Chain
+
+Build an explicit chain based on the request type, not based on knowledge of project details.
+
+**The agent will:** Read the request/checklist, read project files, verify criteria, report findings.
+
+**You will not:** Read any of those project files before spawning.
+
+### Key Rule: Parsing ≠ Context Building
+
+**Parsing (ALLOWED):**
+- Reading the request to understand WHAT is being asked
+- Identifying work type and scope
+- Routing to department and flow
+
+**Context Building (NOT ALLOWED):**
+- Reading project code files
+- Understanding implementation details
+- Pre-analyzing scope by reading referenced files
+
+Let the agent do context building. You only parse requests.
+
+---
+
 ## Pre-Action Gate (For Orchestrator — Encode This Into ORCHESTRATOR.md)
 
 **Builder Note:** This gate applies to the FUTURE orchestrator using the framework, NOT to you during bootstrapping.
@@ -444,7 +801,7 @@ The framework has two layers: **universal infrastructure** (same for every proje
 
 | Component | What | Why Universal |
 |-----------|------|---------------|
-| Abstract actions | agent-standards, create-log-folder, update-queue, post-notification, post-completion | Framework infrastructure — all agents need behavioral standards, logging, notifications |
+| Abstract actions | agent-standards, create-log-folder, update-queue, post-notification, post-completion, dual-execution | Framework infrastructure — all agents need behavioral standards, logging, notifications |
 | Registry structure | ACTIONS.md, FLOWS.md, ORGANIZATION.md | Orchestrator needs these to route work |
 | Log structure | INDEX.md, LEARNINGS.md | Continuous improvement requires execution history |
 | Framework flows | flow-creation, action-creation, action-deletion, framework-health | Framework must be able to maintain itself |
@@ -470,6 +827,41 @@ The framework has two layers: **universal infrastructure** (same for every proje
 This catalog describes every action type available in the framework. The bootstrapping agent evaluates the project and selects which actions to create. This is a **reference menu**, not a mandatory list — create only what the project needs.
 
 The catalog also serves as the **core work blueprint** — when writing an action's `agent.md`, the "Execute Core Work" section should implement what's described here, adapted to the project's specific stack and patterns.
+
+**Scale expectation:** Starter projects: 12-15 actions. Mature projects: 20-25+ actions. Growth indicates framework adoption and domain specialization.
+
+### Action Selection Guide (Read This First)
+
+**Before reading the full catalog below, use this table to decide which actions your project needs.** Then read only the relevant catalog entries in detail.
+
+| Project Characteristic | Actions to Include |
+|----------------------|-------------------|
+| Any project (minimum viable) | code/, review/, commit/ |
+| Has test suites | + test/ |
+| Has team chat channel | + notify/ |
+| Complex features requiring design | + plan/ |
+| Security surfaces, APIs, auth | + audit/ |
+| Needs metrics or gap analysis | + analyze/ |
+| Tracks progress in status files | + status-update/ |
+| Accumulates temp files/logs | + cleanup/ |
+| Multiple deployment targets | + stack-specific code/ variants |
+
+**Minimum viable framework:** code/ + review/ + commit/ (3 actions) + 4 framework flows.
+
+**Optional / advanced actions (sections 4.9-4.15):** design-flow/, flow-discovery/, ollama-mirror/, compare/, orchestrator-monitor/. **Skip these sections** unless you identified a specific need during Step 1 discovery. They can be added later via the `action-creation/` flow.
+
+---
+
+**Namespace Organization:** For projects with 15+ actions, namespace organization is recommended to prevent catalog sprawl:
+
+```
+actions/
+  project/           (actions that do work on the project)
+  framework/         (actions that manage the framework itself)
+  shared/            (infrastructure used by both)
+```
+
+When using namespaces, spawning patterns become: `actions/{category}/{action}/agent.md`
 
 ### 4.1 code/ — Implementation
 
@@ -762,6 +1154,10 @@ Create sub-actions when the project has 2+ deployment targets. Each variant adds
 
 ---
 
+### 4.9-4.15: Optional / Advanced Actions
+
+> **SKIP DIRECTIVE:** If your Action Selection Guide analysis (above) did not identify a need for cleanup, design-flow, flow-discovery, ollama-mirror, compare, or orchestrator-monitor — skip ahead to Part 5: Flow Catalog. These actions can be added later via the `action-creation/` flow.
+
 ### 4.9 cleanup/ — Cleanup (Optional)
 
 **Purpose:** Clean temporary files, old logs, and stale data.
@@ -861,27 +1257,128 @@ Create sub-actions when the project has 2+ deployment targets. Each variant adds
 
 ---
 
-### Action Selection Guide
+### 4.13 ollama-mirror/ — Local Model Assessment (Optional, Dual Execution)
 
-After discovering the project, use this to decide which actions to create:
+**Purpose:** Re-run an assessment action (review/, audit/, analyze/) through a local Ollama model for comparison with Claude's output.
+**When to include:** Optional — for projects that want cost-effective dual assessment or local model validation.
+**Model:** haiku
 
-| Project Characteristic | Actions to Include |
-|----------------------|-------------------|
-| Any project (minimum viable) | code/, review/, commit/ |
-| Has test suites | + test/ |
-| Has team chat channel | + notify/ |
-| Complex features requiring design | + plan/ |
-| Security surfaces, APIs, auth | + audit/ |
-| Needs metrics or gap analysis | + analyze/ |
-| Tracks progress in status files | + status-update/ |
-| Accumulates temp files/logs | + cleanup/ |
-| Multiple deployment targets | + stack-specific code/ variants |
+| Input | Required | Description |
+|-------|----------|-------------|
+| original_action | YES | Which action to mirror (review/, audit/, analyze/) |
+| scope | YES | What to assess (same as original action's scope) |
+| type | NO | Assessment type (same as original action's type, if applicable) |
+| ollama_model | YES | Which Ollama model to use (e.g., qwen2.5-coder:7b, qwen2.5-coder:32b) |
 
-**Minimum viable framework:** code/ + review/ + commit/ (3 actions) + 4 framework flows.
+**Core work blueprint:**
+1. Parse the original_action and inputs
+2. Verify Ollama is available (run `ollama list`)
+3. Execute the same assessment logic as the original action, but using the specified Ollama model via API
+4. Format output to match the original action's output structure (findings list, severity categorization, etc.)
+5. Write results to a parallel output file (same format as original action)
+
+**Output:** Assessment results in same format as original action, but from local model.
+**Gate:** Local model assessment complete, output file written.
+
+---
+
+### 4.14 compare/ — Dual Assessment Comparison (Optional, Dual Execution)
+
+**Purpose:** Compare Claude's assessment with a local model's assessment, identify discrepancies, and suggest remediations.
+**When to include:** Optional — used alongside ollama-mirror/ for dual execution workflows.
+**Model:** sonnet
+
+| Input | Required | Description |
+|-------|----------|-------------|
+| claude_output_path | YES | Path to Claude's assessment output |
+| ollama_output_path | YES | Path to Ollama's assessment output |
+| original_action | YES | Which action was mirrored (review/, audit/, analyze/) |
+| scope | YES | What was assessed |
+
+**Core work blueprint:**
+1. Read both assessment outputs
+2. Compare findings lists:
+   - Issues found by Claude but not Ollama
+   - Issues found by Ollama but not Claude
+   - Issues found by both (agreement)
+3. Analyze discrepancies:
+   - False positives (likely in Claude or Ollama)
+   - False negatives (missed by Claude or Ollama)
+   - Severity disagreements
+4. For each discrepancy, determine which model is likely correct and why
+5. Generate suggested remediation actions (e.g., "Fix issue X that Claude found", "Investigate false positive Y from Ollama")
+6. Present to human for approval (this becomes a HUMAN GATE in the chain)
+
+**Output:** Comparison report with agreement/disagreement analysis, suggested remediation list.
+**Gate:** Comparison complete, human approves/rejects suggested actions.
+
+### 4.15 orchestrator-monitor/ — Orchestrator Compliance Audit (Optional)
+
+**Purpose:** Audit orchestrator sessions for compliance with ORCHESTRATOR.md rules. Supports real-time hooks for continuous monitoring.
+**When to include:** Optional — for projects that want to maintain framework discipline and catch boundary violations early.
+**Model:** sonnet
+
+| Input | Required | Description |
+|-------|----------|-------------|
+| session_id | NO | Session to audit (if not provided, audits most recent) |
+| rules_to_check | NO | Specific rules to focus on (all if not provided) |
+| mode | NO | real-time (hooks during execution) or post-hoc (audit after completion) |
+
+**Core work blueprint:**
+1. Load ORCHESTRATOR.md rules and session logs
+2. Scan orchestrator actions for violations:
+   - Content production without agents
+   - Unauthorized file reads
+   - Framework boundary crossing
+   - Registry edits outside exhaustive list
+3. For each violation, identify:
+   - Which rule was broken
+   - What the orchestrator did
+   - Why it's a sin
+   - How to fix it
+4. Generate compliance report with severity levels
+5. Present findings to human
+
+**Output:** Compliance audit report with violations, suggested framework fixes.
+**Gate:** Audit complete, human reviews violations.
+
+---
+
+### Common Project-Specific Extensions
+
+The following actions appear frequently in mature projects but are domain-specific. Include them if your project needs them:
+
+#### 4.15 test-plan/ — Test Planning
+
+**Purpose:** Generate test implementation guidance from coverage analysis.
+**Model:** sonnet | **Inputs:** coverage-report, scope (optional)
+**When to include:** Projects prioritizing test coverage improvements.
+
+#### 4.16 openspec-propose/ — Spec Proposal
+
+**Purpose:** Create structured OpenSpec change proposals.
+**Model:** opus | **Inputs:** feature, scope
+**When to include:** Spec-driven development workflows.
+
+#### 4.17 openspec-implement/ — Spec Implementation
+
+**Purpose:** Implement approved OpenSpec changes with spec awareness.
+**Model:** haiku | **Inputs:** change_id, stacks
+**When to include:** Spec-driven development workflows.
+
+#### 4.18 health-check/ — Service Health Check
+
+**Purpose:** Run health/readiness checks on deployed services.
+**Model:** haiku | **Inputs:** scope, environment
+**When to include:** Deployed services requiring health monitoring.
+
+---
 
 ---
 
 ## Part 5: Flow Catalog
+
+**Scale expectation:** Starter projects will have 7-10 flows. Mature projects typically grow to 30-40+ flows across departments. This is expected framework evolution as the project discovers its common patterns.
 
 ### Universal Flows (Always Create)
 
@@ -951,6 +1448,12 @@ These 4 flows let the framework maintain itself. Always create under `flows/fram
 ### Project Flow Patterns (Select Based on Discovery)
 
 Common patterns. Propose which ones the project needs based on Step 1 discovery.
+
+**Additional patterns seen in mature projects:**
+- **QA:** security-scan/ (focused security audit → prioritize → remediate), regression-check/ (full test suite → report regressions → fix), performance-audit/ (profile → bottlenecks → optimize → verify)
+- **Docs:** api-docs-sync/ (compare endpoints with docs → fix mismatches), changelog/ (analyze commits → generate changelog), onboarding-guide/ (generate developer onboarding docs)
+- **DevOps:** deploy-verify/ (deploy → smoke test → verify → notify), dependency-audit/ (check outdated/vulnerable deps → update → test)
+- **Engineering:** hotfix/ (fast-track fix with abbreviated review), refactor/ (analyze impact → refactor → test → review), database-migration/ (plan → implement → test → review), multi-component/ (parallel implementation across backend + frontend + mobile)
 
 #### engineering/code-and-review/
 
@@ -1064,17 +1567,64 @@ for item in items:
 
 ---
 
-#### Other patterns to consider:
+#### Additional Flow Patterns for Mature Projects
 
+As projects mature and patterns emerge, consider adding these flows based on domain and operational needs:
+
+**Product & Strategy:**
 | Pattern | Purpose | When to Suggest |
 |---------|---------|----------------|
-| engineering/bug-triage/ | analyze → code → test → review | Complex bugs |
+| product/openspec/ | propose → human gate → apply | Spec-driven feature development |
+| product/impact-analysis/ | analyze → notify | Understanding change impact |
+| product/spike/ | plan → research → report | Time-boxed explorations |
+
+**Engineering:**
+| Pattern | Purpose | When to Suggest |
+|---------|---------|----------------|
+| engineering/bug-triage/ | analyze → code → test → review | Complex bugs needing assessment |
 | engineering/database-migration/ | plan → code → test → review | DB schema changes |
 | engineering/multi-component/ | analyze → parallel code per stack → review → test | Multi-stack features |
-| docs/codebase-summarize/ | analyze → code → review | Large codebases needing docs |
-| qa/coverage-analysis/ | analyze → notify | Tracking test coverage |
+| engineering/hotfix/ | abbreviated code review → immediate deployment | Critical production fixes |
+| engineering/refactor/ | analyze impact → refactor → test → review | Code quality improvements |
 
-**Propose flows based on the project's actual work patterns, not from a fixed list.**
+**QA & Quality:**
+| Pattern | Purpose | When to Suggest |
+|---------|---------|----------------|
+| qa/coverage-analysis/ | analyze → notify | Tracking test coverage |
+| qa/test-gap-fill/ | coverage analysis → code gaps → code → test | Improving test suite |
+| qa/permission-audit/ | audit access controls → report → remediate | Security compliance |
+| qa/tenant-isolation-check/ | audit multi-tenant boundaries → report findings | Multi-tenant verification |
+
+**Documentation:**
+| Pattern | Purpose | When to Suggest |
+|---------|---------|----------------|
+| docs/api-docs-sync/ | compare endpoints with docs → code → notify | Keeping docs current |
+| docs/checklist-creation/ | plan → code → review | Building new checklists |
+| docs/checklist-gap-analysis/ | analyze existing checklists → report gaps | Improving checklist coverage |
+| docs/onboarding-guide/ | analyze project structure → code → review | Developer onboarding docs |
+| docs/codebase-summarize/ | analyze → code → review | Large codebases needing summary docs |
+
+**DevOps & Reliability:**
+| Pattern | Purpose | When to Suggest |
+|---------|---------|----------------|
+| devops/deploy-verify/ | deploy → smoke test → verify → notify | Safe deployments |
+| devops/dependency-audit/ | analyze dependencies → update → test | Keeping dependencies current |
+| devops/incident-postmortem/ | analyze incident → document findings → notify | Learning from failures |
+
+**Framework & Operations:**
+| Pattern | Purpose | When to Suggest |
+|---------|---------|----------------|
+| framework/blueprint-alignment/ | audit framework drift → code fixes → review | Keeping framework consistent |
+| framework/learn-and-improve/ | analyze past executions → surface learnings → update docs | Continuous improvement |
+| framework/knowledge-extraction/ | analyze logs → extract patterns → document | Knowledge management |
+| framework/flow-consolidation/ | analyze flow usage → consolidate → verify | Reducing flow duplication |
+
+**Proposal guidance:**
+- Propose flows based on the project's actual work patterns and operational needs
+- Start with universal flows + code-and-review
+- Add flows as patterns emerge from execution logs
+- Use flow-discovery/ to identify candidate patterns
+- Prioritize flows that eliminate repeated manual orchestration
 
 ---
 
@@ -1212,6 +1762,12 @@ Write results to `.claude/actionflows/logs/{action-type}/{datetime}/`
 
 **Tool:** `{exact MCP tool name — e.g., mcp__slack__conversations_add_message}`
 **Channel ID:** `{exact channel ID}`
+
+**If notification is not configured** (no channel discovered in Step 1d), use this standard fallback block instead:
+```markdown
+**Tool:** `mcp__slack__conversations_add_message`
+**Channel:** Not configured — note "Notification skipped — channel not configured" in output.
+```
 
 **Format:**
 ```
@@ -1451,6 +2007,17 @@ Use concrete file paths, not relative references. Provide examples for complex c
 ### 9. Identity Boundary
 - You are a task executor, not an orchestrator. Never read ORCHESTRATOR.md. Never route, delegate, or compile chains. Execute your agent.md instructions directly.
 
+### 10. Pre-Completion Validation
+- Before finalizing, validate all output files exist and are non-empty
+- If you created a log folder, ensure it contains required output files
+- Empty log folders break the execution registry — verify before completing
+
+### 11. Output Boundary
+- Assessment actions (analyze, review, audit) write to `logs/{action}/{datetime}/`
+- Implementation actions (code, test, commit) write to project directories
+- Communication actions (notify) write nothing but send notifications
+- Never write outside your designated output location
+
 ---
 
 ## Learnings Output Format
@@ -1464,6 +2031,21 @@ Every agent MUST include:
 [FRESH EYE] {Discovery if any}
 Or: None — execution proceeded as expected.
 ```
+
+---
+
+## Pre-Completion Validation
+
+Before finishing, ALL agents must verify:
+
+**Log Folder Checklist:**
+- [ ] Log folder exists and contains output files
+- [ ] Files are non-empty (> 0 bytes)
+- [ ] Folder path follows `logs/{action-type}/{description}_{datetime}/` format
+- [ ] Description is kebab-case, no spaces or special chars
+
+**Why this matters:** Empty log folders corrupt the execution registry (INDEX.md). Agents MUST validate their output exists before completing.
+
 ```
 
 **`_abstract/create-log-folder/instructions.md`:**
@@ -1480,9 +2062,52 @@ Create folder: `.claude/actionflows/logs/{action-type}/{description}_{YYYY-MM-DD
 - `{description}` = brief kebab-case task description (e.g., `fix-auth-bug`)
 - `{datetime}` = current datetime as YYYY-MM-DD-HH-MM-SS
 
+**Example:** `.claude/actionflows/logs/review/auth-changes_2026-02-05-14-30-45/`
+
+## Critical Execution Order
+
+**IMPORTANT:** Execute these steps in EXACTLY this order:
+
+1. **First:** Derive description from the task (kebab-case, no spaces)
+2. **Second:** Get current datetime (YYYY-MM-DD-HH-MM-SS format)
+3. **Third:** Construct the FULL path string with all variables substituted
+4. **Fourth:** Pass the completed string to mkdir -p
+
+**Shell Substitution Warning:**
+
+❌ **WRONG — This fails:**
+```bash
+mkdir -p ".claude/actionflows/logs/review/auth-changes_$(date +%Y-%m-%d-%H-%M-%S)/"
+```
+The `$(date)` inside the string causes shell substitution errors.
+
+✅ **CORRECT — Do this:**
+```bash
+description="auth-changes"
+datetime=$(date +%Y-%m-%d-%H-%M-%S)
+folder=".claude/actionflows/logs/review/${description}_${datetime}"
+mkdir -p "$folder"
+```
+
+Substitute ALL variables BEFORE constructing the path string.
+
 Use `mkdir -p` to create. Write all outputs into this folder.
 
-**Example:** `.claude/actionflows/logs/review/auth-changes_2026-02-05-14-30-45/`
+## Critical Warnings
+
+**Windows Shell Substitution Failures:**
+- On Windows (Git Bash, MinGW), the `$()` syntax may fail or behave unpredictably
+- Always pre-compute values into variables first
+- Test your path construction before using mkdir
+- Use forward slashes `/` in paths, not backslashes
+
+**Missing Description Pitfalls:**
+- Empty or missing description field → folder looks unnamed and is hard to find
+- Description with spaces → breaks path structure (use kebab-case instead)
+- Description with special chars (#, @, !, etc.) → shell escaping errors
+- Non-descriptive names (like "temp", "log", "output") → impossible to identify what executed
+
+**Correct pattern:** Derive description from task name. For task "Fix auth bug in login endpoint", use `fix-auth-login-bug`.
 ```
 
 **`_abstract/post-notification/instructions.md`:**
@@ -1562,8 +2187,91 @@ After core work is done:
 1. **Commit** — Stage changed files, commit with descriptive message following project conventions
 2. **Notify** — Post to project's communication channel (follow post-notification instructions)
 3. **Update Status** — Update relevant status/progress files (if they exist)
+4. **Update Execution Registry** — Add entry to `actionflows/logs/INDEX.md` with chain details and outcome
 
 Each step is independent — if one fails, continue with the others.
+
+## Pre-Completion Validation
+
+Before marking completion, validate:
+
+**Checklist:**
+- [ ] All files staged in git
+- [ ] Commit message written and follows project conventions
+- [ ] Notification channel configured and available
+- [ ] Status files identified and ready to update
+- [ ] Log folder contains all expected output files
+- [ ] INDEX.md entry prepared with chain signature
+
+**If validation fails:** Fix issues and retry completion steps.
+
+## Execution Registry Update
+
+After successful completion:
+1. **Generate chain signature:** {action1}-{action2}-{action3}
+2. **Record in INDEX.md:**
+   - Chain signature
+   - Timestamp
+   - Outcome (succeeded/partial/failed)
+   - Key metrics (duration, steps completed)
+```
+
+**`_abstract/dual-execution/instructions.md`:**
+```markdown
+# Dual Execution Protocol
+
+> Automatically expand assessment actions into dual execution blocks for local model comparison.
+
+## Purpose
+
+When the orchestrator compiles a chain containing `analyze/`, `review/`, or `audit/` actions, automatically expand each assessment step into a parallel dual execution block that runs both Claude and a local Ollama model, then compares results.
+
+## Protocol Definition
+
+**Pre-check:** Before expansion, verify Ollama is available:
+```bash
+ollama list
+```
+If this fails, skip dual execution and compile the chain normally.
+
+**Expansion pattern:**
+
+Original chain step:
+```
+| 2 | review/ | sonnet | scope={scope}, type={type} | #1 | Pending |
+```
+
+Becomes:
+```
+| 2  | review/        | sonnet | scope={scope}, type={type}                                          | #1      | Pending |
+| 2m | ollama-mirror/ | haiku  | original_action=review/, scope={scope}, type={type}, ollama_model={model} | #1      | Pending |
+| 2c | compare/       | sonnet | claude_output=#2, ollama_output=#2m, original_action=review/, scope={scope} | #2, #2m | Pending |
+| 2d | HUMAN GATE     | —      | Review comparison, approve/reject suggested actions                  | #2c     | Pending |
+```
+
+**Execution:** Steps 2 and 2m run in **parallel**. Step 2c waits for both. Step 2d is a human gate.
+
+**Human gate outcomes:**
+- **Approve all** → Inject suggested actions into chain after 2d, marked `[INJECTED]`
+- **Approve some** → Inject only selected actions
+- **Reject** → Continue chain without injection
+
+**Anti-recursion:** Steps marked `[INJECTED]` are NEVER expanded with dual execution.
+
+**Model selection:**
+
+| Original Action | Ollama Model |
+|----------------|--------------|
+| `audit/` | `qwen2.5-coder:32b` |
+| `review/` | `qwen2.5-coder:7b` |
+| `analyze/` | `qwen2.5-coder:7b` |
+
+## When NOT to Use
+
+- Chain already includes `ollama-mirror/` or `compare/` steps (avoid double-expansion)
+- Ollama is not available (`ollama list` fails)
+- Human explicitly requests "Claude only" mode
+- Assessment action is marked `[INJECTED]` (from previous dual execution)
 ```
 
 ### 6.5 Structural File Content
@@ -1680,35 +2388,100 @@ Each checklist contains:
 3. Severity per item
 ```
 
+**`FRAMEWORK_GUIDE.md` (Optional):**
+
+Consider creating a comprehensive framework teaching document that explains:
+- How the orchestration system works end-to-end
+- Philosophy behind delegation and boundaries
+- How to create new actions and flows
+- Common patterns and anti-patterns
+- Troubleshooting guide
+
+**When to include:** Projects that onboard new team members or want detailed framework documentation. Useful for teaching the framework to other AI agents or human contributors.
+
 ### 6.6 Registry Templates
 
 **`ACTIONS.md`:** Populate based on which actions were actually created.
 ```markdown
-# Action Registry
+# Actions Registry
 
-> Orchestrator reads this to compose chains.
-
-## Actions
-
-| Action | Purpose | Model | Required Inputs | Extends |
-|--------|---------|-------|-----------------|---------|
-| {only list actions that exist on disk} |
-
-## Action Modes
-
-| Action | Default | Extended | Behavior |
-|--------|---------|----------|----------|
-| {only list if review/, audit/, or analyze/ were created} |
+> Atomic building blocks. Orchestrator reads this to find actions for dynamic chaining.
 
 ## Abstract Actions
 
-| Abstract | Purpose | Used By |
-|----------|---------|---------|
-| _abstract/agent-standards | Core behavioral standards | All agents |
-| _abstract/create-log-folder | Datetime log folder | Most actions |
-| _abstract/post-notification | Completion notifications | Most actions |
-| _abstract/update-queue | Queue status tracking | code, review |
-| _abstract/post-completion | Commit → notify → update | Implementation actions |
+Abstract actions are **reusable behavior patterns** that agents are explicitly instructed to follow. They don't have agents - just instructions that define "how we do things."
+
+| Abstract Action | Purpose | Used By |
+|-----------------|---------|---------|
+| `_abstract/agent-standards/` | Core behavioral standards for all agents | All agents |
+| `_abstract/post-completion/` | Post-implementation workflow (commit, notify, docs) | code, review, audit, test, analyze, plan |
+| `_abstract/post-to-slack/` | Standardized Slack notifications | code, review, audit, test, analyze, plan, notify |
+| `_abstract/create-log-folder/` | Datetime folder creation | code, review, audit, analyze, test, plan |
+| `_abstract/update-queue/` | Queue.md status updates | code, review |
+| {add other abstract actions as created} |
+
+## Generic Actions
+
+These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
+
+| Action | Purpose | Requires Input? | Required Inputs | Model |
+|--------|---------|-----------------|-----------------|-------|
+| code/ | Implement code changes (generic) | YES | task, context | haiku |
+| review/ | Review anything | YES | scope, type | sonnet |
+| audit/ | Comprehensive audits | YES | type, scope | opus |
+| test/ | Execute tests | YES | scope, type | haiku |
+| analyze/ | Codebase analysis | YES | aspect, scope | sonnet |
+| {add other generic actions as created} |
+
+## Stack-Specific Code Actions
+
+**Prefer these over generic `code/` when the target stack is known.**
+
+| Action | Stack | Required Inputs | Model |
+|--------|-------|-----------------|-------|
+| `code/backend/` | {backend stack, e.g., Python/FastAPI} | task, context | haiku |
+| `code/frontend/` | {frontend stack, e.g., React/TypeScript} | task, context | haiku |
+| `code/mobile/` | {mobile stack, e.g., Flutter/Dart} | task, context | haiku |
+
+## Action Modes
+
+Actions like review/, audit/, and analyze/ support a `mode` input that controls behavior:
+
+| Action | Default Mode | Extended Mode | Behavior |
+|--------|-------------|---------------|----------|
+| review/ | review-only | review-and-fix | Reviews AND fixes bugs, doc errors |
+| audit/ | audit-only | audit-and-remediate | Audits AND remediates CRITICAL/HIGH findings |
+| analyze/ | analyze-only | analyze-and-correct | Analyzes AND corrects drift, mismatches |
+
+Use extended mode when fixes are straightforward and don't require architecture decisions.
+
+## Model Selection Guidelines
+
+| Action Type | Model | Why |
+|-------------|-------|-----|
+| code, code/backend, code/frontend, code/mobile, test, commit, notify | haiku | Fast, simple execution |
+| review, analyze, test-plan | sonnet | Needs judgment |
+| audit, plan, design-flow | opus | Deep analysis needed |
+
+## Input Requirement Types
+
+### Requires Input = YES
+Orchestrator MUST provide inputs. Without them, agent cannot do its job.
+
+```
+Read your definition in .claude/actionflows/actions/project/code/agent.md
+
+Input:
+- task: Fix login validation bug      ← REQUIRED
+- context: backend/app/api/auth.py    ← REQUIRED
+```
+
+### Requires Input = NO
+Agent is autonomous. Orchestrator just spawns it.
+
+```
+Read your definition in .claude/actionflows/actions/shared/cleanup/agent.md
+```
 
 ## Spawning Pattern
 
@@ -1811,6 +2584,19 @@ Request → Which department? → Which flow? → No flow? Compose from actions 
 | Pattern | Count | Last Used | Notes |
 |---------|-------|-----------|-------|
 | *(populated as patterns emerge)* |
+
+## By Intent Type
+
+| Type | Count | Last Used | Successful | Notes |
+|------|-------|-----------|------------|-------|
+| fix | {N} | {date} | {X%} | Bug fixes and corrections |
+| feature | {N} | {date} | {X%} | New functionality |
+| refactor | {N} | {date} | {X%} | Code reorganization |
+| audit | {N} | {date} | {X%} | Security/quality scans |
+| test | {N} | {date} | {X%} | Test coverage work |
+| docs | {N} | {date} | {X%} | Documentation updates |
+| infra | {N} | {date} | {X%} | Infrastructure/config changes |
+| *(additional types as needed)* |
 ```
 
 **`logs/LEARNINGS.md`:**
@@ -1971,6 +2757,8 @@ Copy to INDEX.md:
 
 **Steps 1-2 are discovery and decision. Steps 3-10 are creation.**
 
+**Windows compatibility:** All `mkdir -p` commands and file paths in this bootstrap use **forward slashes** (`/`), which work in Git Bash, MinGW, and WSL on Windows. Do NOT use backslashes (`\`) in paths — they cause escaping issues in shell commands. When constructing paths programmatically, always use forward slashes regardless of platform.
+
 ### Step 1: Discover Project Context
 
 Before creating anything, analyze the project.
@@ -2015,20 +2803,96 @@ Scan for these manifest files to detect stacks:
 
 ### Step 1.5: Create Project Configuration File
 
-Copy the project config template and fill with values discovered in Step 1:
+Create `.claude/actionflows/project.config.md` from the following template, filling all sections with values discovered in Step 1:
+
+```markdown
+# {Project Name} — Project Configuration
+
+> Single source of truth for project-specific values. Referenced by CLAUDE.md and injected into agent prompts by the orchestrator.
+
+---
+
+## Project
+
+- **Name:** {Project Name}
+- **Description:** {One-line description}
+- **Repository:** {Repo info}
+- **Working Directory:** {absolute path}
+
+---
+
+## Notification
+
+- **Platform:** {Slack | Discord | Teams | None}
+- **MCP Tool:** {exact tool name, e.g., `mcp__slack__conversations_add_message` | "Not available"}
+- **Channel Name:** {#channel-name | "Not configured"}
+- **Channel ID:** {Cxxxxxxxxxx | "Not configured"}
+- **Status:** {Active | "Available but no channel designated" | "Not available"}
+
+---
+
+## Tech Stack
+
+### Backend
+- **Language:** {language + version}
+- **Framework:** {framework + version}
+- {additional entries as discovered}
+- **Package:** {path}
+- **Entry:** {entry file}
+
+### Frontend
+- **Language:** {language + version}
+- **Framework:** {framework + version}
+- {additional entries as discovered}
+- **Package:** {path}
+- **Entry:** {entry file}
+
+### Shared
+- **Language:** {language + version}
+- **Types:** {type system info}
+- **Package:** {path}
+- **Entry:** {entry file}
+
+{Add other stacks as discovered: Mobile, MCP Server, etc.}
+
+---
+
+## Architecture
+
+### Component Paths
+- **{Component} routes:** {path}
+- **{Component} components:** {path}
+{add all discovered paths}
+
+### Ports
+- **{Component}:** {port}
+{add all discovered ports}
+
+---
+
+## Domain Concepts
+
+- **{Concept}:** {Definition}
+
+---
+
+## Development Commands
 
 ```bash
-cp .claude/actionflows/project.config.template.md .claude/actionflows/project.config.md
+{command}  # {description}
 ```
 
-Fill all sections:
-- Project name and description
-- Slack channel name and ID
-- Tech stack (backend, frontend, mobile)
-- Architecture (paths, ports)
-- Domain concepts
-- Development commands
-- Git conventions
+---
+
+## Git Conventions
+
+- **Commit style:** {style}
+- **Co-author:** {if applicable}
+- **Current branch:** {branch}
+- **Main branch:** {branch}
+```
+
+Fill ALL sections with concrete values from Step 1. No `{placeholders}` should remain.
 
 This file becomes the single source of truth for project-specific values.
 
@@ -2097,7 +2961,7 @@ Create directories for **only the approved components**.
 .claude/actionflows/logs/
 ```
 
-**Per approved action:** `.claude/actionflows/actions/{name}/`
+**Per approved action:** `.claude/actionflows/actions/{category}/{name}/`
 **Per approved department:** `.claude/actionflows/flows/{dept}/`
 **Per approved flow:** `.claude/actionflows/flows/{dept}/{flow}/`
 
@@ -2156,8 +3020,9 @@ Create TWO separate files for the framework:
 
 #### 9a. Create `.claude/CLAUDE.md` — Lean Project Context
 
-**If file exists:** Preserve existing project context sections. Add minimal ActionFlows pointer section at bottom if not present.
-**If doesn't exist:** Create from template below.
+**If file doesn't exist:** Create from template below.
+**If file exists WITHOUT ActionFlows pointer:** Preserve existing content. Add the ActionFlows pointer section at bottom.
+**If file exists WITH ActionFlows pointer (re-bootstrap):** Leave the file as-is. Verify the pointer section still references `.claude/actionflows/ORCHESTRATOR.md` and the subagent exemption is present. No other changes needed — the project context was already written.
 
 This file contains ONLY project context (tech stack, paths, conventions, commands, domain concepts, git style). NO orchestrator instructions.
 
@@ -2204,7 +3069,7 @@ This file should be comprehensive — it is the orchestrator's complete operatin
 - [ ] All directories exist for approved components
 - [ ] Every action has both `agent.md` and `instructions.md`
 - [ ] Every flow has `instructions.md`
-- [ ] **No unfilled `{placeholder}` text** in any file
+- [ ] **No unfilled `{placeholder}` text** in any file (EXEMPT: `{placeholders}` inside code blocks that define response FORMAT TEMPLATES in ORCHESTRATOR.md and learnings output sections in agent.md files — these are intentional format examples, not unfilled values)
 - [ ] `ACTIONS.md` lists exactly the actions on disk
 - [ ] `FLOWS.md` lists exactly the flows on disk
 - [ ] `ORGANIZATION.md` departments match flow directories
@@ -2406,7 +3271,15 @@ All work routes through ActionFlows. Never bypass with external instruction file
 
 **Request:** {One-line human intent}
 **Source:** {flow-name/ | Composed from: action1 + action2 + action3 | Meta-task}
+**Type:** {openspec | code-review | audit | test | generic}
 **Ref:** {Similar past execution from INDEX.md, or "First run"}
+
+**Type values:**
+- `openspec` — Chain uses openspec-propose/ or openspec-implement/ actions
+- `code-review` — Chain uses code/ followed by review/ actions
+- `audit` — Chain uses audit/ action (with or without remediation)
+- `test` — Chain uses test/ or coverage actions
+- `generic` — Default for composed chains without recognized pattern
 
 | # | Action | Model | Key Inputs | Waits For | Status |
 |---|--------|-------|------------|-----------|--------|
@@ -2495,6 +3368,63 @@ Continuing execution...
 **Suggested fix:** {orchestrator's proposed solution}
 
 Implement?
+```
+
+#### 5a. Mid-Chain Learning Notification
+
+```
+>> Learning from Step {N} ({action/}): "{learning summary}"
+   Impact: {how this affects remaining steps}
+   Action: {recompiling / inserting step / adjusting inputs}
+```
+
+#### 5b. Autonomous Step Completion (informational, replaces format 3 during autonomous execution)
+
+```
+>> Step {N} complete: {action/} -- {one-line result}. Continuing to Step {N+1}...
+```
+
+Then print the full chain table with updated statuses.
+
+#### 5c. Follow-Up Chain (auto-compiled after chain completion)
+
+```
+## Follow-Up: {Next Chain Title}
+
+**Reason:** {Why this logically follows the completed chain}
+**Source:** {flow-name/ or Composed from: actions}
+
+| # | Action | Model | Key Inputs | Waits For | Status |
+|---|--------|-------|------------|-----------|--------|
+| 1 | action/ | model | input=value | -- | Pending |
+
+Executing in 1 response. Reply to adjust or cancel.
+```
+
+#### 5d. Improvement Opportunity (appended to chain completion)
+
+```
+## Improvement Opportunity
+
+**Pattern:** {what was observed across executions}
+**Evidence:** {INDEX.md/LEARNINGS.md references}
+**Proposal:** {what to do about it -- e.g., "Create flow X", "Fix action Y instructions"}
+
+Compile improvement chain?
+```
+
+#### 5e. Scope Expansion Request (when recompilation exceeds original scope)
+
+```
+## Scope Expansion: {Title}
+
+**Original scope:** {what was approved}
+**Discovered scope:** {what the chain now needs to cover}
+**Trigger:** {what caused the expansion -- agent learning, review feedback, etc.}
+
+{Full recompiled chain with statuses}
+
+This exceeds the original approval. Execute expanded chain?
 ```
 
 #### 6. Registry Update (the ONLY direct action)
@@ -2591,6 +3521,198 @@ Input:
 """
 )
 ```
+
+### Config Injection Rule
+
+**ALWAYS inject relevant project config into agent prompts.** Agents have generic instructions — project-specific context comes from config injection at spawn time.
+
+This ensures:
+- Agents remain project-agnostic and reusable
+- Hardcoded values in agent.md serve as examples/fallbacks only
+- Real config flows from orchestrator via prompt injection
+- Changes to project config update all agents automatically (single source of truth)
+
+#### Agent-Type Config Mapping
+
+Different agents need different config sections. Use this table to determine what to inject:
+
+| Agent Type | Config Needed | Example Values |
+|-----------|---------------|-----------------|
+| notify/ | project_name, notification_channel, notification_platform | {Project Name}, #{channel-name}, {Platform ID} |
+| code/ (all variants) | project_name, backend_stack, frontend_stack, mobile_stack, component_paths | {Project Name}, {Backend Stack}, {Frontend Stack}, {Mobile Stack}, backend={path}/, web={path}/, etc. |
+| test/ (all variants) | project_name, tech_stack, test_commands, component_paths | {Project Name}, {Tech Stack}, pytest backend/, npm test web/, flutter test mobile/ |
+| commit/ | project_name, git_branch_format, git_commit_format | {Project Name}, feature/*, fix/*, feat:, fix:, docs: |
+| review/ | project_name, backend_stack, frontend_stack, mobile_stack | {Project Name}, {Backend Stack}, {Frontend Stack}, {Mobile Stack} |
+| audit/ | project_name, tech_stack, component_paths, security_focus | {Project Name}, [all stacks], [all paths], varies by aspect |
+| analyze/ | project_name, tech_stack, component_paths | {Project Name}, [relevant stacks], [relevant paths] |
+| plan/ | project_name, tech_stack, architecture_overview | {Project Name}, [all stacks], {architecture description} |
+
+#### Injection Patterns
+
+**Minimal config injection** (when agent only needs project name):
+```
+Project Context:
+- Name: {project_name}
+```
+
+**Standard config injection** (most agents):
+```
+Project Context:
+- Name: {project_name}
+- Notification: {notification_platform} #{channel-name} ({channel_id})
+- Backend: {backend_stack}
+- Frontend: {frontend_stack}
+- Mobile: {mobile_stack}
+- Paths: backend={path}/, web={path}/, mobile={path}/
+- Ports: backend={port}, web={port}
+```
+
+**Full config injection** (complex tasks like plan/ or audit/):
+```
+Project Context:
+- Name: {project_name}
+- Description: {project_description}
+- Notification: {notification_platform} #{channel-name} ({channel_id})
+- Backend Stack:
+  * Language: {language}
+  * Framework: {framework}
+  * Database: {database}
+  * Cache: {cache}
+  * Queue: {queue}
+- Frontend Stack:
+  * Language: {language}
+  * Framework: {framework}
+  * Build Tool: {build_tool}
+  * Styling: {styling}
+  * State Management: {state_management}
+- Mobile Stack:
+  * Language: {language}
+  * Framework: {framework}
+  * State Management: {state_management}
+- Component Paths:
+  * Backend: {path}/
+  * Web: {path}/
+  * Admin Portal: {path}/
+  * Mobile: {path}/
+- Ports:
+  * Backend API: {port}
+  * Web Frontend: {port}
+- Git Conventions:
+  * Branch format: {format}
+  * Commit format: {format}
+  * Deliverables: {format}
+```
+
+#### Why Config Injection Matters
+
+- **Agents are project-agnostic.** They can be ported to other projects by changing project.config.md only.
+- **No agent.md file modifications needed.** Hardcoded values in agent.md remain as examples/fallbacks only.
+- **Single source of truth.** Update project.config.md once, all agents use the new values.
+- **Framework portability.** The entire ActionFlows framework (all actions) works across projects with zero changes — only config differs.
+
+The orchestrator reads `project.config.md` once at session start (per Session-Start Protocol, step 0) and injects relevant config sections into each agent prompt throughout the session.
+
+---
+
+## Checklist Execution Protocol
+
+When user provides a checklist path (`.claude/actionflows/checklists/{type}/{name}.md`):
+
+1. **Recognize intent:** This is a checklist execution request, NOT a file read request
+2. **Route to department:** Quality Assurance (QA)
+3. **Determine checklist type:**
+   - Path contains `functional/` → Use `checklist-execution/` with mode: functional
+   - Path contains `technical/` → Use `checklist-execution/` with mode: technical
+4. **Compile chain:** Follow flow's instructions.md with checklist_path input
+5. **NEVER read the checklist file directly** — agents will do that
+
+**Anti-pattern:**
+- ❌ Reading checklist file yourself: "Let me see what's in this checklist..."
+- ❌ Asking "what would you like to do?" when checklist path is clear
+- ✅ Route to QA → Compile chain → Execute
+
+**Note:** If `checklist-execution/` flow doesn't exist yet, compose from: `analyze/` (checklist coverage) → HUMAN GATE → `code/` (fixes) → `review/` (verify) → `post-completion/`
+
+---
+
+## Session-Start Anti-Patterns
+
+These are WRONG behaviors that violate the Session-Start Protocol:
+
+**❌ Help Mode (asking what to do when intent is clear):**
+```
+Human: .claude/actionflows/checklists/functional/system-admin-operations-review.md
+Orchestrator: "I see this is a checklist. What would you like to do with it?"
+```
+**Why wrong:** Checklist path = execution request. Route to QA, compile chain.
+
+**❌ Reading User Files Before Routing:**
+```
+Human: Fix the login bug in backend/app/api/auth.py
+Orchestrator: [reads auth.py] "I see the issue is in line 45..."
+```
+**Why wrong:** Reading code = agent work. Route to Engineering, compile bug-triage/ chain.
+
+**❌ Providing Options Instead of Routing:**
+```
+Human: Audit backend security
+Orchestrator: "I can: 1) Run security-scan/, 2) Run audit-and-fix/, 3) Run general audit. Which?"
+```
+**Why wrong:** Intent is clear (security audit). Route to QA, use security-scan/ (most specific).
+
+**✅ Correct Pattern:**
+```
+Human: [any request]
+Orchestrator: [Session-Start Protocol steps 0-3]
+Orchestrator: [Request Type Recognition]
+Orchestrator: [Compile chain from FLOWS.md]
+Orchestrator: [Present chain for approval]
+```
+
+---
+
+## Part 8.3: Additional Patterns for Mature Projects (Optional)
+
+After the orchestrator has executed several cycles, consider documenting these additional patterns:
+
+### Request Type Recognition Table
+
+Add a table to help orchestrators quickly match user intent to department and default flow:
+
+| User Provides | Pattern Match | Intent | Department | Default Flow |
+|---------------|--------------|--------|------------|--------------|
+| **Checklist path** | `.claude/actionflows/checklists/` | Checklist execution | QA | `checklist-execution/` |
+| **"fix bug"**, "error", "broken" | Keywords | Bug fix | Engineering | `bug-triage/` |
+| **"add feature"**, "implement" | Keywords | Feature implementation | Engineering | `code-and-review/` |
+| **"audit"**, "security scan" | Keywords | Security audit | QA | `security-scan/` or `audit-and-fix/` |
+| **"document"**, "add docs" | Keywords | Documentation | Documentation | Varies by scope |
+| **"deploy"**, "release" | Keywords | Deployment | DevOps | `deploy-verify/` |
+| **"proposal"**, "spec", "plan" | Keywords | Spec creation | Product | `openspec/` (propose stage) |
+
+**Matching Rules:**
+1. **Most specific wins:** "audit security" → `security-scan/` (specific) over `audit-and-fix/` (generic)
+2. **Path > Keyword:** If user provides both path and keyword, path determines routing
+3. **No match:** Ask human for clarification about intent
+
+### File Reading Permissions Matrix
+
+Document which files the orchestrator can read during various phases:
+
+| File Type | Orchestrator CAN Read | Agent Reads | Notes |
+|-----------|----------------------|-------------|-------|
+| **Coordination files** |  |  |  |
+| - `actionflows/ORGANIZATION.md` | ✅ (session start) | No | Routing reference |
+| - `actionflows/FLOWS.md` | ✅ (routing) | No | Flow definitions |
+| - `actionflows/ACTIONS.md` | ✅ (dynamic chains) | No | Action registry |
+| - `actionflows/logs/INDEX.md` | ✅ (past executions) | No | Execution history |
+| **Project files** | ❌ NEVER | ✅ ALWAYS | Project code, docs, configs |
+| - `backend/**/*` | ❌ | ✅ | Backend code |
+| - `web/**/*` | ❌ | ✅ | Frontend code |
+| - `docs/**/*` | ❌ | ✅ | Project documentation |
+| - Any user-provided path | ❌ | ✅ | User references |
+
+**Rule of thumb:** Orchestrator reads coordination files (registries, logs). Agents read work files (code, checklists, project docs).
+
 ```
 
 **End of ORCHESTRATOR.md template.**

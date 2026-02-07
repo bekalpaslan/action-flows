@@ -13,33 +13,30 @@ Request → Which department? → Which flow? → No flow? Compose from actions 
 ### Framework
 **Owns:** ActionFlows framework maintenance
 **Key Flows:** flow-creation/, action-creation/, action-deletion/, framework-health/
-**Triggers:** "create a new flow", "add an action", "remove action", "check framework health", "validate framework"
+**Triggers:** "create a new flow", "create a new action", "check framework health", "delete action"
 
 ### Engineering
-**Owns:** Code implementation, testing, bug fixes, post-completion workflows
-**Key Flows:** code-and-review/, post-completion/, bug-triage/
-**Triggers:** "implement", "build", "add feature", "fix bug", "refactor", "commit", "deploy"
+**Owns:** Code implementation, reviews, bug fixes, refactoring
+**Key Flows:** code-and-review/, bug-triage/, post-completion/
+**Triggers:** "implement", "add feature", "fix bug", "refactor", "code change"
 
 ### QA
-**Owns:** Reviews, audits, analysis, quality gates
+**Owns:** Audits, quality sweeps, security scans
 **Key Flows:** audit-and-fix/
-**Triggers:** "review", "audit", "analyze", "check security", "check architecture", "coverage"
+**Triggers:** "audit", "security scan", "quality check", "performance review"
 
 ## Routing Guide
 
 | Human Says | Department | Flow/Action |
 |------------|-----------|-------------|
-| "Add a new component" | Engineering | code-and-review/ |
-| "Fix this bug" | Engineering | bug-triage/ |
-| "Implement Phase 6" | Engineering | code-and-review/ (with plan/ first) |
-| "Review the changes" | QA | compose: review/ |
-| "Run security audit" | QA | audit-and-fix/ |
-| "Check test coverage" | QA | compose: analyze/ (coverage) |
-| "Run the tests" | Engineering | compose: test/ |
-| "Commit the changes" | Engineering | compose: commit/ |
-| "Create a new flow" | Framework | flow-creation/ |
-| "Add a new action" | Framework | action-creation/ |
-| "Check framework health" | Framework | framework-health/ |
-| "Plan the next phase" | Engineering | compose: plan/ |
-| "Analyze dependencies" | QA | compose: analyze/ (dependencies) |
-| "Update project status" | Engineering | compose: status-update/ |
+| "implement X" / "add feature X" | Engineering | code-and-review/ |
+| "fix bug X" / "X is broken" | Engineering | bug-triage/ |
+| "refactor X" | Engineering | code-and-review/ |
+| "audit security" / "security scan" | QA | audit-and-fix/ |
+| "audit architecture" / "check performance" | QA | audit-and-fix/ |
+| "run tests" | — | test/ (direct action) |
+| "analyze coverage" / "check dependencies" | — | analyze/ (direct action) |
+| "create a new flow" | Framework | flow-creation/ |
+| "create a new action" | Framework | action-creation/ |
+| "check framework health" | Framework | framework-health/ |
+| "plan X" | — | plan/ (direct action) |

@@ -6,9 +6,9 @@
 
 ## When to Use
 
-- An action is no longer needed
-- An action is being replaced by a better alternative
-- Framework cleanup
+- An action is obsolete or replaced by another
+- Framework health check identifies orphaned actions
+- Human explicitly requests action removal
 
 ---
 
@@ -16,8 +16,7 @@
 
 | Input | Description | Example |
 |-------|-------------|---------|
-| action | The action to delete | "cleanup/" |
-| reason | Why it's being removed | "No longer needed — log management handled differently" |
+| action | Which action to delete | "cleanup/" |
 
 ---
 
@@ -32,52 +31,49 @@
 ```
 Read your definition in .claude/actionflows/actions/analyze/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-
 Input:
 - aspect: impact
 - scope: .claude/actionflows/
-- context: Find all references to {action} in flows, registries, and other action files
+- context: Find all references to action {action} in flows, registries, and other actions
 ```
 
-**Gate:** Impact report listing all files that reference the action.
+**Gate:** Impact report delivered with all references to the action identified.
 
 ---
 
-### Step 2: Remove Action
+### Step 2: Remove Action and Update References
 
-**Spawn after Step 1 completes:**
+**Action:** `.claude/actionflows/actions/code/`
+**Model:** haiku
+
+**Spawn after Step 1:**
 ```
 Read your definition in .claude/actionflows/actions/code/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-
 Input:
-- task: Remove action files at .claude/actionflows/actions/{action}/, update ACTIONS.md to remove the entry, update all referencing flows from Step 1's impact report
-- context: Impact analysis from Step 1 listing all references
+- task: Remove action {action} files + update ACTIONS.md + update all referencing flows from impact analysis
+- context: .claude/actionflows/actions/{action}/, impact analysis from Step 1
 ```
 
-**Gate:** Action files deleted, ACTIONS.md updated, referencing flows updated.
+**Gate:** Action files deleted, ACTIONS.md updated, all referencing flows updated.
 
 ---
 
 ### Step 3: Review Deletion
 
-**Spawn after Step 2 completes:**
+**Action:** `.claude/actionflows/actions/review/`
+**Model:** sonnet
+
+**Spawn after Step 2:**
 ```
 Read your definition in .claude/actionflows/actions/review/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-
 Input:
-- scope: All files changed during deletion (ACTIONS.md, affected flow instructions.md files)
+- scope: All changes from Step 2 (deleted files, updated registries, updated flows)
 - type: code-review
 ```
 
-**Gate:** No dangling references, registries consistent.
+**Gate:** No dangling references remain. ACTIONS.md accurate.
 
 ---
 
@@ -93,4 +89,4 @@ Step 1 → Step 2 → Step 3
 
 ## Chains With
 
-- → `engineering/post-completion/` (after deletion is complete)
+- → `post-completion/` (after deletion is verified)

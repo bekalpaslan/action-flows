@@ -1,6 +1,6 @@
 # Audit Action
 
-> Comprehensive deep-dive audits — security, architecture, performance, compliance.
+> Comprehensive deep-dive audits — security, architecture, performance, dependencies.
 
 ---
 
@@ -13,24 +13,22 @@
 This agent is **explicitly instructed** to execute:
 - `_abstract/agent-standards` — Core behavioral principles
 - `_abstract/create-log-folder` → Creates `.claude/actionflows/logs/audit/{datetime}/`
-- `_abstract/post-notification` → Posts audit results notification (currently not configured)
-
 ---
 
 ## Inputs
 
 | Input | Required | Description | Default |
 |-------|----------|-------------|---------|
-| type | YES | Audit type: `security`, `architecture`, `performance`, `compliance`, `dependency`. Example: "security" | — |
-| scope | YES | What to audit. Example: "packages/backend/src/" or "all" | — |
-| focus | NO | Narrow focus. Example: "WebSocket handlers" | — |
+| type | YES | `security`, `architecture`, `performance`, `dependency` | — |
+| scope | YES | What to audit — e.g., "packages/backend/src/" or "all" | — |
+| focus | NO | Narrow focus — e.g., "WebSocket handlers" | none |
 | mode | NO | `audit-only` or `audit-and-remediate` | audit-only |
 
 ---
 
 ## Model
 
-**opus** — Deep reasoning needed for comprehensive vulnerability analysis and architecture evaluation.
+**opus** — Deep analysis needed for comprehensive security/architecture audits.
 
 ---
 
@@ -38,36 +36,31 @@ This agent is **explicitly instructed** to execute:
 
 1. Collect inputs:
    - `type`: From human request
-   - `scope`: From human request or "all"
-   - `mode`: From human or default audit-only
+   - `scope`: From human request
+   - `mode`: From human request (default audit-only)
 
 2. Spawn:
 
 ```
 Read your definition in .claude/actionflows/actions/audit/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express + WebSocket + Redis (packages/backend/)
-- Frontend: React + Vite + Electron (packages/app/)
-
 Input:
 - type: security
 - scope: packages/backend/src/
-- focus: WebSocket handlers and command API
-- mode: audit-only
+- focus: WebSocket handlers and API routes
+- mode: audit-and-remediate
 ```
 
 ---
 
 ## Gate
 
-Audit report delivered with severity categorization. Score calculated. All findings include file paths, line numbers, and remediation steps.
+Audit report delivered with severity categorization. All findings include file paths, line numbers, and remediation steps.
 
 ---
 
 ## Notes
 
-- Security audits should pay special attention to WebSocket message handling and command injection
-- Architecture audits verify package boundary enforcement
-- Performance audits check React rendering and WebSocket message volume
+- When `mode: audit-and-remediate`, only CRITICAL and HIGH findings are fixed directly. MEDIUM/LOW remain as recommendations.
+- Security audits check: injection, XSS, WebSocket spoofing, Electron IPC, secret exposure, CORS, rate limiting
+- Comprehensive scan — no sampling. Every file in scope is checked.

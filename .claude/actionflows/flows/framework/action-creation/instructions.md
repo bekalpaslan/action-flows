@@ -6,9 +6,9 @@
 
 ## When to Use
 
-- Human wants to add a new action type
-- A gap has been identified in the action catalog
-- New capability needed for workflows
+- Human wants to create a new action type
+- A gap in the action catalog has been identified
+- Orchestrator proposes a new action after repeated composition
 
 ---
 
@@ -16,14 +16,13 @@
 
 | Input | Description | Example |
 |-------|-------------|---------|
-| description | What the action should do | "An action that generates API documentation from route definitions" |
-| model | Suggested model for the action | "sonnet" |
+| requirements | Action purpose, inputs, model | "A cleanup action that removes old log folders and temp files" |
 
 ---
 
 ## Action Sequence
 
-### Step 1: Plan
+### Step 1: Plan Action Design
 
 **Action:** `.claude/actionflows/actions/plan/`
 **Model:** opus
@@ -32,68 +31,63 @@
 ```
 Read your definition in .claude/actionflows/actions/plan/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express + WebSocket + Redis (packages/backend/)
-- Frontend: React + Vite + Electron (packages/app/)
-
 Input:
-- requirements: Design a new action: {description}
-- context: Existing actions in ACTIONS.md, agent.md template format, model: {model}
+- requirements: Design action: {requirements from human}
+- context: Existing actions in .claude/actionflows/actions/, action catalog patterns
 - depth: detailed
 ```
 
-**Gate:** Action design plan delivered.
+**Gate:** Action design delivered with agent.md structure, inputs, gates, and model selection.
 
 ---
 
 ### Step 2: HUMAN GATE
 
-Present the action design for approval before creating files.
+Present the action design for approval. Human reviews the proposed agent.md structure, inputs, and model.
 
 ---
 
-### Step 3: Implement Action
+### Step 3: Create Action Files
 
-**Spawn after Step 2 approval:**
+**Spawn after Human approves:**
+
+**Action:** `.claude/actionflows/actions/code/`
+**Model:** haiku
+
 ```
 Read your definition in .claude/actionflows/actions/code/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-
 Input:
 - task: Create agent.md + instructions.md per approved design at .claude/actionflows/actions/{action-name}/
-- context: Approved action design from Step 1, existing agent.md templates in .claude/actionflows/actions/
+- context: .claude/actionflows/actions/ for existing action patterns, approved plan from Step 1
 ```
 
-**Gate:** Action agent.md and instructions.md created.
+**Gate:** Both agent.md and instructions.md created following template structure.
 
 ---
 
 ### Step 4: Review Action
 
-**Spawn after Step 3 completes:**
+**Action:** `.claude/actionflows/actions/review/`
+**Model:** sonnet
+
+**Spawn after Step 3:**
 ```
 Read your definition in .claude/actionflows/actions/review/agent.md
-
-Project Context:
-- Name: ActionFlows Dashboard
 
 Input:
 - scope: .claude/actionflows/actions/{action-name}/agent.md, .claude/actionflows/actions/{action-name}/instructions.md
 - type: proposal-review
-- mode: review-and-fix
 ```
 
-**Gate:** Action reviewed, approved, registered in ACTIONS.md.
+**Gate:** Action reviewed and APPROVED. Registered in ACTIONS.md.
 
 ---
 
 ## Dependencies
 
 ```
-Step 1 → Step 2 (HUMAN) → Step 3 → Step 4
+Step 1 → Step 2 (HUMAN GATE) → Step 3 → Step 4
 ```
 
 **Parallel groups:** None — fully sequential.
@@ -102,4 +96,4 @@ Step 1 → Step 2 (HUMAN) → Step 3 → Step 4
 
 ## Chains With
 
-- → `engineering/post-completion/` (after action files are created)
+- → `post-completion/` (after action files are created and reviewed)

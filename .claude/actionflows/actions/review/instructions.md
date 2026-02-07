@@ -13,51 +13,42 @@
 This agent is **explicitly instructed** to execute:
 - `_abstract/agent-standards` — Core behavioral principles
 - `_abstract/create-log-folder` → Creates `.claude/actionflows/logs/review/{datetime}/`
-- `_abstract/post-notification` → Posts verdict notification (currently not configured)
-
-**You don't need to spawn a separate `notify` action after this action.**
-
 ---
 
 ## Inputs
 
 | Input | Required | Description | Default |
 |-------|----------|-------------|---------|
-| scope | YES | What to review — file paths, git diff output, or change description. Example: "packages/app/src/components/SessionPane/SessionPane.tsx, packages/app/src/hooks/useSessionControls.ts" | — |
-| type | YES | Review type: `code-review`, `doc-review`, `migration-review`, `proposal-review` | — |
-| checklist | NO | Specific checklist file from `checklists/` to validate against | — |
+| scope | YES | What to review — file paths, git diff, or change description — e.g., "packages/backend/src/routes/sessions.ts" | — |
+| type | YES | `code-review`, `doc-review`, `migration-review`, `proposal-review` | — |
+| checklist | NO | Checklist file path from `checklists/` — e.g., "technical/p1-typescript-quality.md" | none |
 | mode | NO | `review-only` or `review-and-fix` | review-only |
 
 ---
 
 ## Model
 
-**sonnet** — Needs pattern recognition for quality assessment and nuanced code evaluation.
+**sonnet** — Needs pattern recognition and judgment for quality assessment.
 
 ---
 
 ## How Orchestrator Spawns This
 
 1. Collect inputs:
-   - `scope`: Changed files from previous code/ action or from human request
-   - `type`: Usually `code-review` for implementation work
-   - `checklist`: From human if specific validation needed
-   - `mode`: From human or default to `review-only`
+   - `scope`: From human request or previous action's changed files
+   - `type`: From human request context
+   - `checklist`: Optional, from human request
+   - `mode`: Optional, from human request
 
 2. Spawn:
 
 ```
 Read your definition in .claude/actionflows/actions/review/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express + WebSocket + Redis (packages/backend/)
-- Frontend: React + Vite + Electron (packages/app/)
-
 Input:
-- scope: packages/app/src/components/SessionPane/SessionPane.tsx, packages/app/src/hooks/useSessionControls.ts
+- scope: packages/backend/src/routes/sessions.ts, packages/backend/src/routes/commands.ts
 - type: code-review
-- mode: review-only
+- mode: review-and-fix
 ```
 
 ---
@@ -70,6 +61,6 @@ Verdict delivered (APPROVED or NEEDS_CHANGES). If NEEDS_CHANGES, findings includ
 
 ## Notes
 
-- When mode is `review-and-fix`, fixes only clear-cut issues. Subjective improvements are flagged for human.
+- When `mode: review-and-fix`, fixes only clear-cut issues. Subjective improvements are flagged for human.
 - If scope files don't exist, report "File Not Found" and continue with remaining files.
-- Critical findings automatically result in NEEDS_CHANGES verdict regardless of score.
+- Quality score: (files without issues / total files) * 100. APPROVED requires score >= 80% and no critical findings.

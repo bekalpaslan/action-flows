@@ -1,7 +1,13 @@
 import express, { Router } from 'express';
 import type { WorkspaceEvent, SessionId, StepNumber } from '@afw/shared';
-import { storage, isAsyncStorage } from '../storage';
-import { setActiveStep, clearActiveStep } from '../services/fileWatcher';
+import { storage, isAsyncStorage } from '../storage/index.js';
+import { setActiveStep, clearActiveStep } from '../services/fileWatcher.js';
+
+// Validation and rate limiting (Agent A)
+import { validateBody } from '../middleware/validate.js';
+import { createEventSchema } from '../schemas/api.js';
+import { writeLimiter } from '../middleware/rateLimit.js';
+import { sanitizeError } from '../middleware/errorHandler.js';
 
 const router = Router();
 
@@ -9,17 +15,9 @@ const router = Router();
  * POST /api/events
  * Receive events from hooks/systems, store and broadcast
  */
-router.post('/', async (req, res) => {
+router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res) => {
   try {
     const event: WorkspaceEvent = req.body;
-
-    // Validate event structure
-    if (!event || !event.sessionId || !event.type || !event.timestamp) {
-      return res.status(400).json({
-        error: 'Invalid event format',
-        required: ['sessionId', 'type', 'timestamp'],
-      });
-    }
 
     // Store event (handles both async Redis and sync Memory)
     await Promise.resolve(storage.addEvent(event.sessionId, event));
@@ -50,7 +48,7 @@ router.post('/', async (req, res) => {
     console.error('[API] Error storing event:', error);
     res.status(500).json({
       error: 'Failed to store event',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -80,7 +78,7 @@ router.get('/:sessionId', async (req, res) => {
     console.error('[API] Error fetching events:', error);
     res.status(500).json({
       error: 'Failed to fetch events',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });
@@ -119,7 +117,7 @@ router.get('/:sessionId/recent', async (req, res) => {
     console.error('[API] Error fetching recent events:', error);
     res.status(500).json({
       error: 'Failed to fetch recent events',
-      message: error instanceof Error ? error.message : 'Unknown error',
+      message: sanitizeError(error),
     });
   }
 });

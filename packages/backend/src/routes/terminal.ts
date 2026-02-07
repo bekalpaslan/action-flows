@@ -5,7 +5,12 @@
 
 import { Router, type Request, type Response } from 'express';
 import type { SessionId, StepNumber, TerminalOutputEvent } from '@afw/shared';
-import { terminalBuffer } from '../services/terminalBuffer';
+import { terminalBuffer } from '../services/terminalBuffer.js';
+
+// Validation and rate limiting (Agent A)
+import { validateBody } from '../middleware/validate.js';
+import { terminalOutputSchema } from '../schemas/api.js';
+import { writeLimiter } from '../middleware/rateLimit.js';
 
 const router = Router();
 
@@ -20,19 +25,9 @@ export function setBroadcastTerminalFunction(fn: (sessionId: SessionId, event: T
  * POST /api/terminal/:sessionId/output
  * Hook posts terminal output here
  */
-router.post('/:sessionId/output', (req: Request, res: Response) => {
+router.post('/:sessionId/output', writeLimiter, validateBody(terminalOutputSchema), (req: Request, res: Response) => {
   const { sessionId } = req.params;
   const { output, stream, stepNumber, action } = req.body;
-
-  if (!output || !stream) {
-    res.status(400).json({ error: 'Missing required fields: output, stream' });
-    return;
-  }
-
-  if (stream !== 'stdout' && stream !== 'stderr') {
-    res.status(400).json({ error: 'stream must be "stdout" or "stderr"' });
-    return;
-  }
 
   try {
     // Append to buffer
@@ -50,7 +45,7 @@ router.post('/:sessionId/output', (req: Request, res: Response) => {
       sessionId: sessionId as SessionId,
       output,
       stream: stream as 'stdout' | 'stderr',
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString() as any,
       stepNumber: stepNumber ? parseInt(stepNumber, 10) as StepNumber : undefined,
       action,
     };

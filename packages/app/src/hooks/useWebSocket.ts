@@ -49,18 +49,25 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
   const handleMessage = useCallback(
     (event: MessageEvent) => {
       try {
-        const data = JSON.parse(event.data) as WorkspaceEvent;
+        const data = JSON.parse(event.data);
 
-        // Validate required fields
+        // Handle non-event messages (connection confirmations, pong, errors)
+        if (data.type === 'subscription_confirmed' || data.type === 'pong' || data.type === 'error') {
+          if (data.type === 'error') {
+            console.warn('[WS] Server error:', data.payload);
+          }
+          return;
+        }
+
+        // Validate required fields for workspace events
         if (!data.type || !data.sessionId || !data.timestamp) {
           console.warn('Invalid event structure received:', data);
-          setError(new Error(`Invalid event structure: missing required fields`));
           return;
         }
 
         // Only process events for subscribed sessions
         if (subscribedSessionsRef.current.has(data.sessionId)) {
-          onEvent?.(data);
+          onEvent?.(data as WorkspaceEvent);
         }
       } catch (err) {
         const parseError = err instanceof Error ? err : new Error('Failed to parse WebSocket message');

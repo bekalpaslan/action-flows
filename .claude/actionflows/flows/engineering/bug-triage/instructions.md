@@ -1,15 +1,14 @@
 # Bug Triage Flow
 
-> Analyze, fix, test, and review bug fixes.
+> Analyze, fix, test, and review bug fixes with structured triage.
 
 ---
 
 ## When to Use
 
-- Complex bugs requiring investigation
-- Bugs spanning multiple packages
-- Issues with unclear root cause
-- "Fix this bug", "Investigate this issue"
+- Bug reports requiring investigation
+- Errors that span multiple packages
+- Complex bugs needing root cause analysis before fixing
 
 ---
 
@@ -17,14 +16,14 @@
 
 | Input | Description | Example |
 |-------|-------------|---------|
-| bug | Bug description or symptoms | "WebSocket disconnects don't trigger reconnection" |
-| context | Where the bug manifests | "packages/app/src/hooks/useWebSocket.ts, browser console shows connection closed" |
+| bug | Bug description or error message | "WebSocket disconnects after 30s idle, no reconnection" |
+| context | Where the bug manifests | "packages/app/src/hooks/useWebSocket.ts, packages/backend/src/ws/handler.ts" |
 
 ---
 
 ## Action Sequence
 
-### Step 1: Analyze
+### Step 1: Analyze Root Cause
 
 **Action:** `.claude/actionflows/actions/analyze/`
 **Model:** sonnet
@@ -33,38 +32,27 @@
 ```
 Read your definition in .claude/actionflows/actions/analyze/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express + WebSocket + Redis (packages/backend/)
-- Frontend: React + Vite + Electron (packages/app/)
-
 Input:
 - aspect: impact
 - scope: {context from human}
-- context: Bug: {bug description}. Trace root cause and identify all affected files.
+- context: Bug: {bug description}. Investigate root cause and identify all affected files.
 ```
 
-**Gate:** Root cause identified, affected files listed.
+**Gate:** Root cause identified with affected files list.
 
 ---
 
-### Step 2: Fix
+### Step 2: Implement Fix
 
-**Spawn after Step 1 completes:**
-
-**Action:** `.claude/actionflows/actions/code/` (or stack variant based on analysis)
+**Action:** `.claude/actionflows/actions/code/`
 **Model:** haiku
 
+**Spawn after Step 1:**
 ```
 Read your definition in .claude/actionflows/actions/code/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express + WebSocket + Redis (packages/backend/)
-- Frontend: React + Vite + Electron (packages/app/)
-
 Input:
-- task: Fix bug: {bug description}. Root cause: {from Step 1}
+- task: Fix bug: {bug description}. Root cause: {from Step 1 analysis}
 - context: {affected files from Step 1}
 ```
 
@@ -72,70 +60,54 @@ Input:
 
 ---
 
-### Step 3: Test
-
-**Spawn after Step 2 completes:**
+### Step 3: Run Tests
 
 **Action:** `.claude/actionflows/actions/test/`
 **Model:** haiku
 
+**Spawn after Step 2:**
 ```
 Read your definition in .claude/actionflows/actions/test/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Test framework: Vitest + Supertest
-
 Input:
-- scope: {relevant test files or "all"}
+- scope: {test files related to affected areas}
 - type: integration
-- context: Bug fix for: {bug description}
+- context: Bug fix for {bug description}. Changed files: {from Step 2}
 ```
 
-**Gate:** Tests pass (or failures documented).
+**Gate:** Tests executed, results reported.
 
 ---
 
-### Step 4: Review
-
-**Spawn after Step 3 completes:**
+### Step 4: Review Fix
 
 **Action:** `.claude/actionflows/actions/review/`
 **Model:** sonnet
 
+**Spawn after Step 3:**
 ```
 Read your definition in .claude/actionflows/actions/review/agent.md
-
-Project Context:
-- Name: ActionFlows Dashboard
 
 Input:
 - scope: {changed files from Step 2}
 - type: code-review
-- mode: review-and-fix
 ```
 
-**Gate:** Review APPROVED.
-
----
-
-### Step 5: Post-Completion
-
-**Chains with:** `engineering/post-completion/`
+**Gate:** Verdict APPROVED.
 
 ---
 
 ## Dependencies
 
 ```
-Step 1 → Step 2 → Step 3 → Step 4 → Step 5
+Step 1 → Step 2 → Step 3 → Step 4
 ```
 
-**Parallel groups:** None — fully sequential (each step depends on previous).
+**Parallel groups:** None — sequential (each step depends on previous).
 
 ---
 
 ## Chains With
 
-- → `engineering/post-completion/` (on APPROVED verdict)
-- → `engineering/code-and-review/` (can trigger if fix needs additional implementation)
+- → `post-completion/` (when review APPROVED)
+- ← Bug fix requests route here

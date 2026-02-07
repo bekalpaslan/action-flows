@@ -1,14 +1,14 @@
 # Post-Completion Flow
 
-> Standardized wrap-up after implementation work: commit + status update.
+> Standardized wrap-up after any work that modifies files: commit and update registry.
 
 ---
 
 ## When to Use
 
-- After `engineering/code-and-review/` produces APPROVED changes
-- After `qa/audit-and-fix/` remediations are reviewed
-- After any flow that modifies project files and needs committing
+- After code-and-review/ flow completes with APPROVED verdict
+- After bug-triage/ flow completes
+- After any chain that produces file changes
 
 ---
 
@@ -16,14 +16,14 @@
 
 | Input | Description | Example |
 |-------|-------------|---------|
-| summary | What was accomplished | "Phase 6 conversation panel implemented and reviewed" |
-| files | Changed files to commit | "packages/app/src/components/ConversationPanel/*.tsx" |
+| summary | What was accomplished | "Added session expiry with configurable timeout" |
+| files | Changed files to commit | "packages/backend/src/routes/sessions.ts packages/backend/src/services/cleanup.ts" |
 
 ---
 
 ## Action Sequence
 
-### Step 1: Commit
+### Step 1: Commit Changes
 
 **Action:** `.claude/actionflows/actions/commit/`
 **Model:** haiku
@@ -32,38 +32,19 @@
 ```
 Read your definition in .claude/actionflows/actions/commit/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Working directory: D:/ActionFlowsDashboard
-
 Input:
-- summary: {from flow input}
-- files: {from flow input}
+- summary: {summary from input}
+- files: {files from input}
 - push: true
 ```
 
-**Gate:** Commit created and pushed. Hash reported.
+**Gate:** Commit created and pushed.
 
 ---
 
-### Step 2: Status Update (parallel with nothing — runs after Step 1)
+### Step 2: Update Execution Registry
 
-**Action:** `.claude/actionflows/actions/status-update/`
-**Model:** haiku
-
-**Spawn after Step 1:**
-```
-Read your definition in .claude/actionflows/actions/status-update/agent.md
-
-Project Context:
-- Name: ActionFlows Dashboard
-- Status files: PHASE_5_COMPLETE.md, docs/
-
-Input:
-- what: {summary from flow input}
-```
-
-**Gate:** Status files updated.
+This is handled by the orchestrator as a registry line edit — add entry to `logs/INDEX.md`.
 
 ---
 
@@ -73,12 +54,12 @@ Input:
 Step 1 → Step 2
 ```
 
-**Parallel groups:** Step 2 depends on Step 1 (needs commit hash for status update).
+**Parallel groups:** None — sequential.
 
 ---
 
 ## Chains With
 
-- ← `engineering/code-and-review/` (primary trigger)
-- ← `qa/audit-and-fix/` (after audit remediations)
-- ← `engineering/bug-triage/` (after bug fix)
+- ← `code-and-review/` (always chains here after APPROVED)
+- ← `bug-triage/` (always chains here after APPROVED)
+- ← `audit-and-fix/` (always chains here after remediations reviewed)

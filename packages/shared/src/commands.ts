@@ -3,7 +3,7 @@
  * Defines commands that can be issued to control session, chains, and steps
  */
 
-import type { StepNumber, Timestamp, SessionId, ChainId, UserId } from './types';
+import type { StepNumber, Timestamp, SessionId, ChainId, UserId } from './types.js';
 
 /**
  * Command types that can be issued

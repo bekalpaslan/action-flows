@@ -1,6 +1,6 @@
-# Code/Frontend Action
+# Frontend Code Action
 
-> Implement frontend code changes in React + Vite + Electron stack.
+> Implement frontend code changes following React + TypeScript + Electron patterns.
 
 ---
 
@@ -13,57 +13,49 @@
 This agent is **explicitly instructed** to execute:
 - `_abstract/agent-standards` — Core behavioral principles
 - `_abstract/create-log-folder` → Creates `.claude/actionflows/logs/code/{datetime}/`
-- `_abstract/post-notification` → Posts completion notification (currently not configured)
-
 ---
 
 ## Inputs
 
 | Input | Required | Description | Default |
 |-------|----------|-------------|---------|
-| task | YES | Frontend feature/fix to implement. Example: "Add conversation panel component for Phase 6" | — |
-| context | YES | Relevant frontend files. Example: "packages/app/src/components/SessionPane/, packages/app/src/hooks/" | — |
-| component | NO | Specific area: components, hooks, contexts, electron | — |
+| task | YES | Frontend implementation task — e.g., "Add flow visualization controls" | — |
+| context | YES | Relevant frontend files — e.g., "packages/app/src/components/" | — |
 
 ---
 
 ## Model
 
-**haiku** — Fast, well-defined frontend implementation tasks.
+**haiku** — Fast, well-defined task execution for frontend code implementation.
 
 ---
 
 ## How Orchestrator Spawns This
 
 1. Collect inputs:
-   - `task`: From human request (frontend-specific portion)
-   - `context`: Frontend files from human request or plan/ output
+   - `task`: From human request
+   - `context`: From human request or routing knowledge
 
 2. Spawn:
 
 ```
 Read your definition in .claude/actionflows/actions/code/frontend/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Frontend: React + Vite + Electron (packages/app/)
-- Port: Vite 5173
-
 Input:
-- task: Add conversation panel component for Phase 6
-- context: packages/app/src/components/SessionPane/
+- task: Add zoom controls to flow visualization
+- context: packages/app/src/components/, packages/app/src/hooks/
 ```
 
 ---
 
 ## Gate
 
-Frontend changes implemented, `pnpm -F @afw/app type-check` passes, change summary written.
+Frontend changes implemented, TypeScript check passes, change summary written.
 
 ---
 
 ## Notes
 
-- Always co-locate CSS files with their component TSX files
-- Use existing hook patterns — check packages/app/src/hooks/ for conventions
-- ReactFlow nodes/edges follow patterns in ChainDAG component
+- Preferred over generic `code/` when work is purely frontend
+- Uses React hooks + functional components + TypeScript patterns
+- ReactFlow for flow visualization, Monaco for code editing, xterm for terminal

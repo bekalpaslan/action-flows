@@ -1,4 +1,4 @@
-import { filePersistence } from '../storage/file-persistence'
+import { filePersistence } from '../storage/file-persistence.js';
 
 /**
  * Daily cleanup job that removes history files older than 7 days

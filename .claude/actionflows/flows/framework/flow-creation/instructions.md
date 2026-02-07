@@ -6,9 +6,9 @@
 
 ## When to Use
 
-- Human wants to add a new workflow to the framework
+- Human wants to create a new predefined workflow
 - A recurring pattern has been identified that should become a flow
-- New department needs new flows
+- flow-discovery/ suggests a new flow candidate
 
 ---
 
@@ -16,14 +16,14 @@
 
 | Input | Description | Example |
 |-------|-------------|---------|
-| description | What the flow should do | "A flow that runs linting, then auto-fixes, then reviews changes" |
-| department | Which department owns it | "engineering" |
+| requirements | Flow purpose and triggers | "A flow for database migration: plan → implement → test → review" |
+| department | Which department owns the flow | "engineering" |
 
 ---
 
 ## Action Sequence
 
-### Step 1: Plan
+### Step 1: Plan Flow Design
 
 **Action:** `.claude/actionflows/actions/plan/`
 **Model:** opus
@@ -32,14 +32,9 @@
 ```
 Read your definition in .claude/actionflows/actions/plan/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express + WebSocket + Redis (packages/backend/)
-- Frontend: React + Vite + Electron (packages/app/)
-
 Input:
-- requirements: Design a new flow: {description}
-- context: Existing flows in FLOWS.md, existing actions in ACTIONS.md, department: {department}
+- requirements: Design flow: {requirements from human}
+- context: Existing flows in .claude/actionflows/flows/, existing actions in .claude/actionflows/actions/
 - depth: detailed
 ```
 
@@ -49,51 +44,51 @@ Input:
 
 ### Step 2: HUMAN GATE
 
-Present the flow design for approval before creating files.
+Present the flow design for approval. Human reviews the proposed action sequence, dependencies, and gates.
 
 ---
 
-### Step 3: Implement Flow
+### Step 3: Create Flow Files
 
-**Spawn after Step 2 approval:**
+**Spawn after Human approves:**
+
+**Action:** `.claude/actionflows/actions/code/`
+**Model:** haiku
+
 ```
 Read your definition in .claude/actionflows/actions/code/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-
 Input:
 - task: Create flow instructions.md per approved design at .claude/actionflows/flows/{department}/{flow-name}/instructions.md
-- context: Approved flow design from Step 1, flow template format from existing flows
+- context: .claude/actionflows/flows/ for existing flow patterns, approved plan from Step 1
 ```
 
-**Gate:** Flow instructions.md created in correct directory.
+**Gate:** Flow instructions.md created following template structure.
 
 ---
 
 ### Step 4: Review Flow
 
-**Spawn after Step 3 completes:**
+**Action:** `.claude/actionflows/actions/review/`
+**Model:** sonnet
+
+**Spawn after Step 3:**
 ```
 Read your definition in .claude/actionflows/actions/review/agent.md
-
-Project Context:
-- Name: ActionFlows Dashboard
 
 Input:
 - scope: .claude/actionflows/flows/{department}/{flow-name}/instructions.md
 - type: proposal-review
-- mode: review-and-fix
 ```
 
-**Gate:** Flow reviewed and approved. Registered in FLOWS.md.
+**Gate:** Flow reviewed and APPROVED. Registered in FLOWS.md.
 
 ---
 
 ## Dependencies
 
 ```
-Step 1 → Step 2 (HUMAN) → Step 3 → Step 4
+Step 1 → Step 2 (HUMAN GATE) → Step 3 → Step 4
 ```
 
 **Parallel groups:** None — fully sequential.
@@ -102,4 +97,4 @@ Step 1 → Step 2 (HUMAN) → Step 3 → Step 4
 
 ## Chains With
 
-- → `engineering/post-completion/` (after flow files are created)
+- → `post-completion/` (after flow files are created and reviewed)

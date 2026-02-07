@@ -25,9 +25,9 @@ export type {
   ModelString,
   ChainSourceString,
   DurationMs,
-} from './types';
+} from './types.js';
 
-export { Status, Model, ChainSource, brandedTypes, duration } from './types';
+export { Status, Model, ChainSource, brandedTypes, duration } from './types.js';
 
 // ============================================================================
 // Event Types
@@ -52,12 +52,13 @@ export type {
   FileDeletedEvent,
   RegistryLineUpdatedEvent,
   ExecutionLogCreatedEvent,
+  TerminalOutputEvent,
   ErrorOccurredEvent,
   WarningOccurredEvent,
   WorkspaceEvent,
-} from './events';
+} from './events.js';
 
-export { eventGuards } from './events';
+export { eventGuards } from './events.js';
 
 // ============================================================================
 // Domain Models
@@ -75,7 +76,7 @@ export type {
   ChainTemplate,
   ChainTemplateStep,
   TemplateParameter,
-} from './models';
+} from './models.js';
 
 // ============================================================================
 // Commands
@@ -90,9 +91,9 @@ export type {
   SkipCommand,
   CommandPayload,
   CommandResult,
-} from './commands';
+} from './commands.js';
 
-export { CommandType, commandGuards, CommandValidator, CommandBuilder } from './commands';
+export { CommandType, commandGuards, CommandValidator, CommandBuilder } from './commands.js';
 
 // ============================================================================
 // Legacy Types (for backward compatibility)

@@ -7,11 +7,11 @@ import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import type { IncomingMessage } from 'http';
 import type { Socket } from 'net';
-import { storage, isAsyncStorage } from '../storage';
-import { handleWebSocket } from '../ws/handler';
-import eventsRouter from '../routes/events';
-import sessionsRouter from '../routes/sessions';
-import commandsRouter from '../routes/commands';
+import { storage, isAsyncStorage } from '../storage/index.js';
+import { handleWebSocket } from '../ws/handler.js';
+import eventsRouter from '../routes/events.js';
+import sessionsRouter from '../routes/sessions.js';
+import commandsRouter from '../routes/commands.js';
 import type { Server } from 'http';
 
 let testServer: Server | null = null;
@@ -162,7 +162,7 @@ export async function createWebSocketClient(wsUrl: string): Promise<WebSocket> {
  */
 export function createMockEvent<T extends WorkspaceEvent>(
   type: T['type'],
-  overrides?: Partial<T>
+  overrides?: Partial<T> & Record<string, unknown>
 ): T {
   const now = new Date().toISOString();
   const sessionId = overrides?.sessionId || brandedTypes.sessionId(`session-${Date.now()}`);
