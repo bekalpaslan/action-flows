@@ -53,6 +53,9 @@ export type {
   RegistryLineUpdatedEvent,
   ExecutionLogCreatedEvent,
   TerminalOutputEvent,
+  ClaudeCliStartedEvent,
+  ClaudeCliOutputEvent,
+  ClaudeCliExitedEvent,
   ErrorOccurredEvent,
   WarningOccurredEvent,
   WorkspaceEvent,
@@ -76,6 +79,7 @@ export type {
   ChainTemplate,
   ChainTemplateStep,
   TemplateParameter,
+  ClaudeCliSession,
 } from './models.js';
 
 // ============================================================================
@@ -89,6 +93,9 @@ export type {
   AbortCommand,
   RetryCommand,
   SkipCommand,
+  ClaudeCliStartCommand,
+  ClaudeCliSendInputCommand,
+  ClaudeCliStopCommand,
   CommandPayload,
   CommandResult,
 } from './commands.js';

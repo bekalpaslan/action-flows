@@ -44,7 +44,8 @@ export function validateQuery<T extends ZodSchema>(schema: T) {
       });
     }
 
-    req.query = result.data as any;
+    // Cast is safe because Zod validates and transforms the data
+    req.query = result.data as typeof req.query;
     next();
   };
 }

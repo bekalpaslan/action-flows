@@ -10,6 +10,9 @@ import { SplitPaneLayout } from './SplitPaneLayout';
 import { NotificationManager } from './NotificationManager';
 import { CodeEditor } from './CodeEditor';
 import { TerminalTabs } from './Terminal';
+import { ClaudeCliStartDialog } from './ClaudeCliTerminal/ClaudeCliStartDialog';
+import { ClaudeCliTerminal } from './ClaudeCliTerminal/ClaudeCliTerminal';
+import type { SessionId } from '@afw/shared';
 
 /**
  * Main app content component that displays real-time WebSocket connection status
@@ -24,6 +27,8 @@ export default function AppContent() {
   const [terminalHeight, setTerminalHeight] = useState<number>(250);
   const [terminalCollapsed, setTerminalCollapsed] = useState<boolean>(false);
   const [terminalCombinedMode, setTerminalCombinedMode] = useState<boolean>(false);
+  const [showClaudeCliDialog, setShowClaudeCliDialog] = useState<boolean>(false);
+  const [claudeCliSessionId, setClaudeCliSessionId] = useState<SessionId | null>(null);
 
   // Manage attached sessions
   const {
@@ -39,6 +44,11 @@ export default function AppContent() {
   // Handle file opening from explorer
   const handleFileOpen = useCallback((path: string) => {
     setFileToOpen(path);
+  }, []);
+
+  // Handle Claude CLI session started
+  const handleClaudeCliSessionStarted = useCallback((sessionId: SessionId) => {
+    setClaudeCliSessionId(sessionId);
   }, []);
 
   // Map WebSocket status to display text
@@ -79,11 +89,28 @@ export default function AppContent() {
 
       <header className="app-header">
         <h1>ActionFlows Workspace</h1>
-        <div className="status-indicator">
-          <span className={`status ${getStatusClass()}`}>
-            {statusDisplay}
-            {error && ` - ${error.message}`}
-          </span>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <button
+            onClick={() => setShowClaudeCliDialog(true)}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#0e639c',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: '500',
+            }}
+          >
+            Start Claude CLI
+          </button>
+          <div className="status-indicator">
+            <span className={`status ${getStatusClass()}`}>
+              {statusDisplay}
+              {error && ` - ${error.message}`}
+            </span>
+          </div>
         </div>
       </header>
 
@@ -147,6 +174,36 @@ export default function AppContent() {
           combinedMode={terminalCombinedMode}
           onToggleCombinedMode={() => setTerminalCombinedMode(!terminalCombinedMode)}
         />
+      )}
+
+      {/* Claude CLI Start Dialog */}
+      {showClaudeCliDialog && (
+        <ClaudeCliStartDialog
+          onClose={() => setShowClaudeCliDialog(false)}
+          onSessionStarted={handleClaudeCliSessionStarted}
+        />
+      )}
+
+      {/* Claude CLI Terminal (overlay mode) */}
+      {claudeCliSessionId && (
+        <div style={{
+          position: 'fixed',
+          top: '60px',
+          right: '20px',
+          width: '700px',
+          height: '500px',
+          backgroundColor: '#1e1e1e',
+          border: '1px solid #3e3e3e',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
+          zIndex: 999,
+          overflow: 'hidden',
+        }}>
+          <ClaudeCliTerminal
+            sessionId={claudeCliSessionId}
+            onClose={() => setClaudeCliSessionId(null)}
+          />
+        </div>
       )}
     </div>
   );

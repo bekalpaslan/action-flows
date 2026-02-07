@@ -10,13 +10,15 @@ import { handleWebSocket } from './ws/handler.js';
 import { clientRegistry } from './ws/clientRegistry.js';
 import { cleanupService } from './services/cleanup.js';
 import { setBroadcastFunction, shutdownAllWatchers } from './services/fileWatcher.js';
+import { claudeCliManager } from './services/claudeCliManager.js';
 import terminalRouter, { setBroadcastTerminalFunction } from './routes/terminal.js';
 import eventsRouter from './routes/events.js';
 import sessionsRouter from './routes/sessions.js';
 import commandsRouter from './routes/commands.js';
 import historyRouter from './routes/history.js';
 import filesRouter from './routes/files.js';
-import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent } from '@afw/shared';
+import claudeCliRouter from './routes/claudeCli.js';
+import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent } from '@afw/shared';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -69,6 +71,7 @@ app.use('/api/commands', commandsRouter);
 app.use('/api/history', historyRouter);
 app.use('/api/files', filesRouter);
 app.use('/api/terminal', terminalRouter);
+app.use('/api/claude-cli', claudeCliRouter);
 
 // Global error handler (must be after all routes) (Agent A)
 app.use(globalErrorHandler);
@@ -163,6 +166,20 @@ function broadcastTerminalEvent(
   clientRegistry.broadcastToSession(sessionId, message);
 }
 
+// Broadcast Claude CLI events to WebSocket clients subscribed to this session
+function broadcastClaudeCliEvent(
+  sessionId: SessionId,
+  event: WorkspaceEvent
+) {
+  const message = JSON.stringify({
+    type: 'event',
+    sessionId,
+    payload: event,
+  });
+
+  clientRegistry.broadcastToSession(sessionId, message);
+}
+
 // Initialize Redis Pub/Sub if using Redis storage
 async function initializeRedisPubSub() {
   if (isAsyncStorage(storage) && storage.subscribe) {
@@ -210,6 +227,9 @@ if (isMainModule) {
     // Initialize terminal broadcast function
     setBroadcastTerminalFunction(broadcastTerminalEvent);
 
+    // Initialize Claude CLI broadcast function
+    claudeCliManager.setBroadcastFunction(broadcastClaudeCliEvent);
+
     // Start cleanup service
     cleanupService.start();
 
@@ -234,6 +254,9 @@ if (isMainModule) {
 
     // Shutdown file watchers
     await shutdownAllWatchers();
+
+    // Stop all Claude CLI sessions
+    claudeCliManager.stopAllSessions();
 
     // Close WebSocket connections
     clientRegistry.getAllClients().forEach((client) => {

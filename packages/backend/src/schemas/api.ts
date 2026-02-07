@@ -82,6 +82,9 @@ const VALID_EVENT_TYPES = [
   'registry:line-updated',
   'execution:log-created',
   'terminal:output',
+  'claude-cli:started',
+  'claude-cli:output',
+  'claude-cli:exited',
   'error:occurred',
   'warning:occurred',
 ] as const;
@@ -134,3 +137,35 @@ export const fileWriteSchema = z.object({
 });
 
 export type FileWriteRequest = z.infer<typeof fileWriteSchema>;
+
+// ============================================================================
+// Claude CLI Schemas
+// ============================================================================
+
+export const claudeCliStartSchema = z.object({
+  sessionId: z.string().min(1, 'sessionId required').max(200, 'sessionId too long'),
+  cwd: z
+    .string()
+    .min(1, 'cwd required')
+    .max(500, 'cwd too long')
+    .refine(
+      (p) => path.isAbsolute(p),
+      'cwd must be an absolute path'
+    ),
+  prompt: z.string().max(10000, 'prompt too long').optional(),
+  flags: z.array(z.string().max(200, 'flag too long')).max(50, 'too many flags').optional(),
+});
+
+export type ClaudeCliStartRequest = z.infer<typeof claudeCliStartSchema>;
+
+export const claudeCliInputSchema = z.object({
+  input: z.string().max(100000, 'input too large (max 100KB)'),
+});
+
+export type ClaudeCliInputRequest = z.infer<typeof claudeCliInputSchema>;
+
+export const claudeCliStopSchema = z.object({
+  signal: z.enum(['SIGTERM', 'SIGINT', 'SIGKILL']).optional(),
+});
+
+export type ClaudeCliStopRequest = z.infer<typeof claudeCliStopSchema>;

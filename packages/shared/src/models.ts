@@ -404,3 +404,45 @@ export interface TemplateParameter {
   description: string;
   defaultValue?: unknown;
 }
+
+/**
+ * Claude CLI Session - represents a spawned Claude Code CLI process
+ */
+export interface ClaudeCliSession {
+  /** Session ID for this Claude CLI session */
+  id: SessionId;
+
+  /** Process ID of spawned Claude CLI subprocess */
+  pid: number | null;
+
+  /** Current status of the Claude CLI session */
+  status: 'starting' | 'running' | 'paused' | 'stopped' | 'error';
+
+  /** Working directory for Claude CLI */
+  cwd: string;
+
+  /** When the session was started */
+  startedAt: Timestamp;
+
+  /** When the session ended */
+  endedAt?: Timestamp;
+
+  /** Exit code if process terminated */
+  exitCode?: number;
+
+  /** Exit signal if process was killed */
+  exitSignal?: string;
+
+  /** Full command args used to spawn the process */
+  spawnArgs: string[];
+
+  /** Additional metadata */
+  metadata?: {
+    /** User who started this session */
+    user?: UserId;
+    /** Initial prompt passed to Claude CLI */
+    prompt?: string;
+    /** Additional flags passed to Claude CLI */
+    flags?: Record<string, unknown>;
+  };
+}

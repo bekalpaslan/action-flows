@@ -17,7 +17,17 @@ export enum CommandType {
   ABORT = 'abort',
 }
 
-export type CommandTypeString = keyof typeof CommandType | 'pause' | 'resume' | 'cancel' | 'retry' | 'skip' | 'abort';
+export type CommandTypeString =
+  | keyof typeof CommandType
+  | 'pause'
+  | 'resume'
+  | 'cancel'
+  | 'retry'
+  | 'skip'
+  | 'abort'
+  | 'claude-cli:start'
+  | 'claude-cli:send-input'
+  | 'claude-cli:stop';
 
 /**
  * Base command structure
@@ -114,6 +124,37 @@ export interface SkipCommand extends Command {
 
   /** Whether dependent steps should also be skipped */
   skipDependents?: boolean;
+}
+
+/**
+ * Claude CLI control commands
+ */
+
+export interface ClaudeCliStartCommand extends Command {
+  type: 'claude-cli:start';
+
+  /** Working directory for Claude CLI */
+  cwd: string;
+
+  /** Initial prompt to send to Claude CLI */
+  prompt?: string;
+
+  /** Additional CLI flags */
+  flags?: string[];
+}
+
+export interface ClaudeCliSendInputCommand extends Command {
+  type: 'claude-cli:send-input';
+
+  /** Input to send to Claude CLI stdin */
+  input: string;
+}
+
+export interface ClaudeCliStopCommand extends Command {
+  type: 'claude-cli:stop';
+
+  /** Signal to send to process */
+  signal?: 'SIGTERM' | 'SIGINT' | 'SIGKILL';
 }
 
 /**

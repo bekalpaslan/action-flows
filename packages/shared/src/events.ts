@@ -370,6 +370,48 @@ export interface TerminalOutputEvent extends BaseEvent {
 }
 
 /**
+ * Claude CLI lifecycle events
+ */
+
+export interface ClaudeCliStartedEvent extends BaseEvent {
+  type: 'claude-cli:started';
+
+  // Automatic fields
+  pid: number;
+  cwd: string;
+  args: string[];
+
+  // Parsed fields (nullable)
+  prompt?: string | null;
+
+  // Inferred fallbacks
+  timestamp: Timestamp;
+}
+
+export interface ClaudeCliOutputEvent extends BaseEvent {
+  type: 'claude-cli:output';
+
+  // Automatic fields
+  output: string;
+  stream: 'stdout' | 'stderr';
+
+  // Inferred fallbacks
+  timestamp: Timestamp;
+}
+
+export interface ClaudeCliExitedEvent extends BaseEvent {
+  type: 'claude-cli:exited';
+
+  // Automatic fields
+  exitCode: number | null;
+  exitSignal: string | null;
+  duration: DurationMs;
+
+  // Inferred fallbacks
+  timestamp: Timestamp;
+}
+
+/**
  * Error and diagnostic events
  */
 
@@ -426,6 +468,9 @@ export type WorkspaceEvent =
   | RegistryLineUpdatedEvent
   | ExecutionLogCreatedEvent
   | TerminalOutputEvent
+  | ClaudeCliStartedEvent
+  | ClaudeCliOutputEvent
+  | ClaudeCliExitedEvent
   | ErrorOccurredEvent
   | WarningOccurredEvent;
 
@@ -463,6 +508,12 @@ export const eventGuards = {
     event.type === 'file:deleted',
   isTerminalOutput: (event: WorkspaceEvent): event is TerminalOutputEvent =>
     event.type === 'terminal:output',
+  isClaudeCliStarted: (event: WorkspaceEvent): event is ClaudeCliStartedEvent =>
+    event.type === 'claude-cli:started',
+  isClaudeCliOutput: (event: WorkspaceEvent): event is ClaudeCliOutputEvent =>
+    event.type === 'claude-cli:output',
+  isClaudeCliExited: (event: WorkspaceEvent): event is ClaudeCliExitedEvent =>
+    event.type === 'claude-cli:exited',
   isError: (event: WorkspaceEvent): event is ErrorOccurredEvent =>
     event.type === 'error:occurred',
   isWarning: (event: WorkspaceEvent): event is WarningOccurredEvent =>
