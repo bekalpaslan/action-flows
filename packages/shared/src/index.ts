@@ -58,6 +58,10 @@ export type {
   ClaudeCliExitedEvent,
   ErrorOccurredEvent,
   WarningOccurredEvent,
+  SessionFollowedEvent,
+  SessionUnfollowedEvent,
+  QuickActionTriggeredEvent,
+  FlowNodeClickedEvent,
   WorkspaceEvent,
 } from './events.js';
 
@@ -101,6 +105,21 @@ export type {
 } from './commands.js';
 
 export { CommandType, commandGuards, CommandValidator, CommandBuilder } from './commands.js';
+
+// ============================================================================
+// Session Window System Types
+// ============================================================================
+export type {
+  SessionWindowState,
+  SessionWindowConfig,
+  QuickActionDefinition,
+  QuickActionPreset,
+  PromptType,
+  FlowNodeData,
+  FlowEdgeData,
+  SessionWindowLayout,
+  SessionLifecycleState,
+} from './sessionWindows.js';
 
 // ============================================================================
 // Legacy Types (for backward compatibility)

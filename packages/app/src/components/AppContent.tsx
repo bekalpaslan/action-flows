@@ -4,6 +4,7 @@ import type { ConnectionStatus } from '../hooks/useWebSocket';
 import { useUsers } from '../hooks/useUsers';
 import { useAllSessions } from '../hooks/useAllSessions';
 import { useAttachedSessions } from '../hooks/useAttachedSessions';
+import { useSessionWindows } from '../hooks/useSessionWindows';
 import { UserSidebar } from './UserSidebar';
 import { FileExplorer } from './FileExplorer';
 import { SplitPaneLayout } from './SplitPaneLayout';
@@ -12,6 +13,8 @@ import { CodeEditor } from './CodeEditor';
 import { TerminalTabs } from './Terminal';
 import { ClaudeCliStartDialog } from './ClaudeCliTerminal/ClaudeCliStartDialog';
 import { ClaudeCliTerminal } from './ClaudeCliTerminal/ClaudeCliTerminal';
+import { SessionWindowSidebar } from './SessionWindowSidebar/SessionWindowSidebar';
+import { SessionWindowGrid } from './SessionWindowGrid/SessionWindowGrid';
 import type { SessionId } from '@afw/shared';
 
 /**
@@ -21,6 +24,12 @@ export default function AppContent() {
   const { status, error } = useWebSocketContext();
   const { users, currentUserId } = useUsers();
   const { sessions: allSessions } = useAllSessions();
+  const {
+    followedSessionIds,
+    sessionWindows,
+    followSession,
+    unfollowSession,
+  } = useSessionWindows();
   const [statusDisplay, setStatusDisplay] = useState<string>('Connecting...');
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>();
   const [fileToOpen, setFileToOpen] = useState<string | null>(null);
@@ -29,6 +38,7 @@ export default function AppContent() {
   const [terminalCombinedMode, setTerminalCombinedMode] = useState<boolean>(false);
   const [showClaudeCliDialog, setShowClaudeCliDialog] = useState<boolean>(false);
   const [claudeCliSessionId, setClaudeCliSessionId] = useState<SessionId | null>(null);
+  const [useSessionWindowMode, setUseSessionWindowMode] = useState<boolean>(false);
 
   // Manage attached sessions
   const {
@@ -91,6 +101,21 @@ export default function AppContent() {
         <h1>ActionFlows Workspace</h1>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <button
+            onClick={() => setUseSessionWindowMode(!useSessionWindowMode)}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: useSessionWindowMode ? '#10a37f' : '#666',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: '500',
+            }}
+          >
+            {useSessionWindowMode ? 'Classic Mode' : 'Session Window Mode'}
+          </button>
+          <button
             onClick={() => setShowClaudeCliDialog(true)}
             style={{
               padding: '6px 12px',
@@ -115,51 +140,68 @@ export default function AppContent() {
       </header>
 
       <div className="app-container">
-        <div className="left-sidebar-group">
-          <UserSidebar
-            users={users}
-            selectedUserId={selectedUserId}
-            onUserSelect={setSelectedUserId}
-            currentUserId={currentUserId}
-            attachedSessionIds={attachedSessionIds}
-            onSessionAttach={attachSession}
-            onSessionDetach={detachSession}
-          />
-
-          {attachedSessionIds.length > 0 && (
-            <FileExplorer
-              sessionId={attachedSessionIds[0]}
-              onFileSelect={(path) => console.log('File selected:', path)}
-              onFileOpen={handleFileOpen}
+        {useSessionWindowMode ? (
+          <>
+            <SessionWindowSidebar
+              sessions={allSessions}
+              followedSessionIds={followedSessionIds}
+              onFollow={followSession}
+              onUnfollow={unfollowSession}
             />
-          )}
-        </div>
+            <SessionWindowGrid
+              sessions={sessionWindows.map((sw) => sw.session)}
+              onRemove={unfollowSession}
+            />
+          </>
+        ) : (
+          <>
+            <div className="left-sidebar-group">
+              <UserSidebar
+                users={users}
+                selectedUserId={selectedUserId}
+                onUserSelect={setSelectedUserId}
+                currentUserId={currentUserId}
+                attachedSessionIds={attachedSessionIds}
+                onSessionAttach={attachSession}
+                onSessionDetach={detachSession}
+              />
 
-        <aside className="app-sidebar">
-          <nav className="sidebar-nav">
-            <ul>
-              <li><a href="#dashboard">Dashboard</a></li>
-              <li><a href="#flows">Flows</a></li>
-              <li><a href="#actions">Actions</a></li>
-              <li><a href="#logs">Logs</a></li>
-              <li><a href="#settings">Settings</a></li>
-            </ul>
-          </nav>
-        </aside>
+              {attachedSessionIds.length > 0 && (
+                <FileExplorer
+                  sessionId={attachedSessionIds[0]}
+                  onFileSelect={(path) => console.log('File selected:', path)}
+                  onFileOpen={handleFileOpen}
+                />
+              )}
+            </div>
 
-        <main className="app-main">
-          <SplitPaneLayout
-            sessions={attachedSessions}
-            onSessionDetach={detachSession}
-          />
-        </main>
+            <aside className="app-sidebar">
+              <nav className="sidebar-nav">
+                <ul>
+                  <li><a href="#dashboard">Dashboard</a></li>
+                  <li><a href="#flows">Flows</a></li>
+                  <li><a href="#actions">Actions</a></li>
+                  <li><a href="#logs">Logs</a></li>
+                  <li><a href="#settings">Settings</a></li>
+                </ul>
+              </nav>
+            </aside>
 
-        {attachedSessionIds.length > 0 && (
-          <CodeEditor
-            sessionId={attachedSessionIds[0]}
-            fileToOpen={fileToOpen}
-            onFileOpened={() => setFileToOpen(null)}
-          />
+            <main className="app-main">
+              <SplitPaneLayout
+                sessions={attachedSessions}
+                onSessionDetach={detachSession}
+              />
+            </main>
+
+            {attachedSessionIds.length > 0 && (
+              <CodeEditor
+                sessionId={attachedSessionIds[0]}
+                fileToOpen={fileToOpen}
+                onFileOpened={() => setFileToOpen(null)}
+              />
+            )}
+          </>
         )}
       </div>
 

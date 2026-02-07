@@ -1,0 +1,249 @@
+.session-window-grid-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  color: var(--text-secondary);
+}
+
+.empty-state h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Grid layouts */
+.session-window-grid {
+  flex: 1;
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-primary);
+  overflow-y: auto;
+}
+
+.session-window-grid.session-count-1 {
+  grid-template-columns: 1fr;
+}
+
+.session-window-grid.session-count-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.session-window-grid.session-count-3,
+.session-window-grid.session-count-4 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.session-window-grid.session-count-5 {
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-rows: minmax(300px, auto);
+}
+
+/* Session Window Tile */
+.session-window-tile {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.session-window-tile:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.session-window-tile.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  border-radius: 0;
+  margin: 0;
+}
+
+/* Tile Header */
+.tile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tile-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tile-session-id {
+  font-size: 12px;
+  font-family: monospace;
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tile-status-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tile-status-badge.status-pending {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.tile-status-badge.status-active {
+  background: var(--info-color-bg);
+  color: var(--info-color);
+}
+
+.tile-status-badge.status-completed {
+  background: var(--success-color-bg);
+  color: var(--success-color);
+}
+
+.tile-status-badge.status-failed {
+  background: var(--error-color-bg);
+  color: var(--error-color);
+}
+
+.tile-cli-indicator {
+  font-size: 9px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: var(--accent-color-bg);
+  color: var(--accent-color);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.tile-header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.tile-action-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.tile-action-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-color);
+  color: var(--text-primary);
+}
+
+.tile-action-btn.remove-btn:hover {
+  background: var(--error-color-bg);
+  border-color: var(--error-color);
+  color: var(--error-color);
+}
+
+/* Collapsed State */
+.tile-content-collapsed {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.tile-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.summary-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.summary-value {
+  color: var(--text-primary);
+  font-family: monospace;
+}
+
+/* Expanded State */
+.tile-content-expanded {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.tile-flow-viz {
+  flex: 4;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-right: 1px solid var(--border-color);
+}
+
+.tile-cli-terminal {
+  flex: 1;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.placeholder-content {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 24px;
+}
+
+.placeholder-content p {
+  margin: 0 0 16px 0;
+}
+
+.chain-info {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}

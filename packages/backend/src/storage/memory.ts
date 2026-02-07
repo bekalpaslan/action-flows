@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig } from '@afw/shared';
 
 /**
  * In-memory storage for sessions, chains, events, commands, and input
@@ -56,6 +56,15 @@ export interface MemoryStorage {
   addClient(clientId: string, sessionId?: SessionId): void;
   removeClient(clientId: string): void;
   getClientsForSession(sessionId: SessionId): string[];
+
+  // Session window storage
+  followedSessions: Set<SessionId>;
+  sessionWindowConfigs: Map<SessionId, SessionWindowConfig>;
+  followSession(sessionId: SessionId): void;
+  unfollowSession(sessionId: SessionId): void;
+  getFollowedSessions(): SessionId[];
+  setSessionWindowConfig(sessionId: SessionId, config: SessionWindowConfig): void;
+  getSessionWindowConfig(sessionId: SessionId): SessionWindowConfig | undefined;
 
   // Internal eviction method
   _evictOldestCompletedSession(): void;
@@ -211,6 +220,29 @@ export const storage: MemoryStorage = {
       }
     });
     return clients;
+  },
+
+  // Session windows
+  followedSessions: new Set(),
+  sessionWindowConfigs: new Map(),
+  followSession(sessionId: SessionId) {
+    this.followedSessions.add(sessionId);
+  },
+  unfollowSession(sessionId: SessionId) {
+    // Only delete config if session was actually followed
+    if (this.followedSessions.has(sessionId)) {
+      this.followedSessions.delete(sessionId);
+      this.sessionWindowConfigs.delete(sessionId);
+    }
+  },
+  getFollowedSessions() {
+    return Array.from(this.followedSessions);
+  },
+  setSessionWindowConfig(sessionId: SessionId, config: SessionWindowConfig) {
+    this.sessionWindowConfigs.set(sessionId, config);
+  },
+  getSessionWindowConfig(sessionId: SessionId) {
+    return this.sessionWindowConfigs.get(sessionId);
   },
 
   /**

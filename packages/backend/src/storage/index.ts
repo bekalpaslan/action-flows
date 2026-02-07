@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
 
@@ -47,6 +47,15 @@ export interface Storage {
   addClient(clientId: string, sessionId?: SessionId): void;
   removeClient(clientId: string): void;
   getClientsForSession(sessionId: SessionId): string[];
+
+  // Session window storage
+  followedSessions?: Set<SessionId>; // Memory only
+  sessionWindowConfigs?: Map<SessionId, SessionWindowConfig>; // Memory only
+  followSession?(sessionId: SessionId): void | Promise<void>;
+  unfollowSession?(sessionId: SessionId): void | Promise<void>;
+  getFollowedSessions?(): SessionId[] | Promise<SessionId[]>;
+  setSessionWindowConfig?(sessionId: SessionId, config: SessionWindowConfig): void | Promise<void>;
+  getSessionWindowConfig?(sessionId: SessionId): SessionWindowConfig | undefined | Promise<SessionWindowConfig | undefined>;
 
   // Pub/Sub support (Redis only)
   subscribe?(channel: string, callback: (message: string) => void): Promise<void>;

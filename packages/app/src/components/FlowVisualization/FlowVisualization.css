@@ -1,0 +1,107 @@
+/**
+ * FlowVisualization Styles
+ * Container and swimlane visualization styling
+ */
+
+.flow-visualization {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #f5f5f5;
+}
+
+/* Swimlane background panel */
+.swimlane-panel {
+  pointer-events: none;
+  z-index: 0;
+}
+
+.swimlane-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.swimlane {
+  transition: background-color 0.3s ease;
+}
+
+.swimlane-label {
+  transition: opacity 0.3s ease;
+  user-select: none;
+}
+
+/* React Flow overrides */
+.flow-visualization .react-flow {
+  background-color: #f5f5f5;
+}
+
+.flow-visualization .react-flow__viewport {
+  background: transparent;
+}
+
+/* Controls styling */
+.flow-visualization .react-flow__controls {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.flow-visualization .react-flow__controls-button {
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+
+.flow-visualization .react-flow__controls-button:hover {
+  background-color: #f5f5f5;
+}
+
+.flow-visualization .react-flow__controls-button svg {
+  fill: #666;
+}
+
+/* MiniMap styling */
+.flow-visualization .react-flow__minimap {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Chain recompilation animations */
+.flow-visualization.recompiling .react-flow__node {
+  animation: fadeOut 0.3s ease-out;
+}
+
+.flow-visualization.recompiling .react-flow__edge {
+  animation: fadeOut 0.3s ease-out;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.3;
+  }
+}
+
+/* New chain slide-in */
+.flow-visualization.new-chain .react-flow__node {
+  animation: slideInNewChain 0.4s ease-out;
+}
+
+@keyframes slideInNewChain {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

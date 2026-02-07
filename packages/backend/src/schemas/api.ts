@@ -60,6 +60,25 @@ export const sessionAwaitingSchema = z.object({
 
 export type SessionAwaitingRequest = z.infer<typeof sessionAwaitingSchema>;
 
+export const quickActionSchema = z.object({
+  id: z.string().min(1).max(100),
+  label: z.string().min(1).max(200),
+  icon: z.string().min(1).max(50),
+  value: z.string().min(1).max(5000),
+  contextPatterns: z.array(z.string().max(500)).max(20).optional(),
+  alwaysShow: z.boolean().optional(),
+});
+
+export const sessionWindowConfigSchema = z.object({
+  autoExpand: z.boolean().optional(),
+  autoAttachCli: z.boolean().optional(),
+  enableAnimations: z.boolean().optional(),
+  quickActions: z.array(quickActionSchema).max(50).optional(),
+  autoArchiveDelaySeconds: z.number().int().min(0).max(3600).optional(),
+});
+
+export type SessionWindowConfigRequest = z.infer<typeof sessionWindowConfigSchema>;
+
 // ============================================================================
 // Event Schemas
 // ============================================================================

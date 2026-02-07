@@ -1,0 +1,53 @@
+/**
+ * AnimatedFlowEdge Styles
+ * Animations for data flow visualization
+ */
+
+/* Edge particles (traveling dots) */
+.edge-particle {
+  opacity: 0.8;
+}
+
+.edge-particle.particle-1 {
+  filter: drop-shadow(0 0 2px rgba(251, 192, 45, 0.8));
+}
+
+.edge-particle.particle-2 {
+  filter: drop-shadow(0 0 2px rgba(251, 192, 45, 0.6));
+}
+
+/* Edge labels */
+.edge-label {
+  position: absolute;
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.edge-label-content {
+  background-color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  font-weight: 500;
+  color: #666;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.edge-label-content.active {
+  border-color: #fbc02d;
+  background-color: #fffde7;
+  color: #f57f17;
+  box-shadow: 0 1px 4px rgba(251, 192, 45, 0.3);
+}
+
+/* Edge color transitions */
+.react-flow__edge-path {
+  transition: stroke 0.3s ease, stroke-width 0.3s ease;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #1976d2;
+  stroke-width: 3;
+}

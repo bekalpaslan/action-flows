@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig } from '@afw/shared';
 
 /**
  * Redis storage adapter for sessions, chains, events, commands, and input
@@ -35,6 +35,13 @@ export interface RedisStorage {
   addClient(clientId: string, sessionId?: SessionId): void;
   removeClient(clientId: string): void;
   getClientsForSession(sessionId: SessionId): string[];
+
+  // Session window storage
+  followSession(sessionId: SessionId): Promise<void>;
+  unfollowSession(sessionId: SessionId): Promise<void>;
+  getFollowedSessions(): Promise<SessionId[]>;
+  setSessionWindowConfig(sessionId: SessionId, config: SessionWindowConfig): Promise<void>;
+  getSessionWindowConfig(sessionId: SessionId): Promise<SessionWindowConfig | undefined>;
 
   // Pub/Sub support
   subscribe(channel: string, callback: (message: string) => void): Promise<void>;
@@ -264,6 +271,59 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         }
       });
       return clients;
+    },
+
+    // === Session Windows ===
+    async followSession(sessionId: SessionId) {
+      try {
+        const key = `${keyPrefix}followed`;
+        await redis.sadd(key, sessionId);
+      } catch (error) {
+        console.error(`[Redis] Error following session ${sessionId}:`, error);
+      }
+    },
+
+    async unfollowSession(sessionId: SessionId) {
+      try {
+        const key = `${keyPrefix}followed`;
+        await redis.srem(key, sessionId);
+        // Also delete config
+        const configKey = `${keyPrefix}sw-config:${sessionId}`;
+        await redis.del(configKey);
+      } catch (error) {
+        console.error(`[Redis] Error unfollowing session ${sessionId}:`, error);
+      }
+    },
+
+    async getFollowedSessions() {
+      try {
+        const key = `${keyPrefix}followed`;
+        const sessions = await redis.smembers(key);
+        return sessions as SessionId[];
+      } catch (error) {
+        console.error('[Redis] Error getting followed sessions:', error);
+        return [];
+      }
+    },
+
+    async setSessionWindowConfig(sessionId: SessionId, config: SessionWindowConfig) {
+      try {
+        const key = `${keyPrefix}sw-config:${sessionId}`;
+        await redis.setex(key, SESSION_TTL, JSON.stringify(config));
+      } catch (error) {
+        console.error(`[Redis] Error setting session window config for ${sessionId}:`, error);
+      }
+    },
+
+    async getSessionWindowConfig(sessionId: SessionId) {
+      try {
+        const key = `${keyPrefix}sw-config:${sessionId}`;
+        const data = await redis.get(key);
+        return data ? JSON.parse(data) as SessionWindowConfig : undefined;
+      } catch (error) {
+        console.error(`[Redis] Error getting session window config for ${sessionId}:`, error);
+        return undefined;
+      }
     },
 
     // === Pub/Sub ===

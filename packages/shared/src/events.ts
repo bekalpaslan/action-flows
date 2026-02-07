@@ -448,6 +448,51 @@ export interface WarningOccurredEvent extends BaseEvent {
 }
 
 /**
+ * Session window events
+ */
+
+export interface SessionFollowedEvent extends BaseEvent {
+  type: 'session:followed';
+
+  // Automatic fields
+  sessionId: SessionId;
+
+  // Parsed fields
+  user?: UserId;
+}
+
+export interface SessionUnfollowedEvent extends BaseEvent {
+  type: 'session:unfollowed';
+
+  // Automatic fields
+  sessionId: SessionId;
+
+  // Parsed fields
+  user?: UserId;
+}
+
+export interface QuickActionTriggeredEvent extends BaseEvent {
+  type: 'quick-action:triggered';
+
+  // Automatic fields
+  actionId: string;
+  value: string;
+
+  // Parsed fields
+  label?: string;
+}
+
+export interface FlowNodeClickedEvent extends BaseEvent {
+  type: 'flow:node-clicked';
+
+  // Automatic fields
+  stepNumber: StepNumber;
+
+  // Parsed fields
+  action?: string | null;
+}
+
+/**
  * Union type for all events
  */
 export type WorkspaceEvent =
@@ -472,7 +517,11 @@ export type WorkspaceEvent =
   | ClaudeCliOutputEvent
   | ClaudeCliExitedEvent
   | ErrorOccurredEvent
-  | WarningOccurredEvent;
+  | WarningOccurredEvent
+  | SessionFollowedEvent
+  | SessionUnfollowedEvent
+  | QuickActionTriggeredEvent
+  | FlowNodeClickedEvent;
 
 /**
  * Type guard functions for discriminating event types
@@ -518,4 +567,12 @@ export const eventGuards = {
     event.type === 'error:occurred',
   isWarning: (event: WorkspaceEvent): event is WarningOccurredEvent =>
     event.type === 'warning:occurred',
+  isSessionFollowed: (event: WorkspaceEvent): event is SessionFollowedEvent =>
+    event.type === 'session:followed',
+  isSessionUnfollowed: (event: WorkspaceEvent): event is SessionUnfollowedEvent =>
+    event.type === 'session:unfollowed',
+  isQuickActionTriggered: (event: WorkspaceEvent): event is QuickActionTriggeredEvent =>
+    event.type === 'quick-action:triggered',
+  isFlowNodeClicked: (event: WorkspaceEvent): event is FlowNodeClickedEvent =>
+    event.type === 'flow:node-clicked',
 };

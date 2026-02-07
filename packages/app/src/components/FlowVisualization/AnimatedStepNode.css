@@ -1,0 +1,259 @@
+/**
+ * AnimatedStepNode Styles
+ * Performant CSS animations using transform/opacity only
+ */
+
+.animated-step-node {
+  padding: 12px;
+  border-radius: 8px;
+  background-color: white;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+  max-width: 220px;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.animated-step-node:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Node content layout */
+.node-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.node-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.step-number {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #666;
+}
+
+.status-icon {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.status-icon.completed {
+  color: #4caf50;
+}
+
+.status-icon.failed {
+  color: #f44336;
+}
+
+.status-icon.running {
+  color: #fbc02d;
+  animation: rotate 2s linear infinite;
+}
+
+.status-icon.skipped {
+  color: #9e9e9e;
+}
+
+.status-icon.pending {
+  color: #bdbdbd;
+}
+
+.node-action {
+  font-weight: 600;
+  color: #1976d2;
+  word-break: break-word;
+  font-size: 13px;
+}
+
+.node-model {
+  display: flex;
+  gap: 4px;
+}
+
+.model-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.model-badge.model-haiku {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.model-badge.model-sonnet {
+  background-color: #f3e5f5;
+  color: #6a1b9a;
+}
+
+.model-badge.model-opus {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.node-duration {
+  font-size: 10px;
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.node-error {
+  font-size: 10px;
+  color: #f44336;
+  font-weight: 600;
+  padding: 2px 4px;
+  background-color: rgba(244, 67, 54, 0.1);
+  border-radius: 2px;
+}
+
+.node-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+}
+
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(251, 192, 45, 0.3);
+  border-top-color: #fbc02d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Status-based border colors */
+.animated-step-node.status-pending {
+  border-color: #bdbdbd;
+  background-color: #fafafa;
+}
+
+.animated-step-node.status-in_progress {
+  border-color: #fbc02d;
+  background-color: #fffde7;
+}
+
+.animated-step-node.status-completed {
+  border-color: #4caf50;
+  background-color: #f1f8e9;
+}
+
+.animated-step-node.status-failed {
+  border-color: #f44336;
+  background-color: #ffebee;
+}
+
+.animated-step-node.status-skipped {
+  border-color: #9e9e9e;
+  background-color: #f5f5f5;
+  opacity: 0.7;
+}
+
+/* Animation states - using transform/opacity only for performance */
+
+/* Slide-in animation (for pending nodes appearing) */
+.animated-step-node.anim-slide-in {
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Pulse animation (for running nodes) */
+.animated-step-node.anim-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Shrink animation (for completed nodes) */
+.animated-step-node.anim-shrink {
+  animation: shrink 0.3s ease-out forwards;
+}
+
+@keyframes shrink {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.95);
+  }
+}
+
+/* Shake animation (for failed nodes) */
+.animated-step-node.anim-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+/* Spinner rotation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Rotating icon animation */
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* React Flow handle overrides */
+.animated-step-node .react-flow__handle {
+  background-color: #1976d2;
+  border: 2px solid white;
+  width: 8px;
+  height: 8px;
+}
+
+.animated-step-node .react-flow__handle.connectingNode {
+  background-color: #ff6f00;
+}
+
+.animated-step-node .react-flow__handle.valid {
+  background-color: #4caf50;
+}
