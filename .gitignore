@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data & logs
+data/
+
+# Test reports
+test/e2e/reports/
+
+# Electron
+out/
+
+# Lock files already tracked via pnpm-lock.yaml
