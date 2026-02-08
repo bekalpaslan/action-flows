@@ -3,6 +3,8 @@ import { useWebSocketContext } from '../contexts/WebSocketContext';
 import type { Session } from '@afw/shared';
 import type { WorkspaceEvent } from '@afw/shared';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export interface UseUserSessionsReturn {
   sessions: Session[];
   loading: boolean;
@@ -40,7 +42,7 @@ export function useUserSessions(userId: string): UseUserSessionsReturn {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/users/${userId}/sessions`, {
+      const response = await fetch(`${API_BASE}/api/users/${userId}/sessions`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

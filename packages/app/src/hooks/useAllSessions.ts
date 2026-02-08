@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useWebSocketContext } from '../contexts/WebSocketContext';
 import type { Session, WorkspaceEvent } from '@afw/shared';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export interface UseAllSessionsReturn {
   /** All sessions from all users */
   sessions: Session[];
@@ -37,7 +39,7 @@ export function useAllSessions(): UseAllSessionsReturn {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('/api/sessions', {
+      const response = await fetch(`${API_BASE}/api/sessions`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-import { useState, useCallback, MouseEvent } from 'react';
+import { useState, useCallback, useEffect, MouseEvent } from 'react';
 import { FileIcon } from './FileIcon';
 
 export interface DirectoryEntry {

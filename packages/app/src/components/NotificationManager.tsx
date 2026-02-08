@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { useEvents } from '../hooks/useEvents'
+import { useWebSocketContext } from '../contexts/WebSocketContext'
 import { useNotifications } from '../hooks/useNotifications'
-import type { SessionId } from '@afw/shared'
+import type { SessionId, WorkspaceEvent } from '@afw/shared'
 
 interface NotificationManagerProps {
   sessionIds: SessionId[]
@@ -9,9 +9,15 @@ interface NotificationManagerProps {
   enableChainCompletions?: boolean
 }
 
+const WATCHED_TYPES = new Set(['step_failed', 'chain_complete', 'session_ended'])
+
 /**
  * Background component that monitors events and shows desktop notifications
  * for important events (step failures, chain completions)
+ *
+ * NOTE: Cannot use useEvents() in a loop — that violates Rules of Hooks
+ * because the number of hook calls changes when sessionIds.length changes.
+ * Instead we subscribe/unsubscribe directly via the WebSocket context.
  */
 export function NotificationManager({
   sessionIds,
@@ -19,27 +25,31 @@ export function NotificationManager({
   enableChainCompletions = true,
 }: NotificationManagerProps) {
   const { showNotification } = useNotifications()
+  const { subscribe, unsubscribe, onEvent } = useWebSocketContext()
   const processedEvents = useRef(new Set<string>())
 
-  // Listen to all sessions
-  const allEvents = sessionIds.flatMap((sessionId) =>
-    useEvents(sessionId, ['step_failed', 'chain_complete', 'session_ended'])
-  )
-
+  // Subscribe to all watched sessions
   useEffect(() => {
-    if (allEvents.length === 0) return
+    sessionIds.forEach((id) => subscribe(id))
+    return () => {
+      sessionIds.forEach((id) => unsubscribe(id))
+    }
+  }, [sessionIds, subscribe, unsubscribe])
 
-    // Process only new events
-    allEvents.forEach((event) => {
+  // Listen for events from all watched sessions
+  useEffect(() => {
+    if (!onEvent) return
+
+    const sessionSet = new Set(sessionIds)
+
+    const handleEvent = (event: WorkspaceEvent) => {
+      if (!sessionSet.has(event.sessionId as SessionId)) return
+      if (!WATCHED_TYPES.has(event.type)) return
+
       const eventKey = `${event.sessionId}-${event.timestamp}-${event.type}`
-
-      if (processedEvents.current.has(eventKey)) {
-        return
-      }
-
+      if (processedEvents.current.has(eventKey)) return
       processedEvents.current.add(eventKey)
 
-      // Show notification based on event type
       switch (event.type) {
         case 'step_failed': {
           if (!enableStepFailures) return
@@ -72,19 +82,19 @@ export function NotificationManager({
         }
 
         case 'session_ended': {
-          const data = (event as any).data || {}
-          const sessionId = event.sessionId
-
           showNotification({
             title: 'Session Ended',
-            body: `Session ${sessionId} has completed`,
+            body: `Session ${event.sessionId} has completed`,
             urgency: 'low',
           })
           break
         }
       }
-    })
-  }, [allEvents, showNotification, enableStepFailures, enableChainCompletions])
+    }
+
+    const unregister = onEvent(handleEvent)
+    return () => { unregister() }
+  }, [sessionIds, onEvent, showNotification, enableStepFailures, enableChainCompletions])
 
   return null // This is a background component
 }

@@ -7,10 +7,10 @@ import rateLimit from 'express-rate-limit';
  * Uses express-rate-limit with IP-based key generation.
  */
 
-// General API rate limit: 100 requests per 15 minutes per IP
+// General API rate limit: 1000 requests per 15 minutes per IP
 export const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
+  max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests, please try again later.' },

@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useWebSocketContext } from '../contexts/WebSocketContext';
 import type { WorkspaceEvent } from '@afw/shared';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export interface User {
   id: string;
   sessionCount: number;
@@ -48,7 +50,7 @@ export function useUsers(): UseUsersReturn {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('/api/users', {
+      const response = await fetch(`${API_BASE}/api/users`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
