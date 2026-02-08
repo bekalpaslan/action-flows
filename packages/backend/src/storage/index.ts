@@ -1,6 +1,25 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
+
+/**
+ * Filter options for bookmarks queries
+ */
+export interface BookmarkFilter {
+  category?: BookmarkCategory;
+  since?: Timestamp;
+  userId?: UserId;
+  tags?: string[];
+}
+
+/**
+ * Filter options for pattern queries
+ */
+export interface PatternFilter {
+  patternType?: PatternType;
+  minConfidence?: number;
+  since?: Timestamp;
+}
 
 /**
  * Unified storage interface that can use either memory or Redis backend
@@ -56,6 +75,20 @@ export interface Storage {
   getFollowedSessions?(): SessionId[] | Promise<SessionId[]>;
   setSessionWindowConfig?(sessionId: SessionId, config: SessionWindowConfig): void | Promise<void>;
   getSessionWindowConfig?(sessionId: SessionId): SessionWindowConfig | undefined | Promise<SessionWindowConfig | undefined>;
+
+  // Frequency tracking
+  trackAction(actionType: string, projectId?: ProjectId, userId?: UserId): void | Promise<void>;
+  getFrequency(actionType: string, projectId?: ProjectId): FrequencyRecord | undefined | Promise<FrequencyRecord | undefined>;
+  getTopActions(projectId: ProjectId, limit: number): FrequencyRecord[] | Promise<FrequencyRecord[]>;
+
+  // Bookmarks
+  addBookmark(bookmark: Bookmark): void | Promise<void>;
+  getBookmarks(projectId: ProjectId, filter?: BookmarkFilter): Bookmark[] | Promise<Bookmark[]>;
+  removeBookmark(bookmarkId: string): void | Promise<void>;
+
+  // Patterns (detected)
+  addPattern(pattern: DetectedPattern): void | Promise<void>;
+  getPatterns(projectId: ProjectId, filter?: PatternFilter): DetectedPattern[] | Promise<DetectedPattern[]>;
 
   // Pub/Sub support (Redis only)
   subscribe?(channel: string, callback: (message: string) => void): Promise<void>;

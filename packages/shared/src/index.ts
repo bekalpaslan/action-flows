@@ -62,6 +62,9 @@ export type {
   SessionUnfollowedEvent,
   QuickActionTriggeredEvent,
   FlowNodeClickedEvent,
+  PatternDetectedEvent,
+  FrequencyUpdatedEvent,
+  BookmarkCreatedEvent,
   WorkspaceEvent,
 } from './events.js';
 
@@ -153,6 +156,24 @@ export type {
   ToolbarSlot,
   ToolbarConfig,
 } from './buttonTypes.js';
+
+// ============================================================================
+// Pattern & Bookmark Types
+// ============================================================================
+export type {
+  BookmarkId,
+  PatternId,
+  BookmarkCategory,
+  Bookmark,
+  PatternType,
+  ConfidenceScore,
+  ActionSequence,
+  DetectedPattern,
+  PatternAction,
+  FrequencyRecord,
+  FrequencyQuery,
+  BookmarkCluster,
+} from './patternTypes.js';
 
 // ============================================================================
 // Legacy Types (for backward compatibility)

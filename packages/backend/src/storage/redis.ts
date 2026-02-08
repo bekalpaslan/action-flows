@@ -1,5 +1,6 @@
 import { Redis } from 'ioredis';
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId } from '@afw/shared';
+import type { BookmarkFilter, PatternFilter } from './index.js';
 
 /**
  * Redis storage adapter for sessions, chains, events, commands, and input
@@ -42,6 +43,20 @@ export interface RedisStorage {
   getFollowedSessions(): Promise<SessionId[]>;
   setSessionWindowConfig(sessionId: SessionId, config: SessionWindowConfig): Promise<void>;
   getSessionWindowConfig(sessionId: SessionId): Promise<SessionWindowConfig | undefined>;
+
+  // Frequency tracking
+  trackAction(actionType: string, projectId?: ProjectId, userId?: UserId): Promise<void>;
+  getFrequency(actionType: string, projectId?: ProjectId): Promise<FrequencyRecord | undefined>;
+  getTopActions(projectId: ProjectId, limit: number): Promise<FrequencyRecord[]>;
+
+  // Bookmarks
+  addBookmark(bookmark: Bookmark): Promise<void>;
+  getBookmarks(projectId: ProjectId, filter?: BookmarkFilter): Promise<Bookmark[]>;
+  removeBookmark(bookmarkId: string): Promise<void>;
+
+  // Patterns (detected)
+  addPattern(pattern: DetectedPattern): Promise<void>;
+  getPatterns(projectId: ProjectId, filter?: PatternFilter): Promise<DetectedPattern[]>;
 
   // Pub/Sub support
   subscribe(channel: string, callback: (message: string) => void): Promise<void>;
@@ -328,6 +343,198 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       } catch (error) {
         console.error(`[Redis] Error getting session window config for ${sessionId}:`, error);
         return undefined;
+      }
+    },
+
+    // === Frequency Tracking ===
+    async trackAction(actionType: string, projectId?: ProjectId, userId?: UserId) {
+      try {
+        const key = `${keyPrefix}freq:${projectId ? `${projectId}:` : ''}${actionType}`;
+        const now = new Date().toISOString();
+        const today = now.split('T')[0]; // ISO date string (YYYY-MM-DD)
+
+        // Get existing record or create new one
+        const existing = await redis.get(key);
+        let record: FrequencyRecord;
+
+        if (existing) {
+          record = JSON.parse(existing) as FrequencyRecord;
+          record.count++;
+          record.lastSeen = now as Timestamp;
+          record.dailyCounts[today] = (record.dailyCounts[today] || 0) + 1;
+        } else {
+          record = {
+            actionType,
+            projectId,
+            userId,
+            count: 1,
+            firstSeen: now as Timestamp,
+            lastSeen: now as Timestamp,
+            dailyCounts: { [today]: 1 },
+          };
+        }
+
+        // Store updated record with TTL (30 days)
+        await redis.setex(key, 2592000, JSON.stringify(record));
+      } catch (error) {
+        console.error(`[Redis] Error tracking action ${actionType}:`, error);
+      }
+    },
+
+    async getFrequency(actionType: string, projectId?: ProjectId) {
+      try {
+        const key = `${keyPrefix}freq:${projectId ? `${projectId}:` : ''}${actionType}`;
+        const data = await redis.get(key);
+        return data ? (JSON.parse(data) as FrequencyRecord) : undefined;
+      } catch (error) {
+        console.error(`[Redis] Error getting frequency for ${actionType}:`, error);
+        return undefined;
+      }
+    },
+
+    async getTopActions(projectId: ProjectId, limit: number) {
+      try {
+        // Get all frequency keys for this project
+        // TODO: Consider using SCAN instead of KEYS for large datasets
+        // KEYS is O(N) and can block Redis; SCAN is cursor-based and non-blocking
+        const pattern = `${keyPrefix}freq:${projectId}:*`;
+        const keys = await redis.keys(pattern);
+
+        const results: FrequencyRecord[] = [];
+        for (const key of keys) {
+          const data = await redis.get(key);
+          if (data) {
+            results.push(JSON.parse(data) as FrequencyRecord);
+          }
+        }
+
+        // Sort by count descending
+        results.sort((a, b) => b.count - a.count);
+        return results.slice(0, limit);
+      } catch (error) {
+        console.error(`[Redis] Error getting top actions for ${projectId}:`, error);
+        return [];
+      }
+    },
+
+    // === Bookmarks ===
+    async addBookmark(bookmark: Bookmark) {
+      try {
+        const key = `${keyPrefix}bookmark:${bookmark.id}`;
+        const projectKey = `${keyPrefix}bookmarks:${bookmark.projectId}`;
+        // Store bookmark with 30 day TTL
+        await redis.setex(key, 2592000, JSON.stringify(bookmark));
+        // Add to project index
+        await redis.sadd(projectKey, bookmark.id);
+        await redis.expire(projectKey, 2592000);
+      } catch (error) {
+        console.error(`[Redis] Error adding bookmark ${bookmark.id}:`, error);
+      }
+    },
+
+    async getBookmarks(projectId: ProjectId, filter?: BookmarkFilter) {
+      try {
+        const projectKey = `${keyPrefix}bookmarks:${projectId}`;
+        const bookmarkIds = await redis.smembers(projectKey);
+
+        const results: Bookmark[] = [];
+        for (const id of bookmarkIds) {
+          const key = `${keyPrefix}bookmark:${id}`;
+          const data = await redis.get(key);
+          if (data) {
+            const bookmark = JSON.parse(data) as Bookmark;
+
+            // Apply category filter
+            if (filter?.category && bookmark.category !== filter.category) continue;
+
+            // Apply userId filter
+            if (filter?.userId && bookmark.userId !== filter.userId) continue;
+
+            // Apply timestamp filter (since)
+            if (filter?.since) {
+              const bookmarkTime = new Date(bookmark.timestamp).getTime();
+              const sinceTime = new Date(filter.since).getTime();
+              if (bookmarkTime < sinceTime) continue;
+            }
+
+            // Apply tags filter
+            if (filter?.tags && filter.tags.length > 0) {
+              const hasTag = filter.tags.some((tag) => bookmark.tags.includes(tag));
+              if (!hasTag) continue;
+            }
+
+            results.push(bookmark);
+          }
+        }
+        return results;
+      } catch (error) {
+        console.error(`[Redis] Error getting bookmarks for ${projectId}:`, error);
+        return [];
+      }
+    },
+
+    async removeBookmark(bookmarkId: string) {
+      try {
+        const key = `${keyPrefix}bookmark:${bookmarkId}`;
+        const data = await redis.get(key);
+        if (data) {
+          const bookmark = JSON.parse(data) as Bookmark;
+          const projectKey = `${keyPrefix}bookmarks:${bookmark.projectId}`;
+          await redis.srem(projectKey, bookmarkId);
+        }
+        await redis.del(key);
+      } catch (error) {
+        console.error(`[Redis] Error removing bookmark ${bookmarkId}:`, error);
+      }
+    },
+
+    // === Patterns ===
+    async addPattern(pattern: DetectedPattern) {
+      try {
+        const key = `${keyPrefix}pattern:${pattern.id}`;
+        const projectKey = `${keyPrefix}patterns:${pattern.projectId}`;
+        // Store pattern with 30 day TTL
+        await redis.setex(key, 2592000, JSON.stringify(pattern));
+        // Add to project index
+        await redis.sadd(projectKey, pattern.id);
+        await redis.expire(projectKey, 2592000);
+      } catch (error) {
+        console.error(`[Redis] Error adding pattern ${pattern.id}:`, error);
+      }
+    },
+
+    async getPatterns(projectId: ProjectId, filter?: PatternFilter) {
+      try {
+        const projectKey = `${keyPrefix}patterns:${projectId}`;
+        const patternIds = await redis.smembers(projectKey);
+
+        const results: DetectedPattern[] = [];
+        for (const id of patternIds) {
+          const key = `${keyPrefix}pattern:${id}`;
+          const data = await redis.get(key);
+          if (data) {
+            const pattern = JSON.parse(data) as DetectedPattern;
+
+            // Apply pattern type filter
+            if (filter?.patternType && pattern.patternType !== filter.patternType) continue;
+
+            // Apply confidence filter
+            if (filter?.minConfidence !== undefined && pattern.confidence < filter.minConfidence) continue;
+
+            // Apply timestamp filter (since)
+            if (filter?.since) {
+              const patternTime = new Date(pattern.detectedAt).getTime();
+              const sinceTime = new Date(filter.since).getTime();
+              if (patternTime < sinceTime) continue;
+            }
+
+            results.push(pattern);
+          }
+        }
+        return results;
+      } catch (error) {
+        console.error(`[Redis] Error getting patterns for ${projectId}:`, error);
+        return [];
       }
     },
 

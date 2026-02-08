@@ -280,3 +280,32 @@ export const trackButtonUsageSchema = z.object({
 });
 
 export type TrackButtonUsageRequest = z.infer<typeof trackButtonUsageSchema>;
+
+// ============================================================================
+// Pattern & Bookmark Schemas
+// ============================================================================
+
+export const createBookmarkSchema = z.object({
+  sessionId: z.string().min(1, 'sessionId required').max(200, 'sessionId too long'),
+  messageIndex: z.number().int().min(0, 'messageIndex must be >= 0'),
+  messageContent: z.string().min(1, 'messageContent required').max(50000, 'messageContent too long'),
+  category: z.enum([
+    'useful-pattern',
+    'good-output',
+    'want-to-automate',
+    'reference-material',
+    'other',
+  ]),
+  explanation: z.string().min(1, 'explanation required').max(2000, 'explanation too long'),
+  tags: z.array(z.string().max(50, 'tag too long')).max(20, 'too many tags').default([]),
+  userId: z.string().max(100, 'userId too long').optional(),
+  projectId: z.string().max(200, 'projectId too long').optional(),
+});
+
+export type CreateBookmarkRequest = z.infer<typeof createBookmarkSchema>;
+
+export const analyzePatternSchema = z.object({
+  force: z.boolean().optional().default(false),
+});
+
+export type AnalyzePatternRequest = z.infer<typeof analyzePatternSchema>;

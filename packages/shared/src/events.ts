@@ -493,6 +493,41 @@ export interface FlowNodeClickedEvent extends BaseEvent {
 }
 
 /**
+ * Pattern detection events
+ */
+
+export interface PatternDetectedEvent extends BaseEvent {
+  type: 'pattern:detected';
+
+  // Automatic fields
+  patternId: string;
+  patternType: 'frequency' | 'sequence' | 'bookmark-cluster';
+  confidence: number;
+
+  // Parsed fields (nullable)
+  description?: string;
+}
+
+export interface FrequencyUpdatedEvent extends BaseEvent {
+  type: 'frequency:updated';
+
+  // Automatic fields
+  actionType: string;
+  newCount: number;
+
+  // Parsed fields (nullable)
+  projectId?: string;
+}
+
+export interface BookmarkCreatedEvent extends BaseEvent {
+  type: 'bookmark:created';
+
+  // Automatic fields
+  bookmarkId: string;
+  category: string;
+}
+
+/**
  * Union type for all events
  */
 export type WorkspaceEvent =
@@ -521,7 +556,10 @@ export type WorkspaceEvent =
   | SessionFollowedEvent
   | SessionUnfollowedEvent
   | QuickActionTriggeredEvent
-  | FlowNodeClickedEvent;
+  | FlowNodeClickedEvent
+  | PatternDetectedEvent
+  | FrequencyUpdatedEvent
+  | BookmarkCreatedEvent;
 
 /**
  * Type guard functions for discriminating event types
@@ -575,4 +613,10 @@ export const eventGuards = {
     event.type === 'quick-action:triggered',
   isFlowNodeClicked: (event: WorkspaceEvent): event is FlowNodeClickedEvent =>
     event.type === 'flow:node-clicked',
+  isPatternDetected: (event: WorkspaceEvent): event is PatternDetectedEvent =>
+    event.type === 'pattern:detected',
+  isFrequencyUpdated: (event: WorkspaceEvent): event is FrequencyUpdatedEvent =>
+    event.type === 'frequency:updated',
+  isBookmarkCreated: (event: WorkspaceEvent): event is BookmarkCreatedEvent =>
+    event.type === 'bookmark:created',
 };

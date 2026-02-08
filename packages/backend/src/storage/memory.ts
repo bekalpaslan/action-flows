@@ -1,4 +1,5 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType } from '@afw/shared';
+import type { BookmarkFilter, PatternFilter } from './index.js';
 
 /**
  * In-memory storage for sessions, chains, events, commands, and input
@@ -65,6 +66,23 @@ export interface MemoryStorage {
   getFollowedSessions(): SessionId[];
   setSessionWindowConfig(sessionId: SessionId, config: SessionWindowConfig): void;
   getSessionWindowConfig(sessionId: SessionId): SessionWindowConfig | undefined;
+
+  // Frequency tracking
+  frequencies: Map<string, FrequencyRecord>;
+  trackAction(actionType: string, projectId?: ProjectId, userId?: UserId): void;
+  getFrequency(actionType: string, projectId?: ProjectId): FrequencyRecord | undefined;
+  getTopActions(projectId: ProjectId, limit: number): FrequencyRecord[];
+
+  // Bookmarks
+  bookmarks: Map<string, Bookmark>;
+  addBookmark(bookmark: Bookmark): void;
+  getBookmarks(projectId: ProjectId, filter?: BookmarkFilter): Bookmark[];
+  removeBookmark(bookmarkId: string): void;
+
+  // Patterns (detected)
+  patterns: Map<string, DetectedPattern>;
+  addPattern(pattern: DetectedPattern): void;
+  getPatterns(projectId: ProjectId, filter?: PatternFilter): DetectedPattern[];
 
   // Internal eviction method
   _evictOldestCompletedSession(): void;
@@ -243,6 +261,119 @@ export const storage: MemoryStorage = {
   },
   getSessionWindowConfig(sessionId: SessionId) {
     return this.sessionWindowConfigs.get(sessionId);
+  },
+
+  // Frequency tracking
+  frequencies: new Map(),
+  trackAction(actionType: string, projectId?: ProjectId, userId?: UserId) {
+    const key = projectId ? `${projectId}:${actionType}` : actionType;
+    const now = new Date().toISOString();
+    const today = now.split('T')[0]; // ISO date string (YYYY-MM-DD)
+
+    const record = this.frequencies.get(key);
+    if (record) {
+      // Update existing record
+      record.count++;
+      record.lastSeen = now as Timestamp;
+      record.dailyCounts[today] = (record.dailyCounts[today] || 0) + 1;
+    } else {
+      // Create new record
+      const newRecord: FrequencyRecord = {
+        actionType,
+        projectId,
+        userId,
+        count: 1,
+        firstSeen: now as Timestamp,
+        lastSeen: now as Timestamp,
+        dailyCounts: { [today]: 1 },
+      };
+      this.frequencies.set(key, newRecord);
+    }
+  },
+
+  getFrequency(actionType: string, projectId?: ProjectId) {
+    const key = projectId ? `${projectId}:${actionType}` : actionType;
+    return this.frequencies.get(key);
+  },
+
+  getTopActions(projectId: ProjectId, limit: number) {
+    const results: FrequencyRecord[] = [];
+    this.frequencies.forEach((record) => {
+      if (record.projectId === projectId) {
+        results.push(record);
+      }
+    });
+    // Sort by count descending
+    results.sort((a, b) => b.count - a.count);
+    return results.slice(0, limit);
+  },
+
+  // Bookmarks
+  bookmarks: new Map(),
+  addBookmark(bookmark: Bookmark) {
+    this.bookmarks.set(bookmark.id, bookmark);
+  },
+
+  getBookmarks(projectId: ProjectId, filter?: BookmarkFilter) {
+    const results: Bookmark[] = [];
+    this.bookmarks.forEach((bookmark) => {
+      if (bookmark.projectId !== projectId) return;
+
+      // Apply category filter
+      if (filter?.category && bookmark.category !== filter.category) return;
+
+      // Apply userId filter
+      if (filter?.userId && bookmark.userId !== filter.userId) return;
+
+      // Apply timestamp filter (since)
+      if (filter?.since) {
+        const bookmarkTime = new Date(bookmark.timestamp).getTime();
+        const sinceTime = new Date(filter.since).getTime();
+        if (bookmarkTime < sinceTime) return;
+      }
+
+      // Apply tags filter
+      if (filter?.tags && filter.tags.length > 0) {
+        const hasTag = filter.tags.some((tag) => bookmark.tags.includes(tag));
+        if (!hasTag) return;
+      }
+
+      results.push(bookmark);
+    });
+    return results;
+  },
+
+  removeBookmark(bookmarkId: string) {
+    this.bookmarks.delete(bookmarkId);
+  },
+
+  // Patterns (detected)
+  patterns: new Map(),
+  addPattern(pattern: DetectedPattern) {
+    this.patterns.set(pattern.id, pattern);
+  },
+
+  getPatterns(projectId: ProjectId, filter?: PatternFilter) {
+    const results: DetectedPattern[] = [];
+    this.patterns.forEach((pattern) => {
+      if (pattern.projectId !== projectId) return;
+
+      // Apply pattern type filter
+      if (filter?.patternType && pattern.patternType !== filter.patternType) return;
+
+      // Apply confidence filter
+      if (filter?.minConfidence !== undefined && pattern.confidence < filter.minConfidence) return;
+
+      // Apply timestamp filter (since)
+      if (filter?.since) {
+        const patternTime = new Date(pattern.detectedAt).getTime();
+        const sinceTime = new Date(filter.since).getTime();
+        if (patternTime < sinceTime) return;
+      }
+
+      results.push(pattern);
+    });
+    return results;
   },
 
   /**
