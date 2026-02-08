@@ -23,6 +23,7 @@ interface EventHandlers {
 export class ClaudeCliSessionProcess {
   private process: ChildProcess | null = null;
   private sessionInfo: ClaudeCliSession;
+  private spawnEnv: NodeJS.ProcessEnv;
   private eventHandlers: EventHandlers = {
     stdout: new Set(),
     stderr: new Set(),
@@ -34,7 +35,8 @@ export class ClaudeCliSessionProcess {
     sessionId: SessionId,
     cwd: string,
     args: string[],
-    metadata?: ClaudeCliSession['metadata']
+    metadata?: ClaudeCliSession['metadata'],
+    spawnEnv?: NodeJS.ProcessEnv
   ) {
     this.sessionInfo = {
       id: sessionId,
@@ -45,6 +47,7 @@ export class ClaudeCliSessionProcess {
       spawnArgs: args,
       metadata,
     };
+    this.spawnEnv = spawnEnv || process.env;
   }
 
   /**
@@ -63,7 +66,7 @@ export class ClaudeCliSessionProcess {
           stdio: ['pipe', 'pipe', 'pipe'],
           shell: false,
           env: {
-            ...process.env,
+            ...this.spawnEnv,
             // Force non-interactive mode for subprocess
             CI: '1',
           },

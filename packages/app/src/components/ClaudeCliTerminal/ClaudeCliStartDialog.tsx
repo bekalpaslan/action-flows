@@ -4,8 +4,11 @@
  */
 
 import React, { useState } from 'react';
-import type { SessionId } from '@afw/shared';
+import type { SessionId, Project, ProjectId } from '@afw/shared';
 import { useClaudeCliSessions } from '../../hooks/useClaudeCliSessions';
+import { useProjects } from '../../hooks/useProjects';
+import { ProjectSelector } from './ProjectSelector';
+import { ProjectForm } from './ProjectForm';
 
 interface ClaudeCliStartDialogProps {
   onClose: () => void;
@@ -19,10 +22,25 @@ interface ClaudeCliStartDialogProps {
 export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliStartDialogProps) {
   // Safely get current working directory (Electron context)
   const initialCwd = typeof process !== 'undefined' && process.cwd ? process.cwd() : '';
+
+  // Mode state: select-project | add-project | edit-project
+  const [mode, setMode] = useState<'select-project' | 'add-project' | 'edit-project'>('select-project');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  // Form state (for manual mode or when project not selected)
   const [cwd, setCwd] = useState(initialCwd);
   const [prompt, setPrompt] = useState('');
   const [selectedFlags, setSelectedFlags] = useState<string[]>([]);
+
   const { startSession, isLoading, error } = useClaudeCliSessions();
+  const {
+    projects,
+    createProject,
+    updateProject,
+    detectProject,
+    isLoading: projectsLoading,
+    error: projectsError,
+  } = useProjects();
 
   const availableFlags = [
     { value: '--debug', label: 'Debug Mode', description: 'Enable debug output' },
@@ -38,6 +56,51 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
     );
   };
 
+  const handleProjectSelect = (project: Project | null) => {
+    setSelectedProject(project);
+    if (project) {
+      setCwd(project.cwd);
+      setPrompt(project.defaultPromptTemplate || '');
+      setSelectedFlags(project.defaultCliFlags || []);
+    }
+  };
+
+  const handleAddNewProject = () => {
+    setMode('add-project');
+  };
+
+  const handleSaveProject = async (data: any) => {
+    try {
+      if (mode === 'add-project') {
+        const newProject = await createProject(data);
+        setSelectedProject(newProject);
+        setCwd(newProject.cwd);
+        setPrompt(newProject.defaultPromptTemplate || '');
+        setSelectedFlags(newProject.defaultCliFlags || []);
+      } else if (mode === 'edit-project' && selectedProject) {
+        const updated = await updateProject(selectedProject.id, data);
+        setSelectedProject(updated);
+        setCwd(updated.cwd);
+        setPrompt(updated.defaultPromptTemplate || '');
+        setSelectedFlags(updated.defaultCliFlags || []);
+      }
+      setMode('select-project');
+    } catch (err) {
+      console.error('Failed to save project:', err);
+      alert(err instanceof Error ? err.message : 'Failed to save project');
+    }
+  };
+
+  const handleCancelProjectForm = () => {
+    setMode('select-project');
+  };
+
+  const handleEditProject = () => {
+    if (selectedProject) {
+      setMode('edit-project');
+    }
+  };
+
   const handleStart = async () => {
     if (!cwd.trim()) {
       alert('Working directory is required');
@@ -46,7 +109,15 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
 
     try {
       const sessionId = crypto.randomUUID() as SessionId;
-      await startSession(sessionId, cwd, prompt || undefined, selectedFlags.length > 0 ? selectedFlags : undefined);
+      await startSession(
+        sessionId,
+        cwd,
+        prompt || undefined,
+        selectedFlags.length > 0 ? selectedFlags : undefined,
+        selectedProject?.id,
+        selectedProject?.envVars,
+        selectedProject?.mcpConfigPath || undefined
+      );
       onSessionStarted?.(sessionId);
       onClose();
     } catch (err) {
@@ -54,6 +125,20 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
       // Error is already set by the hook
     }
   };
+
+  // Show project form if in add/edit mode
+  if (mode === 'add-project' || mode === 'edit-project') {
+    return (
+      <ProjectForm
+        mode={mode === 'add-project' ? 'create' : 'edit'}
+        initialData={mode === 'edit-project' ? selectedProject || undefined : undefined}
+        onSave={handleSaveProject}
+        onCancel={handleCancelProjectForm}
+        onDetect={detectProject}
+        isLoading={projectsLoading}
+      />
+    );
+  }
 
   return (
     <div className="claude-cli-start-dialog" style={{
@@ -80,7 +165,7 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
       }}>
         <h2 style={{ margin: '0 0 16px 0', color: '#d4d4d4' }}>Start Claude CLI Session</h2>
 
-        {error && (
+        {(error || projectsError) && (
           <div style={{
             padding: '12px',
             backgroundColor: '#5a1d1d',
@@ -90,10 +175,41 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
             color: '#f48771',
             fontSize: '14px',
           }}>
-            {error.message}
+            {error?.message || projectsError?.message}
           </div>
         )}
 
+        {/* Project Selector */}
+        <div style={{ marginBottom: '16px' }}>
+          <ProjectSelector
+            projects={projects}
+            selectedProjectId={selectedProject?.id || null}
+            onSelectProject={handleProjectSelect}
+            onAddNewProject={handleAddNewProject}
+          />
+        </div>
+
+        {/* Edit Project Button */}
+        {selectedProject && (
+          <div style={{ marginBottom: '16px' }}>
+            <button
+              onClick={handleEditProject}
+              style={{
+                padding: '6px 12px',
+                backgroundColor: '#3c3c3c',
+                color: '#d4d4d4',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '13px',
+              }}
+            >
+              Edit Project Settings
+            </button>
+          </div>
+        )}
+
+        {/* Working Directory (read-only if project selected, editable otherwise) */}
         <div style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '4px', color: '#d4d4d4', fontSize: '14px' }}>
             Working Directory *
@@ -103,20 +219,24 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
             value={cwd}
             onChange={(e) => setCwd(e.target.value)}
             placeholder="/path/to/project"
+            readOnly={!!selectedProject}
             style={{
               width: '100%',
               padding: '8px',
-              backgroundColor: '#2d2d2d',
+              backgroundColor: selectedProject ? '#1e1e1e' : '#2d2d2d',
               border: '1px solid #3e3e3e',
               borderRadius: '4px',
-              color: '#d4d4d4',
+              color: selectedProject ? '#858585' : '#d4d4d4',
               fontSize: '14px',
               fontFamily: 'Consolas, monospace',
+              cursor: selectedProject ? 'not-allowed' : 'text',
             }}
           />
-          <small style={{ color: '#858585', fontSize: '12px' }}>
-            Absolute path to the directory where Claude CLI will run
-          </small>
+          {!selectedProject && (
+            <small style={{ color: '#858585', fontSize: '12px' }}>
+              Absolute path to the directory where Claude CLI will run
+            </small>
+          )}
         </div>
 
         <div style={{ marginBottom: '16px' }}>

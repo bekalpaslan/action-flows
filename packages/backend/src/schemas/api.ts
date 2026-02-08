@@ -173,6 +173,9 @@ export const claudeCliStartSchema = z.object({
     ),
   prompt: z.string().max(10000, 'prompt too long').optional(),
   flags: z.array(z.string().max(200, 'flag too long')).max(50, 'too many flags').optional(),
+  projectId: z.string().optional(),
+  envVars: z.record(z.string().max(1000)).optional(),
+  mcpConfigPath: z.string().max(500).optional(),
 });
 
 export type ClaudeCliStartRequest = z.infer<typeof claudeCliStartSchema>;
@@ -188,3 +191,61 @@ export const claudeCliStopSchema = z.object({
 });
 
 export type ClaudeCliStopRequest = z.infer<typeof claudeCliStopSchema>;
+
+// ============================================================================
+// Project Schemas
+// ============================================================================
+
+export const createProjectSchema = z.object({
+  name: z.string().min(1, 'name required').max(200, 'name too long'),
+  cwd: z
+    .string()
+    .min(1, 'cwd required')
+    .max(500, 'cwd too long')
+    .refine(
+      (p) => path.isAbsolute(p),
+      'cwd must be an absolute path'
+    ),
+  defaultCliFlags: z.array(z.string().max(200, 'flag too long')).max(50, 'too many flags').optional(),
+  defaultPromptTemplate: z.string().max(10000, 'prompt template too long').optional().nullable(),
+  mcpConfigPath: z.string().max(500, 'mcp config path too long').optional().nullable(),
+  envVars: z.record(z.string().max(1000, 'env var value too long')).optional(),
+  quickActionPresets: z.array(quickActionSchema).max(50, 'too many quick actions').optional(),
+  description: z.string().max(2000, 'description too long').optional().nullable(),
+});
+
+export type CreateProjectRequest = z.infer<typeof createProjectSchema>;
+
+export const updateProjectSchema = z.object({
+  name: z.string().min(1).max(200).optional(),
+  cwd: z
+    .string()
+    .min(1)
+    .max(500)
+    .refine(
+      (p) => path.isAbsolute(p),
+      'cwd must be an absolute path'
+    )
+    .optional(),
+  defaultCliFlags: z.array(z.string().max(200)).max(50).optional(),
+  defaultPromptTemplate: z.string().max(10000).optional().nullable(),
+  mcpConfigPath: z.string().max(500).optional().nullable(),
+  envVars: z.record(z.string().max(1000)).optional(),
+  quickActionPresets: z.array(quickActionSchema).max(50).optional(),
+  description: z.string().max(2000).optional().nullable(),
+});
+
+export type UpdateProjectRequest = z.infer<typeof updateProjectSchema>;
+
+export const autoDetectProjectSchema = z.object({
+  cwd: z
+    .string()
+    .min(1, 'cwd required')
+    .max(500, 'cwd too long')
+    .refine(
+      (p) => path.isAbsolute(p),
+      'cwd must be an absolute path'
+    ),
+});
+
+export type AutoDetectProjectRequest = z.infer<typeof autoDetectProjectSchema>;

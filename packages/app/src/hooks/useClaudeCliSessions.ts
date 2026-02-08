@@ -6,11 +6,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useWebSocketContext } from '../contexts/WebSocketContext';
 import { claudeCliService } from '../services/claudeCliService';
-import type { ClaudeCliSession, SessionId, ClaudeCliStartedEvent, ClaudeCliExitedEvent, WorkspaceEvent } from '@afw/shared';
+import type { ClaudeCliSession, SessionId, ClaudeCliStartedEvent, ClaudeCliExitedEvent, WorkspaceEvent, ProjectId } from '@afw/shared';
 
 export interface UseClaudeCliSessionsReturn {
   sessions: Map<SessionId, ClaudeCliSession>;
-  startSession: (sessionId: SessionId, cwd: string, prompt?: string, flags?: string[]) => Promise<void>;
+  startSession: (
+    sessionId: SessionId,
+    cwd: string,
+    prompt?: string,
+    flags?: string[],
+    projectId?: ProjectId,
+    envVars?: Record<string, string>,
+    mcpConfigPath?: string
+  ) => Promise<void>;
   stopSession: (sessionId: SessionId) => Promise<void>;
   getSession: (sessionId: SessionId) => ClaudeCliSession | undefined;
   isLoading: boolean;
@@ -80,13 +88,16 @@ export function useClaudeCliSessions(): UseClaudeCliSessionsReturn {
     sessionId: SessionId,
     cwd: string,
     prompt?: string,
-    flags?: string[]
+    flags?: string[],
+    projectId?: ProjectId,
+    envVars?: Record<string, string>,
+    mcpConfigPath?: string
   ) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      await claudeCliService.startSession(sessionId, cwd, prompt, flags);
+      await claudeCliService.startSession(sessionId, cwd, prompt, flags, projectId, envVars, mcpConfigPath);
       // Session will be added via WebSocket event
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to start Claude CLI session');

@@ -4,8 +4,10 @@
  */
 
 import { Router, type Request, type Response } from 'express';
-import type { SessionId } from '@afw/shared';
+import type { SessionId, ProjectId } from '@afw/shared';
 import { claudeCliManager } from '../services/claudeCliManager.js';
+import { projectStorage } from '../services/projectStorage.js';
+import { ProjectDetector } from '../services/projectDetector.js';
 import { validateBody } from '../middleware/validate.js';
 import { claudeCliStartSchema, claudeCliInputSchema, claudeCliStopSchema } from '../schemas/api.js';
 import { writeLimiter } from '../middleware/rateLimit.js';
@@ -17,14 +19,39 @@ const router = Router();
  * Start a new Claude CLI session
  */
 router.post('/start', writeLimiter, validateBody(claudeCliStartSchema), async (req: Request, res: Response) => {
-  const { sessionId, cwd, prompt, flags } = req.body;
+  const { sessionId, cwd, prompt, flags, projectId, envVars, mcpConfigPath } = req.body;
 
   try {
+    // Validate environment variables if provided
+    if (envVars) {
+      for (const [key, value] of Object.entries(envVars)) {
+        if (!ProjectDetector.validateEnvVarKey(key)) {
+          return res.status(400).json({
+            error: `Invalid environment variable key: ${key}`,
+          });
+        }
+        if (!ProjectDetector.validateEnvVarValue(value as string)) {
+          return res.status(400).json({
+            error: `Invalid environment variable value for key: ${key}`,
+          });
+        }
+      }
+    }
+
+    // Update project lastUsedAt if projectId provided (fire-and-forget)
+    if (projectId) {
+      projectStorage.updateLastUsed(projectId as ProjectId).catch(error => {
+        console.warn('[ClaudeCli] Failed to update project lastUsedAt:', error);
+      });
+    }
+
     const session = await claudeCliManager.startSession(
       sessionId as SessionId,
       cwd,
       prompt,
-      flags
+      flags,
+      envVars,
+      mcpConfigPath
     );
 
     const info = session.getInfo();

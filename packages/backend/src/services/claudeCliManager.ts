@@ -61,9 +61,18 @@ class ClaudeCliManager {
   /**
    * Validate cwd path for security
    */
-  private validateCwd(cwd: string): void {
+  private async validateCwd(cwd: string): Promise<void> {
+    // Resolve realpath to prevent symlink escapes
+    let realCwd: string;
+    try {
+      const fs = await import('fs/promises');
+      realCwd = await fs.realpath(cwd);
+    } catch (error) {
+      throw new Error('Directory does not exist or is not accessible');
+    }
+
     // Check for path traversal attempts
-    const normalizedCwd = path.normalize(cwd);
+    const normalizedCwd = path.normalize(realCwd);
     if (normalizedCwd.includes('..')) {
       throw new Error('Path traversal detected in cwd');
     }
@@ -116,7 +125,9 @@ class ClaudeCliManager {
     sessionId: SessionId,
     cwd: string,
     prompt?: string,
-    flags?: string[]
+    flags?: string[],
+    envVars?: Record<string, string>,
+    mcpConfigPath?: string
   ): Promise<ClaudeCliSessionProcess> {
     // Check session limit
     if (this.sessions.size >= this.MAX_SESSIONS) {
@@ -129,7 +140,7 @@ class ClaudeCliManager {
     }
 
     // Validate cwd for security
-    this.validateCwd(cwd);
+    await this.validateCwd(cwd);
 
     // Validate flags for security
     if (flags && flags.length > 0) {
@@ -139,9 +150,13 @@ class ClaudeCliManager {
     // Build command args
     const args: string[] = [];
 
-    // Add MCP config
-    const mcpConfig = this.generateMcpConfig();
-    args.push('--mcp-config', mcpConfig);
+    // Add MCP config (use provided path or generate default)
+    if (mcpConfigPath) {
+      args.push('--mcp-config', mcpConfigPath);
+    } else {
+      const mcpConfig = this.generateMcpConfig();
+      args.push('--mcp-config', mcpConfig);
+    }
 
     // Add user flags
     if (flags && flags.length > 0) {
@@ -153,11 +168,17 @@ class ClaudeCliManager {
       args.push(prompt);
     }
 
+    // Prepare spawn environment (merge with provided env vars)
+    const spawnEnv = {
+      ...process.env,
+      ...(envVars || {}),
+    };
+
     // Create session process
     const session = new ClaudeCliSessionProcess(sessionId, cwd, args, {
       prompt,
       flags: flags ? Object.fromEntries(flags.map((f, i) => [i.toString(), f])) : undefined,
-    });
+    }, spawnEnv);
 
     // Register event handlers
     const startTime = Date.now();

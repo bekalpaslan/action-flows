@@ -3,7 +3,7 @@
  * Frontend API client for Claude Code CLI session management
  */
 
-import type { SessionId, ClaudeCliSession } from '@afw/shared';
+import type { SessionId, ClaudeCliSession, ProjectId } from '@afw/shared';
 
 /**
  * Claude CLI Service
@@ -23,7 +23,10 @@ export class ClaudeCliService {
     sessionId: SessionId,
     cwd: string,
     prompt?: string,
-    flags?: string[]
+    flags?: string[],
+    projectId?: ProjectId,
+    envVars?: Record<string, string>,
+    mcpConfigPath?: string
   ): Promise<ClaudeCliSession> {
     const response = await fetch(`${this.baseUrl}/api/claude-cli/start`, {
       method: 'POST',
@@ -35,6 +38,9 @@ export class ClaudeCliService {
         cwd,
         prompt,
         flags,
+        projectId,
+        envVars,
+        mcpConfigPath,
       }),
     });
 
