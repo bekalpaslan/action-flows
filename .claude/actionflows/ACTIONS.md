@@ -27,6 +27,7 @@ These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 | plan/ | Implementation planning | YES | requirements, context | sonnet |
 | commit/ | Git commit + push | YES | summary, files | haiku |
 | brainstorm/ | Interactive ideation facilitation | YES | idea, classification, context | opus |
+| onboarding/ | Facilitate interactive onboarding questionnaire | NO | (none) | opus |
 
 ## Stack-Specific Code Actions
 
@@ -78,7 +79,7 @@ Certain actions automatically trigger follow-up steps:
 |-------------|-------|-----|
 | code, code/backend, code/frontend, test, commit | haiku | Fast, simple execution |
 | review, analyze, plan | sonnet | Needs judgment |
-| audit | opus | Deep analysis needed |
+| audit, brainstorm, onboarding | opus | Deep analysis or interactive teaching needed |
 | second-opinion | haiku | Lightweight CLI wrapper |
 
 ## Input Requirement Types

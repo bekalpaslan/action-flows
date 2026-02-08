@@ -6,6 +6,7 @@
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
+| onboarding/ | Interactive teaching session for ActionFlows | onboarding (single step, foreground) |
 | flow-creation/ | Create a new flow | plan → human gate → code → review |
 | action-creation/ | Create a new action | plan → human gate → code → review → second-opinion/ |
 | action-deletion/ | Remove action safely | analyze → code → review |
