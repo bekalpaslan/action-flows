@@ -26,6 +26,7 @@ These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 | analyze/ | Codebase analysis | YES | aspect, scope | sonnet |
 | plan/ | Implementation planning | YES | requirements, context | sonnet |
 | commit/ | Git commit + push | YES | summary, files | haiku |
+| brainstorm/ | Interactive ideation facilitation | YES | idea, classification, context | opus |
 
 ## Stack-Specific Code Actions
 

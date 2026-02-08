@@ -25,6 +25,11 @@ Request → Which department? → Which flow? → No flow? Compose from actions 
 **Key Flows:** audit-and-fix/
 **Triggers:** "audit", "security scan", "quality check", "performance review"
 
+### Human
+**Owns:** Human-led ideation, brainstorming, thinking sessions, decision exploration
+**Key Flows:** ideation/
+**Triggers:** "I have an idea", "brainstorm", "let's think about something", "ideation"
+
 ## Routing Guide
 
 | Human Says | Department | Flow/Action |
@@ -40,3 +45,5 @@ Request → Which department? → Which flow? → No flow? Compose from actions 
 | "create a new action" | Framework | action-creation/ |
 | "check framework health" | Framework | framework-health/ |
 | "plan X" | — | plan/ (direct action) |
+| "I have an idea" / "brainstorm X" | Human | ideation/ |
+| "let's think about X" / "ideation" | Human | ideation/ |

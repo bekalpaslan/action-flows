@@ -25,3 +25,9 @@
 | Flow | Purpose | Chain |
 |------|---------|-------|
 | audit-and-fix/ | Audit and remediate | audit → second-opinion/ → review |
+
+## Human
+
+| Flow | Purpose | Chain |
+|------|---------|-------|
+| ideation/ | Structured ideation sessions | classify (human gate) → analyze → brainstorm → code (summary) |
