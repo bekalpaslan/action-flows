@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import type { Session } from '@afw/shared';
+import type { Session, SessionId } from '@afw/shared';
 import { ChainDAG } from '../ChainDAG';
 import { TimelineView } from '../TimelineView';
 import { ControlButtons } from '../ControlButtons/ControlButtons';
 import { StepInspector } from '../StepInspector/StepInspector';
 import { ConversationPanel } from '../ConversationPanel';
 import { useSessionInput } from '../../hooks/useSessionInput';
+import { claudeCliService } from '../../services/claudeCliService';
 import './SessionPane.css';
 
 export interface SessionPaneProps {
   session: Session;
   onDetach: (sessionId: string) => void;
+  onClose?: (sessionId: string) => void;
   /** Pane position for layout styling */
   position: { row: number; col: number; totalRows: number; totalCols: number };
 }
@@ -24,10 +26,13 @@ export interface SessionPaneProps {
  * - Status indicator
  * - Adaptive sizing based on grid position
  */
-export function SessionPane({ session, onDetach, position }: SessionPaneProps) {
+export function SessionPane({ session, onDetach, onClose, position }: SessionPaneProps) {
   const [selectedStep, setSelectedStep] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'dag' | 'timeline'>('dag');
+  const [isClosing, setIsClosing] = useState(false);
   const { submitInput } = useSessionInput();
+
+  const isCliSession = session.metadata?.type === 'claude-cli';
 
   const handleDetach = () => {
     if (!session.id) {
@@ -35,6 +40,26 @@ export function SessionPane({ session, onDetach, position }: SessionPaneProps) {
       return;
     }
     onDetach(session.id);
+  };
+
+  const handleClose = async () => {
+    if (!session.id || isClosing) return;
+    setIsClosing(true);
+
+    try {
+      if (isCliSession) {
+        await claudeCliService.stopSession(session.id as SessionId);
+      }
+    } catch (err) {
+      console.error('Failed to stop CLI session:', err);
+      // Still close even if stop fails (process may have already exited)
+    }
+
+    if (onClose) {
+      onClose(session.id);
+    } else {
+      onDetach(session.id);
+    }
   };
 
   const truncateId = (id: string | undefined, length: number = 8): string => {
@@ -118,12 +143,13 @@ export function SessionPane({ session, onDetach, position }: SessionPaneProps) {
             </div>
           )}
           <button
-            className="session-detach-btn"
-            onClick={handleDetach}
-            title="Detach session"
-            aria-label="Detach this session from view"
+            className={`session-detach-btn${isCliSession ? ' session-close-btn' : ''}`}
+            onClick={isCliSession ? handleClose : handleDetach}
+            disabled={isClosing}
+            title={isCliSession ? 'End session' : 'Detach session'}
+            aria-label={isCliSession ? 'Stop CLI process and close this session' : 'Detach this session from view'}
           >
-            ×
+            {isClosing ? '...' : '×'}
           </button>
         </div>
       </div>
@@ -145,8 +171,51 @@ export function SessionPane({ session, onDetach, position }: SessionPaneProps) {
               )}
             </div>
           ) : (
-            <div className="session-pane-empty">
-              <p>No active chain</p>
+            <div className="session-details-panel">
+              <div className="session-details-grid">
+                <div className="detail-item">
+                  <span className="detail-label">Status</span>
+                  <span className={`detail-value status-badge status-${getStatusColor(session.status)}`}>
+                    {getStatusLabel(session.status)}
+                  </span>
+                </div>
+                {session.cwd && (
+                  <div className="detail-item">
+                    <span className="detail-label">Directory</span>
+                    <code className="detail-value detail-code">{session.cwd}</code>
+                  </div>
+                )}
+                {session.hostname && (
+                  <div className="detail-item">
+                    <span className="detail-label">Host</span>
+                    <span className="detail-value">{session.hostname}</span>
+                  </div>
+                )}
+                {session.platform && (
+                  <div className="detail-item">
+                    <span className="detail-label">Platform</span>
+                    <span className="detail-value">{session.platform}</span>
+                  </div>
+                )}
+                {session.startedAt && (
+                  <div className="detail-item">
+                    <span className="detail-label">Started</span>
+                    <span className="detail-value">{new Date(session.startedAt).toLocaleString()}</span>
+                  </div>
+                )}
+                {session.duration != null && (
+                  <div className="detail-item">
+                    <span className="detail-label">Duration</span>
+                    <span className="detail-value">{Math.round(session.duration / 1000)}s</span>
+                  </div>
+                )}
+                {session.metadata?.type && (
+                  <div className="detail-item">
+                    <span className="detail-label">Type</span>
+                    <span className="detail-value">{String(session.metadata.type)}</span>
+                  </div>
+                )}
+              </div>
               <p className="empty-hint">
                 Waiting for orchestrator to compile a chain...
               </p>

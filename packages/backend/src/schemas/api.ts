@@ -176,6 +176,7 @@ export const claudeCliStartSchema = z.object({
   projectId: z.string().optional(),
   envVars: z.record(z.string().max(1000)).optional(),
   mcpConfigPath: z.string().max(500).optional(),
+  user: z.string().max(200).optional(),
 });
 
 export type ClaudeCliStartRequest = z.infer<typeof claudeCliStartSchema>;

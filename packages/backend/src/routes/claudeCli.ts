@@ -19,7 +19,7 @@ const router = Router();
  * Start a new Claude CLI session
  */
 router.post('/start', writeLimiter, validateBody(claudeCliStartSchema), async (req: Request, res: Response) => {
-  const { sessionId, cwd, prompt, flags, projectId, envVars, mcpConfigPath } = req.body;
+  const { sessionId, cwd, prompt, flags, projectId, envVars, mcpConfigPath, user } = req.body;
 
   try {
     // Validate environment variables if provided
@@ -51,7 +51,8 @@ router.post('/start', writeLimiter, validateBody(claudeCliStartSchema), async (r
       prompt,
       flags,
       envVars,
-      mcpConfigPath
+      mcpConfigPath,
+      user
     );
 
     const info = session.getInfo();

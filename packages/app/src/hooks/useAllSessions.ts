@@ -16,6 +16,9 @@ export interface UseAllSessionsReturn {
 
   /** Refresh sessions */
   refresh: () => void;
+
+  /** Inject a session directly into state (avoids fetch race condition) */
+  addSession: (session: Session) => void;
 }
 
 /**
@@ -184,10 +187,18 @@ export function useAllSessions(): UseAllSessionsReturn {
     fetchSessions();
   }, [fetchSessions]);
 
+  const addSession = useCallback((session: Session) => {
+    setSessions((prev) => {
+      if (prev.some((s) => s.id === session.id)) return prev;
+      return [...prev, session];
+    });
+  }, []);
+
   return {
     sessions,
     loading,
     error,
     refresh: fetchSessions,
+    addSession,
   };
 }

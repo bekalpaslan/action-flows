@@ -139,11 +139,15 @@ router.get('/', (req, res) => {
       count: sessions.length,
       sessions: sessions.map((s) => ({
         id: s.id,
+        user: s.user,
         status: s.status,
-        // cwd omitted from list response for security (Agent A)
+        cwd: s.cwd,
+        hostname: s.hostname,
+        platform: s.platform,
         startedAt: s.startedAt,
         endedAt: s.endedAt,
         chainsCount: s.chains.length,
+        metadata: s.metadata,
       })),
       note: storage.sessions ? undefined : 'Full session listing not available with Redis storage',
     });
@@ -485,6 +489,7 @@ router.get('/users', (req, res) => {
         .filter((s: any): s is Session => s !== undefined && typeof s === 'object' && 'id' in s);
 
       return {
+        id: userId,
         user: userId,
         sessionCount: sessions.length,
         sessions: sessions.map((s: Session) => ({

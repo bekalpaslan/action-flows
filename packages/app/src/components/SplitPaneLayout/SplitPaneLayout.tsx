@@ -5,6 +5,7 @@ import './SplitPaneLayout.css';
 export interface SplitPaneLayoutProps {
   sessions: Session[];
   onSessionDetach: (sessionId: string) => void;
+  onSessionClose?: (sessionId: string) => void;
 }
 
 /**
@@ -23,7 +24,7 @@ export interface SplitPaneLayoutProps {
  * - Warning for excessive sessions (>4)
  * - Responsive pane sizing
  */
-export function SplitPaneLayout({ sessions, onSessionDetach }: SplitPaneLayoutProps) {
+export function SplitPaneLayout({ sessions, onSessionDetach, onSessionClose }: SplitPaneLayoutProps) {
   const count = sessions.length;
 
   // Empty state
@@ -69,6 +70,7 @@ export function SplitPaneLayout({ sessions, onSessionDetach }: SplitPaneLayoutPr
               key={session.id}
               session={session}
               onDetach={onSessionDetach}
+              onClose={onSessionClose}
               position={position}
             />
           );

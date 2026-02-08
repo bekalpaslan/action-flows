@@ -3,5 +3,31 @@
     "enabled": true,
     "backendUrl": "http://localhost:3001",
     "user": "alice"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node packages/hooks/dist/hooks/src/afw-session-start.js",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node packages/hooks/dist/hooks/src/afw-session-end.js",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }

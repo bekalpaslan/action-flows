@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useWebSocketContext } from '../contexts/WebSocketContext';
 import { useUsers } from '../hooks/useUsers';
 import { useAllSessions } from '../hooks/useAllSessions';
@@ -10,11 +10,10 @@ import { SplitPaneLayout } from './SplitPaneLayout';
 import { NotificationManager } from './NotificationManager';
 import { CodeEditor } from './CodeEditor';
 import { TerminalTabs } from './Terminal';
-import { ClaudeCliStartDialog } from './ClaudeCliTerminal/ClaudeCliStartDialog';
-import { ClaudeCliTerminal } from './ClaudeCliTerminal/ClaudeCliTerminal';
 import { SessionWindowSidebar } from './SessionWindowSidebar/SessionWindowSidebar';
 import { SessionWindowGrid } from './SessionWindowGrid/SessionWindowGrid';
-import type { SessionId } from '@afw/shared';
+import { claudeCliService } from '../services/claudeCliService';
+import type { Session, SessionId } from '@afw/shared';
 
 /**
  * Main app content component that displays real-time WebSocket connection status
@@ -22,7 +21,7 @@ import type { SessionId } from '@afw/shared';
 export default function AppContent() {
   const { status, error } = useWebSocketContext();
   const { users, currentUserId } = useUsers();
-  const { sessions: allSessions } = useAllSessions();
+  const { sessions: allSessions, addSession } = useAllSessions();
   const {
     followedSessionIds,
     sessionWindows,
@@ -35,9 +34,9 @@ export default function AppContent() {
   const [terminalHeight, setTerminalHeight] = useState<number>(250);
   const [terminalCollapsed, setTerminalCollapsed] = useState<boolean>(false);
   const [terminalCombinedMode, setTerminalCombinedMode] = useState<boolean>(false);
-  const [showClaudeCliDialog, setShowClaudeCliDialog] = useState<boolean>(false);
-  const [claudeCliSessionId, setClaudeCliSessionId] = useState<SessionId | null>(null);
   const [useSessionWindowMode, setUseSessionWindowMode] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>('sessions');
+  const [isStartingCli, setIsStartingCli] = useState<boolean>(false);
 
   // Manage attached sessions
   const {
@@ -45,6 +44,7 @@ export default function AppContent() {
     attachedSessions,
     attachSession,
     detachSession,
+    forceAttachSession,
   } = useAttachedSessions(allSessions, {
     maxAttached: 6,
     persistToStorage: true,
@@ -55,10 +55,40 @@ export default function AppContent() {
     setFileToOpen(path);
   }, []);
 
-  // Handle Claude CLI session started
-  const handleClaudeCliSessionStarted = useCallback((sessionId: SessionId) => {
-    setClaudeCliSessionId(sessionId);
-  }, []);
+  // Start a new Claude CLI session and attach it immediately
+  const handleStartClaudeSession = useCallback(async () => {
+    if (isStartingCli) return;
+    setIsStartingCli(true);
+
+    try {
+      const sessionId = crypto.randomUUID() as SessionId;
+      const defaultCwd = attachedSessions[0]?.cwd || 'D:/ActionFlowsDashboard';
+
+      await claudeCliService.startSession(sessionId, defaultCwd);
+
+      // Inject session into allSessions immediately so SessionPane can render it
+      addSession({
+        id: sessionId,
+        cwd: defaultCwd,
+        chains: [],
+        status: 'in_progress',
+        startedAt: new Date().toISOString(),
+        metadata: { type: 'claude-cli' },
+      } as Session);
+
+      forceAttachSession(sessionId);
+      setActiveTab('sessions');
+    } catch (err) {
+      console.error('Failed to start Claude CLI session:', err);
+    } finally {
+      setIsStartingCli(false);
+    }
+  }, [isStartingCli, attachedSessions, addSession, forceAttachSession]);
+
+  // Handle session close (CLI stop is done inside SessionPane, this just detaches)
+  const handleSessionClose = useCallback((sessionId: string) => {
+    detachSession(sessionId);
+  }, [detachSession]);
 
   // Map WebSocket status to display text
   useEffect(() => {
@@ -98,6 +128,17 @@ export default function AppContent() {
 
       <header className="app-header">
         <h1>ActionFlows Workspace</h1>
+        <nav className="header-nav">
+          {['sessions', 'dashboard', 'flows', 'actions', 'logs', 'settings'].map((tab) => (
+            <button
+              key={tab}
+              className={`header-nav-tab${activeTab === tab ? ' active' : ''}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </nav>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <button
             onClick={() => setUseSessionWindowMode(!useSessionWindowMode)}
@@ -115,19 +156,20 @@ export default function AppContent() {
             {useSessionWindowMode ? 'Classic Mode' : 'Session Window Mode'}
           </button>
           <button
-            onClick={() => setShowClaudeCliDialog(true)}
+            onClick={handleStartClaudeSession}
+            disabled={isStartingCli}
             style={{
               padding: '6px 12px',
-              backgroundColor: '#0e639c',
+              backgroundColor: isStartingCli ? '#555' : '#0e639c',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
-              cursor: 'pointer',
+              cursor: isStartingCli ? 'not-allowed' : 'pointer',
               fontSize: '13px',
               fontWeight: '500',
             }}
           >
-            Start Claude CLI
+            {isStartingCli ? 'Starting...' : 'New Session'}
           </button>
           <div className="status-indicator">
             <span className={`status ${getStatusClass()}`}>
@@ -174,31 +216,31 @@ export default function AppContent() {
               )}
             </div>
 
-            <aside className="app-sidebar">
-              <nav className="sidebar-nav">
-                <ul>
-                  <li><a href="#dashboard">Dashboard</a></li>
-                  <li><a href="#flows">Flows</a></li>
-                  <li><a href="#actions">Actions</a></li>
-                  <li><a href="#logs">Logs</a></li>
-                  <li><a href="#settings">Settings</a></li>
-                </ul>
-              </nav>
-            </aside>
+            {activeTab === 'sessions' ? (
+              <>
+                <main className="app-main">
+                  <SplitPaneLayout
+                    sessions={attachedSessions}
+                    onSessionDetach={detachSession}
+                    onSessionClose={handleSessionClose}
+                  />
+                </main>
 
-            <main className="app-main">
-              <SplitPaneLayout
-                sessions={attachedSessions}
-                onSessionDetach={detachSession}
-              />
-            </main>
-
-            {attachedSessionIds.length > 0 && (
-              <CodeEditor
-                sessionId={attachedSessionIds[0]}
-                fileToOpen={fileToOpen}
-                onFileOpened={() => setFileToOpen(null)}
-              />
+                {attachedSessionIds.length > 0 && (
+                  <CodeEditor
+                    sessionId={attachedSessionIds[0]}
+                    fileToOpen={fileToOpen}
+                    onFileOpened={() => setFileToOpen(null)}
+                  />
+                )}
+              </>
+            ) : (
+              <main className="app-main">
+                <div className="placeholder-tab">
+                  <h2>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h2>
+                  <p>This section is not yet implemented.</p>
+                </div>
+              </main>
             )}
           </>
         )}
@@ -215,36 +257,6 @@ export default function AppContent() {
           combinedMode={terminalCombinedMode}
           onToggleCombinedMode={() => setTerminalCombinedMode(!terminalCombinedMode)}
         />
-      )}
-
-      {/* Claude CLI Start Dialog */}
-      {showClaudeCliDialog && (
-        <ClaudeCliStartDialog
-          onClose={() => setShowClaudeCliDialog(false)}
-          onSessionStarted={handleClaudeCliSessionStarted}
-        />
-      )}
-
-      {/* Claude CLI Terminal (overlay mode) */}
-      {claudeCliSessionId && (
-        <div style={{
-          position: 'fixed',
-          top: '60px',
-          right: '20px',
-          width: '700px',
-          height: '500px',
-          backgroundColor: '#1e1e1e',
-          border: '1px solid #3e3e3e',
-          borderRadius: '8px',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
-          zIndex: 999,
-          overflow: 'hidden',
-        }}>
-          <ClaudeCliTerminal
-            sessionId={claudeCliSessionId}
-            onClose={() => setClaudeCliSessionId(null)}
-          />
-        </div>
       )}
     </div>
   );

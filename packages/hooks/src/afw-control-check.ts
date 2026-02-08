@@ -58,8 +58,8 @@ async function getCommands(sessionId: string): Promise<CommandPayload[]> {
       return [];
     }
 
-    const data = await response.json();
-    return data.commands || [];
+    const data = await response.json() as Record<string, unknown>;
+    return (data.commands as CommandPayload[]) || [];
   } catch (error) {
     console.error('Error getting commands:', error instanceof Error ? error.message : 'Unknown error');
     return [];

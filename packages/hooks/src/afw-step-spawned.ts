@@ -27,8 +27,8 @@
  * - Exits with code 0 regardless of POST success (silent failure)
  */
 
-import { readSettings } from './utils/settings';
-import { postEvent } from './utils/http';
+import { readSettings } from './utils/settings.js';
+import { postEvent } from './utils/http.js';
 import { brandedTypes, StepSpawnedEvent } from '@afw/shared';
 
 /**

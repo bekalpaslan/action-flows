@@ -23,9 +23,9 @@
  * - Exits with code 0 regardless of POST success (silent failure)
  */
 
-import { readSettings, validateSettings } from './utils/settings';
-import { postEvent } from './utils/http';
-import { parseAgentOutput } from './utils/parser';
+import { readSettings, validateSettings } from './utils/settings.js';
+import { postEvent } from './utils/http.js';
+import { parseAgentOutput } from './utils/parser.js';
 import { Status, brandedTypes, duration, StepCompletedEvent } from '@afw/shared';
 
 /**

@@ -7,6 +7,8 @@
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import type { UserId } from '@afw/shared';
+import { brandedTypes } from '@afw/shared';
 
 interface WorkspaceConfig {
   backendUrl: string;
@@ -14,9 +16,9 @@ interface WorkspaceConfig {
   enabled: boolean;
 }
 
-interface HookSettings {
+export interface HookSettings {
   backendUrl: string;
-  user: string;
+  user: UserId;
   enabled: boolean;
 }
 
@@ -70,7 +72,7 @@ export function readSettings(): HookSettings {
 
   return {
     backendUrl,
-    user,
+    user: brandedTypes.userId(user),
     enabled,
   };
 }

@@ -124,10 +124,11 @@ async function pollForInput(sessionId: string, timeoutMs: number): Promise<strin
       return null;
     }
 
-    const data = await response.json();
+    const data = await response.json() as Record<string, unknown>;
 
     if (data.available && data.input) {
-      return data.input.input || data.input; // Handle both formats
+      const input = data.input as Record<string, unknown>;
+      return (input.input as string) || (data.input as string); // Handle both formats
     }
 
     return null;

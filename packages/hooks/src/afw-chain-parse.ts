@@ -15,8 +15,8 @@
  */
 
 import * as fs from 'fs';
-import { readSettings } from './utils/settings';
-import { postEvent } from './utils/http';
+import { readSettings } from './utils/settings.js';
+import { postEvent } from './utils/http.js';
 import { brandedTypes, ChainCompiledEvent, ChainStepSnapshot } from '@afw/shared';
 
 // Configuration

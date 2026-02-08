@@ -30,6 +30,34 @@
   text-overflow: ellipsis;
 }
 
+.header-nav {
+  display: flex;
+  gap: 2px;
+  margin-left: 2rem;
+}
+
+.header-nav-tab {
+  padding: 6px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #808080;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.header-nav-tab:hover {
+  color: #e0e0e0;
+}
+
+.header-nav-tab.active {
+  color: #e0e0e0;
+  border-bottom-color: #bb86fc;
+}
+
 .app-header .status-indicator {
   display: flex;
   align-items: center;
@@ -272,6 +300,26 @@
   border-radius: 8px;
   text-align: center;
   color: #808080;
+}
+
+.placeholder-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: #808080;
+}
+
+.placeholder-tab h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  color: #b0b0b0;
+}
+
+.placeholder-tab p {
+  margin: 0;
+  font-size: 0.95rem;
 }
 
 /* Scrollbar styling */

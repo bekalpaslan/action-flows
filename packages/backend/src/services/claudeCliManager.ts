@@ -4,8 +4,11 @@
  */
 
 import path from 'path';
-import type { SessionId, ClaudeCliStartedEvent, ClaudeCliOutputEvent, ClaudeCliExitedEvent, WorkspaceEvent, DurationMs, Timestamp } from '@afw/shared';
+import os from 'os';
+import type { SessionId, ClaudeCliStartedEvent, ClaudeCliOutputEvent, ClaudeCliExitedEvent, WorkspaceEvent, DurationMs, Timestamp, Session, SessionStartedEvent, SessionEndedEvent } from '@afw/shared';
+import { brandedTypes } from '@afw/shared';
 import { ClaudeCliSessionProcess } from './claudeCliSession.js';
+import { storage } from '../storage/index.js';
 
 /**
  * Claude CLI Manager
@@ -127,7 +130,8 @@ class ClaudeCliManager {
     prompt?: string,
     flags?: string[],
     envVars?: Record<string, string>,
-    mcpConfigPath?: string
+    mcpConfigPath?: string,
+    user?: string
   ): Promise<ClaudeCliSessionProcess> {
     // Check session limit
     if (this.sessions.size >= this.MAX_SESSIONS) {
@@ -206,16 +210,43 @@ class ClaudeCliManager {
     });
 
     session.on('exit', (code, signal) => {
-      const duration = (Date.now() - startTime) as DurationMs;
+      const dur = (Date.now() - startTime) as DurationMs;
+      const exitTimestamp = new Date().toISOString() as Timestamp;
       const event: ClaudeCliExitedEvent = {
         type: 'claude-cli:exited',
         sessionId,
         exitCode: code,
         exitSignal: signal,
-        duration,
-        timestamp: new Date().toISOString() as Timestamp,
+        duration: dur,
+        timestamp: exitTimestamp,
       };
       this.broadcast(sessionId, event);
+
+      // Update session in storage with final status
+      const updateStorage = async () => {
+        try {
+          const storedSession = await Promise.resolve(storage.getSession(sessionId));
+          if (storedSession) {
+            storedSession.status = code === 0 ? 'completed' : 'failed';
+            storedSession.endedAt = exitTimestamp;
+            storedSession.duration = dur;
+            await Promise.resolve(storage.setSession(storedSession));
+          }
+
+          // Store session:ended event
+          const endEvent: SessionEndedEvent = {
+            type: 'session:ended',
+            sessionId,
+            timestamp: exitTimestamp,
+            duration: dur,
+            reason: signal ? `signal:${signal}` : `exit:${code}`,
+          };
+          await Promise.resolve(storage.addEvent(sessionId, endEvent));
+        } catch (err) {
+          console.error(`[ClaudeCliManager] Failed to update storage on exit:`, err);
+        }
+      };
+      updateStorage();
 
       // Remove from sessions map
       this.sessions.delete(sessionId);
@@ -245,6 +276,33 @@ class ClaudeCliManager {
         timestamp: new Date().toISOString() as Timestamp,
       };
       this.broadcast(sessionId, startedEvent);
+
+      // Store session in storage so it appears in GET /api/sessions
+      const now = brandedTypes.currentTimestamp();
+      const resolvedUser = user || process.env.AFW_USER || process.env.USERNAME || process.env.USER || 'local';
+      const storageSession: Session = {
+        id: sessionId,
+        user: brandedTypes.userId(resolvedUser),
+        cwd: cwd,
+        hostname: os.hostname(),
+        platform: os.platform(),
+        chains: [],
+        status: 'in_progress',
+        startedAt: now,
+        metadata: { type: 'claude-cli', pid: info.pid },
+      };
+      await Promise.resolve(storage.setSession(storageSession));
+
+      // Store session:started event
+      const sessionStartedEvent: SessionStartedEvent = {
+        type: 'session:started',
+        sessionId,
+        timestamp: now,
+        cwd,
+        hostname: os.hostname(),
+        platform: os.platform(),
+      };
+      await Promise.resolve(storage.addEvent(sessionId, sessionStartedEvent));
 
       console.log(`[ClaudeCliManager] Started Claude CLI session ${sessionId} (PID: ${info.pid})`);
       return session;

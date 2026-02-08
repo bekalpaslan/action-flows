@@ -16,8 +16,8 @@
 
 import * as fs from 'fs';
 import * as os from 'os';
-import { readSettings } from './utils/settings';
-import { postEvent } from './utils/http';
+import { readSettings } from './utils/settings.js';
+import { postEvent } from './utils/http.js';
 import { brandedTypes, SessionStartedEvent } from '@afw/shared';
 
 // Configuration

@@ -19,6 +19,9 @@ export interface UseAttachedSessionsReturn {
 
   /** Check if a session is attached */
   isAttached: (sessionId: string) => boolean;
+
+  /** Force-attach a session by ID (skips session-exists validation) */
+  forceAttachSession: (sessionId: string) => void;
 }
 
 /**
@@ -126,6 +129,21 @@ export function useAttachedSessions(
     [attachedIds]
   );
 
+  // Force-attach without session-exists validation (for newly created sessions)
+  const forceAttachSession = useCallback(
+    (sessionId: string) => {
+      setAttachedIds((current) => {
+        if (current.includes(sessionId)) return current;
+        if (current.length >= maxAttached) {
+          console.warn(`Maximum ${maxAttached} sessions can be attached.`);
+          return current;
+        }
+        return [...current, sessionId];
+      });
+    },
+    [maxAttached]
+  );
+
   return {
     attachedSessionIds: attachedIds,
     attachedSessions,
@@ -133,5 +151,6 @@ export function useAttachedSessions(
     detachSession,
     clearAll,
     isAttached,
+    forceAttachSession,
   };
 }
