@@ -130,6 +130,118 @@ Parallel for independent steps, sequential for dependent.
 | audit/ | audit-only | audit-and-remediate |
 | analyze/ | analyze-only | analyze-and-correct |
 
+### 7a. Second Opinion Protocol
+
+The orchestrator auto-inserts a `second-opinion/` step after specific actions in compiled chains.
+
+**Auto-trigger (always inserted):**
+- After `review/` steps
+- After `audit/` steps
+
+**Opt-in trigger (inserted only when orchestrator adds `secondOpinion: true` flag):**
+- After `analyze/` steps
+- After `plan/` steps
+
+**Never triggered:**
+- After `code/`, `test/`, `commit/` steps
+
+#### Step Insertion Rule
+
+When compiling a chain that contains an auto-trigger action, the orchestrator MUST insert a `second-opinion/` step immediately after it:
+
+**Before (without second opinion):**
+```
+| # | Action   | Waits For |
+|---|----------|-----------|
+| 1 | analyze/ | --        |
+| 2 | code/    | #1        |
+| 3 | review/  | #2        |
+| 4 | commit/  | #3        |
+```
+
+**After (with auto-inserted second opinion):**
+```
+| # | Action            | Waits For |
+|---|-------------------|-----------|
+| 1 | analyze/          | --        |
+| 2 | code/             | #1        |
+| 3 | review/           | #2        |
+| 4 | second-opinion/   | #3        |
+| 5 | commit/           | #3 (NOT #4) |
+```
+
+**Critical: The commit step waits for the ORIGINAL action (#3), NOT the second-opinion step (#4).** The second opinion is informational and never blocks subsequent workflow steps. The orchestrator presents both outputs together before moving to the next human-visible checkpoint.
+
+#### Spawning the Second Opinion Agent
+
+When spawning `second-opinion/`, the orchestrator passes these inputs:
+- `actionType`: The action type of the step being critiqued (e.g., `review`)
+- `claudeOutputPath`: The absolute path to the critiqued agent's output file (from its log folder)
+- `originalInput`: The scope/input that was given to the original action
+
+```python
+Task(
+  subagent_type="general-purpose",
+  model="haiku",
+  run_in_background=True,
+  prompt="""
+Read your definition in .claude/actionflows/actions/second-opinion/agent.md
+
+IMPORTANT: You are a spawned subagent executor.
+Do NOT read .claude/actionflows/ORCHESTRATOR.md -- it is not for you.
+Do NOT delegate work or compile chains. Execute your agent.md directly.
+
+Project Context:
+- Name: ActionFlows Dashboard
+- Paths: backend=packages/backend/, frontend=packages/app/, shared=packages/shared/
+
+Input:
+- actionType: {action type, e.g., review}
+- claudeOutputPath: {absolute path to the output file}
+- originalInput: {scope description}
+"""
+)
+```
+
+#### Presenting Dual Output
+
+When both the original action and the second-opinion step complete, the orchestrator presents them together in the step completion format:
+
+```
+>> Step {N} complete: {action/} -- {one-line result}.
+>> Step {N+1} complete: second-opinion/ -- {critique summary or SKIPPED}.
+
+### Dual Output: {action/} + Second Opinion
+
+**Original ({action/}):**
+{Verdict/score from original agent's completion message}
+
+**Second Opinion ({model name} via Ollama):**
+{Key findings summary from second-opinion agent's completion message}
+- Missed issues: {count}
+- Disagreements: {count}
+- Notable: {top finding if any}
+
+**Full reports:**
+- Original: `{original log path}`
+- Critique: `{second-opinion log path}`
+
+Continuing to Step {N+2}...
+```
+
+If the second opinion was SKIPPED, present:
+
+```
+>> Step {N} complete: {action/} -- {one-line result}.
+>> Step {N+1} complete: second-opinion/ -- SKIPPED ({reason}).
+
+Continuing to Step {N+2}...
+```
+
+#### Suppressing Second Opinion
+
+The human can suppress auto-triggering by saying "skip second opinions" or "no second opinion" when approving a chain. The orchestrator removes the second-opinion steps before executing.
+
 ### 8. Compose First, Propose Later
 No flow matches? Compose from existing actions. Propose new flow only if pattern recurs 2+ times.
 

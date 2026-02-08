@@ -36,6 +36,18 @@ These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 | `code/backend/` | Express 4.18 + TypeScript + Zod | task, context | haiku |
 | `code/frontend/` | React 18.2 + Vite 5 + Electron 28 | task, context | haiku |
 
+## Code-Backed Actions
+
+**Code-backed actions have real TypeScript packages backing them.** Unlike generic actions where Claude IS the tool, these actions wrap existing code packages. Claude is a thin wrapper that runs the code and interprets results.
+
+**Key distinction:**
+- **Generic Actions:** Pure Claude instructions. Claude performs all logic and produces the output.
+- **Code-Backed Actions:** Claude spawns and orchestrates code from packages/. The heavy lifting happens in the package.
+
+| Action | Purpose | Code Package | Required Inputs | Model |
+|--------|---------|--------------|-----------------|-------|
+| second-opinion/ | Ollama critique of agent output | packages/second-opinion/ | actionType, claudeOutputPath, originalInput | haiku |
+
 ## Action Modes
 
 Actions like review/, audit/, and analyze/ support a `mode` input that controls behavior:
@@ -48,6 +60,17 @@ Actions like review/, audit/, and analyze/ support a `mode` input that controls 
 
 Use extended mode when fixes are straightforward and don't require architecture decisions.
 
+## Post-Action Steps
+
+Certain actions automatically trigger follow-up steps:
+
+| Trigger Action | Post-Action Step | Trigger Type | Can Suppress? |
+|---------------|-----------------|--------------|---------------|
+| review/ | second-opinion/ | Auto | Yes ("skip second opinions") |
+| audit/ | second-opinion/ | Auto | Yes ("skip second opinions") |
+| analyze/ | second-opinion/ | Opt-in (orchestrator flag) | N/A |
+| plan/ | second-opinion/ | Opt-in (orchestrator flag) | N/A |
+
 ## Model Selection Guidelines
 
 | Action Type | Model | Why |
@@ -55,6 +78,7 @@ Use extended mode when fixes are straightforward and don't require architecture 
 | code, code/backend, code/frontend, test, commit | haiku | Fast, simple execution |
 | review, analyze, plan | sonnet | Needs judgment |
 | audit | opus | Deep analysis needed |
+| second-opinion | haiku | Lightweight CLI wrapper |
 
 ## Input Requirement Types
 
