@@ -3,7 +3,7 @@ import type { SessionId, SessionWindowConfig } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { storage } from '../storage/index.js';
 import { writeLimiter } from '../middleware/rateLimit.js';
-import { validateBody } from '../middleware/validate.js';
+import { validateBody, validateSessionIdParam } from '../middleware/validate.js';
 import { sessionWindowConfigSchema } from '../schemas/api.js';
 import { sanitizeError } from '../middleware/errorHandler.js';
 
@@ -50,7 +50,7 @@ router.get('/', async (req, res) => {
  * GET /api/session-windows/:id/enriched
  * Get enriched data for a specific session window
  */
-router.get('/:id/enriched', async (req, res) => {
+router.get('/:id/enriched', validateSessionIdParam(), async (req, res) => {
   try {
     const { id } = req.params;
     const session = await storage.getSession(id as SessionId);
@@ -90,7 +90,7 @@ router.get('/:id/enriched', async (req, res) => {
  * POST /api/session-windows/:id/follow
  * Mark a session as followed
  */
-router.post('/:id/follow', writeLimiter, async (req, res) => {
+router.post('/:id/follow', writeLimiter, validateSessionIdParam(), async (req, res) => {
   try {
     const { id } = req.params;
     const session = await storage.getSession(id as SessionId);
@@ -126,7 +126,7 @@ router.post('/:id/follow', writeLimiter, async (req, res) => {
  * DELETE /api/session-windows/:id/follow
  * Unmark a session as followed
  */
-router.delete('/:id/follow', writeLimiter, async (req, res) => {
+router.delete('/:id/follow', writeLimiter, validateSessionIdParam(), async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -154,7 +154,7 @@ router.delete('/:id/follow', writeLimiter, async (req, res) => {
  * PUT /api/session-windows/:id/config
  * Update session window configuration
  */
-router.put('/:id/config', writeLimiter, validateBody(sessionWindowConfigSchema), async (req, res) => {
+router.put('/:id/config', writeLimiter, validateSessionIdParam(), validateBody(sessionWindowConfigSchema), async (req, res) => {
   try {
     const { id } = req.params;
     const session = await storage.getSession(id as SessionId);

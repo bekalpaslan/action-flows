@@ -1,4 +1,4 @@
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig } from '@afw/shared';
 
 /**
@@ -57,9 +57,9 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
   const keyPrefix = prefix || process.env.REDIS_PREFIX || 'afw:';
 
   // Redis clients for regular operations and pub/sub
-  const redis = new (Redis as any)({ url });
-  const pubClient = new (Redis as any)({ url });
-  const subClient = new (Redis as any)({ url });
+  const redis = new Redis(url);
+  const pubClient = new Redis(url);
+  const subClient = new Redis(url);
 
   // In-memory client registry (not persisted, for current instance only)
   const localClients = new Map<string, SessionId | undefined>();

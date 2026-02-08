@@ -29,7 +29,7 @@ export function useSessionArchive(
   autoArchiveDelayMs: number = DEFAULT_AUTO_ARCHIVE_DELAY_MS
 ) {
   const [archivedSessions, setArchivedSessions] = useState<ArchivedSession[]>([]);
-  const [archiveTimers, setArchiveTimers] = useState<Map<SessionId, number>>(new Map());
+  const [archiveTimers, setArchiveTimers] = useState<Map<SessionId, ReturnType<typeof setTimeout>>>(new Map());
 
   // Load archived sessions from localStorage on mount
   useEffect(() => {
@@ -54,46 +54,12 @@ export function useSessionArchive(
   }, [archivedSessions]);
 
   /**
-   * Schedule auto-archive for a session
-   */
-  const scheduleAutoArchive = useCallback(
-    (sessionId: SessionId, sessionData: ArchivedSession['sessionData']) => {
-      // Cancel existing timer if any
-      const existingTimer = archiveTimers.get(sessionId);
-      if (existingTimer) {
-        window.clearTimeout(existingTimer);
-      }
-
-      // Schedule new timer
-      const timer = window.setTimeout(() => {
-        archiveSession(sessionId, sessionData);
-        setArchiveTimers(prev => {
-          const next = new Map(prev);
-          next.delete(sessionId);
-          return next;
-        });
-      }, autoArchiveDelayMs);
-
-      setArchiveTimers(prev => new Map(prev).set(sessionId, timer));
-    },
-    [autoArchiveDelayMs, archiveSession]
-  );
-
-  // Cleanup timers when autoArchiveDelayMs changes
-  useEffect(() => {
-    // When delay changes, cancel all existing timers to prevent memory leaks
-    return () => {
-      archiveTimers.forEach(timer => window.clearTimeout(timer));
-    };
-  }, [autoArchiveDelayMs, archiveTimers]);
-
-  /**
    * Cancel scheduled auto-archive
    */
   const cancelAutoArchive = useCallback((sessionId: SessionId) => {
     const timer = archiveTimers.get(sessionId);
     if (timer) {
-      window.clearTimeout(timer);
+      clearTimeout(timer);
       setArchiveTimers(prev => {
         const next = new Map(prev);
         next.delete(sessionId);
@@ -124,6 +90,39 @@ export function useSessionArchive(
     },
     [cancelAutoArchive]
   );
+
+  /**
+   * Schedule auto-archive for a session
+   */
+  const scheduleAutoArchive = useCallback(
+    (sessionId: SessionId, sessionData: ArchivedSession['sessionData']) => {
+      // Cancel existing timer if any
+      const existingTimer = archiveTimers.get(sessionId);
+      if (existingTimer) {
+        clearTimeout(existingTimer);
+      }
+
+      // Schedule new timer
+      const timer = setTimeout(() => {
+        archiveSession(sessionId, sessionData);
+        setArchiveTimers(prev => {
+          const next = new Map(prev);
+          next.delete(sessionId);
+          return next;
+        });
+      }, autoArchiveDelayMs);
+
+      setArchiveTimers(prev => new Map(prev).set(sessionId, timer));
+    },
+    [autoArchiveDelayMs, archiveSession, archiveTimers]
+  );
+
+  // Cleanup timers when autoArchiveDelayMs changes
+  useEffect(() => {
+    return () => {
+      archiveTimers.forEach(timer => clearTimeout(timer));
+    };
+  }, [autoArchiveDelayMs, archiveTimers]);
 
   /**
    * Restore an archived session
@@ -165,7 +164,7 @@ export function useSessionArchive(
   // Cleanup timers on unmount
   useEffect(() => {
     return () => {
-      archiveTimers.forEach(timer => window.clearTimeout(timer));
+      archiveTimers.forEach(timer => clearTimeout(timer));
     };
   }, [archiveTimers]);
 

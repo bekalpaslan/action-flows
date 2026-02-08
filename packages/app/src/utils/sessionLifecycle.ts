@@ -65,7 +65,7 @@ export class SessionLifecycleStateMachine {
   private state: SessionLifecycleState;
   private sessionId: SessionId;
   private listeners: Set<StateChangeCallback> = new Set();
-  private autoArchiveTimer: number | null = null;
+  private autoArchiveTimer: ReturnType<typeof setTimeout> | null = null;
   private autoArchiveDelayMs: number;
 
   constructor(
@@ -203,11 +203,11 @@ export class SessionLifecycleStateMachine {
   private scheduleAutoArchive(): void {
     // Cancel existing timer if any
     if (this.autoArchiveTimer !== null) {
-      window.clearTimeout(this.autoArchiveTimer);
+      clearTimeout(this.autoArchiveTimer);
     }
 
     // Schedule archive
-    this.autoArchiveTimer = window.setTimeout(() => {
+    this.autoArchiveTimer = setTimeout(() => {
       this.listeners.forEach(listener =>
         listener({
           sessionId: this.sessionId,
@@ -225,7 +225,7 @@ export class SessionLifecycleStateMachine {
    */
   cancelAutoArchive(): void {
     if (this.autoArchiveTimer !== null) {
-      window.clearTimeout(this.autoArchiveTimer);
+      clearTimeout(this.autoArchiveTimer);
       this.autoArchiveTimer = null;
     }
   }
