@@ -1,0 +1,357 @@
+/**
+ * SquadPanel Styles
+ * Root container for orchestrator + subagents arrangement
+ *
+ * Layout:
+ * - Orchestrator center (1.5x size)
+ * - Subagents distributed evenly on left and right
+ * - Responsive: horizontal on wide, stack on narrow
+ *
+ * Dark theme colors:
+ * - Background: #1a1a1a or transparent
+ * - Borders: #3c3c3c
+ */
+
+/* ===== BASE CONTAINER ===== */
+
+.squad-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 16px;
+  background: transparent;
+  border-radius: 12px;
+  outline: none;
+}
+
+/* Placement variants */
+.squad-panel.placement-left {
+  flex-direction: row;
+  position: relative;
+  left: 0;
+}
+
+.squad-panel.placement-right {
+  flex-direction: row-reverse;
+  position: relative;
+  right: 0;
+}
+
+.squad-panel.placement-bottom {
+  flex-direction: column;
+  position: relative;
+  bottom: 0;
+}
+
+/* ===== AGENTS CONTAINER ===== */
+
+.squad-panel-agents-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.squad-panel.placement-left .squad-panel-agents-wrapper,
+.squad-panel.placement-right .squad-panel-agents-wrapper {
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.squad-panel.placement-bottom .squad-panel-agents-wrapper {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+/* ===== ORCHESTRATOR CENTER ===== */
+
+.squad-panel-orchestrator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+/* Orchestrator card is 1.5x the size of subagents */
+.squad-panel-orchestrator .agent-character-card {
+  width: 200px;
+}
+
+/* Orchestrator visual emphasis */
+.squad-panel-orchestrator .agent-character-card {
+  position: relative;
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.squad-panel-orchestrator .agent-character-card:hover {
+  box-shadow: 0 0 60px rgba(255, 215, 0, 0.25), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Orchestrator expanded log panel */
+.squad-panel-orchestrator .agent-log-panel {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* ===== SUBAGENTS SIDES ===== */
+
+.squad-panel-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 140px;
+  max-width: 160px;
+}
+
+.squad-panel-side.side-left {
+  align-items: flex-end;
+  padding-right: 12px;
+}
+
+.squad-panel-side.side-right {
+  align-items: flex-start;
+  padding-left: 12px;
+}
+
+/* Subagent card sizing */
+.squad-panel-side .agent-character-card {
+  width: 140px;
+  flex-shrink: 0;
+}
+
+/* Subagent log panels */
+.squad-panel-side .agent-log-panel {
+  width: 100%;
+  max-width: 320px;
+}
+
+/* ===== LAYOUT: HORIZONTAL (WIDE) ===== */
+
+@media (min-width: 1024px) {
+  .squad-panel {
+    gap: 32px;
+    padding: 20px;
+  }
+
+  .squad-panel-agents-wrapper {
+    gap: 32px;
+  }
+
+  .squad-panel-side {
+    gap: 20px;
+    max-width: 180px;
+  }
+
+  .squad-panel-orchestrator .agent-character-card {
+    width: 220px;
+  }
+}
+
+/* ===== LAYOUT: RESPONSIVE (NARROW) ===== */
+
+@media (max-width: 1023px) {
+  .squad-panel {
+    gap: 16px;
+    padding: 12px;
+  }
+
+  .squad-panel-agents-wrapper {
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .squad-panel-side {
+    gap: 12px;
+    max-width: 140px;
+  }
+
+  .squad-panel-side.side-left {
+    padding-right: 8px;
+  }
+
+  .squad-panel-side.side-right {
+    padding-left: 8px;
+  }
+
+  .squad-panel-orchestrator .agent-character-card {
+    width: 180px;
+  }
+
+  .squad-panel-orchestrator .agent-log-panel {
+    max-width: 300px;
+  }
+
+  .squad-panel-side .agent-log-panel {
+    max-width: 280px;
+  }
+}
+
+/* ===== LAYOUT: MOBILE (VERY NARROW) ===== */
+
+@media (max-width: 640px) {
+  .squad-panel {
+    gap: 12px;
+    padding: 8px;
+  }
+
+  .squad-panel-agents-wrapper {
+    gap: 12px;
+  }
+
+  .squad-panel-side {
+    gap: 8px;
+    max-width: 130px;
+  }
+
+  .squad-panel-side.side-left {
+    padding-right: 4px;
+  }
+
+  .squad-panel-side.side-right {
+    padding-left: 4px;
+  }
+
+  .squad-panel.placement-left,
+  .squad-panel.placement-right {
+    flex-direction: column;
+  }
+
+  .squad-panel-orchestrator .agent-character-card {
+    width: 160px;
+  }
+
+  .squad-panel-orchestrator .agent-log-panel {
+    max-width: 100%;
+  }
+
+  .squad-panel-side .agent-log-panel {
+    max-width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 40vh;
+    border-radius: 8px 8px 0 0;
+    z-index: 100;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .squad-panel-orchestrator .agent-character-card {
+    transition: none;
+  }
+}
+
+/* ===== EMPTY STATE ===== */
+
+.squad-panel.is-empty {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #606060;
+  font-size: 14px;
+}
+
+.squad-panel.is-empty::before {
+  content: 'No agents connected...';
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* ===== ANIMATION: APPEARANCE ===== */
+
+@keyframes squad-panel-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.squad-panel {
+  animation: squad-panel-fade-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ===== STAGGERED SUBAGENT APPEARANCE ===== */
+
+.squad-panel-side .agent-character-card {
+  animation: agent-appear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.squad-panel-side.side-left .agent-character-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.squad-panel-side.side-left .agent-character-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.squad-panel-side.side-left .agent-character-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.squad-panel-side.side-left .agent-character-card:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.squad-panel-side.side-right .agent-character-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.squad-panel-side.side-right .agent-character-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.squad-panel-side.side-right .agent-character-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.squad-panel-side.side-right .agent-character-card:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+@keyframes agent-appear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== DARK THEME ===== */
+
+.squad-panel {
+  background: transparent;
+  color: #e8e8e8;
+}
+
+/* Optional: apply dark background when needed */
+.squad-panel.with-background {
+  background: rgba(26, 26, 26, 0.5);
+  border: 1px solid #3c3c3c;
+}
+
+/* ===== FOCUS STYLES ===== */
+
+.squad-panel:focus-visible {
+  outline: 2px solid #6f9dff;
+  outline-offset: 2px;
+}

@@ -1,0 +1,217 @@
+/**
+ * AgentLogPanel Styles
+ *
+ * Expandable inline log panel with chat-bubble style logs.
+ * Smooth expand/collapse animations with auto-scroll behavior.
+ */
+
+.agent-log-panel {
+  display: flex;
+  flex-direction: column;
+  background: #1a1a1a;
+  border: 1px solid #3c3c3c;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  overflow: hidden;
+  animation: log-panel-expand 0.35s var(--ease-ghibli) forwards;
+}
+
+/* Border color per agent role */
+.log-panel-border-orchestrator {
+  border-left-color: #FFFAF0;
+  border-right-color: #FFFAF0;
+  border-bottom-color: #FFFAF0;
+}
+
+.log-panel-border-explore {
+  border-left-color: #7FFFD4;
+  border-right-color: #7FFFD4;
+  border-bottom-color: #7FFFD4;
+}
+
+.log-panel-border-plan {
+  border-left-color: #FF00FF;
+  border-right-color: #FF00FF;
+  border-bottom-color: #FF00FF;
+}
+
+.log-panel-border-bash {
+  border-left-color: #39FF14;
+  border-right-color: #39FF14;
+  border-bottom-color: #39FF14;
+}
+
+.log-panel-border-read {
+  border-left-color: #FFFAFA;
+  border-right-color: #FFFAFA;
+  border-bottom-color: #FFFAFA;
+}
+
+.log-panel-border-write {
+  border-left-color: #FFBF00;
+  border-right-color: #FFBF00;
+  border-bottom-color: #FFBF00;
+}
+
+.log-panel-border-edit {
+  border-left-color: #FFB6C1;
+  border-right-color: #FFB6C1;
+  border-bottom-color: #FFB6C1;
+}
+
+.log-panel-border-grep {
+  border-left-color: #FFFF00;
+  border-right-color: #FFFF00;
+  border-bottom-color: #FFFF00;
+}
+
+.log-panel-border-glob {
+  border-left-color: #6495ED;
+  border-right-color: #6495ED;
+  border-bottom-color: #6495ED;
+}
+
+/* Log panel header */
+.log-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #1e1e1e;
+  border-bottom: 1px solid #2c2c2c;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #808080;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.log-panel-agent-name {
+  flex: 1;
+  color: #a0a0a0;
+}
+
+.log-panel-count {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #707070;
+  font-size: 10px;
+}
+
+/* Scroll container */
+.log-panel-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  scroll-behavior: smooth;
+}
+
+/* Log bubbles list */
+.log-bubbles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Empty state */
+.log-panel-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  color: #606060;
+  font-size: 12px;
+  text-align: center;
+  padding: 12px;
+}
+
+.log-panel-empty p {
+  margin: 0;
+}
+
+/* Expand animation */
+@keyframes log-panel-expand {
+  from {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    max-height: 400px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Collapse animation (when isExpanded becomes false) */
+@keyframes log-panel-collapse {
+  from {
+    max-height: 400px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Apply collapse animation when panel is not expanded */
+.agent-log-panel:not(.log-panel-expanded) {
+  animation: log-panel-collapse 0.35s var(--ease-ghibli) forwards;
+}
+
+/* Scrollbar styling for log panel */
+.log-panel-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log-panel-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.log-panel-scroll-container::-webkit-scrollbar-thumb {
+  background: #3c3c3c;
+  border-radius: 3px;
+}
+
+.log-panel-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #4c4c4c;
+}
+
+/* Accessibility: respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .agent-log-panel {
+    animation: none;
+  }
+
+  .log-panel-scroll-container {
+    scroll-behavior: auto;
+  }
+}
+
+/* Responsive: hide on very narrow viewports */
+@media (max-width: 480px) {
+  .agent-log-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 50vh !important;
+    border-radius: 8px 8px 0 0;
+    z-index: 100;
+  }
+
+  .log-panel-header {
+    background: linear-gradient(135deg, #1e1e1e, #252525);
+    padding: 12px;
+  }
+}

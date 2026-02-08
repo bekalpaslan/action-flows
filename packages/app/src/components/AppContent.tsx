@@ -12,6 +12,7 @@ import { CodeEditor } from './CodeEditor';
 import { TerminalTabs } from './Terminal';
 import { SessionWindowSidebar } from './SessionWindowSidebar/SessionWindowSidebar';
 import { SessionWindowGrid } from './SessionWindowGrid/SessionWindowGrid';
+import { SquadPanel } from './SquadPanel';
 import { claudeCliService } from '../services/claudeCliService';
 import type { Session, SessionId } from '@afw/shared';
 
@@ -37,6 +38,7 @@ export default function AppContent() {
   const [useSessionWindowMode, setUseSessionWindowMode] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>('sessions');
   const [isStartingCli, setIsStartingCli] = useState<boolean>(false);
+  const [showSquadPanel, setShowSquadPanel] = useState<boolean>(true);
 
   // Manage attached sessions
   const {
@@ -141,6 +143,21 @@ export default function AppContent() {
         </nav>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <button
+            onClick={() => setShowSquadPanel(!showSquadPanel)}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: showSquadPanel ? '#9333ea' : '#666',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              fontWeight: '500',
+            }}
+          >
+            {showSquadPanel ? 'Hide Squad' : 'Show Squad'}
+          </button>
+          <button
             onClick={() => setUseSessionWindowMode(!useSessionWindowMode)}
             style={{
               padding: '6px 12px',
@@ -213,6 +230,16 @@ export default function AppContent() {
                   onFileSelect={(path) => console.log('File selected:', path)}
                   onFileOpen={handleFileOpen}
                 />
+              )}
+
+              {showSquadPanel && (
+                <div style={{ borderTop: '1px solid #444', marginTop: '12px', paddingTop: '12px' }}>
+                  <SquadPanel
+                    sessionId={attachedSessionIds.length > 0 ? (attachedSessionIds[0] as SessionId) : null}
+                    placement="left"
+                    audioEnabled={false}
+                  />
+                </div>
               )}
             </div>
 

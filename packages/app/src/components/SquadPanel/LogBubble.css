@@ -1,0 +1,187 @@
+/**
+ * LogBubble Styles
+ *
+ * Chat-style log bubbles with color coding for different log types.
+ * Each type has a distinct color scheme with subtle icons for colorblind users.
+ */
+
+.log-bubble {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  animation: bubble-fade-in 0.25s ease-out forwards;
+}
+
+@keyframes bubble-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.log-bubble-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.log-bubble-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.log-bubble-icon {
+  flex-shrink: 0;
+  font-size: 11px;
+  width: 14px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.log-bubble-message {
+  flex: 1;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  color: inherit;
+}
+
+.log-bubble-timestamp {
+  font-size: 10px;
+  opacity: 0.6;
+  margin-left: 20px;
+}
+
+/* Info bubbles: neutral gray (default) */
+.log-bubble-info {
+  background: rgba(128, 128, 128, 0.15);
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  color: #a0a0a0;
+}
+
+.log-bubble-info .log-bubble-icon {
+  color: #909090;
+}
+
+.log-bubble-info:hover {
+  background: rgba(128, 128, 128, 0.2);
+  border-color: rgba(128, 128, 128, 0.4);
+}
+
+/* Success bubbles: soft green */
+.log-bubble-success {
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #7ed321;
+}
+
+.log-bubble-success .log-bubble-icon {
+  color: #66bb6a;
+}
+
+.log-bubble-success:hover {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+/* Error bubbles: soft red */
+.log-bubble-error {
+  background: rgba(244, 67, 54, 0.15);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #ff6b6b;
+}
+
+.log-bubble-error .log-bubble-icon {
+  color: #ef5350;
+}
+
+.log-bubble-error:hover {
+  background: rgba(244, 67, 54, 0.2);
+  border-color: rgba(244, 67, 54, 0.4);
+}
+
+/* Thinking bubbles: soft purple */
+.log-bubble-thinking {
+  background: rgba(156, 39, 176, 0.15);
+  border: 1px solid rgba(156, 39, 176, 0.3);
+  color: #ce93d8;
+}
+
+.log-bubble-thinking .log-bubble-icon {
+  color: #ba68c8;
+}
+
+.log-bubble-thinking:hover {
+  background: rgba(156, 39, 176, 0.2);
+  border-color: rgba(156, 39, 176, 0.4);
+}
+
+/* Warning bubbles: soft amber */
+.log-bubble-warning {
+  background: rgba(255, 193, 7, 0.15);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  color: #ffd54f;
+}
+
+.log-bubble-warning .log-bubble-icon {
+  color: #ffca28;
+}
+
+.log-bubble-warning:hover {
+  background: rgba(255, 193, 7, 0.2);
+  border-color: rgba(255, 193, 7, 0.4);
+}
+
+/* Accessibility: respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .log-bubble {
+    animation: none;
+  }
+
+  .log-bubble:hover {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  .log-bubble {
+    border-width: 2px;
+  }
+
+  .log-bubble-info {
+    background: rgba(128, 128, 128, 0.25);
+    border-color: rgba(128, 128, 128, 0.5);
+  }
+
+  .log-bubble-success {
+    background: rgba(76, 175, 80, 0.25);
+    border-color: rgba(76, 175, 80, 0.5);
+  }
+
+  .log-bubble-error {
+    background: rgba(244, 67, 54, 0.25);
+    border-color: rgba(244, 67, 54, 0.5);
+  }
+
+  .log-bubble-thinking {
+    background: rgba(156, 39, 176, 0.25);
+    border-color: rgba(156, 39, 176, 0.5);
+  }
+
+  .log-bubble-warning {
+    background: rgba(255, 193, 7, 0.25);
+    border-color: rgba(255, 193, 7, 0.5);
+  }
+}
