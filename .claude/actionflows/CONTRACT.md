@@ -43,6 +43,39 @@ To modify an existing format:
 
 ---
 
+### The Complete Harmony System
+
+This contract is **part 1 of 4** in the Framework Harmony System:
+
+**1. Orchestrator Contract (this file)**
+- Purpose: Formal specification of all output formats
+- Location: `.claude/actionflows/CONTRACT.md`
+- Implementation: `packages/shared/src/contract/` (types, parsers, patterns, guards)
+
+**2. Onboarding Questionnaire**
+- Purpose: Interactive teaching of harmony concepts to humans
+- Location: `.claude/actionflows/flows/framework/onboarding/modules/09-harmony.md`
+- Trigger: Run `onboarding/` flow, complete Advanced level
+
+**3. Harmony Detection**
+- Purpose: Automated drift monitoring (real-time parsing validation)
+- Implementation: `packages/backend/src/services/harmonyDetector.ts`
+- Types: `packages/shared/src/harmonyTypes.ts`
+- Usage: Runs automatically on every orchestrator output, broadcasts violations via WebSocket
+
+**4. Philosophy Documentation**
+- Purpose: Embed harmony concept everywhere it belongs (ORCHESTRATOR.md, agent-standards, docs)
+- Status: See harmony gap analysis in logs/analyze/
+
+**Why this matters:** The contract is meaningless without the full system. Humans learn via onboarding, orchestrator follows CONTRACT.md, backend validates via HarmonyDetector, dashboard shows status. This is **synchronized evolution**.
+
+**Learn more:**
+- Teaching: Complete `.claude/actionflows/flows/framework/onboarding/` (Module 9)
+- Implementation: Read `packages/backend/src/services/harmonyDetector.ts`
+- Monitoring: Check dashboard harmony panel (real-time status)
+
+---
+
 ## Format Catalog
 
 ### Priority Levels

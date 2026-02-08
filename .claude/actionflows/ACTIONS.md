@@ -17,17 +17,25 @@ Abstract actions are **reusable behavior patterns** that agents are explicitly i
 
 These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 
-| Action | Purpose | Requires Input? | Required Inputs | Model |
-|--------|---------|-----------------|-----------------|-------|
-| code/ | Implement code changes (generic) | YES | task, context | haiku |
-| review/ | Review anything | YES | scope, type | sonnet |
-| audit/ | Comprehensive audits | YES | type, scope | opus |
-| test/ | Execute tests | YES | scope, type | haiku |
-| analyze/ | Codebase analysis | YES | aspect, scope | sonnet |
-| plan/ | Implementation planning | YES | requirements, context | sonnet |
-| commit/ | Git commit + push | YES | summary, files | haiku |
-| brainstorm/ | Interactive ideation facilitation | YES | idea, classification, context | opus |
-| onboarding/ | Facilitate interactive onboarding questionnaire | NO | (none) | opus |
+| Action | Purpose | Requires Input? | Required Inputs | Model | Contract Output? |
+|--------|---------|-----------------|-----------------|-------|------------------|
+| code/ | Implement code changes (generic) | YES | task, context | haiku | NO |
+| review/ | Review anything | YES | scope, type | sonnet | YES (5.1) |
+| audit/ | Comprehensive audits | YES | type, scope | opus | NO |
+| test/ | Execute tests | YES | scope, type | haiku | NO |
+| analyze/ | Codebase analysis | YES | aspect, scope | sonnet | YES (5.2) |
+| plan/ | Implementation planning | YES | requirements, context | sonnet | NO |
+| commit/ | Git commit + push | YES | summary, files | haiku | NO |
+| brainstorm/ | Interactive ideation facilitation | YES | idea, classification, context | opus | YES (5.3) |
+| onboarding/ | Facilitate interactive onboarding questionnaire | NO | (none) | opus | NO |
+
+**Contract Output Column:**
+- **YES (X.X)** — Action produces structured output defined in CONTRACT.md (format number shown)
+- **NO** — Action output is not contract-defined (internal logs, working files)
+
+Contract-defined outputs are parsed by the dashboard. Deviating from specification causes harmony violations (graceful degradation).
+
+See `.claude/actionflows/CONTRACT.md` for format specifications.
 
 ## Stack-Specific Code Actions
 

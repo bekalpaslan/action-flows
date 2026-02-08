@@ -18,6 +18,38 @@ ActionFlows Workspace is a self-hosted desktop application that provides complet
 
 ## Architecture
 
+### Framework Harmony
+
+ActionFlows uses a **harmony system** to keep the orchestrator and dashboard synchronized as both evolve:
+
+**The 4-Part System:**
+
+1. **Orchestrator Contract** — Formal specification of all output formats (`.claude/actionflows/CONTRACT.md`)
+2. **Onboarding Questionnaire** — Interactive teaching flow explaining harmony concepts (Module 9)
+3. **Harmony Detection** — Backend service validating orchestrator output in real-time (`packages/backend/src/services/harmonyDetector.ts`)
+4. **Philosophy Documentation** — Harmony concept embedded throughout framework docs
+
+**How It Works:**
+
+```
+Orchestrator produces output
+    ↓
+Backend parses using contract-defined parsers (packages/shared/src/contract/)
+    ↓
+Harmony detector validates structure
+    ↓
+Dashboard shows status: ✅ In Harmony | ⚠️ Degraded | ❌ Violation
+```
+
+**Living Software:** The system is designed to evolve through use. The contract can change, but changes must be deliberate and coordinated (increment CONTRACT_VERSION, support migration).
+
+**Learn more:**
+- Read the contract: `.claude/actionflows/CONTRACT.md`
+- Learn interactively: Run onboarding flow (Module 9: Harmony)
+- Monitor harmony: Dashboard harmony panel (real-time status)
+
+---
+
 ```
 Dev Machines (Claude Code + Hooks)
        | POST /events

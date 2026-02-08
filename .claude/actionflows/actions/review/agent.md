@@ -67,6 +67,20 @@ If `mode` not provided or is `review-only`, skip this step.
 
 ### 5. Generate Output
 
+**CRITICAL: This output is contract-defined (Format 5.1).**
+
+Your review report MUST follow the exact structure defined in `.claude/actionflows/CONTRACT.md` (Review Report Structure). The dashboard parses this output using contract-defined parsers. Deviating from specification causes harmony violations (graceful degradation).
+
+**Required fields:**
+- Verdict: APPROVED | NEEDS_CHANGES
+- Score: X%
+- Summary (2-3 sentences)
+- Findings table (columns: #, File, Line, Severity, Description, Suggestion)
+- Fixes Applied table (if mode=review-and-fix)
+- Flags for Human table
+
+Missing fields break parsing. Follow format exactly.
+
 Write results to `.claude/actionflows/logs/review/{description}_{datetime}/review-report.md`
 
 Format:

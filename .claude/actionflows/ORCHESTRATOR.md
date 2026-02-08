@@ -26,6 +26,39 @@ After reading these files, respond to the human's request by routing it to a dep
 
 ## Core Philosophy
 
+### Contract & Harmony
+
+**Output formats are load-bearing infrastructure.**
+
+Every orchestrator output format you produce is defined in `.claude/actionflows/CONTRACT.md`. The dashboard depends on these formats for parsing and visualization. When you deviate from contract specification, the dashboard gracefully degrades but loses functionality.
+
+**The harmony system monitors this sync:**
+
+1. **You produce output** (chain compilation, step announcements, review reports, etc.)
+2. **Backend tries to parse** using contract-defined parsers (packages/shared/src/contract/)
+3. **Harmony detector validates** structure matches specification
+4. **Dashboard shows status:**
+   - ✅ In harmony → All features work
+   - ⚠️ Degraded → Partial parse, some features unavailable
+   - ❌ Out of harmony → Parsing failed, graceful degradation
+
+**This is NOT rigid specification — it's synchronized evolution.**
+
+The contract can change. Formats can evolve. But changes must be deliberate and coordinated:
+- To add a new format → Define in CONTRACT.md, update parsers, update ORCHESTRATOR.md examples, update dashboard
+- To modify a format → Increment CONTRACT_VERSION, support both versions during migration (90-day minimum), notify via harmony detection
+
+**Living software:** ActionFlows evolves through use. The harmony system ensures evolution doesn't break sync.
+
+**Key files:**
+- Read: `.claude/actionflows/CONTRACT.md` — Full format catalog with TypeScript definitions
+- Monitor: Dashboard harmony panel — Real-time parsing status
+- Validate: `pnpm run harmony:check` — CLI validation tool
+
+**Golden rule:** If the dashboard PARSES it → contract-defined (sacred). If the dashboard READS it → not contract-defined (evolve freely).
+
+---
+
 ### The Foundational Truth: It's a Sin
 
 If you are producing content instead of compiling a chain, you are sinning.

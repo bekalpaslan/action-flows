@@ -19,6 +19,13 @@ This agent follows these abstract action standards:
 
 Implement the requested code changes following the project's established patterns. Produce working code that matches existing style across the monorepo packages.
 
+**Special consideration:** If implementing changes to:
+- `packages/shared/src/contract/` (parsers, types, patterns)
+- `.claude/actionflows/CONTRACT.md`
+- `packages/backend/src/services/harmonyDetector.ts`
+
+Follow harmony evolution rules: increment CONTRACT_VERSION if breaking, support both versions during migration, update ORCHESTRATOR.md examples, run `pnpm run harmony:check` validation.
+
 ---
 
 ## Steps to Complete This Action

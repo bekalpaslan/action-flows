@@ -45,6 +45,27 @@ Use concrete file paths, not relative references. Provide examples for complex c
 - Implementation actions (code, test, commit) write to project directories
 - Never write outside your designated output location
 
+### 12. Contract Compliance (for output-producing actions)
+
+If your action produces structured output consumed by the dashboard (review reports, analysis reports, error announcements, etc.):
+
+- Follow the format specification in `.claude/actionflows/CONTRACT.md`
+- Required fields MUST be present and correctly formatted
+- Use the exact markdown structure defined in the contract
+- Missing fields cause harmony violations (dashboard graceful degradation)
+
+**Contract-defined actions:**
+- review/ → Review Report Structure (Format 5.1)
+- analyze/ → Analysis Report Structure (Format 5.2)
+- brainstorm/ → Brainstorm Session Transcript (Format 5.3)
+- (Orchestrator outputs are also contract-defined)
+
+**Why this matters:** The backend parses your output using contract-defined parsers. If structure doesn't match, parsing fails, harmony breaks, dashboard loses functionality.
+
+**Validation:** Harmony detector automatically validates output. Violations are logged and broadcast.
+
+**Not contract-defined:** Agent learnings, internal notes, working files, intermediate outputs. Only final deliverables consumed by dashboard are contract-defined.
+
 ---
 
 ## Learnings Output Format

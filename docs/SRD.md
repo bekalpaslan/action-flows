@@ -75,6 +75,16 @@ Storage Layer
     ├→ Memory (dev): Sync Maps
     └→ Redis (prod): Async + pub/sub
         ↓ (Redis pub/sub on 'afw:events' channel)
+Harmony Detector
+    ├→ Parse orchestrator output using contract parsers
+    ├→ Validate structure against CONTRACT.md specification
+    └→ Broadcast harmony events (valid/degraded/violation)
+        ↓ (WebSocket harmony:check, harmony:violation)
+Dashboard Harmony Panel
+    ├→ Real-time harmony status display
+    ├→ Violation alerts
+    └→ Historical metrics
+        ↓
 WebSocket Server
     ├→ Client registry (per-session subscriptions)
     └→ Per-client rate limiting (50 msg/sec)
@@ -333,6 +343,54 @@ setActiveStep(sessionId, stepNumber, action) {
   this.activeSteps.set(sessionId, { stepNumber, action });
 }
 ```
+
+**Pattern 7: HarmonyDetector Service**
+
+```typescript
+// Backend service for real-time validation of orchestrator output
+class HarmonyDetector {
+  checkOutput(text: string, sessionId: SessionId, context?: string): HarmonyCheck {
+    // Parse output using contract-defined parsers
+    const parsed = parseOrchestratorOutput(text);
+
+    // Validate structure against CONTRACT.md specification
+    if (!parsed || !validateStructure(parsed)) {
+      return {
+        valid: false,
+        violations: extractViolations(parsed),
+        degraded: true
+      };
+    }
+
+    // Broadcast harmony events via WebSocket
+    this.broadcast({
+      type: 'harmony:check',
+      sessionId,
+      status: 'valid'
+    });
+
+    return { valid: true, violations: [] };
+  }
+
+  getHarmonyMetrics(target: SessionId, type: 'session' | 'global'): HarmonyMetrics {
+    // Aggregate metrics: percentage valid, violation counts, trends
+    return this.storage.getMetrics(target, type);
+  }
+}
+```
+
+**HarmonyDetector Service**
+**Location:** `packages/backend/src/services/harmonyDetector.ts`
+**Purpose:** Real-time validation of orchestrator output compliance with CONTRACT.md
+**Dependencies:**
+- `@afw/shared/contract` (parsers, patterns, types)
+- `@afw/shared/harmonyTypes` (HarmonyCheck, HarmonyMetrics)
+**Methods:**
+- `checkOutput(text, sessionId, context)` — Parse and validate output
+- `getHarmonyMetrics(target, type)` — Aggregate metrics
+- `getHarmonyChecks(target, filter)` — Query violation history
+**Events:** Broadcasts `harmony:check`, `harmony:violation`, `harmony:metrics-updated`
+**Configuration:** maxTextLength=500, significantChangeThreshold=5%, maxViolationsPerSession=100, ttlDays=7
 
 ### 3.2 Frontend Implementation Patterns
 

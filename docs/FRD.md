@@ -120,7 +120,53 @@ Before any action:
 
 Example: Updating a version number in package.json = direct. Refactoring authentication = delegate.
 
-### 3.3 Session-Start Protocol
+### 3.3 Framework Harmony System
+
+ActionFlows enforces synchronized evolution between orchestrator and dashboard through a **4-part harmony system**:
+
+**1. Orchestrator Contract (`.claude/actionflows/CONTRACT.md`)**
+- Formal specification of all 17+ orchestrator output formats
+- TypeScript definitions in `packages/shared/src/contract/`
+- Versioned (CONTRACT_VERSION) with migration support
+
+**2. Onboarding Questionnaire**
+- Interactive teaching flow (Module 9: Harmony)
+- Teaches humans how harmony works and why it matters
+- Progressive disclosure: Beginner → Intermediate → Advanced
+
+**3. Harmony Detection**
+- Backend service: `packages/backend/src/services/harmonyDetector.ts`
+- Real-time validation of every orchestrator output
+- Broadcasts violations via WebSocket
+
+**4. Philosophy Documentation**
+- Harmony concept embedded in ORCHESTRATOR.md, agent-standards, project docs
+- Cross-references throughout framework files
+
+**Living Software Model:**
+- Traditional software: Static code, manual changes, quality degrades
+- Living software: Evolves through use, agent learnings, quality improves
+- Harmony system: Enables evolution without breaking sync
+
+**Harmony States:**
+- ✅ **Valid:** Output matches contract, all features work
+- ⚠️ **Degraded:** Partial parse, some features unavailable
+- ❌ **Violation:** Parse failed, graceful degradation
+
+**Dashboard representation:**
+- Harmony panel shows real-time status
+- Violation alerts notify when parsing fails
+- Metrics track harmony percentage over time
+
+**Evolution workflow:**
+1. Define new format in CONTRACT.md
+2. Add TypeScript parser
+3. Update ORCHESTRATOR.md examples
+4. Update dashboard components
+5. Increment CONTRACT_VERSION if breaking
+6. Run harmony:check validation
+
+### 3.4 Session-Start Protocol
 
 **Before responding to any human request:**
 1. Read `project.config.md` — Project context (tech stack, paths, ports)
@@ -132,7 +178,7 @@ Example: Updating a version number in package.json = direct. Refactoring authent
 
 **Dashboard reflection:** Session start is the entry point; dashboard shows which flows are available and which past executions can be reviewed.
 
-### 3.4 Proactive Coordination
+### 3.5 Proactive Coordination
 
 Once a chain is approved, the orchestrator **autonomously** follows through:
 - Execute entire chain without stopping between steps
@@ -141,7 +187,7 @@ Once a chain is approved, the orchestrator **autonomously** follows through:
 
 **Dashboard support:** Chain status shows current step, allows pause/resume for re-evaluation.
 
-### 3.5 Agent Identity Isolation
+### 3.6 Agent Identity Isolation
 
 Three-layer defense prevents agents from reading orchestrator files:
 
@@ -151,7 +197,7 @@ Three-layer defense prevents agents from reading orchestrator files:
 
 **Why three layers?** Defense-in-depth. Prevents single-point failures.
 
-### 3.6 Learning Capture
+### 3.7 Learning Capture
 
 **Fresh Eye discoveries:** Agents tag unexpected findings with `[FRESH EYE]` and report them to orchestrator.
 
