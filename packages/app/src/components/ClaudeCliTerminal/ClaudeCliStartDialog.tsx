@@ -3,12 +3,14 @@
  * Dialog for starting a new Claude CLI session
  */
 
-import React, { useState } from 'react';
-import type { SessionId, Project, ProjectId } from '@afw/shared';
+import { useState } from 'react';
+import type { SessionId, Project } from '@afw/shared';
 import { useClaudeCliSessions } from '../../hooks/useClaudeCliSessions';
 import { useProjects } from '../../hooks/useProjects';
+import { useDiscoveredSessions } from '../../hooks/useDiscoveredSessions';
 import { ProjectSelector } from './ProjectSelector';
 import { ProjectForm } from './ProjectForm';
+import { DiscoveredSessionsList } from './DiscoveredSessionsList';
 
 interface ClaudeCliStartDialogProps {
   onClose: () => void;
@@ -41,6 +43,12 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
     isLoading: projectsLoading,
     error: projectsError,
   } = useProjects();
+  const { sessions: discoveredSessions, isLoading: discoveryLoading } = useDiscoveredSessions();
+
+  const handleStartFromDiscovery = (discoveryCwd: string) => {
+    setSelectedProject(null);
+    setCwd(discoveryCwd);
+  };
 
   const availableFlags = [
     { value: '--debug', label: 'Debug Mode', description: 'Enable debug output' },
@@ -178,6 +186,13 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
             {error?.message || projectsError?.message}
           </div>
         )}
+
+        {/* Discovered Sessions */}
+        <DiscoveredSessionsList
+          sessions={discoveredSessions}
+          isLoading={discoveryLoading}
+          onStartHere={handleStartFromDiscovery}
+        />
 
         {/* Project Selector */}
         <div style={{ marginBottom: '16px' }}>

@@ -84,6 +84,8 @@ export type {
   ChainTemplateStep,
   TemplateParameter,
   ClaudeCliSession,
+  DiscoveredClaudeSession,
+  DiscoveredSessionEnrichment,
 } from './models.js';
 
 // ============================================================================

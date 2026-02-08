@@ -446,3 +446,48 @@ export interface ClaudeCliSession {
     flags?: Record<string, unknown>;
   };
 }
+
+/**
+ * Discovered Claude Session - an externally-running Claude Code session
+ * detected via IDE lock files (~/.claude/ide/<port>.lock)
+ */
+export interface DiscoveredClaudeSession {
+  /** Unique key for this discovery entry (e.g. "ide-12345") */
+  discoveryKey: string;
+  /** How the session was discovered */
+  source: 'ide-lock';
+  /** Port from the lock file name */
+  port: number;
+  /** IDE process PID from lock JSON */
+  pid: number;
+  /** Whether the PID is currently alive */
+  pidAlive: boolean;
+  /** Workspace folders from lock JSON */
+  workspaceFolders: string[];
+  /** First workspace folder, normalized */
+  primaryCwd: string;
+  /** IDE name (e.g. "Visual Studio Code") */
+  ideName: string;
+  /** Transport protocol */
+  transport: string;
+  /** When this session was last scanned */
+  lastSeenAt: string;
+  /** Optional enrichment from JSONL project files */
+  enrichment?: DiscoveredSessionEnrichment;
+}
+
+/**
+ * Enrichment data derived from Claude's JSONL project files
+ */
+export interface DiscoveredSessionEnrichment {
+  /** Most recent session ID found in JSONL files */
+  latestSessionId: string | null;
+  /** Last prompt text from JSONL */
+  lastPrompt: string | null;
+  /** Git branch from JSONL metadata */
+  gitBranch: string | null;
+  /** mtime of most recently modified JSONL file */
+  lastActivityAt: string | null;
+  /** Total number of JSONL session files found */
+  totalSessionFiles: number;
+}

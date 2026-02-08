@@ -3,7 +3,7 @@
  * Frontend API client for Claude Code CLI session management
  */
 
-import type { SessionId, ClaudeCliSession, ProjectId } from '@afw/shared';
+import type { SessionId, ClaudeCliSession, ProjectId, DiscoveredClaudeSession } from '@afw/shared';
 
 /**
  * Claude CLI Service
@@ -116,6 +116,30 @@ export class ClaudeCliService {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
       throw new Error(errorData.error || `Failed to list sessions: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.sessions;
+  }
+
+  /**
+   * Discover externally-running Claude Code sessions (IDE lock files)
+   */
+  async discoverSessions(opts?: {
+    enrich?: boolean;
+    aliveOnly?: boolean;
+  }): Promise<DiscoveredClaudeSession[]> {
+    const params = new URLSearchParams();
+    if (opts?.enrich) params.set('enrich', 'true');
+    if (opts?.aliveOnly === false) params.set('aliveOnly', 'false');
+
+    const qs = params.toString();
+    const url = `${this.baseUrl}/api/discovery/sessions${qs ? `?${qs}` : ''}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      throw new Error(errorData.error || `Failed to discover sessions: ${response.statusText}`);
     }
 
     const data = await response.json();
