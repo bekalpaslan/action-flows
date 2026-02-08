@@ -103,6 +103,15 @@
   color: #808080;
 }
 
+.message-step-number {
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #606060;
+  margin-left: 4px;
+}
+
 .message-user .message-role {
   color: #4ec9b0;
 }
@@ -113,6 +122,14 @@
   color: #cccccc;
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+
+.inline-buttons-slot {
+  margin-top: 8px;
+  min-height: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .message-timestamp {

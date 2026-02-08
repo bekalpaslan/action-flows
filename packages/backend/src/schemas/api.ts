@@ -250,3 +250,33 @@ export const autoDetectProjectSchema = z.object({
 });
 
 export type AutoDetectProjectRequest = z.infer<typeof autoDetectProjectSchema>;
+
+// ============================================================================
+// Toolbar Schemas
+// ============================================================================
+
+export const toolbarSlotSchema = z.object({
+  buttonId: z.string().min(1, 'buttonId required').max(100, 'buttonId too long'),
+  pinned: z.boolean().default(false),
+  position: z.number().int().min(0).max(1000),
+  usageCount: z.number().int().min(0).default(0),
+  lastUsed: z.string().datetime({ message: 'lastUsed must be ISO 8601 timestamp' }),
+});
+
+export type ToolbarSlotRequest = z.infer<typeof toolbarSlotSchema>;
+
+export const toolbarConfigSchema = z.object({
+  maxSlots: z.number().int().min(1).max(50).default(10),
+  slots: z.array(toolbarSlotSchema).default([]),
+  autoLearn: z.boolean().default(true),
+  showUsageCount: z.boolean().default(false),
+});
+
+export type ToolbarConfigRequest = z.infer<typeof toolbarConfigSchema>;
+
+export const trackButtonUsageSchema = z.object({
+  buttonId: z.string().min(1, 'buttonId required').max(100, 'buttonId too long'),
+  sessionId: z.string().min(1, 'sessionId required').max(200, 'sessionId too long'),
+});
+
+export type TrackButtonUsageRequest = z.infer<typeof trackButtonUsageSchema>;

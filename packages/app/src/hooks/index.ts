@@ -27,3 +27,6 @@ export { useAllSessions } from './useAllSessions';
 export type { UseAllSessionsReturn } from './useAllSessions';
 
 export { useFileTree } from './useFileTree';
+
+export { useButtonActions } from './useButtonActions';
+export type { UseButtonActionsResult } from './useButtonActions';

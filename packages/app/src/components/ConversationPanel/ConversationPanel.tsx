@@ -3,11 +3,65 @@
  *
  * Displays Claude's output and allows Dashboard users to respond via UI
  * instead of CLI. Supports quick-response buttons for binary prompts.
+ *
+ * Message History:
+ * - Renders full conversation history from session data
+ * - Extracts Claude responses from lastPrompt and chain step results
+ * - Renders user responses from lastPrompt quickResponses selection
+ * - Supports InlineButtons placeholder for future integration (Step 4)
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import type { Session } from '@afw/shared';
+import type { Session, ButtonDefinition, ButtonId } from '@afw/shared';
+import { InlineButtons } from '../InlineButtons';
 import './ConversationPanel.css';
+
+/**
+ * Default demo buttons for testing the button system.
+ * These will be replaced by registry-based buttons in Phase 3.
+ */
+const DEFAULT_BUTTONS: ButtonDefinition[] = [
+  {
+    id: 'btn-copy' as ButtonId,
+    label: 'Copy',
+    icon: '📋',
+    action: { type: 'clipboard', payload: { text: '' } },
+    contexts: ['code-change', 'analysis-report', 'general'],
+    source: { type: 'core' },
+    priority: 1,
+    enabled: true,
+  },
+  {
+    id: 'btn-retry' as ButtonId,
+    label: 'Retry',
+    icon: '🔄',
+    action: { type: 'command', commandType: 'retry' },
+    contexts: ['error-message'],
+    source: { type: 'core' },
+    priority: 2,
+    enabled: true,
+  },
+  {
+    id: 'btn-approve' as ButtonId,
+    label: 'Approve',
+    icon: '✅',
+    action: { type: 'quick-action', payload: { response: 'yes' } },
+    contexts: ['question-prompt'],
+    source: { type: 'core' },
+    priority: 1,
+    enabled: true,
+  },
+  {
+    id: 'btn-reject' as ButtonId,
+    label: 'Reject',
+    icon: '❌',
+    action: { type: 'quick-action', payload: { response: 'no' } },
+    contexts: ['question-prompt'],
+    source: { type: 'core' },
+    priority: 2,
+    enabled: true,
+  },
+];
 
 interface ConversationPanelProps {
   session: Session;
@@ -18,6 +72,8 @@ interface Message {
   role: 'assistant' | 'user';
   content: string;
   timestamp: string;
+  stepNumber?: number;
+  hasInlineButtons?: boolean;
 }
 
 export function ConversationPanel({ session, onSubmitInput }: ConversationPanelProps) {
@@ -36,17 +92,50 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Parse session events/chain output into messages (simplified for Phase 6)
+  /**
+   * Extract full message history from session data
+   *
+   * Sources:
+   * 1. Chain step results (completed steps with summaries/results)
+   * 2. lastPrompt (current awaiting prompt from Claude)
+   * 3. User submissions tracked locally in state
+   */
   useEffect(() => {
     const msgs: Message[] = [];
 
+    // Extract messages from chain steps (completed chains/steps)
+    if (session.chains && session.chains.length > 0) {
+      session.chains.forEach((chain) => {
+        if (chain.steps && chain.steps.length > 0) {
+          chain.steps.forEach((step) => {
+            // Add step description/result as assistant message if available
+            const content = step.description || (step.result ? String(step.result) : null);
+            if (content) {
+              msgs.push({
+                role: 'assistant',
+                content,
+                timestamp: step.completedAt || step.startedAt || new Date().toISOString(),
+                stepNumber: step.stepNumber,
+                hasInlineButtons: false,
+              });
+            }
+          });
+        }
+      });
+    }
+
+    // Add last prompt (current awaiting input) as latest assistant message
     if (session.lastPrompt) {
       msgs.push({
         role: 'assistant',
         content: session.lastPrompt.text,
         timestamp: session.lastPrompt.timestamp,
+        hasInlineButtons: true, // Placeholder for InlineButtons integration (Step 4)
       });
     }
+
+    // Sort messages by timestamp (chronological order)
+    msgs.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
     setMessages(msgs);
   }, [session]);
@@ -114,8 +203,21 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
           <div key={idx} className={`message message-${msg.role}`}>
             <div className="message-role">
               {msg.role === 'assistant' ? 'Claude' : 'You'}
+              {msg.stepNumber !== undefined && (
+                <span className="message-step-number"> (Step {msg.stepNumber})</span>
+              )}
             </div>
             <div className="message-content">{msg.content}</div>
+            {msg.hasInlineButtons && (
+              <InlineButtons
+                messageContent={msg.content}
+                sessionId={session.id}
+                buttons={DEFAULT_BUTTONS}
+                onAction={(button) => {
+                  console.log('InlineButton action triggered:', button);
+                }}
+              />
+            )}
             <div className="message-timestamp">
               {new Date(msg.timestamp).toLocaleTimeString()}
             </div>

@@ -133,6 +133,28 @@ export type {
 } from './projects.js';
 
 // ============================================================================
+// Self-Evolving System Types
+// ============================================================================
+export type {
+  BehaviorPackId,
+  LayerSource,
+} from './selfEvolvingTypes.js';
+
+// ============================================================================
+// Button System Types
+// ============================================================================
+export type {
+  ButtonId,
+  ButtonActionType,
+  ButtonAction,
+  ButtonContext,
+  ButtonDefinition,
+  ButtonState,
+  ToolbarSlot,
+  ToolbarConfig,
+} from './buttonTypes.js';
+
+// ============================================================================
 // Legacy Types (for backward compatibility)
 // ============================================================================
 

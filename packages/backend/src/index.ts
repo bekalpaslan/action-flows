@@ -22,6 +22,7 @@ import sessionWindowsRouter from './routes/sessionWindows.js';
 import projectsRouter from './routes/projects.js';
 import discoveryRouter from './routes/discovery.js';
 import usersRouter from './routes/users.js';
+import toolbarRouter from './routes/toolbar.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent } from '@afw/shared';
 
 // Middleware imports (Agent A)
@@ -80,6 +81,7 @@ app.use('/api/session-windows', sessionWindowsRouter);
 app.use('/api/projects', projectsRouter);
 app.use('/api/discovery', discoveryRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/toolbar', toolbarRouter);
 
 // Global error handler (must be after all routes) (Agent A)
 app.use(globalErrorHandler);

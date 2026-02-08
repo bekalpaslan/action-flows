@@ -1,0 +1,133 @@
+/* InlineButtons container - horizontal flexbox layout */
+.inline-buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Individual inline button item */
+.inline-button-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #0e639c;
+  color: #ffffff;
+  border: 1px solid #1177bb;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.inline-button-item:hover:not(:disabled) {
+  background: #1177bb;
+  border-color: #1890e0;
+  transform: translateY(-1px);
+}
+
+.inline-button-item:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.inline-button-item:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loading state - gray with spinner animation */
+.inline-button-item.inline-button-loading {
+  background: #3c3c3c;
+  border-color: #4c4c4c;
+  color: #999999;
+}
+
+.inline-button-item.inline-button-loading:hover:not(:disabled) {
+  background: #3c3c3c;
+  border-color: #4c4c4c;
+  transform: none;
+}
+
+/* Success state - green */
+.inline-button-item.inline-button-success {
+  background: #0d8659;
+  border-color: #0fa570;
+  color: #ffffff;
+}
+
+.inline-button-item.inline-button-success:hover:not(:disabled) {
+  background: #0d8659;
+  border-color: #0fa570;
+  transform: none;
+}
+
+/* Error state - red */
+.inline-button-item.inline-button-error {
+  background: #941713;
+  border-color: #c8302e;
+  color: #ffffff;
+}
+
+.inline-button-item.inline-button-error:hover:not(:disabled) {
+  background: #941713;
+  border-color: #c8302e;
+  transform: none;
+}
+
+/* Icon and spinner styling */
+.inline-button-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+.inline-button-emoji {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.inline-button-spinner {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  flex-shrink: 0;
+  color: currentColor;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Label styling */
+.inline-button-label {
+  display: inline;
+  flex-shrink: 0;
+}
+
+/* Responsive: stack on very small screens */
+@media (max-width: 480px) {
+  .inline-buttons-container {
+    gap: 6px;
+  }
+
+  .inline-button-item {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+}
