@@ -11,6 +11,7 @@ import { clientRegistry } from './ws/clientRegistry.js';
 import { cleanupService } from './services/cleanup.js';
 import { setBroadcastFunction, shutdownAllWatchers } from './services/fileWatcher.js';
 import { claudeCliManager } from './services/claudeCliManager.js';
+import { registryStorage } from './services/registryStorage.js';
 import terminalRouter, { setBroadcastTerminalFunction } from './routes/terminal.js';
 import eventsRouter from './routes/events.js';
 import sessionsRouter from './routes/sessions.js';
@@ -24,7 +25,8 @@ import discoveryRouter from './routes/discovery.js';
 import usersRouter from './routes/users.js';
 import toolbarRouter from './routes/toolbar.js';
 import patternsRouter from './routes/patterns.js';
-import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent } from '@afw/shared';
+import registryRouter from './routes/registry.js';
+import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -86,6 +88,7 @@ app.use('/api/toolbar', toolbarRouter);
 app.use('/api/patterns', patternsRouter);
 // Note: patternsRouter also handles /bookmarks routes, registered at /api for cleaner URLs
 app.use('/api', patternsRouter);
+app.use('/api/registry', registryRouter);
 
 // Global error handler (must be after all routes) (Agent A)
 app.use(globalErrorHandler);
@@ -194,6 +197,21 @@ function broadcastClaudeCliEvent(
   clientRegistry.broadcastToSession(sessionId, message);
 }
 
+// Broadcast registry change events to all WebSocket clients (system-level, not session-specific)
+function broadcastRegistryEvent(event: RegistryChangedEvent) {
+  const message = JSON.stringify({
+    type: 'registry-event',
+    payload: event,
+  });
+
+  // Broadcast to all connected clients since registry changes affect everyone
+  clientRegistry.getAllClients().forEach((client) => {
+    if (client.readyState === 1) { // WebSocket.OPEN
+      client.send(message);
+    }
+  });
+}
+
 // Initialize Redis Pub/Sub if using Redis storage
 async function initializeRedisPubSub() {
   if (isAsyncStorage(storage) && storage.subscribe) {
@@ -243,6 +261,12 @@ if (isMainModule) {
 
     // Initialize Claude CLI broadcast function
     claudeCliManager.setBroadcastFunction(broadcastClaudeCliEvent);
+
+    // Initialize registry broadcast function for real-time registry updates
+    registryStorage.setBroadcastFunction(broadcastRegistryEvent);
+
+    // Initialize registry storage
+    await registryStorage.initialize();
 
     // Start cleanup service
     cleanupService.start();

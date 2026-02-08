@@ -51,6 +51,7 @@ export type {
   FileModifiedEvent,
   FileDeletedEvent,
   RegistryLineUpdatedEvent,
+  RegistryChangedEvent,
   ExecutionLogCreatedEvent,
   TerminalOutputEvent,
   ClaudeCliStartedEvent,
@@ -174,6 +175,24 @@ export type {
   FrequencyQuery,
   BookmarkCluster,
 } from './patternTypes.js';
+
+// ============================================================================
+// Registry Types
+// ============================================================================
+export type {
+  RegistryEntryId,
+  RegistryEntryType,
+  RegistryEntryStatus,
+  WorkflowDefinition,
+  ShortcutDefinition,
+  ModifierDefinition,
+  RegistryEntry,
+  PackCompatibility,
+  BehaviorPack,
+  ResolvedBehavior,
+  RegistryConflict,
+  RegistryFilter,
+} from './registryTypes.js';
 
 // ============================================================================
 // Legacy Types (for backward compatibility)

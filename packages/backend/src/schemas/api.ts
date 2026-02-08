@@ -309,3 +309,94 @@ export const analyzePatternSchema = z.object({
 });
 
 export type AnalyzePatternRequest = z.infer<typeof analyzePatternSchema>;
+
+// ============================================================================
+// Registry Schemas
+// ============================================================================
+
+/**
+ * Query schema for listing registry entries
+ * GET /api/registry/entries?type=button&source=core&enabled=true&packId=xyz&projectId=abc
+ */
+export const registryEntryQuerySchema = z.object({
+  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'modifier', 'pack']).optional(),
+  source: z.enum(['core', 'pack', 'project']).optional(),
+  enabled: z.string().optional(), // "true" or "false" as query param
+  packId: z.string().max(100).optional(),
+  projectId: z.string().max(200).optional(),
+});
+
+export type RegistryEntryQueryRequest = z.infer<typeof registryEntryQuerySchema>;
+
+/**
+ * Layer source schema for registry entries
+ */
+const layerSourceSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('core') }),
+  z.object({ type: z.literal('pack'), packId: z.string().min(1).max(100) }),
+  z.object({ type: z.literal('project'), projectId: z.string().min(1).max(200) }),
+]);
+
+/**
+ * Schema for creating a new registry entry
+ * POST /api/registry/entries
+ */
+export const createRegistryEntrySchema = z.object({
+  name: z.string().min(1, 'name required').max(200, 'name too long'),
+  description: z.string().max(2000, 'description too long'),
+  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'modifier', 'pack']),
+  source: layerSourceSchema,
+  version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Version must be in semver format (X.Y.Z)'),
+  status: z.enum(['active', 'inactive']).optional().default('active'),
+  enabled: z.boolean().optional().default(true),
+  data: z.object({
+    type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'modifier']),
+    definition: z.record(z.unknown()),
+  }),
+  metadata: z.record(z.unknown()).optional(),
+});
+
+export type CreateRegistryEntryRequest = z.infer<typeof createRegistryEntrySchema>;
+
+/**
+ * Schema for updating a registry entry
+ * PATCH /api/registry/entries/:id
+ */
+export const updateRegistryEntrySchema = z.object({
+  name: z.string().min(1).max(200).optional(),
+  description: z.string().max(2000).optional(),
+  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'modifier', 'pack']).optional(),
+  source: layerSourceSchema.optional(),
+  version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Version must be in semver format').optional(),
+  status: z.enum(['active', 'inactive']).optional(),
+  enabled: z.boolean().optional(),
+  data: z.object({
+    type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'modifier']),
+    definition: z.record(z.unknown()),
+  }).optional(),
+  metadata: z.record(z.unknown()).optional(),
+});
+
+export type UpdateRegistryEntryRequest = z.infer<typeof updateRegistryEntrySchema>;
+
+/**
+ * Schema for behavior pack installation
+ * POST /api/registry/packs
+ */
+export const behaviorPackSchema = z.object({
+  id: z.string().min(1, 'id required').max(100, 'id too long'),
+  name: z.string().min(1, 'name required').max(200, 'name too long'),
+  description: z.string().max(2000, 'description too long'),
+  author: z.string().min(1, 'author required').max(100, 'author too long'),
+  version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Version must be in semver format (X.Y.Z)'),
+  tags: z.array(z.string().max(50, 'tag too long')).max(20, 'too many tags').optional(),
+  compatibility: z.object({
+    minDashboardVersion: z.string().min(1, 'minDashboardVersion required'),
+    projectTypes: z.array(z.string().max(50)).max(20).optional(),
+  }),
+  entries: z.array(z.any()).optional(), // Array of RegistryEntry objects
+  dependencies: z.array(z.string().max(100)).max(50).optional(),
+  enabled: z.boolean().optional().default(true),
+});
+
+export type BehaviorPackRequest = z.infer<typeof behaviorPackSchema>;

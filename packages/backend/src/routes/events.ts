@@ -20,16 +20,21 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
     const event: WorkspaceEvent = req.body;
 
     // Store event (handles both async Redis and sync Memory)
-    await Promise.resolve(storage.addEvent(event.sessionId, event));
+    // Registry events may not have a sessionId - skip storage for those
+    if (event.sessionId) {
+      await Promise.resolve(storage.addEvent(event.sessionId, event));
+    }
 
-    // Update active step for file change attribution
-    if (event.type === 'step:spawned' || event.type === 'step:started') {
-      const stepEvent = event as any;
-      if (stepEvent.stepNumber && stepEvent.action) {
-        setActiveStep(event.sessionId, stepEvent.stepNumber, stepEvent.action);
+    // Update active step for file change attribution (step events always have sessionId)
+    if (event.sessionId) {
+      if (event.type === 'step:spawned' || event.type === 'step:started') {
+        const stepEvent = event as any;
+        if (stepEvent.stepNumber && stepEvent.action) {
+          setActiveStep(event.sessionId, stepEvent.stepNumber, stepEvent.action);
+        }
+      } else if (event.type === 'step:completed' || event.type === 'step:failed') {
+        clearActiveStep(event.sessionId);
       }
-    } else if (event.type === 'step:completed' || event.type === 'step:failed') {
-      clearActiveStep(event.sessionId);
     }
 
     // Broadcast to clients (WebSocket handler subscribes to Redis pub/sub)

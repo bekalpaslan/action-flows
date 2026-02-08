@@ -14,6 +14,8 @@ import type {
   ChainSourceString,
   DurationMs,
 } from './types.js';
+import type { RegistryEntryId, RegistryEntry } from './registryTypes.js';
+import type { LayerSource } from './selfEvolvingTypes.js';
 
 /**
  * Base event structure
@@ -334,6 +336,26 @@ export interface RegistryLineUpdatedEvent extends BaseEvent {
   registryType?: 'INDEX' | 'FLOWS' | 'ACTIONS' | 'LEARNINGS';
 }
 
+/**
+ * Registry changed event - system-level, not tied to a specific session.
+ * Extends BaseEvent but makes sessionId optional.
+ */
+export interface RegistryChangedEvent extends Omit<BaseEvent, 'sessionId'> {
+  type: 'registry:changed';
+
+  /** Optional session if change was triggered from a session context */
+  sessionId?: SessionId;
+
+  // Automatic fields
+  entryId: RegistryEntryId;
+  changeType: 'added' | 'updated' | 'removed' | 'enabled' | 'disabled';
+  source: LayerSource;
+
+  // Optional fields for tracking changes
+  previousValue?: RegistryEntry;
+  newValue?: RegistryEntry;
+}
+
 export interface ExecutionLogCreatedEvent extends BaseEvent {
   type: 'execution:log-created';
 
@@ -546,6 +568,7 @@ export type WorkspaceEvent =
   | FileModifiedEvent
   | FileDeletedEvent
   | RegistryLineUpdatedEvent
+  | RegistryChangedEvent
   | ExecutionLogCreatedEvent
   | TerminalOutputEvent
   | ClaudeCliStartedEvent
@@ -619,4 +642,6 @@ export const eventGuards = {
     event.type === 'frequency:updated',
   isBookmarkCreated: (event: WorkspaceEvent): event is BookmarkCreatedEvent =>
     event.type === 'bookmark:created',
+  isRegistryChanged: (event: WorkspaceEvent): event is RegistryChangedEvent =>
+    event.type === 'registry:changed',
 };
