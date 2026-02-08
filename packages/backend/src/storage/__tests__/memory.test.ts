@@ -1035,5 +1035,710 @@ describe('MemoryStorage', () => {
 
       expect(found).toBeUndefined();
     });
+
+    it('should enforce FIFO eviction when exceeding max chains', () => {
+      const sessionId = brandedTypes.sessionId('chain-evict-session');
+
+      // Add more than MAX_CHAINS_PER_SESSION (100)
+      for (let i = 0; i < 105; i++) {
+        storage.addChain(sessionId, {
+          id: brandedTypes.chainId(`chain-${i}`),
+          sessionId,
+          title: `Chain ${i}`,
+          status: 'active',
+          startedAt: brandedTypes.currentTimestamp(),
+          steps: [],
+        });
+      }
+
+      const chains = storage.getChains(sessionId);
+      expect(chains.length).toBeLessThanOrEqual(100);
+      // First chains should be evicted
+      expect(chains[0].title).not.toBe('Chain 0');
+    });
+
+    it('should return empty array for session with no chains', () => {
+      const sessionId = brandedTypes.sessionId('no-chains-session');
+      const chains = storage.getChains(sessionId);
+
+      expect(chains).toEqual([]);
+    });
+  });
+
+  describe('Session History and Cleanup', () => {
+    it('should evict oldest completed session when at capacity', () => {
+      const maxSessions = 1000;
+      const oldestSessionId = brandedTypes.sessionId('oldest-completed');
+
+      // Add oldest completed session
+      storage.setSession({
+        id: oldestSessionId,
+        status: 'completed',
+        startedAt: new Date('2020-01-01T00:00:00Z').toISOString() as Timestamp,
+        cwd: '/test',
+      });
+
+      // Fill to capacity with active sessions
+      for (let i = 0; i < maxSessions - 1; i++) {
+        storage.setSession({
+          id: brandedTypes.sessionId(`active-session-${i}`),
+          status: 'active',
+          startedAt: brandedTypes.currentTimestamp(),
+          cwd: '/test',
+        });
+      }
+
+      // Add one more session (should trigger eviction)
+      const newSessionId = brandedTypes.sessionId('trigger-eviction');
+      storage.setSession({
+        id: newSessionId,
+        status: 'active',
+        startedAt: brandedTypes.currentTimestamp(),
+        cwd: '/test',
+      });
+
+      // Oldest completed session should be evicted
+      expect(storage.getSession(oldestSessionId)).toBeUndefined();
+      expect(storage.getSession(newSessionId)).toBeDefined();
+    });
+
+    it('should evict oldest failed session when at capacity', () => {
+      const maxSessions = 1000;
+      const oldestFailedId = brandedTypes.sessionId('oldest-failed');
+
+      // Add oldest failed session
+      storage.setSession({
+        id: oldestFailedId,
+        status: 'failed',
+        startedAt: new Date('2020-01-01T00:00:00Z').toISOString() as Timestamp,
+        cwd: '/test',
+      });
+
+      // Fill to capacity
+      for (let i = 0; i < maxSessions - 1; i++) {
+        storage.setSession({
+          id: brandedTypes.sessionId(`filler-${i}`),
+          status: 'active',
+          startedAt: brandedTypes.currentTimestamp(),
+          cwd: '/test',
+        });
+      }
+
+      // Trigger eviction
+      storage.setSession({
+        id: brandedTypes.sessionId('trigger-2'),
+        status: 'active',
+        startedAt: brandedTypes.currentTimestamp(),
+        cwd: '/test',
+      });
+
+      expect(storage.getSession(oldestFailedId)).toBeUndefined();
+    });
+
+    it('should clean up all related data when evicting session', () => {
+      const maxSessions = 1000;
+      const targetSessionId = brandedTypes.sessionId('evict-with-data');
+
+      // Create session with full data
+      storage.setSession({
+        id: targetSessionId,
+        status: 'completed',
+        startedAt: new Date('2020-01-01T00:00:00Z').toISOString() as Timestamp,
+        cwd: '/test',
+      });
+
+      // Add related data
+      storage.addEvent(targetSessionId, {
+        type: 'step:spawned',
+        sessionId: targetSessionId,
+        timestamp: brandedTypes.currentTimestamp(),
+        stepNumber: 1 as any,
+        action: 'test',
+      } as WorkspaceEvent);
+
+      storage.addChain(targetSessionId, {
+        id: brandedTypes.chainId('test-chain'),
+        sessionId: targetSessionId,
+        title: 'Test',
+        status: 'active',
+        startedAt: brandedTypes.currentTimestamp(),
+        steps: [],
+      });
+
+      storage.queueCommand(targetSessionId, { type: 'pause' } as CommandPayload);
+      storage.queueInput(targetSessionId, { data: 'test' });
+
+      storage.addHarmonyCheck({
+        sessionId: targetSessionId,
+        timestamp: brandedTypes.currentTimestamp(),
+        result: 'valid',
+      } as HarmonyCheck);
+
+      // Fill to capacity and trigger eviction
+      for (let i = 0; i < maxSessions - 1; i++) {
+        storage.setSession({
+          id: brandedTypes.sessionId(`filler-evict-${i}`),
+          status: 'active',
+          startedAt: brandedTypes.currentTimestamp(),
+          cwd: '/test',
+        });
+      }
+
+      storage.setSession({
+        id: brandedTypes.sessionId('trigger-cleanup'),
+        status: 'active',
+        startedAt: brandedTypes.currentTimestamp(),
+        cwd: '/test',
+      });
+
+      // Verify all related data is cleaned
+      expect(storage.getSession(targetSessionId)).toBeUndefined();
+      expect(storage.getEvents(targetSessionId)).toEqual([]);
+      expect(storage.getChains(targetSessionId)).toEqual([]);
+      expect(storage.getCommands(targetSessionId)).toEqual([]);
+      expect(storage.getInput(targetSessionId)).toEqual([]);
+      expect(storage.getHarmonyChecks(targetSessionId)).toEqual([]);
+    });
+
+    it('should not evict active sessions when at capacity', () => {
+      const maxSessions = 1000;
+      const activeSessionId = brandedTypes.sessionId('keep-active');
+      const completedSessionId = brandedTypes.sessionId('evict-completed');
+
+      // Add completed session (older)
+      storage.setSession({
+        id: completedSessionId,
+        status: 'completed',
+        startedAt: new Date('2020-01-01T00:00:00Z').toISOString() as Timestamp,
+        cwd: '/test',
+      });
+
+      // Add active session (newer but should be kept)
+      storage.setSession({
+        id: activeSessionId,
+        status: 'active',
+        startedAt: new Date('2020-02-01T00:00:00Z').toISOString() as Timestamp,
+        cwd: '/test',
+      });
+
+      // Fill to capacity
+      for (let i = 0; i < maxSessions - 2; i++) {
+        storage.setSession({
+          id: brandedTypes.sessionId(`filler-active-${i}`),
+          status: 'active',
+          startedAt: brandedTypes.currentTimestamp(),
+          cwd: '/test',
+        });
+      }
+
+      // Trigger eviction
+      storage.setSession({
+        id: brandedTypes.sessionId('trigger-active-test'),
+        status: 'active',
+        startedAt: brandedTypes.currentTimestamp(),
+        cwd: '/test',
+      });
+
+      // Active session should be kept, completed should be evicted
+      expect(storage.getSession(activeSessionId)).toBeDefined();
+      expect(storage.getSession(completedSessionId)).toBeUndefined();
+    });
+  });
+
+  describe('Advanced Event Filtering', () => {
+    it('should handle events without timestamps gracefully', () => {
+      const sessionId = brandedTypes.sessionId('no-timestamp-events');
+
+      // Add event without timestamp
+      const eventNoTimestamp = {
+        type: 'step:spawned',
+        sessionId,
+        stepNumber: 1 as any,
+        action: 'test',
+      } as WorkspaceEvent;
+
+      storage.addEvent(sessionId, eventNoTimestamp);
+
+      // getEventsSince should include events without timestamps
+      const events = storage.getEventsSince(sessionId, brandedTypes.currentTimestamp());
+      expect(events).toHaveLength(1);
+    });
+
+    it('should filter events with exact timestamp boundary', () => {
+      const sessionId = brandedTypes.sessionId('boundary-events');
+      const boundaryTime = new Date('2024-06-01T12:00:00Z').toISOString() as Timestamp;
+
+      storage.addEvent(sessionId, {
+        type: 'step:spawned',
+        sessionId,
+        timestamp: boundaryTime,
+        stepNumber: 1 as any,
+        action: 'boundary-event',
+      } as WorkspaceEvent);
+
+      const events = storage.getEventsSince(sessionId, boundaryTime);
+      expect(events).toHaveLength(1);
+    });
+  });
+
+  describe('Client Management Edge Cases', () => {
+    it('should handle adding client without session ID', () => {
+      storage.addClient('client-no-session');
+
+      // Client should exist but not be associated with any session
+      const sessionId = brandedTypes.sessionId('random-session');
+      const clients = storage.getClientsForSession(sessionId);
+      expect(clients).toEqual([]);
+    });
+
+    it('should handle removing non-existent client', () => {
+      storage.removeClient('non-existent-client');
+
+      // Should not throw error
+      expect(storage.clients.size).toBe(0);
+    });
+
+    it('should handle multiple clients for same session', () => {
+      const sessionId = brandedTypes.sessionId('multi-client-session');
+
+      storage.addClient('client-a', sessionId);
+      storage.addClient('client-b', sessionId);
+      storage.addClient('client-c', sessionId);
+
+      const clients = storage.getClientsForSession(sessionId);
+      expect(clients).toHaveLength(3);
+      expect(clients).toContain('client-a');
+      expect(clients).toContain('client-b');
+      expect(clients).toContain('client-c');
+    });
+  });
+
+  describe('Session Window Edge Cases', () => {
+    it('should not delete config when unfollowing non-followed session', () => {
+      const sessionId = brandedTypes.sessionId('never-followed');
+      const config: SessionWindowConfig = { zoom: 1.0 } as SessionWindowConfig;
+
+      storage.setSessionWindowConfig(sessionId, config);
+      storage.unfollowSession(sessionId);
+
+      // Config should still exist since session was never followed
+      const retrieved = storage.getSessionWindowConfig(sessionId);
+      expect(retrieved).toBeDefined();
+    });
+
+    it('should handle multiple follow/unfollow cycles', () => {
+      const sessionId = brandedTypes.sessionId('cycle-session');
+
+      storage.followSession(sessionId);
+      storage.unfollowSession(sessionId);
+      storage.followSession(sessionId);
+      storage.unfollowSession(sessionId);
+
+      expect(storage.getFollowedSessions()).not.toContain(sessionId);
+    });
+  });
+
+  describe('Frequency Tracking Advanced', () => {
+    it('should track daily counts correctly', () => {
+      const projectId = 'proj-daily' as ProjectId;
+      const actionType = 'daily-action';
+
+      storage.trackAction(actionType, projectId);
+      storage.trackAction(actionType, projectId);
+
+      const record = storage.getFrequency(actionType, projectId);
+      const today = new Date().toISOString().split('T')[0];
+
+      expect(record?.dailyCounts[today]).toBe(2);
+    });
+
+    it('should update lastSeen on repeated tracking', () => {
+      const actionType = 'repeated-action';
+
+      storage.trackAction(actionType);
+      const firstRecord = storage.getFrequency(actionType);
+      const firstLastSeen = firstRecord?.lastSeen;
+
+      // Small delay
+      storage.trackAction(actionType);
+      const secondRecord = storage.getFrequency(actionType);
+
+      expect(secondRecord?.count).toBe(2);
+      expect(secondRecord?.lastSeen).toBeDefined();
+    });
+
+    it('should separate project-scoped and global actions', () => {
+      const projectId = 'proj-scope' as ProjectId;
+      const actionType = 'scoped-action';
+
+      storage.trackAction(actionType, projectId);
+      storage.trackAction(actionType); // global
+
+      const projectRecord = storage.getFrequency(actionType, projectId);
+      const globalRecord = storage.getFrequency(actionType);
+
+      expect(projectRecord?.count).toBe(1);
+      expect(globalRecord?.count).toBe(1);
+    });
+
+    it('should handle empty top actions for project', () => {
+      const projectId = 'proj-empty' as ProjectId;
+      const topActions = storage.getTopActions(projectId, 10);
+
+      expect(topActions).toEqual([]);
+    });
+  });
+
+  describe('Bookmark Filtering Advanced', () => {
+    it('should filter by userId', () => {
+      const projectId = 'proj-user-filter' as ProjectId;
+      const userId1 = brandedTypes.userId('user-a');
+      const userId2 = brandedTypes.userId('user-b');
+
+      storage.addBookmark({
+        id: 'bm-user-1',
+        projectId,
+        userId: userId1,
+        timestamp: brandedTypes.currentTimestamp(),
+        tags: [],
+      } as Bookmark);
+
+      storage.addBookmark({
+        id: 'bm-user-2',
+        projectId,
+        userId: userId2,
+        timestamp: brandedTypes.currentTimestamp(),
+        tags: [],
+      } as Bookmark);
+
+      const user1Bookmarks = storage.getBookmarks(projectId, { userId: userId1 });
+      expect(user1Bookmarks).toHaveLength(1);
+      expect(user1Bookmarks[0].userId).toBe(userId1);
+    });
+
+    it('should filter by timestamp (since)', () => {
+      const projectId = 'proj-time-filter' as ProjectId;
+      const oldTime = new Date('2020-01-01T00:00:00Z').toISOString() as Timestamp;
+      const newTime = new Date('2024-01-01T00:00:00Z').toISOString() as Timestamp;
+
+      storage.addBookmark({
+        id: 'bm-old',
+        projectId,
+        timestamp: oldTime,
+        tags: [],
+      } as Bookmark);
+
+      storage.addBookmark({
+        id: 'bm-new',
+        projectId,
+        timestamp: newTime,
+        tags: [],
+      } as Bookmark);
+
+      const recentBookmarks = storage.getBookmarks(projectId, {
+        since: '2023-01-01T00:00:00Z',
+      });
+
+      expect(recentBookmarks).toHaveLength(1);
+      expect(recentBookmarks[0].id).toBe('bm-new');
+    });
+
+    it('should filter by tags (any match)', () => {
+      const projectId = 'proj-tag-filter' as ProjectId;
+
+      storage.addBookmark({
+        id: 'bm-tag-1',
+        projectId,
+        timestamp: brandedTypes.currentTimestamp(),
+        tags: ['important', 'bug'],
+      } as Bookmark);
+
+      storage.addBookmark({
+        id: 'bm-tag-2',
+        projectId,
+        timestamp: brandedTypes.currentTimestamp(),
+        tags: ['feature'],
+      } as Bookmark);
+
+      const bugBookmarks = storage.getBookmarks(projectId, {
+        tags: ['bug', 'critical'],
+      });
+
+      expect(bugBookmarks).toHaveLength(1);
+      expect(bugBookmarks[0].id).toBe('bm-tag-1');
+    });
+
+    it('should combine multiple filters', () => {
+      const projectId = 'proj-multi-filter' as ProjectId;
+      const userId = brandedTypes.userId('filter-user');
+
+      storage.addBookmark({
+        id: 'bm-match',
+        projectId,
+        userId,
+        category: 'insight',
+        timestamp: brandedTypes.currentTimestamp(),
+        tags: ['important'],
+      } as Bookmark);
+
+      storage.addBookmark({
+        id: 'bm-no-match-category',
+        projectId,
+        userId,
+        category: 'error',
+        timestamp: brandedTypes.currentTimestamp(),
+        tags: ['important'],
+      } as Bookmark);
+
+      storage.addBookmark({
+        id: 'bm-no-match-user',
+        projectId,
+        userId: brandedTypes.userId('other-user'),
+        category: 'insight',
+        timestamp: brandedTypes.currentTimestamp(),
+        tags: ['important'],
+      } as Bookmark);
+
+      const filtered = storage.getBookmarks(projectId, {
+        userId,
+        category: 'insight',
+        tags: ['important'],
+      });
+
+      expect(filtered).toHaveLength(1);
+      expect(filtered[0].id).toBe('bm-match');
+    });
+  });
+
+  describe('Pattern Filtering Advanced', () => {
+    it('should filter by timestamp (since)', () => {
+      const projectId = 'proj-pattern-time' as ProjectId;
+      const oldTime = new Date('2020-01-01T00:00:00Z').toISOString() as Timestamp;
+      const newTime = new Date('2024-01-01T00:00:00Z').toISOString() as Timestamp;
+
+      storage.addPattern({
+        id: 'pat-old',
+        projectId,
+        patternType: 'commit-format',
+        confidence: 0.9,
+        detectedAt: oldTime,
+      } as DetectedPattern);
+
+      storage.addPattern({
+        id: 'pat-new',
+        projectId,
+        patternType: 'commit-format',
+        confidence: 0.9,
+        detectedAt: newTime,
+      } as DetectedPattern);
+
+      const recentPatterns = storage.getPatterns(projectId, {
+        since: '2023-01-01T00:00:00Z',
+      });
+
+      expect(recentPatterns).toHaveLength(1);
+      expect(recentPatterns[0].id).toBe('pat-new');
+    });
+
+    it('should combine type and confidence filters', () => {
+      const projectId = 'proj-pattern-combo' as ProjectId;
+
+      storage.addPattern({
+        id: 'pat-match',
+        projectId,
+        patternType: 'commit-format',
+        confidence: 0.95,
+        detectedAt: brandedTypes.currentTimestamp(),
+      } as DetectedPattern);
+
+      storage.addPattern({
+        id: 'pat-wrong-type',
+        projectId,
+        patternType: 'action-sequence',
+        confidence: 0.95,
+        detectedAt: brandedTypes.currentTimestamp(),
+      } as DetectedPattern);
+
+      storage.addPattern({
+        id: 'pat-low-confidence',
+        projectId,
+        patternType: 'commit-format',
+        confidence: 0.5,
+        detectedAt: brandedTypes.currentTimestamp(),
+      } as DetectedPattern);
+
+      const filtered = storage.getPatterns(projectId, {
+        patternType: 'commit-format',
+        minConfidence: 0.8,
+      });
+
+      expect(filtered).toHaveLength(1);
+      expect(filtered[0].id).toBe('pat-match');
+    });
+  });
+
+  describe('Harmony Tracking Advanced', () => {
+    it('should track checks by project ID', () => {
+      const sessionId = brandedTypes.sessionId('proj-harmony-session');
+      const projectId = 'proj-harmony' as ProjectId;
+
+      storage.addHarmonyCheck({
+        sessionId,
+        projectId,
+        timestamp: brandedTypes.currentTimestamp(),
+        result: 'valid',
+      } as HarmonyCheck);
+
+      const projectChecks = storage.getHarmonyChecks(projectId);
+      expect(projectChecks).toHaveLength(1);
+    });
+
+    it('should limit session checks to 100 (FIFO)', () => {
+      const sessionId = brandedTypes.sessionId('limit-harmony-session');
+
+      // Add 105 checks
+      for (let i = 0; i < 105; i++) {
+        storage.addHarmonyCheck({
+          sessionId,
+          timestamp: brandedTypes.currentTimestamp(),
+          result: 'valid',
+          parsedFormat: `format-${i}`,
+        } as HarmonyCheck);
+      }
+
+      const checks = storage.getHarmonyChecks(sessionId);
+      expect(checks.length).toBeLessThanOrEqual(100);
+    });
+
+    it('should filter by formatType', () => {
+      const sessionId = brandedTypes.sessionId('sess-format-filter');
+
+      storage.addHarmonyCheck({
+        sessionId,
+        timestamp: brandedTypes.currentTimestamp(),
+        result: 'valid',
+        parsedFormat: 'json',
+      } as HarmonyCheck);
+
+      storage.addHarmonyCheck({
+        sessionId,
+        timestamp: brandedTypes.currentTimestamp(),
+        result: 'valid',
+        parsedFormat: 'xml',
+      } as HarmonyCheck);
+
+      // First verify all checks are stored
+      const allChecks = storage.getHarmonyChecks(sessionId, {});
+      expect(allChecks).toHaveLength(2);
+
+      const jsonChecks = storage.getHarmonyChecks(sessionId, {
+        formatType: 'json',
+      });
+
+      expect(jsonChecks).toHaveLength(1);
+      expect(jsonChecks[0].parsedFormat).toBe('json');
+    });
+
+    it('should filter by since timestamp', () => {
+      const sessionId = brandedTypes.sessionId('sess-time-filter');
+      const oldTime = new Date('2020-01-01T00:00:00Z').toISOString() as Timestamp;
+      const newTime = new Date('2024-01-01T00:00:00Z').toISOString() as Timestamp;
+
+      storage.addHarmonyCheck({
+        sessionId,
+        timestamp: oldTime,
+        result: 'valid',
+      } as HarmonyCheck);
+
+      storage.addHarmonyCheck({
+        sessionId,
+        timestamp: newTime,
+        result: 'valid',
+      } as HarmonyCheck);
+
+      const recentChecks = storage.getHarmonyChecks(sessionId, {
+        since: '2023-01-01T00:00:00Z' as Timestamp,
+      });
+
+      expect(recentChecks).toHaveLength(1);
+    });
+
+    it('should apply limit filter (last N checks)', () => {
+      const sessionId = brandedTypes.sessionId('sess-limit-filter');
+
+      for (let i = 0; i < 20; i++) {
+        storage.addHarmonyCheck({
+          sessionId,
+          timestamp: brandedTypes.currentTimestamp(),
+          result: 'valid',
+        } as HarmonyCheck);
+      }
+
+      const limitedChecks = storage.getHarmonyChecks(sessionId, { limit: 5 });
+      expect(limitedChecks).toHaveLength(5);
+    });
+
+    it('should calculate format breakdown in metrics', () => {
+      const sessionId = brandedTypes.sessionId('sess-breakdown');
+
+      storage.addHarmonyCheck({
+        sessionId,
+        timestamp: brandedTypes.currentTimestamp(),
+        result: 'valid',
+        parsedFormat: 'json',
+      } as HarmonyCheck);
+
+      storage.addHarmonyCheck({
+        sessionId,
+        timestamp: brandedTypes.currentTimestamp(),
+        result: 'valid',
+        parsedFormat: 'json',
+      } as HarmonyCheck);
+
+      storage.addHarmonyCheck({
+        sessionId,
+        timestamp: brandedTypes.currentTimestamp(),
+        result: 'valid',
+        parsedFormat: 'xml',
+      } as HarmonyCheck);
+
+      const metrics = storage.getHarmonyMetrics(sessionId, 'session');
+
+      expect(metrics.formatBreakdown['json']).toBe(2);
+      expect(metrics.formatBreakdown['xml']).toBe(1);
+    });
+
+    it('should handle checks with no parsedFormat', () => {
+      const sessionId = brandedTypes.sessionId('sess-no-format');
+
+      storage.addHarmonyCheck({
+        sessionId,
+        timestamp: brandedTypes.currentTimestamp(),
+        result: 'valid',
+      } as HarmonyCheck);
+
+      const metrics = storage.getHarmonyMetrics(sessionId, 'session');
+
+      expect(metrics.formatBreakdown['Unknown']).toBe(1);
+    });
+
+    it('should slice recent violations correctly', () => {
+      const sessionId = brandedTypes.sessionId('sess-violations');
+
+      // Add 15 violations
+      for (let i = 0; i < 15; i++) {
+        storage.addHarmonyCheck({
+          sessionId,
+          timestamp: brandedTypes.currentTimestamp(),
+          result: 'violation',
+          parsedFormat: `violation-${i}`,
+        } as HarmonyCheck);
+      }
+
+      const metrics = storage.getHarmonyMetrics(sessionId, 'session');
+
+      // Should only return last 10 violations
+      expect(metrics.recentViolations).toHaveLength(10);
+    });
   });
 });
