@@ -109,8 +109,12 @@ function computeLevels(steps: ChainStep[]): Map<number, ChainStep[]> {
     }
 
     if (visited.has(stepNum)) {
-      console.warn(`Cycle detected at step ${stepNum}`);
-      return 0;
+      console.warn(`[swimlaneLayout] Cycle detected at step ${stepNum}, placing at current level`);
+      // Place cyclic node at same level as its position in the chain
+      // to avoid layout breakage — the node will appear in sequence
+      const fallbackLevel = stepMap.has(stepNum) ? Math.max(0, stepNum - 1) : 0;
+      levelCache.set(stepNum, fallbackLevel);
+      return fallbackLevel;
     }
 
     visited.add(stepNum);

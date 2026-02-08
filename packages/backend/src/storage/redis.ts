@@ -64,6 +64,9 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
   // In-memory client registry (not persisted, for current instance only)
   const localClients = new Map<string, SessionId | undefined>();
 
+  // Track subscription handlers for cleanup on disconnect
+  const subscriptionHandlers = new Map<string, (channel: string, message: string) => void>();
+
   // TTL for sessions (24 hours in seconds)
   const SESSION_TTL = 86400;
   const EVENT_TTL = 86400; // Same TTL as sessions
@@ -286,10 +289,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     async unfollowSession(sessionId: SessionId) {
       try {
         const key = `${keyPrefix}followed`;
-        await redis.srem(key, sessionId);
-        // Also delete config
-        const configKey = `${keyPrefix}sw-config:${sessionId}`;
-        await redis.del(configKey);
+        const removed = await redis.srem(key, sessionId);
+        // Only delete config if session was actually in the followed set
+        if (removed > 0) {
+          const configKey = `${keyPrefix}sw-config:${sessionId}`;
+          await redis.del(configKey);
+        }
       } catch (error) {
         console.error(`[Redis] Error unfollowing session ${sessionId}:`, error);
       }
@@ -329,11 +334,13 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     // === Pub/Sub ===
     async subscribe(channel: string, callback: (message: string) => void) {
       try {
-        subClient.on('message', (subscribeChannel: string, message: string) => {
+        const handler = (subscribeChannel: string, message: string) => {
           if (subscribeChannel === channel) {
             callback(message);
           }
-        });
+        };
+        subscriptionHandlers.set(channel, handler);
+        subClient.on('message', handler);
         await subClient.subscribe(channel);
         console.log(`[Redis] Subscribed to channel: ${channel}`);
       } catch (error) {
@@ -351,6 +358,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async disconnect() {
       try {
+        // Remove all subscription listeners before quitting
+        for (const [, handler] of subscriptionHandlers) {
+          subClient.removeListener('message', handler);
+        }
+        subscriptionHandlers.clear();
+
         await redis.quit();
         await pubClient.quit();
         await subClient.quit();

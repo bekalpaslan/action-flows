@@ -38,11 +38,13 @@ export function QuickActionSettings({
   const [actions, setActions] = useState<QuickActionDefinition[]>(quickActions);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<QuickActionDefinition>>({});
+  const [isNewUnsaved, setIsNewUnsaved] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   const handleAddNew = () => {
     const newAction: QuickActionDefinition = {
       id: `action-${Date.now()}`,
-      label: 'New Action',
+      label: '',
       icon: 'check',
       value: '',
       alwaysShow: false,
@@ -51,6 +53,7 @@ export function QuickActionSettings({
     setActions([...actions, newAction]);
     setEditingId(newAction.id);
     setEditForm(newAction);
+    setIsNewUnsaved(true);
   };
 
   const handleEdit = (action: QuickActionDefinition) => {
@@ -59,8 +62,7 @@ export function QuickActionSettings({
   };
 
   const handleSaveEdit = () => {
-    if (!editingId || !editForm.label || !editForm.value) {
-      alert('Label and value are required');
+    if (!editingId || !editForm.label?.trim() || !editForm.value?.trim()) {
       return;
     }
 
@@ -71,22 +73,33 @@ export function QuickActionSettings({
     setActions(updated);
     setEditingId(null);
     setEditForm({});
+    setIsNewUnsaved(false);
   };
 
   const handleCancelEdit = () => {
-    // Remove action if it was newly created and not saved
-    if (editForm.label === 'New Action' && editForm.value === '') {
+    // Remove action if it was newly created and never saved
+    if (isNewUnsaved) {
       setActions(actions.filter(a => a.id !== editingId));
     }
 
     setEditingId(null);
     setEditForm({});
+    setIsNewUnsaved(false);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm('Delete this quick action?')) {
-      setActions(actions.filter(a => a.id !== id));
+  const handleDeleteRequest = (id: string) => {
+    setPendingDeleteId(id);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (pendingDeleteId) {
+      setActions(actions.filter(a => a.id !== pendingDeleteId));
+      setPendingDeleteId(null);
     }
+  };
+
+  const handleDeleteCancel = () => {
+    setPendingDeleteId(null);
   };
 
   const handleSave = () => {
@@ -182,20 +195,42 @@ export function QuickActionSettings({
                     </div>
 
                     <div className="action-buttons">
-                      <button
-                        className="action-btn edit-btn"
-                        onClick={() => handleEdit(action)}
-                        title="Edit"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="action-btn delete-btn"
-                        onClick={() => handleDelete(action.id)}
-                        title="Delete"
-                      >
-                        Delete
-                      </button>
+                      {pendingDeleteId === action.id ? (
+                        <>
+                          <span className="delete-confirm-label">Delete?</span>
+                          <button
+                            className="action-btn confirm-btn"
+                            onClick={handleDeleteConfirm}
+                            title="Confirm delete"
+                          >
+                            Yes
+                          </button>
+                          <button
+                            className="action-btn cancel-btn"
+                            onClick={handleDeleteCancel}
+                            title="Cancel delete"
+                          >
+                            No
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            className="action-btn edit-btn"
+                            onClick={() => handleEdit(action)}
+                            title="Edit"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="action-btn delete-btn"
+                            onClick={() => handleDeleteRequest(action.id)}
+                            title="Delete"
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 )}

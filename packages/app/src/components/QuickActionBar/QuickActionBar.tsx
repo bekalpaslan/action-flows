@@ -57,28 +57,38 @@ export function QuickActionBar({
     }
   }, [lifecycleState, isWaitingForInput]);
 
+  // Pre-compile regex patterns (only recomputed when quickActions change)
+  const compiledPatterns = useMemo(() => {
+    const map = new Map<string, RegExp[]>();
+    for (const action of quickActions) {
+      if (action.contextPatterns && action.contextPatterns.length > 0) {
+        const regexes: RegExp[] = [];
+        for (const pattern of action.contextPatterns) {
+          try {
+            regexes.push(new RegExp(pattern, 'i'));
+          } catch {
+            // Skip invalid regex
+          }
+        }
+        map.set(action.id, regexes);
+      }
+    }
+    return map;
+  }, [quickActions]);
+
   // Filter quick actions based on context (alwaysShow or matching pattern)
   const visibleActions = useMemo(() => {
     return quickActions.filter(action => {
       if (action.alwaysShow) return true;
 
+      const patterns = compiledPatterns.get(action.id);
       // If no patterns defined, show by default
-      if (!action.contextPatterns || action.contextPatterns.length === 0) {
-        return true;
-      }
+      if (!patterns || patterns.length === 0) return true;
 
-      // Check if any pattern matches last output
-      return action.contextPatterns.some(pattern => {
-        try {
-          const regex = new RegExp(pattern, 'i');
-          return regex.test(lastOutput);
-        } catch {
-          // Invalid regex, skip
-          return false;
-        }
-      });
+      // Check if any pre-compiled pattern matches last output
+      return patterns.some(regex => regex.test(lastOutput));
     });
-  }, [quickActions, lastOutput]);
+  }, [quickActions, lastOutput, compiledPatterns]);
 
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();
