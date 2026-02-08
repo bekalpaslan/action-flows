@@ -195,6 +195,16 @@ export type {
 } from './registryTypes.js';
 
 // ============================================================================
+// Harmony Detection Types
+// ============================================================================
+export type {
+  HarmonyResult,
+  HarmonyCheck,
+  HarmonyMetrics,
+  HarmonyFilter,
+} from './harmonyTypes.js';
+
+// ============================================================================
 // Orchestrator Output Contract
 // ============================================================================
 export * from './contract/index.js';

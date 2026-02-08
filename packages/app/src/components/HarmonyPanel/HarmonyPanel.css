@@ -1,0 +1,249 @@
+/**
+ * HarmonyPanel styles
+ */
+
+.harmony-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Header */
+.harmony-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.harmony-panel__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Metrics Grid */
+.harmony-panel__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.harmony-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem;
+  text-align: center;
+}
+
+.harmony-metric__label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.harmony-metric__value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.harmony-metric--success .harmony-metric__value {
+  color: #28a745;
+}
+
+.harmony-metric--warning .harmony-metric__value {
+  color: #ffc107;
+}
+
+.harmony-metric--danger .harmony-metric__value {
+  color: #dc3545;
+}
+
+/* Sections */
+.harmony-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.harmony-panel__section-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+}
+
+/* Format Breakdown */
+.harmony-panel__format-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.harmony-format-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+}
+
+.harmony-format-item__name {
+  font-size: 0.875rem;
+  color: #333;
+}
+
+.harmony-format-item__count {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #666;
+}
+
+/* Violations */
+.harmony-panel__violations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.harmony-violation {
+  border: 1px solid #f5c6cb;
+  border-radius: 0.25rem;
+  background-color: #f8d7da;
+}
+
+.harmony-violation__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.harmony-violation__header:hover {
+  background-color: #f5c6cb;
+}
+
+.harmony-violation__icon {
+  color: #721c24;
+  font-weight: bold;
+}
+
+.harmony-violation__timestamp {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #721c24;
+}
+
+.harmony-violation__expand {
+  color: #721c24;
+  font-size: 0.75rem;
+}
+
+.harmony-violation__details {
+  padding: 0.75rem;
+  background-color: #ffffff;
+  border-top: 1px solid #f5c6cb;
+}
+
+.harmony-violation__text {
+  margin: 0;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 0.25rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8125rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.harmony-violation__context {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: #555;
+}
+
+/* Footer */
+.harmony-panel__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.harmony-panel__last-check {
+  font-size: 0.8125rem;
+  color: #666;
+}
+
+.harmony-panel__refresh {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.harmony-panel__refresh:hover {
+  background-color: #0056b3;
+}
+
+/* Loading & Error States */
+.harmony-panel--loading,
+.harmony-panel--error,
+.harmony-panel--empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.harmony-panel__spinner {
+  color: #666;
+  font-size: 1rem;
+}
+
+.harmony-panel__error {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: #721c24;
+}
+
+.harmony-panel__retry {
+  padding: 0.5rem 1rem;
+  background-color: #dc3545;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.harmony-panel__retry:hover {
+  background-color: #c82333;
+}

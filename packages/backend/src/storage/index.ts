@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
 
@@ -89,6 +89,17 @@ export interface Storage {
   // Patterns (detected)
   addPattern(pattern: DetectedPattern): void | Promise<void>;
   getPatterns(projectId: ProjectId, filter?: PatternFilter): DetectedPattern[] | Promise<DetectedPattern[]>;
+
+  // Harmony tracking
+  addHarmonyCheck(check: HarmonyCheck): void | Promise<void>;
+  getHarmonyChecks(
+    target: SessionId | ProjectId,
+    filter?: HarmonyFilter
+  ): HarmonyCheck[] | Promise<HarmonyCheck[]>;
+  getHarmonyMetrics(
+    target: SessionId | ProjectId,
+    targetType: 'session' | 'project'
+  ): HarmonyMetrics | Promise<HarmonyMetrics>;
 
   // Pub/Sub support (Redis only)
   subscribe?(channel: string, callback: (message: string) => void): Promise<void>;

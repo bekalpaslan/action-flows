@@ -26,7 +26,9 @@ import usersRouter from './routes/users.js';
 import toolbarRouter from './routes/toolbar.js';
 import patternsRouter from './routes/patterns.js';
 import registryRouter from './routes/registry.js';
+import harmonyRouter from './routes/harmony.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
+import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -89,6 +91,7 @@ app.use('/api/patterns', patternsRouter);
 // Note: patternsRouter also handles /bookmarks routes, registered at /api for cleaner URLs
 app.use('/api', patternsRouter);
 app.use('/api/registry', registryRouter);
+app.use('/api/harmony', harmonyRouter);
 
 // Global error handler (must be after all routes) (Agent A)
 app.use(globalErrorHandler);
@@ -212,6 +215,20 @@ function broadcastRegistryEvent(event: RegistryChangedEvent) {
   });
 }
 
+// Broadcast harmony events to WebSocket clients subscribed to this session
+function broadcastHarmonyEvent(
+  sessionId: SessionId,
+  event: WorkspaceEvent
+) {
+  const message = JSON.stringify({
+    type: 'event',
+    sessionId,
+    payload: event,
+  });
+
+  clientRegistry.broadcastToSession(sessionId, message);
+}
+
 // Initialize Redis Pub/Sub if using Redis storage
 async function initializeRedisPubSub() {
   if (isAsyncStorage(storage) && storage.subscribe) {
@@ -267,6 +284,10 @@ if (isMainModule) {
 
     // Initialize registry storage
     await registryStorage.initialize();
+
+    // Initialize harmony detector
+    initializeHarmonyDetector(storage);
+    harmonyDetector.setBroadcastFunction(broadcastHarmonyEvent);
 
     // Start cleanup service
     cleanupService.start();

@@ -1,5 +1,6 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
+import { brandedTypes } from '@afw/shared';
 
 /**
  * In-memory storage for sessions, chains, events, commands, and input
@@ -83,6 +84,13 @@ export interface MemoryStorage {
   patterns: Map<string, DetectedPattern>;
   addPattern(pattern: DetectedPattern): void;
   getPatterns(projectId: ProjectId, filter?: PatternFilter): DetectedPattern[];
+
+  // Harmony tracking
+  harmonyChecks: Map<SessionId, HarmonyCheck[]>;
+  harmonyChecksByProject: Map<ProjectId, HarmonyCheck[]>;
+  addHarmonyCheck(check: HarmonyCheck): void;
+  getHarmonyChecks(target: SessionId | ProjectId, filter?: HarmonyFilter): HarmonyCheck[];
+  getHarmonyMetrics(target: SessionId | ProjectId, targetType: 'session' | 'project'): HarmonyMetrics;
 
   // Internal eviction method
   _evictOldestCompletedSession(): void;
@@ -376,6 +384,109 @@ export const storage: MemoryStorage = {
     return results;
   },
 
+  // Harmony tracking
+  harmonyChecks: new Map(),
+  harmonyChecksByProject: new Map(),
+
+  addHarmonyCheck(check: HarmonyCheck) {
+    // Add to session checks
+    const sessionChecks = this.harmonyChecks.get(check.sessionId) || [];
+    sessionChecks.push(check);
+    this.harmonyChecks.set(check.sessionId, sessionChecks);
+
+    // Add to project checks if projectId is present
+    if (check.projectId) {
+      const projectChecks = this.harmonyChecksByProject.get(check.projectId) || [];
+      projectChecks.push(check);
+      this.harmonyChecksByProject.set(check.projectId, projectChecks);
+    }
+
+    // Limit storage per session (keep last 100 checks)
+    if (sessionChecks.length > 100) {
+      sessionChecks.shift(); // Remove oldest
+    }
+  },
+
+  getHarmonyChecks(target: SessionId | ProjectId, filter?: HarmonyFilter) {
+    // Determine if target is session or project (check if it starts with 'sess_' or 'proj_')
+    const isSession = target.toString().startsWith('sess') || target.toString().startsWith('session');
+    const checks = isSession
+      ? this.harmonyChecks.get(target as SessionId) || []
+      : this.harmonyChecksByProject.get(target as ProjectId) || [];
+
+    // Apply filters
+    let filtered = [...checks]; // Create a copy
+
+    if (filter?.result) {
+      filtered = filtered.filter(c => c.result === filter.result);
+    }
+
+    if (filter?.formatType) {
+      filtered = filtered.filter(c => c.parsedFormat === filter.formatType);
+    }
+
+    if (filter?.since) {
+      filtered = filtered.filter(c => c.timestamp >= filter.since!);
+    }
+
+    if (filter?.limit) {
+      filtered = filtered.slice(-filter.limit);
+    }
+
+    return filtered;
+  },
+
+  getHarmonyMetrics(target: SessionId | ProjectId, targetType: 'session' | 'project') {
+    const checks = this.getHarmonyChecks(target, {});
+
+    if (checks.length === 0) {
+      return {
+        totalChecks: 0,
+        validCount: 0,
+        degradedCount: 0,
+        violationCount: 0,
+        harmonyPercentage: 100,
+        recentViolations: [],
+        formatBreakdown: {},
+        lastCheck: brandedTypes.currentTimestamp(),
+      };
+    }
+
+    // Calculate counts
+    const validCount = checks.filter(c => c.result === 'valid').length;
+    const degradedCount = checks.filter(c => c.result === 'degraded').length;
+    const violationCount = checks.filter(c => c.result === 'violation').length;
+
+    // Calculate harmony percentage
+    const harmonyPercentage = ((validCount + degradedCount) / checks.length) * 100;
+
+    // Get recent violations
+    const recentViolations = checks
+      .filter(c => c.result === 'violation')
+      .slice(-10);
+
+    // Calculate format breakdown
+    const formatBreakdown: Record<string, number> = {};
+    for (const check of checks) {
+      const format = check.parsedFormat || 'Unknown';
+      formatBreakdown[format] = (formatBreakdown[format] || 0) + 1;
+    }
+
+    // Get last check timestamp
+    const lastCheck = checks[checks.length - 1].timestamp;
+
+    return {
+      totalChecks: checks.length,
+      validCount,
+      degradedCount,
+      violationCount,
+      harmonyPercentage,
+      recentViolations,
+      formatBreakdown,
+      lastCheck,
+    };
+  },
+
   /**
    * Evict the oldest completed or failed session when capacity is reached
    * This is called when the session limit is exceeded
@@ -398,6 +509,7 @@ export const storage: MemoryStorage = {
       this.chains.delete(oldestId);
       this.commandsQueue.delete(oldestId);
       this.inputQueue.delete(oldestId);
+      this.harmonyChecks.delete(oldestId);
     }
   },
 };

@@ -550,6 +550,50 @@ export interface BookmarkCreatedEvent extends BaseEvent {
 }
 
 /**
+ * Harmony detection events
+ */
+
+export interface HarmonyCheckEvent extends BaseEvent {
+  type: 'harmony:check';
+
+  // Automatic fields
+  checkId: string;
+  result: 'valid' | 'degraded' | 'violation';
+  parsedFormat: string | null;
+
+  // Parsed fields (nullable)
+  text?: string | null; // Truncated output
+  missingFields?: string[] | null;
+  context?: {
+    stepNumber?: number;
+    chainId?: string;
+  };
+}
+
+export interface HarmonyViolationEvent extends BaseEvent {
+  type: 'harmony:violation';
+
+  // Automatic fields
+  checkId: string;
+  text: string; // Raw text that failed to parse
+
+  // Optional context
+  context?: {
+    stepNumber?: number;
+    chainId?: string;
+  };
+}
+
+export interface HarmonyMetricsUpdatedEvent extends BaseEvent {
+  type: 'harmony:metrics-updated';
+
+  // Automatic fields
+  harmonyPercentage: number;
+  totalChecks: number;
+  violationCount: number;
+}
+
+/**
  * Union type for all events
  */
 export type WorkspaceEvent =
@@ -582,7 +626,10 @@ export type WorkspaceEvent =
   | FlowNodeClickedEvent
   | PatternDetectedEvent
   | FrequencyUpdatedEvent
-  | BookmarkCreatedEvent;
+  | BookmarkCreatedEvent
+  | HarmonyCheckEvent
+  | HarmonyViolationEvent
+  | HarmonyMetricsUpdatedEvent;
 
 /**
  * Type guard functions for discriminating event types
@@ -644,4 +691,10 @@ export const eventGuards = {
     event.type === 'bookmark:created',
   isRegistryChanged: (event: WorkspaceEvent): event is RegistryChangedEvent =>
     event.type === 'registry:changed',
+  isHarmonyCheck: (event: WorkspaceEvent): event is HarmonyCheckEvent =>
+    event.type === 'harmony:check',
+  isHarmonyViolation: (event: WorkspaceEvent): event is HarmonyViolationEvent =>
+    event.type === 'harmony:violation',
+  isHarmonyMetricsUpdated: (event: WorkspaceEvent): event is HarmonyMetricsUpdatedEvent =>
+    event.type === 'harmony:metrics-updated',
 };

@@ -1,6 +1,7 @@
 import { Redis } from 'ioredis';
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
+import { brandedTypes } from '@afw/shared';
 
 /**
  * Redis storage adapter for sessions, chains, events, commands, and input
@@ -57,6 +58,11 @@ export interface RedisStorage {
   // Patterns (detected)
   addPattern(pattern: DetectedPattern): Promise<void>;
   getPatterns(projectId: ProjectId, filter?: PatternFilter): Promise<DetectedPattern[]>;
+
+  // Harmony tracking
+  addHarmonyCheck(check: HarmonyCheck): Promise<void>;
+  getHarmonyChecks(target: SessionId | ProjectId, filter?: HarmonyFilter): Promise<HarmonyCheck[]>;
+  getHarmonyMetrics(target: SessionId | ProjectId, targetType: 'session' | 'project'): Promise<HarmonyMetrics>;
 
   // Pub/Sub support
   subscribe(channel: string, callback: (message: string) => void): Promise<void>;
@@ -535,6 +541,133 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       } catch (error) {
         console.error(`[Redis] Error getting patterns for ${projectId}:`, error);
         return [];
+      }
+    },
+
+    // === Harmony Tracking ===
+    async addHarmonyCheck(check: HarmonyCheck) {
+      try {
+        const key = `${keyPrefix}harmony:session:${check.sessionId}`;
+
+        // Store check in Redis list (LPUSH to add to left, LTRIM to limit size)
+        await redis.lpush(key, JSON.stringify(check));
+        await redis.ltrim(key, 0, 99); // Keep only last 100 checks
+
+        // Set TTL (7 days)
+        await redis.expire(key, 7 * 24 * 60 * 60);
+
+        // Also store by project if projectId is present
+        if (check.projectId) {
+          const projectKey = `${keyPrefix}harmony:project:${check.projectId}`;
+          await redis.lpush(projectKey, JSON.stringify(check));
+          await redis.ltrim(projectKey, 0, 199); // Keep more for project level
+          await redis.expire(projectKey, 7 * 24 * 60 * 60);
+        }
+      } catch (error) {
+        console.error(`[Redis] Error adding harmony check:`, error);
+      }
+    },
+
+    async getHarmonyChecks(target: SessionId | ProjectId, filter?: HarmonyFilter) {
+      try {
+        // Determine key
+        const isSession = target.toString().startsWith('sess') || target.toString().startsWith('session');
+        const key = isSession
+          ? `${keyPrefix}harmony:session:${target}`
+          : `${keyPrefix}harmony:project:${target}`;
+
+        // Get all checks from Redis list
+        const raw = await redis.lrange(key, 0, -1);
+        const checks: HarmonyCheck[] = raw.map(s => JSON.parse(s));
+
+        // Apply filters
+        let filtered = checks;
+
+        if (filter?.result) {
+          filtered = filtered.filter(c => c.result === filter.result);
+        }
+
+        if (filter?.formatType) {
+          filtered = filtered.filter(c => c.parsedFormat === filter.formatType);
+        }
+
+        if (filter?.since) {
+          filtered = filtered.filter(c => c.timestamp >= filter.since!);
+        }
+
+        if (filter?.limit) {
+          filtered = filtered.slice(0, filter.limit);
+        }
+
+        return filtered;
+      } catch (error) {
+        console.error(`[Redis] Error getting harmony checks:`, error);
+        return [];
+      }
+    },
+
+    async getHarmonyMetrics(target: SessionId | ProjectId, targetType: 'session' | 'project') {
+      try {
+        const checks = await storage.getHarmonyChecks(target, {});
+
+        if (checks.length === 0) {
+          return {
+            totalChecks: 0,
+            validCount: 0,
+            degradedCount: 0,
+            violationCount: 0,
+            harmonyPercentage: 100,
+            recentViolations: [],
+            formatBreakdown: {},
+            lastCheck: brandedTypes.currentTimestamp(),
+          };
+        }
+
+        // Calculate counts
+        const validCount = checks.filter(c => c.result === 'valid').length;
+        const degradedCount = checks.filter(c => c.result === 'degraded').length;
+        const violationCount = checks.filter(c => c.result === 'violation').length;
+
+        // Calculate harmony percentage
+        const harmonyPercentage = ((validCount + degradedCount) / checks.length) * 100;
+
+        // Get recent violations
+        const recentViolations = checks
+          .filter(c => c.result === 'violation')
+          .slice(0, 10);
+
+        // Calculate format breakdown
+        const formatBreakdown: Record<string, number> = {};
+        for (const check of checks) {
+          const format = check.parsedFormat || 'Unknown';
+          formatBreakdown[format] = (formatBreakdown[format] || 0) + 1;
+        }
+
+        // Get last check timestamp (first in list since we LPUSH)
+        const lastCheck = checks[0].timestamp;
+
+        return {
+          totalChecks: checks.length,
+          validCount,
+          degradedCount,
+          violationCount,
+          harmonyPercentage,
+          recentViolations,
+          formatBreakdown,
+          lastCheck,
+        };
+      } catch (error) {
+        console.error(`[Redis] Error getting harmony metrics:`, error);
+        return {
+          totalChecks: 0,
+          validCount: 0,
+          degradedCount: 0,
+          violationCount: 0,
+          harmonyPercentage: 100,
+          recentViolations: [],
+          formatBreakdown: {},
+          lastCheck: brandedTypes.currentTimestamp(),
+        };
       }
     },
 
