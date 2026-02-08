@@ -28,16 +28,18 @@ export function SessionWindowSidebar({
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Group sessions by user
-  const sessionsByUser = sessions.reduce((acc, session) => {
+  const sessionsByUser = new Map<string, Session[]>();
+  for (const session of sessions) {
     const userId = session.user || 'unknown';
-    if (!acc[userId]) {
-      acc[userId] = [];
+    const group = sessionsByUser.get(userId);
+    if (group) {
+      group.push(session);
+    } else {
+      sessionsByUser.set(userId, [session]);
     }
-    acc[userId].push(session);
-    return acc;
-  }, {} as Record<string, Session[]>);
+  }
 
-  const userIds = Object.keys(sessionsByUser);
+  const userIds = Array.from(sessionsByUser.keys());
 
   return (
     <aside className={`session-window-sidebar ${isCollapsed ? 'collapsed' : ''}`}>
@@ -63,7 +65,7 @@ export function SessionWindowSidebar({
               <UserGroup
                 key={userId}
                 userId={userId}
-                sessions={sessionsByUser[userId]}
+                sessions={sessionsByUser.get(userId) ?? []}
                 followedSessionIds={followedSessionIds}
                 onFollow={onFollow}
                 onUnfollow={onUnfollow}

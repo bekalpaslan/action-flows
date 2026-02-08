@@ -34,8 +34,8 @@ const PATTERN_MATCHERS: PatternMatcher[] = [
       /\[1-\d+\]/i,
       /select.*option/i,
       /choose.*\d+/i,
-      /^\s*\d+\)/gm,
-      /^\s*[a-e]\)/gim,
+      /(?:^|\n)\s*\d+\)/,
+      /(?:^|\n)\s*[a-e]\)/i,
     ],
     extractResponses: (output: string) => {
       // Extract numbered options (1-9)

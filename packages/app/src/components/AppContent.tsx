@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useWebSocketContext } from '../contexts/WebSocketContext';
-import type { ConnectionStatus } from '../hooks/useWebSocket';
 import { useUsers } from '../hooks/useUsers';
 import { useAllSessions } from '../hooks/useAllSessions';
 import { useAttachedSessions } from '../hooks/useAttachedSessions';
@@ -68,7 +67,7 @@ export default function AppContent() {
       connected: 'Connected',
       disconnected: 'Disconnected',
       error: 'Connection Error',
-    }[status as ConnectionStatus] || 'Unknown';
+    }[status] || 'Unknown';
 
     setStatusDisplay(displayText);
   }, [status]);
