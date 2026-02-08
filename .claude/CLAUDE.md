@@ -1,3 +1,11 @@
+# STOP — Session-Start Protocol
+
+**Before responding to ANY human message**, read `.claude/actionflows/ORCHESTRATOR.md` and execute the session-start protocol.
+
+Spawned subagents: ignore this — follow your agent.md instructions instead.
+
+---
+
 # ActionFlows Dashboard — Project Context
 
 **See `actionflows/project.config.md` for detailed project-specific values.**
@@ -99,10 +107,3 @@ pnpm test:e2e             # Run E2E tests
 - **Main branch:** main (PR target)
 - **Working directory:** D:/ActionFlowsDashboard
 
----
-
-## ActionFlows
-
-If this is the start of a new human conversation (not a spawned Task subagent), read `.claude/actionflows/ORCHESTRATOR.md` before responding.
-
-Spawned subagents: ignore this section — follow your agent.md instructions instead.
