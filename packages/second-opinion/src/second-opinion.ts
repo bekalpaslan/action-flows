@@ -46,64 +46,74 @@ export class SecondOpinionRunner {
 
       // Resolve model with fallback chain
       const modelConfig = getModelConfig(request.actionType);
-      const model = request.modelOverride ?? modelConfig.primary;
       const allModels = request.modelOverride
         ? [request.modelOverride]
         : [modelConfig.primary, ...modelConfig.fallbacks];
 
-      let selectedModel: string | null = null;
-      let fallbackUsed = false;
+      // Build critique prompt (same for all models)
+      const prompt = getCritiquePrompt(request.actionType, request.originalInput, request.claudeOutput);
 
-      for (const candidateModel of allModels) {
+      // Try each model in the fallback chain — handles both "not installed" and "timeout"
+      for (let i = 0; i < allModels.length; i++) {
+        const candidateModel = allModels[i];
+        const isLast = i === allModels.length - 1;
+
         const hasModel = await this.client.hasModel(candidateModel);
-        if (hasModel) {
-          selectedModel = candidateModel;
-          fallbackUsed = candidateModel !== allModels[0];
-          break;
+        if (!hasModel) {
+          if (isLast) {
+            return {
+              skipped: true,
+              reason: 'no_model_available',
+              error: `None of the configured models are available: ${allModels.join(', ')}`,
+            };
+          }
+          continue;
+        }
+
+        try {
+          const response = await this.client.generate(
+            {
+              model: candidateModel,
+              prompt,
+              options: {
+                temperature: modelConfig.temperature,
+                num_predict: modelConfig.maxTokens,
+              },
+            },
+            modelConfig.timeoutMs
+          );
+
+          // Success — parse and return
+          const critique = this.parseResponse(response.response);
+          const metadata: RunMetadata = {
+            modelUsed: candidateModel,
+            latencyMs: Date.now() - startTime,
+            promptTokens: response.prompt_eval_count || 0,
+            responseTokens: response.eval_count || 0,
+            fallbackUsed: i > 0,
+            timestamp: new Date().toISOString(),
+          };
+
+          return {
+            skipped: false,
+            critique,
+            metadata,
+          };
+        } catch (modelError) {
+          // If this is the last model, let the outer catch handle it
+          if (isLast) {
+            throw modelError;
+          }
+          // Otherwise, try the next model in the fallback chain
+          continue;
         }
       }
 
-      if (!selectedModel) {
-        return {
-          skipped: true,
-          reason: 'no_model_available',
-          error: `None of the configured models are available: ${allModels.join(', ')}`,
-        };
-      }
-
-      // Build critique prompt
-      const prompt = getCritiquePrompt(request.actionType, request.originalInput, request.claudeOutput);
-
-      // Call Ollama
-      const response = await this.client.generate(
-        {
-          model: selectedModel,
-          prompt,
-          options: {
-            temperature: modelConfig.temperature,
-            num_predict: modelConfig.maxTokens,
-          },
-        },
-        modelConfig.timeoutMs
-      );
-
-      // Parse response into structured critique
-      const critique = this.parseResponse(response.response);
-
-      // Calculate metadata
-      const metadata: RunMetadata = {
-        modelUsed: selectedModel,
-        latencyMs: Date.now() - startTime,
-        promptTokens: response.prompt_eval_count || 0,
-        responseTokens: response.eval_count || 0,
-        fallbackUsed,
-        timestamp: new Date().toISOString(),
-      };
-
+      // Should not reach here, but satisfy TypeScript
       return {
-        skipped: false,
-        critique,
-        metadata,
+        skipped: true,
+        reason: 'no_model_available',
+        error: `Exhausted all models: ${allModels.join(', ')}`,
       };
     } catch (error) {
       // Graceful error handling - never throw
