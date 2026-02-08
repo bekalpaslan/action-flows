@@ -218,7 +218,7 @@ Edit `packages/app/electron/main.ts` for app behavior:
 
 ## API Reference
 
-See [API_REFERENCE.md](./API_REFERENCE.md) for complete REST API documentation.
+See [API_REFERENCE.md](./docs/api/API_REFERENCE.md) for complete REST API documentation.
 
 ### Core Endpoints
 

@@ -408,7 +408,7 @@ Or disable in app settings (if UI implemented).
 
 ## Next Steps
 
-- Read the [API Reference](./API_REFERENCE.md) for backend integration
+- Read the [API Reference](../api/API_REFERENCE.md) for backend integration
 - Explore the [User Guide](./docs/USER_GUIDE.md) for detailed features
 - Join the community on [GitHub Discussions](https://github.com/...)
 - Report issues on [GitHub Issues](https://github.com/...)

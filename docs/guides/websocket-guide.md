@@ -23,7 +23,7 @@ Production-ready WebSocket client for ActionFlows Dashboard with real-time event
 
 ### 4. Documentation (3 files)
 - **WEBSOCKET_USAGE.md** - Comprehensive usage guide
-- **WEBSOCKET_IMPLEMENTATION.md** - Technical details
+- **docs/status/implementation/websocket.md** - Technical details
 - **QUICK_START.md** - Quick start guide
 
 ## Files Created
@@ -181,7 +181,7 @@ Uses:
 
 - **QUICK_START.md** - Quick overview
 - **packages/app/src/hooks/WEBSOCKET_USAGE.md** - Complete guide
-- **WEBSOCKET_IMPLEMENTATION.md** - Technical details
+- **docs/status/implementation/websocket.md** - Technical details
 - **WebSocketTest.tsx** - Code examples
 
 ## Status

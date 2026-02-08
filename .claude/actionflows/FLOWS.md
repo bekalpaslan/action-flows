@@ -10,6 +10,7 @@
 | action-creation/ | Create a new action | plan → human gate → code → review |
 | action-deletion/ | Remove action safely | analyze → code → review |
 | framework-health/ | Validate structure | analyze |
+| doc-reorganization/ | Reorganize documentation | analyze → human gate → plan → human gate → code → review |
 
 ## Engineering
 

@@ -80,7 +80,7 @@ Setup and usage guide including:
 - CI/CD integration examples
 - Troubleshooting section
 
-#### 3. `INTEGRATION_TEST_SUMMARY.md` (250+ lines)
+#### 3. `../../testing/integration-summary.md` (250+ lines)
 Implementation overview including:
 - Files created and modified
 - Test coverage statistics
@@ -113,7 +113,7 @@ Completion verification including:
 ### Documentation
 - ✅ `packages/backend/src/__tests__/README.md` (6.7 KB)
 - ✅ `packages/backend/TESTING_GUIDE.md` (8.6 KB)
-- ✅ `INTEGRATION_TEST_SUMMARY.md` (8.4 KB)
+- ✅ `../../testing/integration-summary.md` (8.4 KB)
 - ✅ `packages/backend/IMPLEMENTATION_CHECKLIST.md` (4.4 KB)
 
 ---
@@ -353,7 +353,7 @@ describe('Example', () => {
    - Implementation details
 
 ### For Integration
-1. **Summary**: `INTEGRATION_TEST_SUMMARY.md`
+1. **Summary**: `../../testing/integration-summary.md`
    - Overview of implementation
    - Files created/modified
    - Coverage statistics

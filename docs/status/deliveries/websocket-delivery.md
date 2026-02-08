@@ -106,7 +106,7 @@ import { WebSocketProvider } from '@/contexts'
 - Troubleshooting guide
 - Type safety examples
 
-**WEBSOCKET_IMPLEMENTATION.md** (350+ lines)
+**websocket.md** (350+ lines) - see `docs/status/implementation/websocket.md`
 - Implementation overview
 - Complete feature list
 - File descriptions and sizes
@@ -216,9 +216,9 @@ D:/ActionFlowsDashboard/
 │   │   └── WebSocketTest.tsx        [300+ lines] ✅ NEW
 │   ├── App.tsx                      [13 lines]   ✅ MODIFIED
 │   └── App.css                      [+30 lines]  ✅ MODIFIED
-├── WEBSOCKET_IMPLEMENTATION.md      [350+ lines] ✅ NEW
+├── ../implementation/websocket.md      [350+ lines] ✅ NEW
 ├── QUICK_START.md                   [150+ lines] ✅ NEW
-└── DELIVERY_SUMMARY.md              [This file]
+└── websocket-delivery.md              [This file]
 ```
 
 ## Code Statistics
@@ -233,7 +233,7 @@ D:/ActionFlowsDashboard/
 
 - **Documentation**: ~900 lines
   - WEBSOCKET_USAGE.md: 400+ lines
-  - WEBSOCKET_IMPLEMENTATION.md: 350+ lines
+  - ../implementation/websocket.md: 350+ lines
   - QUICK_START.md: 150+ lines
 
 - **Total**: ~1750 lines
@@ -390,7 +390,7 @@ send({ type: 'command', command: 'pause' })
 
 - **Quick Start**: QUICK_START.md
 - **Usage Guide**: packages/app/src/hooks/WEBSOCKET_USAGE.md
-- **Technical Details**: WEBSOCKET_IMPLEMENTATION.md
+- **Technical Details**: ../implementation/websocket.md
 - **Code Examples**: WebSocketTest.tsx
 - **API Reference**: TypeScript IntelliSense in IDE
 

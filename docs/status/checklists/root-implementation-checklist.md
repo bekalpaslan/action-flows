@@ -182,7 +182,7 @@
 **Total Files:**
 - New: 4 files (chainTypeDetection.ts, ChainBadge.tsx, ChainBadge.css, index.ts)
 - Updated: 3 files (ChainDAG.tsx, ChainDAG.css, sampleChain.ts)
-- Documentation: 2 files (this checklist, IMPLEMENTATION_SUMMARY.md)
+- Documentation: 2 files (this checklist, docs/status/implementation/session-tree.md)
 
 **Total Code Lines:**
 - Detection logic: ~160 lines

@@ -303,4 +303,4 @@ Implement immediate pause if your agents support mid-execution interruption.
 
 - [MCP Server README](../packages/mcp-server/README.md)
 - [Control Interface Spec](../openspec/changes/add-actionflows-dashboard/specs/control-interface/spec.md)
-- [API Reference](API_REFERENCE.md)
+- [API Reference](../api/API_REFERENCE.md)

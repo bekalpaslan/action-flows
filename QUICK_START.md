@@ -42,7 +42,7 @@ A complete WebSocket client implementation for real-time events in ActionFlows D
 - **contexts/index.ts** - Export barrel
 - **App.css** - Status styling updates
 - **WEBSOCKET_USAGE.md** - Comprehensive guide
-- **WEBSOCKET_IMPLEMENTATION.md** - Technical details
+- **docs/status/implementation/websocket.md** - Technical details
 
 ## Key Features
 
@@ -155,4 +155,4 @@ const stats = useEventStats(sessionId)
 
 ---
 
-See WEBSOCKET_IMPLEMENTATION.md for complete documentation.
+See [docs/status/implementation/websocket.md](./docs/status/implementation/websocket.md) for complete documentation.
