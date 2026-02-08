@@ -1,0 +1,332 @@
+/* ====== MODIFIER CARD STYLES ====== */
+.modifier-card {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modifier-card:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.modifier-card.modifier-disabled {
+  opacity: 0.6;
+  background: var(--bg-tertiary);
+  pointer-events: none;
+}
+
+.modifier-card.modifier-disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.modifier-card.modifier-applied {
+  border-color: var(--success-color);
+  background: var(--success-color-bg);
+}
+
+.modifier-card.modifier-error {
+  border-color: var(--error-color);
+}
+
+/* Header Section */
+.modifier-header {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.modifier-tier {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modifier-tier.tier-minor {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.modifier-tier.tier-moderate {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.modifier-tier.tier-major {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Confidence Badge */
+.confidence-badge {
+  margin-left: auto;
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.confidence-badge.high {
+  background: var(--success-color-bg);
+  color: var(--success-color);
+}
+
+.confidence-badge.medium {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.confidence-badge.low {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Applied Badge */
+.applied-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--success-color);
+  color: white;
+}
+
+/* Name and Description */
+.modifier-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.modifier-description {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* Target Display */
+.modifier-target {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+  padding: 6px 8px;
+  background: var(--bg-primary);
+  border-radius: 4px;
+}
+
+.target-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.target-value {
+  color: var(--text-primary);
+  font-family: monospace;
+  font-size: 11px;
+}
+
+/* Value Comparison */
+.modifier-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: var(--bg-primary);
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.comparison-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.comparison-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 60px;
+}
+
+.comparison-value {
+  font-size: 11px;
+  font-family: monospace;
+  padding: 2px 6px;
+  background: var(--bg-secondary);
+  border-radius: 3px;
+  word-break: break-all;
+  flex: 1;
+}
+
+.comparison-item.current .comparison-value {
+  color: var(--error-color);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.comparison-item.proposed .comparison-value {
+  color: var(--success-color);
+}
+
+/* Validation Requirements */
+.modifier-validation {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.validation-item {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.validation-item.enabled {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #7dd3fc;
+}
+
+.validation-item.disabled {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Error Message */
+.modifier-error-message {
+  padding: 8px;
+  background: var(--error-color-bg);
+  color: var(--error-color);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Footer with Action Buttons */
+.modifier-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-color);
+}
+
+.preview-btn,
+.apply-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.preview-btn {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.preview-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--accent-color);
+}
+
+.apply-btn {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+.apply-btn:hover:not(:disabled) {
+  background: var(--accent-color-dark);
+  border-color: var(--accent-color-dark);
+  transform: translateY(-1px);
+}
+
+.preview-btn:disabled,
+.apply-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.modifier-applied .apply-btn {
+  background: var(--success-color);
+  border-color: var(--success-color);
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .modifier-header {
+    flex-wrap: wrap;
+  }
+
+  .confidence-badge {
+    margin-left: 0;
+    order: 3;
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .modifier-footer {
+    flex-direction: column;
+  }
+
+  .preview-btn,
+  .apply-btn {
+    width: 100%;
+  }
+}

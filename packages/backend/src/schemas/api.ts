@@ -400,3 +400,29 @@ export const behaviorPackSchema = z.object({
 });
 
 export type BehaviorPackRequest = z.infer<typeof behaviorPackSchema>;
+
+// ============================================================================
+// Modifier Schemas (Self-Modification Endpoints)
+// ============================================================================
+
+/**
+ * Query schema for listing modifiers
+ * GET /api/registry/modifiers?status=active&tier=minor
+ */
+export const modifierQuerySchema = z.object({
+  status: z.enum(['active', 'inactive']).optional(),
+  tier: z.enum(['minor', 'moderate', 'major']).optional(),
+});
+
+export type ModifierQueryRequest = z.infer<typeof modifierQuerySchema>;
+
+/**
+ * Schema for applying a modifier
+ * POST /api/registry/modifiers/:id/apply
+ */
+export const applyModifierSchema = z.object({
+  dryRun: z.boolean().optional().default(false),
+  force: z.boolean().optional().default(false),
+});
+
+export type ApplyModifierRequest = z.infer<typeof applyModifierSchema>;
