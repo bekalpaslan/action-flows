@@ -16,6 +16,7 @@
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.2));
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --glow-color: #ffffff;
 }
 
 /* Size variants */
@@ -44,10 +45,11 @@
   position: absolute;
   inset: -8px;
   border-radius: 50%;
-  border: 2px solid;
+  border: 2px solid var(--glow-color);
   opacity: 0.6;
   transition: opacity 0.3s ease, box-shadow 0.3s ease;
   pointer-events: none;
+  box-shadow: 0 0 12px var(--glow-color);
 }
 
 /* Idle aura - slow, dim pulse */
@@ -360,6 +362,66 @@
   animation: blink 4s ease-in-out infinite;
 }
 
+/* ===== STATUS-BASED ANIMATIONS (from animations.css) ===== */
+
+/* Apply idle animation (float + blink) */
+.agent-avatar-idle .avatar-character {
+  animation: agent-float 3s var(--ease-natural) infinite;
+}
+
+/* Apply thinking animation (sway) */
+.agent-avatar-thinking .avatar-character {
+  animation: agent-sway 2.5s var(--ease-ghibli) infinite;
+}
+
+/* Apply working animation (pulse) */
+.agent-avatar-working .avatar-character {
+  animation: agent-pulse 1.5s var(--ease-natural) infinite;
+}
+
+/* Apply success animation (sparkle - play once) */
+.agent-avatar-success .avatar-character {
+  animation: agent-sparkle 0.8s var(--ease-bounce);
+}
+
+/* Apply error animation (jolt - play once) */
+.agent-avatar-error .avatar-character {
+  animation: agent-jolt 0.5s var(--ease-natural);
+}
+
+/* Apply spawning animation (materialize - play once) */
+.agent-avatar-spawning .avatar-character {
+  animation: agent-spawn 1s var(--ease-ghibli);
+}
+
+/* ===== AURA STATUS ANIMATIONS ===== */
+
+/* Idle aura - slow pulse */
+.agent-aura-idle {
+  animation: aura-pulse-idle 3s var(--ease-natural) infinite;
+}
+
+/* Working/thinking aura - active pulse */
+.agent-aura-working,
+.agent-aura-thinking {
+  animation: aura-pulse-active 1.8s var(--ease-natural) infinite;
+}
+
+/* Error aura - flicker */
+.agent-aura-error {
+  animation: aura-pulse-error 0.6s ease-in-out infinite;
+}
+
+/* Success aura - brief bright pulse */
+.agent-aura-success {
+  animation: aura-pulse-active 1s var(--ease-bounce);
+}
+
+/* Spawning aura - bright fade-in */
+.agent-aura-spawning {
+  animation: aura-pulse-active 1s var(--ease-ghibli);
+}
+
 /* ===== ACCESSIBILITY ===== */
 
 /* Respect prefers-reduced-motion */
@@ -386,4 +448,54 @@
 /* High contrast for dark backgrounds */
 .agent-avatar .avatar-svg {
   filter: drop-shadow(0 0 12px currentColor);
+}
+
+/* ===== RESPONSIVE SIZING ===== */
+
+/* Full layout (≥1200px) */
+@media (min-width: 1200px) {
+  .agent-avatar.size-orchestrator {
+    width: 160px;
+    height: 160px;
+  }
+
+  .agent-avatar.size-subagent {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+/* Compact layout (768-1199px) */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .agent-avatar.size-orchestrator {
+    width: 150px;
+    height: 150px;
+  }
+
+  .agent-avatar.size-subagent {
+    width: 105px;
+    height: 105px;
+  }
+}
+
+/* Icon grid (< 768px) - all avatars same size */
+@media (max-width: 767px) {
+  .agent-avatar.size-orchestrator,
+  .agent-avatar.size-subagent {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* Very narrow (< 480px) */
+@media (max-width: 479px) {
+  .agent-avatar.size-orchestrator,
+  .agent-avatar.size-subagent {
+    width: 85px;
+    height: 85px;
+  }
+
+  .avatar-emoji {
+    font-size: clamp(18px, 35%, 36px);
+  }
 }

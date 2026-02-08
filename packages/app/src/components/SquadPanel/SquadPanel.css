@@ -23,6 +23,10 @@
   background: transparent;
   border-radius: 12px;
   outline: none;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Placement variants */
@@ -242,6 +246,45 @@
     max-height: 40vh;
     border-radius: 8px 8px 0 0;
     z-index: 100;
+  }
+}
+
+/* ===== RESPONSIVE: Full Layout (≥1200px) ===== */
+
+@media (min-width: 1200px) {
+  .squad-panel {
+    gap: 32px;
+    padding: 20px;
+  }
+}
+
+/* ===== RESPONSIVE: Compact Layout (768-1199px) ===== */
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .squad-panel {
+    gap: 20px;
+    padding: 16px;
+  }
+}
+
+/* ===== RESPONSIVE: Icon Grid (< 768px) ===== */
+
+@media (max-width: 767px) {
+  .squad-panel {
+    gap: 16px;
+    padding: 12px;
+  }
+
+  /* Log panels become full-width at bottom */
+  .agent-log-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+    max-height: 50vh;
+    border-radius: 12px 12px 0 0;
+    z-index: 200;
   }
 }
 

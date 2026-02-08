@@ -48,14 +48,16 @@
 
 .agent-character-card:hover,
 .agent-character-card.is-hovered {
-  transform: scale(1.1);
+  transform: scale(1.05);
   border-color: currentColor;
   background: #1e1e1e;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s var(--ease-natural);
 }
 
 .agent-character-card.size-orchestrator:hover,
 .agent-character-card.size-orchestrator.is-hovered {
+  transform: scale(1.08);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
 
@@ -308,15 +310,16 @@
   );
   width: var(--progress-amount);
   border-radius: 2px;
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.4s var(--ease-natural);
   box-shadow: 0 0 8px var(--progress-color);
+  animation: progress-fill 0.6s var(--ease-ghibli);
 }
 
 .agent-character-card.status-working .progress-fill {
-  animation: progressShimmer 2s ease-in-out infinite;
+  animation: progress-fill 0.6s var(--ease-ghibli), progress-shimmer 2s ease-in-out infinite;
 }
 
-@keyframes progressShimmer {
+@keyframes progress-shimmer {
   0%, 100% {
     opacity: 1;
   }
@@ -430,20 +433,71 @@
 
 /* ===== RESPONSIVE ===== */
 
-@media (max-width: 768px) {
+/* Full layout (≥1200px) */
+@media (min-width: 1200px) {
   .agent-character-card.size-orchestrator {
-    width: 180px;
-    gap: 12px;
+    width: 220px;
+    gap: 18px;
+    padding: 24px 16px;
   }
 
   .agent-character-card.size-subagent {
-    width: 130px;
-    gap: 8px;
+    width: 160px;
+    gap: 12px;
+  }
+}
+
+/* Compact layout (768-1199px) */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .agent-character-card.size-orchestrator {
+    width: 200px;
+    gap: 16px;
+  }
+
+  .agent-character-card.size-subagent {
+    width: 150px;
+    gap: 10px;
+  }
+}
+
+/* Icon grid (< 768px) - all cards same size */
+@media (max-width: 767px) {
+  .agent-character-card.size-orchestrator,
+  .agent-character-card.size-subagent {
+    width: 140px;
+    gap: 10px;
+    padding: 12px 10px;
   }
 
   .card-hint {
     font-size: 10px;
     top: -26px;
+  }
+
+  .card-name {
+    font-size: 13px;
+  }
+
+  .card-archetype {
+    font-size: 10px;
+  }
+}
+
+/* Very narrow (< 480px) */
+@media (max-width: 479px) {
+  .agent-character-card.size-orchestrator,
+  .agent-character-card.size-subagent {
+    width: 120px;
+    gap: 8px;
+    padding: 10px 8px;
+  }
+
+  .card-name {
+    font-size: 12px;
+  }
+
+  .card-archetype {
+    font-size: 9px;
   }
 }
 

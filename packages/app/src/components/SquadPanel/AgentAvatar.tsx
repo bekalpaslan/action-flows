@@ -10,10 +10,11 @@
  * - Size variants (orchestrator 1.5x, subagent standard)
  */
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import type { AgentAvatarProps } from './types';
 import { AGENT_COLORS } from './types';
 import './AgentAvatar.css';
+import './animations.css';
 
 /**
  * Render emoji character for agent role
@@ -120,15 +121,22 @@ export function AgentAvatar({
   const auraClass = getAuraState(status);
   const hoverClass = isHovered ? 'is-hovered' : '';
 
+  // Status-based animation classes
+  const statusAnimationClass = `agent-avatar-${status}`;
+  const auraAnimationClass = `agent-aura-${status}`;
+
   return (
     <div
-      className={`agent-avatar ${sizeClass} ${expressionClass} ${hoverClass} ${className}`}
+      className={`agent-avatar ${sizeClass} ${expressionClass} ${hoverClass} ${statusAnimationClass} ${className}`}
       role="img"
       aria-label={`${role} agent character`}
+      style={{
+        '--glow-color': colors.glow,
+      } as React.CSSProperties}
     >
       {/* Aura layer - dynamic pulse with status */}
       <div
-        className={`avatar-aura ${auraClass}`}
+        className={`avatar-aura ${auraClass} ${auraAnimationClass}`}
         style={{
           borderColor: colors.glow,
           boxShadow: `0 0 ${isHovered ? 20 : 12}px ${colors.glow}`,

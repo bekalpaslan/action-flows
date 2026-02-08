@@ -1,0 +1,245 @@
+/**
+ * SquadPanel Animations
+ * CSS keyframes and transitions for agent character animations
+ *
+ * Design: Studio Ghibli motion principles + Persona 5 UI aesthetic
+ * Performance: GPU-accelerated transforms and opacity only
+ * Accessibility: Respects prefers-reduced-motion
+ */
+
+/* ===== CSS CUSTOM PROPERTIES (EASING FUNCTIONS) ===== */
+
+:root {
+  /* Natural ease for gentle floating motions */
+  --ease-natural: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  /* Ghibli-style ease for smooth, deliberate movements */
+  --ease-ghibli: cubic-bezier(0.4, 0.0, 0.2, 1);
+
+  /* Bounce for playful interactions */
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ===== IDLE STATE ANIMATIONS ===== */
+
+/* Gentle float - slow bobbing motion */
+@keyframes agent-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Subtle blink - eye closing effect */
+@keyframes agent-blink {
+  0%, 90%, 100% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0;
+  }
+}
+
+/* ===== THINKING STATE ANIMATIONS ===== */
+
+/* Sway motion - contemplative back-and-forth */
+@keyframes agent-sway {
+  0%, 100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+/* ===== WORKING STATE ANIMATIONS ===== */
+
+/* Active pulse - rhythmic breathing effect */
+@keyframes agent-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* ===== SUCCESS STATE ANIMATIONS ===== */
+
+/* Sparkle burst - celebratory pop */
+@keyframes agent-sparkle {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===== ERROR STATE ANIMATIONS ===== */
+
+/* Jolt + recover - shake and settle */
+@keyframes agent-jolt {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* ===== SPAWNING STATE ANIMATIONS ===== */
+
+/* Materialize fade-in - appearing from nothing */
+@keyframes agent-spawn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== AURA PULSE ANIMATIONS ===== */
+
+/* Idle aura - dim, slow pulse */
+@keyframes aura-pulse-idle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
+
+/* Active aura - bright, steady pulse */
+@keyframes aura-pulse-active {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.15);
+  }
+}
+
+/* Error aura - frantic flicker */
+@keyframes aura-pulse-error {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ===== LOG PANEL ANIMATIONS ===== */
+
+/* Expand animation - unfold downward */
+@keyframes log-panel-expand {
+  from {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    max-height: 400px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Collapse animation - fold upward */
+@keyframes log-panel-collapse {
+  from {
+    max-height: 400px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* ===== HOVER ANIMATIONS ===== */
+
+/* Hover scale - smooth zoom in */
+@keyframes agent-hover {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+/* ===== PROGRESS BAR ANIMATIONS ===== */
+
+/* Progress bar fill - smooth width transition */
+@keyframes progress-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-width);
+  }
+}
+
+/* Progress shimmer - active work indicator */
+@keyframes progress-shimmer {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ===== ACCESSIBILITY: REDUCED MOTION ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all animations except essential UI feedback */
+  .agent-avatar,
+  .agent-aura,
+  .avatar-character,
+  .log-panel,
+  .agent-character-card {
+    animation: none !important;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  /* Keep only scale transform for click/hover feedback */
+  .agent-character-card:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+  }
+
+  /* Keep progress bar transitions for usability */
+  .progress-fill {
+    transition: width 0.3s ease;
+  }
+}

@@ -15,7 +15,9 @@ import React, { useState, useRef, useCallback } from 'react';
 import type { AgentCharacterCardProps } from './types';
 import { AGENT_NAMES, AGENT_ARCHETYPES, AGENT_COLORS } from './types';
 import { AgentAvatar } from './AgentAvatar';
+import { useAgentInteractions } from './useAgentInteractions';
 import './AgentCharacterCard.css';
+import './animations.css';
 
 /**
  * Format progress percentage for display
@@ -39,33 +41,6 @@ function getStatusText(agent: AgentCharacterCardProps['agent']): string {
   return agent.status.charAt(0).toUpperCase() + agent.status.slice(1);
 }
 
-/**
- * Calculate eye target position from mouse event
- * Returns normalized coordinates relative to agent avatar
- */
-function calculateEyeTarget(
-  event: React.MouseEvent,
-  avatarElement: HTMLElement
-): { x: number; y: number } {
-  const rect = avatarElement.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
-
-  const mouseX = event.clientX;
-  const mouseY = event.clientY;
-
-  const deltaX = mouseX - centerX;
-  const deltaY = mouseY - centerY;
-
-  // Normalize to -1 to 1 range
-  const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-  const maxDistance = Math.max(rect.width, rect.height) * 1.5;
-
-  return {
-    x: distance > 0 ? (deltaX / maxDistance) * 0.8 : 0,
-    y: distance > 0 ? (deltaY / maxDistance) * 0.8 : 0,
-  };
-}
 
 /**
  * AgentCharacterCard - Interactive card for individual agent
@@ -82,6 +57,7 @@ export function AgentCharacterCard({
   const [isHovered, setIsHovered] = useState(false);
   const [eyeTarget, setEyeTarget] = useState<{ x: number; y: number } | null>(null);
   const avatarRef = useRef<HTMLDivElement>(null);
+  const { calculateEyeTarget } = useAgentInteractions();
 
   const agentName = AGENT_NAMES[agent.role] || agent.name;
   const agentArchetype = AGENT_ARCHETYPES[agent.role];
@@ -98,7 +74,7 @@ export function AgentCharacterCard({
       }
       onHover(true);
     },
-    [onHover]
+    [onHover, calculateEyeTarget]
   );
 
   const handleMouseMove = useCallback(
@@ -108,7 +84,7 @@ export function AgentCharacterCard({
         setEyeTarget(target);
       }
     },
-    [isHovered]
+    [isHovered, calculateEyeTarget]
   );
 
   const handleMouseLeave = useCallback(() => {

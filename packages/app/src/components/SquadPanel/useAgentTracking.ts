@@ -123,8 +123,8 @@ export function useAgentTracking(sessionId: SessionId | null): UseAgentTrackingR
             timestamp: Date.now(),
           };
 
-          // Keep only last MAX_LOGS_PER_AGENT entries
-          const logs = [newLog, ...agent.logs].slice(0, MAX_LOGS_PER_AGENT);
+          // Keep only last MAX_LOGS_PER_AGENT entries (newest at end)
+          const logs = [...agent.logs, newLog].slice(-MAX_LOGS_PER_AGENT);
           agents.set(agentId, { ...agent, logs });
         }
 

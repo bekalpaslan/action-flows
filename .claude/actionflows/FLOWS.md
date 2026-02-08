@@ -12,6 +12,7 @@
 | action-deletion/ | Remove action safely | analyze → code → review |
 | framework-health/ | Validate structure | analyze |
 | doc-reorganization/ | Reorganize documentation | analyze → human gate → plan → human gate → code → review |
+| planning/ | Structured roadmap review and prioritization | analyze → plan → human gate → code → commit |
 
 ## Engineering
 

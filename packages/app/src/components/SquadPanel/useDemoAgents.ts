@@ -255,9 +255,9 @@ export function useDemoAgents(enableUpdates: boolean = false): UseDemoAgentsResu
       const subagents = prev.subagents.map((agent) => {
         const agent_copy = { ...agent };
 
-        // Randomly change status
-        const statuses = ['idle', 'thinking', 'working', 'success', 'error'] as const;
-        const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+        // Randomly change status (status can be extended later if needed)
+        // const statuses = ['idle', 'thinking', 'working', 'success', 'error'] as const;
+        // const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
 
         // Add a new log entry occasionally
         if (Math.random() > 0.6) {

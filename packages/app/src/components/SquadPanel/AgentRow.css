@@ -1,0 +1,250 @@
+/**
+ * AgentRow Styles
+ * Responsive layout for orchestrator + subagents
+ *
+ * Breakpoints:
+ * - Full (≥1200px): orchestrator center, subagents flanking left/right
+ * - Compact (768-1199px): orchestrator center, subagents in 2 columns below
+ * - Icon grid (< 768px): all agents same size in 3-column grid
+ */
+
+/* ===== BASE ROW CONTAINER ===== */
+
+.agent-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+/* ===== ORCHESTRATOR CENTER ===== */
+
+.agent-row-orchestrator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+/* Orchestrator visual emphasis with glow */
+.agent-row-orchestrator .agent-character-card {
+  position: relative;
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
+  transition: all 0.3s var(--ease-natural);
+}
+
+.agent-row-orchestrator .agent-character-card:hover {
+  box-shadow: 0 0 60px rgba(255, 215, 0, 0.25), 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== SUBAGENT SIDES ===== */
+
+.agent-row-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 140px;
+  max-width: 180px;
+}
+
+.agent-row-side.side-left {
+  align-items: flex-end;
+}
+
+.agent-row-side.side-right {
+  align-items: flex-start;
+}
+
+/* Agent slot - contains card + log panel */
+.agent-row-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+/* ===== FULL LAYOUT (≥1200px) ===== */
+
+@media (min-width: 1200px) {
+  .agent-row {
+    gap: 32px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  .agent-row-side {
+    gap: 20px;
+    max-width: 200px;
+  }
+
+  .agent-row-orchestrator .agent-character-card {
+    width: 220px;
+  }
+
+  .agent-row-orchestrator .agent-log-panel {
+    max-width: 420px;
+  }
+
+  .agent-row-side .agent-log-panel {
+    max-width: 340px;
+  }
+}
+
+/* ===== COMPACT LAYOUT (768-1199px) ===== */
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .agent-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  /* Orchestrator stays on top */
+  .agent-row-orchestrator {
+    order: 1;
+    width: 100%;
+    max-width: 220px;
+  }
+
+  .agent-row-orchestrator .agent-character-card {
+    width: 200px;
+  }
+
+  .agent-row-orchestrator .agent-log-panel {
+    max-width: 380px;
+  }
+
+  /* Subagents below in 2 columns */
+  .agent-row-side {
+    order: 2;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 100%;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  .agent-row-side.side-left,
+  .agent-row-side.side-right {
+    align-items: center;
+  }
+
+  .agent-row-slot {
+    width: auto;
+    max-width: 160px;
+  }
+
+  .agent-row-side .agent-log-panel {
+    max-width: 300px;
+  }
+}
+
+/* ===== ICON GRID (< 768px) ===== */
+
+@media (max-width: 767px) {
+  .agent-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* All agents same size in grid */
+  .agent-row-orchestrator,
+  .agent-row-side {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .agent-row-orchestrator {
+    order: 1;
+  }
+
+  .agent-row-side {
+    order: 2;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  /* All cards same size */
+  .agent-row-orchestrator .agent-character-card,
+  .agent-row-side .agent-character-card {
+    width: 140px;
+  }
+
+  .agent-row-slot {
+    width: auto;
+  }
+
+  /* Log panels become full-width overlays */
+  .agent-row-orchestrator .agent-log-panel,
+  .agent-row-side .agent-log-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+    max-height: 50vh;
+    border-radius: 12px 12px 0 0;
+    z-index: 200;
+  }
+}
+
+/* ===== VERY NARROW (< 480px) ===== */
+
+@media (max-width: 479px) {
+  .agent-row {
+    gap: 12px;
+  }
+
+  .agent-row-side {
+    gap: 10px;
+  }
+
+  /* Smaller cards on very narrow screens */
+  .agent-row-orchestrator .agent-character-card,
+  .agent-row-side .agent-character-card {
+    width: 120px;
+  }
+
+  /* Log panels cover more of the screen */
+  .agent-row-orchestrator .agent-log-panel,
+  .agent-row-side .agent-log-panel {
+    max-height: 60vh;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .agent-row-orchestrator .agent-character-card {
+    transition: none;
+  }
+
+  .agent-row-slot {
+    transition: none;
+  }
+}
+
+/* ===== DARK THEME ===== */
+
+.agent-row {
+  color: #e8e8e8;
+}
+
+/* ===== NO HORIZONTAL OVERFLOW ===== */
+
+.agent-row,
+.agent-row-side,
+.agent-row-orchestrator,
+.agent-row-slot {
+  overflow-x: hidden;
+}

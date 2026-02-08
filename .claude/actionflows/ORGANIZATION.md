@@ -12,8 +12,8 @@ Request → Which department? → Which flow? → No flow? Compose from actions 
 
 ### Framework
 **Owns:** ActionFlows framework maintenance
-**Key Flows:** onboarding/, flow-creation/, action-creation/, action-deletion/, framework-health/
-**Triggers:** "create a new flow", "create a new action", "check framework health", "delete action", "teach me ActionFlows", "onboarding"
+**Key Flows:** onboarding/, flow-creation/, action-creation/, action-deletion/, framework-health/, planning/
+**Triggers:** "create a new flow", "create a new action", "check framework health", "delete action", "teach me ActionFlows", "onboarding", "review roadmap", "what's next", "update roadmap"
 
 ### Engineering
 **Owns:** Code implementation, reviews, bug fixes, refactoring
@@ -46,6 +46,8 @@ Request → Which department? → Which flow? → No flow? Compose from actions 
 | "check framework health" | Framework | framework-health/ |
 | "teach me ActionFlows" / "onboarding" | Framework | onboarding/ |
 | "I want to learn ActionFlows" / "explain the framework" | Framework | onboarding/ |
+| "review roadmap" / "what's next" | Framework | planning/ (review mode) |
+| "update roadmap" / "reprioritize" | Framework | planning/ (update mode) |
 | "plan X" | — | plan/ (direct action) |
 | "I have an idea" / "brainstorm X" | Human | ideation/ |
 | "let's think about X" / "ideation" | Human | ideation/ |

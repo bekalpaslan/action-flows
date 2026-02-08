@@ -15,13 +15,13 @@
  * - Audio cue support (optional)
  */
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { useAgentTracking } from './useAgentTracking';
 import { useAgentInteractions } from './useAgentInteractions';
-import { AgentCharacterCard } from './AgentCharacterCard';
-import { AgentLogPanel } from './AgentLogPanel';
+import { AgentRow } from './AgentRow';
 import type { SquadPanelProps } from './types';
 import './SquadPanel.css';
+import './animations.css';
 
 /**
  * SquadPanel - Root container component for agent squad visualization
@@ -67,30 +67,11 @@ export function SquadPanel({
    * Handle agent card hover
    */
   const handleAgentHover = useCallback(
-    (agentId: string | null) => {
-      setHoveredAgent(agentId);
+    (agentId: string, isHovering: boolean) => {
+      setHoveredAgent(isHovering ? agentId : null);
     },
     [setHoveredAgent]
   );
-
-  /**
-   * Distribute subagents evenly between left and right sides
-   * If odd number, right side gets the extra agent
-   */
-  const { leftAgents, rightAgents } = useMemo(() => {
-    const leftArr: typeof subagents = [];
-    const rightArr: typeof subagents = [];
-
-    subagents.forEach((agent, index) => {
-      if (index % 2 === 0) {
-        leftArr.push(agent);
-      } else {
-        rightArr.push(agent);
-      }
-    });
-
-    return { leftAgents: leftArr, rightAgents: rightArr };
-  }, [subagents]);
 
   // Empty state
   if (!orchestrator && subagents.length === 0) {
@@ -112,88 +93,16 @@ export function SquadPanel({
       role="region"
       aria-label="Agent squad panel"
     >
-      {/* Main agents container */}
-      <div className="squad-panel-agents-wrapper">
-        {/* LEFT SIDE: Subagents */}
-        {(placement === 'left' || placement === 'bottom') && leftAgents.length > 0 && (
-          <div className="squad-panel-side side-left">
-            {leftAgents.map((agent) => (
-              <div key={agent.id} className="squad-panel-agent-slot">
-                <AgentCharacterCard
-                  agent={agent}
-                  size="subagent"
-                  isExpanded={expandedAgentId === agent.id}
-                  onHover={(isHovering) => {
-                    handleAgentHover(isHovering ? agent.id : null);
-                  }}
-                  onClick={() => {
-                    handleAgentClick(agent.id);
-                  }}
-                />
-
-                {/* Log panel appears inline below the card */}
-                <AgentLogPanel
-                  agent={agent}
-                  isExpanded={expandedAgentId === agent.id}
-                  maxHeight={320}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* CENTER: Orchestrator */}
-        {orchestrator && (
-          <div className="squad-panel-orchestrator">
-            <AgentCharacterCard
-              agent={orchestrator}
-              size="orchestrator"
-              isExpanded={expandedAgentId === orchestrator.id}
-              onHover={(isHovering) => {
-                handleAgentHover(isHovering ? orchestrator.id : null);
-              }}
-              onClick={() => {
-                handleAgentClick(orchestrator.id);
-              }}
-            />
-
-            {/* Orchestrator log panel */}
-            <AgentLogPanel
-              agent={orchestrator}
-              isExpanded={expandedAgentId === orchestrator.id}
-              maxHeight={400}
-            />
-          </div>
-        )}
-
-        {/* RIGHT SIDE: Subagents */}
-        {(placement === 'right' || placement === 'bottom') && rightAgents.length > 0 && (
-          <div className="squad-panel-side side-right">
-            {rightAgents.map((agent) => (
-              <div key={agent.id} className="squad-panel-agent-slot">
-                <AgentCharacterCard
-                  agent={agent}
-                  size="subagent"
-                  isExpanded={expandedAgentId === agent.id}
-                  onHover={(isHovering) => {
-                    handleAgentHover(isHovering ? agent.id : null);
-                  }}
-                  onClick={() => {
-                    handleAgentClick(agent.id);
-                  }}
-                />
-
-                {/* Log panel appears inline below the card */}
-                <AgentLogPanel
-                  agent={agent}
-                  isExpanded={expandedAgentId === agent.id}
-                  maxHeight={320}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Use AgentRow for responsive layout */}
+      {orchestrator && (
+        <AgentRow
+          orchestrator={orchestrator}
+          subagents={subagents}
+          expandedAgentId={expandedAgentId}
+          onAgentHover={handleAgentHover}
+          onAgentClick={handleAgentClick}
+        />
+      )}
     </div>
   );
 }

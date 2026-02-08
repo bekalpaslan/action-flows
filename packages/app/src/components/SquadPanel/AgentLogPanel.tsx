@@ -16,6 +16,7 @@ import React, { useEffect, useRef } from 'react';
 import type { AgentLogPanelProps } from './types';
 import { LogBubble } from './LogBubble';
 import './AgentLogPanel.css';
+import './animations.css';
 
 export function AgentLogPanel({
   agent,

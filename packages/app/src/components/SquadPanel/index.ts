@@ -36,6 +36,7 @@ export {
 
 // Components
 export { SquadPanel } from './SquadPanel';
+export { AgentRow } from './AgentRow';
 export { AgentCharacterCard } from './AgentCharacterCard';
 export { AgentAvatar } from './AgentAvatar';
 export { AgentLogPanel } from './AgentLogPanel';

@@ -198,20 +198,54 @@
   }
 }
 
-/* Responsive: hide on very narrow viewports */
-@media (max-width: 480px) {
+/* ===== RESPONSIVE ===== */
+
+/* Full layout (≥1200px) */
+@media (min-width: 1200px) {
+  .agent-log-panel {
+    max-width: 100%;
+  }
+}
+
+/* Compact layout (768-1199px) */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .agent-log-panel {
+    max-width: 100%;
+  }
+}
+
+/* Icon grid (< 768px) - log panels become full-width overlays */
+@media (max-width: 767px) {
   .agent-log-panel {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
+    max-width: 100%;
     max-height: 50vh !important;
-    border-radius: 8px 8px 0 0;
-    z-index: 100;
+    border-radius: 12px 12px 0 0;
+    z-index: 200;
   }
 
   .log-panel-header {
     background: linear-gradient(135deg, #1e1e1e, #252525);
+    padding: 10px 12px;
+  }
+}
+
+/* Very narrow (< 480px) */
+@media (max-width: 479px) {
+  .agent-log-panel {
+    max-height: 60vh !important;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .log-panel-header {
     padding: 12px;
+    font-size: 10px;
+  }
+
+  .log-panel-scroll-container {
+    padding: 6px;
   }
 }
