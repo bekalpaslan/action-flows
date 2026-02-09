@@ -9,6 +9,8 @@ export interface SessionSidebarProps {
   onAttachSession?: (sessionId: SessionId) => void;
   /** Currently active session ID (for highlighting) */
   activeSessionId?: SessionId;
+  /** Callback when "New Session" is clicked */
+  onNewSession?: () => void;
 }
 
 /**
@@ -31,6 +33,7 @@ export interface SessionSidebarProps {
 export function SessionSidebar({
   onAttachSession,
   activeSessionId,
+  onNewSession,
 }: SessionSidebarProps) {
   const {
     isExpanded,
@@ -101,7 +104,22 @@ export function SessionSidebar({
         <div className="sidebar-icon" aria-hidden="true">
           📋
         </div>
-        {isExpanded && <h2 className="sidebar-title">Sessions</h2>}
+        {isExpanded && (
+          <>
+            <h2 className="sidebar-title">Sessions</h2>
+            <button
+              className="sidebar-new-session-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onNewSession?.();
+              }}
+              aria-label="New session"
+              title="New session"
+            >
+              +
+            </button>
+          </>
+        )}
       </div>
 
       {/* Scrollable content */}

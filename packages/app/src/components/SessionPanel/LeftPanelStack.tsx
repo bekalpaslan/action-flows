@@ -104,8 +104,7 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
         style={{
           flex: heights.conversation === 'flex' ? 1 : undefined,
           height: heights.conversation !== 'flex' ? heights.conversation : undefined,
-          minHeight: 0,
-          overflow: 'hidden',
+          minHeight: '150px',
         }}
       >
         <ConversationPanel

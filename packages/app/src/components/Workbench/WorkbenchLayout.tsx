@@ -584,6 +584,18 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         <SessionSidebar
           onAttachSession={handleAttachSession}
           activeSessionId={activeSessionId}
+          onNewSession={() => {
+            const newId = `session-${Date.now()}` as SessionId;
+            const newSession: Session = {
+              id: newId,
+              cwd: 'D:/ActionFlowsDashboard',
+              chains: [],
+              status: 'in_progress',
+              startedAt: brandedTypes.currentTimestamp(),
+            };
+            setAttachedSessions((prev) => [...prev, newSession]);
+            setActiveSessionId(newId);
+          }}
         />
       )}
 
