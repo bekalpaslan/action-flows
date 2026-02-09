@@ -80,6 +80,7 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
           flexShrink: 0,
         }}
       >
+        <span className="left-panel-stack__panel-number">1</span>
         <SessionInfoPanel session={session} />
       </div>
 
@@ -92,6 +93,7 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
           minHeight: '200px',
         }}
       >
+        <span className="left-panel-stack__panel-number">2</span>
         <CliPanel sessionId={session.id} />
       </div>
 
@@ -103,6 +105,7 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
           flexShrink: 0,
         }}
       >
+        <span className="left-panel-stack__panel-number">3</span>
         <ConversationPanel
           session={session}
           onSubmitInput={onSubmitInput || (async (_input: string) => {})}
@@ -117,6 +120,7 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
           flexShrink: 0,
         }}
       >
+        <span className="left-panel-stack__panel-number">4</span>
         <SmartPromptLibrary
           flows={flows}
           actions={actions}
