@@ -125,5 +125,6 @@ These contexts receive content automatically — not routed by user intent.
 | "update roadmap" / "reprioritize" | pm | planning/ (update mode) |
 | "plan X" | pm | plan/ (direct action) |
 | "check test coverage" / "coverage gaps" | review | test-coverage/ |
+| "audit harmony" / "check contract" / "backwards harmony" | review | backwards-harmony-audit/ |
 | "I have an idea" / "brainstorm X" | explore | ideation/ |
 | "let's think about X" / "ideation" | explore | ideation/ |
