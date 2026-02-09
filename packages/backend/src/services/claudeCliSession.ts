@@ -143,8 +143,12 @@ export class ClaudeCliSessionProcess {
     }
 
     try {
-      // Write input with newline (interactive prompts expect newline-terminated input)
-      this.process.stdin.write(input + '\n', 'utf8');
+      // Format as stream-json user message (JSONL: one JSON object per line)
+      const message = JSON.stringify({
+        type: 'user',
+        message: { role: 'user', content: input.trim() },
+      });
+      this.process.stdin.write(message + '\n', 'utf8');
     } catch (error) {
       console.error('[ClaudeCliSession] Error writing to stdin:', error);
       throw error;

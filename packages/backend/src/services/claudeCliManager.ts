@@ -154,6 +154,18 @@ class ClaudeCliManager {
     // Build command args
     const args: string[] = [];
 
+    // Use --print with stream-json for bidirectional piped communication
+    // --input-format stream-json: accepts JSON messages on stdin
+    // --output-format stream-json: emits JSON messages on stdout
+    // --include-partial-messages: streams partial response chunks
+    args.push('--print');
+    args.push('--input-format', 'stream-json');
+    args.push('--output-format', 'stream-json');
+    args.push('--include-partial-messages');
+    args.push('--verbose');
+    args.push('--dangerously-skip-permissions');
+    args.push('--no-session-persistence');
+
     // Add MCP config (use provided path or generate default)
     if (mcpConfigPath) {
       args.push('--mcp-config', mcpConfigPath);
@@ -167,7 +179,7 @@ class ClaudeCliManager {
       args.push(...flags);
     }
 
-    // Add prompt if provided
+    // Add prompt if provided (required for --print mode)
     if (prompt) {
       args.push(prompt);
     }
