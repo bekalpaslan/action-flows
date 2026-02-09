@@ -91,13 +91,14 @@ app.use('/api/discovery', discoveryRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/toolbar', toolbarRouter);
 app.use('/api/patterns', patternsRouter);
+app.use('/api/dossiers', dossiersRouter);
+app.use('/api/suggestions', suggestionsRouter);
 // Note: patternsRouter also handles /bookmarks routes, registered at /api for cleaner URLs
+// IMPORTANT: Must come AFTER specific /api/* routes since it has /:projectId catch-all
 app.use('/api', patternsRouter);
 app.use('/api/registry', registryRouter);
 app.use('/api/harmony', harmonyRouter);
 app.use('/api/routing', routingRouter);
-app.use('/api/dossiers', dossiersRouter);
-app.use('/api/suggestions', suggestionsRouter);
 
 // Global error handler (must be after all routes) (Agent A)
 app.use(globalErrorHandler);
