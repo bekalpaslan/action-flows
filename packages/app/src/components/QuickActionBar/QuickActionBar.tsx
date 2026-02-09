@@ -73,7 +73,7 @@ export function QuickActionBar({
         label: btn.label,
         icon: btn.icon || '💬',
         value: (btn.action.payload?.value as string) || '',
-        alwaysShow: btn.contexts.includes('general'),
+        alwaysShow: (btn.action.payload?.alwaysShow as boolean) || false,
       })),
     [customPromptButtons]
   );

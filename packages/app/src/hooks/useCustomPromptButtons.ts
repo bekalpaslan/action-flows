@@ -70,9 +70,10 @@ export function useCustomPromptButtons(projectId?: ProjectId): UseCustomPromptBu
               type: 'quick-action' as const,
               payload: {
                 value: def.prompt,
+                alwaysShow: def.alwaysShow,
               },
             },
-            contexts: def.alwaysShow ? ['general' as const] : ['general' as const], // Default to general context
+            contexts: ['general' as const], // TODO: Implement contextPatterns → ButtonContext[] conversion when context pattern UI is added
             source: entry.source,
             priority: 100, // Lower priority than core buttons
             enabled: entry.enabled,

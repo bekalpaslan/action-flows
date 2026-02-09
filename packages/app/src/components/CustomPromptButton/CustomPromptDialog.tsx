@@ -8,7 +8,7 @@
 import { useState, useCallback } from 'react';
 import './CustomPromptDialog.css';
 
-interface CustomPromptDialogProps {
+export interface CustomPromptDialogProps {
   onSubmit: (
     label: string,
     prompt: string,
