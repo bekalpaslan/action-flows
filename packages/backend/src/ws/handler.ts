@@ -1,5 +1,5 @@
 import type { WebSocket } from 'ws';
-import type { WorkspaceEvent, SessionId } from '@afw/shared';
+import type { WorkspaceEvent, SessionId, ChatMessageEvent, ChatHistoryEvent, Timestamp, ChatMessage } from '@afw/shared';
 import type { Storage } from '../storage/index.js';
 import { clientRegistry } from './clientRegistry.js';
 import { wsMessageSchema, type ValidatedWSMessage } from '../schemas/ws.js';
@@ -97,6 +97,30 @@ export function handleWebSocket(
           };
           ws.send(JSON.stringify(confirmSubscription));
           console.log(`[WS] Client ${clientId} subscribed to session ${message.sessionId}`);
+
+          // Send chat history for reconnect/replay
+          try {
+            const chatHistory = await Promise.resolve(
+              storage.getChatHistory(message.sessionId as SessionId)
+            );
+            if (chatHistory && chatHistory.length > 0) {
+              const historyEvent: ChatHistoryEvent = {
+                type: 'chat:history',
+                sessionId: message.sessionId as SessionId,
+                messages: chatHistory,
+                timestamp: new Date().toISOString() as Timestamp,
+              };
+              const historyBroadcast: WSBroadcast = {
+                type: 'event',
+                sessionId: message.sessionId,
+                payload: historyEvent,
+              };
+              ws.send(JSON.stringify(historyBroadcast));
+              console.log(`[WS] Sent chat history (${chatHistory.length} messages) to client ${clientId}`);
+            }
+          } catch (historyErr) {
+            console.error(`[WS] Error sending chat history:`, historyErr);
+          }
           break;
         }
 
@@ -108,22 +132,60 @@ export function handleWebSocket(
 
         case 'input':
           if (message.payload) {
+            const inputSessionId = message.sessionId as SessionId;
+            const inputText = String(message.payload);
+
+            // Capture user message for chat history
+            try {
+              const userAggregator = claudeCliManager.getAggregator(inputSessionId);
+              if (userAggregator) {
+                // Use aggregator to create and emit a user ChatMessage
+                userAggregator.createUserMessage(inputText);
+              } else {
+                // No aggregator — store directly as a ChatMessage
+                const userMsg: ChatMessage = {
+                  id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 8)}`,
+                  sessionId: inputSessionId,
+                  role: 'user',
+                  content: inputText,
+                  timestamp: new Date().toISOString() as Timestamp,
+                  messageType: 'text',
+                };
+                await Promise.resolve(storage.addChatMessage(inputSessionId, userMsg));
+                // Broadcast user message event
+                const chatEvent: ChatMessageEvent = {
+                  type: 'chat:message',
+                  sessionId: inputSessionId,
+                  message: userMsg,
+                  timestamp: userMsg.timestamp,
+                };
+                const chatBroadcast: WSBroadcast = {
+                  type: 'event',
+                  sessionId: message.sessionId,
+                  payload: chatEvent,
+                };
+                clientRegistry.broadcastToSession(inputSessionId, JSON.stringify(chatBroadcast));
+              }
+            } catch (userMsgErr) {
+              console.error(`[WS] Error capturing user message:`, userMsgErr);
+            }
+
             // Try to pipe input directly to running CLI session
             try {
-              const cliSession = claudeCliManager.getSession(message.sessionId as SessionId);
+              const cliSession = claudeCliManager.getSession(inputSessionId);
               if (cliSession && cliSession.isRunning()) {
                 // Pipe input directly to Claude CLI stdin
-                cliSession.sendInput(String(message.payload));
+                cliSession.sendInput(inputText);
                 console.log(`[WS] Input piped to CLI session ${message.sessionId}`);
               } else {
                 // Fallback: queue input for later processing
-                await Promise.resolve(storage.queueInput(message.sessionId as SessionId, message.payload));
+                await Promise.resolve(storage.queueInput(inputSessionId, message.payload));
                 console.log(`[WS] Input queued for session ${message.sessionId} (no active CLI session)`);
               }
             } catch (error) {
               console.error(`[WS] Error piping input to CLI session ${message.sessionId}:`, error);
               // Fallback: queue input on error
-              await Promise.resolve(storage.queueInput(message.sessionId as SessionId, message.payload));
+              await Promise.resolve(storage.queueInput(inputSessionId, message.payload));
               console.log(`[WS] Input queued for session ${message.sessionId} (piping failed)`);
             }
           }

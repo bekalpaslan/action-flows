@@ -305,6 +305,38 @@ router.get('/:id/chains', async (req, res) => {
 });
 
 /**
+ * GET /api/sessions/:id/chat
+ * Get chat message history for a session
+ */
+router.get('/:id/chat', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const session = await Promise.resolve(storage.getSession(id as SessionId));
+
+    if (!session) {
+      return res.status(404).json({
+        error: 'Session not found',
+        sessionId: id,
+      });
+    }
+
+    const messages = await Promise.resolve(storage.getChatHistory(id as SessionId));
+
+    res.json({
+      sessionId: id,
+      count: messages.length,
+      messages,
+    });
+  } catch (error) {
+    console.error('[API] Error fetching chat history:', error);
+    res.status(500).json({
+      error: 'Failed to fetch chat history',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
  * POST /api/sessions/:id/input
  * Submit user input for a session (from Dashboard)
  */

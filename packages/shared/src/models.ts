@@ -445,6 +445,39 @@ export interface ClaudeCliSession {
 }
 
 /**
+ * Chat Message - represents a single message in a CLI chat conversation
+ */
+export interface ChatMessage {
+  /** Unique message ID */
+  id: string;
+
+  /** Session this message belongs to */
+  sessionId: SessionId;
+
+  /** Message role */
+  role: 'user' | 'assistant' | 'system';
+
+  /** Message content (text) */
+  content: string;
+
+  /** When the message was created */
+  timestamp: Timestamp;
+
+  /** Type of message content */
+  messageType?: 'text' | 'tool_use' | 'tool_result' | 'error';
+
+  /** Optional metadata for assistant messages */
+  metadata?: {
+    model?: string;
+    stopReason?: string;
+    toolName?: string;
+    stepNumber?: number;
+    costUsd?: number;
+    durationMs?: number;
+  };
+}
+
+/**
  * Discovered Claude Session - an externally-running Claude Code session
  * detected via IDE lock files (~/.claude/ide/<port>.lock)
  */

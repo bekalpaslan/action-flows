@@ -7,13 +7,31 @@ import { spawn, type ChildProcess } from 'child_process';
 import type { EventEmitter } from 'events';
 import type { SessionId, ClaudeCliSession, Timestamp } from '@afw/shared';
 
-type ClaudeCliEventType = 'stdout' | 'stderr' | 'exit' | 'error';
+type ClaudeCliEventType = 'stdout' | 'stderr' | 'exit' | 'error' | 'raw-json';
+
+/** Raw parsed JSON message from stream-json output */
+export interface StreamJsonMessage {
+  type: string;
+  message?: { role?: string; content?: string; model?: string; stop_reason?: string };
+  result?: string;
+  error?: string;
+  event?: {
+    type?: string;
+    delta?: { text?: string; type?: string };
+    content_block?: { type?: string; name?: string };
+  };
+  cost_usd?: number;
+  duration_ms?: number;
+  stop_reason?: string;
+  [key: string]: unknown;
+}
 
 interface EventHandlers {
   stdout: Set<(data: string) => void>;
   stderr: Set<(data: string) => void>;
   exit: Set<(code: number | null, signal: string | null) => void>;
   error: Set<(error: Error) => void>;
+  'raw-json': Set<(msg: StreamJsonMessage) => void>;
 }
 
 /**
@@ -29,6 +47,7 @@ export class ClaudeCliSessionProcess {
     stderr: new Set(),
     exit: new Set(),
     error: new Set(),
+    'raw-json': new Set(),
   };
   private stdoutBuffer: string = ''; // Buffer for accumulating JSONL lines
   private static readonly MAX_BUFFER_SIZE = 1048576; // 1MB max buffer to prevent memory exhaustion
@@ -86,7 +105,10 @@ export class ClaudeCliSessionProcess {
 
       try {
         // Parse JSON message
-        const parsed = JSON.parse(trimmedLine);
+        const parsed = JSON.parse(trimmedLine) as StreamJsonMessage;
+
+        // Emit raw parsed JSON for message aggregation
+        this.eventHandlers['raw-json'].forEach(handler => handler(parsed));
 
         // Extract content based on message type
         if (parsed.type === 'assistant' && parsed.message?.content !== undefined) {
@@ -266,7 +288,8 @@ export class ClaudeCliSessionProcess {
   on(event: 'stderr', handler: (data: string) => void): void;
   on(event: 'exit', handler: (code: number | null, signal: string | null) => void): void;
   on(event: 'error', handler: (error: Error) => void): void;
-  on(event: ClaudeCliEventType, handler: ((data: string) => void) | ((code: number | null, signal: string | null) => void) | ((error: Error) => void)): void {
+  on(event: 'raw-json', handler: (msg: StreamJsonMessage) => void): void;
+  on(event: ClaudeCliEventType, handler: ((data: string) => void) | ((code: number | null, signal: string | null) => void) | ((error: Error) => void) | ((msg: StreamJsonMessage) => void)): void {
     const handlers = this.eventHandlers[event];
     if (handlers) {
       // Type assertion is safe here because we've validated event type via overloads
@@ -281,7 +304,8 @@ export class ClaudeCliSessionProcess {
   off(event: 'stderr', handler: (data: string) => void): void;
   off(event: 'exit', handler: (code: number | null, signal: string | null) => void): void;
   off(event: 'error', handler: (error: Error) => void): void;
-  off(event: ClaudeCliEventType, handler: ((data: string) => void) | ((code: number | null, signal: string | null) => void) | ((error: Error) => void)): void {
+  off(event: 'raw-json', handler: (msg: StreamJsonMessage) => void): void;
+  off(event: ClaudeCliEventType, handler: ((data: string) => void) | ((code: number | null, signal: string | null) => void) | ((error: Error) => void) | ((msg: StreamJsonMessage) => void)): void {
     const handlers = this.eventHandlers[event];
     if (handlers) {
       // Type assertion is safe here because we've validated event type via overloads

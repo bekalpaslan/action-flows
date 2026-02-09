@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes } from '@afw/shared';
 
@@ -20,6 +20,7 @@ const MAX_INPUT_QUEUE_PER_SESSION = 100;
 const MAX_DOSSIERS = 100;
 const MAX_DOSSIER_HISTORY = 50;
 const MAX_SUGGESTIONS = 500;
+const MAX_CHAT_MESSAGES_PER_SESSION = 1_000;
 export interface MemoryStorage {
   // Session storage
   sessions: Map<SessionId, Session>;
@@ -110,6 +111,12 @@ export interface MemoryStorage {
   addSuggestion(suggestion: SuggestionEntry): void;
   deleteSuggestion(id: string): boolean;
   incrementSuggestionFrequency(id: string): boolean;
+
+  // Chat history storage
+  chatHistory: Map<SessionId, ChatMessage[]>;
+  getChatHistory(sessionId: SessionId): ChatMessage[];
+  addChatMessage(sessionId: SessionId, message: ChatMessage): void;
+  clearChatHistory(sessionId: SessionId): void;
 
   // Internal eviction method
   _evictOldestCompletedSession(): void;
@@ -506,6 +513,27 @@ export const storage: MemoryStorage = {
     };
   },
 
+  // Chat history storage
+  chatHistory: new Map(),
+
+  getChatHistory(sessionId: SessionId) {
+    return this.chatHistory.get(sessionId) || [];
+  },
+
+  addChatMessage(sessionId: SessionId, message: ChatMessage) {
+    const messages = this.chatHistory.get(sessionId) || [];
+    messages.push(message);
+    // Evict oldest if over limit (FIFO)
+    if (messages.length > MAX_CHAT_MESSAGES_PER_SESSION) {
+      messages.splice(0, messages.length - MAX_CHAT_MESSAGES_PER_SESSION);
+    }
+    this.chatHistory.set(sessionId, messages);
+  },
+
+  clearChatHistory(sessionId: SessionId) {
+    this.chatHistory.delete(sessionId);
+  },
+
   /**
    * Evict the oldest completed or failed session when capacity is reached
    * This is called when the session limit is exceeded
@@ -529,6 +557,7 @@ export const storage: MemoryStorage = {
       this.commandsQueue.delete(oldestId);
       this.inputQueue.delete(oldestId);
       this.harmonyChecks.delete(oldestId);
+      this.chatHistory.delete(oldestId);
     }
   },
 

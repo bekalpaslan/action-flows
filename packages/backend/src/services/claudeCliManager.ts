@@ -5,9 +5,11 @@
 
 import path from 'path';
 import os from 'os';
-import type { SessionId, ClaudeCliStartedEvent, ClaudeCliOutputEvent, ClaudeCliExitedEvent, WorkspaceEvent, DurationMs, Timestamp, Session, SessionStartedEvent, SessionEndedEvent } from '@afw/shared';
+import type { SessionId, ClaudeCliStartedEvent, ClaudeCliOutputEvent, ClaudeCliExitedEvent, ChatMessageEvent, ChatHistoryEvent, WorkspaceEvent, DurationMs, Timestamp, Session, SessionStartedEvent, SessionEndedEvent, ChatMessage } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { ClaudeCliSessionProcess } from './claudeCliSession.js';
+import type { StreamJsonMessage } from './claudeCliSession.js';
+import { ClaudeCliMessageAggregator } from './claudeCliMessageAggregator.js';
 import { storage } from '../storage/index.js';
 
 /**
@@ -16,6 +18,7 @@ import { storage } from '../storage/index.js';
  */
 class ClaudeCliManager {
   private sessions: Map<SessionId, ClaudeCliSessionProcess> = new Map();
+  private aggregators: Map<SessionId, ClaudeCliMessageAggregator> = new Map();
   private broadcastFunction: ((sessionId: SessionId, event: WorkspaceEvent) => void) | null = null;
   private readonly MAX_SESSIONS = parseInt(process.env.AFW_CLAUDE_CLI_MAX_SESSIONS || '5', 10);
 
@@ -200,6 +203,88 @@ class ClaudeCliManager {
     // Register event handlers
     const startTime = Date.now();
 
+    // Create message aggregator for this session
+    const aggregator = new ClaudeCliMessageAggregator(sessionId);
+    this.aggregators.set(sessionId, aggregator);
+
+    // When aggregator emits a complete message, broadcast it and store in history
+    aggregator.setMessageCallback((message: ChatMessage) => {
+      // Store in chat history
+      Promise.resolve(storage.addChatMessage(sessionId, message)).catch(err => {
+        console.error(`[ClaudeCliManager] Failed to store chat message:`, err);
+      });
+
+      // Broadcast chat:message event
+      const chatEvent: ChatMessageEvent = {
+        type: 'chat:message',
+        sessionId,
+        message,
+        timestamp: message.timestamp,
+      };
+      this.broadcast(sessionId, chatEvent);
+    });
+
+    // Handle raw-json messages for aggregation (message boundary detection)
+    session.on('raw-json', (msg: StreamJsonMessage) => {
+      try {
+        if (msg.type === 'assistant' && msg.message?.content !== undefined) {
+          // Complete assistant message — append content to aggregator
+          aggregator.appendChunk(msg.message.content);
+          if (msg.message.model) {
+            aggregator.setMetadata('model', msg.message.model);
+          }
+          if (msg.message.stop_reason) {
+            aggregator.setMetadata('stopReason', msg.message.stop_reason);
+          }
+        } else if (msg.type === 'result') {
+          // End of assistant turn — finalize message with metadata
+          if (msg.result) {
+            aggregator.appendChunk(msg.result);
+          }
+          if (msg.cost_usd !== undefined) {
+            aggregator.setMetadata('costUsd', msg.cost_usd);
+          }
+          if (msg.duration_ms !== undefined) {
+            aggregator.setMetadata('durationMs', msg.duration_ms);
+          }
+          if (msg.stop_reason) {
+            aggregator.setMetadata('stopReason', msg.stop_reason);
+          }
+          aggregator.finalizeMessage();
+        } else if (msg.type === 'error' && msg.error) {
+          // Error — finalize any buffered content first, then emit error
+          if (aggregator.hasBufferedContent()) {
+            aggregator.finalizeMessage();
+          }
+          aggregator.setMessageType('error');
+          aggregator.appendChunk(msg.error);
+          aggregator.finalizeMessage();
+        } else if (msg.type === 'stream_event' && msg.event) {
+          // Streaming event — accumulate chunks
+          if (msg.event.type === 'content_block_delta' && msg.event.delta?.text) {
+            aggregator.appendChunk(msg.event.delta.text);
+          } else if (msg.event.type === 'content_block_start' && msg.event.content_block?.type === 'tool_use') {
+            // Tool use start
+            if (aggregator.hasBufferedContent()) {
+              aggregator.finalizeMessage();
+            }
+            aggregator.setMessageType('tool_use');
+            if (msg.event.content_block.name) {
+              aggregator.setMetadata('toolName', msg.event.content_block.name);
+            }
+          } else if (msg.event.type === 'message_stop') {
+            // End of message — finalize
+            aggregator.finalizeMessage();
+          }
+        }
+        // Ignore 'system' and other unknown types for aggregation
+      } catch (err) {
+        console.error(`[ClaudeCliManager] Error processing raw-json for aggregation:`, err);
+      }
+    });
+
+    // DEPRECATED: claude-cli:output events will be removed in v2.0
+    // Use chat:message events instead
     session.on('stdout', (output) => {
       const event: ClaudeCliOutputEvent = {
         type: 'claude-cli:output',
@@ -261,6 +346,13 @@ class ClaudeCliManager {
       };
       updateStorage();
 
+      // Dispose aggregator (flushes any remaining buffered content)
+      const sessionAggregator = this.aggregators.get(sessionId);
+      if (sessionAggregator) {
+        sessionAggregator.dispose();
+        this.aggregators.delete(sessionId);
+      }
+
       // Remove from sessions map
       this.sessions.delete(sessionId);
       console.log(`[ClaudeCliManager] Session ${sessionId} exited (code: ${code}, signal: ${signal})`);
@@ -279,6 +371,8 @@ class ClaudeCliManager {
 
       // If initial prompt provided, send it as the first stdin message
       if (prompt) {
+        // Capture prompt as a user chat message
+        aggregator.createUserMessage(prompt);
         session.sendInput(prompt);
       }
 
@@ -338,6 +432,13 @@ class ClaudeCliManager {
   }
 
   /**
+   * Get the message aggregator for a session
+   */
+  getAggregator(sessionId: SessionId): ClaudeCliMessageAggregator | undefined {
+    return this.aggregators.get(sessionId);
+  }
+
+  /**
    * Stop a Claude CLI session
    */
   stopSession(sessionId: SessionId, signal: NodeJS.Signals = 'SIGTERM'): boolean {
@@ -367,6 +468,16 @@ class ClaudeCliManager {
    */
   stopAllSessions(): void {
     console.log(`[ClaudeCliManager] Stopping all Claude CLI sessions (${this.sessions.size})`);
+    // Dispose all aggregators first
+    this.aggregators.forEach((agg, sessionId) => {
+      try {
+        agg.dispose();
+      } catch (error) {
+        console.error(`[ClaudeCliManager] Error disposing aggregator for ${sessionId}:`, error);
+      }
+    });
+    this.aggregators.clear();
+
     this.sessions.forEach((session, sessionId) => {
       try {
         session.stop('SIGTERM');

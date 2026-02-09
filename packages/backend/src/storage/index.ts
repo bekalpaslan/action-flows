@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
 
@@ -100,6 +100,12 @@ export interface Storage {
     target: SessionId | ProjectId,
     targetType: 'session' | 'project'
   ): HarmonyMetrics | Promise<HarmonyMetrics>;
+
+  // Chat history storage
+  chatHistory?: Map<SessionId, ChatMessage[]>; // Memory only
+  getChatHistory(sessionId: SessionId): ChatMessage[] | Promise<ChatMessage[]>;
+  addChatMessage(sessionId: SessionId, message: ChatMessage): void | Promise<void>;
+  clearChatHistory(sessionId: SessionId): void | Promise<void>;
 
   // Pub/Sub support (Redis only)
   subscribe?(channel: string, callback: (message: string) => void): Promise<void>;

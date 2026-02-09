@@ -1,5 +1,5 @@
 import { Redis } from 'ioredis';
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes } from '@afw/shared';
 
@@ -77,6 +77,11 @@ export interface RedisStorage {
   addSuggestion(suggestion: SuggestionEntry): Promise<void>;
   deleteSuggestion(id: string): Promise<boolean>;
   incrementSuggestionFrequency(id: string): Promise<boolean>;
+
+  // Chat history storage
+  getChatHistory(sessionId: SessionId): Promise<ChatMessage[]>;
+  addChatMessage(sessionId: SessionId, message: ChatMessage): Promise<void>;
+  clearChatHistory(sessionId: SessionId): Promise<void>;
 
   // Pub/Sub support
   subscribe(channel: string, callback: (message: string) => void): Promise<void>;
@@ -824,6 +829,40 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       } catch (error) {
         console.error(`[Redis] Error incrementing suggestion frequency:`, error);
         return false;
+      }
+    },
+
+    // === Chat History ===
+    async getChatHistory(sessionId: SessionId) {
+      try {
+        const key = `${keyPrefix}chat:${sessionId}`;
+        const messages = await redis.lrange(key, 0, -1);
+        return messages.map((m: string) => JSON.parse(m) as ChatMessage);
+      } catch (error) {
+        console.error(`[Redis] Error getting chat history for ${sessionId}:`, error);
+        return [];
+      }
+    },
+
+    async addChatMessage(sessionId: SessionId, message: ChatMessage) {
+      try {
+        const key = `${keyPrefix}chat:${sessionId}`;
+        await redis.rpush(key, JSON.stringify(message));
+        // Keep only last 1000 messages per session
+        await redis.ltrim(key, -1000, -1);
+        // Set TTL (24 hours, same as sessions)
+        await redis.expire(key, SESSION_TTL);
+      } catch (error) {
+        console.error(`[Redis] Error adding chat message for ${sessionId}:`, error);
+      }
+    },
+
+    async clearChatHistory(sessionId: SessionId) {
+      try {
+        const key = `${keyPrefix}chat:${sessionId}`;
+        await redis.del(key);
+      } catch (error) {
+        console.error(`[Redis] Error clearing chat history for ${sessionId}:`, error);
       }
     },
 

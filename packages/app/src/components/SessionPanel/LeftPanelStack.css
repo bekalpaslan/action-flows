@@ -30,26 +30,9 @@
   box-shadow: var(--panel-glow-default);
 }
 
-/* Panel Number Badge — top-right corner */
+/* Panel Number Badge — hidden (single panel, no numbering needed) */
 .left-panel-stack__panel-number {
-  position: absolute;
-  top: 4px;
-  right: 28px;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: var(--radius-full, 9999px);
-  background: var(--system-blue, #0a84ff);
-  color: var(--text-primary, #fff);
-  font-size: 11px;
-  font-weight: var(--font-bold, 700);
-  font-family: var(--font-sans);
-  box-shadow: 0 0 8px rgba(10, 132, 255, 0.5), 0 0 2px rgba(10, 132, 255, 0.7);
-  pointer-events: none;
-  line-height: 1;
+  display: none;
 }
 
 /* All panels have full border now — no special last-child needed */
@@ -63,23 +46,7 @@
 }
 
 /* Panel-Specific Colors */
-.left-panel-stack__panel--info {
-  background: var(--panel-bg-elevated);
-}
-
-.left-panel-stack__panel--cli {
-  background: var(--panel-bg-inset);
-}
-
-.left-panel-stack__panel--conversation {
-  background: var(--panel-bg-base);
-}
-
-.left-panel-stack__panel--prompts {
-  background: var(--panel-bg-base);
-}
-
-.left-panel-stack__panel--folders {
+.left-panel-stack__panel--chat {
   background: var(--panel-bg-base);
 }
 
@@ -147,11 +114,5 @@
  * ============================================================================ */
 
 @media (max-width: 800px) {
-  .left-panel-stack__panel--info {
-    height: 50px !important;
-  }
-
-  .left-panel-stack__panel--prompts {
-    height: 120px !important;
-  }
+  /* Single panel — no special responsive overrides needed */
 }

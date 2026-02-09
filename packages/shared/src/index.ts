@@ -58,6 +58,8 @@ export type {
   ClaudeCliStartedEvent,
   ClaudeCliOutputEvent,
   ClaudeCliExitedEvent,
+  ChatMessageEvent,
+  ChatHistoryEvent,
   ErrorOccurredEvent,
   WarningOccurredEvent,
   SessionFollowedEvent,
@@ -89,6 +91,7 @@ export type {
   ChainTemplateStep,
   TemplateParameter,
   ClaudeCliSession,
+  ChatMessage,
   DiscoveredClaudeSession,
   DiscoveredSessionEnrichment,
 } from './models.js';

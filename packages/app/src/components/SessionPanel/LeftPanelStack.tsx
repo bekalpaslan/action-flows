@@ -1,36 +1,30 @@
 /**
  * LeftPanelStack Component
  *
- * Vertical stacking container for all left-side panels.
- * Manages 4 panels with mixed height strategy (fixed + flexible).
+ * Container for the left-side panel.
+ * Now renders a single component: ChatPanel (with integrated session info header).
  *
- * Panel Order (top to bottom):
- * 1. SessionInfoPanel (60px fixed)
- * 2. CliPanel (flex: 1 - grows to fill)
- * 3. ConversationPanel (200px fixed)
- * 4. SmartPromptLibrary (160px fixed)
+ * Panel:
+ * 1. ChatPanel (flex: 1 - fills entire space, session info in its header bar)
  */
 
 import React from 'react';
 import type { Session, FlowAction } from '@afw/shared';
-import { SessionInfoPanel } from './SessionInfoPanel';
-import { CliPanel } from './CliPanel';
-import { ConversationPanel } from './ConversationPanel';
-import { SmartPromptLibrary } from './SmartPromptLibrary';
+import { ChatPanel } from './ChatPanel';
 import './LeftPanelStack.css';
 
 export interface PanelHeightConfig {
-  sessionInfo?: number | string;
-  cli?: number | string;
-  conversation?: number | string;
-  smartPrompt?: number | string;
+  chat?: number | string;
 }
 
 export interface LeftPanelStackProps {
   /** Session to display */
   session: Session;
 
-  /** Callback when user submits input */
+  /** Callback when user sends a message */
+  onSendMessage?: (message: string) => Promise<void>;
+
+  /** Callback when user submits input (legacy, passed to ChatPanel as onSendMessage) */
   onSubmitInput?: (input: string) => Promise<void>;
 
   /** Callback when a flow is selected */
@@ -47,84 +41,36 @@ export interface LeftPanelStackProps {
 }
 
 /**
- * Default panel heights
- */
-const DEFAULT_HEIGHTS: Required<PanelHeightConfig> = {
-  sessionInfo: 'auto',
-  cli: 'flex',
-  conversation: '200px',
-  smartPrompt: '160px',
-};
-
-/**
  * LeftPanelStack - Main component
+ * Single panel: ChatPanel with integrated session info header
  */
 export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
   session,
+  onSendMessage,
   onSubmitInput,
-  onSelectFlow,
-  flows = [],
-  actions = [],
-  panelHeights = {},
+  onSelectFlow: _onSelectFlow,
+  flows: _flows = [],
+  actions: _actions = [],
+  panelHeights: _panelHeights = {},
 }) => {
-  // Merge custom heights with defaults
-  const heights = { ...DEFAULT_HEIGHTS, ...panelHeights };
+  // Use onSendMessage if provided, fall back to onSubmitInput for backward compat
+  const handleSendMessage = onSendMessage || onSubmitInput;
 
   return (
     <div className="left-panel-stack">
-      {/* 1. SessionInfoPanel - Session metadata (compact) */}
+      {/* ChatPanel - Unified chat interface with integrated session info */}
       <div
-        className="left-panel-stack__panel left-panel-stack__panel--info"
+        className="left-panel-stack__panel left-panel-stack__panel--chat"
         style={{
-          height: heights.sessionInfo,
-          flexShrink: 0,
+          flex: 1,
+          minHeight: '300px',
         }}
       >
-        <span className="left-panel-stack__panel-number">1</span>
-        <SessionInfoPanel session={session} />
-      </div>
-
-      {/* 2. CliPanel - Terminal (flexible, takes remaining space) */}
-      <div
-        className="left-panel-stack__panel left-panel-stack__panel--cli"
-        style={{
-          flex: heights.cli === 'flex' ? 1 : undefined,
-          height: heights.cli !== 'flex' ? heights.cli : undefined,
-          minHeight: '200px',
-        }}
-      >
-        <span className="left-panel-stack__panel-number">2</span>
-        <CliPanel sessionId={session.id} />
-      </div>
-
-      {/* 3. ConversationPanel - Messages */}
-      <div
-        className="left-panel-stack__panel left-panel-stack__panel--conversation"
-        style={{
-          height: heights.conversation,
-          flexShrink: 0,
-        }}
-      >
-        <span className="left-panel-stack__panel-number">3</span>
-        <ConversationPanel
+        <ChatPanel
+          sessionId={session.id}
           session={session}
-          onSubmitInput={onSubmitInput || (async (_input: string) => {})}
-        />
-      </div>
-
-      {/* 4. SmartPromptLibrary - Flow/action buttons */}
-      <div
-        className="left-panel-stack__panel left-panel-stack__panel--prompts"
-        style={{
-          height: heights.smartPrompt,
-          flexShrink: 0,
-        }}
-      >
-        <span className="left-panel-stack__panel-number">4</span>
-        <SmartPromptLibrary
-          flows={flows}
-          actions={actions}
-          onSelectFlow={onSelectFlow || (() => {})}
+          onSendMessage={handleSendMessage}
+          collapsible
         />
       </div>
     </div>

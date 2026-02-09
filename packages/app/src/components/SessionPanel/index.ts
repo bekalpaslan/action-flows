@@ -19,14 +19,8 @@ export type { ResizeHandleProps } from './ResizeHandle';
 export { SessionInfoPanel } from './SessionInfoPanel';
 export type { SessionInfoPanelProps } from './SessionInfoPanel';
 
-export { CliPanel } from './CliPanel';
-export type { CliPanelProps } from './CliPanel';
-
-export { ConversationPanel } from './ConversationPanel';
-export type { ConversationPanelProps } from './ConversationPanel';
-
-export { SmartPromptLibrary } from './SmartPromptLibrary';
-export type { SmartPromptLibraryProps } from './SmartPromptLibrary';
+export { ChatPanel } from './ChatPanel';
+export type { ChatPanelProps } from './ChatPanel';
 
 export { FolderHierarchy } from './FolderHierarchy';
 export type { FolderHierarchyProps, FileTreeNode } from './FolderHierarchy';

@@ -16,6 +16,7 @@ import type {
 } from './types.js';
 import type { RegistryEntryId, RegistryEntry } from './registryTypes.js';
 import type { LayerSource } from './selfEvolvingTypes.js';
+import type { ChatMessage } from './models.js';
 
 /**
  * Base event structure
@@ -448,6 +449,24 @@ export interface ClaudeCliExitedEvent extends BaseEvent {
 }
 
 /**
+ * Chat messaging events (for CLI-to-chat conversion)
+ */
+
+export interface ChatMessageEvent extends BaseEvent {
+  type: 'chat:message';
+
+  /** The complete chat message */
+  message: ChatMessage;
+}
+
+export interface ChatHistoryEvent extends BaseEvent {
+  type: 'chat:history';
+
+  /** Full conversation history for reconnect/replay */
+  messages: ChatMessage[];
+}
+
+/**
  * Error and diagnostic events
  */
 
@@ -633,6 +652,8 @@ export type WorkspaceEvent =
   | ClaudeCliStartedEvent
   | ClaudeCliOutputEvent
   | ClaudeCliExitedEvent
+  | ChatMessageEvent
+  | ChatHistoryEvent
   | ErrorOccurredEvent
   | WarningOccurredEvent
   | SessionFollowedEvent
@@ -688,6 +709,10 @@ export const eventGuards = {
     event.type === 'claude-cli:output',
   isClaudeCliExited: (event: WorkspaceEvent): event is ClaudeCliExitedEvent =>
     event.type === 'claude-cli:exited',
+  isChatMessage: (event: WorkspaceEvent): event is ChatMessageEvent =>
+    event.type === 'chat:message',
+  isChatHistory: (event: WorkspaceEvent): event is ChatHistoryEvent =>
+    event.type === 'chat:history',
   isError: (event: WorkspaceEvent): event is ErrorOccurredEvent =>
     event.type === 'error:occurred',
   isWarning: (event: WorkspaceEvent): event is WarningOccurredEvent =>
