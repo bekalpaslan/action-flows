@@ -80,6 +80,16 @@ export const SmartPromptLibrary: React.FC<SmartPromptLibraryProps> = ({
     );
   }, [currentItems, searchQuery]);
 
+  const getCategoryLabel = (item: FlowAction | ChecklistItem | HumanPromptItem): string => {
+    if ('category' in item) {
+      if (activeTab === 'flows' || activeTab === 'actions') {
+        return item.category === 'flow' ? 'Flows' : 'Actions';
+      }
+      return item.category.charAt(0).toUpperCase() + item.category.slice(1);
+    }
+    return 'Other';
+  };
+
   // Group items by category
   const groupedItems = useMemo(() => {
     const groups = new Map<string, Array<FlowAction | ChecklistItem | HumanPromptItem>>();
@@ -115,17 +125,6 @@ export const SmartPromptLibrary: React.FC<SmartPromptLibraryProps> = ({
   useEffect(() => {
     setSelectedIndex(0);
   }, [allFlatItems]);
-
-  const getCategoryLabel = (item: FlowAction | ChecklistItem | HumanPromptItem): string => {
-    if ('category' in item) {
-      if (activeTab === 'flows' || activeTab === 'actions') {
-        return item.category === 'flow' ? 'Flows' : 'Actions';
-      }
-      // Capitalize category for checklists and prompts
-      return item.category.charAt(0).toUpperCase() + item.category.slice(1);
-    }
-    return 'Other';
-  };
 
   const handleSelect = (item: FlowAction | ChecklistItem | HumanPromptItem) => {
     addToRecent(item.id);

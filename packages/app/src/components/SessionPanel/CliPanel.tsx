@@ -45,6 +45,7 @@ export function CliPanel({
   const terminalRef = useRef<HTMLDivElement>(null);
   const terminalInstanceRef = useRef<Terminal | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
+  const lineBufferRef = useRef('');
   const [commandInput, setCommandInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -99,13 +100,16 @@ export function CliPanel({
     const fitAddon = new FitAddon();
     terminal.loadAddon(fitAddon);
 
-    // Mount terminal
+    // Mount terminal and store refs BEFORE fit (fit can throw if container not sized yet)
     terminal.open(terminalRef.current);
-    fitAddon.fit();
-
-    // Store refs
     terminalInstanceRef.current = terminal;
     fitAddonRef.current = fitAddon;
+
+    try {
+      fitAddon.fit();
+    } catch {
+      // FitAddon throws if container has zero dimensions (e.g. hidden panel, StrictMode)
+    }
 
     // Welcome message
     terminal.writeln('\x1b[1;36m╔════════════════════════════════╗\x1b[0m');

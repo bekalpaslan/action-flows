@@ -11,7 +11,6 @@ export { EditorWorkbench } from './EditorWorkbench';
 export type { EditorWorkbenchProps } from './EditorWorkbench';
 export { ArchiveWorkbench } from './ArchiveWorkbench';
 export type { ArchiveWorkbenchProps } from './ArchiveWorkbench';
-export { SessionTileGrid } from './SessionTileGrid';
 export { ExploreWorkbench } from './ExploreWorkbench';
 export type { ExploreWorkbenchProps } from './ExploreWorkbench';
 export { PMWorkbench } from './PMWorkbench';
