@@ -112,7 +112,7 @@ const initialDemoDocs: DocLink[] = [
     title: 'ActionFlows Framework',
     url: '/.claude/actionflows/ORGANIZATION.md',
     category: 'Framework',
-    description: 'ActionFlows department and routing documentation',
+    description: 'ActionFlows context and routing documentation',
   },
   {
     id: 'doc-4',
