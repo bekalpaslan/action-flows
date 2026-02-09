@@ -33,6 +33,7 @@ ActionFlows is organized as 7 layers, each with its own role, evolution mechanis
 - **INDEX.md** is a searchable registry of past executions. Before compiling any chain, the orchestrator reads INDEX.md to find similar patterns. "We solved this before with `analyze×3 → audit`. Let me reuse that pattern." This is not logging — it's active decision-making input.
 - **LEARNINGS.md** is a catalog of past mistakes and their root causes. The orchestrator reads it before routing to check: "Has this type of work failed before? What went wrong? How do I avoid repeating it?" A learning entry includes: context, problem, root cause, and solution. Agents surface learnings during execution; the orchestrator records them; future sessions benefit. Learnings inform routing, they are not an execution step.
 - **Reports** provide trend data. Framework health reports across sessions reveal patterns — e.g., "harmony violations dropped after we fixed the contract parsers."
+- **Intel Dossiers** are the living manifestation of Layer 0 in the UI. A dossier is a persistent, evolving intelligence page about a code domain — it watches paths, accumulates insights, and grows through re-analysis. Where INDEX.md and LEARNINGS.md are the orchestrator's memory, dossiers are the *codebase's* memory. They follow their own lifecycle: Birth → Life → Growth → Memory. See `docs/design/INTEL_DOSSIER.md`.
 
 **Key Mechanism:**
 ```
@@ -178,6 +179,7 @@ When this format changes, three things update:
 - **Timeline:** Real-time execution timeline with pausing and resuming
 - **SquadPanel:** Agent status indicators (in development)
 - **Harmony Panel:** Real-time harmony violations and parsing status
+- **Intel Workbench:** Living dossiers about code domains — persistent intelligence pages with widgets (StatCard, InsightCard, FileTree, SnippetPreview, CodeHealthMeter, AlertPanel). This is where Layer 0 (Memory) becomes visible. Dossiers watch file changes, trigger re-analysis, and accumulate insights over time. The dashboard shifts from passive observer to active intelligence gatherer.
 
 **What Makes It Living:**
 - The Self-Evolving UI system allows the dashboard to register new button types, detect visual patterns, and self-modify. Instead of hard-coding UI elements, the system reads a registry and generates buttons dynamically.
@@ -309,6 +311,24 @@ Every ad-hoc chain the orchestrator compiles is a potential reusable flow. When 
 This happened in practice on 2026-02-09: the backwards harmony audit was composed ad-hoc from existing actions. It worked. It was immediately registered as `backwards-harmony-audit/` — a permanent flow available to every future session.
 
 **Every chain is a seed. Some seeds become flows. Flows become the system's muscle memory.**
+
+### Every Dossier Is a Living Record
+
+The growth cycle isn't limited to orchestrator chains. **Intel Dossiers** follow the same principle at the code level:
+
+```
+Dossier created (Birth)
+    ↓
+File watcher detects changes (Life)
+    ↓
+Re-analysis runs, new insights accumulate (Growth)
+    ↓
+Prior states preserved for temporal comparison (Memory)
+    ↓
+Domain understanding deepens with every change
+```
+
+Where chains grow the orchestrator's routing intelligence, dossiers grow the system's understanding of the codebase itself. A dossier about "Auth System" that watches `middleware/auth.ts`, `AuthContext.tsx`, and `types/user.ts` sees the full cross-cutting domain — and gets smarter every time those files change. The system doesn't just execute work better. It *understands the code better*.
 
 ### The Compounding Properties
 
