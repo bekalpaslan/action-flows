@@ -158,6 +158,9 @@ class ClaudeCliManager {
     // --input-format stream-json: accepts JSON messages on stdin
     // --output-format stream-json: emits JSON messages on stdout
     // --include-partial-messages: streams partial response chunks
+    // IMPORTANT: Do NOT pass the initial prompt as a CLI argument. Claude CLI's --print mode
+    // with an argument is one-shot and rejects stdin follow-ups with "Prompt is too long".
+    // Instead, we send the initial prompt as the first stdin message after process start.
     args.push('--print');
     args.push('--input-format', 'stream-json');
     args.push('--output-format', 'stream-json');
@@ -179,10 +182,8 @@ class ClaudeCliManager {
       args.push(...flags);
     }
 
-    // Add prompt if provided (required for --print mode)
-    if (prompt) {
-      args.push(prompt);
-    }
+    // NOTE: Do NOT add prompt to args. It will be sent via stdin after process starts.
+    // See comment at line 161-163 for explanation.
 
     // Prepare spawn environment (merge with provided env vars)
     const spawnEnv = {
@@ -275,6 +276,11 @@ class ClaudeCliManager {
     try {
       await session.start();
       this.sessions.set(sessionId, session);
+
+      // If initial prompt provided, send it as the first stdin message
+      if (prompt) {
+        session.sendInput(prompt);
+      }
 
       // Broadcast started event
       const info = session.getInfo();
