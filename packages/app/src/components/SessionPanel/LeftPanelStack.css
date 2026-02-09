@@ -30,6 +30,14 @@
   border-bottom: none;
 }
 
+/* Collapsed Panel Detection — override wrapper dimensions when child collapses */
+.left-panel-stack__panel:has(> .collapsed) {
+  flex: 0 0 auto !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  overflow: hidden;
+}
+
 /* Panel-Specific Colors */
 .left-panel-stack__panel--info {
   background-color: #252525;
