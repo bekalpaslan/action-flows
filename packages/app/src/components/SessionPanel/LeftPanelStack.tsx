@@ -8,12 +8,17 @@
  * 1. SessionInfoPanel (120px fixed)
  * 2. CliPanel (200px fixed)
  * 3. ConversationPanel (flex: 1 - grows to fill)
- * 4. SmartPromptLibrary (180px fixed) - PLACEHOLDER
- * 5. FolderHierarchy (200px fixed) - PLACEHOLDER
+ * 4. SmartPromptLibrary (180px fixed)
+ * 5. FolderHierarchy (200px fixed)
  */
 
 import React from 'react';
 import type { Session, FlowAction } from '@afw/shared';
+import { SessionInfoPanel } from './SessionInfoPanel';
+import { CliPanel } from './CliPanel';
+import { ConversationPanel } from './ConversationPanel';
+import { SmartPromptLibrary } from './SmartPromptLibrary';
+import { FolderHierarchy } from './FolderHierarchy';
 import './LeftPanelStack.css';
 
 export interface PanelHeightConfig {
@@ -79,12 +84,7 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
           flexShrink: 0,
         }}
       >
-        <div className="panel-placeholder">
-          <div className="panel-placeholder__title">Session Info</div>
-          <div className="panel-placeholder__hint">
-            SessionInfoPanel will be added by parallel agent
-          </div>
-        </div>
+        <SessionInfoPanel session={session} />
       </div>
 
       {/* 2. CliPanel - Terminal */}
@@ -95,12 +95,7 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
           flexShrink: 0,
         }}
       >
-        <div className="panel-placeholder">
-          <div className="panel-placeholder__title">CLI Terminal</div>
-          <div className="panel-placeholder__hint">
-            CliPanel will be added by parallel agent
-          </div>
-        </div>
+        <CliPanel sessionId={session.id} />
       </div>
 
       {/* 3. ConversationPanel - Messages (flexible height) */}
@@ -113,12 +108,10 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
           overflow: 'hidden',
         }}
       >
-        <div className="panel-placeholder">
-          <div className="panel-placeholder__title">Conversation</div>
-          <div className="panel-placeholder__hint">
-            ConversationPanel will be added by parallel agent
-          </div>
-        </div>
+        <ConversationPanel
+          session={session}
+          onSubmitInput={onSubmitInput || (async (_input: string) => {})}
+        />
       </div>
 
       {/* 4. SmartPromptLibrary - Flow/action buttons */}
@@ -129,12 +122,11 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
           flexShrink: 0,
         }}
       >
-        <div className="panel-placeholder">
-          <div className="panel-placeholder__title">Smart Prompts</div>
-          <div className="panel-placeholder__hint">
-            SmartPromptLibrary will be added by parallel agent
-          </div>
-        </div>
+        <SmartPromptLibrary
+          flows={flows}
+          actions={actions}
+          onSelectFlow={onSelectFlow || (() => {})}
+        />
       </div>
 
       {/* 5. FolderHierarchy - Workspace navigation */}
@@ -145,12 +137,9 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
           flexShrink: 0,
         }}
       >
-        <div className="panel-placeholder">
-          <div className="panel-placeholder__title">Workspace</div>
-          <div className="panel-placeholder__hint">
-            FolderHierarchy will be added by parallel agent
-          </div>
-        </div>
+        <FolderHierarchy
+          workspaceRoot={session.cwd || 'D:/ActionFlowsDashboard'}
+        />
       </div>
     </div>
   );

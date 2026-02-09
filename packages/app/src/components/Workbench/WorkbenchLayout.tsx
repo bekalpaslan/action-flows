@@ -11,13 +11,11 @@ import { SettingsWorkbench } from './SettingsWorkbench';
 import { HarmonyWorkbench } from './HarmonyWorkbench';
 import { ExploreWorkbench } from './ExploreWorkbench';
 import { ArchiveWorkbench } from './ArchiveWorkbench';
-import { BottomControlPanel } from '../BottomControlPanel';
 import { useSessionArchive } from '../../hooks/useSessionArchive';
 import {
   type WorkbenchId,
   type SessionId,
   type Session,
-  type QuickCommandAction,
   type FlowAction,
   canWorkbenchHaveSessions,
   brandedTypes,
@@ -449,41 +447,10 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
     console.log('Agent clicked:', sessionId, agentId);
   }, []);
 
-  /**
-   * Handle input submission from BottomControlPanel
-   */
-  const handleSubmitInput = useCallback((input: string) => {
-    if (!activeSessionId) {
-      console.warn('No active session to send input to');
-      return;
-    }
-    // TODO: Send input to backend via WebSocket/claudeCliService
-    handleSessionInput(activeSessionId, input);
-  }, [activeSessionId, handleSessionInput]);
-
-  /**
-   * Handle quick command execution from BottomControlPanel
-   */
-  const handleExecuteCommand = useCallback((action: QuickCommandAction) => {
-    if (!activeSessionId) {
-      console.warn('No active session to execute command on');
-      return;
-    }
-    // TODO: Dispatch command to backend based on action type
-    console.log('Execute command:', action, 'on session:', activeSessionId);
-  }, [activeSessionId]);
-
-  /**
-   * Handle flow/action selection from BottomControlPanel
-   */
-  const handleSelectFlow = useCallback((item: FlowAction) => {
-    if (!activeSessionId) {
-      console.warn('No active session to apply flow to');
-      return;
-    }
-    // TODO: Execute flow/action on the active session
-    console.log('Select flow/action:', item, 'for session:', activeSessionId);
-  }, [activeSessionId]);
+  // Removed handleSubmitInput, handleExecuteCommand, handleSelectFlow
+  // These were used by BottomControlPanel which was removed in Phase 2
+  // Input submission now handled by ConversationPanel inside SessionPanelLayout
+  // Flow/action selection now handled by SmartPromptLibrary inside SessionPanelLayout
 
   /**
    * PM Workbench: Handle task creation
@@ -545,6 +512,8 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
             onSessionInput={handleSessionInput}
             onNodeClick={handleNodeClick}
             onAgentClick={handleAgentClick}
+            flows={ACTIONFLOWS_FLOWS}
+            actions={ACTIONFLOWS_ACTIONS}
           />
         );
       case 'maintenance':
@@ -627,17 +596,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         </main>
       </div>
 
-      <footer className="workbench-bottom">
-        <BottomControlPanel
-          sessionId={activeSessionId}
-          onSubmitInput={handleSubmitInput}
-          onExecuteCommand={handleExecuteCommand}
-          onSelectFlow={handleSelectFlow}
-          flows={ACTIONFLOWS_FLOWS}
-          actions={ACTIONFLOWS_ACTIONS}
-          disabled={!activeSessionId}
-        />
-      </footer>
+      {/* BottomControlPanel removed in Phase 2 - functionality moved to ConversationPanel + SmartPromptLibrary */}
     </div>
   );
 }

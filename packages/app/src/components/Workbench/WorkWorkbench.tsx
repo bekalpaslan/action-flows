@@ -3,19 +3,19 @@
  * Primary workbench for active development sessions
  *
  * Features:
- * - Displays 1-4 SessionTiles in a dynamic grid layout
+ * - Displays active session using SessionPanelLayout with 25/75 split panel architecture
  * - Header showing attached session count
  * - Empty state when no sessions are attached
  * - Session control callbacks (close, detach, input)
  *
  * Layout:
  * - Header bar with session count and controls
- * - SessionTileGrid for displaying attached sessions
+ * - SessionPanelLayout for displaying active session
  */
 
 import React from 'react';
-import type { Session } from '@afw/shared';
-import { SessionTileGrid } from './SessionTileGrid';
+import type { Session, FlowAction } from '@afw/shared';
+import { SessionPanelLayout } from '../SessionPanel';
 import './WorkWorkbench.css';
 
 export interface WorkWorkbenchProps {
@@ -36,6 +36,12 @@ export interface WorkWorkbenchProps {
 
   /** Callback when an agent avatar is clicked */
   onAgentClick?: (sessionId: string, agentId: string) => void;
+
+  /** Available flows for SmartPromptLibrary */
+  flows?: FlowAction[];
+
+  /** Available actions for SmartPromptLibrary */
+  actions?: FlowAction[];
 }
 
 /**
@@ -48,6 +54,8 @@ export function WorkWorkbench({
   onSessionInput,
   onNodeClick,
   onAgentClick,
+  flows = [],
+  actions = [],
 }: WorkWorkbenchProps): React.ReactElement {
   const sessionCount = sessions.length;
 
@@ -68,16 +76,26 @@ export function WorkWorkbench({
         </div>
       </div>
 
-      {/* Main Content - SessionTileGrid */}
+      {/* Main Content - SessionPanelLayout for active session */}
       <div className="work-workbench__content">
-        <SessionTileGrid
-          sessions={sessions}
-          onSessionClose={onSessionClose}
-          onSessionDetach={onSessionDetach}
-          onSessionInput={onSessionInput}
-          onNodeClick={onNodeClick}
-          onAgentClick={onAgentClick}
-        />
+        {sessionCount === 0 ? (
+          <div className="work-workbench__empty-state">
+            <p>No sessions attached. Select a session from the sidebar to begin.</p>
+          </div>
+        ) : (
+          <SessionPanelLayout
+            session={sessions[0]}
+            onSessionClose={() => onSessionClose?.(sessions[0].id)}
+            onSessionDetach={() => onSessionDetach?.(sessions[0].id)}
+            onSubmitInput={async (input) => {
+              await onSessionInput?.(sessions[0].id, input);
+            }}
+            onNodeClick={(nodeId) => onNodeClick?.(sessions[0].id, nodeId)}
+            onAgentClick={(agentId) => onAgentClick?.(sessions[0].id, agentId)}
+            flows={flows}
+            actions={actions}
+          />
+        )}
       </div>
     </div>
   );
