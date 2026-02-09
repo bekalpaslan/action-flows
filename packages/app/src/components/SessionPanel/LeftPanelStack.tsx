@@ -50,7 +50,7 @@ export interface LeftPanelStackProps {
  * Default panel heights
  */
 const DEFAULT_HEIGHTS: Required<PanelHeightConfig> = {
-  sessionInfo: '60px',
+  sessionInfo: 'auto',
   cli: 'flex',
   conversation: '200px',
   smartPrompt: '160px',

@@ -11,7 +11,6 @@
   border-bottom: var(--panel-border-default);
   box-shadow: var(--panel-glow-default);
   border-radius: var(--panel-radius-sm);
-  height: 120px;
   overflow: hidden;
 }
 
@@ -71,64 +70,53 @@
   transform: rotate(-90deg);
 }
 
-/* Panel Content */
+/* Panel Content — Compact horizontal flow */
 .info-panel-content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  flex: 1;
-}
-
-/* Sections */
-.info-section {
-  display: flex;
-  flex-direction: column;
   gap: 6px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--separator-base);
+  padding: 8px 10px;
+  overflow: hidden;
 }
 
-.info-section:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-/* Header Section */
-.info-header {
-  background: var(--panel-header-bg);
-  padding: 8px;
-  border-radius: var(--panel-radius-sm);
-  border: var(--panel-border-default);
-  box-shadow: var(--panel-glow-default);
-}
-
-/* Session ID Row */
-.session-id-row {
+/* Compact row — wrapping horizontal flow */
+.info-row-compact {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 6px;
+  flex-wrap: wrap;
 }
 
-.session-id-row .label {
-  font-size: 10px;
-  font-weight: 600;
+/* Info chip — compact inline pill */
+.info-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-full, 9999px);
+  background: var(--fill-quaternary, rgba(118, 118, 128, 0.18));
   color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.info-chip--active {
+  background: rgba(10, 132, 255, 0.15);
+  color: var(--system-blue, #0a84ff);
+  border: 1px solid rgba(10, 132, 255, 0.3);
 }
 
 .session-id-button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 8px;
+  padding: 2px 8px;
   background: var(--btn-bg-tertiary);
   border: var(--btn-border-default);
-  border-radius: var(--btn-radius-md);
+  border-radius: var(--radius-full, 9999px);
   box-shadow: var(--btn-glow-default);
   color: var(--text-secondary);
   font-family: var(--font-mono);
@@ -165,13 +153,13 @@
   opacity: 1;
 }
 
-/* Status Badge */
+/* Status Badge — compact pill */
 .status-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 4px;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full, 9999px);
   font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
