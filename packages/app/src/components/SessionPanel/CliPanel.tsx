@@ -309,7 +309,7 @@ export function CliPanel({
   return (
     <div
       className={`cli-panel ${isCollapsed ? 'collapsed' : ''}`.trim()}
-      style={{ height: isCollapsed ? '32px' : panelHeight }}
+      style={{ height: isCollapsed ? '32px' : '100%' }}
       role="region"
       aria-label="Claude CLI terminal"
     >
