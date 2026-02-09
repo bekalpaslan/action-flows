@@ -18,6 +18,7 @@ import { Terminal } from 'xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import type { SessionId, ClaudeCliOutputEvent, WorkspaceEvent } from '@afw/shared';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
+import { claudeCliService } from '../../services/claudeCliService';
 import 'xterm/css/xterm.css';
 import './CliPanel.css';
 
@@ -30,7 +31,12 @@ export interface CliPanelProps {
   onCommand?: (command: string) => void;
   /** Enable collapsible header */
   collapsible?: boolean;
+  /** Working directory for CLI session (defaults to project root) */
+  cwd?: string;
 }
+
+/** CLI session lifecycle states */
+type CliSessionState = 'not-started' | 'starting' | 'running' | 'stopped';
 
 /**
  * CliPanel - Terminal panel for Claude CLI sessions
@@ -41,15 +47,26 @@ export function CliPanel({
   height = 200,
   onCommand,
   collapsible = true,
+  cwd = 'D:/ActionFlowsDashboard',
 }: CliPanelProps): React.ReactElement {
   const terminalRef = useRef<HTMLDivElement>(null);
   const terminalInstanceRef = useRef<Terminal | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
   const lineBufferRef = useRef('');
+  const cliStateRef = useRef<CliSessionState>('not-started'); // Synchronous source of truth
   const [commandInput, setCommandInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [cliState, setCliState] = useState<CliSessionState>('not-started');
   const { onEvent, subscribe, unsubscribe, send } = useWebSocketContext();
+
+  /**
+   * Synchronously update both ref and state
+   */
+  const setCliStateSync = useCallback((state: CliSessionState) => {
+    cliStateRef.current = state;
+    setCliState(state);
+  }, []);
 
   /**
    * Toggle collapse state
@@ -57,6 +74,45 @@ export function CliPanel({
   const toggleCollapse = useCallback(() => {
     setIsCollapsed(prev => !prev);
   }, []);
+
+  /**
+   * Start the Claude CLI session
+   * Returns true if session successfully started, false otherwise
+   */
+  const startCliSession = useCallback(async (): Promise<boolean> => {
+    // Allow starting from 'not-started' or 'stopped' state (retry support)
+    if (cliStateRef.current !== 'not-started' && cliStateRef.current !== 'stopped') {
+      return cliStateRef.current === 'running'; // Already running
+    }
+
+    setCliStateSync('starting');
+    const terminal = terminalInstanceRef.current;
+
+    try {
+      if (terminal) {
+        terminal.writeln('\x1b[90mStarting Claude CLI session...\x1b[0m');
+      }
+
+      await claudeCliService.startSession(sessionId, cwd);
+
+      setCliStateSync('running');
+      if (terminal) {
+        terminal.writeln('\x1b[1;32m✓ CLI session ready\x1b[0m');
+        terminal.writeln('');
+      }
+      return true;
+    } catch (error) {
+      setCliStateSync('stopped');
+      if (terminal) {
+        terminal.writeln(
+          `\x1b[1;31m✗ Failed to start CLI session: ${error instanceof Error ? error.message : 'Unknown error'}\x1b[0m`
+        );
+        terminal.writeln('\x1b[90mRetry by typing a command.\x1b[0m');
+        terminal.writeln('');
+      }
+      return false;
+    }
+  }, [sessionId, cwd, setCliStateSync]);
 
   /**
    * Initialize xterm.js terminal
@@ -238,6 +294,7 @@ export function CliPanel({
         const terminal = terminalInstanceRef.current;
         if (!terminal) return;
 
+        setCliStateSync('stopped');
         terminal.writeln('');
         terminal.writeln('\x1b[90m────────────────────────────────\x1b[0m');
         terminal.writeln('\x1b[1;33mClaude CLI session ended\x1b[0m');
@@ -256,10 +313,20 @@ export function CliPanel({
 
     setIsSending(true);
     const command = commandInput.trim();
+    const terminal = terminalInstanceRef.current;
 
     try {
+      // Start CLI session if not running - check ref for synchronous state
+      if (cliStateRef.current !== 'running') {
+        const started = await startCliSession();
+        if (!started) {
+          // Session failed to start, show error already displayed by startCliSession
+          setIsSending(false);
+          return;
+        }
+      }
+
       // Echo command to terminal
-      const terminal = terminalInstanceRef.current;
       if (terminal) {
         terminal.writeln(`\x1b[1;32m$ ${command}\x1b[0m`);
       }
@@ -278,7 +345,6 @@ export function CliPanel({
       // Clear input
       setCommandInput('');
     } catch (error) {
-      const terminal = terminalInstanceRef.current;
       if (terminal) {
         terminal.writeln(
           `\x1b[1;31mError sending command: ${error instanceof Error ? error.message : 'Unknown error'}\x1b[0m`
@@ -287,7 +353,7 @@ export function CliPanel({
     } finally {
       setIsSending(false);
     }
-  }, [commandInput, isSending, sessionId, onCommand, send]);
+  }, [commandInput, isSending, sessionId, onCommand, send, startCliSession]);
 
   /**
    * Handle Enter key in input field
