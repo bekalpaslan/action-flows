@@ -1,4 +1,3 @@
-import { useRef, useEffect, useState } from 'react';
 import { useSessionSidebar } from '../../hooks/useSessionSidebar';
 import { SessionSidebarItem } from './SessionSidebarItem';
 import type { SessionId } from '@afw/shared';
@@ -14,17 +13,16 @@ export interface SessionSidebarProps {
 }
 
 /**
- * SessionSidebar component - Auto-hide sidebar for session navigation
+ * SessionSidebar component - Static sidebar for session navigation
  *
  * Features:
- * - Auto-hide: Collapses to 40px strip, expands to 280px on hover
+ * - Always visible at 240px width
  * - Shows active sessions (in_progress) and recent sessions (last 10)
  * - Notification badges for session events
- * - Smooth slide animation with reduced-motion support
- * - Dark theme styling
+ * - "New Session" button in header
  *
  * Layout (top to bottom):
- * - Header: "Sessions" label (only visible when expanded)
+ * - Header: "Sessions" label + new session button
  * - Active Sessions section
  * - Divider
  * - Recent Sessions section
@@ -36,48 +34,11 @@ export function SessionSidebar({
   onNewSession,
 }: SessionSidebarProps) {
   const {
-    isExpanded,
-    setIsExpanded,
     activeSessions,
     recentSessions,
     notificationCounts,
     attachSession,
   } = useSessionSidebar(onAttachSession);
-
-  // Track animation state for slide-in/slide-out classes
-  const [animationClass, setAnimationClass] = useState<string>('');
-  const isFirstRender = useRef(true);
-  const prevExpanded = useRef(isExpanded);
-
-  // Update animation class when expand state changes
-  useEffect(() => {
-    // Skip animation on first render
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      prevExpanded.current = isExpanded;
-      return;
-    }
-
-    // Only animate if state actually changed
-    if (prevExpanded.current !== isExpanded) {
-      if (isExpanded) {
-        setAnimationClass('sidebar-slide-in');
-      } else {
-        setAnimationClass('sidebar-slide-out');
-      }
-      prevExpanded.current = isExpanded;
-    }
-  }, [isExpanded]);
-
-  // Handle mouse enter with delay
-  const handleMouseEnter = () => {
-    setIsExpanded(true);
-  };
-
-  // Handle mouse leave with delay
-  const handleMouseLeave = () => {
-    setIsExpanded(false);
-  };
 
   // Handle session click
   const handleSessionClick = (sessionId: SessionId) => {
@@ -94,9 +55,7 @@ export function SessionSidebar({
 
   return (
     <aside
-      className={`session-sidebar ${isExpanded ? 'expanded sidebar-expanded' : 'collapsed sidebar-collapsed'} ${animationClass}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      className="session-sidebar"
       aria-label="Session navigation sidebar"
     >
       {/* Header */}
@@ -104,32 +63,26 @@ export function SessionSidebar({
         <div className="sidebar-icon" aria-hidden="true">
           📋
         </div>
-        {isExpanded && (
-          <>
-            <h2 className="sidebar-title">Sessions</h2>
-            <button
-              className="sidebar-new-session-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                onNewSession?.();
-              }}
-              aria-label="New session"
-              title="New session"
-            >
-              +
-            </button>
-          </>
-        )}
+        <h2 className="sidebar-title">Sessions</h2>
+        <button
+          className="sidebar-new-session-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onNewSession?.();
+          }}
+          aria-label="New session"
+          title="New session"
+        >
+          +
+        </button>
       </div>
 
       {/* Scrollable content */}
-      <div className="sidebar-content sidebar-content-wrapper">
+      <div className="sidebar-content">
         {/* Active Sessions Section */}
         {activeSessions.length > 0 && (
           <section className="session-section">
-            {isExpanded && (
-              <h3 className="section-title">Active ({activeSessions.length})</h3>
-            )}
+            <h3 className="section-title">Active ({activeSessions.length})</h3>
             <div className="session-list">
               {activeSessions.map((session) => (
                 <SessionSidebarItem
@@ -152,9 +105,7 @@ export function SessionSidebar({
         {/* Recent Sessions Section */}
         {uniqueRecentSessions.length > 0 && (
           <section className="session-section">
-            {isExpanded && (
-              <h3 className="section-title">Recent ({uniqueRecentSessions.length})</h3>
-            )}
+            <h3 className="section-title">Recent ({uniqueRecentSessions.length})</h3>
             <div className="session-list">
               {uniqueRecentSessions.map((session) => (
                 <SessionSidebarItem
@@ -170,7 +121,7 @@ export function SessionSidebar({
         )}
 
         {/* Empty state */}
-        {totalCount === 0 && isExpanded && (
+        {totalCount === 0 && (
           <div className="empty-state">
             <p className="empty-message">No sessions yet</p>
           </div>
@@ -179,15 +130,9 @@ export function SessionSidebar({
 
       {/* Footer - Session count */}
       <div className="sidebar-footer">
-        {isExpanded ? (
-          <span className="session-count">
-            {totalCount} {totalCount === 1 ? 'session' : 'sessions'}
-          </span>
-        ) : (
-          <span className="session-count-compact" aria-label={`${totalCount} sessions`}>
-            {totalCount}
-          </span>
-        )}
+        <span className="session-count">
+          {totalCount} {totalCount === 1 ? 'session' : 'sessions'}
+        </span>
       </div>
     </aside>
   );

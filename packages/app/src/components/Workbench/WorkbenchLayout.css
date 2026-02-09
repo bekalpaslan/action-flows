@@ -36,9 +36,9 @@
   transition: margin-left 0.2s ease;
 }
 
-/* Add left margin when SessionSidebar is present (collapsed: 40px) */
+/* Add left margin when SessionSidebar is present (static: 240px) */
 .workbench-main.with-sidebar {
-  margin-left: 40px;
+  margin-left: 240px;
 }
 
 .workbench-main::-webkit-scrollbar {
