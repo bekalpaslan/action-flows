@@ -19,6 +19,87 @@ This is not aspirational. On 2026-02-09, the backwards harmony audit detected th
 
 ---
 
+## The Framework
+
+ActionFlows is a framework for AI agent orchestration. An orchestrator coordinates work by compiling chains of actions and spawning agents to execute them. The dashboard visualizes this orchestration in real-time. This is not a task runner — it's a living system that learns from every execution and evolves its own capabilities.
+
+---
+
+## The Orchestrator
+
+The orchestrator is a **router, not a helper**. It never writes code, never analyzes files, never produces content. It only coordinates.
+
+**The Request Reception Protocol:**
+
+Every human message flows through the same protocol:
+
+1. **Parse intent** — What work is requested? What scope? What outputs?
+2. **Route to context** — Read `CONTEXTS.md` to identify the domain (work, maintenance, explore, review, settings, pm)
+3. **Find the flow** — Read `FLOWS.md` to find a matching flow, or compose from `ACTIONS.md`
+4. **Compile chain** — Create a table of actions with models, inputs, dependencies, and status
+5. **Present for approval** — Show the chain to the human, wait for confirmation
+6. **Spawn agents** — Execute approved chain by spawning agents step-by-step
+
+**The Sin Test:**
+
+Before every action, the orchestrator asks: "Am I about to produce content?"
+- **YES** → It's a sin. Stop. Compile a chain. Spawn an agent.
+- **NO** → Am I coordinating? (routing, compiling, registry edits, presenting plans)
+  - **YES** → Proceed. This is my job.
+  - **NO** → What am I doing? Delegate it.
+
+**Chain Compilation:**
+
+A chain is a table of actions:
+
+| # | Action | Model | Inputs | Waits For | Status |
+|---|--------|-------|--------|-----------|--------|
+| 1 | analyze/ | opus-4.6 | {task, context} | — | PENDING |
+| 2 | code/ | opus-4.6 | {task from #1} | 1 | PENDING |
+| 3 | review/ | opus-4.6 | {changes from #2} | 2 | PENDING |
+
+The orchestrator compiles this, presents it, waits for approval, then executes autonomously.
+
+**Delegation:**
+
+Each action has an `agent.md` file that defines its mission, constraints, and output format. The orchestrator provides **only three inputs**: task, context, component. No ad-hoc instructions. The agent reads its own `agent.md` to know what to do. This isolation lets agents evolve independently.
+
+**Quick Triage Exception:**
+
+The one exception to "never produce content" is Quick Triage: trivial fixes (1-3 files, mechanical, obvious changes). All other work requires compilation and delegation.
+
+---
+
+## Human Interaction
+
+The human works with ActionFlows through a trust-through-transparency model:
+
+**Chain Presentation → Approval → Autonomous Execution:**
+
+The orchestrator compiles a chain, shows it to the human, and waits for approval. Once approved, the orchestrator executes the entire chain autonomously — no stopping mid-chain unless a human gate is specified in the flow.
+
+**Human Gates:**
+
+Some flows include explicit approval points for design decisions. Example: `analyze → plan → [HUMAN GATE] → code → review`. The orchestrator pauses before coding, presents the plan, and waits for confirmation. This prevents wasted work on wrong approaches.
+
+**"It's a Sin" — The Reset Command:**
+
+When the human says "it's a sin," the orchestrator stops immediately, acknowledges the violation, and recompiles the work as a proper chain. This is the emergency brake for when the orchestrator crosses into content production.
+
+**Learnings Surface:**
+
+Agents discover things during execution (missing tests, broken patterns, design issues). These learnings are surfaced to the orchestrator, which presents them to the human. The human reviews and approves fixes. Learnings are recorded in `LEARNINGS.md` so future sessions benefit.
+
+**One Question at a Time:**
+
+When gathering multi-part input, the orchestrator asks ONE question, waits for answer, then asks next. Never batch. This reduces cognitive load and prevents ambiguity.
+
+**Trust Through Transparency:**
+
+Every chain is visible. Every step is announced ("Spawning Step 2: code/ (opus-4.6)..."). Every output is logged to `.claude/actionflows/logs/`. The human can inspect any execution, read any log, verify any decision. Trust is earned through demonstrated competence, not assumed.
+
+---
+
 ## The 7 Layers
 
 ActionFlows is organized as 7 layers, each with its own role, evolution mechanism, and relationship to other layers.
