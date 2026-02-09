@@ -1,0 +1,349 @@
+/**
+ * CustomPromptDialog Component Styles
+ * Follows StarBookmark dialog pattern for consistency
+ */
+
+/* ============================================================================ */
+/* Dialog Backdrop */
+/* ============================================================================ */
+
+.custom-prompt-dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================================================ */
+/* Dialog Box */
+/* ============================================================================ */
+
+.custom-prompt-dialog {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.custom-prompt-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.custom-prompt-dialog-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.close-button:hover:not(:disabled) {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.close-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================================ */
+/* Dialog Body & Forms */
+/* ============================================================================ */
+
+.custom-prompt-dialog-body {
+  padding: 24px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.text-input,
+.textarea-input {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #333;
+  transition: border-color 0.2s ease;
+}
+
+.text-input:focus,
+.textarea-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.text-input:disabled,
+.textarea-input:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+}
+
+.textarea-input {
+  resize: vertical;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ============================================================================ */
+/* Checkbox */
+/* ============================================================================ */
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.checkbox-label input[type='checkbox'] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: #007bff;
+}
+
+.checkbox-label input[type='checkbox']:disabled {
+  cursor: not-allowed;
+}
+
+/* ============================================================================ */
+/* Dialog Actions */
+/* ============================================================================ */
+
+.custom-prompt-dialog-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 12px;
+  margin-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+.btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0056b3;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #e8e8e8;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================================ */
+/* Dark Mode */
+/* ============================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  .custom-prompt-dialog {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid #444;
+  }
+
+  .custom-prompt-dialog-header {
+    border-bottom-color: #444;
+  }
+
+  .custom-prompt-dialog-header h3 {
+    color: #e0e0e0;
+  }
+
+  .close-button {
+    color: #aaa;
+  }
+
+  .close-button:hover:not(:disabled) {
+    background-color: #3a3a3a;
+    color: #e0e0e0;
+  }
+
+  .form-label {
+    color: #e0e0e0;
+  }
+
+  .text-input,
+  .textarea-input {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border-color: #444;
+  }
+
+  .text-input:focus,
+  .textarea-input:focus {
+    border-color: #0084ff;
+    box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.2);
+  }
+
+  .text-input:disabled,
+  .textarea-input:disabled {
+    background-color: #333;
+    color: #888;
+  }
+
+  .field-hint {
+    color: #aaa;
+  }
+
+  .checkbox-label {
+    color: #e0e0e0;
+  }
+
+  .checkbox-label input[type='checkbox'] {
+    accent-color: #0084ff;
+  }
+
+  .custom-prompt-dialog-actions {
+    border-top-color: #444;
+  }
+
+  .btn-primary {
+    background-color: #0084ff;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: #006acc;
+    box-shadow: 0 2px 8px rgba(0, 132, 255, 0.4);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border-color: #555;
+    color: #e0e0e0;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background-color: #3a3a3a;
+  }
+}
+
+/* ============================================================================ */
+/* Responsive Design */
+/* ============================================================================ */
+
+@media (max-width: 600px) {
+  .custom-prompt-dialog {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .custom-prompt-dialog-header,
+  .custom-prompt-dialog-body {
+    padding: 16px;
+  }
+
+  .custom-prompt-dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

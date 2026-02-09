@@ -60,6 +60,30 @@
   border-color: var(--accent-color);
 }
 
+/* Toolbar Section */
+.registry-toolbar {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+}
+
+.add-custom-prompt-button {
+  padding: 8px 16px;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-custom-prompt-button:hover {
+  opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+}
+
 /* Filters Section */
 .registry-filters {
   display: flex;
@@ -175,6 +199,11 @@
   color: #d97706;
 }
 
+.category-badge.badge-custom-prompt {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
 .category-count {
   font-size: 12px;
   font-weight: 500;
@@ -268,6 +297,49 @@
 .entry-type.type-pack {
   background: #dbeafe;
   color: #0284c7;
+}
+
+.entry-type.type-custom-prompt {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+/* Custom Prompt Details */
+.custom-prompt-details {
+  margin-top: 8px;
+  padding: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.custom-prompt-details .prompt-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.custom-prompt-details .prompt-preview {
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.custom-prompt-details .always-show-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(0, 123, 255, 0.1);
+  color: var(--accent-color);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
 }
 
 /* Source Badges */

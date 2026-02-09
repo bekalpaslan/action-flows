@@ -26,6 +26,33 @@ export function RegistryEntryCard({ entry, onClick, onToggle }: RegistryEntryCar
     onToggle?.(e.target.checked);
   }, [onToggle]);
 
+  // Render custom-prompt-specific details
+  const renderCustomPromptDetails = () => {
+    if (entry.type !== 'custom-prompt') {
+      return null;
+    }
+
+    // Type narrowing for custom-prompt entry
+    if (!('definition' in entry.data)) {
+      return null;
+    }
+
+    const def = entry.data.definition as import('@afw/shared').CustomPromptDefinition;
+    const promptPreview = def.prompt.length > 100
+      ? def.prompt.substring(0, 100) + '...'
+      : def.prompt;
+
+    return (
+      <div className="custom-prompt-details">
+        <div className="prompt-icon">{def.icon || '💬'}</div>
+        <div className="prompt-preview">{promptPreview}</div>
+        {def.alwaysShow && (
+          <div className="always-show-badge">Always Visible</div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div
       className={`entry-card ${!entry.enabled ? 'entry-disabled' : ''}`}
@@ -38,6 +65,7 @@ export function RegistryEntryCard({ entry, onClick, onToggle }: RegistryEntryCar
       </div>
       <h4 className="entry-name">{entry.name}</h4>
       <p className="entry-description">{entry.description}</p>
+      {renderCustomPromptDetails()}
       <div className="entry-footer">
         <span className="entry-version">v{entry.version}</span>
         <label className="toggle-switch toggle-small" onClick={(e) => e.stopPropagation()}>

@@ -104,6 +104,37 @@ const server = createServer(app);
 // Create WebSocket server with max payload limit (1MB) for security
 const wss = new WebSocketServer({ noServer: true, maxPayload: 1024 * 1024 });
 
+// Server-side heartbeat interval to keep connections alive
+let heartbeatInterval: NodeJS.Timeout | null = null;
+const HEARTBEAT_INTERVAL_MS = 20000; // 20 seconds
+
+function startServerHeartbeat() {
+  if (heartbeatInterval) {
+    clearInterval(heartbeatInterval);
+  }
+
+  heartbeatInterval = setInterval(() => {
+    const heartbeatMessage = JSON.stringify({ type: 'pong' });
+    const clients = clientRegistry.getAllClients();
+
+    clients.forEach((client) => {
+      if (client.readyState === 1) { // WebSocket.OPEN
+        client.send(heartbeatMessage);
+      }
+    });
+  }, HEARTBEAT_INTERVAL_MS);
+
+  console.log('[WS] Server heartbeat started (20s interval)');
+}
+
+function stopServerHeartbeat() {
+  if (heartbeatInterval) {
+    clearInterval(heartbeatInterval);
+    heartbeatInterval = null;
+    console.log('[WS] Server heartbeat stopped');
+  }
+}
+
 // Handle WebSocket upgrade
 server.on('upgrade', (request: IncomingMessage, socket: Socket, head: Buffer) => {
   if (request.url?.startsWith('/ws')) {
@@ -294,6 +325,9 @@ if (isMainModule) {
     // Start cleanup service
     cleanupService.start();
 
+    // Start server-side WebSocket heartbeat
+    startServerHeartbeat();
+
     console.log(`
 ╔════════════════════════════════════════════╗
 ║   ActionFlows Backend Server Running      ║
@@ -309,6 +343,9 @@ if (isMainModule) {
   // Graceful shutdown
   async function gracefulShutdown() {
     console.log('[Server] Shutting down gracefully...');
+
+    // Stop server heartbeat
+    stopServerHeartbeat();
 
     // Stop cleanup service
     cleanupService.stop();

@@ -42,6 +42,7 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const heartbeatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const subscribedSessionsRef = useRef<Set<SessionId>>(new Set());
   const reconnectAttemptsRef = useRef(0);
 
@@ -120,6 +121,16 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
             })
           );
         });
+
+        // Start periodic ping (every 25 seconds)
+        if (pingIntervalRef.current) {
+          clearInterval(pingIntervalRef.current);
+        }
+        pingIntervalRef.current = setInterval(() => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'ping' }));
+          }
+        }, 25000);
       });
 
       ws.addEventListener('message', (event) => {
@@ -137,6 +148,12 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
         console.log('WebSocket disconnected');
         wsRef.current = null;
         setStatus('disconnected');
+
+        // Stop ping interval
+        if (pingIntervalRef.current) {
+          clearInterval(pingIntervalRef.current);
+          pingIntervalRef.current = null;
+        }
 
         // Attempt to reconnect with backoff
         const delay = Math.min(
@@ -213,6 +230,9 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
       }
       if (heartbeatTimeoutRef.current) {
         clearTimeout(heartbeatTimeoutRef.current);
+      }
+      if (pingIntervalRef.current) {
+        clearInterval(pingIntervalRef.current);
       }
       if (wsRef.current) {
         wsRef.current.close();

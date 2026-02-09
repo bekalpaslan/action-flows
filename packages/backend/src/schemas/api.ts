@@ -319,7 +319,7 @@ export type AnalyzePatternRequest = z.infer<typeof analyzePatternSchema>;
  * GET /api/registry/entries?type=button&source=core&enabled=true&packId=xyz&projectId=abc
  */
 export const registryEntryQuerySchema = z.object({
-  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'modifier', 'pack']).optional(),
+  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'custom-prompt', 'modifier', 'pack']).optional(),
   source: z.enum(['core', 'pack', 'project']).optional(),
   enabled: z.string().optional(), // "true" or "false" as query param
   packId: z.string().max(100).optional(),
@@ -338,21 +338,54 @@ const layerSourceSchema = z.discriminatedUnion('type', [
 ]);
 
 /**
+ * Custom prompt definition schema
+ */
+const customPromptDefinitionSchema = z.object({
+  label: z.string().min(1, 'label required').max(100, 'label too long'),
+  prompt: z.string().min(1, 'prompt required').max(2000, 'prompt too long'),
+  icon: z.string().max(50, 'icon too long').optional(),
+  contextPatterns: z.array(z.string().max(500, 'context pattern too long')).max(20, 'too many context patterns').optional(),
+  alwaysShow: z.boolean().optional(),
+});
+
+/**
  * Schema for creating a new registry entry
  * POST /api/registry/entries
  */
 export const createRegistryEntrySchema = z.object({
   name: z.string().min(1, 'name required').max(200, 'name too long'),
   description: z.string().max(2000, 'description too long'),
-  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'modifier', 'pack']),
+  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'custom-prompt', 'modifier', 'pack']),
   source: layerSourceSchema,
   version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Version must be in semver format (X.Y.Z)'),
   status: z.enum(['active', 'inactive']).optional().default('active'),
   enabled: z.boolean().optional().default(true),
-  data: z.object({
-    type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'modifier']),
-    definition: z.record(z.unknown()),
-  }),
+  data: z.union([
+    z.object({
+      type: z.literal('button'),
+      definition: z.record(z.unknown()),
+    }),
+    z.object({
+      type: z.literal('pattern'),
+      definition: z.record(z.unknown()),
+    }),
+    z.object({
+      type: z.literal('workflow'),
+      definition: z.record(z.unknown()),
+    }),
+    z.object({
+      type: z.literal('shortcut'),
+      definition: z.record(z.unknown()),
+    }),
+    z.object({
+      type: z.literal('custom-prompt'),
+      definition: customPromptDefinitionSchema,
+    }),
+    z.object({
+      type: z.literal('modifier'),
+      definition: z.record(z.unknown()),
+    }),
+  ]),
   metadata: z.record(z.unknown()).optional(),
 });
 
@@ -365,15 +398,37 @@ export type CreateRegistryEntryRequest = z.infer<typeof createRegistryEntrySchem
 export const updateRegistryEntrySchema = z.object({
   name: z.string().min(1).max(200).optional(),
   description: z.string().max(2000).optional(),
-  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'modifier', 'pack']).optional(),
+  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'custom-prompt', 'modifier', 'pack']).optional(),
   source: layerSourceSchema.optional(),
   version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Version must be in semver format').optional(),
   status: z.enum(['active', 'inactive']).optional(),
   enabled: z.boolean().optional(),
-  data: z.object({
-    type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'modifier']),
-    definition: z.record(z.unknown()),
-  }).optional(),
+  data: z.union([
+    z.object({
+      type: z.literal('button'),
+      definition: z.record(z.unknown()),
+    }),
+    z.object({
+      type: z.literal('pattern'),
+      definition: z.record(z.unknown()),
+    }),
+    z.object({
+      type: z.literal('workflow'),
+      definition: z.record(z.unknown()),
+    }),
+    z.object({
+      type: z.literal('shortcut'),
+      definition: z.record(z.unknown()),
+    }),
+    z.object({
+      type: z.literal('custom-prompt'),
+      definition: customPromptDefinitionSchema,
+    }),
+    z.object({
+      type: z.literal('modifier'),
+      definition: z.record(z.unknown()),
+    }),
+  ]).optional(),
   metadata: z.record(z.unknown()).optional(),
 });
 

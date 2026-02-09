@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
-import type { ButtonDefinition, ButtonContext, SessionId } from '@afw/shared';
+import type { ButtonDefinition, ButtonContext, SessionId, ProjectId } from '@afw/shared';
 import { detectContext } from '../../utils/buttonContextDetector';
 import { InlineButtonItem } from './InlineButtonItem';
+import { useCustomPromptButtons } from '../../hooks/useCustomPromptButtons';
 import './InlineButtons.css';
 
 interface InlineButtonsProps {
@@ -11,6 +12,8 @@ interface InlineButtonsProps {
   sessionId: SessionId;
   /** Available button definitions (will be filtered by context) */
   buttons: ButtonDefinition[];
+  /** Optional: project ID for fetching custom prompts */
+  projectId?: ProjectId;
   /** Optional: override detected context */
   overrideContext?: ButtonContext;
   /** Callback when a button action is triggered */
@@ -32,10 +35,20 @@ export function InlineButtons({
   messageContent,
   sessionId,
   buttons,
+  projectId,
   overrideContext,
   onAction,
 }: InlineButtonsProps) {
-  // 1. Detect context from message content (or use override)
+  // Fetch custom prompt buttons
+  const { buttons: customPromptButtons } = useCustomPromptButtons(projectId);
+
+  // 1. Merge custom prompt buttons with provided buttons
+  const allButtons = useMemo(
+    () => [...buttons, ...customPromptButtons],
+    [buttons, customPromptButtons]
+  );
+
+  // 2. Detect context from message content (or use override)
   const detectedContext = useMemo(() => {
     if (overrideContext) {
       return overrideContext;
@@ -43,23 +56,23 @@ export function InlineButtons({
     return detectContext(messageContent).context;
   }, [messageContent, overrideContext]);
 
-  // 2. Filter buttons by matching context
+  // 3. Filter buttons by matching context
   const filteredButtons = useMemo(() => {
-    return buttons
+    return allButtons
       .filter(
         (button) =>
           button.enabled && button.contexts.includes(detectedContext)
       )
-      // 3. Sort by priority (lower = higher priority)
+      // 4. Sort by priority (lower = higher priority)
       .sort((a, b) => a.priority - b.priority);
-  }, [buttons, detectedContext]);
+  }, [allButtons, detectedContext]);
 
-  // 4. Handle empty state (no matching buttons = don't render)
+  // 5. Handle empty state (no matching buttons = don't render)
   if (filteredButtons.length === 0) {
     return null;
   }
 
-  // 5. Render horizontal button row
+  // 6. Render horizontal button row
   return (
     <div className="inline-buttons-container">
       {filteredButtons.map((button) => (

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import type { SessionId, QuickActionDefinition, SessionLifecycleState } from '@afw/shared';
+import type { SessionId, QuickActionDefinition, SessionLifecycleState, ProjectId } from '@afw/shared';
 import { QuickActionButton } from './QuickActionButton';
+import { useCustomPromptButtons } from '../../hooks/useCustomPromptButtons';
 import './QuickActionBar.css';
 
 export interface QuickActionBarProps {
@@ -24,6 +25,9 @@ export interface QuickActionBarProps {
 
   /** Disabled state */
   disabled?: boolean;
+
+  /** Project ID for fetching custom prompts */
+  projectId?: ProjectId;
 }
 
 /**
@@ -40,9 +44,13 @@ export function QuickActionBar({
   onManualInput,
   lastOutput = '',
   disabled = false,
+  projectId,
 }: QuickActionBarProps) {
   const [manualInputValue, setManualInputValue] = useState('');
   const [isWaitingForInput, setIsWaitingForInput] = useState(false);
+
+  // Fetch custom prompt buttons
+  const { buttons: customPromptButtons } = useCustomPromptButtons(projectId);
 
   // Detect waiting-for-input state
   useEffect(() => {
@@ -57,10 +65,29 @@ export function QuickActionBar({
     }
   }, [lifecycleState, isWaitingForInput]);
 
-  // Pre-compile regex patterns (only recomputed when quickActions change)
+  // Convert custom prompt buttons to QuickActionDefinitions
+  const customQuickActions: QuickActionDefinition[] = useMemo(
+    () =>
+      customPromptButtons.map((btn) => ({
+        id: btn.id,
+        label: btn.label,
+        icon: btn.icon || '💬',
+        value: (btn.action.payload?.value as string) || '',
+        alwaysShow: btn.contexts.includes('general'),
+      })),
+    [customPromptButtons]
+  );
+
+  // Merge custom prompts with provided quick actions
+  const allQuickActions = useMemo(
+    () => [...quickActions, ...customQuickActions],
+    [quickActions, customQuickActions]
+  );
+
+  // Pre-compile regex patterns (only recomputed when allQuickActions change)
   const compiledPatterns = useMemo(() => {
     const map = new Map<string, RegExp[]>();
-    for (const action of quickActions) {
+    for (const action of allQuickActions) {
       if (action.contextPatterns && action.contextPatterns.length > 0) {
         const regexes: RegExp[] = [];
         for (const pattern of action.contextPatterns) {
@@ -74,11 +101,11 @@ export function QuickActionBar({
       }
     }
     return map;
-  }, [quickActions]);
+  }, [allQuickActions]);
 
   // Filter quick actions based on context (alwaysShow or matching pattern)
   const visibleActions = useMemo(() => {
-    return quickActions.filter(action => {
+    return allQuickActions.filter(action => {
       if (action.alwaysShow) return true;
 
       const patterns = compiledPatterns.get(action.id);
@@ -88,7 +115,7 @@ export function QuickActionBar({
       // Check if any pre-compiled pattern matches last output
       return patterns.some(regex => regex.test(lastOutput));
     });
-  }, [quickActions, lastOutput, compiledPatterns]);
+  }, [allQuickActions, lastOutput, compiledPatterns]);
 
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -185,6 +185,7 @@ export type {
   RegistryEntryStatus,
   WorkflowDefinition,
   ShortcutDefinition,
+  CustomPromptDefinition,
   ModifierDefinition,
   RegistryEntry,
   PackCompatibility,

@@ -15,7 +15,6 @@ import { Terminal } from 'xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import type { SessionId, ClaudeCliOutputEvent, WorkspaceEvent } from '@afw/shared';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
-import { claudeCliService } from '../../services/claudeCliService';
 import 'xterm/css/xterm.css';
 import './SessionCliPanel.css';
 
@@ -41,7 +40,7 @@ export function SessionCliPanel({
   const fitAddonRef = useRef<FitAddon | null>(null);
   const [commandInput, setCommandInput] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const { onEvent, subscribe, unsubscribe } = useWebSocketContext();
+  const { onEvent, subscribe, unsubscribe, send } = useWebSocketContext();
 
   /**
    * Initialize xterm.js terminal
@@ -178,7 +177,7 @@ export function SessionCliPanel({
   }, [sessionId, onEvent]);
 
   /**
-   * Send command to Claude CLI
+   * Send command to Claude CLI via WebSocket
    */
   const handleSendCommand = useCallback(async () => {
     if (!commandInput.trim() || isSending) return;
@@ -193,8 +192,13 @@ export function SessionCliPanel({
         terminal.writeln(`\x1b[1;32m$ ${command}\x1b[0m`);
       }
 
-      // Send command via service
-      await claudeCliService.sendInput(sessionId, command + '\n');
+      // Send command via WebSocket
+      send({
+        type: 'input',
+        sessionId: sessionId,
+        payload: command + '\n',
+        timestamp: new Date().toISOString(),
+      });
 
       // Notify parent
       onCommand?.(command);
@@ -211,7 +215,7 @@ export function SessionCliPanel({
     } finally {
       setIsSending(false);
     }
-  }, [commandInput, isSending, sessionId, onCommand]);
+  }, [commandInput, isSending, sessionId, onCommand, send]);
 
   /**
    * Handle Enter key in input field

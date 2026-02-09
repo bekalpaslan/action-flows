@@ -8,6 +8,7 @@ import type {
 } from '@afw/shared';
 import { PackCard } from './PackCard';
 import { RegistryEntryCard } from './RegistryEntryCard';
+import { CustomPromptDialog } from '../CustomPromptButton';
 import './RegistryBrowser.css';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
@@ -36,6 +37,8 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
   const [searchQuery, setSearchQuery] = useState('');
   const [sourceFilter, setSourceFilter] = useState<SourceFilterType>('all');
   const [enabledFilter, setEnabledFilter] = useState<'all' | 'enabled' | 'disabled'>('all');
+  const [showCustomPromptDialog, setShowCustomPromptDialog] = useState(false);
+  const [isCreatingPrompt, setIsCreatingPrompt] = useState(false);
 
   // Fetch data on mount
   useEffect(() => {
@@ -129,6 +132,52 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
     }
   }, []);
 
+  const handleCreateCustomPrompt = useCallback(
+    async (
+      label: string,
+      prompt: string,
+      icon?: string,
+      contextPatterns?: string[],
+      alwaysShow?: boolean
+    ) => {
+      setIsCreatingPrompt(true);
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/registry/entries`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: label,
+            description: `Custom prompt: ${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}`,
+            type: 'custom-prompt',
+            source: { type: 'project', projectId: projectId || '' },
+            version: '1.0.0',
+            status: 'active',
+            enabled: true,
+            data: {
+              type: 'custom-prompt',
+              definition: { label, prompt, icon, contextPatterns, alwaysShow },
+            },
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+          throw new Error(error.error || 'Failed to create custom prompt');
+        }
+
+        // Refresh entries list
+        await fetchData();
+        setShowCustomPromptDialog(false);
+      } catch (error) {
+        console.error('[RegistryBrowser] Error creating custom prompt:', error);
+        alert(`Failed to create custom prompt: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      } finally {
+        setIsCreatingPrompt(false);
+      }
+    },
+    [projectId]
+  );
+
   // Filter entries based on current filter + search
   const filteredEntries = useMemo(() => {
     let results = entries;
@@ -167,6 +216,7 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
       shortcut: [],
       modifier: [],
       pack: [],
+      'custom-prompt': [],
     };
 
     for (const entry of filteredEntries) {
@@ -185,6 +235,7 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
     { value: 'workflow', label: 'Workflows' },
     { value: 'shortcut', label: 'Shortcuts' },
     { value: 'modifier', label: 'Modifiers' },
+    { value: 'custom-prompt', label: 'Custom Prompts' },
   ];
 
   const sourceFilters: { value: SourceFilterType; label: string }[] = [
@@ -229,6 +280,16 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
 
       {activeTab === 'entries' && (
         <>
+          <div className="registry-toolbar">
+            <button
+              className="add-custom-prompt-button"
+              onClick={() => setShowCustomPromptDialog(true)}
+              title="Create custom prompt button"
+            >
+              + Custom Prompt
+            </button>
+          </div>
+
           <div className="registry-filters">
             <input
               type="text"
@@ -354,6 +415,24 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
                     </div>
                   </div>
                 )}
+                {getCategoryCount('custom-prompt') > 0 && (
+                  <div className="entry-category">
+                    <h3 className="category-header">
+                      <span className="category-badge badge-custom-prompt">Custom Prompts</span>
+                      <span className="category-count">{getCategoryCount('custom-prompt')}</span>
+                    </h3>
+                    <div className="entries-grid">
+                      {categorizedEntries['custom-prompt'].map(entry => (
+                        <RegistryEntryCard
+                          key={entry.id}
+                          entry={entry}
+                          onClick={() => onEntrySelect?.(entry)}
+                          onToggle={(enabled) => handleToggleEntry(entry.id, enabled)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {filteredEntries.length === 0 && (
                   <div className="empty-state">No entries match your filter</div>
                 )}
@@ -377,6 +456,14 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
             <div className="empty-state">No behavior packs installed</div>
           )}
         </div>
+      )}
+
+      {showCustomPromptDialog && (
+        <CustomPromptDialog
+          onSubmit={handleCreateCustomPrompt}
+          onCancel={() => setShowCustomPromptDialog(false)}
+          isLoading={isCreatingPrompt}
+        />
       )}
     </div>
   );

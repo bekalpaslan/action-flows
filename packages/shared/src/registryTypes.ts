@@ -29,10 +29,11 @@ export type RegistryEntryId = string & { readonly __brand: 'RegistryEntryId' };
  * - pattern: Detected usage patterns
  * - workflow: Multi-step automated workflows
  * - shortcut: Keyboard shortcut bindings
+ * - custom-prompt: Custom prompt button definitions
  * - modifier: Self-modification templates (legacy)
  * - pack: Behavior pack reference (legacy)
  */
-export type RegistryEntryType = 'button' | 'pattern' | 'workflow' | 'shortcut' | 'modifier' | 'pack';
+export type RegistryEntryType = 'button' | 'pattern' | 'workflow' | 'shortcut' | 'custom-prompt' | 'modifier' | 'pack';
 
 /** Status of a registry entry */
 export type RegistryEntryStatus = 'active' | 'inactive';
@@ -77,6 +78,23 @@ export interface ShortcutDefinition {
   contexts?: string[];
   /** Whether this shortcut can be overridden by project settings */
   overridable: boolean;
+}
+
+/**
+ * Custom prompt button definition
+ * Allows users to define custom prompt buttons with contextual visibility
+ */
+export interface CustomPromptDefinition {
+  /** Display label for the button */
+  label: string;
+  /** The prompt text to send when clicked */
+  prompt: string;
+  /** Optional icon identifier */
+  icon?: string;
+  /** Context patterns where this button should appear */
+  contextPatterns?: string[];
+  /** Whether to always show this button regardless of context */
+  alwaysShow?: boolean;
 }
 
 /** Modifier action definition (for self-modification templates) */
@@ -128,6 +146,7 @@ export interface RegistryEntry {
     | { type: 'pattern'; definition: PatternAction }
     | { type: 'workflow'; definition: WorkflowDefinition }
     | { type: 'shortcut'; definition: ShortcutDefinition }
+    | { type: 'custom-prompt'; definition: CustomPromptDefinition }
     | { type: 'modifier'; definition: ModifierDefinition };
   /** When this entry was created */
   createdAt: Timestamp;
