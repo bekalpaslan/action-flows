@@ -12,7 +12,7 @@
  *   Reading/dismissing reduces glow
  */
 
-import { useState, useCallback, useMemo, useEffect, useContext, createContext } from 'react';
+import { useState, useCallback, useMemo, useEffect, useContext, createContext, createElement, type ReactNode } from 'react';
 import type {
   NotificationEvent,
   NotificationLevel,
@@ -429,6 +429,15 @@ export function useNotificationGlow(
  * Context for sharing notification glow state across the component tree
  */
 export const NotificationGlowContext = createContext<UseNotificationGlowReturn | null>(null);
+
+/**
+ * Provider component that initializes notification glow state and makes it
+ * available to the component tree via context.
+ */
+export function NotificationGlowProvider({ children }: { children: ReactNode }) {
+  const glowState = useNotificationGlow();
+  return createElement(NotificationGlowContext.Provider, { value: glowState }, children);
+}
 
 /**
  * Hook to access the notification glow context

@@ -42,5 +42,5 @@ export { useVimNavigation } from './useVimNavigation';
 export { useTheme } from '../contexts/ThemeContext';
 export type { Theme, ResolvedTheme } from '../contexts/ThemeContext';
 
-export { useNotificationGlow, useNotificationGlowContext, NotificationGlowContext, registerSessionWorkbench, unregisterSessionWorkbench } from './useNotificationGlow';
+export { useNotificationGlow, useNotificationGlowContext, NotificationGlowContext, NotificationGlowProvider, registerSessionWorkbench, unregisterSessionWorkbench } from './useNotificationGlow';
 export type { UseNotificationGlowReturn, GlowState, NotificationInput } from './useNotificationGlow';
