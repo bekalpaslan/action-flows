@@ -9,6 +9,7 @@ import type {
 import { PackCard } from './PackCard';
 import { RegistryEntryCard } from './RegistryEntryCard';
 import { CustomPromptDialog } from '../CustomPromptButton';
+import { useToast } from '../../contexts/ToastContext';
 import './RegistryBrowser.css';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
@@ -29,6 +30,7 @@ interface RegistryBrowserProps {
  * - Install/uninstall behavior packs
  */
 export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserProps) {
+  const { showToast } = useToast();
   const [entries, setEntries] = useState<RegistryEntry[]>([]);
   const [packs, setPacks] = useState<BehaviorPack[]>([]);
   const [filter, setFilter] = useState<RegistryFilter>({});
@@ -113,6 +115,35 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
     }
   }, []);
 
+  const handleDeleteEntry = useCallback(async (entryId: string) => {
+    const entry = entries.find(e => e.id === entryId);
+    if (!entry) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${entry.name}"? This action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/registry/entries/${entryId}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        // Remove entry from local state
+        setEntries(prev => prev.filter(e => e.id !== entryId));
+        showToast('Custom prompt deleted', 'success');
+        console.log(`[RegistryBrowser] Deleted entry: ${entryId}`);
+      } else {
+        const error = await res.json().catch(() => ({ error: 'Unknown error' }));
+        showToast(`Failed to delete entry: ${error.error || 'Unknown error'}`, 'error');
+      }
+    } catch (error) {
+      console.error('[RegistryBrowser] Failed to delete entry:', error);
+      showToast(`Failed to delete entry: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
+    }
+  }, [entries, showToast]);
+
   const handleTogglePack = useCallback(async (packId: string, enabled: boolean) => {
     try {
       const endpoint = enabled
@@ -168,14 +199,15 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
         // Refresh entries list
         await fetchData();
         setShowCustomPromptDialog(false);
+        showToast('Custom prompt created!', 'success');
       } catch (error) {
         console.error('[RegistryBrowser] Error creating custom prompt:', error);
-        alert(`Failed to create custom prompt: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        showToast(`Failed to create custom prompt: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
       } finally {
         setIsCreatingPrompt(false);
       }
     },
-    [projectId]
+    [projectId, showToast]
   );
 
   // Filter entries based on current filter + search
@@ -334,6 +366,7 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
                     entry={entry}
                     onClick={() => onEntrySelect?.(entry)}
                     onToggle={(enabled) => handleToggleEntry(entry.id, enabled)}
+                    onDelete={handleDeleteEntry}
                   />
                 ))}
                 {filteredEntries.length === 0 && (

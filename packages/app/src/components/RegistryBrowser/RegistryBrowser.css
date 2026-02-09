@@ -257,6 +257,7 @@
   gap: 6px;
   align-items: center;
   flex-wrap: wrap;
+  position: relative;
 }
 
 .entry-type {
@@ -302,6 +303,44 @@
 .entry-type.type-custom-prompt {
   background: #e0f2fe;
   color: #0369a1;
+}
+
+/* Delete Button */
+.entry-delete-button {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: var(--error-color);
+  color: white;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s;
+  padding: 0;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.entry-card:hover .entry-delete-button {
+  opacity: 1;
+}
+
+.entry-delete-button:hover {
+  background: var(--error-color-dark, #c53030);
+  transform: scale(1.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.entry-delete-button:active {
+  transform: scale(0.95);
 }
 
 /* Custom Prompt Details */

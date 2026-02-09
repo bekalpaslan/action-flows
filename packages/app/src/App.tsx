@@ -5,6 +5,7 @@ import { WebSocketProvider } from './contexts/WebSocketContext'
 import { WorkbenchProvider } from './contexts/WorkbenchContext'
 import { VimNavigationProvider } from './contexts/VimNavigationContext'
 import { NotificationGlowProvider } from './hooks/useNotificationGlow'
+import { ToastProvider } from './contexts/ToastContext'
 import AppContent from './components/AppContent'
 import { CommandPalette } from './components/CommandPalette'
 import { VimModeIndicator } from './components/VimModeIndicator'
@@ -25,15 +26,17 @@ function AppWithVim() {
 function App() {
   return (
     <ThemeProvider>
-      <WebSocketProvider url="ws://localhost:3001/ws">
-        <WorkbenchProvider>
-          <NotificationGlowProvider>
-            <VimNavigationProvider>
-              <AppWithVim />
-            </VimNavigationProvider>
-          </NotificationGlowProvider>
-        </WorkbenchProvider>
-      </WebSocketProvider>
+      <ToastProvider>
+        <WebSocketProvider url="ws://localhost:3001/ws">
+          <WorkbenchProvider>
+            <NotificationGlowProvider>
+              <VimNavigationProvider>
+                <AppWithVim />
+              </VimNavigationProvider>
+            </NotificationGlowProvider>
+          </WorkbenchProvider>
+        </WebSocketProvider>
+      </ToastProvider>
     </ThemeProvider>
   )
 }

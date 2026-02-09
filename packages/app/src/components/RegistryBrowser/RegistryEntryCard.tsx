@@ -6,13 +6,14 @@ interface RegistryEntryCardProps {
   entry: RegistryEntry;
   onClick?: () => void;
   onToggle?: (enabled: boolean) => void;
+  onDelete?: (entryId: string) => void;
 }
 
 /**
  * Display card for a registry entry.
  * Shows: name, type, source layer, status, enable toggle
  */
-export function RegistryEntryCard({ entry, onClick, onToggle }: RegistryEntryCardProps) {
+export function RegistryEntryCard({ entry, onClick, onToggle, onDelete }: RegistryEntryCardProps) {
   const sourceLabel = entry.source.type === 'core'
     ? 'Core'
     : entry.source.type === 'pack'
@@ -25,6 +26,11 @@ export function RegistryEntryCard({ entry, onClick, onToggle }: RegistryEntryCar
     e.stopPropagation();
     onToggle?.(e.target.checked);
   }, [onToggle]);
+
+  const handleDelete = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete?.(entry.id);
+  }, [onDelete, entry.id]);
 
   // Render custom-prompt-specific details
   const renderCustomPromptDetails = () => {
@@ -62,6 +68,16 @@ export function RegistryEntryCard({ entry, onClick, onToggle }: RegistryEntryCar
         <span className={`entry-type type-${entry.type}`}>{entry.type}</span>
         <span className={sourceBadgeClass}>{sourceLabel}</span>
         <span className={`entry-status status-${entry.status}`}>{entry.status}</span>
+        {entry.type === 'custom-prompt' && onDelete && (
+          <button
+            className="entry-delete-button"
+            onClick={handleDelete}
+            title="Delete this custom prompt"
+            aria-label="Delete entry"
+          >
+            ×
+          </button>
+        )}
       </div>
       <h4 className="entry-name">{entry.name}</h4>
       <p className="entry-description">{entry.description}</p>

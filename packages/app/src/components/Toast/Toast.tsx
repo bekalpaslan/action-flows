@@ -42,8 +42,8 @@ export function Toast({ toast, onDismiss, duration = 3000 }: ToastProps) {
   };
 
   return (
-    <div className={`toast toast-${toast.type}`} role="alert">
-      <span className="toast-icon">{getIcon()}</span>
+    <div className={`toast toast-${toast.type}`} role="alert" aria-live="polite">
+      <span className="toast-icon" aria-hidden="true">{getIcon()}</span>
       <span className="toast-message">{toast.message}</span>
       <button
         className="toast-close"

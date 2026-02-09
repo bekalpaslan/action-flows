@@ -60,6 +60,12 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
           return;
         }
 
+        // Handle registry events (system-level, no sessionId required)
+        if (data.type === 'registry-event' && data.payload) {
+          onEvent?.(data.payload as WorkspaceEvent);
+          return;
+        }
+
         // Unwrap broadcast wrapper: { type: 'event', sessionId, payload: <actual event> }
         if (data.type === 'event' && data.payload) {
           data = data.payload;

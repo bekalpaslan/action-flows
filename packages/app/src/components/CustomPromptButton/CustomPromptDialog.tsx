@@ -33,22 +33,29 @@ export function CustomPromptDialog({
   const [label, setLabel] = useState('');
   const [prompt, setPrompt] = useState('');
   const [icon, setIcon] = useState('');
+  const [contextPatterns, setContextPatterns] = useState('');
   const [alwaysShow, setAlwaysShow] = useState(false);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
       if (label.trim() && prompt.trim()) {
+        // Parse context patterns: split by newline, trim, filter empty
+        const patterns = contextPatterns
+          .split('\n')
+          .map(p => p.trim())
+          .filter(p => p.length > 0);
+
         onSubmit(
           label.trim(),
           prompt.trim(),
           icon.trim() || undefined,
-          undefined, // contextPatterns - not implemented in UI yet
+          patterns.length > 0 ? patterns : undefined,
           alwaysShow
         );
       }
     },
-    [label, prompt, icon, alwaysShow, onSubmit]
+    [label, prompt, icon, contextPatterns, alwaysShow, onSubmit]
   );
 
   const isValid = label.trim().length > 0 && prompt.trim().length > 0;
@@ -124,6 +131,24 @@ export function CustomPromptDialog({
               />
               <div className="field-hint">
                 Emoji or icon name (defaults to 💬 if empty)
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="contextPatterns" className="form-label">
+                Context Patterns (optional)
+              </label>
+              <textarea
+                id="contextPatterns"
+                className="textarea-input context-patterns-input"
+                placeholder="Enter regex patterns, one per line&#10;e.g. .*\.tsx$&#10;.*auth.*"
+                value={contextPatterns}
+                onChange={(e) => setContextPatterns(e.target.value)}
+                disabled={isLoading}
+                rows={4}
+              />
+              <div className="field-hint">
+                File path patterns that determine when this button appears
               </div>
             </div>
 

@@ -3,9 +3,81 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import type { ButtonDefinition, ProjectId, ButtonId, CustomPromptDefinition } from '@afw/shared';
+import type { ButtonDefinition, ProjectId, ButtonId, CustomPromptDefinition, ButtonContext, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
+import { useWebSocketContext } from '../contexts/WebSocketContext';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+
+/**
+ * Converts context patterns (regex strings) to ButtonContext values.
+ * Uses pattern analysis to infer likely contexts based on file path patterns.
+ *
+ * @param patterns - Array of regex pattern strings
+ * @returns Array of ButtonContext values
+ */
+function convertPatternsToContexts(patterns?: string[]): ButtonContext[] {
+  if (!patterns || patterns.length === 0) {
+    return ['general'];
+  }
+
+  const contexts = new Set<ButtonContext>();
+
+  for (const pattern of patterns) {
+    const lower = pattern.toLowerCase();
+
+    // Code-related patterns
+    if (
+      lower.includes('.ts') ||
+      lower.includes('.tsx') ||
+      lower.includes('.js') ||
+      lower.includes('.jsx') ||
+      lower.includes('.py') ||
+      lower.includes('.go') ||
+      lower.includes('.rs') ||
+      lower.includes('src/') ||
+      lower.includes('code')
+    ) {
+      contexts.add('code-change');
+      contexts.add('file-modification');
+    }
+
+    // Error/bug patterns
+    if (
+      lower.includes('error') ||
+      lower.includes('bug') ||
+      lower.includes('fix') ||
+      lower.includes('test')
+    ) {
+      contexts.add('error-message');
+    }
+
+    // Analysis patterns
+    if (
+      lower.includes('report') ||
+      lower.includes('analysis') ||
+      lower.includes('audit') ||
+      lower.includes('review')
+    ) {
+      contexts.add('analysis-report');
+    }
+
+    // Documentation patterns
+    if (
+      lower.includes('.md') ||
+      lower.includes('readme') ||
+      lower.includes('doc')
+    ) {
+      contexts.add('file-modification');
+    }
+  }
+
+  // If no specific contexts matched, default to general
+  if (contexts.size === 0) {
+    contexts.add('general');
+  }
+
+  return Array.from(contexts);
+}
 
 export interface UseCustomPromptButtonsResult {
   /** Custom prompt buttons as ButtonDefinitions */
@@ -29,6 +101,7 @@ export function useCustomPromptButtons(projectId?: ProjectId): UseCustomPromptBu
   const [buttons, setButtons] = useState<ButtonDefinition[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const wsContext = useWebSocketContext();
 
   const fetchCustomPrompts = useCallback(async () => {
     if (!projectId) {
@@ -73,7 +146,7 @@ export function useCustomPromptButtons(projectId?: ProjectId): UseCustomPromptBu
                 alwaysShow: def.alwaysShow,
               },
             },
-            contexts: ['general' as const], // TODO: Implement contextPatterns → ButtonContext[] conversion when context pattern UI is added
+            contexts: convertPatternsToContexts(def.contextPatterns),
             source: entry.source,
             priority: 100, // Lower priority than core buttons
             enabled: entry.enabled,
@@ -90,9 +163,30 @@ export function useCustomPromptButtons(projectId?: ProjectId): UseCustomPromptBu
     }
   }, [projectId]);
 
+  // Initial fetch on mount and when projectId changes
   useEffect(() => {
     fetchCustomPrompts();
   }, [fetchCustomPrompts]);
+
+  // Subscribe to WebSocket registry change events
+  useEffect(() => {
+    if (!wsContext.onEvent) return;
+
+    const handleRegistryEvent = (event: WorkspaceEvent) => {
+      // Check if this is a registry:changed event for custom-prompt entries
+      if (event.type === 'registry:changed') {
+        const registryEvent = event as RegistryChangedEvent;
+
+        // Refetch if the change affects custom-prompt entries
+        // We refetch on any registry change for simplicity, but could filter by entry type
+        console.log('[useCustomPromptButtons] Registry changed, refetching custom prompts');
+        fetchCustomPrompts();
+      }
+    };
+
+    const unsubscribe = wsContext.onEvent(handleRegistryEvent);
+    return unsubscribe;
+  }, [wsContext, fetchCustomPrompts]);
 
   return {
     buttons,
