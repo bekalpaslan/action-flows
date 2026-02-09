@@ -1,0 +1,150 @@
+/**
+ * GlowIndicator Styles
+ *
+ * Animated glow effect with color-coded severity levels.
+ * Supports reduced motion preferences.
+ */
+
+/* CSS Variables for glow colors */
+:root {
+  --glow-info-color: #3b82f6;
+  --glow-info-shadow: rgba(59, 130, 246, 0.6);
+  --glow-success-color: #10b981;
+  --glow-success-shadow: rgba(16, 185, 129, 0.6);
+  --glow-warning-color: #f59e0b;
+  --glow-warning-shadow: rgba(245, 158, 11, 0.6);
+  --glow-error-color: #ef4444;
+  --glow-error-shadow: rgba(239, 68, 68, 0.6);
+}
+
+/* Base container */
+.glow-indicator {
+  position: relative;
+  display: inline-block;
+  border-radius: inherit;
+}
+
+/* Active glow state */
+.glow-indicator--active {
+  --glow-intensity: 1;
+}
+
+/* Info level - blue */
+.glow-indicator--info {
+  box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-info-shadow),
+    0 0 calc(16px * var(--glow-intensity)) var(--glow-info-shadow);
+  border-color: var(--glow-info-color);
+}
+
+/* Success level - green */
+.glow-indicator--success {
+  box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-success-shadow),
+    0 0 calc(16px * var(--glow-intensity)) var(--glow-success-shadow);
+  border-color: var(--glow-success-color);
+}
+
+/* Warning level - yellow/amber */
+.glow-indicator--warning {
+  box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-warning-shadow),
+    0 0 calc(16px * var(--glow-intensity)) var(--glow-warning-shadow);
+  border-color: var(--glow-warning-color);
+}
+
+/* Error level - red */
+.glow-indicator--error {
+  box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-error-shadow),
+    0 0 calc(16px * var(--glow-intensity)) var(--glow-error-shadow);
+  border-color: var(--glow-error-color);
+}
+
+/* Pulse animation */
+.glow-indicator--pulse.glow-indicator--info {
+  animation: glow-pulse-info 2s ease-in-out infinite;
+}
+
+.glow-indicator--pulse.glow-indicator--success {
+  animation: glow-pulse-success 2s ease-in-out infinite;
+}
+
+.glow-indicator--pulse.glow-indicator--warning {
+  animation: glow-pulse-warning 2s ease-in-out infinite;
+}
+
+.glow-indicator--pulse.glow-indicator--error {
+  animation: glow-pulse-error 2s ease-in-out infinite;
+}
+
+/* Keyframe animations for each level */
+@keyframes glow-pulse-info {
+  0%,
+  100% {
+    box-shadow: 0 0 calc(4px * var(--glow-intensity)) var(--glow-info-shadow),
+      0 0 calc(8px * var(--glow-intensity)) var(--glow-info-shadow);
+  }
+  50% {
+    box-shadow: 0 0 calc(12px * var(--glow-intensity)) var(--glow-info-shadow),
+      0 0 calc(24px * var(--glow-intensity)) var(--glow-info-shadow);
+  }
+}
+
+@keyframes glow-pulse-success {
+  0%,
+  100% {
+    box-shadow: 0 0 calc(4px * var(--glow-intensity)) var(--glow-success-shadow),
+      0 0 calc(8px * var(--glow-intensity)) var(--glow-success-shadow);
+  }
+  50% {
+    box-shadow: 0 0 calc(12px * var(--glow-intensity))
+        var(--glow-success-shadow),
+      0 0 calc(24px * var(--glow-intensity)) var(--glow-success-shadow);
+  }
+}
+
+@keyframes glow-pulse-warning {
+  0%,
+  100% {
+    box-shadow: 0 0 calc(4px * var(--glow-intensity)) var(--glow-warning-shadow),
+      0 0 calc(8px * var(--glow-intensity)) var(--glow-warning-shadow);
+  }
+  50% {
+    box-shadow: 0 0 calc(12px * var(--glow-intensity))
+        var(--glow-warning-shadow),
+      0 0 calc(24px * var(--glow-intensity)) var(--glow-warning-shadow);
+  }
+}
+
+@keyframes glow-pulse-error {
+  0%,
+  100% {
+    box-shadow: 0 0 calc(4px * var(--glow-intensity)) var(--glow-error-shadow),
+      0 0 calc(8px * var(--glow-intensity)) var(--glow-error-shadow);
+  }
+  50% {
+    box-shadow: 0 0 calc(12px * var(--glow-intensity)) var(--glow-error-shadow),
+      0 0 calc(24px * var(--glow-intensity)) var(--glow-error-shadow);
+  }
+}
+
+/* Reduced motion preference - disable animations */
+@media (prefers-reduced-motion: reduce) {
+  .glow-indicator--pulse {
+    animation: none;
+  }
+
+  /* Static glow for reduced motion users */
+  .glow-indicator--pulse.glow-indicator--info {
+    box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-info-shadow);
+  }
+
+  .glow-indicator--pulse.glow-indicator--success {
+    box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-success-shadow);
+  }
+
+  .glow-indicator--pulse.glow-indicator--warning {
+    box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-warning-shadow);
+  }
+
+  .glow-indicator--pulse.glow-indicator--error {
+    box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-error-shadow);
+  }
+}

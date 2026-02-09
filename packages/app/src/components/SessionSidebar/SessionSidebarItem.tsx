@@ -1,4 +1,6 @@
 import type { Session, WorkbenchId } from '@afw/shared';
+import { GlowIndicator } from '../common';
+import { useNotificationGlowContext } from '../../hooks/useNotificationGlow';
 import './SessionSidebarItem.css';
 
 export interface SessionSidebarItemProps {
@@ -142,43 +144,55 @@ export function SessionSidebarItem({
   const hasRouting = !!routingContext;
   const confidenceClass = getConfidenceClass(routingConfidence);
 
+  // Get session-level glow state from notification context
+  const { getSessionGlow } = useNotificationGlowContext();
+  const glowState = getSessionGlow(session.id);
+
   return (
-    <div
-      className={`session-sidebar-item ${isActive ? 'active' : ''} ${statusClass}`}
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={handleKeyDown}
-      aria-label={`Session ${sessionName}, ${session.status}, ${relativeTime}${hasNotifications ? `, ${notificationCount} notifications` : ''}`}
+    <GlowIndicator
+      active={glowState.active}
+      level={glowState.level}
+      intensity={glowState.intensity}
+      pulse={glowState.active}
+      className="session-sidebar-glow-wrapper"
     >
-      {/* Status indicator dot */}
-      <div className={`status-dot ${statusClass}`} aria-hidden="true" />
+      <div
+        className={`session-sidebar-item ${isActive ? 'active' : ''} ${statusClass}`}
+        role="button"
+        tabIndex={0}
+        onClick={onClick}
+        onKeyDown={handleKeyDown}
+        aria-label={`Session ${sessionName}, ${session.status}, ${relativeTime}${hasNotifications ? `, ${notificationCount} notifications` : ''}`}
+      >
+        {/* Status indicator dot */}
+        <div className={`status-dot ${statusClass}`} aria-hidden="true" />
 
-      {/* Session content */}
-      <div className="session-info">
-        <div className="session-name" title={session.id}>
-          {sessionName}
+        {/* Session content */}
+        <div className="session-info">
+          <div className="session-name" title={session.id}>
+            {sessionName}
+          </div>
+          <div className="session-time">{relativeTime}</div>
         </div>
-        <div className="session-time">{relativeTime}</div>
+
+        {/* Routing badge */}
+        {hasRouting && (
+          <div
+            className={`routing-badge ${confidenceClass}`}
+            title={`Routed to ${routingContext} (confidence: ${Math.round((routingConfidence || 0) * 100)}%)${routingMethod ? ` via ${routingMethod}` : ''}`}
+            aria-label={`Routed to ${routingContext} context`}
+          >
+            {formatContextName(routingContext)}
+          </div>
+        )}
+
+        {/* Notification badge */}
+        {hasNotifications && (
+          <div className="notification-badge" aria-label={`${notificationCount} notifications`}>
+            {notificationCount > 99 ? '99+' : notificationCount}
+          </div>
+        )}
       </div>
-
-      {/* Routing badge */}
-      {hasRouting && (
-        <div
-          className={`routing-badge ${confidenceClass}`}
-          title={`Routed to ${routingContext} (confidence: ${Math.round((routingConfidence || 0) * 100)}%)${routingMethod ? ` via ${routingMethod}` : ''}`}
-          aria-label={`Routed to ${routingContext} context`}
-        >
-          {formatContextName(routingContext)}
-        </div>
-      )}
-
-      {/* Notification badge */}
-      {hasNotifications && (
-        <div className="notification-badge" aria-label={`${notificationCount} notifications`}>
-          {notificationCount > 99 ? '99+' : notificationCount}
-        </div>
-      )}
-    </div>
+    </GlowIndicator>
   );
 }

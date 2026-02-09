@@ -1,0 +1,215 @@
+/**
+ * WorkbenchTab Component Styles
+ * Compact tab design for 9 workbench navigation with notification badges and glow effects
+ */
+
+/* GlowIndicator wrapper for workbench tabs */
+.workbench-tab-glow {
+  display: inline-flex;
+  border-radius: 4px;
+}
+
+/* Ensure glow doesn't interfere with tab layout */
+.workbench-tab-glow .workbench-tab {
+  margin: 0;
+}
+
+.workbench-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #808080;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.3s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Hover state */
+.workbench-tab:hover:not(.disabled) {
+  color: #e0e0e0;
+}
+
+/* Active state */
+.workbench-tab.active {
+  color: #e0e0e0;
+  border-bottom-color: #bb86fc;
+}
+
+/* Disabled state */
+.workbench-tab.disabled {
+  color: #505050;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Icon styling */
+.workbench-tab .tab-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Label styling */
+.workbench-tab .tab-label {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* Notification badge */
+.workbench-tab .tab-badge {
+  position: absolute;
+  top: -2px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f44336;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 9px;
+  line-height: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+/* Notification glow effect */
+.workbench-tab.has-notifications {
+  animation: notification-glow 2s ease-in-out infinite;
+}
+
+@keyframes notification-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(244, 67, 54, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px var(--glow-color, #f44336);
+  }
+}
+
+/* Active tab with notifications has stronger glow */
+.workbench-tab.active.has-notifications {
+  animation: active-notification-glow 2s ease-in-out infinite;
+}
+
+@keyframes active-notification-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 8px var(--glow-color, #f44336);
+  }
+  50% {
+    box-shadow: 0 0 16px var(--glow-color, #f44336);
+  }
+}
+
+/* Focus state for accessibility */
+.workbench-tab:focus-visible {
+  outline: 2px solid #bb86fc;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Responsive sizing for narrow screens */
+@media (max-width: 1200px) {
+  .workbench-tab {
+    padding: 6px 10px;
+    gap: 0.3rem;
+  }
+
+  .workbench-tab .tab-label {
+    display: none;
+  }
+
+  .workbench-tab .tab-badge {
+    right: -4px;
+  }
+}
+
+/* Extra compact for very narrow screens */
+@media (max-width: 768px) {
+  .workbench-tab {
+    padding: 6px 8px;
+  }
+
+  .workbench-tab .tab-icon {
+    font-size: 16px;
+  }
+
+  .workbench-tab .tab-badge {
+    min-width: 16px;
+    height: 16px;
+    font-size: 9px;
+    right: -2px;
+    top: 0;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .workbench-tab {
+    color: #808080;
+  }
+
+  .workbench-tab:hover:not(.disabled) {
+    color: #e0e0e0;
+  }
+
+  .workbench-tab.active {
+    color: #e0e0e0;
+    border-bottom-color: #bb86fc;
+  }
+
+  .workbench-tab.disabled {
+    color: #404040;
+  }
+
+  .workbench-tab .tab-badge {
+    background: #f44336;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .workbench-tab {
+    border-bottom-width: 3px;
+  }
+
+  .workbench-tab.active {
+    border-bottom-color: #fff;
+  }
+
+  .workbench-tab .tab-badge {
+    border: 2px solid #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .workbench-tab {
+    transition: none;
+  }
+
+  .workbench-tab.has-notifications,
+  .workbench-tab.active.has-notifications {
+    animation: none;
+  }
+
+  .workbench-tab .tab-badge {
+    animation: none;
+  }
+}

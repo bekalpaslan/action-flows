@@ -3,6 +3,13 @@
  * Compact session display for sidebar navigation
  */
 
+/* GlowIndicator wrapper for session items */
+.session-sidebar-glow-wrapper {
+  display: block;
+  width: 100%;
+  border-radius: 0.5rem;
+}
+
 .session-sidebar-item {
   display: flex;
   align-items: center;

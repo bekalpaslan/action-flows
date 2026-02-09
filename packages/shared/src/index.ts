@@ -252,6 +252,25 @@ export {
 } from './controlPanelTypes.js';
 
 // ============================================================================
+// Hierarchical Notification Types
+// ============================================================================
+export type {
+  NotificationLevel,
+  NotificationSource,
+  NotificationEvent,
+  PropagationPath,
+  NotificationState,
+} from './notificationTypes.js';
+
+export {
+  NOTIFICATION_GLOW_COLORS,
+  NOTIFICATION_GLOW_INTENSITIES,
+  createNotification,
+  createPropagationPath,
+  aggregateNotificationState,
+} from './notificationTypes.js';
+
+// ============================================================================
 // Orchestrator Output Contract
 // ============================================================================
 export * from './contract/index.js';
