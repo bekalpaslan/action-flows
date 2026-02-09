@@ -164,9 +164,16 @@ export function SessionCliPanel({
           setCliStarted(true);
         } else {
           const error = await res.json();
-          terminal.writeln(
-            `\x1b[1;31m[Failed to start Claude CLI: ${error.error || 'Unknown error'}]\x1b[0m`
-          );
+          // "already exists" means CLI is already running — treat as success
+          if (String(error.error || '').includes('already exists')) {
+            terminal.writeln('\x1b[1;32m[Claude CLI already running]\x1b[0m');
+            terminal.writeln('');
+            setCliStarted(true);
+          } else {
+            terminal.writeln(
+              `\x1b[1;31m[Failed to start Claude CLI: ${error.error || 'Unknown error'}]\x1b[0m`
+            );
+          }
         }
       } catch (err) {
         console.error('Failed to start Claude CLI:', err);
@@ -181,23 +188,9 @@ export function SessionCliPanel({
     startCli();
   }, [sessionId, cwd, cliStarted]);
 
-  /**
-   * Cleanup: Stop Claude CLI session on unmount
-   */
-  useEffect(() => {
-    return () => {
-      if (!sessionId || !cliStarted) return;
-
-      // Send stop request (fire-and-forget)
-      fetch(`http://localhost:3001/api/claude-cli/${sessionId}/stop`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ signal: 'SIGTERM' }),
-      }).catch((err) => {
-        console.warn('Failed to stop Claude CLI session on unmount:', err);
-      });
-    };
-  }, [sessionId, cliStarted]);
+  // Note: CLI session lifecycle is managed by the backend claudeCliManager.
+  // We don't stop on unmount to avoid StrictMode double-mount race conditions.
+  // The manager handles cleanup on server shutdown and enforces max sessions.
 
   /**
    * Handle terminal output events from WebSocket

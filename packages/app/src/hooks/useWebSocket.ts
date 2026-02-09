@@ -50,7 +50,7 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
   const handleMessage = useCallback(
     (event: MessageEvent) => {
       try {
-        const data = JSON.parse(event.data);
+        let data = JSON.parse(event.data);
 
         // Handle non-event messages (connection confirmations, pong, errors)
         if (data.type === 'subscription_confirmed' || data.type === 'pong' || data.type === 'error') {
@@ -58,6 +58,11 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
             console.warn('[WS] Server error:', data.payload);
           }
           return;
+        }
+
+        // Unwrap broadcast wrapper: { type: 'event', sessionId, payload: <actual event> }
+        if (data.type === 'event' && data.payload) {
+          data = data.payload;
         }
 
         // Validate required fields for workspace events
