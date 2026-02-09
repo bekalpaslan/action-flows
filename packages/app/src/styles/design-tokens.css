@@ -25,8 +25,8 @@
   --text-quaternary: #48484a;          /* Disabled/placeholder text */
 
   /* Separator & Border Base */
-  --separator-base: rgba(84, 84, 88, 0.65);
-  --separator-opaque: #38383a;
+  --separator-base: rgba(100, 160, 255, 0.18);
+  --separator-opaque: rgba(80, 120, 200, 0.35);
 
   /* System Colors — Apple Palette */
   --system-blue: #0a84ff;
@@ -55,17 +55,17 @@
   --panel-bg-raised: rgba(58, 58, 60, 0.90);       /* Highest panels */
   --panel-bg-inset: rgba(0, 0, 0, 0.85);           /* Inset/recessed areas */
 
-  /* Panel Borders — Thin with visible white tint */
-  --panel-border-default: 1px solid rgba(255, 255, 255, 0.12);
-  --panel-border-subtle: 1px solid rgba(255, 255, 255, 0.08);
-  --panel-border-strong: 1px solid rgba(255, 255, 255, 0.18);
-  --panel-border-accent: 1px solid rgba(10, 132, 255, 0.35);
+  /* Panel Borders — Bright visible borders */
+  --panel-border-default: 1px solid rgba(100, 160, 255, 0.30);
+  --panel-border-subtle: 1px solid rgba(100, 160, 255, 0.18);
+  --panel-border-strong: 1px solid rgba(100, 160, 255, 0.45);
+  --panel-border-accent: 1px solid rgba(10, 132, 255, 0.55);
 
   /* Panel Border Colors (for use in custom borders) */
-  --panel-border-color-default: rgba(255, 255, 255, 0.12);
-  --panel-border-color-subtle: rgba(255, 255, 255, 0.08);
-  --panel-border-color-strong: rgba(255, 255, 255, 0.18);
-  --panel-border-color-accent: rgba(10, 132, 255, 0.35);
+  --panel-border-color-default: rgba(100, 160, 255, 0.30);
+  --panel-border-color-subtle: rgba(100, 160, 255, 0.18);
+  --panel-border-color-strong: rgba(100, 160, 255, 0.45);
+  --panel-border-color-accent: rgba(10, 132, 255, 0.55);
 
   /* Panel Radius Scale */
   --panel-radius-sm: 6px;      /* Small panels/cards */
@@ -73,15 +73,15 @@
   --panel-radius-lg: 14px;     /* Large panels/modals */
   --panel-radius-xl: 18px;     /* Extra large containers */
 
-  /* Panel Glow — Visible border illumination */
-  --panel-glow-default: 0 0 6px rgba(255, 255, 255, 0.12);
-  --panel-glow-accent: 0 0 8px rgba(10, 132, 255, 0.25);
-  --panel-glow-hover: 0 0 10px rgba(255, 255, 255, 0.18);
-  --panel-glow-focus: 0 0 12px rgba(10, 132, 255, 0.35);
+  /* Panel Glow — Bright blue illumination */
+  --panel-glow-default: 0 0 8px rgba(80, 140, 255, 0.20), 0 0 2px rgba(100, 160, 255, 0.30);
+  --panel-glow-accent: 0 0 12px rgba(10, 132, 255, 0.35), 0 0 3px rgba(10, 132, 255, 0.45);
+  --panel-glow-hover: 0 0 14px rgba(80, 140, 255, 0.30), 0 0 3px rgba(100, 160, 255, 0.40);
+  --panel-glow-focus: 0 0 18px rgba(10, 132, 255, 0.40), 0 0 4px rgba(10, 132, 255, 0.55);
 
   /* Panel Header — Distinct header area */
-  --panel-header-bg: rgba(255, 255, 255, 0.03);
-  --panel-header-border: 1px solid rgba(255, 255, 255, 0.06);
+  --panel-header-bg: rgba(255, 255, 255, 0.05);
+  --panel-header-border: 1px solid rgba(100, 160, 255, 0.20);
   --panel-header-text-color: var(--text-primary);
   --panel-header-secondary-color: var(--text-secondary);
 
@@ -108,13 +108,13 @@
   --btn-active-danger: rgba(204, 55, 46, 0.95);
 
   /* Button Borders */
-  --btn-border-default: 1px solid rgba(255, 255, 255, 0.12);
-  --btn-border-focus: 1px solid rgba(10, 132, 255, 0.5);
+  --btn-border-default: 1px solid rgba(100, 160, 255, 0.25);
+  --btn-border-focus: 1px solid rgba(10, 132, 255, 0.6);
   --btn-border-none: none;
 
   /* Button Border Colors */
-  --btn-border-color-default: rgba(255, 255, 255, 0.12);
-  --btn-border-color-focus: rgba(10, 132, 255, 0.5);
+  --btn-border-color-default: rgba(100, 160, 255, 0.25);
+  --btn-border-color-focus: rgba(10, 132, 255, 0.6);
 
   /* Button Radius */
   --btn-radius-sm: 6px;        /* Small buttons */
@@ -123,9 +123,9 @@
   --btn-radius-pill: 999px;    /* Pill-shaped buttons */
 
   /* Button Glow */
-  --btn-glow-default: 0 0 4px rgba(255, 255, 255, 0.12);
-  --btn-glow-hover: 0 0 8px rgba(10, 132, 255, 0.3);
-  --btn-glow-focus: 0 0 10px rgba(10, 132, 255, 0.4);
+  --btn-glow-default: 0 0 6px rgba(80, 140, 255, 0.18), 0 0 2px rgba(100, 160, 255, 0.25);
+  --btn-glow-hover: 0 0 12px rgba(10, 132, 255, 0.35), 0 0 3px rgba(10, 132, 255, 0.45);
+  --btn-glow-focus: 0 0 16px rgba(10, 132, 255, 0.45), 0 0 4px rgba(10, 132, 255, 0.55);
 
   /* Button Text Colors */
   --btn-text-primary: #ffffff;
@@ -144,15 +144,15 @@
   --input-bg-disabled: rgba(118, 118, 128, 0.12);
 
   /* Input Borders */
-  --input-border-default: 1px solid rgba(255, 255, 255, 0.12);
-  --input-border-hover: 1px solid rgba(255, 255, 255, 0.18);
-  --input-border-focus: 1px solid rgba(10, 132, 255, 0.5);
+  --input-border-default: 1px solid rgba(100, 160, 255, 0.25);
+  --input-border-hover: 1px solid rgba(100, 160, 255, 0.35);
+  --input-border-focus: 1px solid rgba(10, 132, 255, 0.6);
   --input-border-error: 1px solid rgba(255, 69, 58, 0.5);
 
   /* Input Border Colors */
-  --input-border-color-default: rgba(255, 255, 255, 0.12);
-  --input-border-color-hover: rgba(255, 255, 255, 0.18);
-  --input-border-color-focus: rgba(10, 132, 255, 0.5);
+  --input-border-color-default: rgba(100, 160, 255, 0.25);
+  --input-border-color-hover: rgba(100, 160, 255, 0.35);
+  --input-border-color-focus: rgba(10, 132, 255, 0.6);
   --input-border-color-error: rgba(255, 69, 58, 0.5);
 
   /* Input Radius */
@@ -161,9 +161,9 @@
   --input-radius-lg: 10px;     /* Large inputs */
 
   /* Input Glow */
-  --input-glow-default: 0 0 4px rgba(255, 255, 255, 0.12);
-  --input-glow-focus: 0 0 10px rgba(10, 132, 255, 0.35);
-  --input-glow-error: 0 0 8px rgba(255, 69, 58, 0.3);
+  --input-glow-default: 0 0 6px rgba(80, 140, 255, 0.15), 0 0 2px rgba(100, 160, 255, 0.25);
+  --input-glow-focus: 0 0 14px rgba(10, 132, 255, 0.40), 0 0 3px rgba(10, 132, 255, 0.50);
+  --input-glow-error: 0 0 10px rgba(255, 69, 58, 0.35), 0 0 3px rgba(255, 69, 58, 0.45);
 
   /* Input Text */
   --input-text-color: var(--text-primary);
@@ -179,8 +179,8 @@
   --header-bg-glass: rgba(28, 28, 30, 0.75);
 
   /* Header Borders */
-  --header-border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  --header-border-color: rgba(255, 255, 255, 0.06);
+  --header-border-bottom: 1px solid rgba(100, 160, 255, 0.22);
+  --header-border-color: rgba(100, 160, 255, 0.22);
 
   /* Header Text */
   --header-text-primary: var(--text-primary);
@@ -210,14 +210,14 @@
   --glass-blur-xl: blur(40px);
 
   /* Glass Borders */
-  --glass-border-default: 1px solid rgba(255, 255, 255, 0.14);
-  --glass-border-subtle: 1px solid rgba(255, 255, 255, 0.08);
-  --glass-border-strong: 1px solid rgba(255, 255, 255, 0.22);
+  --glass-border-default: 1px solid rgba(100, 160, 255, 0.25);
+  --glass-border-subtle: 1px solid rgba(100, 160, 255, 0.15);
+  --glass-border-strong: 1px solid rgba(100, 160, 255, 0.40);
 
   /* Glass Border Colors */
-  --glass-border-color-default: rgba(255, 255, 255, 0.14);
-  --glass-border-color-subtle: rgba(255, 255, 255, 0.08);
-  --glass-border-color-strong: rgba(255, 255, 255, 0.22);
+  --glass-border-color-default: rgba(100, 160, 255, 0.25);
+  --glass-border-color-subtle: rgba(100, 160, 255, 0.15);
+  --glass-border-color-strong: rgba(100, 160, 255, 0.40);
 
   /* ==========================================================================
      Glow & Illumination Token System
