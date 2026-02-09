@@ -6,6 +6,14 @@
 
 | Date | Description | Pattern | Outcome |
 |------|-------------|---------|---------|
+| 2026-02-09 | Custom Prompt Button Tests — hook + dialog coverage | code×2 → review → commit | Success — 4 files, +1,631 lines, 63 tests (23 hook + 40 dialog), APPROVED 92% (0ca4c6b) |
+| 2026-02-09 | Session Panel Redesign Phase 3 — Cleanup & Deprecation | code → review → second-opinion → commit | Success — 27 files, +655/-3,823 lines, 22 old components deleted, APPROVED 95% (82b9847) |
+| 2026-02-09 | Session Panel Redesign Phase 2 — Integration + wiring | code×2 → review → second-opinion → triage fix → commit | Success — 7 files, +458/-93 lines, LeftPanelStack wired, WorkbenchLayout migrated, BottomControlPanel removed, review 75% → triage fixed (4ef71e9) |
+| 2026-02-09 | Session Panel Redesign Phase 1 — 25/75 split component system | analyze → plan → human gate → code×4 → review → second-opinion → triage fix → commit | Success — 29 files, +7,085 lines, 9 components + 9 CSS + types + barrel, review 78% → triage fixed (46e42ac) |
+| 2026-02-09 | Custom Prompt Button — Priority 2 enhancements (context patterns, WS refetch, delete, toasts) | code×3 → code → review → second-opinion → commit | Success — 12 files, 340 ins/35 del, 4 enhancements, APPROVED 92% (6ea5ff7) |
+| 2026-02-09 | Custom Prompt Button — quick fixes (export, alwaysShow, TODOs) | analyze → code → commit | Success — 4 files, 5 ins/3 del, 3 mechanical fixes (4bfe443) |
+| 2026-02-09 | Custom Prompt Button — creation dialog + registry integration | analyze → plan → human gate → code×2 → review → second-opinion → triage fix → commit | Success — 22 files, +2,637 lines, dialog+hook+integrations, NEEDS_CHANGES 82% → triage fixed (3afde4a) |
+| 2026-02-09 | Dead Code Cleanup — Remove old classic layout | analyze → code → review → second-opinion → commit | Success — 25 files, +5/-3,527 lines, classic layout removed, artifacts cleaned, APPROVED 98% (6c76be7) |
 | 2026-02-09 | Context-Native Routing Phase 5 | code×3 → review → commit | Success — 27 files, 316 ins/307 del, ORGANIZATION.md deleted, contract migrated, feature flag removed, APPROVED 95% (4532d16) |
 | 2026-02-09 | Context-Native Routing Phase 4 | code×3 → review → triage fix → commit | Success — 9 files, 515 ins, API endpoint + routing badges + disambiguation modal + feature flag enabled, APPROVED 92% (82d0742) |
 | 2026-02-09 | Context-Native Routing Phase 3 | code → review → commit | Success — 5 files, 185 ins/36 del, CONTEXTS.md created, FLOWS.md regrouped, ORCHESTRATOR.md updated (f7591e4) |
