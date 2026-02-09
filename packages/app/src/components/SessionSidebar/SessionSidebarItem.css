@@ -1,0 +1,267 @@
+/**
+ * SessionSidebarItem Component Styles
+ * Compact session display for sidebar navigation
+ */
+
+.session-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+  position: relative;
+  user-select: none;
+}
+
+.session-sidebar-item:hover {
+  background: rgba(224, 224, 224, 0.05);
+  border-color: rgba(187, 134, 252, 0.3);
+}
+
+.session-sidebar-item:focus {
+  outline: 2px solid #bb86fc;
+  outline-offset: 2px;
+}
+
+.session-sidebar-item:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Active state */
+.session-sidebar-item.active {
+  background: rgba(187, 134, 252, 0.12);
+  border-color: #bb86fc;
+}
+
+.session-sidebar-item.active:hover {
+  background: rgba(187, 134, 252, 0.18);
+}
+
+/* Status Indicator Dot */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: all 150ms ease;
+}
+
+/* Status Colors */
+.status-dot.status-in-progress {
+  background: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+  animation: pulse-glow 2s infinite;
+}
+
+.status-dot.status-completed {
+  background: #757575;
+  box-shadow: 0 0 4px rgba(117, 117, 117, 0.4);
+}
+
+.status-dot.status-failed {
+  background: #f44336;
+  box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
+  animation: pulse-glow-error 2s infinite;
+}
+
+.status-dot.status-idle {
+  background: #ffc107;
+  box-shadow: 0 0 4px rgba(255, 193, 7, 0.4);
+}
+
+/* Status Glow Animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(76, 175, 80, 0.8);
+  }
+}
+
+@keyframes pulse-glow-error {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(244, 67, 54, 0.8);
+  }
+}
+
+/* Session Info */
+.session-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Session Name */
+.session-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #e0e0e0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 150ms ease;
+}
+
+.session-sidebar-item:hover .session-name {
+  color: #f0f0f0;
+}
+
+.session-sidebar-item.active .session-name {
+  color: #bb86fc;
+}
+
+/* Session Time */
+.session-time {
+  font-size: 0.75rem;
+  color: #808080;
+  font-weight: 400;
+  transition: color 150ms ease;
+}
+
+.session-sidebar-item:hover .session-time {
+  color: #909090;
+}
+
+.session-sidebar-item.active .session-time {
+  color: #a07acc;
+}
+
+/* Notification Badge */
+.notification-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 0.4rem;
+  background: #bb86fc;
+  color: #1e1e1e;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(187, 134, 252, 0.6);
+  animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(187, 134, 252, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(187, 134, 252, 0.8);
+  }
+}
+
+/* Active state with notification */
+.session-sidebar-item.active .notification-badge {
+  background: #d0a8ff;
+  color: #1e1e1e;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .session-sidebar-item {
+    padding: 0.625rem 0.875rem;
+  }
+
+  .session-name {
+    font-size: 0.8125rem;
+  }
+
+  .session-time {
+    font-size: 0.6875rem;
+  }
+
+  .notification-badge {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.65rem;
+  }
+}
+
+/* Compact mode (if sidebar is narrow) */
+.sidebar-compact .session-sidebar-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.sidebar-compact .status-dot {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.sidebar-compact .notification-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.sidebar-compact .session-time {
+  display: none;
+}
+
+/* Accessibility: High Contrast Mode */
+@media (prefers-contrast: high) {
+  .session-sidebar-item {
+    border: 2px solid #606060;
+  }
+
+  .session-sidebar-item:hover {
+    border-color: #bb86fc;
+  }
+
+  .session-sidebar-item.active {
+    border-color: #d0a8ff;
+    border-width: 3px;
+  }
+
+  .status-dot {
+    border: 2px solid #1e1e1e;
+  }
+
+  .notification-badge {
+    border: 2px solid #1e1e1e;
+  }
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .session-sidebar-item,
+  .session-name,
+  .session-time,
+  .status-dot {
+    transition: none;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+    }
+  }
+
+  @keyframes pulse-glow-error {
+    0%, 100% {
+      box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
+    }
+  }
+
+  @keyframes pulse-badge {
+    0%, 100% {
+      box-shadow: 0 0 12px rgba(187, 134, 252, 0.6);
+    }
+  }
+}

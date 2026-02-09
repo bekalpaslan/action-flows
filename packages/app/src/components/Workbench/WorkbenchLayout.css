@@ -1,0 +1,156 @@
+/* ============================================================================
+ * WorkbenchLayout - Main shell layout styles
+ * ============================================================================ */
+
+.workbench-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background: #1a1a1a;
+  overflow: hidden;
+}
+
+/* ============================================================================
+ * Body Section (Main content only - Sidebar is fixed position)
+ * ============================================================================ */
+
+.workbench-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0; /* Important for flex child scrolling */
+}
+
+/* ============================================================================
+ * Main Content Area
+ * ============================================================================ */
+
+.workbench-main {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  min-width: 0; /* Important for flex child scrolling */
+  transition: margin-left 0.2s ease;
+}
+
+/* Add left margin when SessionSidebar is present (collapsed: 40px) */
+.workbench-main.with-sidebar {
+  margin-left: 40px;
+}
+
+.workbench-main::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.workbench-main::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.workbench-main::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 4px;
+}
+
+.workbench-main::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+
+/* ============================================================================
+ * Bottom Control Panel
+ * ============================================================================ */
+
+.workbench-bottom {
+  height: 120px;
+  min-height: 120px;
+  background: #2a2a2a;
+  border-top: 1px solid #3a3a3a;
+  overflow: hidden;
+  /* Placeholder styles - will be enhanced later */
+}
+
+/* ============================================================================
+ * Placeholder Styles (Temporary)
+ * ============================================================================ */
+
+.bottom-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #808080;
+  text-align: center;
+  padding: 1rem;
+}
+
+.placeholder-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  color: #a0a0a0;
+}
+
+.placeholder-hint {
+  font-size: 0.75rem;
+  color: #606060;
+  font-style: italic;
+}
+
+.workbench-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+}
+
+.workbench-placeholder h1 {
+  font-size: 2rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  color: #e0e0e0;
+}
+
+.workbench-placeholder p {
+  font-size: 1rem;
+  color: #808080;
+  max-width: 400px;
+}
+
+/* ============================================================================
+ * Responsive Adjustments
+ * ============================================================================ */
+
+@media (max-width: 768px) {
+  .workbench-main {
+    padding: 0.75rem;
+  }
+
+  .workbench-bottom {
+    height: 100px;
+    min-height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .workbench-main {
+    padding: 0.5rem;
+  }
+
+  /* Reduce sidebar margin on mobile */
+  .workbench-main.with-sidebar {
+    margin-left: 0;
+  }
+
+  .workbench-bottom {
+    height: 80px;
+    min-height: 80px;
+  }
+}

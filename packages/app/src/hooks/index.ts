@@ -30,3 +30,6 @@ export { useFileTree } from './useFileTree';
 
 export { useButtonActions } from './useButtonActions';
 export type { UseButtonActionsResult } from './useButtonActions';
+
+export { useSessionSidebar } from './useSessionSidebar';
+export type { UseSessionSidebarResult } from './useSessionSidebar';
