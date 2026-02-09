@@ -62,6 +62,16 @@ export interface WorkbenchConfig {
   disabled?: boolean;
   /** Tooltip text */
   tooltip?: string;
+
+  // Routing Metadata (Context-Native Routing)
+  /** Whether orchestrator can route sessions to this context */
+  routable: boolean;
+  /** Trigger keywords/phrases that route to this context */
+  triggers: string[];
+  /** Available flows in this context */
+  flows: string[];
+  /** Example user requests for this context */
+  routingExamples: string[];
 }
 
 /**
@@ -76,6 +86,15 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     notificationCount: 0,
     glowColor: '#4caf50',
     tooltip: 'Active development sessions and current tasks',
+    routable: true,
+    triggers: ['implement', 'build', 'create', 'add feature', 'develop', 'code', 'write', 'generate', 'construct', 'design'],
+    flows: ['code-and-review/', 'post-completion/'],
+    routingExamples: [
+      'implement user authentication',
+      'build a dashboard component',
+      'add export functionality',
+      'create a new API endpoint',
+    ],
   },
   maintenance: {
     id: 'maintenance',
@@ -85,6 +104,15 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     notificationCount: 0,
     glowColor: '#ff9800',
     tooltip: 'Bug fixes, refactoring, and housekeeping',
+    routable: true,
+    triggers: ['fix bug', 'resolve issue', 'patch', 'refactor', 'optimize', 'cleanup', 'improve performance', 'technical debt', 'debug', 'repair'],
+    flows: ['bug-triage/', 'code-and-review/'],
+    routingExamples: [
+      'fix the login bug',
+      'refactor the session storage',
+      'optimize database queries',
+      'cleanup unused imports',
+    ],
   },
   explore: {
     id: 'explore',
@@ -94,6 +122,15 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     notificationCount: 0,
     glowColor: '#2196f3',
     tooltip: 'Research, codebase exploration, and learning',
+    routable: true,
+    triggers: ['explore', 'investigate', 'research', 'learn', 'understand', 'explain', 'how does', 'study', 'analyze', 'discover'],
+    flows: ['doc-reorganization/', 'ideation/'],
+    routingExamples: [
+      'explore the WebSocket implementation',
+      'research best practices for state management',
+      'how does the contract parser work',
+      'investigate performance bottlenecks',
+    ],
   },
   review: {
     id: 'review',
@@ -103,6 +140,15 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     notificationCount: 0,
     glowColor: '#9c27b0',
     tooltip: 'Code reviews, PR checks, and audits',
+    routable: true,
+    triggers: ['review', 'code review', 'audit', 'check quality', 'security scan', 'inspect', 'examine', 'validate', 'verify'],
+    flows: ['audit-and-fix/'],
+    routingExamples: [
+      'review the auth implementation',
+      'audit security vulnerabilities',
+      'check code quality of backend routes',
+      'inspect the database schema',
+    ],
   },
   archive: {
     id: 'archive',
@@ -111,6 +157,10 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     hasNotifications: false,
     notificationCount: 0,
     tooltip: 'Completed and historical sessions',
+    routable: false,
+    triggers: [],
+    flows: [],
+    routingExamples: [],
   },
   settings: {
     id: 'settings',
@@ -119,6 +169,15 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     hasNotifications: false,
     notificationCount: 0,
     tooltip: 'Configuration, preferences, and system management',
+    routable: true,
+    triggers: ['configure', 'set up', 'change settings', 'create flow', 'create action', 'onboard me', 'framework health', 'setup', 'initialize'],
+    flows: ['onboarding/', 'flow-creation/', 'action-creation/', 'framework-health/'],
+    routingExamples: [
+      'configure backend port',
+      'create a new testing flow',
+      'onboard me to ActionFlows',
+      'check framework health',
+    ],
   },
   pm: {
     id: 'pm',
@@ -128,6 +187,15 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     notificationCount: 0,
     glowColor: '#00bcd4',
     tooltip: 'Project management, tasks, and documentation',
+    routable: true,
+    triggers: ['plan', 'roadmap', 'organize', 'track tasks', 'project management', 'what\'s next', 'priorities', 'schedule', 'coordinate'],
+    flows: ['planning/'],
+    routingExamples: [
+      'plan the next sprint',
+      'create a roadmap for Q2',
+      'what are the current priorities',
+      'organize upcoming tasks',
+    ],
   },
   harmony: {
     id: 'harmony',
@@ -137,6 +205,10 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     notificationCount: 0,
     glowColor: '#f44336',
     tooltip: 'Violations, sins, and remediations',
+    routable: false,
+    triggers: [],
+    flows: [],
+    routingExamples: [],
   },
   editor: {
     id: 'editor',
@@ -145,6 +217,10 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     hasNotifications: false,
     notificationCount: 0,
     tooltip: 'Full-screen code editing',
+    routable: false,
+    triggers: [],
+    flows: [],
+    routingExamples: [],
   },
 };
 
@@ -220,4 +296,27 @@ export function getSessionCapableWorkbenches(): WorkbenchId[] {
  */
 export function canWorkbenchHaveSessions(workbenchId: WorkbenchId): boolean {
   return getSessionCapableWorkbenches().includes(workbenchId);
+}
+
+// ============================================================================
+// Context-Native Routing
+// ============================================================================
+
+/**
+ * Workbenches that can receive orchestrator-routed sessions
+ */
+export const ROUTABLE_WORKBENCHES: readonly WorkbenchId[] = [
+  'work',
+  'maintenance',
+  'explore',
+  'review',
+  'settings',
+  'pm',
+] as const;
+
+/**
+ * Check if a workbench is routable (can receive orchestrator sessions)
+ */
+export function isRoutable(workbenchId: WorkbenchId): boolean {
+  return ROUTABLE_WORKBENCHES.includes(workbenchId);
 }

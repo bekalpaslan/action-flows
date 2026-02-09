@@ -221,7 +221,35 @@ export {
   getWorkbenchForSessionTag,
   getSessionCapableWorkbenches,
   canWorkbenchHaveSessions,
+  ROUTABLE_WORKBENCHES,
+  isRoutable,
 } from './workbenchTypes.js';
+
+// ============================================================================
+// Routing Types
+// ============================================================================
+export type {
+  RoutingResult,
+  DisambiguationRequest,
+  RoutingDecision,
+} from './routingTypes.js';
+
+export { ROUTING_THRESHOLDS } from './routingTypes.js';
+
+// ============================================================================
+// Control Panel Types
+// ============================================================================
+export type {
+  QuickCommand,
+  QuickCommandAction,
+  FlowAction,
+  ControlPanelConfig,
+} from './controlPanelTypes.js';
+
+export {
+  DEFAULT_QUICK_COMMANDS,
+  DEFAULT_CONTROL_PANEL_CONFIG,
+} from './controlPanelTypes.js';
 
 // ============================================================================
 // Orchestrator Output Contract
