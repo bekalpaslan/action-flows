@@ -2,7 +2,14 @@ import { type ReactNode, useState, useCallback } from 'react';
 import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { TopBar } from '../TopBar';
 import { SessionSidebar } from '../SessionSidebar';
-import { type WorkbenchId, type SessionId, canWorkbenchHaveSessions } from '@afw/shared';
+import { WorkWorkbench } from './WorkWorkbench';
+import {
+  type WorkbenchId,
+  type SessionId,
+  type Session,
+  canWorkbenchHaveSessions,
+  brandedTypes,
+} from '@afw/shared';
 import './WorkbenchLayout.css';
 
 /**
@@ -23,17 +30,77 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
 
   // Track attached sessions for the current workbench
-  const [attachedSessions, setAttachedSessions] = useState<Set<SessionId>>(new Set());
+  // TODO: Replace with actual session data from context/API
+  const [attachedSessions, setAttachedSessions] = useState<Session[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<SessionId | undefined>();
 
   /**
    * Handle session attachment to the workbench
    */
   const handleAttachSession = useCallback((sessionId: SessionId) => {
-    setAttachedSessions((prev) => new Set(prev).add(sessionId));
+    // TODO: Fetch actual session data and add to attachedSessions
+    // For now, create a mock session structure
+    const mockSession: Session = {
+      id: sessionId,
+      cwd: '/workspace',
+      chains: [],
+      status: 'in_progress',
+      startedAt: brandedTypes.currentTimestamp(),
+    };
+
+    setAttachedSessions((prev) => {
+      // Check if session is already attached
+      if (prev.some(s => s.id === sessionId)) {
+        return prev;
+      }
+      return [...prev, mockSession];
+    });
     setActiveSessionId(sessionId);
-    // TODO: Add session tiles to the main panel
     console.log('Session attached:', sessionId);
+  }, []);
+
+  /**
+   * Handle session close
+   */
+  const handleSessionClose = useCallback((sessionId: string) => {
+    setAttachedSessions((prev) => prev.filter(s => s.id !== sessionId));
+    if (activeSessionId === sessionId) {
+      setActiveSessionId(undefined);
+    }
+    console.log('Session closed:', sessionId);
+  }, [activeSessionId]);
+
+  /**
+   * Handle session detach
+   */
+  const handleSessionDetach = useCallback((sessionId: string) => {
+    setAttachedSessions((prev) => prev.filter(s => s.id !== sessionId));
+    if (activeSessionId === sessionId) {
+      setActiveSessionId(undefined);
+    }
+    console.log('Session detached:', sessionId);
+  }, [activeSessionId]);
+
+  /**
+   * Handle session input submission
+   */
+  const handleSessionInput = useCallback(async (sessionId: string, input: string) => {
+    // TODO: Send input to backend via WebSocket
+    console.log('Session input:', sessionId, input);
+  }, []);
+
+  /**
+   * Handle flow node click
+   */
+  const handleNodeClick = useCallback((sessionId: string, nodeId: string) => {
+    console.log('Node clicked:', sessionId, nodeId);
+  }, []);
+
+  /**
+   * Handle agent avatar click
+   */
+  const handleAgentClick = useCallback((sessionId: string, agentId: string) => {
+    console.log('Agent clicked:', sessionId, agentId);
   }, []);
 
   /**
@@ -43,10 +110,14 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
     switch (workbench) {
       case 'work':
         return (
-          <div className="workbench-placeholder">
-            <h1>Work Dashboard</h1>
-            <p>Session tiles will go here</p>
-          </div>
+          <WorkWorkbench
+            sessions={attachedSessions}
+            onSessionClose={handleSessionClose}
+            onSessionDetach={handleSessionDetach}
+            onSessionInput={handleSessionInput}
+            onNodeClick={handleNodeClick}
+            onAgentClick={handleAgentClick}
+          />
         );
       case 'maintenance':
         return (

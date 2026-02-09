@@ -28,7 +28,9 @@ import './animations.css';
  *
  * Props:
  * - sessionId: Session ID to track agents for
- * - placement: 'left' | 'right' | 'bottom' (affects side positioning)
+ * - placement: 'left' | 'right' | 'bottom' | 'overlay' (affects side positioning)
+ * - overlayPosition: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' (overlay mode only)
+ * - overlayOpacity: 0-1 (overlay mode only, default 0.9)
  * - className: Additional CSS classes
  * - onAgentClick: Callback when an agent card is clicked
  * - audioEnabled: Enable/disable audio cues
@@ -36,6 +38,8 @@ import './animations.css';
 export function SquadPanel({
   sessionId,
   placement = 'left',
+  overlayPosition = 'bottom-right',
+  overlayOpacity = 0.9,
   className = '',
   onAgentClick,
   audioEnabled = false,
@@ -85,11 +89,18 @@ export function SquadPanel({
   }
 
   const placementClass = `placement-${placement}`;
-  const containerClasses = `squad-panel ${placementClass} ${className}`.trim();
+  const overlayPositionClass = placement === 'overlay' ? `overlay-${overlayPosition}` : '';
+  const containerClasses = `squad-panel ${placementClass} ${overlayPositionClass} ${className}`.trim();
+
+  // Inline style for dynamic overlay opacity
+  const containerStyle = placement === 'overlay' ? {
+    '--overlay-opacity': overlayOpacity.toString(),
+  } as React.CSSProperties : undefined;
 
   return (
     <div
       className={containerClasses}
+      style={containerStyle}
       role="region"
       aria-label="Agent squad panel"
     >

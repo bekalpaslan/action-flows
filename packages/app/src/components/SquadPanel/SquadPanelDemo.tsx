@@ -27,7 +27,9 @@ interface SquadPanelDemoProps {
 }
 
 export function SquadPanelDemo({ mode = 'demo', sessionId }: SquadPanelDemoProps) {
-  const [placement, setPlacement] = useState<'left' | 'right' | 'bottom'>('left');
+  const [placement, setPlacement] = useState<'left' | 'right' | 'bottom' | 'overlay'>('left');
+  const [overlayPosition, setOverlayPosition] = useState<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>('bottom-right');
+  const [overlayOpacity, setOverlayOpacity] = useState(0.9);
   const [audioEnabled, setAudioEnabled] = useState(false);
 
   // Demo mode: pass null sessionId
@@ -72,7 +74,7 @@ export function SquadPanelDemo({ mode = 'demo', sessionId }: SquadPanelDemoProps
           <label style={{ fontSize: '14px', fontWeight: '600' }}>Placement</label>
           <select
             value={placement}
-            onChange={(e) => setPlacement(e.target.value as 'left' | 'right' | 'bottom')}
+            onChange={(e) => setPlacement(e.target.value as 'left' | 'right' | 'bottom' | 'overlay')}
             style={{
               padding: '8px 12px',
               backgroundColor: '#2a2a2a',
@@ -85,8 +87,49 @@ export function SquadPanelDemo({ mode = 'demo', sessionId }: SquadPanelDemoProps
             <option value="left">Left</option>
             <option value="right">Right</option>
             <option value="bottom">Bottom</option>
+            <option value="overlay">Overlay</option>
           </select>
         </div>
+
+        {placement === 'overlay' && (
+          <>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <label style={{ fontSize: '14px', fontWeight: '600' }}>Overlay Position</label>
+              <select
+                value={overlayPosition}
+                onChange={(e) => setOverlayPosition(e.target.value as 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right')}
+                style={{
+                  padding: '8px 12px',
+                  backgroundColor: '#2a2a2a',
+                  color: '#e0e0e0',
+                  border: '1px solid #3c3c3c',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                }}
+              >
+                <option value="top-left">Top Left</option>
+                <option value="top-right">Top Right</option>
+                <option value="bottom-left">Bottom Left</option>
+                <option value="bottom-right">Bottom Right</option>
+              </select>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <label style={{ fontSize: '14px', fontWeight: '600' }}>
+                Overlay Opacity ({overlayOpacity.toFixed(2)})
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={overlayOpacity}
+                onChange={(e) => setOverlayOpacity(parseFloat(e.target.value))}
+                style={{ width: '120px' }}
+              />
+            </div>
+          </>
+        )}
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <label style={{ fontSize: '14px', fontWeight: '600' }}>Audio Cues</label>
@@ -140,14 +183,36 @@ export function SquadPanelDemo({ mode = 'demo', sessionId }: SquadPanelDemoProps
           backgroundColor: '#0a0a0a',
           borderRadius: '12px',
           border: '2px dashed #3c3c3c',
+          position: 'relative',
+          minHeight: '500px',
         }}
       >
         <SquadPanel
           sessionId={activeSessionId}
           placement={placement}
+          overlayPosition={overlayPosition}
+          overlayOpacity={overlayOpacity}
           audioEnabled={audioEnabled}
           onAgentClick={handleAgentClick}
         />
+        {placement === 'overlay' && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              fontSize: '14px',
+              color: '#606060',
+              textAlign: 'center',
+              pointerEvents: 'none',
+            }}
+          >
+            Background visualization area
+            <br />
+            (SquadPanel overlays in corner)
+          </div>
+        )}
       </div>
 
       {/* Instructions */}

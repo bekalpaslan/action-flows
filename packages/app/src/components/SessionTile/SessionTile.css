@@ -1,0 +1,282 @@
+/**
+ * SessionTile Styles
+ * Dark theme with panel splits and responsive layout
+ */
+
+/* Main Container */
+.session-tile {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Header Bar */
+.session-tile__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  background-color: #2a2a2a;
+  border-bottom: 1px solid #404040;
+  flex-shrink: 0;
+}
+
+.session-tile__header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.session-tile__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e0e0e0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+.session-tile__status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.session-tile__status-badge .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.session-tile__status-badge.status-green {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.session-tile__status-badge.status-green .status-dot {
+  background-color: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.session-tile__status-badge.status-blue {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.session-tile__status-badge.status-blue .status-dot {
+  background-color: #3b82f6;
+}
+
+.session-tile__status-badge.status-red {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.session-tile__status-badge.status-red .status-dot {
+  background-color: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+}
+
+.session-tile__status-badge.status-yellow {
+  background-color: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+}
+
+.session-tile__status-badge.status-yellow .status-dot {
+  background-color: #eab308;
+}
+
+.session-tile__status-badge.status-gray {
+  background-color: rgba(156, 163, 175, 0.15);
+  color: #9ca3af;
+}
+
+.session-tile__status-badge.status-gray .status-dot {
+  background-color: #9ca3af;
+}
+
+.session-tile__header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.session-tile__header-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: transparent;
+  border: 1px solid #404040;
+  border-radius: 4px;
+  color: #a0a0a0;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.session-tile__header-button:hover {
+  background-color: #333333;
+  border-color: #505050;
+  color: #e0e0e0;
+}
+
+.session-tile__header-button:active {
+  background-color: #3a3a3a;
+}
+
+.session-tile__close-button {
+  padding: 6px 8px;
+}
+
+.session-tile__close-button:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+
+.header-button-icon {
+  flex-shrink: 0;
+}
+
+.header-button-label {
+  white-space: nowrap;
+}
+
+/* Main Content Area */
+.session-tile__content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Left Panel - Details + CLI */
+.session-tile__left-panel {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #404040;
+  background-color: #252525;
+  min-width: 200px;
+  overflow: hidden;
+}
+
+.session-tile__details-section {
+  height: 40%;
+  overflow-y: auto;
+  border-bottom: 1px solid #404040;
+}
+
+.session-tile__cli-section {
+  height: 60%;
+  overflow: hidden;
+}
+
+/* Right Panel - Flow Visualization */
+.session-tile__right-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1a1a;
+  overflow: hidden;
+}
+
+.session-tile__no-chain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666666;
+  font-size: 14px;
+}
+
+/* Compact Mode */
+.session-tile.compact .session-tile__title {
+  font-size: 13px;
+  max-width: 200px;
+}
+
+.session-tile.compact .session-tile__header {
+  height: 36px;
+  padding: 0 12px;
+}
+
+.session-tile.compact .session-tile__header-button {
+  padding: 5px 10px;
+  font-size: 11px;
+}
+
+.session-tile.compact .header-button-label {
+  display: none;
+}
+
+.session-tile.compact .session-tile__status-badge {
+  font-size: 10px;
+  padding: 3px 8px;
+}
+
+/* Responsive Layout - Stack Vertically on Narrow Screens */
+@media (max-width: 800px) {
+  .session-tile__content {
+    flex-direction: column;
+  }
+
+  .session-tile__left-panel {
+    width: 100% !important;
+    height: 40%;
+    border-right: none;
+    border-bottom: 1px solid #404040;
+  }
+
+  .session-tile__details-section {
+    height: 50%;
+  }
+
+  .session-tile__cli-section {
+    height: 50%;
+  }
+
+  .session-tile__right-panel {
+    width: 100% !important;
+    height: 60%;
+  }
+
+  .session-tile__title {
+    max-width: 150px;
+  }
+}
+
+/* Scrollbar Styling */
+.session-tile__details-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.session-tile__details-section::-webkit-scrollbar-track {
+  background-color: #1a1a1a;
+}
+
+.session-tile__details-section::-webkit-scrollbar-thumb {
+  background-color: #404040;
+  border-radius: 4px;
+}
+
+.session-tile__details-section::-webkit-scrollbar-thumb:hover {
+  background-color: #505050;
+}

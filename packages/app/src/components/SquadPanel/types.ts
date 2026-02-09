@@ -65,7 +65,13 @@ export interface SquadPanelProps {
   sessionId: SessionId | null;
 
   /** Placement of the panel (affects layout) */
-  placement?: 'left' | 'right' | 'bottom';
+  placement?: 'left' | 'right' | 'bottom' | 'overlay';
+
+  /** Position for overlay mode (only applies when placement='overlay') */
+  overlayPosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
+  /** Overlay background opacity (0-1, default 0.9, only applies when placement='overlay') */
+  overlayOpacity?: number;
 
   /** Optional CSS className */
   className?: string;

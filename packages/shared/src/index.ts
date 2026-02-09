@@ -205,6 +205,25 @@ export type {
 } from './harmonyTypes.js';
 
 // ============================================================================
+// Workbench System Types
+// ============================================================================
+export type {
+  WorkbenchId,
+  WorkbenchConfig,
+  WorkbenchState,
+  WorkbenchNotification,
+  SessionWorkbenchTag,
+} from './workbenchTypes.js';
+
+export {
+  WORKBENCH_IDS,
+  DEFAULT_WORKBENCH_CONFIGS,
+  getWorkbenchForSessionTag,
+  getSessionCapableWorkbenches,
+  canWorkbenchHaveSessions,
+} from './workbenchTypes.js';
+
+// ============================================================================
 // Orchestrator Output Contract
 // ============================================================================
 export * from './contract/index.js';

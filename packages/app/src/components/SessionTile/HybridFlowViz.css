@@ -1,0 +1,177 @@
+/**
+ * HybridFlowViz Styles
+ * Hybrid visualization combining ReactFlow DAG with SquadPanel overlay
+ *
+ * Layout:
+ * - Full container with ReactFlow visualization
+ * - SquadPanel overlay positioned at bottom-right (configurable)
+ * - Dark theme compatible
+ * - Smooth transitions for agent movements
+ */
+
+/* ===== CONTAINER ===== */
+
+.hybrid-flow-viz {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+}
+
+/* ===== FLOW CONTAINER ===== */
+
+.hybrid-flow-viz__flow-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Dark theme for ReactFlow background */
+.hybrid-flow-viz__flow-container .react-flow {
+  background-color: #1a1a1a;
+}
+
+.hybrid-flow-viz__flow-container .react-flow__viewport {
+  background: transparent;
+}
+
+/* Dark theme for controls */
+.hybrid-flow-viz__flow-container .react-flow__controls {
+  background-color: rgba(38, 38, 38, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.hybrid-flow-viz__flow-container .react-flow__controls-button {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.hybrid-flow-viz__flow-container .react-flow__controls-button:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.hybrid-flow-viz__flow-container .react-flow__controls-button svg {
+  fill: rgba(255, 255, 255, 0.7);
+}
+
+/* Dark theme for minimap */
+.hybrid-flow-viz__flow-container .react-flow__minimap {
+  background-color: rgba(38, 38, 38, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.hybrid-flow-viz__flow-container .react-flow__minimap-mask {
+  fill: rgba(0, 0, 0, 0.6);
+}
+
+/* Dark background pattern */
+.hybrid-flow-viz__flow-container .react-flow__background {
+  background-color: #1a1a1a;
+}
+
+/* ===== SQUAD OVERLAY ===== */
+
+.hybrid-flow-viz__squad-overlay {
+  position: absolute;
+  /* Position will be handled by SquadPanel's overlay mode */
+  pointer-events: none;
+  z-index: 100;
+  /* Allow SquadPanel to handle its own positioning */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* Re-enable pointer events on the actual SquadPanel */
+.hybrid-flow-viz__squad-overlay .squad-panel {
+  pointer-events: auto;
+}
+
+/* Smooth transitions for agent movements */
+.hybrid-flow-viz__squad-overlay .agent-character-card {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Subtle entrance animation for agents */
+.hybrid-flow-viz__squad-overlay .agent-character-card {
+  animation: agentFadeIn 0.5s ease-out;
+}
+
+@keyframes agentFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* On smaller screens, reduce overlay size */
+@media (max-width: 768px) {
+  .hybrid-flow-viz__squad-overlay .squad-panel.placement-overlay {
+    max-width: 300px;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .hybrid-flow-viz__squad-overlay .squad-panel.placement-overlay .agent-character-card {
+    width: 80px;
+  }
+
+  .hybrid-flow-viz__squad-overlay .squad-panel.placement-overlay .squad-panel-orchestrator .agent-character-card {
+    width: 100px;
+  }
+}
+
+/* On very small screens, hide the overlay to preserve flow visibility */
+@media (max-width: 480px) {
+  .hybrid-flow-viz__squad-overlay {
+    display: none;
+  }
+}
+
+/* ===== INTERACTION STATES ===== */
+
+/* When agent is clicked, add emphasis */
+.hybrid-flow-viz__squad-overlay .agent-character-card.is-clicked {
+  transform: scale(1.05);
+  z-index: 101;
+}
+
+/* When hovering over agents, show subtle glow */
+.hybrid-flow-viz__squad-overlay .agent-character-card:hover {
+  filter: brightness(1.1);
+}
+
+/* ===== DARK THEME ENHANCEMENTS ===== */
+
+/* Enhance glow effects in dark theme */
+.hybrid-flow-viz .agent-character-card[data-role="orchestrator"] {
+  box-shadow: 0 0 24px rgba(255, 215, 0, 0.3);
+}
+
+.hybrid-flow-viz .agent-character-card[data-status="working"] {
+  box-shadow: 0 0 16px rgba(251, 192, 45, 0.4);
+}
+
+.hybrid-flow-viz .agent-character-card[data-status="success"] {
+  box-shadow: 0 0 16px rgba(76, 175, 80, 0.4);
+}
+
+.hybrid-flow-viz .agent-character-card[data-status="error"] {
+  box-shadow: 0 0 16px rgba(244, 67, 54, 0.4);
+}

@@ -13,8 +13,13 @@ import { TerminalTabs } from './Terminal';
 import { SessionWindowSidebar } from './SessionWindowSidebar/SessionWindowSidebar';
 import { SessionWindowGrid } from './SessionWindowGrid/SessionWindowGrid';
 import { SquadPanel } from './SquadPanel';
+import { WorkbenchLayout } from './Workbench';
 import { claudeCliService } from '../services/claudeCliService';
 import type { Session, SessionId } from '@afw/shared';
+
+// Feature flag - check for env var or localStorage
+const USE_NEW_LAYOUT = import.meta.env.VITE_NEW_LAYOUT === 'true'
+  || localStorage.getItem('afw-new-layout') === 'true';
 
 /**
  * Main app content component that displays real-time WebSocket connection status
@@ -119,6 +124,12 @@ export default function AppContent() {
     }
   };
 
+  // NEW: If feature flag is on, render new layout
+  if (USE_NEW_LAYOUT) {
+    return <WorkbenchLayout />;
+  }
+
+  // OLD: Existing layout code stays unchanged
   return (
     <div className="app">
       {/* Background notification manager */}
