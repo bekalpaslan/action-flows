@@ -3,10 +3,13 @@ import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { TopBar } from '../TopBar';
 import { SessionSidebar } from '../SessionSidebar';
 import { WorkWorkbench } from './WorkWorkbench';
+import { BottomControlPanel } from '../BottomControlPanel';
 import {
   type WorkbenchId,
   type SessionId,
   type Session,
+  type QuickCommandAction,
+  type FlowAction,
   canWorkbenchHaveSessions,
   brandedTypes,
 } from '@afw/shared';
@@ -102,6 +105,42 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const handleAgentClick = useCallback((sessionId: string, agentId: string) => {
     console.log('Agent clicked:', sessionId, agentId);
   }, []);
+
+  /**
+   * Handle input submission from BottomControlPanel
+   */
+  const handleSubmitInput = useCallback((input: string) => {
+    if (!activeSessionId) {
+      console.warn('No active session to send input to');
+      return;
+    }
+    // TODO: Send input to backend via WebSocket/claudeCliService
+    handleSessionInput(activeSessionId, input);
+  }, [activeSessionId, handleSessionInput]);
+
+  /**
+   * Handle quick command execution from BottomControlPanel
+   */
+  const handleExecuteCommand = useCallback((action: QuickCommandAction) => {
+    if (!activeSessionId) {
+      console.warn('No active session to execute command on');
+      return;
+    }
+    // TODO: Dispatch command to backend based on action type
+    console.log('Execute command:', action, 'on session:', activeSessionId);
+  }, [activeSessionId]);
+
+  /**
+   * Handle flow/action selection from BottomControlPanel
+   */
+  const handleSelectFlow = useCallback((item: FlowAction) => {
+    if (!activeSessionId) {
+      console.warn('No active session to apply flow to');
+      return;
+    }
+    // TODO: Execute flow/action on the active session
+    console.log('Select flow/action:', item, 'for session:', activeSessionId);
+  }, [activeSessionId]);
 
   /**
    * Render workbench-specific content based on activeWorkbench
@@ -211,11 +250,13 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
       </div>
 
       <footer className="workbench-bottom">
-        {/* BottomControlPanel placeholder */}
-        <div className="bottom-placeholder">
-          <div className="placeholder-title">Control Panel</div>
-          <div className="placeholder-hint">Execution controls will appear here</div>
-        </div>
+        <BottomControlPanel
+          sessionId={activeSessionId}
+          onSubmitInput={handleSubmitInput}
+          onExecuteCommand={handleExecuteCommand}
+          onSelectFlow={handleSelectFlow}
+          disabled={!activeSessionId}
+        />
       </footer>
     </div>
   );

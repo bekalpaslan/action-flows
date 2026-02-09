@@ -1,0 +1,69 @@
+.quick-command-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.quick-command-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 4px 12px;
+  background-color: #2a2a2a;
+  border: none;
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  flex-shrink: 0;
+}
+
+.quick-command-button:hover:not(:disabled) {
+  background-color: #3a3a3a;
+  transform: translateY(-1px);
+}
+
+.quick-command-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.quick-command-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quick-command-icon {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.quick-command-label {
+  line-height: 1;
+}
+
+/* Scrollbar styling for horizontal overflow */
+.quick-command-grid::-webkit-scrollbar {
+  height: 4px;
+}
+
+.quick-command-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.quick-command-grid::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 2px;
+}
+
+.quick-command-grid::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}

@@ -1,0 +1,27 @@
+.bottom-control-panel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 60px;
+  padding: 10px 16px;
+  background: #1e1e1e;
+  border-top: 1px solid #404040;
+}
+
+.bottom-control-panel__section {
+  display: flex;
+  align-items: center;
+}
+
+.bottom-control-panel__section--left {
+  flex: 0 0 auto;
+}
+
+.bottom-control-panel__section--center {
+  flex: 1;
+  min-width: 0;
+}
+
+.bottom-control-panel__section--right {
+  flex: 0 0 auto;
+}
