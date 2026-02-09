@@ -158,24 +158,80 @@ export function CliPanel({
       // Filter events for this session
       if (event.sessionId !== sessionId) return;
 
-      // Handle CLI output events
+      // Handle CLI output events — parse stream-json into clean terminal output
       if (event.type === 'claude-cli:output') {
         const outputEvent = event as ClaudeCliOutputEvent;
         const terminal = terminalInstanceRef.current;
         if (!terminal) return;
 
-        // Write output to terminal
-        const output = outputEvent.output;
+        const raw = outputEvent.output;
         const isError = outputEvent.stream === 'stderr';
 
-        // Color stderr output in red
+        // stderr: show as-is in red
         if (isError) {
-          terminal.write('\x1b[31m' + output + '\x1b[0m');
-        } else {
-          terminal.write(output);
+          terminal.write('\x1b[31m' + raw + '\x1b[0m');
+          terminal.scrollToBottom();
+          return;
         }
 
-        // Auto-scroll to bottom
+        // stdout: parse stream-json JSONL (may contain partial lines across chunks)
+        const buffered = lineBufferRef.current + raw;
+        const lines = buffered.split('\n');
+        lineBufferRef.current = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+
+          try {
+            const msg = JSON.parse(trimmed);
+
+            switch (msg.type) {
+              case 'system':
+                if (msg.subtype === 'init') {
+                  terminal.writeln(`\x1b[90m[Claude initialized — ${(msg.tools || []).length} tools available]\x1b[0m`);
+                }
+                break;
+
+              case 'stream_event': {
+                const ev = msg.event;
+                if (!ev) break;
+                if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta' && ev.delta.text) {
+                  terminal.write(ev.delta.text);
+                }
+                if (ev.type === 'content_block_start' && ev.content_block?.type === 'tool_use') {
+                  terminal.writeln('');
+                  terminal.write(`\x1b[1;33m[Tool: ${ev.content_block.name}]\x1b[0m `);
+                }
+                if (ev.type === 'message_stop') {
+                  terminal.writeln('');
+                }
+                break;
+              }
+
+              case 'assistant':
+                break;
+
+              case 'result':
+                terminal.writeln('');
+                if (msg.is_error) {
+                  terminal.writeln(`\x1b[1;31m[Error: ${msg.result || 'Unknown'}]\x1b[0m`);
+                } else {
+                  const cost = msg.total_cost_usd != null ? `$${msg.total_cost_usd.toFixed(4)}` : '';
+                  const dur = msg.duration_ms != null ? `${(msg.duration_ms / 1000).toFixed(1)}s` : '';
+                  const meta = [dur, cost].filter(Boolean).join(' | ');
+                  terminal.writeln(`\x1b[90m[${meta}]\x1b[0m`);
+                }
+                break;
+
+              default:
+                break;
+            }
+          } catch {
+            terminal.writeln(trimmed);
+          }
+        }
+
         terminal.scrollToBottom();
       }
 
@@ -210,17 +266,13 @@ export function CliPanel({
         terminal.writeln(`\x1b[1;32m$ ${command}\x1b[0m`);
       }
 
-      // Send command via WebSocket
-      // Note: CommandSubmittedEvent not yet in WorkspaceEvent union
-      // TODO: Add CommandSubmittedEvent to @afw/shared WorkspaceEvent union and backend handler
-      // For now, bypassing type check as this is a known limitation (review finding #5)
-      const commandEvent = {
-        type: 'command:submitted',
+      // Send command via WebSocket as 'input' type (matches backend WS schema)
+      send({
+        type: 'input',
         sessionId: sessionId,
-        command: command + '\n',
+        payload: command,
         timestamp: new Date().toISOString(),
-      };
-      send(commandEvent as unknown as WorkspaceEvent);
+      } as unknown as WorkspaceEvent);
 
       // Notify parent
       onCommand?.(command);
