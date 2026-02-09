@@ -27,20 +27,28 @@ ActionFlows is organized as 7 layers, each with its own role, evolution mechanis
 
 **Files:** `.claude/actionflows/logs/INDEX.md`, `LEARNINGS.md`, `logs/framework_health_report.md`
 
-**Purpose:** The system's long-term memory. Every chain execution is recorded in INDEX.md with a one-line summary. Every mistake or discovery becomes a LEARNINGS.md entry. Every framework health check produces a report.
+**Purpose:** The system's long-term memory — and its primary source of wisdom. Layer 0 is not part of the execution chain. Instead, the orchestrator **consults** Layer 0 **before every routing decision**, using past patterns and learnings to inform which chain to compile. Past executions and past mistakes shape the routing logic itself.
 
 **What Makes It Living:**
-- INDEX.md accumulates a searchable registry of past executions. When the orchestrator routes a new request, it can query INDEX.md to find similar patterns and reuse established solutions.
-- LEARNINGS.md captures mistakes before they repeat. A learning entry includes: what happened, why it happened, and how to prevent it.
-- Reports generate historical context. Framework health reports from multiple sessions reveal trends — e.g., "harmony violations have dropped 40% since we fixed the contract parsers."
+- **INDEX.md** is a searchable registry of past executions. Before compiling any chain, the orchestrator reads INDEX.md to find similar patterns. "We solved this before with `analyze×3 → audit`. Let me reuse that pattern." This is not logging — it's active decision-making input.
+- **LEARNINGS.md** is a catalog of past mistakes and their root causes. The orchestrator reads it before routing to check: "Has this type of work failed before? What went wrong? How do I avoid repeating it?" A learning entry includes: context, problem, root cause, and solution. Agents surface learnings during execution; the orchestrator records them; future sessions benefit. Learnings inform routing, they are not an execution step.
+- **Reports** provide trend data. Framework health reports across sessions reveal patterns — e.g., "harmony violations dropped after we fixed the contract parsers."
 
 **Key Mechanism:**
 ```
-Every chain execution writes to INDEX.md:
-[EXECUTION_ID] {timestamp} | {human_intent} | {context_routed} | {flows_used} | {status}
-
-Orchestrator's routing logic reads INDEX.md before compiling chains:
-"I see we've solved a similar problem 3 times. Let me use that pattern."
+Before compiling ANY chain, the orchestrator CONSULTS memory (Layer 0):
+1. Read INDEX.md — "Have we done this before? What pattern worked?"
+2. Read LEARNINGS.md — "Has this type of work failed? What's the root cause?"
+   ↓
+This informs the routing decision and shapes the chain compilation
+   ↓
+Chain is presented to human for approval
+   ↓
+After execution completes, the loop records new data:
+- INDEX.md appends new execution record
+- LEARNINGS.md appends agent-surfaced findings
+   ↓
+Next session starts smarter — orchestrator reads enriched memory and routes more wisely
 ```
 
 ---
@@ -287,6 +295,59 @@ This is the most important diagram in the system. It shows how ActionFlows heals
 ```
 
 The cycle is not aspirational. It is operational right now.
+
+---
+
+## The Growth Cycle
+
+The healing cycle fixes what's broken. The growth cycle is different — it makes the system **stronger with every use**, even when nothing is broken.
+
+### Every Chain Is a Seed
+
+Every ad-hoc chain the orchestrator compiles is a potential reusable flow. When the orchestrator composes `analyze×3 → audit → second-opinion` to solve a problem, that pattern is recorded in INDEX.md. If it works well and the pattern recurs, it gets promoted to a registered flow in FLOWS.md. What was a 5-step manual composition becomes a single invocation.
+
+This happened in practice on 2026-02-09: the backwards harmony audit was composed ad-hoc from existing actions. It worked. It was immediately registered as `backwards-harmony-audit/` — a permanent flow available to every future session.
+
+**Every chain is a seed. Some seeds become flows. Flows become the system's muscle memory.**
+
+### The Compounding Properties
+
+As the system grows through use, five properties compound:
+
+**1. Operational Efficiency**
+Each session does less redundant work than the last. Patterns that required manual composition become one-step flow invocations. The orchestrator's routing gets faster because INDEX.md provides proven solutions. Work that took a full chain now takes a flow reference.
+
+**2. Intentionality**
+Decisions are never random. The orchestrator reads INDEX.md ("what worked before?") and LEARNINGS.md ("what failed?") before every routing decision. Each chain is compiled with full historical awareness. The system makes **informed, deliberate choices** — not guesses.
+
+**3. Trust**
+As successful patterns accumulate and learnings prevent repeat mistakes, trust grows between human and system. The human approves chains faster because the orchestrator's track record is visible in INDEX.md. Trust is earned through demonstrated competence, not assumed.
+
+**4. Less Work, Higher Quality**
+These are not in tension — they compound together. Reusable flows eliminate composition overhead. Learnings prevent repeat mistakes. Reviews catch issues early. Second opinions provide safety nets. The system does **less total work** while producing **higher quality output** because it builds on proven foundations instead of starting from scratch.
+
+**5. Growth**
+The system grows its own capabilities. New flows are registered. New agents are created. New patterns are discovered. The framework today is more capable than the framework yesterday — not because someone redesigned it, but because it was used.
+
+### The Growth Formula
+
+```
+Chain executed successfully
+    ↓
+Pattern recorded in INDEX.md
+    ↓
+Pattern recognized as reusable?
+    ├─ No  → Available as reference for future routing
+    └─ Yes → Promoted to registered flow in FLOWS.md
+              ↓
+              Available as single invocation
+              ↓
+              Composes into larger flows
+              ↓
+              System capability grows
+```
+
+**The system that runs today is not the system that will run tomorrow. Tomorrow's system will be stronger — because today it was used.**
 
 ---
 
