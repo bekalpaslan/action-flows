@@ -16,8 +16,9 @@
 /* Workbench Tabs Container */
 .top-bar-tabs {
   display: flex;
-  align-items: stretch;
-  gap: var(--space-1);
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   height: 100%;
   flex: 1;
   overflow-x: auto;
@@ -44,32 +45,29 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 0 var(--space-4);
-  background: transparent;
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.06);
   border: none;
-  border-bottom: 2px solid transparent;
-  border-radius: var(--btn-radius-md) var(--btn-radius-md) 0 0;
-  color: var(--nav-item-text-default);
-  font-size: var(--text-sm);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: var(--transition-all);
+  transition: all 0.2s ease;
   white-space: nowrap;
   position: relative;
-  height: 100%;
+  height: auto;
 }
 
 .workbench-tab:hover:not(.disabled) {
   color: var(--text-primary);
-  background: var(--nav-item-bg-hover);
-  box-shadow: var(--btn-glow-default);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .workbench-tab.active {
-  color: var(--nav-item-text-active);
-  border-bottom-color: var(--system-blue);
-  background: var(--nav-item-bg-active);
-  box-shadow: var(--panel-glow-accent);
+  color: #bb86fc;
+  background: rgba(187, 134, 252, 0.2);
+  box-shadow: 0 0 8px rgba(187, 134, 252, 0.15);
 }
 
 .workbench-tab.disabled {

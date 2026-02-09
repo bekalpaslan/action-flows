@@ -6,7 +6,7 @@
 /* GlowIndicator wrapper for workbench tabs */
 .workbench-tab-glow {
   display: inline-flex;
-  border-radius: 4px;
+  border-radius: 20px;
 }
 
 /* Ensure glow doesn't interfere with tab layout */
@@ -19,35 +19,36 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 6px 12px;
-  background: transparent;
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.06);
   border: none;
-  border-bottom: 2px solid transparent;
-  color: #808080;
+  border-radius: 20px;
+  color: var(--text-secondary, #808080);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.3s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
   user-select: none;
 }
 
 /* Hover state */
 .workbench-tab:hover:not(.disabled) {
-  color: #e0e0e0;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary, #e0e0e0);
 }
 
 /* Active state */
 .workbench-tab.active {
-  color: #e0e0e0;
-  border-bottom-color: #bb86fc;
+  background: rgba(187, 134, 252, 0.2);
+  color: #bb86fc;
+  box-shadow: 0 0 8px rgba(187, 134, 252, 0.15);
 }
 
 /* Disabled state */
 .workbench-tab.disabled {
-  color: #505050;
+  opacity: 0.4;
   cursor: not-allowed;
-  opacity: 0.5;
 }
 
 /* Icon styling */
@@ -120,7 +121,7 @@
 .workbench-tab:focus-visible {
   outline: 2px solid #bb86fc;
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 20px;
 }
 
 /* Responsive sizing for narrow screens */
@@ -161,20 +162,23 @@
 /* Dark mode enhancements */
 @media (prefers-color-scheme: dark) {
   .workbench-tab {
-    color: #808080;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary, #808080);
   }
 
   .workbench-tab:hover:not(.disabled) {
-    color: #e0e0e0;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary, #e0e0e0);
   }
 
   .workbench-tab.active {
-    color: #e0e0e0;
-    border-bottom-color: #bb86fc;
+    background: rgba(187, 134, 252, 0.2);
+    color: #bb86fc;
+    box-shadow: 0 0 8px rgba(187, 134, 252, 0.15);
   }
 
   .workbench-tab.disabled {
-    color: #404040;
+    opacity: 0.4;
   }
 
   .workbench-tab .tab-badge {
@@ -186,11 +190,12 @@
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   .workbench-tab {
-    border-bottom-width: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   .workbench-tab.active {
-    border-bottom-color: #fff;
+    border-color: #bb86fc;
+    background: rgba(187, 134, 252, 0.3);
   }
 
   .workbench-tab .tab-badge {
