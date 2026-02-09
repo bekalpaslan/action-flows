@@ -7,4 +7,32 @@
 
 export { WorkbenchLayout } from './WorkbenchLayout';
 export { WorkWorkbench } from './WorkWorkbench';
+export { EditorWorkbench } from './EditorWorkbench';
+export type { EditorWorkbenchProps } from './EditorWorkbench';
+export { ArchiveWorkbench } from './ArchiveWorkbench';
+export type { ArchiveWorkbenchProps } from './ArchiveWorkbench';
 export { SessionTileGrid } from './SessionTileGrid';
+export { ExploreWorkbench } from './ExploreWorkbench';
+export type { ExploreWorkbenchProps } from './ExploreWorkbench';
+export { PMWorkbench } from './PMWorkbench';
+export { MaintenanceWorkbench } from './MaintenanceWorkbench';
+export { ReviewWorkbench } from './ReviewWorkbench';
+export type {
+  PMTask,
+  TaskStatus,
+  TaskPriority,
+  DocLink,
+  Milestone,
+  PMWorkbenchProps,
+} from './PMWorkbench';
+export type {
+  ReviewWorkbenchProps,
+  PullRequest,
+  ReviewFile,
+  ReviewComment,
+  ReviewStatus,
+  DiffViewMode,
+} from './ReviewWorkbench';
+export { HarmonyWorkbench } from './HarmonyWorkbench';
+export type { HarmonyWorkbenchProps } from './HarmonyWorkbench';
+export { SettingsWorkbench } from './SettingsWorkbench';

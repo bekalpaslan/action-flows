@@ -3,7 +3,16 @@ import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { TopBar } from '../TopBar';
 import { SessionSidebar } from '../SessionSidebar';
 import { WorkWorkbench } from './WorkWorkbench';
+import { EditorWorkbench } from './EditorWorkbench';
+import { ReviewWorkbench } from './ReviewWorkbench';
+import { PMWorkbench, type PMTask, type DocLink, type Milestone, type TaskStatus } from './PMWorkbench';
+import { MaintenanceWorkbench } from './MaintenanceWorkbench';
+import { SettingsWorkbench } from './SettingsWorkbench';
+import { HarmonyWorkbench } from './HarmonyWorkbench';
+import { ExploreWorkbench } from './ExploreWorkbench';
+import { ArchiveWorkbench } from './ArchiveWorkbench';
 import { BottomControlPanel } from '../BottomControlPanel';
+import { useSessionArchive } from '../../hooks/useSessionArchive';
 import {
   type WorkbenchId,
   type SessionId,
@@ -29,6 +38,133 @@ interface WorkbenchLayoutProps {
   children?: ReactNode;
 }
 
+// Demo data for PM Workbench
+const initialDemoTasks: PMTask[] = [
+  {
+    id: 'task-1',
+    title: 'Implement Self-Evolving UI Phase 1',
+    description: 'Create the Button System with context detection and toolbar API',
+    status: 'done',
+    priority: 'high',
+    assignee: 'Claude Opus',
+    createdAt: '2026-02-08T10:00:00Z',
+    dueDate: '2026-02-08T18:00:00Z',
+    tags: ['frontend', 'ui'],
+  },
+  {
+    id: 'task-2',
+    title: 'Pattern Detection System',
+    description: 'Build pattern analyzer, frequency tracker, and confidence scorer',
+    status: 'in-progress',
+    priority: 'high',
+    assignee: 'Claude Sonnet',
+    createdAt: '2026-02-08T14:00:00Z',
+    dueDate: '2026-02-09T12:00:00Z',
+    tags: ['backend', 'ai'],
+  },
+  {
+    id: 'task-3',
+    title: 'Registry Model Implementation',
+    description: 'Create pack/button registry with storage and API endpoints',
+    status: 'todo',
+    priority: 'medium',
+    createdAt: '2026-02-08T16:00:00Z',
+    tags: ['backend', 'api'],
+  },
+  {
+    id: 'task-4',
+    title: 'Add unit tests for storage services',
+    description: 'Increase test coverage for MemoryStorage and Redis implementations',
+    status: 'done',
+    priority: 'medium',
+    assignee: 'Claude Haiku',
+    createdAt: '2026-02-08T20:00:00Z',
+    tags: ['testing'],
+  },
+  {
+    id: 'task-5',
+    title: 'Review Harmony Detection feature',
+    description: 'Code review for orchestrator contract drift detection',
+    status: 'todo',
+    priority: 'low',
+    createdAt: '2026-02-09T08:00:00Z',
+    tags: ['review'],
+  },
+];
+
+const initialDemoDocs: DocLink[] = [
+  {
+    id: 'doc-1',
+    title: 'FRD - Self-Evolving UI',
+    url: '/docs/FRD.md',
+    category: 'Requirements',
+    description: 'Functional Requirements Document for Self-Evolving UI',
+  },
+  {
+    id: 'doc-2',
+    title: 'SRD - Self-Evolving UI',
+    url: '/docs/SRD.md',
+    category: 'Requirements',
+    description: 'System Requirements Document with technical specifications',
+  },
+  {
+    id: 'doc-3',
+    title: 'ActionFlows Framework',
+    url: '/.claude/actionflows/ORGANIZATION.md',
+    category: 'Framework',
+    description: 'ActionFlows department and routing documentation',
+  },
+  {
+    id: 'doc-4',
+    title: 'Project Config',
+    url: '/.claude/actionflows/project.config.md',
+    category: 'Framework',
+    description: 'Project-specific configuration values',
+  },
+  {
+    id: 'doc-5',
+    title: 'Implementation Status',
+    url: '/docs/status/IMPLEMENTATION_STATUS.md',
+    category: 'Status',
+    description: 'Current implementation progress tracker',
+  },
+];
+
+const initialDemoMilestones: Milestone[] = [
+  {
+    id: 'milestone-1',
+    title: 'Phase 1: Button System',
+    description: 'Context detection, toolbar API, persistent toolbar',
+    dueDate: '2026-02-08T18:00:00Z',
+    status: 'completed',
+    progress: 100,
+  },
+  {
+    id: 'milestone-2',
+    title: 'Phase 2: Pattern Detection',
+    description: 'Pattern analyzer, frequency tracking, confidence scoring',
+    dueDate: '2026-02-09T18:00:00Z',
+    status: 'current',
+    progress: 60,
+  },
+  {
+    id: 'milestone-3',
+    title: 'Phase 3: Registry Model',
+    description: 'Pack/button registry, storage, API endpoints',
+    dueDate: '2026-02-10T18:00:00Z',
+    status: 'upcoming',
+    progress: 0,
+  },
+  {
+    id: 'milestone-4',
+    title: 'Phase 4: Self-Modification',
+    description: 'Runtime button promotion, UI adaptation',
+    dueDate: '2026-02-11T18:00:00Z',
+    status: 'upcoming',
+    progress: 0,
+  },
+];
+
 export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
 
@@ -36,6 +172,58 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   // TODO: Replace with actual session data from context/API
   const [attachedSessions, setAttachedSessions] = useState<Session[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<SessionId | undefined>();
+
+  // PM Workbench state
+  const [demoTasks, setDemoTasks] = useState<PMTask[]>(initialDemoTasks);
+  const [demoDocs] = useState<DocLink[]>(initialDemoDocs);
+  const [demoMilestones] = useState<Milestone[]>(initialDemoMilestones);
+
+  // Archive Workbench state
+  const {
+    archivedSessions,
+    restoreSession,
+    deleteArchive,
+    clearAllArchives,
+  } = useSessionArchive();
+
+  /**
+   * Handle archived session restore
+   */
+  const handleArchiveRestore = useCallback((sessionId: string) => {
+    restoreSession(sessionId as SessionId);
+    console.log('Session restored from archive:', sessionId);
+  }, [restoreSession]);
+
+  /**
+   * Handle archived session delete
+   */
+  const handleArchiveDelete = useCallback((sessionId: string) => {
+    deleteArchive(sessionId as SessionId);
+    console.log('Archived session deleted:', sessionId);
+  }, [deleteArchive]);
+
+  /**
+   * Handle clear all archives
+   */
+  const handleArchiveClearAll = useCallback(() => {
+    clearAllArchives();
+    console.log('All archived sessions cleared');
+  }, [clearAllArchives]);
+
+  /**
+   * Handle file selection in ExploreWorkbench
+   */
+  const handleFileSelect = useCallback((path: string) => {
+    console.log('File selected:', path);
+  }, []);
+
+  /**
+   * Handle file open in ExploreWorkbench
+   */
+  const handleFileOpen = useCallback((path: string) => {
+    console.log('File opened:', path);
+    // TODO: Navigate to editor workbench or open in a tab
+  }, []);
 
   /**
    * Handle session attachment to the workbench
@@ -143,6 +331,52 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   }, [activeSessionId]);
 
   /**
+   * PM Workbench: Handle task creation
+   */
+  const handleTaskCreate = useCallback((task: Omit<PMTask, 'id' | 'createdAt'>) => {
+    const newTask: PMTask = {
+      ...task,
+      id: `task-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+    };
+    setDemoTasks((prev) => [...prev, newTask]);
+    console.log('Task created:', newTask);
+  }, []);
+
+  /**
+   * PM Workbench: Handle task status change
+   */
+  const handleTaskStatusChange = useCallback((taskId: string, status: TaskStatus) => {
+    setDemoTasks((prev) =>
+      prev.map((task) =>
+        task.id === taskId
+          ? { ...task, status, updatedAt: new Date().toISOString() }
+          : task
+      )
+    );
+    console.log('Task status changed:', taskId, status);
+  }, []);
+
+  /**
+   * PM Workbench: Handle task deletion
+   */
+  const handleTaskDelete = useCallback((taskId: string) => {
+    setDemoTasks((prev) => prev.filter((task) => task.id !== taskId));
+    console.log('Task deleted:', taskId);
+  }, []);
+
+  /**
+   * PM Workbench: Handle doc link click
+   */
+  const handleDocClick = useCallback((docId: string) => {
+    const doc = demoDocs.find((d) => d.id === docId);
+    if (doc) {
+      console.log('Doc clicked:', doc.title, doc.url);
+      // In a real app, this might open the doc in a modal or navigate to it
+    }
+  }, [demoDocs]);
+
+  /**
    * Render workbench-specific content based on activeWorkbench
    */
   const renderWorkbenchContent = (workbench: WorkbenchId): ReactNode => {
@@ -159,60 +393,47 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
           />
         );
       case 'maintenance':
-        return (
-          <div className="workbench-placeholder">
-            <h1>Maintenance Dashboard</h1>
-            <p>Bug fixes, refactoring, and housekeeping tasks</p>
-          </div>
-        );
+        return <MaintenanceWorkbench />;
       case 'explore':
         return (
-          <div className="workbench-placeholder">
-            <h1>Explore Dashboard</h1>
-            <p>Research, codebase exploration, and learning</p>
-          </div>
+          <ExploreWorkbench
+            sessionId={activeSessionId}
+            onFileSelect={handleFileSelect}
+            onFileOpen={handleFileOpen}
+          />
         );
       case 'review':
-        return (
-          <div className="workbench-placeholder">
-            <h1>Review Dashboard</h1>
-            <p>Code reviews, PR checks, and audits</p>
-          </div>
-        );
+        return <ReviewWorkbench />;
       case 'archive':
         return (
-          <div className="workbench-placeholder">
-            <h1>Archive Dashboard</h1>
-            <p>Completed and historical sessions</p>
-          </div>
+          <ArchiveWorkbench
+            archivedSessions={archivedSessions}
+            onRestore={handleArchiveRestore}
+            onDelete={handleArchiveDelete}
+            onClearAll={handleArchiveClearAll}
+          />
         );
       case 'settings':
-        return (
-          <div className="workbench-placeholder">
-            <h1>Settings Dashboard</h1>
-            <p>Configuration, preferences, and system management</p>
-          </div>
-        );
+        return <SettingsWorkbench />;
       case 'pm':
         return (
-          <div className="workbench-placeholder">
-            <h1>PM Dashboard</h1>
-            <p>Project management, tasks, and documentation</p>
-          </div>
+          <PMWorkbench
+            tasks={demoTasks}
+            docs={demoDocs}
+            milestones={demoMilestones}
+            onTaskCreate={handleTaskCreate}
+            onTaskStatusChange={handleTaskStatusChange}
+            onTaskDelete={handleTaskDelete}
+            onDocClick={handleDocClick}
+          />
         );
       case 'harmony':
-        return (
-          <div className="workbench-placeholder">
-            <h1>Harmony Dashboard</h1>
-            <p>Violations, sins, and remediations</p>
-          </div>
-        );
+        return <HarmonyWorkbench sessionId={activeSessionId} />;
       case 'editor':
         return (
-          <div className="workbench-placeholder">
-            <h1>Editor Dashboard</h1>
-            <p>Full-screen code editing</p>
-          </div>
+          <EditorWorkbench
+            sessionId={activeSessionId || ('' as SessionId)}
+          />
         );
       default:
         return (

@@ -1,0 +1,278 @@
+/**
+ * EditorWorkbench Styles
+ * Full-screen code editor workbench styling
+ */
+
+.editor-workbench {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e1e;
+  overflow: hidden;
+}
+
+/* Header Bar */
+.editor-workbench__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background-color: #252526;
+  border-bottom: 1px solid #3c3c3c;
+  flex-shrink: 0;
+  min-height: 48px;
+}
+
+.editor-workbench__header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.editor-workbench__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #cccccc;
+  margin: 0;
+}
+
+.editor-workbench__unsaved-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  background-color: #4d3a00;
+  color: #ffcc00;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.editor-workbench__header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+/* Breadcrumb Navigation */
+.editor-workbench__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: #858585;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.breadcrumb-segment {
+  color: #858585;
+  transition: color 0.2s;
+}
+
+.breadcrumb-segment:hover {
+  color: #cccccc;
+  cursor: pointer;
+}
+
+.breadcrumb-segment--file {
+  color: #cccccc;
+  font-weight: 500;
+}
+
+.breadcrumb-separator {
+  color: #5a5a5a;
+  margin: 0 0.125rem;
+}
+
+/* Main Editor Content */
+.editor-workbench__content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Loading State */
+.editor-workbench__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #cccccc;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #3c3c3c;
+  border-top-color: #007acc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error State */
+.editor-workbench__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #f48771;
+  padding: 2rem;
+  text-align: center;
+}
+
+.error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: #5a1d1d;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+  font-size: 0.875rem;
+  background-color: #3c3c3c;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  max-width: 400px;
+  word-break: break-word;
+  margin: 0;
+}
+
+/* Empty State */
+.editor-workbench__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #858585;
+  padding: 2rem;
+  text-align: center;
+}
+
+.empty-icon {
+  color: #5a5a5a;
+  margin-bottom: 1.5rem;
+}
+
+.empty-icon svg {
+  width: 64px;
+  height: 64px;
+}
+
+.editor-workbench__empty h2 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #cccccc;
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-hint {
+  font-size: 0.875rem;
+  color: #858585;
+  margin: 0 0 1rem 0;
+}
+
+.empty-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: #6a6a6a;
+  margin: 0;
+}
+
+.empty-shortcut kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.5rem;
+  background-color: #3c3c3c;
+  border: 1px solid #4a4a4a;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: #cccccc;
+  box-shadow: 0 1px 0 #2d2d2d;
+}
+
+/* Editor Tabs Override for Workbench Context */
+.editor-workbench .editor-tabs {
+  flex-shrink: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .editor-workbench__header {
+    padding: 0.5rem 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .editor-workbench__title {
+    font-size: 1rem;
+  }
+
+  .editor-workbench__breadcrumb {
+    font-size: 0.75rem;
+    max-width: 100%;
+  }
+
+  .breadcrumb-segment:not(.breadcrumb-segment--file) {
+    display: none;
+  }
+
+  .breadcrumb-separator {
+    display: none;
+  }
+}
+
+/* Dark theme overrides for Monaco container */
+.editor-workbench .monaco-editor {
+  background-color: #1e1e1e;
+}
+
+.editor-workbench .monaco-editor .margin {
+  background-color: #1e1e1e;
+}
+
+/* Scrollbar styling */
+.editor-workbench ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.editor-workbench ::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.editor-workbench ::-webkit-scrollbar-thumb {
+  background: #424242;
+  border-radius: 5px;
+}
+
+.editor-workbench ::-webkit-scrollbar-thumb:hover {
+  background: #4e4e4e;
+}
+
+.editor-workbench ::-webkit-scrollbar-corner {
+  background: #1e1e1e;
+}
