@@ -45,7 +45,7 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 **Purpose:** Code reviews, audits, and quality checks
 **Icon:** 👁️
 **Triggers:** review, code review, audit, check quality, security scan, inspect, examine, validate, verify
-**Flows:** audit-and-fix/
+**Flows:** audit-and-fix/, test-coverage/
 **Examples:**
 - "review the auth implementation"
 - "audit security vulnerabilities"
@@ -95,6 +95,17 @@ These contexts receive content automatically — not routed by user intent.
 **Icon:** 📝
 **Routing:** User opens manually, never orchestrator-routed
 
+## Context-to-Flow Directory Mapping
+
+| Context | Flow Directories | Rationale |
+|---------|-----------------|-----------|
+| work | engineering/ | Feature dev and new code |
+| maintenance | engineering/ | Bug fixes and refactoring |
+| explore | framework/, human/ | Research and ideation |
+| review | qa/ | Audits and quality checks |
+| settings | framework/ | Config and meta-framework |
+| pm | framework/ | Planning and coordination |
+
 ## Routing Guide
 
 | Human Says | Context | Flow/Action |
@@ -113,5 +124,6 @@ These contexts receive content automatically — not routed by user intent.
 | "review roadmap" / "what's next" | pm | planning/ (review mode) |
 | "update roadmap" / "reprioritize" | pm | planning/ (update mode) |
 | "plan X" | pm | plan/ (direct action) |
+| "check test coverage" / "coverage gaps" | review | test-coverage/ |
 | "I have an idea" / "brainstorm X" | explore | ideation/ |
 | "let's think about X" / "ideation" | explore | ideation/ |

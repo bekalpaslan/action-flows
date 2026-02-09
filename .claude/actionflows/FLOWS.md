@@ -28,6 +28,7 @@
 | Flow | Purpose | Chain |
 |------|---------|-------|
 | audit-and-fix/ | Audit and remediate | audit → second-opinion/ → review |
+| test-coverage/ | Analyze test coverage and address gaps | test → analyze → code (conditional) |
 
 ## settings
 
