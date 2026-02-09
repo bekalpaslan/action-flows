@@ -1,9 +1,11 @@
 import express, { Router } from 'express';
-import type { Session, Chain, SessionId } from '@afw/shared';
+import type { Session, Chain, SessionId, WorkspaceEvent } from '@afw/shared';
 import { brandedTypes, Status } from '@afw/shared';
 import { storage } from '../storage/index.js';
 import { filePersistence } from '../storage/file-persistence.js';
 import { startWatching, stopWatching } from '../services/fileWatcher.js';
+import { clientRegistry } from '../ws/clientRegistry.js';
+import { broadcastEvent } from '../ws/handler.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
@@ -113,6 +115,25 @@ router.post('/', sessionCreateLimiter, validateBody(createSessionSchema), async 
     } catch (error) {
       console.error(`[API] Failed to start file watching for session ${session.id}:`, error);
       // Don't fail session creation if file watching fails
+    }
+
+    // Broadcast session:started event to all connected WebSocket clients
+    try {
+      const clients = clientRegistry.getAllClients();
+      const sessionStartedEvent: WorkspaceEvent = {
+        type: 'session:started',
+        sessionId: session.id,
+        timestamp: session.startedAt,
+        cwd: session.cwd,
+        user: session.user,
+        hostname: session.hostname,
+        platform: session.platform,
+      };
+      broadcastEvent(clients, sessionStartedEvent, session.id);
+      console.log(`[API] Broadcasted session:started event for ${session.id} to ${clients.length} clients`);
+    } catch (error) {
+      console.error(`[API] Failed to broadcast session:started event for ${session.id}:`, error);
+      // Don't fail session creation if broadcast fails
     }
 
     res.status(201).json(session);

@@ -77,8 +77,11 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
           return;
         }
 
-        // Only process events for subscribed sessions
-        if (subscribedSessionsRef.current.has(data.sessionId)) {
+        // Session lifecycle events bypass subscription check (needed for global session list)
+        const isSessionLifecycleEvent = data.type.startsWith('session:');
+
+        // Process if it's a session lifecycle event OR if client is subscribed to this session
+        if (isSessionLifecycleEvent || subscribedSessionsRef.current.has(data.sessionId)) {
           onEvent?.(data as WorkspaceEvent);
         }
       } catch (err) {

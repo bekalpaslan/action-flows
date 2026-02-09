@@ -101,17 +101,16 @@ export function useUserSessions(userId: string): UseUserSessionsReturn {
       // Only process events for this user
       if (
         event.type === 'session:started' ||
-        event.type === 'session:updated' ||
         event.type === 'session:ended'
       ) {
-        const sessionData = event.data as any;
-        const sessionUserId = sessionData.user || sessionData.userId;
+        // Fields are top-level on SessionStartedEvent/SessionEndedEvent
+        const sessionUserId = event.user;
 
         // Check if this event is for our user
         if (sessionUserId === userId) {
           setSessions((prevSessions) => {
             const existingIndex = prevSessions.findIndex(
-              (s) => s.id === sessionData.id
+              (s) => s.id === event.sessionId
             );
 
             if (event.type === 'session:started' && existingIndex === -1) {
@@ -119,28 +118,26 @@ export function useUserSessions(userId: string): UseUserSessionsReturn {
               return [
                 ...prevSessions,
                 {
-                  id: sessionData.id,
+                  id: event.sessionId,
                   user: sessionUserId,
-                  cwd: sessionData.cwd || '',
-                  hostname: sessionData.hostname,
-                  platform: sessionData.platform,
+                  cwd: event.cwd || '',
+                  hostname: event.hostname,
+                  platform: event.platform,
                   chains: [],
                   status: 'pending',
-                  startedAt: sessionData.startedAt || new Date().toISOString(),
-                  metadata: sessionData.metadata,
+                  startedAt: event.timestamp,
                 },
               ];
             } else if (
-              (event.type === 'session:updated' ||
-                event.type === 'session:ended') &&
+              event.type === 'session:ended' &&
               existingIndex >= 0
             ) {
               // Update existing session
               const updated = [...prevSessions];
               updated[existingIndex] = {
                 ...updated[existingIndex],
-                ...sessionData,
-                user: sessionUserId,
+                status: 'completed',
+                endedAt: event.timestamp,
               };
               return updated;
             }

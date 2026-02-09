@@ -113,59 +113,39 @@ export function useAllSessions(): UseAllSessionsReturn {
   const handleSessionEvent = useCallback((event: WorkspaceEvent) => {
     if (
       event.type === 'session:started' ||
-      event.type === 'session:updated' ||
       event.type === 'session:ended'
     ) {
-      interface SessionEventData {
-        id: string;
-        user?: string;
-        userId?: string;
-        cwd?: string;
-        hostname?: string;
-        platform?: string;
-        status?: string;
-        startedAt?: string;
-        endedAt?: string;
-        duration?: number;
-        endReason?: string;
-        summary?: string;
-        metadata?: any;
-        [key: string]: any;
-      }
-      const sessionData = event.data as SessionEventData;
-
       setSessions((prevSessions) => {
         const existingIndex = prevSessions.findIndex(
-          (s) => s.id === sessionData.id
+          (s) => s.id === event.sessionId
         );
 
         if (event.type === 'session:started' && existingIndex === -1) {
-          // Add new session
+          // Add new session — fields are top-level on SessionStartedEvent
           return [
             ...prevSessions,
             {
-              id: sessionData.id,
-              user: sessionData.user || sessionData.userId,
-              cwd: sessionData.cwd || '',
-              hostname: sessionData.hostname,
-              platform: sessionData.platform,
+              id: event.sessionId,
+              user: event.user,
+              cwd: event.cwd || '',
+              hostname: event.hostname,
+              platform: event.platform,
               chains: [],
               status: 'pending',
-              startedAt: sessionData.startedAt || new Date().toISOString(),
-              metadata: sessionData.metadata,
+              startedAt: event.timestamp,
             } as Session,
           ];
         } else if (
-          (event.type === 'session:updated' || event.type === 'session:ended') &&
+          event.type === 'session:ended' &&
           existingIndex >= 0
         ) {
-          // Update existing session
+          // Update existing session with ended data
           const updated = [...prevSessions];
           updated[existingIndex] = {
             ...updated[existingIndex],
-            ...sessionData,
-            user: sessionData.user || sessionData.userId,
-          };
+            status: 'completed',
+            endedAt: event.timestamp,
+          } as Session;
           return updated;
         }
 
