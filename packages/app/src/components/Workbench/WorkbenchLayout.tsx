@@ -25,6 +25,100 @@ import {
 import './WorkbenchLayout.css';
 
 /**
+ * Static ActionFlows data
+ * TODO: Replace with backend API when flows endpoint is implemented
+ */
+const ACTIONFLOWS_FLOWS: FlowAction[] = [
+  {
+    id: 'code-and-review',
+    name: 'Code and Review',
+    description: 'Standard implementation with review',
+    category: 'flow',
+    icon: '🔧',
+  },
+  {
+    id: 'audit-and-fix',
+    name: 'Audit and Fix',
+    description: 'QA with remediation',
+    category: 'flow',
+    icon: '🔍',
+  },
+  {
+    id: 'ideation',
+    name: 'Ideation',
+    description: 'Structured brainstorming',
+    category: 'flow',
+    icon: '💡',
+  },
+  {
+    id: 'onboarding',
+    name: 'Onboarding',
+    description: 'Framework teaching',
+    category: 'flow',
+    icon: '📚',
+  },
+  {
+    id: 'doc-reorganization',
+    name: 'Doc Reorganization',
+    description: 'Analyze → plan → code → review',
+    category: 'flow',
+    icon: '📝',
+  },
+];
+
+const ACTIONFLOWS_ACTIONS: FlowAction[] = [
+  {
+    id: 'analyze',
+    name: 'Analyze',
+    description: 'Data-driven analysis',
+    category: 'action',
+    icon: '📊',
+  },
+  {
+    id: 'brainstorm',
+    name: 'Brainstorm',
+    description: 'Structured brainstorming',
+    category: 'action',
+    icon: '💭',
+  },
+  {
+    id: 'code',
+    name: 'Code',
+    description: 'Code implementation',
+    category: 'action',
+    icon: '💻',
+  },
+  {
+    id: 'review',
+    name: 'Review',
+    description: 'Code review',
+    category: 'action',
+    icon: '👁️',
+  },
+  {
+    id: 'plan',
+    name: 'Plan',
+    description: 'Planning',
+    category: 'action',
+    icon: '📋',
+  },
+  {
+    id: 'test',
+    name: 'Test',
+    description: 'Testing',
+    category: 'action',
+    icon: '🧪',
+  },
+  {
+    id: 'commit',
+    name: 'Commit',
+    description: 'Git commit',
+    category: 'action',
+    icon: '✅',
+  },
+];
+
+/**
  * WorkbenchLayout - Main shell layout that replaces AppContent
  *
  * Structure:
@@ -266,27 +360,50 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   /**
    * Handle session attachment to the workbench
    */
-  const handleAttachSession = useCallback((sessionId: SessionId) => {
-    // TODO: Fetch actual session data and add to attachedSessions
-    // For now, create a mock session structure
-    const mockSession: Session = {
-      id: sessionId,
-      cwd: '/workspace',
-      chains: [],
-      status: 'in_progress',
-      startedAt: brandedTypes.currentTimestamp(),
-    };
+  const handleAttachSession = useCallback(async (sessionId: SessionId) => {
+    // Skip if already attached
+    if (attachedSessions.some(s => s.id === sessionId)) {
+      setActiveSessionId(sessionId);
+      return;
+    }
 
-    setAttachedSessions((prev) => {
-      // Check if session is already attached
-      if (prev.some(s => s.id === sessionId)) {
-        return prev;
-      }
-      return [...prev, mockSession];
-    });
-    setActiveSessionId(sessionId);
-    console.log('Session attached:', sessionId);
-  }, []);
+    try {
+      const res = await fetch(`http://localhost:3001/api/sessions/${sessionId}`);
+      if (!res.ok) throw new Error(`Failed to fetch session: ${res.status}`);
+      const data = await res.json();
+
+      const session: Session = {
+        id: data.id as SessionId,
+        cwd: data.cwd || '/workspace',
+        chains: data.chains || [],
+        status: data.status || 'in_progress',
+        startedAt: data.startedAt,
+        user: data.user,
+        hostname: data.hostname,
+      };
+
+      setAttachedSessions((prev) => {
+        if (prev.some(s => s.id === sessionId)) return prev;
+        return [...prev, session];
+      });
+      setActiveSessionId(sessionId);
+    } catch (err) {
+      console.error('Failed to attach session:', err);
+      // Fallback to minimal session
+      const fallback: Session = {
+        id: sessionId,
+        cwd: '/workspace',
+        chains: [],
+        status: 'in_progress',
+        startedAt: brandedTypes.currentTimestamp(),
+      };
+      setAttachedSessions((prev) => {
+        if (prev.some(s => s.id === sessionId)) return prev;
+        return [...prev, fallback];
+      });
+      setActiveSessionId(sessionId);
+    }
+  }, [attachedSessions]);
 
   /**
    * Handle session close
@@ -516,6 +633,8 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
           onSubmitInput={handleSubmitInput}
           onExecuteCommand={handleExecuteCommand}
           onSelectFlow={handleSelectFlow}
+          flows={ACTIONFLOWS_FLOWS}
+          actions={ACTIONFLOWS_ACTIONS}
           disabled={!activeSessionId}
         />
       </footer>

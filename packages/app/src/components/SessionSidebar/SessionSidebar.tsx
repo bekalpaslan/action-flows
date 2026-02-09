@@ -81,13 +81,13 @@ export function SessionSidebar({
     attachSession(sessionId);
   };
 
-  // Total session count
-  const totalCount = activeSessions.length + recentSessions.length;
-
   // Filter recent sessions that aren't already in active sessions
   const uniqueRecentSessions = recentSessions.filter(
     (recent) => !activeSessions.some((active) => active.id === recent.id)
   );
+
+  // Total session count (deduplicated)
+  const totalCount = activeSessions.length + uniqueRecentSessions.length;
 
   return (
     <aside

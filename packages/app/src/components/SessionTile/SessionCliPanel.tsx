@@ -41,7 +41,7 @@ export function SessionCliPanel({
   const fitAddonRef = useRef<FitAddon | null>(null);
   const [commandInput, setCommandInput] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const { onEvent } = useWebSocketContext();
+  const { onEvent, subscribe, unsubscribe } = useWebSocketContext();
 
   /**
    * Initialize xterm.js terminal
@@ -116,6 +116,20 @@ export function SessionCliPanel({
       fitAddonRef.current = null;
     };
   }, [sessionId]);
+
+  /**
+   * Subscribe to WebSocket events for this session
+   * Must run before event listener to ensure events are received
+   */
+  useEffect(() => {
+    if (!sessionId) return;
+
+    subscribe(sessionId);
+
+    return () => {
+      unsubscribe(sessionId);
+    };
+  }, [sessionId, subscribe, unsubscribe]);
 
   /**
    * Handle terminal output events from WebSocket
