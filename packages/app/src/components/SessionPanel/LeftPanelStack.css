@@ -114,20 +114,11 @@
  * ============================================================================ */
 
 @media (max-width: 800px) {
-  /* Reduce panel heights on mobile */
   .left-panel-stack__panel--info {
-    height: 100px !important;
-  }
-
-  .left-panel-stack__panel--cli {
-    height: 150px !important;
+    height: 50px !important;
   }
 
   .left-panel-stack__panel--prompts {
-    height: 150px !important;
-  }
-
-  .left-panel-stack__panel--folders {
-    height: 150px !important;
+    height: 120px !important;
   }
 }

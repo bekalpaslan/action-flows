@@ -2,14 +2,13 @@
  * LeftPanelStack Component
  *
  * Vertical stacking container for all left-side panels.
- * Manages 5 panels with mixed height strategy (fixed + flexible).
+ * Manages 4 panels with mixed height strategy (fixed + flexible).
  *
  * Panel Order (top to bottom):
- * 1. SessionInfoPanel (120px fixed)
- * 2. CliPanel (200px fixed)
- * 3. ConversationPanel (flex: 1 - grows to fill)
- * 4. SmartPromptLibrary (180px fixed)
- * 5. FolderHierarchy (200px fixed)
+ * 1. SessionInfoPanel (60px fixed)
+ * 2. CliPanel (flex: 1 - grows to fill)
+ * 3. ConversationPanel (200px fixed)
+ * 4. SmartPromptLibrary (160px fixed)
  */
 
 import React from 'react';
@@ -18,7 +17,6 @@ import { SessionInfoPanel } from './SessionInfoPanel';
 import { CliPanel } from './CliPanel';
 import { ConversationPanel } from './ConversationPanel';
 import { SmartPromptLibrary } from './SmartPromptLibrary';
-import { FolderHierarchy } from './FolderHierarchy';
 import './LeftPanelStack.css';
 
 export interface PanelHeightConfig {
@@ -26,7 +24,6 @@ export interface PanelHeightConfig {
   cli?: number | string;
   conversation?: number | string;
   smartPrompt?: number | string;
-  folderHierarchy?: number | string;
 }
 
 export interface LeftPanelStackProps {
@@ -53,11 +50,10 @@ export interface LeftPanelStackProps {
  * Default panel heights
  */
 const DEFAULT_HEIGHTS: Required<PanelHeightConfig> = {
-  sessionInfo: '120px',
-  cli: '200px',
-  conversation: 'flex',
-  smartPrompt: '180px',
-  folderHierarchy: '200px',
+  sessionInfo: '60px',
+  cli: 'flex',
+  conversation: '200px',
+  smartPrompt: '160px',
 };
 
 /**
@@ -76,7 +72,7 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
 
   return (
     <div className="left-panel-stack">
-      {/* 1. SessionInfoPanel - Session metadata */}
+      {/* 1. SessionInfoPanel - Session metadata (compact) */}
       <div
         className="left-panel-stack__panel left-panel-stack__panel--info"
         style={{
@@ -87,24 +83,24 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
         <SessionInfoPanel session={session} />
       </div>
 
-      {/* 2. CliPanel - Terminal */}
+      {/* 2. CliPanel - Terminal (flexible, takes remaining space) */}
       <div
         className="left-panel-stack__panel left-panel-stack__panel--cli"
         style={{
-          height: heights.cli,
-          flexShrink: 0,
+          flex: heights.cli === 'flex' ? 1 : undefined,
+          height: heights.cli !== 'flex' ? heights.cli : undefined,
+          minHeight: '200px',
         }}
       >
         <CliPanel sessionId={session.id} />
       </div>
 
-      {/* 3. ConversationPanel - Messages (flexible height) */}
+      {/* 3. ConversationPanel - Messages */}
       <div
         className="left-panel-stack__panel left-panel-stack__panel--conversation"
         style={{
-          flex: heights.conversation === 'flex' ? 1 : undefined,
-          height: heights.conversation !== 'flex' ? heights.conversation : undefined,
-          minHeight: '150px',
+          height: heights.conversation,
+          flexShrink: 0,
         }}
       >
         <ConversationPanel
@@ -125,19 +121,6 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
           flows={flows}
           actions={actions}
           onSelectFlow={onSelectFlow || (() => {})}
-        />
-      </div>
-
-      {/* 5. FolderHierarchy - Workspace navigation */}
-      <div
-        className="left-panel-stack__panel left-panel-stack__panel--folders"
-        style={{
-          height: heights.folderHierarchy,
-          flexShrink: 0,
-        }}
-      >
-        <FolderHierarchy
-          workspaceRoot={session.cwd || 'D:/ActionFlowsDashboard'}
         />
       </div>
     </div>
