@@ -21,6 +21,7 @@
   flex: 1;
   overflow: hidden;
   min-height: 0; /* Important for flex child scrolling */
+  position: relative; /* Establish positioning context */
 }
 
 /* ============================================================================
@@ -35,6 +36,8 @@
   color: var(--text-primary);
   min-width: 0; /* Important for flex child scrolling */
   transition: margin-left var(--duration-fast) var(--ease-apple);
+  position: relative; /* Establish positioning context for children */
+  contain: layout style; /* CSS containment to prevent layout escape */
 }
 
 /* Add left margin when SessionSidebar is present (static: 240px) */
@@ -71,6 +74,9 @@
   flex-direction: column;
   /* Enable GPU acceleration for smooth transitions */
   will-change: transform, opacity;
+  /* Prevent children from breaking out of the container */
+  overflow: hidden;
+  position: relative; /* Establish positioning context */
 }
 
 /* ============================================================================

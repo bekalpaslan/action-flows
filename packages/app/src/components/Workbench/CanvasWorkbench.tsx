@@ -45,6 +45,9 @@ export function CanvasWorkbench({
     }
   });
 
+  // Editor collapse state (default: expanded)
+  const [isEditorCollapsed, setIsEditorCollapsed] = useState<boolean>(false);
+
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Persist markup to localStorage with debounce
@@ -95,6 +98,13 @@ export function CanvasWorkbench({
   }, [markup]);
 
   /**
+   * Toggle editor collapse state
+   */
+  const handleToggleEditor = useCallback(() => {
+    setIsEditorCollapsed((prev) => !prev);
+  }, []);
+
+  /**
    * Generate iframe content with proper HTML structure
    */
   const generateIframeContent = (htmlMarkup: string): string => {
@@ -124,6 +134,14 @@ export function CanvasWorkbench({
           <button
             type="button"
             className="canvas-workbench__button"
+            onClick={handleToggleEditor}
+            title={isEditorCollapsed ? 'Show Editor' : 'Hide Editor'}
+          >
+            {isEditorCollapsed ? '▲ Show Editor' : '▼ Hide Editor'}
+          </button>
+          <button
+            type="button"
+            className="canvas-workbench__button"
             onClick={handleClear}
             title="Clear canvas markup"
           >
@@ -134,8 +152,12 @@ export function CanvasWorkbench({
 
       {/* Content: Editor + Preview */}
       <div className="canvas-workbench__content">
-        {/* Left: Monaco Editor (60%) */}
-        <div className="canvas-workbench__editor">
+        {/* Editor (collapsible) */}
+        <div
+          className={`canvas-workbench__editor ${
+            isEditorCollapsed ? 'canvas-workbench__editor--collapsed' : ''
+          }`}
+        >
           <Editor
             height="100%"
             language="html"
@@ -154,7 +176,7 @@ export function CanvasWorkbench({
           />
         </div>
 
-        {/* Right: iframe Preview (40%) */}
+        {/* Preview (fills remaining space) */}
         <div className="canvas-workbench__preview">
           <iframe
             title="Canvas Preview"
