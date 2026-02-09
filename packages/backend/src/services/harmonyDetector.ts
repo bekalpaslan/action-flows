@@ -10,7 +10,28 @@ import type {
   HarmonyResult,
   HarmonyFilter,
 } from '@afw/shared';
-import { parseOrchestratorOutput, CONTRACT_VERSION } from '@afw/shared';
+import {
+  parseOrchestratorOutput,
+  CONTRACT_VERSION,
+  isChainCompilationParsed,
+  isChainExecutionStartParsed,
+  isChainStatusUpdateParsed,
+  isExecutionCompleteParsed,
+  isStepCompletionParsed,
+  isDualOutputParsed,
+  isSecondOpinionSkipParsed,
+  isHumanGateParsed,
+  isLearningSurfaceParsed,
+  isSessionStartProtocolParsed,
+  isRegistryUpdateParsed,
+  isIndexEntryParsed,
+  isLearningEntryParsed,
+  isReviewReportParsed,
+  isAnalysisReportParsed,
+  isBrainstormTranscriptParsed,
+  isErrorAnnouncementParsed,
+  isContextRoutingParsed,
+} from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import type { Storage } from '../storage/index.js';
 
@@ -195,28 +216,41 @@ export class HarmonyDetector {
 
   /**
    * Get format name from parsed object
+   * Uses type guard functions to reliably identify formats
    */
   private getFormatName(parsed: any): string {
-    // Contract parsers include a contractVersion field
-    // We can infer format from the fields present
-    if ('title' in parsed && 'steps' in parsed) return 'ChainCompilation';
-    if ('stepNumber' in parsed && 'action' in parsed && 'result' in parsed) return 'StepCompletion';
-    if ('actionOutput' in parsed && 'secondOpinionOutput' in parsed) return 'DualOutput';
-    if ('scope' in parsed && 'verdict' in parsed) return 'ReviewReport';
-    if ('title' in parsed && 'message' in parsed && 'recoveryOptions' in parsed) return 'ErrorAnnouncement';
-    if ('file' in parsed && 'action' in parsed && 'entry' in parsed) return 'RegistryUpdate';
-    if ('question' in parsed && 'options' in parsed) return 'LearningSurface';
-    if ('file' in parsed && 'line' in parsed) return 'IndexEntry';
-    if ('chainId' in parsed && 'status' in parsed) return 'ChainExecutionStart';
-    if ('scope' in parsed && 'findings' in parsed) return 'AnalysisReport';
-    if ('topic' in parsed && 'participant' in parsed) return 'SessionStartProtocol';
-    if ('status' in parsed && 'summary' in parsed) return 'ExecutionComplete';
-    if ('reason' in parsed && 'skipReason' in parsed) return 'SecondOpinionSkip';
-    if ('title' in parsed && 'learning' in parsed) return 'LearningEntry';
-    if ('progress' in parsed && 'currentStep' in parsed) return 'ChainStatusUpdate';
-    if ('transcript' in parsed && 'ideas' in parsed) return 'BrainstormTranscript';
-    if ('question' in parsed && 'context' in parsed && !('options' in parsed)) return 'HumanGate';
-    if ('context' in parsed && 'confidence' in parsed && 'disambiguated' in parsed) return 'ContextRouting';
+    // Check in order of specificity, checking for distinctive field combinations first
+    // This prevents ambiguous matches (e.g., multiple formats checking 'title')
+
+    // Chain formats (distinctive step/changes/logsPath fields)
+    if (isChainExecutionStartParsed(parsed)) return 'ChainExecutionStart';
+    if (isChainStatusUpdateParsed(parsed)) return 'ChainStatusUpdate';
+    if (isExecutionCompleteParsed(parsed)) return 'ExecutionComplete';
+    if (isChainCompilationParsed(parsed)) return 'ChainCompilation';
+
+    // Step formats (distinctive output/skip/nextStep fields)
+    if (isDualOutputParsed(parsed)) return 'DualOutput';
+    if (isSecondOpinionSkipParsed(parsed)) return 'SecondOpinionSkip';
+    if (isStepCompletionParsed(parsed)) return 'StepCompletion';
+
+    // Human interaction formats (distinctive prompt/issue/protocol fields)
+    if (isLearningSurfaceParsed(parsed)) return 'LearningSurface';
+    if (isHumanGateParsed(parsed)) return 'HumanGate';
+    if (isSessionStartProtocolParsed(parsed)) return 'SessionStartProtocol';
+
+    // Registry formats (distinctive pattern/actionType/line fields)
+    if (isIndexEntryParsed(parsed)) return 'IndexEntry';
+    if (isLearningEntryParsed(parsed)) return 'LearningEntry';
+    if (isRegistryUpdateParsed(parsed)) return 'RegistryUpdate';
+
+    // Action output formats (distinctive findings/ideas/sections fields)
+    if (isReviewReportParsed(parsed)) return 'ReviewReport';
+    if (isAnalysisReportParsed(parsed)) return 'AnalysisReport';
+    if (isBrainstormTranscriptParsed(parsed)) return 'BrainstormTranscript';
+
+    // Error and routing formats
+    if (isErrorAnnouncementParsed(parsed)) return 'ErrorAnnouncement';
+    if (isContextRoutingParsed(parsed)) return 'ContextRouting';
 
     return 'Unknown';
   }

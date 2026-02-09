@@ -44,6 +44,7 @@ export type {
   StepStartedEvent,
   StepCompletedEvent,
   StepFailedEvent,
+  StepSkippedEvent,
   FileChange,
   AwaitingInputEvent,
   InputReceivedEvent,

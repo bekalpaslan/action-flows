@@ -217,6 +217,20 @@ export interface StepFailedEvent extends BaseEvent {
   isRetryable: boolean;
 }
 
+export interface StepSkippedEvent extends BaseEvent {
+  type: 'step:skipped';
+
+  // Automatic fields
+  stepNumber: StepNumber;
+
+  // Parsed fields (nullable)
+  action?: string | null;
+  reason?: string | null;
+
+  // Inferred fallbacks
+  skippedAt: Timestamp;
+}
+
 export interface FileChange {
   path: string;
   type: 'created' | 'modified' | 'deleted';
@@ -606,6 +620,7 @@ export type WorkspaceEvent =
   | StepStartedEvent
   | StepCompletedEvent
   | StepFailedEvent
+  | StepSkippedEvent
   | AwaitingInputEvent
   | InputReceivedEvent
   | FileCreatedEvent
@@ -653,6 +668,8 @@ export const eventGuards = {
     event.type === 'step:completed',
   isStepFailed: (event: WorkspaceEvent): event is StepFailedEvent =>
     event.type === 'step:failed',
+  isStepSkipped: (event: WorkspaceEvent): event is StepSkippedEvent =>
+    event.type === 'step:skipped',
   isAwaitingInput: (event: WorkspaceEvent): event is AwaitingInputEvent =>
     event.type === 'interaction:awaiting-input',
   isInputReceived: (event: WorkspaceEvent): event is InputReceivedEvent =>

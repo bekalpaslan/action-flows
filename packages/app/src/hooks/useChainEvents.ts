@@ -1,15 +1,21 @@
 import { useEffect } from 'react';
 import { useEvents } from './useEvents';
-import type { SessionId, WorkspaceEvent } from '@afw/shared';
+import type {
+  SessionId,
+  StepSpawnedEvent,
+  StepCompletedEvent,
+  StepFailedEvent,
+  StepSkippedEvent,
+} from '@afw/shared';
 
 /**
  * Hook that connects WebSocket events to chain state updates
  *
  * Features:
- * - Listens for step_spawned and step_completed events
- * - Maps events to chain state updates via updateStep callback
+ * - Listens for step:spawned, step:completed, step:failed, and step:skipped events
+ * - Maps events to chain state updates via callbacks
  * - Tracks chain progression in real-time
- * - Type-safe event handling
+ * - Type-safe event handling with proper discriminated union types
  */
 export function useChainEvents(
   sessionId: SessionId,
@@ -18,12 +24,12 @@ export function useChainEvents(
   onStepFailed?: (stepNumber: number, error?: string) => void,
   onStepSkipped?: (stepNumber: number) => void
 ) {
-  // Listen for relevant events
+  // Listen for relevant events using colon separators
   const events = useEvents(sessionId, [
-    'step_spawned',
-    'step_completed',
-    'step_failed',
-    'step_skipped',
+    'step:spawned',
+    'step:completed',
+    'step:failed',
+    'step:skipped',
   ]);
 
   /**
@@ -37,38 +43,38 @@ export function useChainEvents(
 
     // Handle different event types
     switch (event.type) {
-      case 'step_spawned': {
-        const data = (event as any).data || {};
-        const stepNumber = data.stepNumber || data.step;
+      case 'step:spawned': {
+        const stepEvent = event as StepSpawnedEvent;
+        const stepNumber = stepEvent.stepNumber;
         if (stepNumber !== undefined) {
           onStepSpawned?.(stepNumber);
         }
         break;
       }
 
-      case 'step_completed': {
-        const data = (event as any).data || {};
-        const stepNumber = data.stepNumber || data.step;
-        const duration = data.duration || undefined;
+      case 'step:completed': {
+        const stepEvent = event as StepCompletedEvent;
+        const stepNumber = stepEvent.stepNumber;
+        const duration = stepEvent.duration;
         if (stepNumber !== undefined) {
           onStepCompleted?.(stepNumber, duration);
         }
         break;
       }
 
-      case 'step_failed': {
-        const data = (event as any).data || {};
-        const stepNumber = data.stepNumber || data.step;
-        const error = data.error || data.message || undefined;
+      case 'step:failed': {
+        const stepEvent = event as StepFailedEvent;
+        const stepNumber = stepEvent.stepNumber;
+        const error = stepEvent.error || undefined;
         if (stepNumber !== undefined) {
           onStepFailed?.(stepNumber, error);
         }
         break;
       }
 
-      case 'step_skipped': {
-        const data = (event as any).data || {};
-        const stepNumber = data.stepNumber || data.step;
+      case 'step:skipped': {
+        const stepEvent = event as StepSkippedEvent;
+        const stepNumber = stepEvent.stepNumber;
         if (stepNumber !== undefined) {
           onStepSkipped?.(stepNumber);
         }
@@ -105,7 +111,14 @@ export function useChainEventSummary(sessionId: SessionId): ChainEventSummary {
   }
 
   const lastEvent = events[events.length - 1];
-  const recentStepNumber = (lastEvent as any).data?.stepNumber || null;
+  const recentStepNumber =
+    (
+      lastEvent as
+        | StepSpawnedEvent
+        | StepCompletedEvent
+        | StepFailedEvent
+        | StepSkippedEvent
+    ).stepNumber || null;
 
   return {
     lastEventType: lastEvent.type,
