@@ -43,7 +43,6 @@ export {
 export {
   parseErrorAnnouncement,
   parseContextRouting,
-  parseDepartmentRouting, // @deprecated
 } from './statusParser.js';
 
 // Import all parsers for master function
@@ -52,7 +51,7 @@ import { parseStepCompletion, parseDualOutput, parseSecondOpinionSkip } from './
 import { parseHumanGate, parseLearningSurface, parseSessionStartProtocol } from './humanParser.js';
 import { parseRegistryUpdate, parseIndexEntry, parseLearningEntry } from './registryParser.js';
 import { parseReviewReport, parseAnalysisReport, parseBrainstormTranscript } from './actionParser.js';
-import { parseErrorAnnouncement, parseContextRouting, parseDepartmentRouting } from './statusParser.js';
+import { parseErrorAnnouncement, parseContextRouting } from './statusParser.js';
 
 /**
  * Union type of all parsed formats

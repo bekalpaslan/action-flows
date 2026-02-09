@@ -32,7 +32,6 @@ import type {
 import type {
   ErrorAnnouncementParsed,
   ContextRoutingParsed,
-  DepartmentRoutingParsed,
 } from './types/statusFormats.js';
 
 /**
@@ -141,7 +140,7 @@ export function isSessionStartProtocolParsed(obj: unknown): obj is SessionStartP
   return (
     isParsedFormat(obj) &&
     'projectName' in obj &&
-    'departmentCount' in obj
+    'flowCount' in obj
   );
 }
 
@@ -232,9 +231,3 @@ export function isContextRoutingParsed(obj: unknown): obj is ContextRoutingParse
   );
 }
 
-/**
- * @deprecated Use isContextRoutingParsed instead
- */
-export function isDepartmentRoutingParsed(obj: unknown): obj is DepartmentRoutingParsed {
-  return isContextRoutingParsed(obj);
-}

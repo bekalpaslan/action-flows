@@ -129,10 +129,10 @@ Formats are prioritized by implementation urgency and user value.
   - **Components:** BrainstormViewer (read-only)
   - **Status:** IMPLEMENTED
 
-- [ ] **Format 6.2:** Department Routing Announcement
-  - **Parser:** `parseDepartmentRouting`
+- [ ] **Format 6.2:** Context Routing Announcement
+  - **Parser:** `parseContextRouting`
   - **Components:** RoutingIndicator
-  - **Status:** FUTURE (not yet produced by orchestrator)
+  - **Status:** IMPLEMENTED
 
 ---
 

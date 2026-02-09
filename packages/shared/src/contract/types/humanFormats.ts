@@ -65,12 +65,6 @@ export interface SessionStartProtocolParsed {
   /** Project name */
   projectName: string | null;
 
-  /** Number of departments */
-  departmentCount: number | null;
-
-  /** List of department names */
-  departments: string[] | null;
-
   /** Number of flows */
   flowCount: number | null;
 

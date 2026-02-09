@@ -295,9 +295,6 @@ export interface FlowDefinition {
   /** Flow title for display */
   title: string;
 
-  /** Department this flow belongs to */
-  department: string;
-
   /** What this flow accomplishes */
   objective: string;
 

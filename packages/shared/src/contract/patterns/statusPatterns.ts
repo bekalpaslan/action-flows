@@ -28,13 +28,7 @@ export const ContextRoutingPatterns = {
   disambiguated: /^\*\*Disambiguated:\*\* (true|false)$/mi,
 } as const;
 
-/**
- * @deprecated Use ContextRoutingPatterns instead
- */
-export const DepartmentRoutingPatterns = ContextRoutingPatterns;
-
 export const StatusPatterns = {
   errorAnnouncement: ErrorAnnouncementPatterns,
   contextRouting: ContextRoutingPatterns,
-  departmentRouting: DepartmentRoutingPatterns, // @deprecated
 } as const;

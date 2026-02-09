@@ -68,7 +68,3 @@ export interface ContextRoutingParsed {
   contractVersion: string;
 }
 
-/**
- * @deprecated Use ContextRoutingParsed instead (Context-Native Routing Phase 5)
- */
-export type DepartmentRoutingParsed = ContextRoutingParsed;

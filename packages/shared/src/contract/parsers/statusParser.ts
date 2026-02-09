@@ -6,7 +6,6 @@
 import type {
   ErrorAnnouncementParsed,
   ContextRoutingParsed,
-  DepartmentRoutingParsed,
 } from '../types/statusFormats.js';
 import type { WorkbenchId } from '../../workbenchTypes.js';
 import { StatusPatterns } from '../patterns/statusPatterns.js';
@@ -124,9 +123,3 @@ export function parseContextRouting(text: string): ContextRoutingParsed | null {
   return parsed;
 }
 
-/**
- * @deprecated Use parseContextRouting instead (Context-Native Routing Phase 5)
- */
-export function parseDepartmentRouting(text: string): DepartmentRoutingParsed | null {
-  return parseContextRouting(text);
-}

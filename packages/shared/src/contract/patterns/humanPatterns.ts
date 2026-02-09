@@ -31,7 +31,6 @@ export const SessionStartProtocolPatterns = {
   heading: /^## Session Started$/m,
   configLabel: /^Loaded configuration:$/m,
   project: /^- Project: (.+)$/m,
-  departments: /^- Departments: (\d+) \((.+)\)$/m,
   flows: /^- Flows: (\d+)$/m,
   actions: /^- Actions: (\d+)$/m,
   pastExecutions: /^- Past executions: (\d+)$/m,

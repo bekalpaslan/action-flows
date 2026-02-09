@@ -99,21 +99,13 @@ export function parseSessionStartProtocol(text: string): SessionStartProtocolPar
 
   // 2. Extract
   const projectMatch = text.match(HumanPatterns.sessionStartProtocol.project);
-  const departmentsMatch = text.match(HumanPatterns.sessionStartProtocol.departments);
   const flowsMatch = text.match(HumanPatterns.sessionStartProtocol.flows);
   const actionsMatch = text.match(HumanPatterns.sessionStartProtocol.actions);
   const pastExecutionsMatch = text.match(HumanPatterns.sessionStartProtocol.pastExecutions);
 
-  // Parse departments list
-  const departments = departmentsMatch?.[2]
-    ? departmentsMatch[2].split(',').map(d => d.trim())
-    : null;
-
   // 3. Build
   const parsed: SessionStartProtocolParsed = {
     projectName: projectMatch?.[1] || null,
-    departmentCount: departmentsMatch ? parseInt(departmentsMatch[1], 10) : null,
-    departments,
     flowCount: flowsMatch ? parseInt(flowsMatch[1], 10) : null,
     actionCount: actionsMatch ? parseInt(actionsMatch[1], 10) : null,
     pastExecutionCount: pastExecutionsMatch ? parseInt(pastExecutionsMatch[1], 10) : null,
