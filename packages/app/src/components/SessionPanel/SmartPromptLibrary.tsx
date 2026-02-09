@@ -253,16 +253,23 @@ export const SmartPromptLibrary: React.FC<SmartPromptLibraryProps> = ({
 
   return (
     <div className="smart-prompt-library" style={containerStyle}>
-      <div className="smart-prompt-library__header">
+      <div className="smart-prompt-library__header" onClick={() => setIsCollapsed(!isCollapsed)}>
+        <h3 className="smart-prompt-library__title">Prompt Library</h3>
         <button
           className="smart-prompt-library__collapse-button"
-          onClick={() => setIsCollapsed(!isCollapsed)}
+          onClick={(e) => { e.stopPropagation(); setIsCollapsed(!isCollapsed); }}
           aria-label={isCollapsed ? 'Expand prompt library' : 'Collapse prompt library'}
-          title={isCollapsed ? 'Expand' : 'Collapse'}
         >
-          {isCollapsed ? '▶' : '▼'}
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className={`collapse-icon ${isCollapsed ? 'collapsed' : ''}`}
+          >
+            <path d="M4.427 9.573l3.396-3.396a.25.25 0 0 1 .354 0l3.396 3.396a.25.25 0 0 1-.177.427H4.604a.25.25 0 0 1-.177-.427z" />
+          </svg>
         </button>
-        <h3 className="smart-prompt-library__title">Prompt Library</h3>
       </div>
 
       {!isCollapsed && (

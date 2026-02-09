@@ -12,14 +12,21 @@
 .smart-prompt-library__header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
   padding: 8px 12px;
-  background-color: #1e1e1e;
-  border-bottom: 1px solid #2a2a2a;
+  background-color: #252525;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.smart-prompt-library__header:hover {
+  background-color: #2a2a2a;
 }
 
 .smart-prompt-library__collapse-button {
-  background: none;
+  background: transparent;
   border: none;
   color: #888;
   font-size: 12px;
@@ -28,20 +35,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease;
+  transition: color 0.15s ease;
 }
 
 .smart-prompt-library__collapse-button:hover {
-  color: #d4d4d4;
+  color: #fff;
+}
+
+.smart-prompt-library__collapse-button .collapse-icon {
+  transition: transform 0.15s ease;
+}
+
+.smart-prompt-library__collapse-button .collapse-icon.collapsed {
+  transform: rotate(-90deg);
 }
 
 .smart-prompt-library__title {
   margin: 0;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: #d4d4d4;
+  color: #ccc;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
 }
 
 /* Tabs */
