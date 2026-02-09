@@ -30,6 +30,7 @@
 | audit-and-fix/ | Audit and remediate | audit → second-opinion/ → review |
 | test-coverage/ | Analyze test coverage and address gaps | test → analyze → code (conditional) |
 | backwards-harmony-audit/ | Audit contract harmony from frontend backwards | analyze×3 (parallel) → audit → second-opinion/ |
+| cli-integration-test/ | Systematic CLI integration testing | analyze → code → test → review |
 
 ## settings
 

@@ -30,6 +30,8 @@ export class ClaudeCliSessionProcess {
     exit: new Set(),
     error: new Set(),
   };
+  private stdoutBuffer: string = ''; // Buffer for accumulating JSONL lines
+  private static readonly MAX_BUFFER_SIZE = 1048576; // 1MB max buffer to prevent memory exhaustion
 
   constructor(
     sessionId: SessionId,
@@ -48,6 +50,67 @@ export class ClaudeCliSessionProcess {
       metadata,
     };
     this.spawnEnv = spawnEnv || process.env;
+  }
+
+  /**
+   * Parse stream-json JSONL output from Claude CLI
+   * Handles: {"type":"assistant","message":{"role":"assistant","content":"..."}}
+   * Extracts clean text content from JSON messages
+   */
+  private parseStreamJson(chunk: string): string {
+    // Accumulate chunk into buffer
+    this.stdoutBuffer += chunk;
+
+    // Guard against unbounded buffer growth (malformed input or very long streams)
+    if (this.stdoutBuffer.length > ClaudeCliSessionProcess.MAX_BUFFER_SIZE) {
+      console.warn('[ClaudeCliSession] Buffer exceeded 1MB limit, resetting');
+      this.stdoutBuffer = '';
+      return '';
+    }
+
+    // Process complete lines (JSONL format: one JSON object per line)
+    const lines = this.stdoutBuffer.split('\n');
+
+    // Keep the last incomplete line in buffer for next chunk
+    this.stdoutBuffer = lines.pop() || '';
+
+    // Parse each complete line
+    const outputs: string[] = [];
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+
+      // Skip empty lines
+      if (!trimmedLine) {
+        continue;
+      }
+
+      try {
+        // Parse JSON message
+        const parsed = JSON.parse(trimmedLine);
+
+        // Extract content based on message type
+        if (parsed.type === 'assistant' && parsed.message?.content !== undefined) {
+          // Assistant message: extract content text (including empty strings)
+          outputs.push(parsed.message.content);
+        } else if (parsed.type === 'result' && parsed.result !== undefined) {
+          // Result message: extract result text
+          outputs.push(parsed.result);
+        } else if (parsed.type === 'error' && parsed.error) {
+          // Error message: extract error text
+          console.error('[ClaudeCliSession] Stream-json error:', parsed.error);
+          outputs.push(`[ERROR] ${parsed.error}`);
+        } else {
+          // Unknown message type: log but don't display
+          console.log('[ClaudeCliSession] Stream-json message:', parsed.type);
+        }
+      } catch (error) {
+        // JSON parse error: log warning and pass raw text as fallback
+        console.warn('[ClaudeCliSession] Failed to parse stream-json line:', trimmedLine.substring(0, 100));
+        outputs.push(trimmedLine);
+      }
+    }
+
+    return outputs.join('');
   }
 
   /**
@@ -78,8 +141,16 @@ export class ClaudeCliSessionProcess {
 
         // Handle stdout - CRITICAL: immediate data handler to prevent buffering hangs
         childProcess.stdout?.on('data', (chunk: Buffer) => {
-          const output = chunk.toString('utf8');
-          this.eventHandlers.stdout.forEach(handler => handler(output));
+          const rawChunk = chunk.toString('utf8');
+          console.log(`[ClaudeCliSession] Received stdout chunk (${rawChunk.length} bytes)`);
+
+          // Parse stream-json JSONL format and extract clean text content
+          const parsedOutput = this.parseStreamJson(rawChunk);
+
+          // Only broadcast if we have content (complete JSON lines were parsed)
+          if (parsedOutput) {
+            this.eventHandlers.stdout.forEach(handler => handler(parsedOutput));
+          }
         });
 
         // Handle stderr - CRITICAL: immediate data handler to prevent buffering hangs
@@ -94,6 +165,7 @@ export class ClaudeCliSessionProcess {
           this.sessionInfo.exitSignal = signal ?? undefined;
           this.sessionInfo.endedAt = new Date().toISOString() as Timestamp;
           this.sessionInfo.status = 'stopped';
+          this.stdoutBuffer = ''; // Clear buffer on exit to prevent memory leak
           this.eventHandlers.exit.forEach(handler => handler(code, signal));
           this.process = null;
         });

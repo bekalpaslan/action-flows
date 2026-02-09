@@ -138,6 +138,7 @@ These contexts receive content automatically — not routed by user intent.
 | "plan X" | pm | plan/ (direct action) |
 | "check test coverage" / "coverage gaps" | review | test-coverage/ |
 | "audit harmony" / "check contract" / "backwards harmony" | review | backwards-harmony-audit/ |
+| "test CLI" / "CLI integration tests" / "run CLI tests" | review | cli-integration-test/ |
 | "I have an idea" / "brainstorm X" | explore | ideation/ |
 | "let's think about X" / "ideation" | explore | ideation/ |
 | "create dossier" / "intel on X" | intel | intel-analysis/ |
