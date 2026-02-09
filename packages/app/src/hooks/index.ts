@@ -36,3 +36,5 @@ export type { UseSessionSidebarResult } from './useSessionSidebar';
 
 export { useCommandPalette } from './useCommandPalette';
 export type { UseCommandPaletteResult } from './useCommandPalette';
+
+export { useVimNavigation } from './useVimNavigation';

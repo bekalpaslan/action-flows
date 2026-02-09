@@ -340,3 +340,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #505050;
 }
+
+/* Vim Navigation Focus */
+[data-vim-target].vim-focused {
+  outline: 2px solid #4caf50 !important;
+  outline-offset: 2px;
+}
