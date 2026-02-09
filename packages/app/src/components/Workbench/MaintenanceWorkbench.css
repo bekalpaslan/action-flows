@@ -384,3 +384,156 @@
     font-size: 0.7rem;
   }
 }
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .maintenance-workbench {
+  background-color: var(--color-bg-primary);
+}
+
+[data-theme="dark"] .maintenance-workbench__header {
+  background-color: var(--color-bg-secondary);
+  border-bottom-color: var(--color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .maintenance-workbench__title {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .maintenance-workbench__status-badge--healthy {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+[data-theme="dark"] .maintenance-workbench__status-badge--degraded {
+  background-color: rgba(251, 191, 36, 0.2);
+  color: #fcd34d;
+}
+
+[data-theme="dark"] .maintenance-workbench__status-badge--error {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+[data-theme="dark"] .maintenance-workbench__auto-refresh {
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .maintenance-workbench__refresh-btn {
+  background-color: rgba(99, 102, 241, 0.8);
+}
+
+[data-theme="dark"] .maintenance-workbench__refresh-btn:hover:not(:disabled) {
+  background-color: rgba(99, 102, 241, 1);
+}
+
+[data-theme="dark"] .maintenance-workbench__refresh-btn:disabled {
+  background-color: rgba(156, 163, 175, 0.3);
+}
+
+[data-theme="dark"] .metric-card {
+  background-color: var(--color-bg-elevated);
+  border-color: var(--color-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .metric-card__title {
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .metric-card__status--connected {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+[data-theme="dark"] .metric-card__status--connecting {
+  background-color: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+}
+
+[data-theme="dark"] .metric-card__status--disconnected {
+  background-color: rgba(75, 85, 99, 0.3);
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .metric-card__status--error {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+[data-theme="dark"] .metric-card__value {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .metric-card__detail .detail-label {
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .metric-card__detail .detail-value {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .metric-card__detail .detail-secondary {
+  color: var(--color-text-muted);
+}
+
+[data-theme="dark"] .metric-card__error {
+  color: #fca5a5;
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+[data-theme="dark"] .maintenance-workbench__errors-section {
+  background-color: var(--color-bg-elevated);
+  border-color: var(--color-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .errors-section__header {
+  border-bottom-color: var(--color-border);
+}
+
+[data-theme="dark"] .errors-section__title {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .errors-section__clear-btn {
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .errors-section__clear-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .errors-section__empty {
+  color: #6ee7b7;
+}
+
+[data-theme="dark"] .error-item {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-left-color: #ef4444;
+}
+
+[data-theme="dark"] .error-item__timestamp {
+  color: var(--color-text-muted);
+}
+
+[data-theme="dark"] .error-item__source--websocket {
+  background-color: rgba(139, 92, 246, 0.2);
+  color: #c4b5fd;
+}
+
+[data-theme="dark"] .error-item__source--api {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .error-item__source--session {
+  background-color: rgba(251, 191, 36, 0.2);
+  color: #fcd34d;
+}
+
+[data-theme="dark"] .error-item__message {
+  color: #fca5a5;
+}

@@ -525,3 +525,241 @@
     padding: 1rem;
   }
 }
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .harmony-workbench {
+  background-color: var(--color-bg-primary);
+}
+
+/* Header */
+[data-theme="dark"] .harmony-workbench__header {
+  background-color: var(--color-bg-secondary);
+  border-bottom-color: var(--color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .harmony-workbench__title {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .harmony-workbench__subtitle {
+  color: var(--color-text-secondary);
+}
+
+/* View Mode Selector */
+[data-theme="dark"] .harmony-workbench__view-selector {
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .harmony-workbench__view-btn {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .harmony-workbench__view-btn:not(:last-child) {
+  border-right-color: var(--color-border);
+}
+
+[data-theme="dark"] .harmony-workbench__view-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .harmony-workbench__view-btn--active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .harmony-workbench__view-btn--active:hover {
+  background-color: #1d4ed8;
+  color: #ffffff;
+}
+
+/* Action Buttons */
+[data-theme="dark"] .harmony-workbench__action-btn {
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .harmony-workbench__action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-border-subtle);
+}
+
+[data-theme="dark"] .harmony-workbench__action-btn--primary {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .harmony-workbench__action-btn--primary:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* Panels */
+[data-theme="dark"] .harmony-workbench__panel {
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .harmony-workbench__panel-title {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .harmony-workbench__panel-description {
+  color: var(--color-text-secondary);
+}
+
+/* Empty State */
+[data-theme="dark"] .harmony-workbench__empty-state {
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .harmony-workbench__empty-state h3 {
+  color: var(--color-text-primary);
+}
+
+/* Manual Check Panel */
+[data-theme="dark"] .harmony-workbench__manual-input {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .harmony-workbench__manual-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .harmony-workbench__manual-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Manual Check Result */
+[data-theme="dark"] .harmony-workbench__result--valid {
+  background-color: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+[data-theme="dark"] .harmony-workbench__result--degraded {
+  background-color: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+[data-theme="dark"] .harmony-workbench__result--violation {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+[data-theme="dark"] .harmony-workbench__result--valid .harmony-workbench__result-icon {
+  color: #34d399;
+}
+
+[data-theme="dark"] .harmony-workbench__result--degraded .harmony-workbench__result-icon {
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .harmony-workbench__result--violation .harmony-workbench__result-icon {
+  color: #f87171;
+}
+
+[data-theme="dark"] .harmony-workbench__result-label {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .harmony-workbench__result-format,
+[data-theme="dark"] .harmony-workbench__result-missing {
+  color: var(--color-text-primary);
+}
+
+/* Drift Detection */
+[data-theme="dark"] .harmony-workbench__drift-empty {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+[data-theme="dark"] .harmony-workbench__drift-item--low {
+  background-color: rgba(59, 130, 246, 0.15);
+  border-left-color: #3b82f6;
+}
+
+[data-theme="dark"] .harmony-workbench__drift-item--medium {
+  background-color: rgba(245, 158, 11, 0.15);
+  border-left-color: #f59e0b;
+}
+
+[data-theme="dark"] .harmony-workbench__drift-item--high {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-left-color: #ef4444;
+}
+
+[data-theme="dark"] .harmony-workbench__drift-format {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .harmony-workbench__drift-severity {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .harmony-workbench__drift-fields {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .harmony-workbench__drift-recommendation {
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .harmony-workbench__drift-timestamp {
+  color: var(--color-text-muted);
+}
+
+/* Contract Status */
+[data-theme="dark"] .harmony-workbench__contract-row {
+  border-bottom-color: var(--color-border-subtle);
+}
+
+[data-theme="dark"] .harmony-workbench__contract-label {
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .harmony-workbench__contract-value {
+  color: var(--color-text-primary);
+}
+
+/* Loading Overlay */
+[data-theme="dark"] .harmony-workbench__loading-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .harmony-workbench__spinner {
+  background-color: var(--color-bg-elevated);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  color: var(--color-text-primary);
+}
+
+/* Error Banner */
+[data-theme="dark"] .harmony-workbench__error-banner {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .harmony-workbench__error-icon {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .harmony-workbench__error-message {
+  color: #fca5a5;
+}
+
+[data-theme="dark"] .harmony-workbench__error-dismiss {
+  background-color: #ef4444;
+}
+
+[data-theme="dark"] .harmony-workbench__error-dismiss:hover {
+  background-color: #dc2626;
+}

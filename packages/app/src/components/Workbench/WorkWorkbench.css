@@ -81,3 +81,23 @@
     gap: 0.5rem;
   }
 }
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .work-workbench {
+  background-color: var(--color-bg-primary);
+}
+
+[data-theme="dark"] .work-workbench__header {
+  background-color: var(--color-bg-secondary);
+  border-bottom-color: var(--color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .work-workbench__title {
+  color: var(--color-text-primary);
+}
+
+[data-theme="dark"] .session-count-badge {
+  background-color: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+}
