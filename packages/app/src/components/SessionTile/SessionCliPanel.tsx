@@ -23,6 +23,8 @@ export interface SessionCliPanelProps {
   sessionId: SessionId;
   /** Height of the terminal panel */
   height?: number | string;
+  /** Working directory for Claude CLI session */
+  cwd?: string;
   /** Callback when command is sent */
   onCommand?: (command: string) => void;
 }
@@ -33,6 +35,7 @@ export interface SessionCliPanelProps {
 export function SessionCliPanel({
   sessionId,
   height = '100%',
+  cwd,
   onCommand,
 }: SessionCliPanelProps): React.ReactElement {
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -40,6 +43,7 @@ export function SessionCliPanel({
   const fitAddonRef = useRef<FitAddon | null>(null);
   const [commandInput, setCommandInput] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [cliStarted, setCliStarted] = useState(false);
   const { onEvent, subscribe, unsubscribe, send } = useWebSocketContext();
 
   /**
@@ -131,6 +135,71 @@ export function SessionCliPanel({
   }, [sessionId, subscribe, unsubscribe]);
 
   /**
+   * Auto-start Claude CLI session on mount
+   */
+  useEffect(() => {
+    if (!sessionId || cliStarted) return;
+
+    const startCli = async () => {
+      const terminal = terminalInstanceRef.current;
+      if (!terminal) return;
+
+      try {
+        terminal.writeln('\x1b[1;36m[Starting Claude CLI...]\x1b[0m');
+
+        const res = await fetch('http://localhost:3001/api/claude-cli/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: sessionId,
+            cwd: cwd || 'D:/ActionFlowsDashboard',
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          terminal.writeln('\x1b[1;32m[Claude CLI started successfully]\x1b[0m');
+          terminal.writeln(`\x1b[90mPID: ${data.session?.pid || 'unknown'}\x1b[0m`);
+          terminal.writeln('');
+          setCliStarted(true);
+        } else {
+          const error = await res.json();
+          terminal.writeln(
+            `\x1b[1;31m[Failed to start Claude CLI: ${error.error || 'Unknown error'}]\x1b[0m`
+          );
+        }
+      } catch (err) {
+        console.error('Failed to start Claude CLI:', err);
+        if (terminal) {
+          terminal.writeln(
+            `\x1b[1;31m[Failed to start Claude CLI: ${err instanceof Error ? err.message : 'Unknown error'}]\x1b[0m`
+          );
+        }
+      }
+    };
+
+    startCli();
+  }, [sessionId, cwd, cliStarted]);
+
+  /**
+   * Cleanup: Stop Claude CLI session on unmount
+   */
+  useEffect(() => {
+    return () => {
+      if (!sessionId || !cliStarted) return;
+
+      // Send stop request (fire-and-forget)
+      fetch(`http://localhost:3001/api/claude-cli/${sessionId}/stop`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ signal: 'SIGTERM' }),
+      }).catch((err) => {
+        console.warn('Failed to stop Claude CLI session on unmount:', err);
+      });
+    };
+  }, [sessionId, cliStarted]);
+
+  /**
    * Handle terminal output events from WebSocket
    */
   useEffect(() => {
@@ -139,6 +208,17 @@ export function SessionCliPanel({
     const unsubscribe = onEvent((event: WorkspaceEvent) => {
       // Filter events for this session
       if (event.sessionId !== sessionId) return;
+
+      // Handle CLI started events
+      if (event.type === 'claude-cli:started') {
+        const terminal = terminalInstanceRef.current;
+        if (!terminal) return;
+
+        terminal.writeln('');
+        terminal.writeln('\x1b[1;32m[Claude CLI ready]\x1b[0m');
+        terminal.writeln('');
+        setCliStarted(true);
+      }
 
       // Handle CLI output events
       if (event.type === 'claude-cli:output') {
@@ -170,6 +250,7 @@ export function SessionCliPanel({
         terminal.writeln('\x1b[90m─────────────────────────────────────────\x1b[0m');
         terminal.writeln('\x1b[1;33mClaude CLI session ended\x1b[0m');
         terminal.writeln('\x1b[90m─────────────────────────────────────────\x1b[0m');
+        setCliStarted(false);
       }
     });
 

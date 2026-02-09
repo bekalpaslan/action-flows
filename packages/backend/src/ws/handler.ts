@@ -3,6 +3,7 @@ import type { WorkspaceEvent, SessionId } from '@afw/shared';
 import type { Storage } from '../storage/index.js';
 import { clientRegistry } from './clientRegistry.js';
 import { wsMessageSchema, type ValidatedWSMessage } from '../schemas/ws.js';
+import { claudeCliManager } from '../services/claudeCliManager.js';
 
 /**
  * WebSocket message format for server->client
@@ -107,8 +108,24 @@ export function handleWebSocket(
 
         case 'input':
           if (message.payload) {
-            await Promise.resolve(storage.queueInput(message.sessionId as SessionId, message.payload));
-            console.log(`[WS] Input received for session ${message.sessionId}`);
+            // Try to pipe input directly to running CLI session
+            try {
+              const cliSession = claudeCliManager.getSession(message.sessionId as SessionId);
+              if (cliSession && cliSession.isRunning()) {
+                // Pipe input directly to Claude CLI stdin
+                cliSession.sendInput(String(message.payload));
+                console.log(`[WS] Input piped to CLI session ${message.sessionId}`);
+              } else {
+                // Fallback: queue input for later processing
+                await Promise.resolve(storage.queueInput(message.sessionId as SessionId, message.payload));
+                console.log(`[WS] Input queued for session ${message.sessionId} (no active CLI session)`);
+              }
+            } catch (error) {
+              console.error(`[WS] Error piping input to CLI session ${message.sessionId}:`, error);
+              // Fallback: queue input on error
+              await Promise.resolve(storage.queueInput(message.sessionId as SessionId, message.payload));
+              console.log(`[WS] Input queued for session ${message.sessionId} (piping failed)`);
+            }
           }
           break;
 
