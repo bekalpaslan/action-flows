@@ -1,0 +1,396 @@
+/**
+ * SessionInfoPanel Component Styles
+ * Optimized for narrow vertical panel (160-280px width)
+ * Fixed height: 120px with overflow-y: auto
+ */
+
+.session-info-panel {
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333;
+  height: 120px;
+  overflow: hidden;
+}
+
+.session-info-panel.collapsed {
+  height: 32px;
+}
+
+/* Panel Header (Collapsible) */
+.info-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: #252525;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.info-panel-header:hover {
+  background-color: #2a2a2a;
+}
+
+.panel-title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.collapse-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.15s ease;
+}
+
+.collapse-toggle:hover {
+  color: #fff;
+}
+
+.collapse-icon {
+  transition: transform 0.2s ease;
+}
+
+.collapse-icon.collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Panel Content */
+.info-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+}
+
+/* Sections */
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.info-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Header Section */
+.info-header {
+  background-color: #252525;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #2a2a2a;
+}
+
+/* Session ID Row */
+.session-id-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.session-id-row .label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.session-id-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 3px;
+  color: #ccc;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.session-id-button:hover {
+  background-color: #333;
+  border-color: #444;
+  color: #fff;
+}
+
+.session-id-button:active {
+  transform: scale(0.98);
+}
+
+.session-id-text {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copy-icon {
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+  flex-shrink: 0;
+}
+
+.session-id-button:hover .copy-icon {
+  opacity: 1;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Status Colors */
+.status-badge.status-green {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-badge.status-green .status-dot {
+  background-color: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  animation: pulse-green 2s ease-in-out infinite;
+}
+
+.status-badge.status-gray {
+  background-color: rgba(156, 163, 175, 0.15);
+  color: #9ca3af;
+  border: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+.status-badge.status-gray .status-dot {
+  background-color: #9ca3af;
+}
+
+.status-badge.status-red {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.status-badge.status-red .status-dot {
+  background-color: #ef4444;
+}
+
+.status-badge.status-yellow {
+  background-color: rgba(234, 179, 8, 0.15);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.status-badge.status-yellow .status-dot {
+  background-color: #eab308;
+  animation: pulse-yellow 2s ease-in-out infinite;
+}
+
+/* Info Rows */
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #ccc;
+}
+
+.info-icon {
+  color: #888;
+  flex-shrink: 0;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #888;
+  min-width: 55px;
+  font-size: 11px;
+}
+
+.info-value {
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  font-size: 12px;
+}
+
+/* Active Chain Section */
+.active-chain-section {
+  margin-top: 4px;
+  padding: 6px;
+  background-color: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 3px;
+}
+
+.active-chain-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.active-chain-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #3b82f6;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.active-chain-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.active-chain-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.active-chain-metrics {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #888;
+}
+
+.metric {
+  white-space: nowrap;
+}
+
+.metric-separator {
+  color: #555;
+}
+
+/* Compact Mode */
+.session-info-panel.compact .info-panel-content {
+  padding: 8px;
+  gap: 6px;
+}
+
+.session-info-panel.compact .info-section {
+  gap: 4px;
+  padding-bottom: 6px;
+}
+
+.session-info-panel.compact .info-header {
+  padding: 6px;
+}
+
+.session-info-panel.compact .session-id-button {
+  padding: 3px 6px;
+  font-size: 10px;
+}
+
+.session-info-panel.compact .status-badge {
+  padding: 4px 8px;
+  font-size: 10px;
+}
+
+.session-info-panel.compact .status-dot {
+  width: 5px;
+  height: 5px;
+}
+
+.session-info-panel.compact .info-row {
+  font-size: 11px;
+}
+
+.session-info-panel.compact .info-label {
+  min-width: 45px;
+  font-size: 10px;
+}
+
+.session-info-panel.compact .info-value {
+  font-size: 11px;
+}
+
+.session-info-panel.compact .active-chain-title {
+  font-size: 11px;
+}
+
+.session-info-panel.compact .active-chain-metrics {
+  font-size: 9px;
+}
+
+/* Animations */
+@keyframes pulse-green {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.8);
+  }
+}
+
+@keyframes pulse-yellow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(234, 179, 8, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(234, 179, 8, 0.8);
+  }
+}
+
+/* Scrollbar Styling */
+.info-panel-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.info-panel-content::-webkit-scrollbar-track {
+  background-color: #1a1a1a;
+}
+
+.info-panel-content::-webkit-scrollbar-thumb {
+  background-color: #3a3a3a;
+  border-radius: 2px;
+}
+
+.info-panel-content::-webkit-scrollbar-thumb:hover {
+  background-color: #4a4a4a;
+}

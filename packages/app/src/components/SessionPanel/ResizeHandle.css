@@ -1,0 +1,74 @@
+/**
+ * ResizeHandle Styles
+ * Draggable vertical divider with visual feedback
+ */
+
+/* Main Handle */
+.resize-handle {
+  width: 4px;
+  height: 100%;
+  background-color: #333333;
+  cursor: col-resize;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: background-color 0.15s ease;
+}
+
+/* Hover State */
+.resize-handle:hover {
+  background-color: #4a9eff;
+}
+
+/* Dragging State */
+.resize-handle.dragging {
+  background-color: #4a9eff;
+  box-shadow: 0 0 8px rgba(74, 158, 255, 0.5);
+}
+
+/* Visual Grip (Optional - adds dots for clarity) */
+.resize-handle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 40px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #666666 20%,
+    #666666 80%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.resize-handle:hover::before,
+.resize-handle.dragging::before {
+  opacity: 1;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .resize-handle,
+  .resize-handle::before {
+    transition: none;
+  }
+}
+
+/* ============================================================================
+ * Focus Styles (for accessibility)
+ * ============================================================================ */
+
+.resize-handle:focus {
+  outline: 2px solid #4a9eff;
+  outline-offset: 2px;
+}
+
+.resize-handle:focus:not(:focus-visible) {
+  outline: none;
+}

@@ -1,0 +1,247 @@
+/* FolderHierarchy component styles */
+
+.folder-hierarchy {
+  display: flex;
+  flex-direction: column;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  overflow: hidden;
+}
+
+.folder-hierarchy.collapsed {
+  height: 40px !important;
+}
+
+/* Header */
+.folder-hierarchy__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px;
+  background: #1e1e1e;
+  border-bottom: 1px solid #333;
+  flex-shrink: 0;
+}
+
+.folder-hierarchy__collapse-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #d4d4d4;
+  padding: 0;
+  transition: color 150ms ease-in;
+}
+
+.folder-hierarchy__collapse-toggle:hover {
+  color: #4a9eff;
+}
+
+.folder-hierarchy__collapse-toggle .chevron {
+  font-size: 12px;
+  transition: transform 150ms ease-in;
+}
+
+.folder-hierarchy__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d4d4d4;
+}
+
+/* Search */
+.folder-hierarchy__search {
+  padding: 8px 12px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #2a2a2a;
+  flex-shrink: 0;
+}
+
+.folder-hierarchy__search-input {
+  width: 100%;
+  height: 28px;
+  padding: 4px 8px;
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 4px;
+  color: #d4d4d4;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  outline: none;
+  transition: border-color 150ms ease-in;
+}
+
+.folder-hierarchy__search-input:focus {
+  border-color: #4a9eff;
+}
+
+.folder-hierarchy__search-input::placeholder {
+  color: #808080;
+}
+
+/* Tree view */
+.folder-hierarchy__tree {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 4px 0;
+}
+
+/* Custom scrollbar for dark theme */
+.folder-hierarchy__tree::-webkit-scrollbar {
+  width: 8px;
+}
+
+.folder-hierarchy__tree::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.folder-hierarchy__tree::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 4px;
+}
+
+.folder-hierarchy__tree::-webkit-scrollbar-thumb:hover {
+  background: #505050;
+}
+
+/* List and items */
+.folder-hierarchy__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.folder-hierarchy__item {
+  margin: 0;
+  padding: 0;
+}
+
+/* Tree node */
+.folder-hierarchy__node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  color: #d4d4d4;
+  transition: background-color 150ms ease-in;
+  user-select: none;
+  position: relative;
+}
+
+/* Indent guide lines (subtle vertical lines per depth level) */
+.folder-hierarchy__node::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #2a2a2a;
+}
+
+.folder-hierarchy__node:hover {
+  background: #2a2a2a;
+}
+
+.folder-hierarchy__node.selected {
+  background: #1a4d7a;
+  color: #ffffff;
+}
+
+/* Chevron for directories */
+.folder-hierarchy__chevron {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  font-size: 10px;
+  color: #808080;
+  transition: transform 150ms ease-in, color 150ms ease-in;
+  flex-shrink: 0;
+}
+
+.folder-hierarchy__node:hover .folder-hierarchy__chevron {
+  color: #d4d4d4;
+}
+
+.folder-hierarchy__node.directory .folder-hierarchy__chevron {
+  transform: rotate(0deg);
+}
+
+/* Icon */
+.folder-hierarchy__icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Name */
+.folder-hierarchy__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Directory-specific styles */
+.folder-hierarchy__node.directory {
+  font-weight: 500;
+}
+
+/* File-specific styles */
+.folder-hierarchy__node.file {
+  font-weight: 400;
+}
+
+/* Nested list indentation */
+.folder-hierarchy__list .folder-hierarchy__list {
+  padding-left: 16px;
+}
+
+/* Empty state */
+.folder-hierarchy__tree:empty::after {
+  content: 'No files found';
+  display: block;
+  padding: 16px;
+  text-align: center;
+  color: #808080;
+  font-size: 12px;
+}
+
+/* Hover effects for directory chevron rotation */
+.folder-hierarchy__node.directory:hover .folder-hierarchy__chevron {
+  color: #4a9eff;
+}
+
+/* Accessibility: Focus styles */
+.folder-hierarchy__node:focus-visible {
+  outline: 2px solid #4a9eff;
+  outline-offset: -2px;
+}
+
+.folder-hierarchy__search-input:focus-visible {
+  outline: 2px solid #4a9eff;
+  outline-offset: -2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .folder-hierarchy__collapse-toggle .chevron,
+  .folder-hierarchy__chevron,
+  .folder-hierarchy__node,
+  .folder-hierarchy__search-input {
+    transition: none;
+  }
+}

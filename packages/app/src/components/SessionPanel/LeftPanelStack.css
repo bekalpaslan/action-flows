@@ -1,0 +1,127 @@
+/**
+ * LeftPanelStack Styles
+ * Vertical panel stacking with mixed height strategy
+ */
+
+/* Main Container */
+.left-panel-stack {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #1e1e1e;
+}
+
+/* Panel Base Styles */
+.left-panel-stack__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-bottom: 1px solid #404040;
+  overflow: hidden;
+  background-color: #1e1e1e;
+}
+
+/* Remove border from last panel */
+.left-panel-stack__panel:last-child {
+  border-bottom: none;
+}
+
+/* Panel-Specific Colors */
+.left-panel-stack__panel--info {
+  background-color: #252525;
+}
+
+.left-panel-stack__panel--cli {
+  background-color: #0a0a0a;
+}
+
+.left-panel-stack__panel--conversation {
+  background-color: #1e1e1e;
+}
+
+.left-panel-stack__panel--prompts {
+  background-color: #1a1a1a;
+}
+
+.left-panel-stack__panel--folders {
+  background-color: #1a1a1a;
+}
+
+/* ============================================================================
+ * Placeholder Styles (Temporary - for panels not yet built)
+ * ============================================================================ */
+
+.panel-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+  text-align: center;
+  color: #666666;
+}
+
+.panel-placeholder__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  color: #808080;
+}
+
+.panel-placeholder__hint {
+  font-size: 0.75rem;
+  color: #606060;
+  font-style: italic;
+  max-width: 200px;
+  line-height: 1.4;
+}
+
+/* ============================================================================
+ * Scrollbar Styling (for scrollable panels)
+ * ============================================================================ */
+
+.left-panel-stack__panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.left-panel-stack__panel::-webkit-scrollbar-track {
+  background-color: #1a1a1a;
+}
+
+.left-panel-stack__panel::-webkit-scrollbar-thumb {
+  background-color: #404040;
+  border-radius: 4px;
+}
+
+.left-panel-stack__panel::-webkit-scrollbar-thumb:hover {
+  background-color: #505050;
+}
+
+/* ============================================================================
+ * Responsive Adjustments
+ * ============================================================================ */
+
+@media (max-width: 800px) {
+  /* Reduce panel heights on mobile */
+  .left-panel-stack__panel--info {
+    height: 100px !important;
+  }
+
+  .left-panel-stack__panel--cli {
+    height: 150px !important;
+  }
+
+  .left-panel-stack__panel--prompts {
+    height: 150px !important;
+  }
+
+  .left-panel-stack__panel--folders {
+    height: 150px !important;
+  }
+}
