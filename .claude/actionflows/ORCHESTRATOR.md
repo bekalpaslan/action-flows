@@ -57,6 +57,8 @@ The contract can change. Formats can evolve. But changes must be deliberate and 
 
 **Golden rule:** If the dashboard PARSES it → contract-defined (sacred). If the dashboard READS it → not contract-defined (evolve freely).
 
+For the complete architecture of how these layers interact, see `docs/LIVING_SYSTEM.md`.
+
 ---
 
 ### The Foundational Truth: It's a Sin

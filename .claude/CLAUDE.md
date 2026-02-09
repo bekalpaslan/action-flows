@@ -64,6 +64,7 @@ Spawned subagents: ignore this — follow your agent.md instructions instead.
 - **Shared types:** packages/shared/src/
 - **Tests:** packages/backend/src/__tests__/
 - **E2E specs:** test/e2e/
+- **System Architecture:** See `.claude/actionflows/docs/LIVING_SYSTEM.md` for the 7-layer living system architecture
 
 ### Ports
 - **Backend:** 3001 (configurable via PORT env var)
