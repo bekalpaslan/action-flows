@@ -1,4 +1,4 @@
-import type { Session } from '@afw/shared';
+import type { Session, WorkbenchId } from '@afw/shared';
 import './SessionSidebarItem.css';
 
 export interface SessionSidebarItemProps {
@@ -10,6 +10,12 @@ export interface SessionSidebarItemProps {
   isActive: boolean;
   /** Handler for click-to-attach */
   onClick: () => void;
+  /** Optional routing context from session metadata */
+  routingContext?: WorkbenchId;
+  /** Optional routing confidence score (0-1) */
+  routingConfidence?: number;
+  /** Optional routing method */
+  routingMethod?: 'automatic' | 'disambiguated' | 'manual';
 }
 
 /**
@@ -29,6 +35,9 @@ export function SessionSidebarItem({
   notificationCount,
   isActive,
   onClick,
+  routingContext,
+  routingConfidence,
+  routingMethod,
 }: SessionSidebarItemProps) {
   /**
    * Get status CSS class based on session status
@@ -109,10 +118,29 @@ export function SessionSidebarItem({
     }
   };
 
+  /**
+   * Get confidence level CSS class for routing badge
+   */
+  const getConfidenceClass = (confidence?: number): string => {
+    if (!confidence) return 'confidence-low';
+    if (confidence >= 0.9) return 'confidence-high';
+    if (confidence >= 0.5) return 'confidence-medium';
+    return 'confidence-low';
+  };
+
+  /**
+   * Format context display name
+   */
+  const formatContextName = (context: WorkbenchId): string => {
+    return context.charAt(0).toUpperCase() + context.slice(1);
+  };
+
   const statusClass = getStatusClass(session.status);
   const relativeTime = formatRelativeTime(session.startedAt);
   const sessionName = getSessionName();
   const hasNotifications = notificationCount > 0;
+  const hasRouting = !!routingContext;
+  const confidenceClass = getConfidenceClass(routingConfidence);
 
   return (
     <div
@@ -133,6 +161,17 @@ export function SessionSidebarItem({
         </div>
         <div className="session-time">{relativeTime}</div>
       </div>
+
+      {/* Routing badge */}
+      {hasRouting && (
+        <div
+          className={`routing-badge ${confidenceClass}`}
+          title={`Routed to ${routingContext} (confidence: ${Math.round((routingConfidence || 0) * 100)}%)${routingMethod ? ` via ${routingMethod}` : ''}`}
+          aria-label={`Routed to ${routingContext} context`}
+        >
+          {formatContextName(routingContext)}
+        </div>
+      )}
 
       {/* Notification badge */}
       {hasNotifications && (

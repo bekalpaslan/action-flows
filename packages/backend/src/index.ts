@@ -27,6 +27,7 @@ import toolbarRouter from './routes/toolbar.js';
 import patternsRouter from './routes/patterns.js';
 import registryRouter from './routes/registry.js';
 import harmonyRouter from './routes/harmony.js';
+import routingRouter from './routes/routing.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
 
@@ -92,6 +93,7 @@ app.use('/api/patterns', patternsRouter);
 app.use('/api', patternsRouter);
 app.use('/api/registry', registryRouter);
 app.use('/api/harmony', harmonyRouter);
+app.use('/api/routing', routingRouter);
 
 // Global error handler (must be after all routes) (Agent A)
 app.use(globalErrorHandler);

@@ -136,6 +136,56 @@
   color: #a07acc;
 }
 
+/* Routing Badge */
+.routing-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  flex-shrink: 0;
+  border: 1px solid;
+  transition: all 150ms ease;
+}
+
+/* Confidence-based coloring */
+.routing-badge.confidence-high {
+  background: rgba(76, 175, 80, 0.15);
+  color: #66bb6a;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
+.routing-badge.confidence-medium {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffa726;
+  border-color: rgba(255, 193, 7, 0.4);
+}
+
+.routing-badge.confidence-low {
+  background: rgba(158, 158, 158, 0.15);
+  color: #9e9e9e;
+  border-color: rgba(158, 158, 158, 0.4);
+}
+
+.session-sidebar-item:hover .routing-badge.confidence-high {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: rgba(76, 175, 80, 0.6);
+}
+
+.session-sidebar-item:hover .routing-badge.confidence-medium {
+  background: rgba(255, 193, 7, 0.2);
+  border-color: rgba(255, 193, 7, 0.6);
+}
+
+.session-sidebar-item:hover .routing-badge.confidence-low {
+  background: rgba(158, 158, 158, 0.2);
+  border-color: rgba(158, 158, 158, 0.6);
+}
+
 /* Notification Badge */
 .notification-badge {
   display: flex;

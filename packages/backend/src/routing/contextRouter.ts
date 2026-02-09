@@ -21,7 +21,7 @@ import {
 // ============================================================================
 
 /** Feature flag — set to true to enable context-native routing */
-export const USE_CONTEXT_ROUTING = false;
+export const USE_CONTEXT_ROUTING = true;
 
 // ============================================================================
 // Stop Words (Common English words to filter out)

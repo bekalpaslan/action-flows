@@ -4,9 +4,10 @@ import {
   useState,
   useEffect,
   useMemo,
+  useCallback,
   type ReactNode,
 } from 'react';
-import type { WorkbenchId, WorkbenchConfig } from '@afw/shared';
+import type { WorkbenchId, WorkbenchConfig, Session } from '@afw/shared';
 import { DEFAULT_WORKBENCH_CONFIGS } from '@afw/shared';
 
 // ============================================================================
@@ -22,6 +23,9 @@ interface WorkbenchContextValue {
   clearNotifications: (workbenchId: WorkbenchId) => void;
   previousWorkbench: WorkbenchId | null;
   goBack: () => void;
+  routingFilter: WorkbenchId | null;
+  setRoutingFilter: (filter: WorkbenchId | null) => void;
+  filterSessionsByContext: (sessions: Session[]) => Session[];
 }
 
 // ============================================================================
@@ -73,6 +77,9 @@ export function WorkbenchProvider({ children }: WorkbenchProviderProps) {
     Map<WorkbenchId, number>
   >(() => new Map());
 
+  // Track routing filter (null = show all sessions)
+  const [routingFilter, setRoutingFilter] = useState<WorkbenchId | null>(null);
+
   // Persist active workbench to localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, activeWorkbench);
@@ -113,6 +120,26 @@ export function WorkbenchProvider({ children }: WorkbenchProviderProps) {
     });
   };
 
+  /**
+   * Filter sessions by routing context
+   * Returns sessions that were routed to the specified context
+   * If routingFilter is null, returns all sessions
+   */
+  const filterSessionsByContext = useCallback(
+    (sessions: Session[]): Session[] => {
+      if (!routingFilter) {
+        return sessions;
+      }
+
+      return sessions.filter(session => {
+        // Check if session has routing metadata
+        const routingContext = session.metadata?.routingContext as WorkbenchId | undefined;
+        return routingContext === routingFilter;
+      });
+    },
+    [routingFilter]
+  );
+
   const value: WorkbenchContextValue = useMemo(
     () => ({
       activeWorkbench,
@@ -123,12 +150,17 @@ export function WorkbenchProvider({ children }: WorkbenchProviderProps) {
       clearNotifications,
       previousWorkbench,
       goBack,
+      routingFilter,
+      setRoutingFilter,
+      filterSessionsByContext,
     }),
     [
       activeWorkbench,
       workbenchConfigs,
       workbenchNotifications,
       previousWorkbench,
+      routingFilter,
+      filterSessionsByContext,
     ]
   );
 
