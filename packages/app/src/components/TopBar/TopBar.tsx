@@ -51,7 +51,7 @@ export function TopBar({ activeWorkbench, onWorkbenchChange }: TopBarProps) {
 
   return (
     <header className="top-bar">
-      <div className="top-bar-tabs">
+      <nav className="top-bar-tabs" aria-label="Workbench navigation">
         {WORKBENCH_IDS.map((workbenchId) => {
           const config = DEFAULT_WORKBENCH_CONFIGS[workbenchId];
           const isActive = activeWorkbench === workbenchId;
@@ -67,13 +67,15 @@ export function TopBar({ activeWorkbench, onWorkbenchChange }: TopBarProps) {
             />
           );
         })}
-      </div>
+      </nav>
 
       <div className="top-bar-status">
         <ThemeToggle />
-        <div className={`status ${getStatusClass()}`}>
-          {getStatusText()}
-          {error && ` - ${error.message}`}
+        <div className={`status ${getStatusClass()}`} role="status" aria-live="polite">
+          <span className="status-text">
+            {getStatusText()}
+            {error && ` - ${error.message}`}
+          </span>
         </div>
       </div>
     </header>

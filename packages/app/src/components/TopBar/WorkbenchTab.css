@@ -1,146 +1,169 @@
-/**
- * WorkbenchTab Component Styles
- * Compact tab design for 9 workbench navigation with notification badges and glow effects
- */
+/* ============================================================================
+   WorkbenchTab Component — Apple HIG macOS Tab Bar Standards
 
-/* GlowIndicator wrapper for workbench tabs */
+   Key Apple principles:
+   - Monochrome active states (weight change, NOT color change)
+   - Subtle 2px bottom border as active indicator
+   - 8px rounded rect (NOT pill/20px)
+   - Transparent default background
+   - Subtle fill on hover/active (rgba whites, NOT colored backgrounds)
+   - Truly circular badges (16px diameter)
+   ============================================================================ */
+
+/* ============================================================================
+   GlowIndicator Wrapper
+   ============================================================================ */
+
 .workbench-tab-glow {
   display: inline-flex;
-  border-radius: 20px;
+  border-radius: var(--topbar-button-radius);
 }
 
-/* Ensure glow doesn't interfere with tab layout */
 .workbench-tab-glow .workbench-tab {
   margin: 0;
 }
+
+/* ============================================================================
+   Tab Base — Apple Monochrome Approach
+   ============================================================================ */
 
 .workbench-tab {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 6px 16px;
-  background: rgba(255, 255, 255, 0.06);
+  gap: var(--space-2);
+  height: var(--topbar-tab-height);
+  padding: var(--topbar-button-padding);
+  background: transparent; /* Apple standard: no background on inactive */
   border: none;
-  border-radius: 20px;
-  color: var(--text-secondary, #808080);
-  font-size: 13px;
-  font-weight: 500;
+  border-radius: var(--topbar-button-radius); /* 8px rounded rect, NOT pill */
+  color: var(--text-secondary);
+  font-size: var(--topbar-font-size);
+  font-weight: var(--topbar-font-weight-default);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color var(--topbar-transition-duration) var(--topbar-transition-ease),
+              color var(--topbar-transition-duration) var(--topbar-transition-ease),
+              font-weight var(--topbar-transition-duration) var(--topbar-transition-ease),
+              box-shadow var(--topbar-transition-duration) var(--topbar-transition-ease);
   white-space: nowrap;
   user-select: none;
+  box-sizing: border-box;
 }
 
-/* Hover state */
+/* ============================================================================
+   Interactive States — Apple Flat, Monochrome Design
+   ============================================================================ */
+
+/* Hover: subtle fill, primary text */
 .workbench-tab:hover:not(.disabled) {
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--text-primary, #e0e0e0);
+  background: rgba(255, 255, 255, 0.08); /* Apple subtle hover fill */
+  color: var(--text-primary);
 }
 
-/* Active state */
+/* Active: stronger fill, weight change, bottom border accent (NO colored text) */
 .workbench-tab.active {
-  background: rgba(187, 134, 252, 0.2);
-  color: #bb86fc;
-  box-shadow: 0 0 8px rgba(187, 134, 252, 0.15);
+  background: rgba(255, 255, 255, 0.12); /* Apple active fill */
+  color: var(--text-primary); /* Keep monochrome */
+  font-weight: var(--topbar-font-weight-active); /* 600 for active emphasis */
+  box-shadow: inset 0 calc(-1 * var(--topbar-active-indicator)) 0 0 var(--system-purple); /* 2px bottom border */
 }
 
-/* Disabled state */
+/* Disabled: reduced opacity, no pointer */
 .workbench-tab.disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* Icon styling */
+/* ============================================================================
+   Tab Icon — SF Symbol Standard
+   ============================================================================ */
+
 .workbench-tab .tab-icon {
   display: inline-flex;
   align-items: center;
-  font-size: 14px;
+  justify-content: center;
+  font-size: var(--topbar-icon-size); /* 15px SF Symbol standard */
   line-height: 1;
+  flex-shrink: 0;
 }
 
-/* Label styling */
+/* ============================================================================
+   Tab Label — San Francisco Text Standard
+   ============================================================================ */
+
 .workbench-tab .tab-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--topbar-font-size); /* 13px macOS standard */
   line-height: 1;
+  flex-shrink: 0;
 }
 
-/* Notification badge */
+/* ============================================================================
+   Notification Badge — Truly Circular at 16px
+   ============================================================================ */
+
 .workbench-tab .tab-badge {
-  position: absolute;
-  top: -2px;
-  right: -6px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #f44336;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 600;
-  border-radius: 9px;
+  width: var(--topbar-badge-size); /* 16px diameter */
+  height: var(--topbar-badge-size); /* 16px diameter */
+  min-width: var(--topbar-badge-size);
+  padding: 0;
+  background: var(--system-red);
+  color: var(--text-primary);
+  font-size: var(--text-xs); /* 11px */
+  font-weight: var(--font-semibold); /* 600 */
+  border-radius: 50%; /* Truly circular */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 4px rgba(255, 69, 58, 0.4);
   line-height: 1;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
   pointer-events: none;
 }
 
-/* Notification glow effect */
-.workbench-tab.has-notifications {
-  animation: notification-glow 2s ease-in-out infinite;
+/* Badge animation — subtle pulse */
+.workbench-tab.has-notifications .tab-badge {
+  animation: badge-pulse 2s infinite;
 }
 
-@keyframes notification-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 0 rgba(244, 67, 54, 0);
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 4px rgba(255, 69, 58, 0.4);
   }
   50% {
-    box-shadow: 0 0 12px var(--glow-color, #f44336);
+    transform: scale(1.1);
+    box-shadow: 0 0 6px rgba(255, 69, 58, 0.6);
   }
 }
 
-/* Active tab with notifications has stronger glow */
-.workbench-tab.active.has-notifications {
-  animation: active-notification-glow 2s ease-in-out infinite;
-}
+/* ============================================================================
+   Accessibility — Apple Focus Standards
+   ============================================================================ */
 
-@keyframes active-notification-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 8px var(--glow-color, #f44336);
-  }
-  50% {
-    box-shadow: 0 0 16px var(--glow-color, #f44336);
-  }
-}
-
-/* Focus state for accessibility */
+/* Focus visible: 2px outline with 2px offset using system accent */
 .workbench-tab:focus-visible {
-  outline: 2px solid #bb86fc;
+  outline: 2px solid var(--system-blue);
   outline-offset: 2px;
-  border-radius: 20px;
 }
 
-/* Responsive sizing for narrow screens */
+/* ============================================================================
+   Responsive Behavior — Progressive Disclosure
+   ============================================================================ */
+
+/* Narrow screens: hide labels, icon-only mode */
 @media (max-width: 1200px) {
   .workbench-tab {
     padding: 6px 10px;
-    gap: 0.3rem;
+    gap: 0;
   }
 
   .workbench-tab .tab-label {
     display: none;
   }
-
-  .workbench-tab .tab-badge {
-    right: -4px;
-  }
 }
 
-/* Extra compact for very narrow screens */
+/* Extra narrow: compact icon-only */
 @media (max-width: 768px) {
   .workbench-tab {
     padding: 6px 8px;
@@ -151,70 +174,40 @@
   }
 
   .workbench-tab .tab-badge {
-    min-width: 16px;
-    height: 16px;
-    font-size: 9px;
-    right: -2px;
-    top: 0;
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    font-size: 10px;
   }
 }
 
-/* Dark mode enhancements */
-@media (prefers-color-scheme: dark) {
-  .workbench-tab {
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text-secondary, #808080);
-  }
+/* ============================================================================
+   Accessibility Enhancements
+   ============================================================================ */
 
-  .workbench-tab:hover:not(.disabled) {
-    background: rgba(255, 255, 255, 0.12);
-    color: var(--text-primary, #e0e0e0);
-  }
-
-  .workbench-tab.active {
-    background: rgba(187, 134, 252, 0.2);
-    color: #bb86fc;
-    box-shadow: 0 0 8px rgba(187, 134, 252, 0.15);
-  }
-
-  .workbench-tab.disabled {
-    opacity: 0.4;
-  }
-
-  .workbench-tab .tab-badge {
-    background: #f44336;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-  }
-}
-
-/* High contrast mode support */
+/* High contrast mode: add visible borders */
 @media (prefers-contrast: high) {
   .workbench-tab {
     border: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   .workbench-tab.active {
-    border-color: #bb86fc;
-    background: rgba(187, 134, 252, 0.3);
+    border-color: var(--system-purple);
+    background: rgba(255, 255, 255, 0.16);
   }
 
   .workbench-tab .tab-badge {
-    border: 2px solid #000;
+    border: 2px solid var(--text-primary);
   }
 }
 
-/* Reduced motion support */
+/* Reduced motion: disable all animations */
 @media (prefers-reduced-motion: reduce) {
   .workbench-tab {
     transition: none;
   }
 
-  .workbench-tab.has-notifications,
-  .workbench-tab.active.has-notifications {
-    animation: none;
-  }
-
-  .workbench-tab .tab-badge {
+  .workbench-tab.has-notifications .tab-badge {
     animation: none;
   }
 }
