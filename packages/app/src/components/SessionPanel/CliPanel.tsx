@@ -188,9 +188,7 @@ export function CliPanel({
 
             switch (msg.type) {
               case 'system':
-                if (msg.subtype === 'init') {
-                  terminal.writeln(`\x1b[90m[Claude initialized — ${(msg.tools || []).length} tools available]\x1b[0m`);
-                }
+                // Silently ignore init messages
                 break;
 
               case 'stream_event': {
