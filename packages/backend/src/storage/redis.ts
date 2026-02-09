@@ -1,5 +1,5 @@
 import { Redis } from 'ioredis';
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes } from '@afw/shared';
 
@@ -63,6 +63,20 @@ export interface RedisStorage {
   addHarmonyCheck(check: HarmonyCheck): Promise<void>;
   getHarmonyChecks(target: SessionId | ProjectId, filter?: HarmonyFilter): Promise<HarmonyCheck[]>;
   getHarmonyMetrics(target: SessionId | ProjectId, targetType: 'session' | 'project'): Promise<HarmonyMetrics>;
+
+  // Intel Dossier storage
+  getDossier(id: string): Promise<IntelDossier | undefined>;
+  setDossier(dossier: IntelDossier): Promise<void>;
+  listDossiers(): Promise<IntelDossier[]>;
+  deleteDossier(id: string): Promise<boolean>;
+  appendDossierHistory(id: string, entry: DossierHistoryEntry): Promise<boolean>;
+
+  // Widget Suggestions storage
+  getSuggestion(id: string): Promise<SuggestionEntry | undefined>;
+  listSuggestions(): Promise<SuggestionEntry[]>;
+  addSuggestion(suggestion: SuggestionEntry): Promise<void>;
+  deleteSuggestion(id: string): Promise<boolean>;
+  incrementSuggestionFrequency(id: string): Promise<boolean>;
 
   // Pub/Sub support
   subscribe(channel: string, callback: (message: string) => void): Promise<void>;
@@ -668,6 +682,148 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           formatBreakdown: {},
           lastCheck: brandedTypes.currentTimestamp(),
         };
+      }
+    },
+
+    // === Intel Dossier ===
+    async getDossier(id: string) {
+      try {
+        const key = `${keyPrefix}dossiers:${id}`;
+        const data = await redis.get(key);
+        return data ? JSON.parse(data) as IntelDossier : undefined;
+      } catch (error) {
+        console.error(`[Redis] Error getting dossier ${id}:`, error);
+        return undefined;
+      }
+    },
+
+    async setDossier(dossier: IntelDossier) {
+      try {
+        const key = `${keyPrefix}dossiers:${dossier.id}`;
+        await redis.set(key, JSON.stringify(dossier));
+        // Add to set for listing
+        await redis.sadd(`${keyPrefix}dossiers`, dossier.id);
+      } catch (error) {
+        console.error(`[Redis] Error setting dossier:`, error);
+      }
+    },
+
+    async listDossiers() {
+      try {
+        const ids = await redis.smembers(`${keyPrefix}dossiers`);
+        const dossiers: IntelDossier[] = [];
+        for (const id of ids) {
+          const dossier = await storage.getDossier(id);
+          if (dossier) {
+            dossiers.push(dossier);
+          }
+        }
+        return dossiers;
+      } catch (error) {
+        console.error(`[Redis] Error listing dossiers:`, error);
+        return [];
+      }
+    },
+
+    async deleteDossier(id: string) {
+      try {
+        const key = `${keyPrefix}dossiers:${id}`;
+        const result = await redis.del(key);
+        await redis.srem(`${keyPrefix}dossiers`, id);
+        return result > 0;
+      } catch (error) {
+        console.error(`[Redis] Error deleting dossier ${id}:`, error);
+        return false;
+      }
+    },
+
+    async appendDossierHistory(id: string, entry: DossierHistoryEntry) {
+      try {
+        const dossier = await storage.getDossier(id);
+        if (!dossier) {
+          return false;
+        }
+
+        dossier.history.push(entry);
+
+        // Enforce max history limit (keep last 50)
+        const MAX_HISTORY = 50;
+        if (dossier.history.length > MAX_HISTORY) {
+          dossier.history = dossier.history.slice(-MAX_HISTORY);
+        }
+
+        await storage.setDossier(dossier);
+        return true;
+      } catch (error) {
+        console.error(`[Redis] Error appending dossier history:`, error);
+        return false;
+      }
+    },
+
+    // === Widget Suggestions ===
+    async getSuggestion(id: string) {
+      try {
+        const key = `${keyPrefix}suggestions:${id}`;
+        const data = await redis.get(key);
+        return data ? JSON.parse(data) as SuggestionEntry : undefined;
+      } catch (error) {
+        console.error(`[Redis] Error getting suggestion ${id}:`, error);
+        return undefined;
+      }
+    },
+
+    async listSuggestions() {
+      try {
+        const ids = await redis.smembers(`${keyPrefix}suggestions`);
+        const suggestions: SuggestionEntry[] = [];
+        for (const id of ids) {
+          const suggestion = await storage.getSuggestion(id);
+          if (suggestion) {
+            suggestions.push(suggestion);
+          }
+        }
+        return suggestions;
+      } catch (error) {
+        console.error(`[Redis] Error listing suggestions:`, error);
+        return [];
+      }
+    },
+
+    async addSuggestion(suggestion: SuggestionEntry) {
+      try {
+        const key = `${keyPrefix}suggestions:${suggestion.id}`;
+        await redis.set(key, JSON.stringify(suggestion));
+        // Add to set for listing
+        await redis.sadd(`${keyPrefix}suggestions`, suggestion.id);
+      } catch (error) {
+        console.error(`[Redis] Error adding suggestion:`, error);
+      }
+    },
+
+    async deleteSuggestion(id: string) {
+      try {
+        const key = `${keyPrefix}suggestions:${id}`;
+        const result = await redis.del(key);
+        await redis.srem(`${keyPrefix}suggestions`, id);
+        return result > 0;
+      } catch (error) {
+        console.error(`[Redis] Error deleting suggestion ${id}:`, error);
+        return false;
+      }
+    },
+
+    async incrementSuggestionFrequency(id: string) {
+      try {
+        const suggestion = await storage.getSuggestion(id);
+        if (!suggestion) {
+          return false;
+        }
+        suggestion.frequency++;
+        await storage.addSuggestion(suggestion);
+        return true;
+      } catch (error) {
+        console.error(`[Redis] Error incrementing suggestion frequency:`, error);
+        return false;
       }
     },
 

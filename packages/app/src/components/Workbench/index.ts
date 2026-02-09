@@ -7,6 +7,8 @@
 
 export { WorkbenchLayout } from './WorkbenchLayout';
 export { WorkWorkbench } from './WorkWorkbench';
+export { CanvasWorkbench } from './CanvasWorkbench';
+export type { CanvasWorkbenchProps } from './CanvasWorkbench';
 export { EditorWorkbench } from './EditorWorkbench';
 export type { EditorWorkbenchProps } from './EditorWorkbench';
 export { ArchiveWorkbench } from './ArchiveWorkbench';
@@ -35,3 +37,5 @@ export type {
 export { HarmonyWorkbench } from './HarmonyWorkbench';
 export type { HarmonyWorkbenchProps } from './HarmonyWorkbench';
 export { SettingsWorkbench } from './SettingsWorkbench';
+export { IntelWorkbench } from './IntelWorkbench';
+export type { IntelWorkbenchProps } from './IntelWorkbench';

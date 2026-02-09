@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes } from '@afw/shared';
 
@@ -17,6 +17,9 @@ const MAX_EVENTS_PER_SESSION = 10_000;
 const MAX_CHAINS_PER_SESSION = 100;
 const MAX_SESSIONS = 1_000;
 const MAX_INPUT_QUEUE_PER_SESSION = 100;
+const MAX_DOSSIERS = 100;
+const MAX_DOSSIER_HISTORY = 50;
+const MAX_SUGGESTIONS = 500;
 export interface MemoryStorage {
   // Session storage
   sessions: Map<SessionId, Session>;
@@ -91,6 +94,22 @@ export interface MemoryStorage {
   addHarmonyCheck(check: HarmonyCheck): void;
   getHarmonyChecks(target: SessionId | ProjectId, filter?: HarmonyFilter): HarmonyCheck[];
   getHarmonyMetrics(target: SessionId | ProjectId, targetType: 'session' | 'project'): HarmonyMetrics;
+
+  // Intel Dossier storage
+  dossiers: Map<string, IntelDossier>;
+  getDossier(id: string): IntelDossier | undefined;
+  setDossier(dossier: IntelDossier): void;
+  listDossiers(): IntelDossier[];
+  deleteDossier(id: string): boolean;
+  appendDossierHistory(id: string, entry: DossierHistoryEntry): boolean;
+
+  // Widget Suggestions storage
+  suggestions: Map<string, SuggestionEntry>;
+  getSuggestion(id: string): SuggestionEntry | undefined;
+  listSuggestions(): SuggestionEntry[];
+  addSuggestion(suggestion: SuggestionEntry): void;
+  deleteSuggestion(id: string): boolean;
+  incrementSuggestionFrequency(id: string): boolean;
 
   // Internal eviction method
   _evictOldestCompletedSession(): void;
@@ -511,5 +530,103 @@ export const storage: MemoryStorage = {
       this.inputQueue.delete(oldestId);
       this.harmonyChecks.delete(oldestId);
     }
+  },
+
+  // Intel Dossier storage
+  dossiers: new Map(),
+
+  getDossier(id: string) {
+    return this.dossiers.get(id);
+  },
+
+  setDossier(dossier: IntelDossier) {
+    // Enforce max dossiers limit
+    if (!this.dossiers.has(dossier.id) && this.dossiers.size >= MAX_DOSSIERS) {
+      // Evict oldest dossier by createdAt
+      let oldestId: string | undefined;
+      let oldestTime = Infinity;
+      for (const [id, d] of this.dossiers) {
+        const time = new Date(d.createdAt).getTime();
+        if (time < oldestTime) {
+          oldestTime = time;
+          oldestId = id;
+        }
+      }
+      if (oldestId) {
+        this.dossiers.delete(oldestId);
+      }
+    }
+    this.dossiers.set(dossier.id, dossier);
+  },
+
+  listDossiers() {
+    return Array.from(this.dossiers.values());
+  },
+
+  deleteDossier(id: string) {
+    return this.dossiers.delete(id);
+  },
+
+  appendDossierHistory(id: string, entry: DossierHistoryEntry) {
+    const dossier = this.dossiers.get(id);
+    if (!dossier) {
+      return false;
+    }
+
+    dossier.history.push(entry);
+
+    // Enforce max history limit (FIFO eviction)
+    if (dossier.history.length > MAX_DOSSIER_HISTORY) {
+      dossier.history.splice(0, dossier.history.length - MAX_DOSSIER_HISTORY);
+    }
+
+    return true;
+  },
+
+  // Widget Suggestions storage
+  suggestions: new Map(),
+
+  getSuggestion(id: string) {
+    return this.suggestions.get(id);
+  },
+
+  listSuggestions() {
+    return Array.from(this.suggestions.values());
+  },
+
+  addSuggestion(suggestion: SuggestionEntry) {
+    // Enforce max suggestions limit
+    if (!this.suggestions.has(suggestion.id) && this.suggestions.size >= MAX_SUGGESTIONS) {
+      // Evict least frequent suggestion (lowest frequency, oldest timestamp as tiebreaker)
+      let evictId: string | undefined;
+      let minFrequency = Infinity;
+      let oldestTime = Infinity;
+
+      for (const [id, s] of this.suggestions) {
+        if (s.frequency < minFrequency || (s.frequency === minFrequency && new Date(s.timestamp).getTime() < oldestTime)) {
+          minFrequency = s.frequency;
+          oldestTime = new Date(s.timestamp).getTime();
+          evictId = id;
+        }
+      }
+
+      if (evictId) {
+        this.suggestions.delete(evictId);
+      }
+    }
+    this.suggestions.set(suggestion.id, suggestion);
+  },
+
+  deleteSuggestion(id: string) {
+    return this.suggestions.delete(id);
+  },
+
+  incrementSuggestionFrequency(id: string) {
+    const suggestion = this.suggestions.get(id);
+    if (!suggestion) {
+      return false;
+    }
+    suggestion.frequency++;
+    return true;
   },
 };

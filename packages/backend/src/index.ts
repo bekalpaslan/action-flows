@@ -28,6 +28,8 @@ import patternsRouter from './routes/patterns.js';
 import registryRouter from './routes/registry.js';
 import harmonyRouter from './routes/harmony.js';
 import routingRouter from './routes/routing.js';
+import dossiersRouter, { setBroadcastDossierFunction } from './routes/dossiers.js';
+import suggestionsRouter from './routes/suggestions.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
 
@@ -94,6 +96,8 @@ app.use('/api', patternsRouter);
 app.use('/api/registry', registryRouter);
 app.use('/api/harmony', harmonyRouter);
 app.use('/api/routing', routingRouter);
+app.use('/api/dossiers', dossiersRouter);
+app.use('/api/suggestions', suggestionsRouter);
 
 // Global error handler (must be after all routes) (Agent A)
 app.use(globalErrorHandler);
@@ -262,6 +266,26 @@ function broadcastHarmonyEvent(
   clientRegistry.broadcastToSession(sessionId, message);
 }
 
+// Broadcast dossier events to all WebSocket clients (global, not session-specific)
+function broadcastDossierEvent(
+  eventType: 'dossier:created' | 'dossier:updated' | 'dossier:deleted' | 'dossier:analyzing' | 'dossier:analyzed',
+  dossierId: string,
+  data?: any
+) {
+  const message = JSON.stringify({
+    type: eventType,
+    dossierId,
+    data,
+  });
+
+  // Broadcast to all connected clients since dossiers are global
+  clientRegistry.getAllClients().forEach((client) => {
+    if (client.readyState === 1) { // WebSocket.OPEN
+      client.send(message);
+    }
+  });
+}
+
 // Initialize Redis Pub/Sub if using Redis storage
 async function initializeRedisPubSub() {
   if (isAsyncStorage(storage) && storage.subscribe) {
@@ -314,6 +338,9 @@ if (isMainModule) {
 
     // Initialize registry broadcast function for real-time registry updates
     registryStorage.setBroadcastFunction(broadcastRegistryEvent);
+
+    // Initialize dossier broadcast function
+    setBroadcastDossierFunction(broadcastDossierEvent);
 
     // Initialize registry storage
     await registryStorage.initialize();

@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
 
@@ -105,6 +105,20 @@ export interface Storage {
   subscribe?(channel: string, callback: (message: string) => void): Promise<void>;
   publish?(channel: string, message: string): Promise<void>;
   disconnect?(): Promise<void>;
+
+  // Intel Dossier storage
+  getDossier(id: string): IntelDossier | undefined | Promise<IntelDossier | undefined>;
+  setDossier(dossier: IntelDossier): void | Promise<void>;
+  listDossiers(): IntelDossier[] | Promise<IntelDossier[]>;
+  deleteDossier(id: string): boolean | Promise<boolean>;
+  appendDossierHistory(id: string, entry: DossierHistoryEntry): boolean | Promise<boolean>;
+
+  // Widget Suggestions storage
+  getSuggestion(id: string): SuggestionEntry | undefined | Promise<SuggestionEntry | undefined>;
+  listSuggestions(): SuggestionEntry[] | Promise<SuggestionEntry[]>;
+  addSuggestion(suggestion: SuggestionEntry): void | Promise<void>;
+  deleteSuggestion(id: string): boolean | Promise<boolean>;
+  incrementSuggestionFrequency(id: string): boolean | Promise<boolean>;
 }
 
 /**

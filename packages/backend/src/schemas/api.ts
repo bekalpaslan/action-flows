@@ -481,3 +481,64 @@ export const applyModifierSchema = z.object({
 });
 
 export type ApplyModifierRequest = z.infer<typeof applyModifierSchema>;
+
+// ============================================================================
+// Intel Dossier Schemas
+// ============================================================================
+
+/**
+ * Schema for creating a new dossier
+ * POST /api/intel/dossiers
+ */
+export const createDossierSchema = z.object({
+  name: z.string().min(1, 'name required').max(200, 'name too long'),
+  targets: z
+    .array(z.string().min(1, 'target cannot be empty').max(500, 'target too long'))
+    .min(1, 'at least one target required')
+    .max(50, 'too many targets'),
+  context: z.string().max(5000, 'context too long').optional().default(''),
+});
+
+export type CreateDossierRequest = z.infer<typeof createDossierSchema>;
+
+/**
+ * Schema for updating a dossier
+ * PATCH /api/intel/dossiers/:id
+ */
+export const updateDossierSchema = z.object({
+  name: z.string().min(1).max(200).optional(),
+  targets: z
+    .array(z.string().min(1).max(500))
+    .min(1)
+    .max(50)
+    .optional(),
+  context: z.string().max(5000).optional(),
+});
+
+export type UpdateDossierRequest = z.infer<typeof updateDossierSchema>;
+
+/**
+ * Schema for triggering dossier analysis
+ * POST /api/intel/dossiers/:id/analyze
+ */
+export const triggerAnalysisSchema = z.object({
+  force: z.boolean().optional().default(false),
+});
+
+export type TriggerAnalysisRequest = z.infer<typeof triggerAnalysisSchema>;
+
+/**
+ * Schema for creating a widget suggestion
+ * POST /api/intel/suggestions
+ */
+export const createSuggestionSchema = z.object({
+  dossierId: z.string().min(1, 'dossierId required'),
+  needed: z.string().min(1, 'needed widget type required'),
+  reason: z.string().min(1, 'reason required'),
+  fallback: z.object({
+    type: z.enum(['raw', 'markdown']),
+    content: z.string().min(1, 'fallback content required'),
+  }),
+});
+
+export type CreateSuggestionRequest = z.infer<typeof createSuggestionSchema>;

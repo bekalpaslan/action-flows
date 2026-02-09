@@ -1,0 +1,309 @@
+/**
+ * DossierCreationDialog Component Styles
+ * Follows CustomPromptDialog pattern for consistency
+ */
+
+/* ============================================================================ */
+/* Dialog Backdrop */
+/* ============================================================================ */
+
+.dossier-creation-dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn var(--duration-fast) var(--ease-apple);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================================================ */
+/* Dialog Box */
+/* ============================================================================ */
+
+.dossier-creation-dialog {
+  background: var(--panel-bg-elevated);
+  border: var(--glass-border-default);
+  border-radius: var(--panel-radius-lg);
+  box-shadow: var(--shadow-lg), var(--panel-glow-default);
+  max-width: 600px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s var(--ease-apple);
+  backdrop-filter: var(--glass-blur-md);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.dossier-creation-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6);
+  border-bottom: var(--panel-border-default);
+  background: var(--panel-header-bg);
+}
+
+.dossier-creation-dialog-header h3 {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--btn-radius-md);
+  transition: var(--transition-all);
+}
+
+.close-button:hover:not(:disabled) {
+  background: var(--glass-bg-medium);
+  color: var(--text-primary);
+  box-shadow: var(--btn-glow-hover);
+}
+
+.close-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================================ */
+/* Dialog Body & Forms */
+/* ============================================================================ */
+
+.dossier-creation-dialog-body {
+  padding: var(--space-6);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+.text-input,
+.textarea-input {
+  padding: var(--space-3);
+  border: var(--panel-border-default);
+  border-radius: var(--btn-radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  background: var(--glass-bg-medium);
+  transition: var(--transition-colors);
+  box-shadow: var(--panel-glow-default);
+}
+
+.text-input:focus,
+.textarea-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1), var(--panel-glow-hover);
+}
+
+.text-input:disabled,
+.textarea-input:disabled {
+  background: var(--app-bg-tertiary);
+  color: var(--text-tertiary);
+  opacity: 0.6;
+}
+
+.textarea-input {
+  resize: vertical;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.field-hint {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+/* ============================================================================ */
+/* Targets List */
+/* ============================================================================ */
+
+.targets-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.target-input-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.target-input {
+  flex: 1;
+}
+
+.btn-remove-target {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--btn-radius-md);
+  transition: var(--transition-all);
+  flex-shrink: 0;
+}
+
+.btn-remove-target:hover:not(:disabled) {
+  background: var(--glass-bg-medium);
+  color: var(--color-error);
+  box-shadow: var(--btn-glow-hover);
+}
+
+.btn-remove-target:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-add-target {
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+  margin-top: var(--space-1);
+}
+
+/* ============================================================================ */
+/* Dialog Actions */
+/* ============================================================================ */
+
+.dossier-creation-dialog-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  padding-top: var(--space-3);
+  margin-top: var(--space-2);
+  border-top: var(--panel-border-default);
+}
+
+.btn {
+  padding: var(--space-3) var(--space-5);
+  border: none;
+  border-radius: var(--btn-radius-md);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-all);
+  white-space: nowrap;
+  font-family: var(--font-sans);
+  box-shadow: var(--btn-glow-default);
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: white;
+  border: 1px solid var(--color-accent);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0056b3;
+  box-shadow: var(--btn-glow-hover), 0 0 12px rgba(0, 122, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--btn-bg-tertiary);
+  color: var(--text-primary);
+  border: var(--panel-border-default);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--glass-bg-medium);
+  box-shadow: var(--btn-glow-hover);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================================ */
+/* Responsive Design */
+/* ============================================================================ */
+
+@media (max-width: 600px) {
+  .dossier-creation-dialog {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .dossier-creation-dialog-header,
+  .dossier-creation-dialog-body {
+    padding: var(--space-4);
+  }
+
+  .dossier-creation-dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

@@ -3,6 +3,7 @@ import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { TopBar } from '../TopBar';
 import { SessionSidebar } from '../SessionSidebar';
 import { WorkWorkbench } from './WorkWorkbench';
+import { CanvasWorkbench } from './CanvasWorkbench';
 import { EditorWorkbench } from './EditorWorkbench';
 import { ReviewWorkbench } from './ReviewWorkbench';
 import { PMWorkbench, type PMTask, type DocLink, type Milestone, type TaskStatus } from './PMWorkbench';
@@ -11,6 +12,7 @@ import { SettingsWorkbench } from './SettingsWorkbench';
 import { HarmonyWorkbench } from './HarmonyWorkbench';
 import { ExploreWorkbench } from './ExploreWorkbench';
 import { ArchiveWorkbench } from './ArchiveWorkbench';
+import { IntelWorkbench } from './IntelWorkbench';
 import { useSessionArchive } from '../../hooks/useSessionArchive';
 import {
   type WorkbenchId,
@@ -553,12 +555,16 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         );
       case 'harmony':
         return <HarmonyWorkbench sessionId={activeSessionId} />;
+      case 'canvas':
+        return <CanvasWorkbench />;
       case 'editor':
         return (
           <EditorWorkbench
             sessionId={activeSessionId || ('' as SessionId)}
           />
         );
+      case 'intel':
+        return <IntelWorkbench />;
       default:
         return (
           <div className="workbench-placeholder">

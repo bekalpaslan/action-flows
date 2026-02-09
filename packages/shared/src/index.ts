@@ -228,6 +228,24 @@ export {
 } from './workbenchTypes.js';
 
 // ============================================================================
+// Intel Dossier Types
+// ============================================================================
+export type {
+  DossierId,
+  SuggestionId,
+  WidgetType,
+  LayoutType,
+  WidgetDescriptor,
+  LayoutDescriptor,
+  DossierStatus,
+  DossierHistoryEntry,
+  IntelDossier,
+  SuggestionEntry,
+} from './dossierTypes.js';
+
+export { createDossierId, createSuggestionId } from './dossierTypes.js';
+
+// ============================================================================
 // Routing Types
 // ============================================================================
 export type {

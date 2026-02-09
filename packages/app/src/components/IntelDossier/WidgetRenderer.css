@@ -1,0 +1,53 @@
+/**
+ * WidgetRenderer Styles
+ *
+ * Grid layouts for widget rendering with responsive column spans.
+ */
+
+/* ============================================================================ */
+/* Layout Base */
+/* ============================================================================ */
+
+.widget-layout {
+  display: grid;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+/* ============================================================================ */
+/* Layout Types */
+/* ============================================================================ */
+
+/** 2-column grid layout */
+.widget-layout--grid-2col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/** 3-column grid layout */
+.widget-layout--grid-3col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/** Single-column stack layout */
+.widget-layout--stack {
+  grid-template-columns: 1fr;
+}
+
+/* ============================================================================ */
+/* Responsive Behavior */
+/* ============================================================================ */
+
+/** On smaller screens, collapse to single column */
+@media (max-width: 768px) {
+  .widget-layout--grid-2col,
+  .widget-layout--grid-3col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/** On medium screens, collapse 3-column to 2-column */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .widget-layout--grid-3col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -6,7 +6,7 @@
 
 Request → Keyword Extraction → Context Scoring → Selection or Disambiguation
 
-## Routable Contexts (6)
+## Routable Contexts (7)
 
 ### work
 **Purpose:** Active feature development and new code
@@ -74,6 +74,17 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 - "what are the current priorities"
 - "organize upcoming tasks"
 
+### intel
+**Purpose:** Code intelligence, living dossiers, domain monitoring
+**Icon:** 🕵️
+**Triggers:** dossier, intel, intelligence, monitor, watch, track, insight, analyze domain, code health, gather intel
+**Flows:** intel-analysis/
+**Examples:**
+- "create an intel dossier for the auth system"
+- "analyze the backend services"
+- "track changes to the API routes"
+- "gather intel on the frontend components"
+
 ## Auto-Target Contexts (2)
 
 These contexts receive content automatically — not routed by user intent.
@@ -105,6 +116,7 @@ These contexts receive content automatically — not routed by user intent.
 | review | qa/ | Audits and quality checks |
 | settings | framework/ | Config and meta-framework |
 | pm | framework/ | Planning and coordination |
+| intel | intel/ | Code intelligence and dossiers |
 
 ## Routing Guide
 
@@ -128,3 +140,5 @@ These contexts receive content automatically — not routed by user intent.
 | "audit harmony" / "check contract" / "backwards harmony" | review | backwards-harmony-audit/ |
 | "I have an idea" / "brainstorm X" | explore | ideation/ |
 | "let's think about X" / "ideation" | explore | ideation/ |
+| "create dossier" / "intel on X" | intel | intel-analysis/ |
+| "track domain X" / "gather intel" | intel | intel-analysis/ |

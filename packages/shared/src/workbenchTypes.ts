@@ -10,7 +10,7 @@
 // ============================================================================
 
 /**
- * The 9 workbench identifiers
+ * The 11 workbench identifiers
  */
 export type WorkbenchId =
   | 'work'
@@ -21,7 +21,9 @@ export type WorkbenchId =
   | 'settings'
   | 'pm'
   | 'harmony'
-  | 'editor';
+  | 'editor'
+  | 'intel'
+  | 'canvas';
 
 /**
  * All workbench IDs as an array for iteration
@@ -36,6 +38,8 @@ export const WORKBENCH_IDS: readonly WorkbenchId[] = [
   'pm',
   'harmony',
   'editor',
+  'intel',
+  'canvas',
 ] as const;
 
 // ============================================================================
@@ -222,6 +226,36 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     flows: [],
     routingExamples: [],
   },
+  intel: {
+    id: 'intel',
+    label: 'Intel',
+    icon: '🕵️',
+    hasNotifications: true,
+    notificationCount: 0,
+    glowColor: '#673ab7',
+    tooltip: 'Intelligence dossiers and persistent monitoring',
+    routable: true,
+    triggers: ['dossier', 'intel', 'intelligence', 'monitor', 'watch', 'track', 'insight'],
+    flows: ['intel-analysis/'],
+    routingExamples: [
+      'create a dossier for auth system',
+      'monitor the database layer',
+      'track changes in the API routes',
+      'intelligence on WebSocket implementation',
+    ],
+  },
+  canvas: {
+    id: 'canvas',
+    label: 'Canvas',
+    icon: '🎨',
+    hasNotifications: false,
+    notificationCount: 0,
+    tooltip: 'Live HTML/CSS preview for design collaboration',
+    routable: false,
+    triggers: [],
+    flows: [],
+    routingExamples: [],
+  },
 };
 
 // ============================================================================
@@ -312,6 +346,7 @@ export const ROUTABLE_WORKBENCHES: readonly WorkbenchId[] = [
   'review',
   'settings',
   'pm',
+  'intel',
 ] as const;
 
 /**
