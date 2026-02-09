@@ -21,6 +21,20 @@ Facilitate interactive brainstorming sessions through conversational exploration
 
 ---
 
+## Output Format (Recommended)
+
+**Your transcript should follow the structure defined in:**
+`.claude/actionflows/CONTRACT.md` § Format 5.3: Brainstorm Session Transcript
+
+**Note:** This format is **recommended but not enforced**. Dashboard displays brainstorm transcripts as read-only markdown.
+
+**Recommended Sections:**
+- Idea, Classification, Initial Context, Transcript, Key Insights, Issues & Risks, Next Steps, Open Questions, Metadata
+
+**See CONTRACT.md for complete specification.**
+
+---
+
 ## Steps to Complete This Action
 
 ### 1. Create Log Folder

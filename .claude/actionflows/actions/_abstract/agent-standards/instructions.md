@@ -47,22 +47,34 @@ Use concrete file paths, not relative references. Provide examples for complex c
 
 ### 12. Contract Compliance (for output-producing actions)
 
-If your action produces structured output consumed by the dashboard (review reports, analysis reports, error announcements, etc.):
+If your action produces structured output consumed by the dashboard (review reports, analysis reports, brainstorm transcripts):
 
-- Follow the format specification in `.claude/actionflows/CONTRACT.md`
-- Required fields MUST be present and correctly formatted
-- Use the exact markdown structure defined in the contract
-- Missing fields cause harmony violations (dashboard graceful degradation)
+- **Read the format specification** in `.claude/actionflows/CONTRACT.md` for your action type
+- **Follow the exact markdown structure** defined in the contract
+- **Include all required fields** — Missing fields cause harmony violations
+- **Use correct enums/types** — Backend validates using contract-defined parsers
+- **Test your output** — Run `pnpm run harmony:check` to validate output format
 
 **Contract-defined actions:**
-- review/ → Review Report Structure (Format 5.1)
-- analyze/ → Analysis Report Structure (Format 5.2)
-- brainstorm/ → Brainstorm Session Transcript (Format 5.3)
-- (Orchestrator outputs are also contract-defined)
+- **review/** → Review Report Structure (CONTRACT.md § Format 5.1)
+  - Required: Verdict (APPROVED | NEEDS_CHANGES), Score (0-100), Summary, Findings table, Fixes Applied (if mode=review-and-fix), Flags for Human
+- **analyze/** → Analysis Report Structure (CONTRACT.md § Format 5.2)
+  - Required: Title, Aspect, Scope, Date, Agent, numbered analysis sections, Recommendations
+- **brainstorm/** → Brainstorm Session Transcript (CONTRACT.md § Format 5.3)
+  - Recommended structure (not strictly enforced): Idea, Classification, Transcript, Key Insights, Issues & Risks, Next Steps
 
-**Why this matters:** The backend parses your output using contract-defined parsers. If structure doesn't match, parsing fails, harmony breaks, dashboard loses functionality.
+**Why this matters:**
+- The backend **parses your output** using contract-defined parsers
+- If structure doesn't match → parsing fails → harmony violation logged
+- Dashboard shows **"parsing incomplete"** and degrades gracefully
+- Harmony detector **broadcasts violations** via WebSocket (visible in dashboard)
 
-**Validation:** Harmony detector automatically validates output. Violations are logged and broadcast.
+**Evolution process:** See `.claude/actionflows/docs/CONTRACT_EVOLUTION.md` for adding/modifying formats
+
+**Validation command:**
+```bash
+pnpm run harmony:check
+```
 
 **Not contract-defined:** Agent learnings, internal notes, working files, intermediate outputs. Only final deliverables consumed by dashboard are contract-defined.
 

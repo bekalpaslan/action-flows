@@ -21,6 +21,25 @@ Perform quantitative analysis of the specified scope, producing structured repor
 
 ---
 
+## Output Format (CRITICAL)
+
+**Your analysis report MUST follow the structure defined in:**
+`.claude/actionflows/CONTRACT.md` § Format 5.2: Analysis Report Structure
+
+The dashboard parses your output using this specification. Missing or incorrectly formatted fields cause harmony violations.
+
+**Required Sections:**
+- **Title:** `# {Analysis Title}` (markdown H1)
+- **Metadata:** Aspect, Scope, Date, Agent
+- **Analysis Body:** Numbered sections (1., 2., 3., etc.)
+- **Recommendations:** Actionable next steps
+
+**Validation:** Run `pnpm run harmony:check` to validate output format
+
+**See CONTRACT.md for complete specification.**
+
+---
+
 ## Steps to Complete This Action
 
 ### 1. Create Log Folder

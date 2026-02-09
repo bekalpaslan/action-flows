@@ -21,6 +21,29 @@ Review the specified changes for correctness, security, performance, and pattern
 
 ---
 
+## Output Format (CRITICAL)
+
+**Your review report MUST follow the structure defined in:**
+`.claude/actionflows/CONTRACT.md` § Format 5.1: Review Report Structure
+
+The dashboard parses your output using this specification. Missing or incorrectly formatted fields cause harmony violations.
+
+**Required Sections:**
+- **Verdict:** `APPROVED` or `NEEDS_CHANGES` (exact enum values)
+- **Score:** Integer 0-100 (quality percentage)
+- **Summary:** 2-3 sentence overview of findings
+- **Findings:** Markdown table with columns: #, File, Line, Severity, Description, Suggestion
+- **Fixes Applied:** (if mode = review-and-fix) Table of files and fixes
+- **Flags for Human:** Issues requiring human judgment
+
+**Severity Levels:** `critical`, `high`, `medium`, `low` (exact lowercase values)
+
+**Validation:** Run `pnpm run harmony:check` to validate output format
+
+**See CONTRACT.md for complete specification.**
+
+---
+
 ## Steps to Complete This Action
 
 ### 1. Create Log Folder

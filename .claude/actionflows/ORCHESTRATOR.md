@@ -433,6 +433,127 @@ Implement?
 Done.
 ```
 
+### 8. Error Announcement
+
+When a step fails or an error occurs:
+
+```
+## Error: {Error title}
+
+**Step:** {step number} — {action/}
+**Message:** {error message}
+**Context:** {what was being attempted}
+
+{Stack trace or additional details if available}
+
+**Recovery options:**
+- Retry step {N}
+- Skip step {N}
+- Cancel chain
+```
+
+**Example:**
+
+```
+## Error: Type Check Failed
+
+**Step:** 3 — code/backend/user-service
+**Message:** TS2345: Argument of type 'string' is not assignable to parameter of type 'UserId'
+**Context:** Implementing getUserById endpoint in packages/backend/src/routes/users.ts
+
+src/routes/users.ts:42:18 - error TS2345
+  const user = await storage.getUser(req.params.id);
+                                      ~~~~~~~~~~~~
+
+**Recovery options:**
+- Retry step 3 (after fixing type error)
+- Skip step 3 (continue to step 4)
+- Cancel chain
+```
+
+### 9. INDEX.md Entry
+
+After chain completes successfully, add execution record to `.claude/actionflows/logs/INDEX.md`:
+
+**Format:**
+```
+| {YYYY-MM-DD} | {Description} | {Pattern} | {Outcome} |
+```
+
+**Example:**
+```
+| 2026-02-08 | Self-Evolving UI phases 1-4 | code×8 → review → second-opinion → commit | Success — 18 files, APPROVED 92% (1d50f9e) |
+```
+
+**Fields:**
+- **Date:** Execution start date (YYYY-MM-DD)
+- **Description:** Brief task description (from chain title or request)
+- **Pattern:** Chain pattern notation (e.g., "code×3 → review → commit")
+- **Outcome:** Success/failure + key metrics + commit hash if applicable
+
+**Note:** This is written AFTER chain completes, not during execution.
+
+### 10. LEARNINGS.md Entry
+
+After human approves a learning surface, write to `.claude/actionflows/LEARNINGS.md`:
+
+**Format:**
+```markdown
+### {Action Type}
+
+#### {Issue Title}
+
+**Context:** {when this happens}
+**Problem:** {what goes wrong}
+**Root Cause:** {why it fails}
+**Solution:** {how to prevent}
+**Date:** {YYYY-MM-DD}
+**Source:** {action/} in {chain description}
+```
+
+**Example:**
+```markdown
+### code/
+
+#### Missing Type Imports After File Reorganization
+
+**Context:** When moving types from shared/index.ts to shared/types/user.ts
+**Problem:** Other packages fail type check with "Cannot find name 'UserId'"
+**Root Cause:** Imports in consuming files still reference old path (shared/index.ts)
+**Solution:** After moving files, grep globally for ALL references to old paths and update them
+**Date:** 2026-02-08
+**Source:** code/shared/types-split in "Organize shared types by domain" chain
+```
+
+### 11. Human Gate Presentation (Free-Form)
+
+**Note:** Human gates are NOT standardized format. Output is free-form prose tailored to the decision.
+
+**Typical Structure:**
+- Present the decision/approval needed
+- Show relevant context (code snippets, analysis results)
+- Explain options if applicable
+- Ask clear yes/no or multiple-choice question
+
+**Example:**
+```
+I've compiled the following chain to implement user authentication:
+
+## Chain: User Authentication Implementation
+
+[Chain table here]
+
+This will:
+1. Add JWT types to shared package
+2. Implement auth middleware in backend
+3. Add login/logout endpoints
+4. Create auth context in frontend
+
+**Proceed with this approach?** (yes/no)
+```
+
+**Format:** No parsing required — display as markdown. User responds with text.
+
 ---
 
 ## Abstract Actions (Instructed Behaviors)
