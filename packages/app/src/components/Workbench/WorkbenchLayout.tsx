@@ -584,17 +584,20 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         <SessionSidebar
           onAttachSession={handleAttachSession}
           activeSessionId={activeSessionId}
-          onNewSession={() => {
-            const newId = `session-${Date.now()}` as SessionId;
-            const newSession: Session = {
-              id: newId,
-              cwd: 'D:/ActionFlowsDashboard',
-              chains: [],
-              status: 'in_progress',
-              startedAt: brandedTypes.currentTimestamp(),
-            };
-            setAttachedSessions((prev) => [...prev, newSession]);
-            setActiveSessionId(newId);
+          onNewSession={async () => {
+            try {
+              const res = await fetch('http://localhost:3001/api/sessions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cwd: 'D:/ActionFlowsDashboard' }),
+              });
+              if (!res.ok) throw new Error(`Failed to create session: ${res.status}`);
+              const data = await res.json();
+              const newId = data.id as SessionId;
+              handleAttachSession(newId);
+            } catch (err) {
+              console.error('Failed to create new session:', err);
+            }
           }}
         />
       )}
