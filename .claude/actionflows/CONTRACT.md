@@ -234,16 +234,16 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 **TypeScript:** `DepartmentRoutingParsed`
 **Parser:** `parseDepartmentRouting(text: string)`
 **Pattern:** `/^## Routing: (.+)$/m`
-**Example:** ORCHESTRATOR.md § Department Routing
+**Example:** ORCHESTRATOR.md § Context Routing
 
 **Required Fields:**
 - Request brief (string)
-- Department (enum: Framework | Engineering | QA | Human)
+- Context (enum: work | maintenance | explore | review | settings | pm | archive | harmony | editor)
 - Flow (flow name or "Composed from actions" or "No match")
 - Actions (list of actions)
 - Explanation (why this routing)
 
-**Note:** Currently NOT produced by orchestrator (internal routing).
+**Note:** Currently NOT produced by orchestrator (internal routing). Legacy name "Department" will be renamed to "Context" in future contract version.
 
 ---
 

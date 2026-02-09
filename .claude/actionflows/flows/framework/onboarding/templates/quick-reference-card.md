@@ -24,7 +24,7 @@
 **Change freely:**
 - Add/edit flows (FLOWS.md)
 - Add/edit actions (agent.md, instructions.md)
-- Customize routing (ORGANIZATION.md)
+- Customize routing (CONTEXTS.md)
 - Modify agent instructions (within standards)
 - Update project config (project.config.md)
 
@@ -54,7 +54,7 @@ Say: **"It's a sin"**
 Human: "Implement login rate limiting"
 
 Orchestrator:
-- Reads routing: "implement" → Engineering → code-and-review/
+- Reads routing: "implement" → work context → code-and-review/
 - Compiles chain: code → review → commit
 - Presents for approval
 - You: "Execute"
@@ -66,7 +66,7 @@ Orchestrator:
 Human: "Fix validation error in auth.ts"
 
 Orchestrator:
-- Routing: "fix" → Engineering → bug-triage/
+- Routing: "fix" → maintenance context → bug-triage/
 - Compiles chain: analyze → code → review → commit
 - Presents for approval
 ```
@@ -76,7 +76,7 @@ Orchestrator:
 Human: "Audit security of API routes"
 
 Orchestrator:
-- Routing: "audit" → QA → audit-and-fix/
+- Routing: "audit" → review context → audit-and-fix/
 - Compiles chain: audit → remediate (if critical) → report
 - Presents for approval
 ```
@@ -118,19 +118,19 @@ Orchestrator:
 - Show examples: "Show me an example of X"
 - Explain again: "Explain {topic} again"
 - Review onboarding: "Review sacred formats"
-- Read docs: `.claude/actionflows/CONTRACT.md`, `ORCHESTRATOR.md`, `ORGANIZATION.md`
+- Read docs: `.claude/actionflows/CONTRACT.md`, `ORCHESTRATOR.md`, `CONTEXTS.md`
 
 ---
 
 ## Next Steps
 
 1. **Try a request:** "I have an idea—{your idea}"
-2. **Customize routing:** Edit ORGANIZATION.md
+2. **Customize routing:** Edit CONTEXTS.md
 3. **Create a flow:** "Create a flow called {flow-name}/"
 4. **Join evolution loop:** Approve agent learnings
 
 ---
 
 **Completed:** Beginner Level
-**Next:** Intermediate Level (department routing, review pipeline)
+**Next:** Intermediate Level (context routing, review pipeline)
 **Resume anytime:** "Continue onboarding to Intermediate"

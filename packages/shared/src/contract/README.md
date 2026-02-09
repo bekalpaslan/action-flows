@@ -50,7 +50,8 @@ import {
 
   // Error & Status (Category 6)
   ErrorAnnouncementParsed,
-  DepartmentRoutingParsed,
+  ContextRoutingParsed,
+  DepartmentRoutingParsed, // @deprecated - Use ContextRoutingParsed
 
   // Contract Metadata
   CONTRACT_VERSION,
@@ -114,7 +115,8 @@ import {
 
   // Status and error parsers
   parseErrorAnnouncement,
-  parseDepartmentRouting,
+  parseContextRouting,
+  parseDepartmentRouting, // @deprecated - Use parseContextRouting
 } from '@actionflows/shared/contract';
 
 // Example usage:
@@ -160,7 +162,8 @@ import {
 
   // Status and error guards
   isErrorAnnouncementParsed,
-  isDepartmentRoutingParsed,
+  isContextRoutingParsed,
+  isDepartmentRoutingParsed, // @deprecated - Use isContextRoutingParsed
 } from '@actionflows/shared/contract';
 
 // Example usage:

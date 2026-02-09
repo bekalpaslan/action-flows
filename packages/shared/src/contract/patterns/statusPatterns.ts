@@ -17,17 +17,24 @@ export const ErrorAnnouncementPatterns = {
 } as const;
 
 /**
- * Format 6.2: Department Routing Announcement
+ * Format 6.2: Context Routing Announcement
  */
-export const DepartmentRoutingPatterns = {
+export const ContextRoutingPatterns = {
   heading: /^## Routing: (.+)$/m,
-  department: /^\*\*Department:\*\* (Framework|Engineering|QA|Human)$/m,
+  context: /^\*\*Context:\*\* (work|maintenance|explore|review|settings|pm|archive|harmony|editor)$/mi,
+  confidence: /^\*\*Confidence:\*\* ([\d.]+)$/m,
   flow: /^\*\*Flow:\*\* (.+)$/m,
   actions: /^\*\*Actions:\*\* (.+)$/m,
-  explanation: /^(.+)$/m,
+  disambiguated: /^\*\*Disambiguated:\*\* (true|false)$/mi,
 } as const;
+
+/**
+ * @deprecated Use ContextRoutingPatterns instead
+ */
+export const DepartmentRoutingPatterns = ContextRoutingPatterns;
 
 export const StatusPatterns = {
   errorAnnouncement: ErrorAnnouncementPatterns,
-  departmentRouting: DepartmentRoutingPatterns,
+  contextRouting: ContextRoutingPatterns,
+  departmentRouting: DepartmentRoutingPatterns, // @deprecated
 } as const;

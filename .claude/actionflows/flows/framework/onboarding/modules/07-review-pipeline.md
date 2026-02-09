@@ -183,7 +183,7 @@ This is why the framework produces high-quality output consistently—multiple p
 ## Intermediate Level Complete!
 
 You've completed Intermediate level! You now know:
-- ✅ Department routing (ORGANIZATION.md)
+- ✅ Context routing (CONTEXTS.md)
 - ✅ Review pipeline (primary + second opinion)
 
 Ready for Advanced level, or would you like to:

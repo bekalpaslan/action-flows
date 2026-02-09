@@ -31,6 +31,7 @@ import type {
 } from './types/actionFormats.js';
 import type {
   ErrorAnnouncementParsed,
+  ContextRoutingParsed,
   DepartmentRoutingParsed,
 } from './types/statusFormats.js';
 
@@ -221,11 +222,19 @@ export function isErrorAnnouncementParsed(obj: unknown): obj is ErrorAnnouncemen
   );
 }
 
-export function isDepartmentRoutingParsed(obj: unknown): obj is DepartmentRoutingParsed {
+export function isContextRoutingParsed(obj: unknown): obj is ContextRoutingParsed {
   return (
     isParsedFormat(obj) &&
     'request' in obj &&
-    'department' in obj &&
-    'flow' in obj
+    'context' in obj &&
+    'confidence' in obj &&
+    'disambiguated' in obj
   );
+}
+
+/**
+ * @deprecated Use isContextRoutingParsed instead
+ */
+export function isDepartmentRoutingParsed(obj: unknown): obj is DepartmentRoutingParsed {
+  return isContextRoutingParsed(obj);
 }

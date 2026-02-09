@@ -170,7 +170,7 @@ Support both versions for 90 days.
 ├── ORCHESTRATOR.md philosophy sections
 ├── Agent instructions (within standards)
 ├── Flow definitions
-├── Department routing
+├── Context routing
 └── project.config.md values
 ```
 

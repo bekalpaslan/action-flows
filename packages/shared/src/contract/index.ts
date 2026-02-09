@@ -55,7 +55,8 @@ export type {
 
   // Error & Status Formats (6.x)
   ErrorAnnouncementParsed,
-  DepartmentRoutingParsed,
+  ContextRoutingParsed,
+  DepartmentRoutingParsed, // @deprecated
 } from './types/index.js';
 
 // ============================================================================
@@ -104,7 +105,8 @@ export {
 
   // Status and error parsers (6.x)
   parseErrorAnnouncement,
-  parseDepartmentRouting,
+  parseContextRouting,
+  parseDepartmentRouting, // @deprecated
 } from './parsers/index.js';
 
 // ============================================================================
@@ -142,5 +144,6 @@ export {
 
   // Status and error guards
   isErrorAnnouncementParsed,
-  isDepartmentRoutingParsed,
+  isContextRoutingParsed,
+  isDepartmentRoutingParsed, // @deprecated
 } from './guards.js';

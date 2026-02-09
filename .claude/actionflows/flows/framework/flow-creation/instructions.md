@@ -17,7 +17,7 @@
 | Input | Description | Example |
 |-------|-------------|---------|
 | requirements | Flow purpose and triggers | "A flow for database migration: plan → implement → test → review" |
-| department | Which department owns the flow | "engineering" |
+| context | Which context owns the flow | "work" |
 
 ---
 
@@ -59,7 +59,7 @@ Present the flow design for approval. Human reviews the proposed action sequence
 Read your definition in .claude/actionflows/actions/code/agent.md
 
 Input:
-- task: Create flow instructions.md per approved design at .claude/actionflows/flows/{department}/{flow-name}/instructions.md
+- task: Create flow instructions.md per approved design at .claude/actionflows/flows/{context}/{flow-name}/instructions.md
 - context: .claude/actionflows/flows/ for existing flow patterns, approved plan from Step 1
 ```
 
@@ -77,7 +77,7 @@ Input:
 Read your definition in .claude/actionflows/actions/review/agent.md
 
 Input:
-- scope: .claude/actionflows/flows/{department}/{flow-name}/instructions.md
+- scope: .claude/actionflows/flows/{context}/{flow-name}/instructions.md
 - type: proposal-review
 ```
 

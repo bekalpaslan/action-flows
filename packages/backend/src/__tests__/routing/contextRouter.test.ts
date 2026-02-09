@@ -10,7 +10,6 @@ import {
   extractKeywords,
   calculateMatchScore,
   routeRequest,
-  USE_CONTEXT_ROUTING,
 } from '../../routing/contextRouter.js';
 
 // ============================================================================
@@ -457,15 +456,5 @@ describe('routeRequest', () => {
     expect(Array.isArray(result.triggerMatches)).toBe(true);
     expect(typeof result.confidence).toBe('number');
     expect(typeof result.requiresDisambiguation).toBe('boolean');
-  });
-});
-
-// ============================================================================
-// Feature Flag Test
-// ============================================================================
-
-describe('USE_CONTEXT_ROUTING', () => {
-  it('should be false', () => {
-    expect(USE_CONTEXT_ROUTING).toBe(false);
   });
 });

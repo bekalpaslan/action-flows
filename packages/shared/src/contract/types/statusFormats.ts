@@ -3,6 +3,8 @@
  * TypeScript interfaces for error and routing formats
  */
 
+import type { WorkbenchId } from '../../workbenchTypes.js';
+
 /**
  * Format 6.1: Error Announcement
  * When produced: When an agent fails or unexpected error occurs
@@ -37,16 +39,18 @@ export interface ErrorAnnouncementParsed {
 }
 
 /**
- * Format 6.2: Department Routing Announcement
- * When produced: Orchestrator routes a request to a department
- * Note: Currently not produced by orchestrator (internal routing)
+ * Format 6.2: Context Routing Announcement
+ * When produced: Orchestrator routes a request to a workbench context
  */
-export interface DepartmentRoutingParsed {
+export interface ContextRoutingParsed {
   /** Request brief */
   request: string | null;
 
-  /** Department name */
-  department: 'Framework' | 'Engineering' | 'QA' | 'Human' | null;
+  /** Workbench context routed to */
+  context: WorkbenchId | null;
+
+  /** Confidence score (0.0-1.0) */
+  confidence: number | null;
 
   /** Flow name or composition method */
   flow: string | null;
@@ -54,8 +58,8 @@ export interface DepartmentRoutingParsed {
   /** List of actions in chain */
   actions: string[] | null;
 
-  /** Explanation of routing choice */
-  explanation: string | null;
+  /** Whether disambiguation was needed */
+  disambiguated: boolean;
 
   /** Raw text */
   raw: string;
@@ -63,3 +67,8 @@ export interface DepartmentRoutingParsed {
   /** Contract version */
   contractVersion: string;
 }
+
+/**
+ * @deprecated Use ContextRoutingParsed instead (Context-Native Routing Phase 5)
+ */
+export type DepartmentRoutingParsed = ContextRoutingParsed;

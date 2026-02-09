@@ -17,7 +17,7 @@ Here's what happens:
 ### Phase 1: Compilation
 
 Orchestrator:
-1. Reads routing tables → "implement" = Engineering department
+1. Reads routing tables → "implement" = work context
 2. Finds matching flow → code-and-review/
 3. Builds chain table:
 

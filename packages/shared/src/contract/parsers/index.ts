@@ -42,7 +42,8 @@ export {
 // Status and error parsers
 export {
   parseErrorAnnouncement,
-  parseDepartmentRouting,
+  parseContextRouting,
+  parseDepartmentRouting, // @deprecated
 } from './statusParser.js';
 
 // Import all parsers for master function
@@ -51,7 +52,7 @@ import { parseStepCompletion, parseDualOutput, parseSecondOpinionSkip } from './
 import { parseHumanGate, parseLearningSurface, parseSessionStartProtocol } from './humanParser.js';
 import { parseRegistryUpdate, parseIndexEntry, parseLearningEntry } from './registryParser.js';
 import { parseReviewReport, parseAnalysisReport, parseBrainstormTranscript } from './actionParser.js';
-import { parseErrorAnnouncement, parseDepartmentRouting } from './statusParser.js';
+import { parseErrorAnnouncement, parseContextRouting, parseDepartmentRouting } from './statusParser.js';
 
 /**
  * Union type of all parsed formats
@@ -74,7 +75,7 @@ export type ParsedFormat =
   | ReturnType<typeof parseAnalysisReport>
   | ReturnType<typeof parseBrainstormTranscript>
   | ReturnType<typeof parseErrorAnnouncement>
-  | ReturnType<typeof parseDepartmentRouting>;
+  | ReturnType<typeof parseContextRouting>;
 
 /**
  * Master parser function
@@ -149,8 +150,8 @@ export function parseOrchestratorOutput(text: string): ParsedFormat {
   const humanGate = parseHumanGate(text);
   if (humanGate) return humanGate;
 
-  const departmentRouting = parseDepartmentRouting(text);
-  if (departmentRouting) return departmentRouting;
+  const contextRouting = parseContextRouting(text);
+  if (contextRouting) return contextRouting;
 
   // No format matched
   return null;

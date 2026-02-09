@@ -21,12 +21,12 @@ Here's what you can freely change without breaking anything:
 **Example:** You want a "security-audit/" flow
 
 **Steps:**
-1. Create directory: `.claude/actionflows/flows/qa/security-audit/`
+1. Create directory: `.claude/actionflows/flows/review/security-audit/`
 2. Write `instructions.md` defining the action sequence
 3. Add entry to FLOWS.md:
 
 ```markdown
-## QA Department
+## review Context
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
@@ -64,15 +64,15 @@ Changes take effect on next agent spawn—no framework update needed.
 
 ### 4. Customizing Routing
 
-Edit ORGANIZATION.md to change how requests route:
+Edit CONTEXTS.md to change how requests route:
 
 ```markdown
-| Human Says | Department | Flow/Action |
-|------------|-----------|-------------|
-| "secure X" | QA        | security-audit/ |
+| Human Says | Context | Flow/Action |
+|------------|---------|-------------|
+| "secure X" | review  | security-audit/ |
 ```
 
-Add triggers, change departments, redirect flows—all safe.
+Add triggers, change contexts, redirect flows—all safe.
 
 ---
 
@@ -81,7 +81,7 @@ Add triggers, change departments, redirect flows—all safe.
 Safe to Evolve (8 categories):
 1. Adding/editing flows
 2. Adding/editing actions
-3. Adding/editing departments
+3. Adding/editing contexts
 4. Modifying agent instructions (within standards)
 5. Editing ORCHESTRATOR.md philosophy sections
 6. Customizing project.config.md values

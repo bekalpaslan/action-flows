@@ -23,7 +23,7 @@ Here's what you learned:
 
 ### Intermediate Level ✅
 ```
-├── Department routing (ORGANIZATION.md)
+├── Context routing (CONTEXTS.md)
 ├── Review pipeline (primary + second opinion)
 └── Action modes (assess vs assess+fix)
 ```
@@ -46,7 +46,7 @@ Here's what you learned:
 - ✅ The philosophy of living software
 - ✅ What's sacred vs what's safe
 - ✅ The sin test and orchestrator boundaries
-- ✅ Department routing and flow composition
+- ✅ Context routing and flow composition
 - ✅ Review pipeline and second opinions
 - ✅ Contract-based harmony system
 
@@ -94,7 +94,7 @@ Example: `"I have an idea—add keyboard shortcuts to the dashboard"`
 Watch orchestrator compile chain, approve, observe execution
 
 ### 2. Customize routing
-Edit ORGANIZATION.md to add triggers for your team's language
+Edit CONTEXTS.md to add triggers for your team's language
 
 ### 3. Create a custom flow
 Try: `"Create a flow called docs-review/ for reviewing documentation"`
@@ -117,7 +117,7 @@ Browse all formats to see what's defined
 **Files:**
 - `.claude/actionflows/CONTRACT.md` — All output formats
 - `.claude/actionflows/ORCHESTRATOR.md` — Orchestration rules
-- `.claude/actionflows/ORGANIZATION.md` — Department routing
+- `.claude/actionflows/CONTEXTS.md` — Context routing
 - `.claude/actionflows/FLOWS.md` — Flow registry
 - `.claude/actionflows/ACTIONS.md` — Action registry
 
@@ -180,7 +180,7 @@ Add entry to `logs/INDEX.md`:
 **Evolution:**
 - Add flows freely (FLOWS.md)
 - Add actions freely (ACTIONS.md)
-- Customize routing (ORGANIZATION.md)
+- Customize routing (CONTEXTS.md)
 - Contract changes require coordination
 
 ---

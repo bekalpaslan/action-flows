@@ -50,5 +50,6 @@ export type {
 // Error & Status Formats (6.x)
 export type {
   ErrorAnnouncementParsed,
-  DepartmentRoutingParsed,
+  ContextRoutingParsed,
+  DepartmentRoutingParsed, // @deprecated
 } from './statusFormats.js';

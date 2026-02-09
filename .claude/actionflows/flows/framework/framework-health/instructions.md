@@ -34,7 +34,7 @@ Read your definition in .claude/actionflows/actions/analyze/agent.md
 Input:
 - aspect: drift
 - scope: .claude/actionflows/
-- context: Verify structure matches registries. Check: every action in ACTIONS.md has agent.md + instructions.md on disk; every flow in FLOWS.md has instructions.md on disk; no stale entries; no orphan directories; ORGANIZATION.md departments match flow directory structure.
+- context: Verify structure matches registries. Check: every action in ACTIONS.md has agent.md + instructions.md on disk; every flow in FLOWS.md has instructions.md on disk; no stale entries; no orphan directories; CONTEXTS.md contexts match flow directory structure.
 ```
 
 **Gate:** Health report delivered with pass/fail for each check.

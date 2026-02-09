@@ -83,7 +83,7 @@ Sacred Formats (14 total):
     ├── WebSocket Event Discriminated Unions
     ├── FLOWS.md Registry Structure
     ├── ACTIONS.md Registry Structure
-    ├── ORGANIZATION.md Routing Table
+    ├── CONTEXTS.md Routing Table
     ├── INDEX.md Table Structure
     └── Contract Version Header
 ```
@@ -98,7 +98,7 @@ You can see the full specifications in:
 **Question:** Which of these can you safely change?
 
 A. The columns in the chain compilation table
-B. The routing triggers in ORGANIZATION.md
+B. The routing triggers in CONTEXTS.md
 C. The >> prefix in step completion announcements
 D. The folder naming pattern for logs
 
@@ -115,10 +115,10 @@ D. The folder naming pattern for logs
 ## Validation Responses
 
 ### If Correct
-"Perfect! ORGANIZATION.md is a routing configuration—the orchestrator READS it to make decisions. Changing it doesn't break parsing, so it's safe to evolve."
+"Perfect! CONTEXTS.md is a routing configuration—the orchestrator READS it to make decisions. Changing it doesn't break parsing, so it's safe to evolve."
 
 ### If Wrong
-"Close, but remember the rule: If the dashboard PARSES it (extracts structured data), it's sacred. The chain table, >> prefix, and log folder naming are all parsed by the backend. ORGANIZATION.md is just READ by the orchestrator for routing decisions—safe to change."
+"Close, but remember the rule: If the dashboard PARSES it (extracts structured data), it's sacred. The chain table, >> prefix, and log folder naming are all parsed by the backend. CONTEXTS.md is just READ by the orchestrator for routing decisions—safe to change."
 
 ---
 

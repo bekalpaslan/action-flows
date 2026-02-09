@@ -47,7 +47,7 @@ Read all module files:
 - `.claude/actionflows/flows/framework/onboarding/modules/03-sacred-formats.md`
 - `.claude/actionflows/flows/framework/onboarding/modules/04-safe-evolution.md`
 - `.claude/actionflows/flows/framework/onboarding/modules/05-sin-test.md`
-- `.claude/actionflows/flows/framework/onboarding/modules/06-department-routing.md`
+- `.claude/actionflows/flows/framework/onboarding/modules/06-context-routing.md`
 - `.claude/actionflows/flows/framework/onboarding/modules/07-review-pipeline.md`
 - `.claude/actionflows/flows/framework/onboarding/modules/08-contract.md`
 - `.claude/actionflows/flows/framework/onboarding/modules/09-harmony.md`

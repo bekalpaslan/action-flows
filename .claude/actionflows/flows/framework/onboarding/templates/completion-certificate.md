@@ -17,7 +17,7 @@
 - [x] Module 5: The Sin Test
 
 ### Intermediate Level ✅
-- [x] Module 6: Department Routing
+- [x] Module 6: Context Routing
 - [x] Module 7: The Review Pipeline
 
 ### Advanced Level ✅
@@ -35,7 +35,7 @@
 - ✅ The philosophy of living software
 - ✅ What's sacred vs what's safe
 - ✅ The sin test and orchestrator boundaries
-- ✅ Department routing and flow composition
+- ✅ Context routing and flow composition
 - ✅ Review pipeline and second opinions
 - ✅ Contract-based harmony system
 
@@ -57,7 +57,7 @@ Example: "I have an idea—{your idea}"
 Watch the orchestrator compile chain, approve, observe execution
 
 ### 2. Customize for your project
-- Edit ORGANIZATION.md (add routing triggers)
+- Edit CONTEXTS.md (add routing triggers)
 - Create custom flow (for your team's workflow)
 - Add project-specific action
 
@@ -84,7 +84,7 @@ Watch the orchestrator compile chain, approve, observe execution
 - Show examples: "Show me an example of X"
 - Explain concepts: "Explain {topic} again"
 - Review modules: "Review {module name}"
-- Read docs: CONTRACT.md, ORCHESTRATOR.md, ORGANIZATION.md
+- Read docs: CONTRACT.md, ORCHESTRATOR.md, CONTEXTS.md
 
 **Found a bug or have feedback?**
 - Report learnings through the framework

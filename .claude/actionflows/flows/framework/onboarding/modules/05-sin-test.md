@@ -188,7 +188,7 @@ What would you like to do?
 ## Transition
 
 Based on human choice:
-- Continue → Module 6 (Department Routing)
+- Continue → Module 6 (Context Routing)
 - Review → Return to chosen module
 - Break → Save progress, offer resume command
 - Quiz → Additional validation questions

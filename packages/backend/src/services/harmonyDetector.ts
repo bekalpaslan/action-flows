@@ -216,7 +216,7 @@ export class HarmonyDetector {
     if ('progress' in parsed && 'currentStep' in parsed) return 'ChainStatusUpdate';
     if ('transcript' in parsed && 'ideas' in parsed) return 'BrainstormTranscript';
     if ('question' in parsed && 'context' in parsed && !('options' in parsed)) return 'HumanGate';
-    if ('department' in parsed && 'route' in parsed) return 'DepartmentRouting';
+    if ('context' in parsed && 'confidence' in parsed && 'disambiguated' in parsed) return 'ContextRouting';
 
     return 'Unknown';
   }

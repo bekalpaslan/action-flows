@@ -5,8 +5,10 @@
 
 import type {
   ErrorAnnouncementParsed,
+  ContextRoutingParsed,
   DepartmentRoutingParsed,
 } from '../types/statusFormats.js';
+import type { WorkbenchId } from '../../workbenchTypes.js';
 import { StatusPatterns } from '../patterns/statusPatterns.js';
 import { CONTRACT_VERSION } from '../version.js';
 
@@ -74,45 +76,57 @@ function parseRecoveryOptions(text: string): string[] | null {
 }
 
 /**
- * Parse department routing announcement
+ * Parse context routing announcement
  * Format 6.2
  */
-export function parseDepartmentRouting(text: string): DepartmentRoutingParsed | null {
+export function parseContextRouting(text: string): ContextRoutingParsed | null {
   // 1. Detect
-  if (!StatusPatterns.departmentRouting.heading.test(text)) {
+  if (!StatusPatterns.contextRouting.heading.test(text)) {
     return null;
   }
 
   // 2. Extract
-  const headingMatch = text.match(StatusPatterns.departmentRouting.heading);
-  const departmentMatch = text.match(StatusPatterns.departmentRouting.department);
-  const flowMatch = text.match(StatusPatterns.departmentRouting.flow);
-  const actionsMatch = text.match(StatusPatterns.departmentRouting.actions);
+  const headingMatch = text.match(StatusPatterns.contextRouting.heading);
+  const contextMatch = text.match(StatusPatterns.contextRouting.context);
+  const confidenceMatch = text.match(StatusPatterns.contextRouting.confidence);
+  const flowMatch = text.match(StatusPatterns.contextRouting.flow);
+  const actionsMatch = text.match(StatusPatterns.contextRouting.actions);
+  const disambiguatedMatch = text.match(StatusPatterns.contextRouting.disambiguated);
 
   // Parse actions list
   const actions = actionsMatch?.[1]
     ? actionsMatch[1].split(',').map(a => a.trim())
     : null;
 
-  // Extract explanation (text after actions line)
-  let explanation: string | null = null;
-  const actionsIndex = actionsMatch ? text.indexOf(actionsMatch[0]) : -1;
-  if (actionsIndex !== -1) {
-    const explanationText = text.slice(actionsIndex + actionsMatch![0].length).trim();
-    explanation = explanationText || null;
-  }
+  // Parse confidence as number
+  const confidence = confidenceMatch?.[1]
+    ? parseFloat(confidenceMatch[1])
+    : null;
+
+  // Parse disambiguated as boolean
+  const disambiguated = disambiguatedMatch?.[1]
+    ? disambiguatedMatch[1].toLowerCase() === 'true'
+    : false;
 
   // 3. Build
-  const parsed: DepartmentRoutingParsed = {
+  const parsed: ContextRoutingParsed = {
     request: headingMatch?.[1] || null,
-    department: (departmentMatch?.[1] as 'Framework' | 'Engineering' | 'QA' | 'Human') || null,
+    context: (contextMatch?.[1] as WorkbenchId) || null,
+    confidence,
     flow: flowMatch?.[1] || null,
     actions,
-    explanation,
+    disambiguated,
     raw: text,
     contractVersion: CONTRACT_VERSION,
   };
 
   // 4. Validate
   return parsed;
+}
+
+/**
+ * @deprecated Use parseContextRouting instead (Context-Native Routing Phase 5)
+ */
+export function parseDepartmentRouting(text: string): DepartmentRoutingParsed | null {
+  return parseContextRouting(text);
 }
