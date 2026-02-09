@@ -1,0 +1,64 @@
+.theme-toggle {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary, #333);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0;
+  outline: none;
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-bg-hover, rgba(0, 0, 0, 0.05));
+}
+
+.theme-toggle:active {
+  background-color: var(--color-bg-active, rgba(0, 0, 0, 0.1));
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-focus-ring, #4A90E2);
+  outline-offset: 2px;
+}
+
+.theme-toggle__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:active .theme-toggle__icon {
+  transform: rotate(180deg);
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .theme-toggle {
+  color: var(--color-text-primary, #E0E0E0);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background-color: var(--color-bg-hover, rgba(255, 255, 255, 0.1));
+}
+
+[data-theme="dark"] .theme-toggle:active {
+  background-color: var(--color-bg-active, rgba(255, 255, 255, 0.15));
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle__icon {
+    transition: none;
+  }
+
+  .theme-toggle:active .theme-toggle__icon {
+    transform: none;
+  }
+}

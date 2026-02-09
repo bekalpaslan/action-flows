@@ -1,4 +1,6 @@
 import './App.css'
+import './styles/themes/index.css'
+import { ThemeProvider } from './contexts/ThemeContext'
 import { WebSocketProvider } from './contexts/WebSocketContext'
 import { WorkbenchProvider } from './contexts/WorkbenchContext'
 import { VimNavigationProvider } from './contexts/VimNavigationContext'
@@ -21,13 +23,15 @@ function AppWithVim() {
 
 function App() {
   return (
-    <WebSocketProvider url="ws://localhost:3001/ws">
-      <WorkbenchProvider>
-        <VimNavigationProvider>
-          <AppWithVim />
-        </VimNavigationProvider>
-      </WorkbenchProvider>
-    </WebSocketProvider>
+    <ThemeProvider>
+      <WebSocketProvider url="ws://localhost:3001/ws">
+        <WorkbenchProvider>
+          <VimNavigationProvider>
+            <AppWithVim />
+          </VimNavigationProvider>
+        </WorkbenchProvider>
+      </WebSocketProvider>
+    </ThemeProvider>
   )
 }
 
