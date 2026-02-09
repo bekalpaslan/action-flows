@@ -1,0 +1,587 @@
+/* ============================================================================
+   ActionFlows Dashboard — Design Token Usage Guide
+
+   This file contains examples and guidelines for using the Apple-style
+   design token system. Copy these patterns into your component styles.
+
+   NOTE: This is a reference guide only. Do not import this file directly.
+   ============================================================================ */
+
+/* ==========================================================================
+   PANEL STYLING EXAMPLES
+   ========================================================================== */
+
+/* Standard Panel — Default Apple-style panel */
+.example-panel-standard {
+  background: var(--panel-bg-base);
+  border: var(--panel-border-default);
+  border-radius: var(--panel-radius-md);
+  box-shadow: var(--panel-glow-default);
+  padding: var(--space-4);
+}
+
+/* Elevated Panel — For panels that need more prominence */
+.example-panel-elevated {
+  background: var(--panel-bg-elevated);
+  border: var(--panel-border-strong);
+  border-radius: var(--panel-radius-lg);
+  box-shadow: var(--panel-glow-hover);
+  padding: var(--space-6);
+}
+
+/* Panel with Header — Two-tone panel with distinct header */
+.example-panel-with-header {
+  background: var(--panel-bg-base);
+  border: var(--panel-border-default);
+  border-radius: var(--panel-radius-md);
+  box-shadow: var(--panel-glow-default);
+}
+
+.example-panel-with-header__header {
+  background: var(--panel-header-bg);
+  border-bottom: var(--panel-header-border);
+  padding: var(--space-4) var(--space-6);
+  color: var(--panel-header-text-color);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-base);
+}
+
+.example-panel-with-header__body {
+  padding: var(--space-6);
+  color: var(--text-primary);
+}
+
+/* Glass Panel — Frosted glass effect with backdrop blur */
+.example-panel-glass {
+  background: var(--glass-bg-medium);
+  backdrop-filter: var(--glass-blur-md);
+  -webkit-backdrop-filter: var(--glass-blur-md);
+  border: var(--glass-border-default);
+  border-radius: var(--panel-radius-md);
+  box-shadow: var(--panel-glow-default);
+  padding: var(--space-6);
+}
+
+/* ==========================================================================
+   BUTTON STYLING EXAMPLES
+   ========================================================================== */
+
+/* Primary Button — Main call-to-action */
+.example-button-primary {
+  background: var(--btn-bg-primary);
+  color: var(--btn-text-primary);
+  border: var(--btn-border-none);
+  border-radius: var(--btn-radius-md);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  transition: var(--transition-colors);
+  cursor: pointer;
+}
+
+.example-button-primary:hover {
+  background: var(--btn-hover-primary);
+  box-shadow: var(--btn-glow-hover);
+}
+
+.example-button-primary:active {
+  background: var(--btn-active-primary);
+}
+
+/* Secondary Button — Less prominent action */
+.example-button-secondary {
+  background: var(--btn-bg-secondary);
+  color: var(--btn-text-secondary);
+  border: var(--btn-border-default);
+  border-radius: var(--btn-radius-md);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  transition: var(--transition-colors);
+  cursor: pointer;
+}
+
+.example-button-secondary:hover {
+  background: var(--btn-hover-secondary);
+  border-color: var(--btn-border-color-focus);
+}
+
+/* Ghost Button — Minimal transparent button */
+.example-button-ghost {
+  background: var(--btn-bg-tertiary);
+  color: var(--btn-text-tertiary);
+  border: var(--btn-border-none);
+  border-radius: var(--btn-radius-md);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  transition: var(--transition-colors);
+  cursor: pointer;
+}
+
+.example-button-ghost:hover {
+  background: var(--btn-hover-tertiary);
+}
+
+/* Danger Button — Destructive action */
+.example-button-danger {
+  background: var(--btn-bg-danger);
+  color: var(--btn-text-primary);
+  border: var(--btn-border-none);
+  border-radius: var(--btn-radius-md);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  transition: var(--transition-colors);
+  cursor: pointer;
+}
+
+.example-button-danger:hover {
+  background: var(--btn-hover-danger);
+  box-shadow: var(--glow-spread-md) var(--glow-color-error);
+}
+
+/* Small Button */
+.example-button-small {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  border-radius: var(--btn-radius-sm);
+}
+
+/* Large Button */
+.example-button-large {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-lg);
+  border-radius: var(--btn-radius-lg);
+}
+
+/* Pill Button — Rounded ends */
+.example-button-pill {
+  border-radius: var(--btn-radius-pill);
+}
+
+/* ==========================================================================
+   INPUT STYLING EXAMPLES
+   ========================================================================== */
+
+/* Standard Input — Text input, textarea, etc. */
+.example-input-standard {
+  background: var(--input-bg-default);
+  color: var(--input-text-color);
+  border: var(--input-border-default);
+  border-radius: var(--input-radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  font-family: var(--font-sans);
+  transition: var(--transition-colors);
+  outline: none;
+}
+
+.example-input-standard::placeholder {
+  color: var(--input-placeholder-color);
+}
+
+.example-input-standard:hover {
+  background: var(--input-bg-hover);
+  border: var(--input-border-hover);
+}
+
+.example-input-standard:focus {
+  background: var(--input-bg-focus);
+  border: var(--input-border-focus);
+  box-shadow: var(--input-glow-focus);
+}
+
+/* Input with Error State */
+.example-input-error {
+  border: var(--input-border-error);
+  box-shadow: var(--input-glow-error);
+}
+
+/* Search Input — Input with icon */
+.example-input-search {
+  background: var(--input-bg-default);
+  border: var(--input-border-default);
+  border-radius: var(--input-radius-lg);
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-10);
+  font-size: var(--text-base);
+  transition: var(--transition-colors);
+}
+
+/* Select / Dropdown */
+.example-select {
+  background: var(--input-bg-default);
+  color: var(--input-text-color);
+  border: var(--input-border-default);
+  border-radius: var(--input-radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+
+/* ==========================================================================
+   HEADER & NAVIGATION EXAMPLES
+   ========================================================================== */
+
+/* App Header — Main application header */
+.example-header {
+  background: var(--header-bg-default);
+  border-bottom: var(--header-border-bottom);
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Translucent Header — With backdrop blur */
+.example-header-translucent {
+  background: var(--header-bg-translucent);
+  backdrop-filter: var(--glass-blur-lg);
+  -webkit-backdrop-filter: var(--glass-blur-lg);
+  border-bottom: var(--header-border-bottom);
+  padding: var(--space-4) var(--space-6);
+}
+
+/* Navigation Item */
+.example-nav-item {
+  background: var(--nav-item-bg-default);
+  color: var(--nav-item-text-default);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  transition: var(--transition-colors);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.example-nav-item:hover {
+  background: var(--nav-item-bg-hover);
+  color: var(--nav-item-text-hover);
+}
+
+.example-nav-item--active {
+  background: var(--nav-item-bg-active);
+  color: var(--nav-item-text-active);
+}
+
+/* ==========================================================================
+   STATUS INDICATOR EXAMPLES
+   ========================================================================== */
+
+/* Success Badge */
+.example-badge-success {
+  background: var(--status-success-bg);
+  color: var(--status-success-text);
+  border: 1px solid var(--status-success-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Warning Badge */
+.example-badge-warning {
+  background: var(--status-warning-bg);
+  color: var(--status-warning-text);
+  border: 1px solid var(--status-warning-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+}
+
+/* Error Badge */
+.example-badge-error {
+  background: var(--status-error-bg);
+  color: var(--status-error-text);
+  border: 1px solid var(--status-error-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+}
+
+/* Info Badge */
+.example-badge-info {
+  background: var(--status-info-bg);
+  color: var(--status-info-text);
+  border: 1px solid var(--status-info-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+}
+
+/* ==========================================================================
+   CARD EXAMPLES
+   ========================================================================== */
+
+/* Standard Card */
+.example-card {
+  background: var(--panel-bg-base);
+  border: var(--panel-border-default);
+  border-radius: var(--panel-radius-md);
+  box-shadow: var(--panel-glow-default);
+  padding: var(--space-6);
+  transition: var(--transition-all);
+}
+
+.example-card:hover {
+  box-shadow: var(--panel-glow-hover);
+  transform: translateY(-1px);
+}
+
+/* Interactive Card — Clickable */
+.example-card-interactive {
+  background: var(--panel-bg-base);
+  border: var(--panel-border-default);
+  border-radius: var(--panel-radius-md);
+  box-shadow: var(--panel-glow-default);
+  padding: var(--space-6);
+  cursor: pointer;
+  transition: var(--transition-all);
+}
+
+.example-card-interactive:hover {
+  background: var(--panel-bg-elevated);
+  border-color: var(--panel-border-color-accent);
+  box-shadow: var(--panel-glow-accent);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   MODAL & OVERLAY EXAMPLES
+   ========================================================================== */
+
+/* Modal Backdrop */
+.example-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal-backdrop);
+}
+
+/* Modal Content */
+.example-modal {
+  background: var(--panel-bg-elevated);
+  border: var(--panel-border-strong);
+  border-radius: var(--panel-radius-xl);
+  box-shadow: var(--shadow-2xl);
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: var(--z-modal);
+}
+
+.example-modal__header {
+  background: var(--panel-header-bg);
+  border-bottom: var(--panel-header-border);
+  padding: var(--space-5) var(--space-6);
+}
+
+.example-modal__body {
+  padding: var(--space-6);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.example-modal__footer {
+  border-top: var(--panel-header-border);
+  padding: var(--space-5) var(--space-6);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+/* ==========================================================================
+   UTILITY CLASS EXAMPLES
+   ========================================================================== */
+
+/* Typography Utilities */
+.example-text-heading-1 {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+}
+
+.example-text-heading-2 {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+}
+
+.example-text-body {
+  font-size: var(--text-base);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+}
+
+.example-text-small {
+  font-size: var(--text-sm);
+  font-weight: var(--font-normal);
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+.example-text-muted {
+  color: var(--text-tertiary);
+}
+
+/* Spacing Utilities */
+.example-spacing-stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.example-spacing-stack-md {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.example-spacing-stack-lg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.example-spacing-inline-sm {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.example-spacing-inline-md {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.example-spacing-inline-lg {
+  display: flex;
+  gap: var(--space-6);
+}
+
+/* ==========================================================================
+   GLOW EFFECT EXAMPLES
+   ========================================================================== */
+
+/* Element with Default Glow */
+.example-glow-default {
+  box-shadow: var(--glow-spread-md) var(--glow-color-default);
+}
+
+/* Element with Accent Glow */
+.example-glow-accent {
+  box-shadow: var(--glow-spread-md) var(--glow-color-accent);
+}
+
+/* Element with Success Glow */
+.example-glow-success {
+  box-shadow: var(--glow-spread-md) var(--glow-color-success);
+}
+
+/* Interactive Glow — Changes on hover */
+.example-glow-interactive {
+  box-shadow: var(--glow-spread-sm) var(--glow-color-default);
+  transition: box-shadow var(--duration-normal) var(--ease-in-out);
+}
+
+.example-glow-interactive:hover {
+  box-shadow: var(--glow-spread-lg) var(--glow-color-accent);
+}
+
+/* ==========================================================================
+   BEST PRACTICES
+   ========================================================================== */
+
+/*
+  1. CONSISTENCY
+     - Always use design tokens instead of hard-coded values
+     - Maintain consistent spacing using the --space-* scale
+     - Use the radius scale for all border-radius values
+
+  2. TRANSPARENCY & LAYERING
+     - Use semi-transparent backgrounds (--panel-bg-*) for depth
+     - Layer elements with appropriate z-index values (--z-*)
+     - Apply subtle glows for visual separation
+
+  3. BORDERS & GLOWS
+     - Keep borders thin (1px) with subtle transparency
+     - Combine borders with gentle box-shadow glows
+     - Use stronger glows for focus/hover states
+
+  4. GLASS EFFECTS
+     - Apply backdrop-filter for frosted glass
+     - Use with semi-transparent backgrounds
+     - Include -webkit-backdrop-filter for Safari
+
+  5. TRANSITIONS
+     - Apply transitions to interactive elements
+     - Use --transition-* tokens for consistency
+     - Consider performance (avoid transitioning expensive properties)
+
+  6. ACCESSIBILITY
+     - Ensure sufficient color contrast
+     - Provide focus indicators (--panel-glow-focus, --btn-glow-focus)
+     - Test with reduced motion preferences
+
+  7. RESPONSIVE DESIGN
+     - Scale spacing and typography appropriately
+     - Consider touch targets on mobile (min 44x44px)
+     - Test glass effects on various backgrounds
+
+  8. PERFORMANCE
+     - Minimize backdrop-filter usage (expensive)
+     - Use transform for animations instead of top/left
+     - Consider will-change for frequently animated elements
+*/
+
+/* ==========================================================================
+   MIGRATION FROM LEGACY TOKENS
+   ========================================================================== */
+
+/*
+  If you're updating existing components, here's a migration guide:
+
+  OLD: background: var(--color-bg-primary);
+  NEW: background: var(--panel-bg-base);
+
+  OLD: border: 1px solid var(--color-border);
+  NEW: border: var(--panel-border-default);
+
+  OLD: border-radius: 8px;
+  NEW: border-radius: var(--panel-radius-md);
+
+  OLD: box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  NEW: box-shadow: var(--panel-glow-default);
+
+  OLD: padding: 16px;
+  NEW: padding: var(--space-4);
+
+  OLD: font-size: 14px;
+  NEW: font-size: var(--text-base);
+
+  OLD: color: #e0e0e0;
+  NEW: color: var(--text-primary);
+
+  OLD: --color-accent (purple)
+  NEW: var(--system-blue) or var(--system-purple)
+
+  Note: Legacy --color-* tokens still work for backward compatibility!
+*/

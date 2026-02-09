@@ -1,0 +1,432 @@
+/* ============================================================================
+   ActionFlows Dashboard — Apple-Style Design Token System
+
+   A comprehensive design token system inspired by Apple's dark mode material
+   design language, featuring deep layered blacks, subtle transparency, thin
+   borders with gentle glows, and a frosted glass aesthetic.
+   ============================================================================ */
+
+:root {
+  /* ==========================================================================
+     Color Palette — Apple Dark Mode Foundation
+     ========================================================================== */
+
+  /* Base Application Colors */
+  --app-bg-base: #000000;              /* True black foundation */
+  --app-bg-primary: #1c1c1e;           /* Primary app background */
+  --app-bg-secondary: #2c2c2e;         /* Secondary surfaces */
+  --app-bg-tertiary: #3a3a3c;          /* Elevated surfaces */
+  --app-bg-quaternary: #48484a;        /* Highest elevation */
+
+  /* Text Colors */
+  --text-primary: #ffffff;             /* Primary text */
+  --text-secondary: #98989d;           /* Secondary text */
+  --text-tertiary: #636366;            /* Tertiary/muted text */
+  --text-quaternary: #48484a;          /* Disabled/placeholder text */
+
+  /* Separator & Border Base */
+  --separator-base: rgba(84, 84, 88, 0.65);
+  --separator-opaque: #38383a;
+
+  /* System Colors — Apple Palette */
+  --system-blue: #0a84ff;
+  --system-purple: #bf5af2;
+  --system-pink: #ff375f;
+  --system-red: #ff453a;
+  --system-orange: #ff9f0a;
+  --system-yellow: #ffd60a;
+  --system-green: #32d74b;
+  --system-teal: #64d2ff;
+  --system-indigo: #5e5ce6;
+
+  /* Fill Colors — Apple's translucent fills */
+  --fill-primary: rgba(120, 120, 128, 0.36);
+  --fill-secondary: rgba(120, 120, 128, 0.32);
+  --fill-tertiary: rgba(118, 118, 128, 0.24);
+  --fill-quaternary: rgba(118, 118, 128, 0.18);
+
+  /* ==========================================================================
+     Panel Token System
+     ========================================================================== */
+
+  /* Panel Backgrounds — Layered with subtle transparency */
+  --panel-bg-base: rgba(28, 28, 30, 0.95);         /* Standard panel */
+  --panel-bg-elevated: rgba(44, 44, 46, 0.92);     /* Elevated panel */
+  --panel-bg-raised: rgba(58, 58, 60, 0.90);       /* Highest panels */
+  --panel-bg-inset: rgba(0, 0, 0, 0.85);           /* Inset/recessed areas */
+
+  /* Panel Borders — Thin with subtle white tint */
+  --panel-border-default: 1px solid rgba(255, 255, 255, 0.06);
+  --panel-border-subtle: 1px solid rgba(255, 255, 255, 0.04);
+  --panel-border-strong: 1px solid rgba(255, 255, 255, 0.10);
+  --panel-border-accent: 1px solid rgba(10, 132, 255, 0.25);
+
+  /* Panel Border Colors (for use in custom borders) */
+  --panel-border-color-default: rgba(255, 255, 255, 0.06);
+  --panel-border-color-subtle: rgba(255, 255, 255, 0.04);
+  --panel-border-color-strong: rgba(255, 255, 255, 0.10);
+  --panel-border-color-accent: rgba(10, 132, 255, 0.25);
+
+  /* Panel Radius Scale */
+  --panel-radius-sm: 6px;      /* Small panels/cards */
+  --panel-radius-md: 10px;     /* Standard panels */
+  --panel-radius-lg: 14px;     /* Large panels/modals */
+  --panel-radius-xl: 18px;     /* Extra large containers */
+
+  /* Panel Glow — Subtle border illumination */
+  --panel-glow-default: 0 0 3px rgba(255, 255, 255, 0.08);
+  --panel-glow-accent: 0 0 3px rgba(10, 132, 255, 0.15);
+  --panel-glow-hover: 0 0 4px rgba(255, 255, 255, 0.12);
+  --panel-glow-focus: 0 0 6px rgba(10, 132, 255, 0.25);
+
+  /* Panel Header — Distinct header area */
+  --panel-header-bg: rgba(255, 255, 255, 0.03);
+  --panel-header-border: 1px solid rgba(255, 255, 255, 0.06);
+  --panel-header-text-color: var(--text-primary);
+  --panel-header-secondary-color: var(--text-secondary);
+
+  /* ==========================================================================
+     Button Token System
+     ========================================================================== */
+
+  /* Button Backgrounds */
+  --btn-bg-primary: rgba(10, 132, 255, 0.95);      /* Primary action */
+  --btn-bg-secondary: rgba(120, 120, 128, 0.36);   /* Secondary action */
+  --btn-bg-tertiary: rgba(255, 255, 255, 0.08);    /* Tertiary/ghost */
+  --btn-bg-danger: rgba(255, 69, 58, 0.95);        /* Destructive action */
+
+  /* Button Hover States */
+  --btn-hover-primary: rgba(10, 132, 255, 1);
+  --btn-hover-secondary: rgba(120, 120, 128, 0.42);
+  --btn-hover-tertiary: rgba(255, 255, 255, 0.12);
+  --btn-hover-danger: rgba(255, 69, 58, 1);
+
+  /* Button Active/Pressed States */
+  --btn-active-primary: rgba(8, 106, 204, 0.95);
+  --btn-active-secondary: rgba(120, 120, 128, 0.48);
+  --btn-active-tertiary: rgba(255, 255, 255, 0.16);
+  --btn-active-danger: rgba(204, 55, 46, 0.95);
+
+  /* Button Borders */
+  --btn-border-default: 1px solid rgba(255, 255, 255, 0.06);
+  --btn-border-focus: 1px solid rgba(10, 132, 255, 0.5);
+  --btn-border-none: none;
+
+  /* Button Border Colors */
+  --btn-border-color-default: rgba(255, 255, 255, 0.06);
+  --btn-border-color-focus: rgba(10, 132, 255, 0.5);
+
+  /* Button Radius */
+  --btn-radius-sm: 6px;        /* Small buttons */
+  --btn-radius-md: 8px;        /* Standard buttons */
+  --btn-radius-lg: 10px;       /* Large buttons */
+  --btn-radius-pill: 999px;    /* Pill-shaped buttons */
+
+  /* Button Glow */
+  --btn-glow-default: 0 0 2px rgba(255, 255, 255, 0.1);
+  --btn-glow-hover: 0 0 4px rgba(10, 132, 255, 0.2);
+  --btn-glow-focus: 0 0 6px rgba(10, 132, 255, 0.35);
+
+  /* Button Text Colors */
+  --btn-text-primary: #ffffff;
+  --btn-text-secondary: var(--text-primary);
+  --btn-text-tertiary: var(--text-primary);
+  --btn-text-disabled: var(--text-quaternary);
+
+  /* ==========================================================================
+     Input Token System
+     ========================================================================== */
+
+  /* Input Backgrounds */
+  --input-bg-default: rgba(118, 118, 128, 0.24);
+  --input-bg-hover: rgba(118, 118, 128, 0.28);
+  --input-bg-focus: rgba(118, 118, 128, 0.32);
+  --input-bg-disabled: rgba(118, 118, 128, 0.12);
+
+  /* Input Borders */
+  --input-border-default: 1px solid rgba(255, 255, 255, 0.06);
+  --input-border-hover: 1px solid rgba(255, 255, 255, 0.10);
+  --input-border-focus: 1px solid rgba(10, 132, 255, 0.5);
+  --input-border-error: 1px solid rgba(255, 69, 58, 0.5);
+
+  /* Input Border Colors */
+  --input-border-color-default: rgba(255, 255, 255, 0.06);
+  --input-border-color-hover: rgba(255, 255, 255, 0.10);
+  --input-border-color-focus: rgba(10, 132, 255, 0.5);
+  --input-border-color-error: rgba(255, 69, 58, 0.5);
+
+  /* Input Radius */
+  --input-radius-sm: 6px;      /* Small inputs */
+  --input-radius-md: 8px;      /* Standard inputs */
+  --input-radius-lg: 10px;     /* Large inputs */
+
+  /* Input Glow */
+  --input-glow-default: 0 0 2px rgba(255, 255, 255, 0.08);
+  --input-glow-focus: 0 0 6px rgba(10, 132, 255, 0.25);
+  --input-glow-error: 0 0 4px rgba(255, 69, 58, 0.25);
+
+  /* Input Text */
+  --input-text-color: var(--text-primary);
+  --input-placeholder-color: var(--text-tertiary);
+
+  /* ==========================================================================
+     Header & Navigation Token System
+     ========================================================================== */
+
+  /* Header Backgrounds */
+  --header-bg-default: rgba(28, 28, 30, 0.95);
+  --header-bg-translucent: rgba(28, 28, 30, 0.85);
+  --header-bg-glass: rgba(28, 28, 30, 0.75);
+
+  /* Header Borders */
+  --header-border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  --header-border-color: rgba(255, 255, 255, 0.06);
+
+  /* Header Text */
+  --header-text-primary: var(--text-primary);
+  --header-text-secondary: var(--text-secondary);
+
+  /* Navigation Colors */
+  --nav-item-bg-default: transparent;
+  --nav-item-bg-hover: rgba(255, 255, 255, 0.08);
+  --nav-item-bg-active: rgba(10, 132, 255, 0.15);
+  --nav-item-text-default: var(--text-secondary);
+  --nav-item-text-hover: var(--text-primary);
+  --nav-item-text-active: var(--system-blue);
+
+  /* ==========================================================================
+     Glass Effect Token System
+     ========================================================================== */
+
+  /* Frosted Glass Backgrounds */
+  --glass-bg-light: rgba(255, 255, 255, 0.08);
+  --glass-bg-medium: rgba(255, 255, 255, 0.05);
+  --glass-bg-dark: rgba(0, 0, 0, 0.15);
+
+  /* Glass Blur Values */
+  --glass-blur-sm: blur(8px);
+  --glass-blur-md: blur(16px);
+  --glass-blur-lg: blur(24px);
+  --glass-blur-xl: blur(40px);
+
+  /* Glass Borders */
+  --glass-border-default: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-border-subtle: 1px solid rgba(255, 255, 255, 0.04);
+  --glass-border-strong: 1px solid rgba(255, 255, 255, 0.12);
+
+  /* Glass Border Colors */
+  --glass-border-color-default: rgba(255, 255, 255, 0.08);
+  --glass-border-color-subtle: rgba(255, 255, 255, 0.04);
+  --glass-border-color-strong: rgba(255, 255, 255, 0.12);
+
+  /* ==========================================================================
+     Glow & Illumination Token System
+     ========================================================================== */
+
+  /* Glow Colors */
+  --glow-color-default: rgba(255, 255, 255, 0.15);
+  --glow-color-accent: rgba(10, 132, 255, 0.25);
+  --glow-color-success: rgba(50, 215, 75, 0.25);
+  --glow-color-warning: rgba(255, 159, 10, 0.25);
+  --glow-color-error: rgba(255, 69, 58, 0.25);
+  --glow-color-purple: rgba(191, 90, 242, 0.25);
+
+  /* Glow Spread Values */
+  --glow-spread-sm: 0 0 2px;
+  --glow-spread-md: 0 0 4px;
+  --glow-spread-lg: 0 0 6px;
+  --glow-spread-xl: 0 0 10px;
+
+  /* ==========================================================================
+     Border Radius Scale
+     ========================================================================== */
+
+  --radius-xs: 4px;     /* Tiny elements (badges, dots) */
+  --radius-sm: 6px;     /* Small elements (tags, small cards) */
+  --radius-md: 8px;     /* Standard elements (buttons, inputs) */
+  --radius-lg: 10px;    /* Large elements (panels, cards) */
+  --radius-xl: 14px;    /* Extra large (modals, drawers) */
+  --radius-2xl: 18px;   /* Huge (full-screen panels) */
+  --radius-3xl: 24px;   /* Massive (hero cards) */
+  --radius-full: 9999px; /* Circular/pill-shaped */
+
+  /* ==========================================================================
+     Typography Scale — Apple System
+     ========================================================================== */
+
+  /* Font Families */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+               "Roboto", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Consolas", "Liberation Mono",
+               "Courier New", monospace;
+
+  /* Font Sizes */
+  --text-xs: 11px;      /* Fine print */
+  --text-sm: 13px;      /* Small text */
+  --text-base: 15px;    /* Body text */
+  --text-lg: 17px;      /* Large body */
+  --text-xl: 20px;      /* Subheadings */
+  --text-2xl: 24px;     /* Headings */
+  --text-3xl: 28px;     /* Large headings */
+  --text-4xl: 34px;     /* Display */
+  --text-5xl: 40px;     /* Large display */
+  --text-6xl: 48px;     /* Hero display */
+
+  /* Font Weights */
+  --font-thin: 200;
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 1.75;
+
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* ==========================================================================
+     Spacing Scale — 4px Base System
+     ========================================================================== */
+
+  --space-0: 0;         /* 0px */
+  --space-px: 1px;      /* 1px */
+  --space-0-5: 2px;     /* 2px */
+  --space-1: 4px;       /* 4px */
+  --space-1-5: 6px;     /* 6px */
+  --space-2: 8px;       /* 8px */
+  --space-2-5: 10px;    /* 10px */
+  --space-3: 12px;      /* 12px */
+  --space-3-5: 14px;    /* 14px */
+  --space-4: 16px;      /* 16px */
+  --space-5: 20px;      /* 20px */
+  --space-6: 24px;      /* 24px */
+  --space-7: 28px;      /* 28px */
+  --space-8: 32px;      /* 32px */
+  --space-9: 36px;      /* 36px */
+  --space-10: 40px;     /* 40px */
+  --space-11: 44px;     /* 44px */
+  --space-12: 48px;     /* 48px */
+  --space-14: 56px;     /* 56px */
+  --space-16: 64px;     /* 64px */
+  --space-20: 80px;     /* 80px */
+  --space-24: 96px;     /* 96px */
+  --space-28: 112px;    /* 112px */
+  --space-32: 128px;    /* 128px */
+
+  /* ==========================================================================
+     Shadow System — Layered Depth
+     ========================================================================== */
+
+  /* Elevation Shadows */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5),
+               0 1px 2px -1px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.6),
+               0 2px 4px -2px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.7),
+               0 4px 6px -4px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.8),
+               0 8px 10px -6px rgba(0, 0, 0, 0.8);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+
+  /* Inner Shadows */
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+  --shadow-inner-lg: inset 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+
+  /* ==========================================================================
+     Z-Index Scale
+     ========================================================================== */
+
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-fixed: 1200;
+  --z-modal-backdrop: 1300;
+  --z-modal: 1400;
+  --z-popover: 1500;
+  --z-tooltip: 1600;
+  --z-notification: 1700;
+  --z-max: 9999;
+
+  /* ==========================================================================
+     Transition & Animation System
+     ========================================================================== */
+
+  /* Duration Scale */
+  --duration-instant: 75ms;
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 400ms;
+  --duration-slowest: 500ms;
+
+  /* Easing Functions */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* Common Transitions */
+  --transition-colors: color var(--duration-normal) var(--ease-in-out),
+                       background-color var(--duration-normal) var(--ease-in-out),
+                       border-color var(--duration-normal) var(--ease-in-out);
+  --transition-opacity: opacity var(--duration-fast) var(--ease-in-out);
+  --transition-transform: transform var(--duration-normal) var(--ease-apple);
+  --transition-all: all var(--duration-normal) var(--ease-in-out);
+
+  /* ==========================================================================
+     Status Color System
+     ========================================================================== */
+
+  /* Success States */
+  --status-success-bg: rgba(50, 215, 75, 0.15);
+  --status-success-border: rgba(50, 215, 75, 0.3);
+  --status-success-text: #32d74b;
+
+  /* Warning States */
+  --status-warning-bg: rgba(255, 159, 10, 0.15);
+  --status-warning-border: rgba(255, 159, 10, 0.3);
+  --status-warning-text: #ff9f0a;
+
+  /* Error States */
+  --status-error-bg: rgba(255, 69, 58, 0.15);
+  --status-error-border: rgba(255, 69, 58, 0.3);
+  --status-error-text: #ff453a;
+
+  /* Info States */
+  --status-info-bg: rgba(10, 132, 255, 0.15);
+  --status-info-border: rgba(10, 132, 255, 0.3);
+  --status-info-text: #0a84ff;
+
+  /* ==========================================================================
+     Opacity Scale
+     ========================================================================== */
+
+  --opacity-0: 0;
+  --opacity-5: 0.05;
+  --opacity-10: 0.1;
+  --opacity-20: 0.2;
+  --opacity-30: 0.3;
+  --opacity-40: 0.4;
+  --opacity-50: 0.5;
+  --opacity-60: 0.6;
+  --opacity-70: 0.7;
+  --opacity-80: 0.8;
+  --opacity-90: 0.9;
+  --opacity-95: 0.95;
+  --opacity-100: 1;
+}

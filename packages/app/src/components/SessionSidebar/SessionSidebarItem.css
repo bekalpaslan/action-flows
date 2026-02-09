@@ -7,30 +7,33 @@
 .session-sidebar-glow-wrapper {
   display: block;
   width: 100%;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
 }
 
 .session-sidebar-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  margin: 0 var(--space-2);
   background: transparent;
-  border: 1px solid transparent;
-  border-radius: 0.5rem;
+  border: var(--glass-border-default);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 150ms ease;
+  transition: var(--transition-all);
   position: relative;
   user-select: none;
+  box-shadow: var(--btn-glow-default);
 }
 
 .session-sidebar-item:hover {
-  background: rgba(224, 224, 224, 0.05);
-  border-color: rgba(187, 134, 252, 0.3);
+  background: var(--nav-item-bg-hover);
+  border-color: rgba(10, 132, 255, 0.3);
+  box-shadow: var(--panel-glow-hover);
 }
 
 .session-sidebar-item:focus {
-  outline: 2px solid #bb86fc;
+  outline: 2px solid var(--system-blue);
   outline-offset: 2px;
 }
 
@@ -40,12 +43,14 @@
 
 /* Active state */
 .session-sidebar-item.active {
-  background: rgba(187, 134, 252, 0.12);
-  border-color: #bb86fc;
+  background: var(--nav-item-bg-active);
+  border-color: var(--system-blue);
+  box-shadow: var(--panel-glow-accent);
 }
 
 .session-sidebar-item.active:hover {
-  background: rgba(187, 134, 252, 0.18);
+  background: rgba(10, 132, 255, 0.2);
+  box-shadow: var(--btn-glow-hover);
 }
 
 /* Status Indicator Dot */
@@ -54,48 +59,48 @@
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
-  transition: all 150ms ease;
+  transition: var(--transition-all);
 }
 
 /* Status Colors */
 .status-dot.status-in-progress {
-  background: #4caf50;
-  box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+  background: var(--system-green);
+  box-shadow: 0 0 8px var(--system-green);
   animation: pulse-glow 2s infinite;
 }
 
 .status-dot.status-completed {
-  background: #757575;
-  box-shadow: 0 0 4px rgba(117, 117, 117, 0.4);
+  background: var(--text-tertiary);
+  box-shadow: 0 0 4px rgba(99, 99, 102, 0.4);
 }
 
 .status-dot.status-failed {
-  background: #f44336;
-  box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
+  background: var(--system-red);
+  box-shadow: 0 0 8px var(--system-red);
   animation: pulse-glow-error 2s infinite;
 }
 
 .status-dot.status-idle {
-  background: #ffc107;
-  box-shadow: 0 0 4px rgba(255, 193, 7, 0.4);
+  background: var(--system-orange);
+  box-shadow: 0 0 4px var(--system-orange);
 }
 
 /* Status Glow Animations */
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+    box-shadow: 0 0 8px var(--system-green);
   }
   50% {
-    box-shadow: 0 0 16px rgba(76, 175, 80, 0.8);
+    box-shadow: 0 0 16px var(--system-green);
   }
 }
 
 @keyframes pulse-glow-error {
   0%, 100% {
-    box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
+    box-shadow: 0 0 8px var(--system-red);
   }
   50% {
-    box-shadow: 0 0 16px rgba(244, 67, 54, 0.8);
+    box-shadow: 0 0 16px var(--system-red);
   }
 }
 
@@ -103,44 +108,44 @@
 .session-info {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--space-1);
   flex: 1;
   min-width: 0;
 }
 
 /* Session Name */
 .session-name {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: #e0e0e0;
+  color: var(--text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: color 150ms ease;
+  transition: var(--transition-colors);
 }
 
 .session-sidebar-item:hover .session-name {
-  color: #f0f0f0;
+  color: var(--text-primary);
 }
 
 .session-sidebar-item.active .session-name {
-  color: #bb86fc;
+  color: var(--system-blue);
 }
 
 /* Session Time */
 .session-time {
-  font-size: 0.75rem;
-  color: #808080;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
   font-weight: 400;
-  transition: color 150ms ease;
+  transition: var(--transition-colors);
 }
 
 .session-sidebar-item:hover .session-time {
-  color: #909090;
+  color: var(--text-secondary);
 }
 
 .session-sidebar-item.active .session-time {
-  color: #a07acc;
+  color: rgba(10, 132, 255, 0.7);
 }
 
 /* Routing Badge */
@@ -148,49 +153,50 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.125rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.65rem;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.025em;
   flex-shrink: 0;
   border: 1px solid;
-  transition: all 150ms ease;
+  box-shadow: var(--btn-glow-default);
+  transition: var(--transition-all);
 }
 
 /* Confidence-based coloring */
 .routing-badge.confidence-high {
-  background: rgba(76, 175, 80, 0.15);
-  color: #66bb6a;
-  border-color: rgba(76, 175, 80, 0.4);
+  background: rgba(50, 215, 75, 0.15);
+  color: var(--system-green);
+  border-color: rgba(50, 215, 75, 0.4);
 }
 
 .routing-badge.confidence-medium {
-  background: rgba(255, 193, 7, 0.15);
-  color: #ffa726;
-  border-color: rgba(255, 193, 7, 0.4);
+  background: rgba(255, 159, 10, 0.15);
+  color: var(--system-orange);
+  border-color: rgba(255, 159, 10, 0.4);
 }
 
 .routing-badge.confidence-low {
-  background: rgba(158, 158, 158, 0.15);
-  color: #9e9e9e;
-  border-color: rgba(158, 158, 158, 0.4);
+  background: rgba(152, 152, 157, 0.15);
+  color: var(--text-secondary);
+  border-color: rgba(152, 152, 157, 0.4);
 }
 
 .session-sidebar-item:hover .routing-badge.confidence-high {
-  background: rgba(76, 175, 80, 0.2);
-  border-color: rgba(76, 175, 80, 0.6);
+  background: rgba(50, 215, 75, 0.2);
+  border-color: rgba(50, 215, 75, 0.6);
 }
 
 .session-sidebar-item:hover .routing-badge.confidence-medium {
-  background: rgba(255, 193, 7, 0.2);
-  border-color: rgba(255, 193, 7, 0.6);
+  background: rgba(255, 159, 10, 0.2);
+  border-color: rgba(255, 159, 10, 0.6);
 }
 
 .session-sidebar-item:hover .routing-badge.confidence-low {
-  background: rgba(158, 158, 158, 0.2);
-  border-color: rgba(158, 158, 158, 0.6);
+  background: rgba(152, 152, 157, 0.2);
+  border-color: rgba(152, 152, 157, 0.6);
 }
 
 /* Notification Badge */
@@ -200,30 +206,32 @@
   justify-content: center;
   min-width: 20px;
   height: 20px;
-  padding: 0 0.4rem;
-  background: #bb86fc;
-  color: #1e1e1e;
+  padding: 0 var(--space-2);
+  background: var(--system-purple);
+  color: var(--text-primary);
   border-radius: 10px;
-  font-size: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: var(--text-xs);
   font-weight: 600;
   flex-shrink: 0;
-  box-shadow: 0 0 12px rgba(187, 134, 252, 0.6);
+  box-shadow: 0 0 12px rgba(191, 90, 242, 0.6);
   animation: pulse-badge 2s infinite;
 }
 
 @keyframes pulse-badge {
   0%, 100% {
-    box-shadow: 0 0 12px rgba(187, 134, 252, 0.6);
+    box-shadow: 0 0 12px rgba(191, 90, 242, 0.6);
   }
   50% {
-    box-shadow: 0 0 18px rgba(187, 134, 252, 0.8);
+    box-shadow: 0 0 18px rgba(191, 90, 242, 0.8);
   }
 }
 
 /* Active state with notification */
 .session-sidebar-item.active .notification-badge {
-  background: #d0a8ff;
-  color: #1e1e1e;
+  background: var(--system-blue);
+  color: var(--text-primary);
+  box-shadow: 0 0 12px rgba(10, 132, 255, 0.6);
 }
 
 /* Responsive adjustments */
@@ -274,24 +282,24 @@
 /* Accessibility: High Contrast Mode */
 @media (prefers-contrast: high) {
   .session-sidebar-item {
-    border: 2px solid #606060;
+    border: 2px solid var(--text-tertiary);
   }
 
   .session-sidebar-item:hover {
-    border-color: #bb86fc;
+    border-color: var(--system-blue);
   }
 
   .session-sidebar-item.active {
-    border-color: #d0a8ff;
+    border-color: var(--system-blue);
     border-width: 3px;
   }
 
   .status-dot {
-    border: 2px solid #1e1e1e;
+    border: 2px solid var(--app-bg-primary);
   }
 
   .notification-badge {
-    border: 2px solid #1e1e1e;
+    border: 2px solid var(--app-bg-primary);
   }
 }
 

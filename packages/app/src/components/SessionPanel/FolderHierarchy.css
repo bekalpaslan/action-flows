@@ -3,8 +3,10 @@
 .folder-hierarchy {
   display: flex;
   flex-direction: column;
-  background: #1a1a1a;
-  border-bottom: 1px solid #333;
+  background: var(--panel-bg-base);
+  border-bottom: var(--panel-border-default);
+  box-shadow: var(--panel-glow-default);
+  border-radius: var(--panel-radius-sm);
   overflow: hidden;
 }
 
@@ -18,16 +20,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  background: #252525;
-  border-bottom: 1px solid #333;
+  background: var(--panel-header-bg);
+  border-bottom: var(--panel-border-default);
+  box-shadow: var(--panel-glow-default);
   flex-shrink: 0;
   cursor: pointer;
   user-select: none;
-  transition: background-color 0.15s ease;
+  transition: var(--transition-colors);
 }
 
 .folder-hierarchy__header:hover {
-  background-color: #2a2a2a;
+  background: var(--glass-bg-medium);
+  box-shadow: var(--panel-glow-hover);
 }
 
 .folder-hierarchy__collapse-toggle {
@@ -37,17 +41,17 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #888;
+  color: var(--text-secondary);
   padding: 4px;
-  transition: color 0.15s ease;
+  transition: var(--transition-colors);
 }
 
 .folder-hierarchy__collapse-toggle:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .folder-hierarchy__collapse-toggle .collapse-icon {
-  transition: transform 0.15s ease;
+  transition: var(--transition-all);
 }
 
 .folder-hierarchy__collapse-toggle .collapse-icon.collapsed {
@@ -56,9 +60,9 @@
 
 .folder-hierarchy__title {
   margin: 0;
-  font-size: 12px;
+  font-size: var(--text-xs);
   font-weight: 600;
-  color: #ccc;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -66,8 +70,9 @@
 /* Search */
 .folder-hierarchy__search {
   padding: 8px 12px;
-  background: #1a1a1a;
-  border-bottom: 1px solid #2a2a2a;
+  background: var(--panel-bg-base);
+  border-bottom: var(--panel-border-default);
+  box-shadow: var(--panel-glow-default);
   flex-shrink: 0;
 }
 
@@ -75,22 +80,24 @@
   width: 100%;
   height: 28px;
   padding: 4px 8px;
-  background: #2a2a2a;
-  border: 1px solid #404040;
-  border-radius: 4px;
-  color: #d4d4d4;
-  font-size: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--input-bg-default);
+  border: var(--input-border-default);
+  border-radius: var(--input-radius-md);
+  box-shadow: var(--input-glow-default);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-family: var(--font-sans);
   outline: none;
-  transition: border-color 150ms ease-in;
+  transition: var(--transition-all);
 }
 
 .folder-hierarchy__search-input:focus {
-  border-color: #4a9eff;
+  border: var(--input-border-focus);
+  box-shadow: var(--input-glow-focus);
 }
 
 .folder-hierarchy__search-input::placeholder {
-  color: #808080;
+  color: var(--text-tertiary);
 }
 
 /* Tree view */
@@ -107,16 +114,17 @@
 }
 
 .folder-hierarchy__tree::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: var(--panel-bg-base);
 }
 
 .folder-hierarchy__tree::-webkit-scrollbar-thumb {
-  background: #404040;
-  border-radius: 4px;
+  background: var(--separator-base);
+  border-radius: var(--panel-radius-sm);
 }
 
 .folder-hierarchy__tree::-webkit-scrollbar-thumb:hover {
-  background: #505050;
+  background: var(--glass-bg-medium);
+  box-shadow: var(--panel-glow-hover);
 }
 
 /* List and items */
@@ -138,10 +146,10 @@
   gap: 6px;
   padding: 4px 8px;
   cursor: pointer;
-  font-size: 13px;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  color: #d4d4d4;
-  transition: background-color 150ms ease-in;
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  transition: var(--transition-colors);
   user-select: none;
   position: relative;
 }
@@ -154,16 +162,18 @@
   top: 0;
   bottom: 0;
   width: 1px;
-  background: #2a2a2a;
+  background: var(--separator-base);
 }
 
 .folder-hierarchy__node:hover {
-  background: #2a2a2a;
+  background: var(--btn-bg-tertiary);
+  box-shadow: var(--panel-glow-hover);
 }
 
 .folder-hierarchy__node.selected {
-  background: #1a4d7a;
-  color: #ffffff;
+  background: var(--btn-bg-primary);
+  color: var(--text-primary);
+  box-shadow: var(--panel-glow-accent);
 }
 
 /* Chevron for directories */
@@ -172,13 +182,13 @@
   width: 14px;
   height: 14px;
   font-size: 10px;
-  color: #808080;
-  transition: transform 150ms ease-in, color 150ms ease-in;
+  color: var(--text-secondary);
+  transition: var(--transition-all);
   flex-shrink: 0;
 }
 
 .folder-hierarchy__node:hover .folder-hierarchy__chevron {
-  color: #d4d4d4;
+  color: var(--text-primary);
 }
 
 .folder-hierarchy__node.directory .folder-hierarchy__chevron {
@@ -225,23 +235,23 @@
   display: block;
   padding: 16px;
   text-align: center;
-  color: #808080;
-  font-size: 12px;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
 }
 
 /* Hover effects for directory chevron rotation */
 .folder-hierarchy__node.directory:hover .folder-hierarchy__chevron {
-  color: #4a9eff;
+  color: var(--btn-bg-primary);
 }
 
 /* Accessibility: Focus styles */
 .folder-hierarchy__node:focus-visible {
-  outline: 2px solid #4a9eff;
+  outline: 2px solid var(--btn-bg-primary);
   outline-offset: -2px;
 }
 
 .folder-hierarchy__search-input:focus-visible {
-  outline: 2px solid #4a9eff;
+  outline: 2px solid var(--btn-bg-primary);
   outline-offset: -2px;
 }
 

@@ -1,3 +1,8 @@
 /* Theme System - ActionFlows Dashboard */
+
+/* Import design tokens first (foundation) */
+@import '../design-tokens.css';
+
+/* Import theme-specific overrides */
 @import './dark.css';
 @import './light.css';
