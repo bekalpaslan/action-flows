@@ -41,6 +41,7 @@ export function SessionCliPanel({
   const terminalRef = useRef<HTMLDivElement>(null);
   const terminalInstanceRef = useRef<Terminal | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
+  const lineBufferRef = useRef('');
   const [commandInput, setCommandInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [cliStarted, setCliStarted] = useState(false);
@@ -213,24 +214,89 @@ export function SessionCliPanel({
         setCliStarted(true);
       }
 
-      // Handle CLI output events
+      // Handle CLI output events — parse stream-json into clean terminal output
       if (event.type === 'claude-cli:output') {
         const outputEvent = event as ClaudeCliOutputEvent;
         const terminal = terminalInstanceRef.current;
         if (!terminal) return;
 
-        // Write output to terminal
-        const output = outputEvent.output;
+        const raw = outputEvent.output;
         const isError = outputEvent.stream === 'stderr';
 
-        // Color stderr output in red
+        // stderr: show as-is in red
         if (isError) {
-          terminal.write('\x1b[31m' + output + '\x1b[0m');
-        } else {
-          terminal.write(output);
+          terminal.write('\x1b[31m' + raw + '\x1b[0m');
+          terminal.scrollToBottom();
+          return;
         }
 
-        // Auto-scroll to bottom
+        // stdout: parse stream-json JSONL (may contain partial lines across chunks)
+        const buffered = lineBufferRef.current + raw;
+        const lines = buffered.split('\n');
+        // Last element is either empty (complete line) or partial (incomplete)
+        lineBufferRef.current = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+
+          try {
+            const msg = JSON.parse(trimmed);
+
+            switch (msg.type) {
+              case 'system':
+                if (msg.subtype === 'init') {
+                  terminal.writeln(`\x1b[90m[Claude initialized — ${(msg.tools || []).length} tools available]\x1b[0m`);
+                }
+                break;
+
+              case 'stream_event': {
+                const ev = msg.event;
+                if (!ev) break;
+
+                // Text streaming — write each delta directly
+                if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta' && ev.delta.text) {
+                  terminal.write(ev.delta.text);
+                }
+                // Tool use start — show tool name
+                if (ev.type === 'content_block_start' && ev.content_block?.type === 'tool_use') {
+                  terminal.writeln('');
+                  terminal.write(`\x1b[1;33m[Tool: ${ev.content_block.name}]\x1b[0m `);
+                }
+                // Tool input delta — skip (noisy JSON fragments)
+                // Message stop — add newline after streamed text
+                if (ev.type === 'message_stop') {
+                  terminal.writeln('');
+                }
+                break;
+              }
+
+              case 'assistant':
+                // Full message — skip (redundant with stream deltas)
+                break;
+
+              case 'result':
+                terminal.writeln('');
+                if (msg.is_error) {
+                  terminal.writeln(`\x1b[1;31m[Error: ${msg.result || 'Unknown'}]\x1b[0m`);
+                } else {
+                  const cost = msg.total_cost_usd != null ? `$${msg.total_cost_usd.toFixed(4)}` : '';
+                  const dur = msg.duration_ms != null ? `${(msg.duration_ms / 1000).toFixed(1)}s` : '';
+                  const meta = [dur, cost].filter(Boolean).join(' | ');
+                  terminal.writeln(`\x1b[90m[${meta}]\x1b[0m`);
+                }
+                break;
+
+              default:
+                // Unknown type — skip silently
+                break;
+            }
+          } catch {
+            // Not valid JSON — write raw (fallback)
+            terminal.writeln(trimmed);
+          }
+        }
+
         terminal.scrollToBottom();
       }
 
