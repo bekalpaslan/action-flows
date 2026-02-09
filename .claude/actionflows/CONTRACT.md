@@ -159,7 +159,7 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 **Example:** ORCHESTRATOR.md § Session Start
 
 **Required Fields:**
-- Loaded configuration summary (project, departments, flows, actions, past executions)
+- Loaded configuration summary (project, contexts, flows, actions, past executions)
 
 **Note:** Currently NOT produced by orchestrator (internal read).
 

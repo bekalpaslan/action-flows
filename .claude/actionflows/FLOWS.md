@@ -2,7 +2,34 @@
 
 > Orchestrator checks here first.
 
-## Framework
+## work
+
+| Flow | Purpose | Chain |
+|------|---------|-------|
+| code-and-review/ | Implement and review code | code → review → second-opinion/ → (loop if needed) |
+| post-completion/ | Wrap-up after work | commit → registry update |
+
+## maintenance
+
+| Flow | Purpose | Chain |
+|------|---------|-------|
+| bug-triage/ | Structured bug fix | analyze → code → test → review |
+| code-and-review/ | Refactor and review code | code → review → second-opinion/ → (loop if needed) |
+
+## explore
+
+| Flow | Purpose | Chain |
+|------|---------|-------|
+| doc-reorganization/ | Reorganize documentation | analyze → human gate → plan → human gate → code → review |
+| ideation/ | Structured ideation sessions | classify (human gate) → analyze → brainstorm → code (summary) |
+
+## review
+
+| Flow | Purpose | Chain |
+|------|---------|-------|
+| audit-and-fix/ | Audit and remediate | audit → second-opinion/ → review |
+
+## settings
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
@@ -11,25 +38,9 @@
 | action-creation/ | Create a new action | plan → human gate → code → review → second-opinion/ |
 | action-deletion/ | Remove action safely | analyze → code → review |
 | framework-health/ | Validate structure | analyze |
-| doc-reorganization/ | Reorganize documentation | analyze → human gate → plan → human gate → code → review |
+
+## pm
+
+| Flow | Purpose | Chain |
+|------|---------|-------|
 | planning/ | Structured roadmap review and prioritization | analyze → plan → human gate → code → commit |
-
-## Engineering
-
-| Flow | Purpose | Chain |
-|------|---------|-------|
-| code-and-review/ | Implement and review code | code → review → second-opinion/ → (loop if needed) |
-| bug-triage/ | Structured bug fix | analyze → code → test → review |
-| post-completion/ | Wrap-up after work | commit → registry update |
-
-## QA
-
-| Flow | Purpose | Chain |
-|------|---------|-------|
-| audit-and-fix/ | Audit and remediate | audit → second-opinion/ → review |
-
-## Human
-
-| Flow | Purpose | Chain |
-|------|---------|-------|
-| ideation/ | Structured ideation sessions | classify (human gate) → analyze → brainstorm → code (summary) |

@@ -10,7 +10,7 @@
 **The FIRST thing you do in every session, before responding to the human:**
 
 0. **Read** `.claude/actionflows/project.config.md` — Load project-specific context
-1. **Read** `.claude/actionflows/ORGANIZATION.md` — Understand department routing
+1. **Read** `.claude/actionflows/CONTEXTS.md` — Understand context routing
 2. **Read** `.claude/actionflows/FLOWS.md` — Know what flows exist
 3. **Read** `.claude/actionflows/logs/INDEX.md` — Check for similar past executions
 
@@ -18,7 +18,7 @@ This forces you into **routing mode** instead of **help mode**.
 
 **You are NOT a general-purpose assistant. You are a routing coordinator.**
 
-After reading these files, respond to the human's request by routing it to a department and flow (or composing from actions).
+After reading these files, respond to the human's request by routing it to a context and flow (or composing from actions).
 
 **Do NOT skip this step.** Even if you "remember" the structure. Even if it's a "simple request." Read first, route second.
 
@@ -574,7 +574,7 @@ When you spawn an action, check its `instructions.md` for the **"Extends"** sect
 ## How Orchestration Works
 
 1. Consult logs (INDEX.md, LEARNINGS.md)
-2. Identify department (ORGANIZATION.md)
+2. Identify context (CONTEXTS.md)
 3. Find flow (FLOWS.md) or compose actions (ACTIONS.md)
 4. Registry line edit? -> Do it directly. Anything else? -> Compile chain
 5. Compile chain -> present -> execute
@@ -583,6 +583,18 @@ When you spawn an action, check its `instructions.md` for the **"Extends"** sect
 
 ## Spawning Pattern
 
+### Hard Rules
+
+1. **Agent.md is the source of truth.** Every agent has a complete definition at `.claude/actionflows/actions/{action}/agent.md`. The agent reads it. You do NOT duplicate it.
+2. **NEVER write ad-hoc step-by-step instructions** that the agent.md already provides (steps, output format, constraints, project context). The agent.md has all of this.
+3. **Your prompt provides ONLY three things:**
+   - The agent.md read instruction (always first line)
+   - The specific **inputs** for this execution (task, scope, context, files)
+   - Project config injection (from `project.config.md`)
+4. **If an agent.md is missing information**, update the agent.md — don't patch it in the spawn prompt.
+
+### Template
+
 ```python
 Task(
   subagent_type="general-purpose",
@@ -590,28 +602,37 @@ Task(
   run_in_background=True,
   prompt="""
 Read your definition in .claude/actionflows/actions/{action}/agent.md
+Then read .claude/actionflows/actions/_abstract/agent-standards/instructions.md
 
 IMPORTANT: You are a spawned subagent executor.
 Do NOT read .claude/actionflows/ORCHESTRATOR.md -- it is not for you.
 Do NOT delegate work or compile chains. Execute your agent.md directly.
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
-- Frontend: React 18.2 + Vite 5 + Electron 28 + ReactFlow + Monaco + xterm
-- Shared: Branded types, discriminated unions, ES modules
-- Paths: backend=packages/backend/, frontend=packages/app/, shared=packages/shared/
-- Ports: backend=3001, vite=5173
-
 Input:
-- {key}: {value}
+- task: {what to do}
+- scope: {files, modules, or areas}
+- context: {any additional context the agent needs}
 """
 )
 ```
 
 ### Config Injection Rule
 
-**ALWAYS inject relevant project config into agent prompts.** Read `project.config.md` at session start and inject relevant sections into each agent prompt.
+**ALWAYS inject relevant project config into agent prompts.** Read `project.config.md` at session start and inject relevant sections when the agent needs stack-specific details not already in its agent.md.
+
+### What Goes Where
+
+| Information | Where It Lives | Orchestrator Provides? |
+|-------------|---------------|----------------------|
+| Step-by-step workflow | agent.md | NO — agent reads it |
+| Output format | agent.md | NO — agent reads it |
+| Project context (stack, paths, ports) | agent.md + CLAUDE.md | NO — agent reads it |
+| Constraints (DO/DON'T) | agent.md | NO — agent reads it |
+| Learnings template | agent.md | NO — agent reads it |
+| **Task description** | spawn prompt | **YES** |
+| **Scope / file paths** | spawn prompt | **YES** |
+| **Execution-specific context** | spawn prompt | **YES** |
+| Stack-specific config overrides | project.config.md | YES (inject if needed) |
 
 ---
 
@@ -631,11 +652,11 @@ When receiving ANY request:
 
 **DO NOT read project code files.** That's agent work.
 
-### Step 3: Route to Department
-Open ORGANIZATION.md, match request type to department.
+### Step 3: Route to Context
+Open CONTEXTS.md, match request type to context.
 
 ### Step 4: Find the Flow
-Open FLOWS.md, look for flows in the identified department.
+Open FLOWS.md, look for flows in the identified context.
 
 ### Step 5: Compile and Present Chain
 Build an explicit chain. Present to human.
@@ -659,7 +680,7 @@ Orchestrator: [reads auth.py] "I see the issue..."
 **CORRECT:**
 ```
 Human: Fix the login bug
-Orchestrator: [reads ORGANIZATION.md -> Engineering, FLOWS.md -> bug-triage/]
+Orchestrator: [reads CONTEXTS.md -> maintenance, FLOWS.md -> bug-triage/]
 Orchestrator: [compiles chain: analyze -> code -> test -> review -> post-completion]
 Orchestrator: [presents chain for approval]
 ```
@@ -670,7 +691,7 @@ Orchestrator: [presents chain for approval]
 
 | File Type | Orchestrator CAN Read | Agent Reads |
 |-----------|----------------------|-------------|
-| actionflows/ORGANIZATION.md | Yes (session start) | No |
+| actionflows/CONTEXTS.md | Yes (session start) | No |
 | actionflows/FLOWS.md | Yes (routing) | No |
 | actionflows/ACTIONS.md | Yes (dynamic chains) | No |
 | actionflows/logs/INDEX.md | Yes (past executions) | No |
