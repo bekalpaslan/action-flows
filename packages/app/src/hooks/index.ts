@@ -33,3 +33,6 @@ export type { UseButtonActionsResult } from './useButtonActions';
 
 export { useSessionSidebar } from './useSessionSidebar';
 export type { UseSessionSidebarResult } from './useSessionSidebar';
+
+export { useCommandPalette } from './useCommandPalette';
+export type { UseCommandPaletteResult } from './useCommandPalette';

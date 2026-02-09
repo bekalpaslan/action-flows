@@ -1,0 +1,71 @@
+.command-palette-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 48px;
+  border-bottom: 1px solid #404040;
+  padding: 0 16px;
+  gap: 12px;
+}
+
+.command-palette-input__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #808080;
+  width: 20px;
+  height: 20px;
+}
+
+.command-palette-input__field {
+  flex: 1;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  font-family: inherit;
+  color: #ffffff;
+  padding: 0;
+}
+
+.command-palette-input__field::placeholder {
+  color: #808080;
+}
+
+.command-palette-input__field:focus {
+  outline: none;
+}
+
+.command-palette-input__clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #808080;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.command-palette-input__clear:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.command-palette-input__clear:active {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(0.95);
+}
+
+.command-palette-input__clear:focus-visible {
+  outline: 2px solid #4a9eff;
+  outline-offset: 2px;
+}
