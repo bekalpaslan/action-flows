@@ -1,3 +1,4 @@
+import { useRef, useEffect, useState } from 'react';
 import { useSessionSidebar } from '../../hooks/useSessionSidebar';
 import { SessionSidebarItem } from './SessionSidebarItem';
 import type { SessionId } from '@afw/shared';
@@ -40,6 +41,31 @@ export function SessionSidebar({
     attachSession,
   } = useSessionSidebar(onAttachSession);
 
+  // Track animation state for slide-in/slide-out classes
+  const [animationClass, setAnimationClass] = useState<string>('');
+  const isFirstRender = useRef(true);
+  const prevExpanded = useRef(isExpanded);
+
+  // Update animation class when expand state changes
+  useEffect(() => {
+    // Skip animation on first render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      prevExpanded.current = isExpanded;
+      return;
+    }
+
+    // Only animate if state actually changed
+    if (prevExpanded.current !== isExpanded) {
+      if (isExpanded) {
+        setAnimationClass('sidebar-slide-in');
+      } else {
+        setAnimationClass('sidebar-slide-out');
+      }
+      prevExpanded.current = isExpanded;
+    }
+  }, [isExpanded]);
+
   // Handle mouse enter with delay
   const handleMouseEnter = () => {
     setIsExpanded(true);
@@ -65,7 +91,7 @@ export function SessionSidebar({
 
   return (
     <aside
-      className={`session-sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}
+      className={`session-sidebar ${isExpanded ? 'expanded sidebar-expanded' : 'collapsed sidebar-collapsed'} ${animationClass}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       aria-label="Session navigation sidebar"
@@ -79,7 +105,7 @@ export function SessionSidebar({
       </div>
 
       {/* Scrollable content */}
-      <div className="sidebar-content">
+      <div className="sidebar-content sidebar-content-wrapper">
         {/* Active Sessions Section */}
         {activeSessions.length > 0 && (
           <section className="session-section">

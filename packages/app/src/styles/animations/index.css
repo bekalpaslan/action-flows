@@ -1,0 +1,9 @@
+/**
+ * Animation Styles — Index
+ *
+ * Central import point for all animation styles.
+ */
+
+@import './glow.css';
+@import './sidebar.css';
+@import './transitions.css';

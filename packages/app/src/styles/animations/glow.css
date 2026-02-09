@@ -1,0 +1,324 @@
+/**
+ * Glow Animations — Consolidated pulse animations for notification glows
+ *
+ * Provides reusable glow effects with:
+ * - Intensity variants (subtle, medium, strong)
+ * - Color-specific classes (info, success, warning, error)
+ * - Fade-in/fade-out transitions
+ * - Reduced motion support
+ *
+ * Compatible with GlowIndicator component.
+ */
+
+/* ==========================================================================
+   CSS Custom Properties — Glow Colors
+   ========================================================================== */
+
+:root {
+  /* Base glow colors — aligned with theme status colors */
+  --glow-color-info: var(--color-info, #2196f3);
+  --glow-color-success: var(--color-success, #4caf50);
+  --glow-color-warning: var(--color-warning, #ff9800);
+  --glow-color-error: var(--color-error, #f44336);
+
+  /* Glow shadow colors with alpha */
+  --glow-shadow-info: rgba(33, 150, 243, 0.6);
+  --glow-shadow-success: rgba(76, 175, 80, 0.6);
+  --glow-shadow-warning: rgba(255, 152, 0, 0.6);
+  --glow-shadow-error: rgba(244, 67, 54, 0.6);
+
+  /* Intensity multipliers */
+  --glow-intensity-subtle: 0.4;
+  --glow-intensity-medium: 0.7;
+  --glow-intensity-strong: 1;
+
+  /* Animation timing */
+  --glow-duration: 2s;
+  --glow-timing: ease-in-out;
+  --glow-fade-duration: 300ms;
+}
+
+/* ==========================================================================
+   Base Glow Container
+   ========================================================================== */
+
+.glow {
+  position: relative;
+  display: inline-block;
+  border-radius: inherit;
+  --glow-intensity: var(--glow-intensity-medium);
+  --glow-current-color: var(--glow-shadow-info);
+}
+
+/* ==========================================================================
+   Intensity Variants
+   ========================================================================== */
+
+/* Subtle — low intensity for info level notifications */
+.glow-pulse-subtle {
+  --glow-intensity: var(--glow-intensity-subtle);
+  animation: glow-pulse var(--glow-duration) var(--glow-timing) infinite;
+}
+
+/* Medium — standard intensity for success/warning */
+.glow-pulse-medium {
+  --glow-intensity: var(--glow-intensity-medium);
+  animation: glow-pulse var(--glow-duration) var(--glow-timing) infinite;
+}
+
+/* Strong — high intensity for error level alerts */
+.glow-pulse-strong {
+  --glow-intensity: var(--glow-intensity-strong);
+  animation: glow-pulse var(--glow-duration) var(--glow-timing) infinite;
+}
+
+/* ==========================================================================
+   Color-Specific Classes
+   ========================================================================== */
+
+/* Info — blue glow */
+.glow-info {
+  --glow-current-color: var(--glow-shadow-info);
+  box-shadow:
+    0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-info),
+    0 0 calc(16px * var(--glow-intensity)) var(--glow-shadow-info);
+}
+
+.glow-info.glow-pulse-subtle,
+.glow-info.glow-pulse-medium,
+.glow-info.glow-pulse-strong {
+  animation-name: glow-pulse-info;
+}
+
+/* Success — green glow */
+.glow-success {
+  --glow-current-color: var(--glow-shadow-success);
+  box-shadow:
+    0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-success),
+    0 0 calc(16px * var(--glow-intensity)) var(--glow-shadow-success);
+}
+
+.glow-success.glow-pulse-subtle,
+.glow-success.glow-pulse-medium,
+.glow-success.glow-pulse-strong {
+  animation-name: glow-pulse-success;
+}
+
+/* Warning — amber glow */
+.glow-warning {
+  --glow-current-color: var(--glow-shadow-warning);
+  box-shadow:
+    0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-warning),
+    0 0 calc(16px * var(--glow-intensity)) var(--glow-shadow-warning);
+}
+
+.glow-warning.glow-pulse-subtle,
+.glow-warning.glow-pulse-medium,
+.glow-warning.glow-pulse-strong {
+  animation-name: glow-pulse-warning;
+}
+
+/* Error — red glow */
+.glow-error {
+  --glow-current-color: var(--glow-shadow-error);
+  box-shadow:
+    0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-error),
+    0 0 calc(16px * var(--glow-intensity)) var(--glow-shadow-error);
+}
+
+.glow-error.glow-pulse-subtle,
+.glow-error.glow-pulse-medium,
+.glow-error.glow-pulse-strong {
+  animation-name: glow-pulse-error;
+}
+
+/* ==========================================================================
+   Keyframe Animations — Generic Pulse
+   ========================================================================== */
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 calc(4px * var(--glow-intensity)) var(--glow-current-color),
+      0 0 calc(8px * var(--glow-intensity)) var(--glow-current-color);
+  }
+  50% {
+    box-shadow:
+      0 0 calc(12px * var(--glow-intensity)) var(--glow-current-color),
+      0 0 calc(24px * var(--glow-intensity)) var(--glow-current-color);
+  }
+}
+
+/* ==========================================================================
+   Keyframe Animations — Color-Specific Pulses
+   ========================================================================== */
+
+@keyframes glow-pulse-info {
+  0%, 100% {
+    box-shadow:
+      0 0 calc(4px * var(--glow-intensity)) var(--glow-shadow-info),
+      0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-info);
+  }
+  50% {
+    box-shadow:
+      0 0 calc(12px * var(--glow-intensity)) var(--glow-shadow-info),
+      0 0 calc(24px * var(--glow-intensity)) var(--glow-shadow-info);
+  }
+}
+
+@keyframes glow-pulse-success {
+  0%, 100% {
+    box-shadow:
+      0 0 calc(4px * var(--glow-intensity)) var(--glow-shadow-success),
+      0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-success);
+  }
+  50% {
+    box-shadow:
+      0 0 calc(12px * var(--glow-intensity)) var(--glow-shadow-success),
+      0 0 calc(24px * var(--glow-intensity)) var(--glow-shadow-success);
+  }
+}
+
+@keyframes glow-pulse-warning {
+  0%, 100% {
+    box-shadow:
+      0 0 calc(4px * var(--glow-intensity)) var(--glow-shadow-warning),
+      0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-warning);
+  }
+  50% {
+    box-shadow:
+      0 0 calc(12px * var(--glow-intensity)) var(--glow-shadow-warning),
+      0 0 calc(24px * var(--glow-intensity)) var(--glow-shadow-warning);
+  }
+}
+
+@keyframes glow-pulse-error {
+  0%, 100% {
+    box-shadow:
+      0 0 calc(4px * var(--glow-intensity)) var(--glow-shadow-error),
+      0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-error);
+  }
+  50% {
+    box-shadow:
+      0 0 calc(12px * var(--glow-intensity)) var(--glow-shadow-error),
+      0 0 calc(24px * var(--glow-intensity)) var(--glow-shadow-error);
+  }
+}
+
+/* ==========================================================================
+   Fade Transitions — Smooth glow appearance/disappearance
+   ========================================================================== */
+
+@keyframes glow-fade-in-anim {
+  from {
+    opacity: 0;
+    box-shadow: 0 0 0 transparent;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes glow-fade-out-anim {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    box-shadow: 0 0 0 transparent;
+  }
+}
+
+.glow-fade-in {
+  animation: glow-fade-in-anim var(--glow-fade-duration) ease-out forwards;
+}
+
+.glow-fade-out {
+  animation: glow-fade-out-anim var(--glow-fade-duration) ease-in forwards;
+}
+
+/* Combined fade-in with pulse (starts fading in, then continues pulsing) */
+.glow-fade-in.glow-pulse-subtle,
+.glow-fade-in.glow-pulse-medium,
+.glow-fade-in.glow-pulse-strong {
+  animation:
+    glow-fade-in-anim var(--glow-fade-duration) ease-out,
+    glow-pulse var(--glow-duration) var(--glow-timing) infinite var(--glow-fade-duration);
+}
+
+/* ==========================================================================
+   Reduced Motion Support
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all pulse animations */
+  .glow-pulse-subtle,
+  .glow-pulse-medium,
+  .glow-pulse-strong,
+  .glow-info.glow-pulse-subtle,
+  .glow-info.glow-pulse-medium,
+  .glow-info.glow-pulse-strong,
+  .glow-success.glow-pulse-subtle,
+  .glow-success.glow-pulse-medium,
+  .glow-success.glow-pulse-strong,
+  .glow-warning.glow-pulse-subtle,
+  .glow-warning.glow-pulse-medium,
+  .glow-warning.glow-pulse-strong,
+  .glow-error.glow-pulse-subtle,
+  .glow-error.glow-pulse-medium,
+  .glow-error.glow-pulse-strong {
+    animation: none;
+  }
+
+  /* Static glow for reduced motion — maintain visibility without animation */
+  .glow-pulse-subtle.glow-info,
+  .glow-pulse-medium.glow-info,
+  .glow-pulse-strong.glow-info {
+    box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-info);
+  }
+
+  .glow-pulse-subtle.glow-success,
+  .glow-pulse-medium.glow-success,
+  .glow-pulse-strong.glow-success {
+    box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-success);
+  }
+
+  .glow-pulse-subtle.glow-warning,
+  .glow-pulse-medium.glow-warning,
+  .glow-pulse-strong.glow-warning {
+    box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-warning);
+  }
+
+  .glow-pulse-subtle.glow-error,
+  .glow-pulse-medium.glow-error,
+  .glow-pulse-strong.glow-error {
+    box-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--glow-shadow-error);
+  }
+
+  /* Fade transitions remain but use instant timing */
+  .glow-fade-in,
+  .glow-fade-out {
+    animation-duration: 0.01ms;
+  }
+}
+
+/* ==========================================================================
+   Utility Classes — For standalone use without glow base
+   ========================================================================== */
+
+/* Apply glow color without animation */
+.glow-static-info {
+  box-shadow: 0 0 8px var(--glow-shadow-info);
+}
+
+.glow-static-success {
+  box-shadow: 0 0 8px var(--glow-shadow-success);
+}
+
+.glow-static-warning {
+  box-shadow: 0 0 8px var(--glow-shadow-warning);
+}
+
+.glow-static-error {
+  box-shadow: 0 0 8px var(--glow-shadow-error);
+}

@@ -1,4 +1,4 @@
-import { type ReactNode, useState, useCallback } from 'react';
+import { type ReactNode, useState, useCallback, useEffect, useRef } from 'react';
 import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { TopBar } from '../TopBar';
 import { SessionSidebar } from '../SessionSidebar';
@@ -172,6 +172,44 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   // TODO: Replace with actual session data from context/API
   const [attachedSessions, setAttachedSessions] = useState<Session[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<SessionId | undefined>();
+
+  // Workbench transition state
+  const [transitionClass, setTransitionClass] = useState<string>('workbench-enter-done');
+  const prevWorkbench = useRef<WorkbenchId>(activeWorkbench);
+  const transitionTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Handle workbench transitions
+  useEffect(() => {
+    if (prevWorkbench.current !== activeWorkbench) {
+      // Clear any pending timeout
+      if (transitionTimeout.current) {
+        clearTimeout(transitionTimeout.current);
+      }
+
+      // Start enter transition
+      setTransitionClass('workbench-enter');
+
+      // Use requestAnimationFrame to ensure class is applied before animating
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTransitionClass('workbench-enter-active');
+
+          // Transition to done state after animation completes
+          transitionTimeout.current = setTimeout(() => {
+            setTransitionClass('workbench-enter-done');
+          }, 180); // Match --transition-duration from transitions.css
+        });
+      });
+
+      prevWorkbench.current = activeWorkbench;
+    }
+
+    return () => {
+      if (transitionTimeout.current) {
+        clearTimeout(transitionTimeout.current);
+      }
+    };
+  }, [activeWorkbench]);
 
   // PM Workbench state
   const [demoTasks, setDemoTasks] = useState<PMTask[]>(initialDemoTasks);
@@ -465,8 +503,10 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
 
       <div className="workbench-body">
         <main className={`workbench-main ${showSessionSidebar ? 'with-sidebar' : ''}`}>
-          {renderWorkbenchContent(activeWorkbench)}
-          {children}
+          <div className={`workbench-content ${transitionClass}`}>
+            {renderWorkbenchContent(activeWorkbench)}
+            {children}
+          </div>
         </main>
       </div>
 

@@ -1,0 +1,202 @@
+/**
+ * SessionSidebar Slide Animations
+ *
+ * Slide-in/slide-out animations for the collapsible sidebar.
+ * Uses CSS transforms for GPU-accelerated performance.
+ *
+ * Usage:
+ *   .sidebar-slide-in   - Apply when expanding sidebar
+ *   .sidebar-slide-out  - Apply when collapsing sidebar
+ *   .sidebar-expanded   - Final expanded state
+ *   .sidebar-collapsed  - Final collapsed state
+ */
+
+/* ===== CSS CUSTOM PROPERTIES ===== */
+
+:root {
+  /* Sidebar animation timing */
+  --sidebar-slide-duration: 250ms;
+  --sidebar-slide-easing: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  /* Sidebar dimensions */
+  --sidebar-width-collapsed: 40px;
+  --sidebar-width-expanded: 280px;
+
+  /* Shadow properties */
+  --sidebar-shadow-expanded: 4px 0 16px rgba(0, 0, 0, 0.25);
+  --sidebar-shadow-collapsed: none;
+}
+
+/* ===== KEYFRAME ANIMATIONS ===== */
+
+/* Slide-in animation: collapsed -> expanded */
+@keyframes sidebar-slide-in {
+  0% {
+    transform: translateX(calc(var(--sidebar-width-collapsed) - var(--sidebar-width-expanded)));
+    box-shadow: var(--sidebar-shadow-collapsed);
+  }
+  100% {
+    transform: translateX(0);
+    box-shadow: var(--sidebar-shadow-expanded);
+  }
+}
+
+/* Slide-out animation: expanded -> collapsed */
+@keyframes sidebar-slide-out {
+  0% {
+    transform: translateX(0);
+    box-shadow: var(--sidebar-shadow-expanded);
+  }
+  100% {
+    transform: translateX(calc(var(--sidebar-width-collapsed) - var(--sidebar-width-expanded)));
+    box-shadow: var(--sidebar-shadow-collapsed);
+  }
+}
+
+/* Shadow fade-in animation (layered effect) */
+@keyframes sidebar-shadow-in {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow: var(--sidebar-shadow-expanded);
+  }
+}
+
+/* Shadow fade-out animation */
+@keyframes sidebar-shadow-out {
+  0% {
+    box-shadow: var(--sidebar-shadow-expanded);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+/* ===== ANIMATION CLASSES ===== */
+
+/* Slide-in class: apply when expanding */
+.sidebar-slide-in {
+  animation: sidebar-slide-in var(--sidebar-slide-duration) var(--sidebar-slide-easing) forwards;
+  width: var(--sidebar-width-expanded);
+}
+
+/* Slide-out class: apply when collapsing */
+.sidebar-slide-out {
+  animation: sidebar-slide-out var(--sidebar-slide-duration) var(--sidebar-slide-easing) forwards;
+  width: var(--sidebar-width-expanded);
+}
+
+/* ===== STATE CLASSES ===== */
+
+/* Expanded state: final resting position */
+.sidebar-expanded {
+  width: var(--sidebar-width-expanded);
+  transform: translateX(0);
+  box-shadow: var(--sidebar-shadow-expanded);
+  transition:
+    box-shadow var(--sidebar-slide-duration) var(--sidebar-slide-easing);
+}
+
+/* Collapsed state: hidden position */
+.sidebar-collapsed {
+  width: var(--sidebar-width-collapsed);
+  transform: translateX(0);
+  box-shadow: var(--sidebar-shadow-collapsed);
+  transition:
+    box-shadow var(--sidebar-slide-duration) var(--sidebar-slide-easing);
+}
+
+/* ===== CONTENT FADE TRANSITIONS ===== */
+
+/* Content container for fade effect during slide */
+.sidebar-content-wrapper {
+  opacity: 1;
+  transition: opacity calc(var(--sidebar-slide-duration) * 0.6) ease-out;
+}
+
+.sidebar-collapsed .sidebar-content-wrapper {
+  opacity: 0;
+  transition: opacity calc(var(--sidebar-slide-duration) * 0.4) ease-in;
+}
+
+/* ===== OVERLAY/BACKDROP (OPTIONAL) ===== */
+
+/* Semi-transparent overlay that appears behind expanded sidebar */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  z-index: 999;
+  transition:
+    background-color var(--sidebar-slide-duration) var(--sidebar-slide-easing);
+}
+
+.sidebar-overlay.active {
+  background-color: rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+}
+
+/* ===== ACCESSIBILITY: REDUCED MOTION ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all animations - instant transitions */
+  .sidebar-slide-in,
+  .sidebar-slide-out {
+    animation: none;
+    transition: none;
+  }
+
+  .sidebar-expanded,
+  .sidebar-collapsed {
+    transition: none;
+  }
+
+  .sidebar-content-wrapper {
+    transition: none;
+  }
+
+  .sidebar-overlay {
+    transition: none;
+  }
+
+  /* Instant state changes */
+  .sidebar-slide-in {
+    transform: translateX(0);
+    box-shadow: var(--sidebar-shadow-expanded);
+  }
+
+  .sidebar-slide-out {
+    transform: translateX(calc(var(--sidebar-width-collapsed) - var(--sidebar-width-expanded)));
+    box-shadow: var(--sidebar-shadow-collapsed);
+  }
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width-expanded: 240px;
+    --sidebar-slide-duration: 200ms;
+  }
+}
+
+/* ===== LIGHT THEME SHADOW ADJUSTMENTS ===== */
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --sidebar-shadow-expanded: 4px 0 16px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+
+@media (prefers-contrast: high) {
+  :root {
+    --sidebar-shadow-expanded: 4px 0 0 currentColor;
+  }
+}

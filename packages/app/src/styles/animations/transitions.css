@@ -1,0 +1,408 @@
+/**
+ * Page & Workbench Transitions
+ * Smooth, performant animations for UI state changes
+ *
+ * Design principles:
+ * - GPU-accelerated (transform/opacity only)
+ * - Snappy feel (150-200ms)
+ * - Respects prefers-reduced-motion
+ */
+
+/* ============================================================================
+ * CSS Custom Properties
+ * ============================================================================ */
+
+:root {
+  /* Transition timing */
+  --transition-duration: 180ms;
+  --transition-duration-fast: 120ms;
+  --transition-duration-slow: 250ms;
+
+  /* Easing functions */
+  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0.0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================================================
+ * Workbench Transitions (React CSSTransition compatible)
+ * ============================================================================ */
+
+/* Enter state - starting point */
+.workbench-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* Enter active - animating to final state */
+.workbench-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity var(--transition-duration) var(--ease-out),
+    transform var(--transition-duration) var(--ease-out);
+}
+
+/* Enter done - final state after enter */
+.workbench-enter-done {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Exit state - starting point for exit */
+.workbench-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Exit active - animating out */
+.workbench-exit-active {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity var(--transition-duration) var(--ease-in),
+    transform var(--transition-duration) var(--ease-in);
+}
+
+/* Exit done - final state after exit */
+.workbench-exit-done {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* ============================================================================
+ * Fade Transitions
+ * ============================================================================ */
+
+/* Simple fade in */
+.fade-in {
+  animation: fadeIn var(--transition-duration) var(--ease-out) forwards;
+}
+
+/* Simple fade out */
+.fade-out {
+  animation: fadeOut var(--transition-duration) var(--ease-in) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
+ * Slide Transitions
+ * ============================================================================ */
+
+/* Slide up with fade */
+.slide-up {
+  animation: slideUp var(--transition-duration) var(--ease-out) forwards;
+}
+
+/* Slide down with fade */
+.slide-down {
+  animation: slideDown var(--transition-duration) var(--ease-out) forwards;
+}
+
+/* Slide in from left */
+.slide-left {
+  animation: slideLeft var(--transition-duration) var(--ease-out) forwards;
+}
+
+/* Slide in from right */
+.slide-right {
+  animation: slideRight var(--transition-duration) var(--ease-out) forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================================================
+ * Scale Transitions
+ * ============================================================================ */
+
+/* Scale in - grow from center */
+.scale-in {
+  animation: scaleIn var(--transition-duration) var(--ease-spring) forwards;
+}
+
+/* Scale out - shrink to center */
+.scale-out {
+  animation: scaleOut var(--transition-duration-fast) var(--ease-in) forwards;
+}
+
+/* Pop in - more pronounced scale for emphasis */
+.pop-in {
+  animation: popIn var(--transition-duration-slow) var(--ease-spring) forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================================================
+ * Utility Classes - Transition Properties
+ * ============================================================================ */
+
+/* Transition opacity only */
+.transition-opacity {
+  transition: opacity var(--transition-duration) var(--ease-out);
+}
+
+/* Transition transform only */
+.transition-transform {
+  transition: transform var(--transition-duration) var(--ease-out);
+}
+
+/* Transition all GPU-accelerated properties */
+.transition-all {
+  transition:
+    opacity var(--transition-duration) var(--ease-out),
+    transform var(--transition-duration) var(--ease-out);
+}
+
+/* Fast transition variant */
+.transition-fast {
+  transition-duration: var(--transition-duration-fast);
+}
+
+/* Slow transition variant */
+.transition-slow {
+  transition-duration: var(--transition-duration-slow);
+}
+
+/* ============================================================================
+ * Interactive State Transitions
+ * ============================================================================ */
+
+/* Hover lift effect */
+.hover-lift {
+  transition: transform var(--transition-duration) var(--ease-out);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* Press effect */
+.press-effect {
+  transition: transform var(--transition-duration-fast) var(--ease-out);
+}
+
+.press-effect:active {
+  transform: scale(0.98);
+}
+
+/* Focus glow transition */
+.focus-glow {
+  transition:
+    box-shadow var(--transition-duration) var(--ease-out),
+    outline var(--transition-duration) var(--ease-out);
+}
+
+/* ============================================================================
+ * Page Transition Wrappers
+ * ============================================================================ */
+
+/* Container for page transitions */
+.page-transition-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Entering page */
+.page-enter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity var(--transition-duration-slow) var(--ease-out),
+    transform var(--transition-duration-slow) var(--ease-out);
+}
+
+/* Exiting page */
+.page-exit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition:
+    opacity var(--transition-duration-slow) var(--ease-in),
+    transform var(--transition-duration-slow) var(--ease-in);
+}
+
+/* ============================================================================
+ * Accessibility: Reduced Motion
+ * ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-duration: 0ms;
+    --transition-duration-fast: 0ms;
+    --transition-duration-slow: 0ms;
+  }
+
+  /* Disable all animations */
+  .fade-in,
+  .fade-out,
+  .slide-up,
+  .slide-down,
+  .slide-left,
+  .slide-right,
+  .scale-in,
+  .scale-out,
+  .pop-in {
+    animation: none;
+  }
+
+  /* Instant opacity changes only */
+  .workbench-enter,
+  .workbench-exit,
+  .page-enter,
+  .page-exit {
+    transition: none;
+  }
+
+  .workbench-enter-active,
+  .workbench-enter-done,
+  .page-enter-active {
+    opacity: 1;
+    transform: none;
+  }
+
+  .workbench-exit-active,
+  .workbench-exit-done,
+  .page-exit-active {
+    opacity: 0;
+    transform: none;
+  }
+
+  /* Disable hover/press effects */
+  .hover-lift:hover,
+  .press-effect:active {
+    transform: none;
+  }
+
+  /* Remove all transitions */
+  .transition-opacity,
+  .transition-transform,
+  .transition-all,
+  .focus-glow {
+    transition: none;
+  }
+}
+
+/* ============================================================================
+ * GPU Acceleration Hints
+ * ============================================================================ */
+
+/* Apply to elements that will animate frequently */
+.will-animate {
+  will-change: transform, opacity;
+}
+
+/* Remove will-change after animation completes (use via JS) */
+.animation-complete {
+  will-change: auto;
+}
