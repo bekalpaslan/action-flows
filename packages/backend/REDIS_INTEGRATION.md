@@ -382,3 +382,223 @@ curl -X POST http://localhost:3001/api/events \
 3. **Metrics Endpoint** - Expose Redis stats at `/metrics`
 4. **Database Migration** - Migrate historic data to external DB
 5. **Session Archival** - Automatic archival of old sessions
+
+---
+
+## Appendix A: Overview & Deployment
+
+### Executive Summary
+
+Redis integration has been successfully added to the ActionFlows Dashboard backend, enabling:
+
+✅ **Persistent Storage** - Sessions survive server restarts
+✅ **Multi-Instance Support** - Multiple backend servers share data
+✅ **Event Broadcasting** - Real-time event distribution via Pub/Sub
+✅ **Zero Breaking Changes** - Backward compatible with existing code
+✅ **Drop-in Replacement** - No code changes needed to use Redis
+
+### What Changed
+
+#### Core Architecture
+
+**Before:**
+```
+Client → Express Routes → In-Memory Storage (Maps)
+         Data lost on restart
+         Single instance only
+```
+
+**After:**
+```
+Client → Express Routes → Storage Factory
+                          ├─ Memory Storage (default)
+                          └─ Redis Storage (if REDIS_URL set)
+
+         With Redis: Multi-instance, Pub/Sub, Persistent
+```
+
+### Deployment Scenarios
+
+#### Scenario 1: Local Development
+- **Storage**: In-memory (default)
+- **Instances**: 1
+- **Persistence**: None
+- **Use Case**: Rapid development iteration
+
+#### Scenario 2: Development with Redis
+- **Storage**: Redis (local or Docker)
+- **Instances**: 1-2
+- **Persistence**: Yes
+- **Use Case**: Testing multi-instance, persistence
+
+#### Scenario 3: Production Single Instance
+- **Storage**: Redis (managed service)
+- **Instances**: 1
+- **Persistence**: Yes (with backups)
+- **Use Case**: Single server deployment with data recovery
+
+#### Scenario 4: Production Multi-Instance
+- **Storage**: Redis (managed service)
+- **Instances**: 2-10+
+- **Persistence**: Yes (with replication)
+- **Load Balancer**: Distributes traffic
+- **Use Case**: High availability, load distribution
+
+### Backward Compatibility
+
+✅ **No Breaking Changes**
+- Routes automatically use storage factory
+- Existing memory-based code still works
+- Configuration is optional (defaults to memory)
+- TypeScript types updated but API unchanged
+
+✅ **Migration Path**
+- Start with memory storage (default)
+- Add Redis later by setting environment variable
+- No code changes required
+- Existing sessions data not automatically migrated (expected)
+
+### Performance Considerations
+
+#### Memory Storage
+- **Latency**: < 1ms
+- **Scalability**: Single instance, limited by RAM
+- **Persistence**: None
+- **Multi-instance**: Not supported
+
+#### Redis Storage
+- **Latency**: 1-5ms (network dependent)
+- **Scalability**: Multi-instance, limited by Redis capacity
+- **Persistence**: Yes (configurable)
+- **Multi-instance**: Fully supported
+- **Network**: Bandwidth overhead for Pub/Sub
+
+#### When to Use Each
+
+| Factor | Memory | Redis |
+|--------|--------|-------|
+| Development | ✅ Perfect | ⚠️ Overkill |
+| Production (1 instance) | ❌ No persistence | ✅ Recommended |
+| Production (2+ instances) | ❌ No sharing | ✅ Required |
+| High latency requirement | ✅ Best | ⚠️ 1-5ms |
+| Large event streams | ❌ RAM limited | ✅ Better |
+
+### Server Logs & Monitoring
+
+#### Check Storage Type
+```typescript
+import { isAsyncStorage } from './storage';
+
+if (isAsyncStorage(storage)) {
+  console.log('Using Redis');
+} else {
+  console.log('Using Memory');
+}
+```
+
+#### Server Logs
+```
+[Storage] Using Redis backend
+[Redis] Subscribed to channel: afw:events
+[Redis] Received broadcast event: session-123
+```
+
+#### Redis CLI
+```bash
+redis-cli
+> KEYS "afw:*"
+> DBSIZE
+> MONITOR
+```
+
+### Extended Troubleshooting
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| `ECONNREFUSED` | Redis not running | Start Redis: `docker run -p 6379:6379 redis:latest` |
+| Events not stored | Redis connection failed | Check `REDIS_URL` env var and Redis status |
+| Memory keeps growing | No TTL on keys | Verify TTL values in redis.ts (24h/5m) |
+| No events in memory mode | Expected | Add `REDIS_URL` to use persistent storage |
+| Multi-instance issues | Not sharing Redis | Ensure both use same `REDIS_URL` |
+| No events from other instances | Pub/Sub not working | Check Redis Pub/Sub: `redis-cli PUBSUB CHANNELS` |
+| Connection pool exhausted | Too many connections | Reduce number of instances or increase Redis max connections |
+| Data loss after restart | No persistence enabled | Set `REDIS_URL` to enable storage, configure persistence in Redis |
+
+---
+
+## Appendix B: Implementation Details
+
+### Detailed Implementation Decisions
+
+#### Storage Abstraction Pattern
+The implementation uses a factory pattern rather than a simple conditional:
+- **Why**: Allows for future extensions (MongoDB, PostgreSQL, etc.)
+- **Benefit**: Clean separation of concerns
+- **Trade-off**: Minimal code complexity
+
+#### Async/Await Compatibility Strategy
+Uses `Promise.resolve()` wrapper to handle both sync and async:
+- **Why**: Memory storage is synchronous, Redis is asynchronous
+- **Benefit**: Routes don't need to know which backend is in use
+- **Pattern**: `await Promise.resolve(storage.operation())`
+
+#### Pub/Sub Channel Design
+Single channel (`afw:events`) for all event broadcasts:
+- **Why**: Simplicity and reduced Redis overhead
+- **Benefit**: All instances receive all events
+- **Trade-off**: No filtering by session, but events include sessionId
+
+#### TTL Configuration
+Different TTLs for different data types:
+- **Sessions/Events/Chains**: 24 hours (long-lived)
+- **Commands/Input**: 5 minutes (time-sensitive)
+- **Why**: Commands are polled frequently, need fresh data
+- **Benefit**: Automatic cleanup reduces memory pressure
+
+#### Client Registry Strategy
+Clients stored in-memory per instance (not in Redis):
+- **Why**: Clients are instance-specific, change frequently
+- **Benefit**: Reduced Redis overhead
+- **Trade-off**: Load balancer cannot share client list across instances
+
+### Testing Checklist
+
+- [ ] Install dependencies: `npm install`
+- [ ] Type checking: `npm run type-check`
+- [ ] Build: `npm run build`
+- [ ] Dev server with memory storage: `npm run dev`
+- [ ] Dev server with Redis:
+  - Start Redis: `docker run -p 6379:6379 redis:latest`
+  - Set env: `export REDIS_URL=redis://localhost:6379`
+  - Run: `npm run dev`
+  - Test POST /api/events with curl
+  - Verify events appear in Redis: `redis-cli LRANGE afw:events:... 0 -1`
+- [ ] WebSocket event broadcasting across instances
+- [ ] Graceful shutdown handling
+- [ ] Session persistence across restarts (with Redis)
+
+### Future Enhancement Roadmap
+
+#### Phase 1: Foundation (Completed)
+- ✅ Redis storage adapter
+- ✅ Storage factory pattern
+- ✅ Pub/Sub event broadcasting
+- ✅ Graceful shutdown
+
+#### Phase 2: Observability
+- Session metrics endpoint
+- Redis performance monitoring
+- Event throughput tracking
+- Memory usage alerts
+
+#### Phase 3: Advanced Features
+- Session archival system
+- Automatic data cleanup
+- Database migration tools
+- Session recovery mechanisms
+
+#### Phase 4: Scale-out
+- Redis cluster support
+- Connection pooling optimization
+- Multi-datacenter replication
+- Geographic distribution

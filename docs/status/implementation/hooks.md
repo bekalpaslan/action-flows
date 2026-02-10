@@ -214,10 +214,10 @@ export async function postEvent(
 - Deployment guide
 - Design decision rationale
 
-#### 8. TEST_EXAMPLES.md (400+ lines)
+#### 8. Test Examples (in IMPLEMENTATION_GUIDE.md)
 
 **Contents**:
-- 9 test scenarios
+- 9 test scenarios (now in IMPLEMENTATION_GUIDE.md § Test Cases)
 - Sample input JSON
 - Expected output event
 - Run commands
@@ -611,10 +611,9 @@ Create `.claude/settings.json` in workspace root:
 - utils/http.ts (43 lines)
 - utils/parser.ts (116 lines)
 
-**Documentation Files**: 6+ (1000+ lines)
+**Documentation Files**: 4 (1000+ lines)
 - README.md (103 lines)
-- IMPLEMENTATION_GUIDE.md (320 lines)
-- TEST_EXAMPLES.md (400+ lines)
+- IMPLEMENTATION_GUIDE.md (with merged test examples, 700+ lines)
 - ARCHITECTURE.md (250+ lines)
 - docs/status/implementation/hooks.md (this file, consolidated from HOOK_IMPLEMENTATION_SUMMARY.md and HOOK_COMPLETION_REPORT.md)
 
@@ -659,7 +658,7 @@ Create `.claude/settings.json` in workspace root:
    ```
 
 2. **Run Tests**
-   - Use TEST_EXAMPLES.md test cases
+   - Use test cases in IMPLEMENTATION_GUIDE.md § Test Cases
    - Or run automated test script
 
 3. **Deploy**

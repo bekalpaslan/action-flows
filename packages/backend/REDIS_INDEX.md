@@ -1,70 +1,43 @@
-# Redis Integration - Complete Index
+# Redis Integration - Documentation Index
 
 ## Documentation Guide
 
 This directory now contains comprehensive Redis integration documentation. Here's how to navigate:
 
-### Start Here
+### Getting Started
 
-**New to Redis integration?** Start with one of these:
+**New to Redis integration?** Start here:
 
 1. **[REDIS_QUICK_START.md](REDIS_QUICK_START.md)** (5 minutes)
    - Quick 5-minute setup guide
    - Three simple deployment scenarios
    - Immediate verification steps
    - Basic troubleshooting
-   - **Best for**: Getting started quickly
+   - **Best for**: Getting started immediately
 
-2. **[COMPLETION_SUMMARY.md](COMPLETION_SUMMARY.md)** (3 minutes)
-   - What was implemented
-   - All requirements fulfilled
-   - Success criteria verified
-   - Next steps
-   - **Best for**: Understanding what's done
-
-### Deep Dives
-
-**Want full details?** Read these:
-
-3. **[REDIS_OVERVIEW.md](REDIS_OVERVIEW.md)** (15 minutes)
-   - Executive summary
-   - Architecture before/after
-   - Key features explained
-   - All configuration options
-   - Deployment scenarios
-   - Performance considerations
-   - **Best for**: Understanding the whole picture
-
-4. **[REDIS_INTEGRATION.md](REDIS_INTEGRATION.md)** (30 minutes)
-   - Complete architecture guide
+2. **[REDIS_INTEGRATION.md](REDIS_INTEGRATION.md)** (Comprehensive Reference)
+   - Complete architecture overview
    - All data structures explained
-   - Multi-instance deployment details
-   - Event broadcasting explained
+   - Configuration and environment setup
+   - Multi-instance deployment guide
+   - WebSocket event broadcasting
    - TTL management
-   - Monitoring and debugging
+   - Error handling and monitoring
+   - Performance considerations
    - Full troubleshooting guide
-   - Production checklist
-   - **Best for**: Production deployment
-
-5. **[REDIS_IMPLEMENTATION_SUMMARY.md](REDIS_IMPLEMENTATION_SUMMARY.md)** (20 minutes)
-   - What was implemented in detail
-   - Technical implementation details
-   - File changes with descriptions
-   - Data flow diagrams
-   - Configuration examples
-   - Testing checklist
-   - **Best for**: Code review and technical details
+   - Migration strategies
+   - Deployment scenarios (Appendix A)
+   - Implementation details (Appendix B)
+   - **Best for**: Production deployment and comprehensive understanding
 
 ### Quick Reference
 
 | Scenario | Read This |
 |----------|-----------|
-| I want to start now | REDIS_QUICK_START.md |
-| I'm new to Redis integration | COMPLETION_SUMMARY.md |
-| I need the full picture | REDIS_OVERVIEW.md |
-| I'm deploying to production | REDIS_INTEGRATION.md |
-| I need technical details | REDIS_IMPLEMENTATION_SUMMARY.md |
-| What's the status? | COMPLETION_SUMMARY.md |
+| I want to start now (5 min) | REDIS_QUICK_START.md |
+| I need comprehensive guide (30 min) | REDIS_INTEGRATION.md |
+| I need technical deep-dive | REDIS_INTEGRATION.md § Appendix B |
+| I need deployment info | REDIS_INTEGRATION.md § Appendix A |
 
 ---
 
@@ -109,11 +82,8 @@ This directory now contains comprehensive Redis integration documentation. Here'
 ### Documentation
 
 - ✅ **REDIS_QUICK_START.md** - Quick setup guide
-- ✅ **REDIS_INTEGRATION.md** - Comprehensive reference
-- ✅ **REDIS_IMPLEMENTATION_SUMMARY.md** - Technical details
-- ✅ **REDIS_OVERVIEW.md** - Complete overview
-- ✅ **COMPLETION_SUMMARY.md** - What was done
-- ✅ **REDIS_INDEX.md** - This file
+- ✅ **REDIS_INTEGRATION.md** - Comprehensive reference (includes Appendices A & B)
+- ✅ **REDIS_INDEX.md** - This file (navigation guide)
 
 ---
 
@@ -136,11 +106,8 @@ packages/backend/
 ├── package.json                   (updated)
 ├── .env.example                   (NEW)
 ├── REDIS_QUICK_START.md           (NEW)
-├── REDIS_INTEGRATION.md           (NEW)
-├── REDIS_IMPLEMENTATION_SUMMARY.md (NEW)
-├── REDIS_OVERVIEW.md              (NEW)
-├── COMPLETION_SUMMARY.md          (NEW)
-└── REDIS_INDEX.md                 (NEW - this file)
+├── REDIS_INTEGRATION.md           (NEW - consolidated with Appendices A & B)
+└── REDIS_INDEX.md                 (this file)
 ```
 
 ---
@@ -253,7 +220,7 @@ redis-cli LRANGE "afw:events:..." 0 -1
 
 1. Check **REDIS_QUICK_START.md** for quick fixes
 2. Search **REDIS_INTEGRATION.md** for detailed troubleshooting
-3. Review **REDIS_IMPLEMENTATION_SUMMARY.md** for technical details
+3. Review **REDIS_INTEGRATION.md** (Appendix B) for technical details
 4. Check server logs: `[Redis]` and `[Storage]` messages
 
 ---
@@ -281,16 +248,13 @@ redis-cli LRANGE "afw:events:..." 0 -1
 
 ## Documentation Statistics
 
-| Document | Size | Read Time | Target Audience |
-|----------|------|-----------|-----------------|
-| REDIS_QUICK_START.md | 4.8 KB | 5 min | Everyone |
-| COMPLETION_SUMMARY.md | 9.9 KB | 3 min | Project leads |
-| REDIS_OVERVIEW.md | 11.2 KB | 15 min | Developers |
-| REDIS_INTEGRATION.md | 10.8 KB | 30 min | DevOps/Architects |
-| REDIS_IMPLEMENTATION_SUMMARY.md | 8.8 KB | 20 min | Code reviewers |
-| REDIS_INDEX.md | This file | 5 min | Everyone |
+| Document | Read Time | Target Audience |
+|----------|-----------|-----------------|
+| REDIS_QUICK_START.md | 5 min | Everyone - getting started |
+| REDIS_INTEGRATION.md | 30 min | Production deployment, comprehensive reference |
+| REDIS_INDEX.md | 5 min | Navigation guide |
 
-**Total documentation**: ~55 KB of guides
+**Total documentation**: Comprehensive guides covering quick start through production deployment
 
 ---
 
@@ -399,10 +363,9 @@ Response
 ## Quick Navigation
 
 - Want to start? → [REDIS_QUICK_START.md](REDIS_QUICK_START.md)
-- Want overview? → [REDIS_OVERVIEW.md](REDIS_OVERVIEW.md)
+- Want overview? → [REDIS_INTEGRATION.md](REDIS_INTEGRATION.md) (Appendix A)
 - Want details? → [REDIS_INTEGRATION.md](REDIS_INTEGRATION.md)
-- Want status? → [COMPLETION_SUMMARY.md](COMPLETION_SUMMARY.md)
-- Want technical? → [REDIS_IMPLEMENTATION_SUMMARY.md](REDIS_IMPLEMENTATION_SUMMARY.md)
+- Want technical? → [REDIS_INTEGRATION.md](REDIS_INTEGRATION.md) (Appendix B)
 
 ---
 

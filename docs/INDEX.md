@@ -20,16 +20,29 @@ Complete guide to ActionFlows Dashboard documentation.
 ## Architecture
 
 - [Orchestrator Integration](architecture/ORCHESTRATOR_INTEGRATION.md) — ActionFlows framework integration patterns
+- [Telemetry System](architecture/TELEMETRY_SYSTEM.md) — Telemetry implementation and system design
 
 ## Deployment
 
 - [Build Guide](deployment/BUILD.md) — Production build and deployment instructions
+
+## Design
+
+- [Agent Style Guide](design/AGENT_STYLE_GUIDE.md) — Style guide for AI agents
+- [Intel Dossier](design/INTEL_DOSSIER.md) — Intelligence dossier for development
 
 ## Guides
 
 - [Multi-User Testing](guides/MULTI_USER_TESTING.md) — Testing with multiple concurrent users
 - [Quick Start: Real-Time](guides/quick-start-real-time.md) — Real-time features quick start
 - [WebSocket Guide](guides/websocket-guide.md) — WebSocket connection and messaging
+
+## Requirements & Specifications
+
+- [FRD](FRD.md) — Functional Requirements Document
+- [FRD: Self-Evolving UI](FRD-SelfEvolvingUI.md) — Self-evolving UI requirements
+- [SRD](SRD.md) — System Requirements Document
+- [SRD: Self-Evolving UI](SRD-SelfEvolvingUI.md) — Self-evolving UI system requirements
 
 ## Setup
 
@@ -39,6 +52,11 @@ Complete guide to ActionFlows Dashboard documentation.
 
 ## Status
 
+### Implementation Status
+
+- [Frontend Implementation Status](status/FRONTEND_IMPLEMENTATION_STATUS.md) — Frontend features and screens status
+- [Implementation Status](status/IMPLEMENTATION_STATUS.md) — Backend and API implementation status
+
 ### Checklists
 
 - [Implementation Checklist](status/checklists/root-implementation-checklist.md) — Root-level implementation tracking
@@ -46,6 +64,8 @@ Complete guide to ActionFlows Dashboard documentation.
 
 ### Deliveries
 
+- [Batch C Contracts](status/deliveries/batch-c-contracts.md) — Behavioral contract phase C implementation
+- [Batch E Contracts](status/deliveries/batch-e-contracts.md) — Behavioral contract phase E completion
 - [Testing Delivery](status/deliveries/testing-delivery.md) — Testing implementation delivery report
 - [WebSocket Delivery](status/deliveries/websocket-delivery.md) — WebSocket feature delivery report
 

@@ -182,7 +182,7 @@ redis-cli MONITOR
 ## Next Steps
 
 1. Read [REDIS_INTEGRATION.md](REDIS_INTEGRATION.md) for comprehensive guide
-2. Check [REDIS_IMPLEMENTATION_SUMMARY.md](REDIS_IMPLEMENTATION_SUMMARY.md) for technical details
+2. Check [REDIS_INTEGRATION.md § Appendix B](REDIS_INTEGRATION.md) for technical details
 3. Explore API routes in `src/routes/`
 4. Set up WebSocket client to receive real-time events
 

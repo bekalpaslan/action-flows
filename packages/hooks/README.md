@@ -2,6 +2,14 @@
 
 Hook scripts that integrate Claude Code's execution lifecycle with the ActionFlows Dashboard backend event system.
 
+## Documentation Structure
+
+This package is documented across three files:
+
+- **README.md** (this file) - Overview and quick reference
+- **ARCHITECTURE.md** - System design and hook lifecycle diagrams
+- **IMPLEMENTATION_GUIDE.md** - Comprehensive implementation guide with detailed parsing patterns, design decisions, and complete test suite
+
 ## Hooks
 
 ### `afw-step-completed` - SubagentStop Hook
