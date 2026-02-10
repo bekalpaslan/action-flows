@@ -1,0 +1,103 @@
+/**
+ * SlidingChatWindow Component Styles
+ *
+ * Sliding panel layout with smooth width transitions.
+ * Uses CSS variables for theming and design tokens.
+ * Supports responsive and motion-preference modes.
+ */
+
+.sliding-chat-window {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-bg-primary);
+  overflow: hidden;
+  transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.sliding-chat-window__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  gap: var(--space-2);
+}
+
+.sliding-chat-window__title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  flex: 0 0 auto;
+}
+
+.sliding-chat-window__source {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  flex: 1 1 auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sliding-chat-window__close-btn {
+  flex: 0 0 auto;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm, 3px);
+  transition: color 150ms ease-out, background-color 150ms ease-out;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.sliding-chat-window__close-btn:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+.sliding-chat-window__close-btn:focus-visible {
+  outline: 2px solid var(--color-focus-ring, #0066cc);
+  outline-offset: 2px;
+}
+
+.sliding-chat-window__close-btn:active {
+  background-color: var(--color-bg-active);
+}
+
+.sliding-chat-window__body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive: Full width on small screens when open */
+@media (max-width: 768px) {
+  .sliding-chat-window {
+    width: 100% !important;
+  }
+}
+
+/* Accessibility: Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .sliding-chat-window {
+    transition-duration: 0ms;
+  }
+
+  .sliding-chat-window__close-btn {
+    transition-duration: 0ms;
+  }
+}

@@ -135,6 +135,35 @@
   transform: rotate(-90deg);
 }
 
+.chat-panel__close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 18px;
+  line-height: 1;
+  transition: var(--transition-colors);
+  border-radius: 4px;
+}
+
+.chat-panel__close-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.chat-panel__close-btn:focus-visible {
+  outline: 2px solid var(--focus-ring-color, rgba(10, 132, 255, 0.5));
+  outline-offset: 2px;
+}
+
+.chat-panel__close-btn:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
 /* ============================================================================
  * Session Info Bar (integrated from SessionInfoPanel)
  * ============================================================================ */

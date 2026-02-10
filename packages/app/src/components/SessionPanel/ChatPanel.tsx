@@ -112,6 +112,12 @@ export interface ChatPanelProps {
   collapsible?: boolean;
   /** Working directory for CLI session */
   cwd?: string;
+  /** Called when user clicks close in chat header */
+  onClose?: () => void;
+  /** Pre-populate the input field (from DiscussButton context) */
+  prefillMessage?: string;
+  /** Show X button in header (default false for backward compat) */
+  showCloseButton?: boolean;
 }
 
 /** CLI session lifecycle states */
@@ -126,6 +132,9 @@ export function ChatPanel({
   onSendMessage,
   collapsible = true,
   cwd = 'D:/ActionFlowsDashboard',
+  onClose,
+  prefillMessage,
+  showCloseButton = false,
 }: ChatPanelProps): React.ReactElement {
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -241,6 +250,17 @@ export function ChatPanel({
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  /**
+   * Handle prefillMessage: when it changes and is non-empty, set input value
+   */
+  useEffect(() => {
+    if (prefillMessage && prefillMessage.trim()) {
+      setInput(prefillMessage);
+      // Clear the prefill so it doesn't re-apply on re-renders
+      // Note: parent should manage the prefillMessage lifecycle
+    }
+  }, [prefillMessage]);
 
   /**
    * Start the Claude CLI session
@@ -464,6 +484,21 @@ export function ChatPanel({
             </span>
           )}
           <DiscussButton componentName="ChatPanel" onClick={openDialog} size="small" />
+          {showCloseButton && (
+            <button
+              className="chat-panel__close-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onClose) {
+                  onClose();
+                }
+              }}
+              aria-label="Close chat"
+              title="Close chat"
+            >
+              ×
+            </button>
+          )}
           {collapsible && (
             <button
               className="collapse-toggle"
