@@ -33,6 +33,7 @@
 | cli-integration-test/ | Systematic CLI integration testing | analyze → code → test → review |
 | e2e-chrome-mcp/ | Chrome MCP browser E2E test creation and execution | analyze → plan → human gate → code → chrome-mcp-test → review |
 | contract-index/ | Create/update behavioral contract specifications for components | analyze → plan → human gate → code×N → review → commit |
+| contract-compliance-audit/ | Audit contracts for inconsistencies, drift, and create compliance tests | analyze×2 (parallel) → plan → human gate → code×2 (parallel) → review → second-opinion/ → commit |
 
 ## settings
 
