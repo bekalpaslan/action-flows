@@ -423,4 +423,20 @@ export class ResilientStorage implements Storage {
   resetCircuitBreaker(): void {
     this.circuitBreaker.reset();
   }
+
+  // Snapshot/Restore (memory-only operations, proxy to fallback storage)
+  snapshot(): any {
+    if (this.fallbackStorage.snapshot) {
+      return this.fallbackStorage.snapshot();
+    }
+    throw new Error('Snapshot not supported by fallback storage');
+  }
+
+  restore(snapshot: any): void {
+    if (this.fallbackStorage.restore) {
+      this.fallbackStorage.restore(snapshot);
+    } else {
+      throw new Error('Restore not supported by fallback storage');
+    }
+  }
 }

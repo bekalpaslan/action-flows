@@ -231,3 +231,29 @@ export interface CircuitBreakerStats {
   lastFailureTime: Timestamp | null;
   totalTrips: number;
 }
+
+/**
+ * Lifecycle types
+ */
+
+/** Lifecycle phase for resource state tracking */
+export type LifecyclePhase = 'active' | 'idle' | 'expiring' | 'evicted';
+
+/** Lifecycle transition event */
+export interface LifecycleEvent {
+  type: 'lifecycle:transition';
+  resourceType: 'session' | 'chain' | 'event';
+  resourceId: string;
+  fromPhase: LifecyclePhase;
+  toPhase: LifecyclePhase;
+  reason: string;
+  timestamp: Timestamp;
+}
+
+/** Lifecycle policy configuration for resource types */
+export interface LifecyclePolicy {
+  resourceType: 'session' | 'chain' | 'event';
+  idleThresholdMs: number;       // Time before marking as idle (default: 30 min)
+  expiringThresholdMs: number;   // Time before marking as expiring (default: 2 hours)
+  evictionStrategy: 'lru' | 'fifo' | 'ttl';
+}

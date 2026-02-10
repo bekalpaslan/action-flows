@@ -13,8 +13,8 @@
  * - Collapsible header
  */
 
-import React, { useCallback, useState } from 'react';
-import type { Session } from '@afw/shared';
+import React, { useCallback, useState, useEffect } from 'react';
+import type { Session, LifecyclePhase } from '@afw/shared';
 import { useFreshness } from '../../hooks/useFreshness';
 import './SessionInfoPanel.css';
 
@@ -126,9 +126,30 @@ export function SessionInfoPanel({
 }: SessionInfoPanelProps): React.ReactElement {
   const [copyTooltip, setCopyTooltip] = useState<string>('Copy');
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const [lifecyclePhase, setLifecyclePhase] = useState<LifecyclePhase | null>(null);
 
   // Fetch freshness data for this session
   const { grade, freshness } = useFreshness('session', session.id);
+
+  // Fetch lifecycle phase
+  useEffect(() => {
+    const fetchLifecyclePhase = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/api/lifecycle/session?resourceId=${session.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setLifecyclePhase(data.phase);
+        }
+      } catch (error) {
+        console.error('Failed to fetch lifecycle phase:', error);
+      }
+    };
+
+    fetchLifecyclePhase();
+    // Poll every 30 seconds to keep phase up to date
+    const interval = setInterval(fetchLifecyclePhase, 30000);
+    return () => clearInterval(interval);
+  }, [session.id]);
 
   // Check if session is active (has activity within 5 minutes)
   const isActive = React.useMemo(() => {
@@ -203,7 +224,7 @@ export function SessionInfoPanel({
       {/* Panel Content — Compact horizontal layout */}
       {!isCollapsed && (
         <div className="info-panel-content">
-          {/* Row 1: Status + Freshness + Active + Session ID */}
+          {/* Row 1: Status + Freshness + Active + Lifecycle + Session ID */}
           <div className="info-row-compact">
             <div className={`status-badge status-${statusColor}`}>
               <span className="status-dot" />
@@ -224,6 +245,18 @@ export function SessionInfoPanel({
               >
                 <span className="active-dot" />
                 <span className="active-text">Active</span>
+              </div>
+            )}
+            {lifecyclePhase && (
+              <div
+                className={`session-info__lifecycle-phase session-info__lifecycle-phase--${lifecyclePhase}`}
+                title={`Lifecycle phase: ${lifecyclePhase}`}
+              >
+                {lifecyclePhase === 'active' && '🟢'}
+                {lifecyclePhase === 'idle' && '⚪'}
+                {lifecyclePhase === 'expiring' && '🟠'}
+                {lifecyclePhase === 'evicted' && '🔴'}
+                <span className="lifecycle-text">{lifecyclePhase.charAt(0).toUpperCase() + lifecyclePhase.slice(1)}</span>
               </div>
             )}
             <button

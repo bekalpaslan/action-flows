@@ -1,6 +1,7 @@
 import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
+import { lifecycleManager } from './lifecycleHooks.js';
 
 /**
  * In-memory storage for sessions, chains, events, commands, and input
@@ -136,6 +137,10 @@ export interface MemoryStorage {
   extendSessionTtl(sessionId: string, extensionMs: number): void;
   getSessionTtlInfo(sessionId: string): { remainingMs: number; extensionCount: number } | null;
 
+  // Snapshot/Restore for persistence
+  snapshot(): any;
+  restore(snapshot: any): void;
+
   // Internal eviction method
   _evictOldestCompletedSession(): void;
 }
@@ -160,6 +165,13 @@ export const storage: MemoryStorage = {
     }
     // Update freshness
     this._updateFreshness('session', session.id);
+
+    // Lifecycle hook: mark session as active
+    try {
+      lifecycleManager.transitionPhase('session', session.id, 'active', 'updated');
+    } catch {
+      // Ignore if lifecycle manager not available
+    }
   },
   deleteSession(sessionId: SessionId) {
     const session = this.sessions.get(sessionId);
@@ -181,6 +193,13 @@ export const storage: MemoryStorage = {
     this.inputQueue.delete(sessionId);
     this.harmonyChecks.delete(sessionId);
     this.chatHistory.delete(sessionId);
+
+    // Lifecycle hook: remove session from tracking
+    try {
+      lifecycleManager.removeResource('session', sessionId);
+    } catch {
+      // Ignore if lifecycle manager not available
+    }
   },
 
   // User session tracking
@@ -636,8 +655,22 @@ export const storage: MemoryStorage = {
       }
     }
     if (oldestId) {
+      // Lifecycle hook: notify pre-eviction
+      try {
+        lifecycleManager.notifyPreEviction('session', oldestId);
+      } catch {
+        // Ignore if lifecycle manager not available
+      }
+
       // Use deleteSession which now handles cascade cleanup
       this.deleteSession(oldestId);
+
+      // Lifecycle hook: mark as evicted
+      try {
+        lifecycleManager.transitionPhase('session', oldestId, 'evicted', 'fifo-eviction');
+      } catch {
+        // Ignore if lifecycle manager not available
+      }
     }
   },
 
@@ -850,5 +883,274 @@ export const storage: MemoryStorage = {
       remainingMs,
       extensionCount: ttlInfo.extensionCount,
     };
+  },
+
+  // Snapshot/Restore methods for persistence
+  snapshot() {
+    const crypto = require('crypto');
+
+    // Convert all Maps to serializable structures
+    const data = {
+      sessions: Array.from(this.sessions.entries()).map(([id, session]) => session),
+      events: Object.fromEntries(
+        Array.from(this.events.entries()).map(([sessionId, events]) => [sessionId, events])
+      ),
+      chains: Object.fromEntries(
+        Array.from(this.chains.entries()).map(([sessionId, chains]) => [sessionId, chains])
+      ),
+      chatHistory: Object.fromEntries(
+        Array.from(this.chatHistory.entries()).map(([sessionId, messages]) => [sessionId, messages])
+      ),
+      sessionsByUser: Object.fromEntries(
+        Array.from(this.sessionsByUser.entries()).map(([userId, sessionIds]) => [userId, Array.from(sessionIds)])
+      ),
+      commandsQueue: Object.fromEntries(
+        Array.from(this.commandsQueue.entries()).map(([sessionId, commands]) => [sessionId, commands])
+      ),
+      inputQueue: Object.fromEntries(
+        Array.from(this.inputQueue.entries()).map(([sessionId, inputs]) => [sessionId, inputs])
+      ),
+      followedSessions: Array.from(this.followedSessions),
+      sessionWindowConfigs: Object.fromEntries(
+        Array.from(this.sessionWindowConfigs.entries()).map(([sessionId, config]) => [sessionId, config])
+      ),
+      frequencies: Object.fromEntries(
+        Array.from(this.frequencies.entries()).map(([key, record]) => [key, record])
+      ),
+      bookmarks: Object.fromEntries(
+        Array.from(this.bookmarks.entries()).map(([id, bookmark]) => [id, bookmark])
+      ),
+      patterns: Object.fromEntries(
+        Array.from(this.patterns.entries()).map(([id, pattern]) => [id, pattern])
+      ),
+      harmonyChecks: Object.fromEntries(
+        Array.from(this.harmonyChecks.entries()).map(([sessionId, checks]) => [sessionId, checks])
+      ),
+      harmonyChecksByProject: Object.fromEntries(
+        Array.from(this.harmonyChecksByProject.entries()).map(([projectId, checks]) => [projectId, checks])
+      ),
+      dossiers: Object.fromEntries(
+        Array.from(this.dossiers.entries()).map(([id, dossier]) => [id, dossier])
+      ),
+      suggestions: Object.fromEntries(
+        Array.from(this.suggestions.entries()).map(([id, suggestion]) => [id, suggestion])
+      ),
+      telemetryEntries: this.telemetryEntries,
+      sessionTtlExtensions: Object.fromEntries(
+        Array.from(this.sessionTtlExtensions.entries()).map(([sessionId, ttlInfo]) => [sessionId, ttlInfo])
+      ),
+      resourceFreshness: Object.fromEntries(
+        Array.from(this.resourceFreshness.entries()).map(([key, timestamp]) => [key, timestamp])
+      ),
+    };
+
+    const timestamp = new Date().toISOString();
+    const serialized = JSON.stringify(data);
+    const checksum = crypto.createHash('md5').update(serialized).digest('hex');
+
+    return {
+      version: 1,
+      timestamp,
+      checksum,
+      data,
+    };
+  },
+
+  restore(snapshot: any) {
+    // Validate snapshot version
+    if (snapshot.version !== 1) {
+      console.warn(`[MemoryStorage] Unsupported snapshot version: ${snapshot.version}. Skipping restore.`);
+      return;
+    }
+
+    // Validate checksum
+    const crypto = require('crypto');
+    const serialized = JSON.stringify(snapshot.data);
+    const computedChecksum = crypto.createHash('md5').update(serialized).digest('hex');
+    if (computedChecksum !== snapshot.checksum) {
+      console.warn(`[MemoryStorage] Checksum mismatch. Expected ${snapshot.checksum}, got ${computedChecksum}. Skipping restore.`);
+      return;
+    }
+
+    console.log(`[MemoryStorage] Restoring snapshot from ${snapshot.timestamp}...`);
+
+    try {
+      const data = snapshot.data;
+
+      // Clear existing data
+      this.sessions.clear();
+      this.events.clear();
+      this.chains.clear();
+      this.chatHistory.clear();
+      this.sessionsByUser.clear();
+      this.commandsQueue.clear();
+      this.inputQueue.clear();
+      this.followedSessions.clear();
+      this.sessionWindowConfigs.clear();
+      this.frequencies.clear();
+      this.bookmarks.clear();
+      this.patterns.clear();
+      this.harmonyChecks.clear();
+      this.harmonyChecksByProject.clear();
+      this.dossiers.clear();
+      this.suggestions.clear();
+      this.telemetryEntries = [];
+      this.sessionTtlExtensions.clear();
+
+      // Restore sessions
+      if (data.sessions && Array.isArray(data.sessions)) {
+        for (const session of data.sessions) {
+          this.sessions.set(session.id, session);
+        }
+        console.log(`[MemoryStorage] Restored ${data.sessions.length} sessions`);
+      }
+
+      // Restore events
+      if (data.events && typeof data.events === 'object') {
+        for (const [sessionId, events] of Object.entries(data.events)) {
+          if (Array.isArray(events)) {
+            this.events.set(sessionId as SessionId, events);
+          }
+        }
+        console.log(`[MemoryStorage] Restored events for ${Object.keys(data.events).length} sessions`);
+      }
+
+      // Restore chains
+      if (data.chains && typeof data.chains === 'object') {
+        for (const [sessionId, chains] of Object.entries(data.chains)) {
+          if (Array.isArray(chains)) {
+            this.chains.set(sessionId as SessionId, chains);
+          }
+        }
+        console.log(`[MemoryStorage] Restored chains for ${Object.keys(data.chains).length} sessions`);
+      }
+
+      // Restore chat history
+      if (data.chatHistory && typeof data.chatHistory === 'object') {
+        for (const [sessionId, messages] of Object.entries(data.chatHistory)) {
+          if (Array.isArray(messages)) {
+            this.chatHistory.set(sessionId as SessionId, messages);
+          }
+        }
+        console.log(`[MemoryStorage] Restored chat history for ${Object.keys(data.chatHistory).length} sessions`);
+      }
+
+      // Restore sessionsByUser
+      if (data.sessionsByUser && typeof data.sessionsByUser === 'object') {
+        for (const [userId, sessionIds] of Object.entries(data.sessionsByUser)) {
+          if (Array.isArray(sessionIds)) {
+            this.sessionsByUser.set(userId as UserId, new Set(sessionIds as SessionId[]));
+          }
+        }
+        console.log(`[MemoryStorage] Restored user sessions for ${Object.keys(data.sessionsByUser).length} users`);
+      }
+
+      // Restore commandsQueue
+      if (data.commandsQueue && typeof data.commandsQueue === 'object') {
+        for (const [sessionId, commands] of Object.entries(data.commandsQueue)) {
+          if (Array.isArray(commands)) {
+            this.commandsQueue.set(sessionId as SessionId, commands);
+          }
+        }
+      }
+
+      // Restore inputQueue
+      if (data.inputQueue && typeof data.inputQueue === 'object') {
+        for (const [sessionId, inputs] of Object.entries(data.inputQueue)) {
+          if (Array.isArray(inputs)) {
+            this.inputQueue.set(sessionId as SessionId, inputs);
+          }
+        }
+      }
+
+      // Restore followedSessions
+      if (data.followedSessions && Array.isArray(data.followedSessions)) {
+        this.followedSessions = new Set(data.followedSessions as SessionId[]);
+      }
+
+      // Restore sessionWindowConfigs
+      if (data.sessionWindowConfigs && typeof data.sessionWindowConfigs === 'object') {
+        for (const [sessionId, config] of Object.entries(data.sessionWindowConfigs)) {
+          this.sessionWindowConfigs.set(sessionId as SessionId, config as SessionWindowConfig);
+        }
+      }
+
+      // Restore frequencies
+      if (data.frequencies && typeof data.frequencies === 'object') {
+        for (const [key, record] of Object.entries(data.frequencies)) {
+          this.frequencies.set(key, record as FrequencyRecord);
+        }
+      }
+
+      // Restore bookmarks
+      if (data.bookmarks && typeof data.bookmarks === 'object') {
+        for (const [id, bookmark] of Object.entries(data.bookmarks)) {
+          this.bookmarks.set(id, bookmark as Bookmark);
+        }
+      }
+
+      // Restore patterns
+      if (data.patterns && typeof data.patterns === 'object') {
+        for (const [id, pattern] of Object.entries(data.patterns)) {
+          this.patterns.set(id, pattern as DetectedPattern);
+        }
+      }
+
+      // Restore harmonyChecks
+      if (data.harmonyChecks && typeof data.harmonyChecks === 'object') {
+        for (const [sessionId, checks] of Object.entries(data.harmonyChecks)) {
+          if (Array.isArray(checks)) {
+            this.harmonyChecks.set(sessionId as SessionId, checks);
+          }
+        }
+      }
+
+      // Restore harmonyChecksByProject
+      if (data.harmonyChecksByProject && typeof data.harmonyChecksByProject === 'object') {
+        for (const [projectId, checks] of Object.entries(data.harmonyChecksByProject)) {
+          if (Array.isArray(checks)) {
+            this.harmonyChecksByProject.set(projectId as ProjectId, checks);
+          }
+        }
+      }
+
+      // Restore dossiers
+      if (data.dossiers && typeof data.dossiers === 'object') {
+        for (const [id, dossier] of Object.entries(data.dossiers)) {
+          this.dossiers.set(id, dossier as IntelDossier);
+        }
+      }
+
+      // Restore suggestions
+      if (data.suggestions && typeof data.suggestions === 'object') {
+        for (const [id, suggestion] of Object.entries(data.suggestions)) {
+          this.suggestions.set(id, suggestion as SuggestionEntry);
+        }
+      }
+
+      // Restore telemetry
+      if (data.telemetryEntries && Array.isArray(data.telemetryEntries)) {
+        this.telemetryEntries = data.telemetryEntries;
+      }
+
+      // Restore sessionTtlExtensions
+      if (data.sessionTtlExtensions && typeof data.sessionTtlExtensions === 'object') {
+        for (const [sessionId, ttlInfo] of Object.entries(data.sessionTtlExtensions)) {
+          this.sessionTtlExtensions.set(sessionId, ttlInfo as { expiresAt: number; extensionCount: number });
+        }
+      }
+
+      // Restore resourceFreshness
+      if (data.resourceFreshness && typeof data.resourceFreshness === 'object') {
+        for (const [key, timestamp] of Object.entries(data.resourceFreshness)) {
+          this.resourceFreshness.set(key, timestamp as Timestamp);
+        }
+      }
+
+      console.log(`[MemoryStorage] Snapshot restore complete`);
+    } catch (error) {
+      console.error(`[MemoryStorage] Error restoring snapshot:`, error);
+      throw error;
+    }
   },
 };

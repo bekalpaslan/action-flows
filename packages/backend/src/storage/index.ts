@@ -139,6 +139,10 @@ export interface Storage {
   // Activity-aware TTL extension
   extendSessionTtl?(sessionId: string, extensionMs: number): Promise<void> | void;
   getSessionTtlInfo?(sessionId: string): Promise<{ remainingMs: number; extensionCount: number } | null> | { remainingMs: number; extensionCount: number } | null;
+
+  // Snapshot/Restore for persistence (Memory storage only)
+  snapshot?(): any;
+  restore?(snapshot: any): void;
 }
 
 /**

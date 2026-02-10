@@ -32,6 +32,9 @@ export type {
   TelemetryQueryFilter,
   CircuitState,
   CircuitBreakerStats,
+  LifecyclePhase,
+  LifecycleEvent,
+  LifecyclePolicy,
 } from './types.js';
 
 export { Status, Model, ChainSource, brandedTypes, duration, FRESHNESS_THRESHOLDS, calculateFreshnessGrade } from './types.js';

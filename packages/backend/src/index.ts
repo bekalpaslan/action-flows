@@ -13,6 +13,7 @@ import { cleanupService } from './services/cleanup.js';
 import { setBroadcastFunction, shutdownAllWatchers } from './services/fileWatcher.js';
 import { claudeCliManager } from './services/claudeCliManager.js';
 import { registryStorage } from './services/registryStorage.js';
+import { SnapshotService } from './services/snapshotService.js';
 import terminalRouter, { setBroadcastTerminalFunction } from './routes/terminal.js';
 import eventsRouter from './routes/events.js';
 import sessionsRouter from './routes/sessions.js';
@@ -32,8 +33,10 @@ import routingRouter from './routes/routing.js';
 import dossiersRouter, { setBroadcastDossierFunction } from './routes/dossiers.js';
 import suggestionsRouter from './routes/suggestions.js';
 import telemetryRouter from './routes/telemetry.js';
+import lifecycleRouter from './routes/lifecycle.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
+import { lifecycleManager } from './services/lifecycleManager.js';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -46,6 +49,9 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
 const storage = process.env.AFW_DISABLE_CIRCUIT_BREAKER === 'true'
   ? baseStorage
   : new ResilientStorage(baseStorage);
+
+// Initialize snapshot service for MemoryStorage persistence
+const snapshotService = new SnapshotService(storage);
 
 // Create Express app
 const app = express();
@@ -101,6 +107,7 @@ app.use('/api/patterns', patternsRouter);
 app.use('/api/dossiers', dossiersRouter);
 app.use('/api/suggestions', suggestionsRouter);
 app.use('/api/telemetry', telemetryRouter);
+app.use('/api/lifecycle', lifecycleRouter);
 // Note: patternsRouter also handles /bookmarks routes, registered at /api for cleaner URLs
 // IMPORTANT: Must come AFTER specific /api/* routes since it has /:projectId catch-all
 app.use('/api', patternsRouter);
@@ -336,6 +343,12 @@ if (isMainModule) {
     // Initialize Redis Pub/Sub after server starts
     await initializeRedisPubSub();
 
+    // Load snapshot and start snapshot service for MemoryStorage (only for non-Redis)
+    if (storage.snapshot) {
+      await snapshotService.loadLatestSnapshot();
+      snapshotService.start();
+    }
+
     // Initialize file watcher broadcast function
     setBroadcastFunction(broadcastFileEvent);
 
@@ -361,6 +374,9 @@ if (isMainModule) {
     // Start cleanup service
     cleanupService.start();
 
+    // Start lifecycle manager checking
+    lifecycleManager.startChecking();
+
     // Start server-side WebSocket heartbeat
     startServerHeartbeat();
 
@@ -380,11 +396,24 @@ if (isMainModule) {
   async function gracefulShutdown() {
     console.log('[Server] Shutting down gracefully...');
 
+    // Save snapshot for MemoryStorage before shutdown
+    if (storage.snapshot) {
+      try {
+        await snapshotService.saveSnapshot();
+        snapshotService.stop();
+      } catch (error) {
+        console.error('[Snapshot] Error saving snapshot on shutdown:', error);
+      }
+    }
+
     // Stop server heartbeat
     stopServerHeartbeat();
 
     // Stop cleanup service
     cleanupService.stop();
+
+    // Stop lifecycle manager checking
+    lifecycleManager.stopChecking();
 
     // Shutdown file watchers
     await shutdownAllWatchers();

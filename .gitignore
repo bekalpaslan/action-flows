@@ -19,6 +19,7 @@ Thumbs.db
 
 # Data & logs
 data/
+.actionflows-snapshot/
 
 # Test reports
 test/e2e/reports/
