@@ -61,3 +61,43 @@
 - **Root Cause:** Agent inferred selector names from component names rather than reading actual CSS. Analysis report had correct names but code agent deviated
 - **Fix:** Corrected selectors in `chrome-mcp-utils.ts`. Future: include actual CSS class names explicitly in code agent spawn prompt inputs
 - **Status:** Closed (selectors corrected)
+
+### L008: Agent writes flat file instead of nested path on Windows
+- **Date:** 2026-02-10
+- **From:** code/ agent during contract-fixes chain
+- **Issue:** Agent used full absolute path as a flat filename (e.g., `D:ActionFlowsDashboard.claude...changes.md`) instead of creating nested directories. Result was a 3.5KB junk file at the project root.
+- **Root Cause:** Agent's `Write` call used the absolute path as a single filename string without proper separator handling. Likely concatenated path segments without `/` or `\`.
+- **Fix:** Deleted junk file. Correct version existed at proper nested path. Future: agents should use `_abstract/create-log-folder/` before writing, which ensures the directory tree exists.
+- **Status:** Closed (junk file removed)
+
+### L009: CRLF Line Endings Break JS Regex Multiline Anchors
+- **Date:** 2026-02-10
+- **From:** code/frontend/ (haiku) during contract-compliance-425-fix chain (Batch C)
+- **Issue:** All 425 contract compliance tests failed. Root cause was CRLF (`\r\n`) line endings in `.contract.md` files on Windows. JS regex multiline mode (`^` and `$`) matches before `\n`, but CRLF introduces `\r` before `\n`, causing `$` to not match at the expected position and `^` to see `\r` as part of the line.
+- **Root Cause:** Windows git `core.autocrlf=true` converts LF→CRLF on checkout. Contract test suite uses multiline regex patterns like `(?=^## [^#]|$)` that assume LF-only line endings.
+- **Fix:** Converted all 100 contract files from CRLF→LF. Added `.gitattributes` rule (`*.contract.md text eol=lf`) to enforce LF on all platforms.
+- **Status:** Closed (commit `646a360`)
+
+### L010: Stale Failure Manifests Cause Batch Agent Misrouting
+- **Date:** 2026-02-10
+- **From:** code/frontend/ (haiku) Batch A during contract-compliance-425-fix chain
+- **Issue:** Analysis agent generated a failure manifest with contract paths that no longer matched the codebase (contracts had been reorganized into subdirectories). Batch A agent found 0 of 9 referenced contracts at the specified paths and was blocked.
+- **Root Cause:** Manifest was generated at analysis time but contract directory structure had been refactored. No validation step between manifest generation and batch dispatch.
+- **Fix:** Future: Add path validation to manifest generation (verify all referenced files exist). Or have code agents glob for contracts by name rather than relying on absolute paths.
+- **Status:** Open (pattern documented, no code fix yet)
+
+### L011: Parallel Batch Agents May Collide on Same File
+- **Date:** 2026-02-10
+- **From:** orchestrator observation during contract-compliance-425-fix chain
+- **Issue:** Batch B and Batch D both modified `ChatPanel.contract.md`. Batch B expanded sections, Batch D reorganized Test Hooks. Since both ran in parallel, the last writer won.
+- **Root Cause:** Batch assignments overlapped — ChatPanel was in both Batch B (Workbench+SessionPanel domain) and Batch D (remaining contracts including health selector fixes). No exclusive file locking between parallel agents.
+- **Fix:** When partitioning work into parallel batches, ensure file-level exclusivity — no contract should appear in more than one batch. Use the manifest to deduplicate assignments before dispatching.
+- **Status:** Closed (lesson logged, no data loss in this case)
+
+### L012: Flow Registration Without Instructions File Creates Orphans
+- **Date:** 2026-02-10
+- **From:** orchestrator observation during flow audit
+- **Issue:** 4 flows (`cli-integration-test/`, `e2e-chrome-mcp/`, `contract-index/`, `contract-compliance-audit/`) were registered in FLOWS.md and CONTEXTS.md but never got `instructions.md` files created in `flows/`. The orchestrator can route to them but has no execution instructions.
+- **Root Cause:** Flow registration was treated as a registry line edit (direct action), but creating the instructions file requires a code agent. The two steps were decoupled — the registry edit happened immediately, but the instructions creation was never queued as a follow-up. No validation exists to check that a registered flow has a corresponding instructions file.
+- **Fix:** When registering a flow, ALWAYS queue a follow-up `flow-creation/` chain or quick-triage the instructions file in the same turn. Add a `framework-health/` check that validates all FLOWS.md entries have matching `instructions.md` files.
+- **Status:** Open (4 orphans being fixed now)
