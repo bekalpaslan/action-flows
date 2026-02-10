@@ -114,7 +114,8 @@ export function useAllSessions(): UseAllSessionsReturn {
     if (
       event.type === 'session:started' ||
       event.type === 'session:ended' ||
-      event.type === 'session:deleted'
+      event.type === 'session:deleted' ||
+      event.type === 'session:updated'
     ) {
       setSessions((prevSessions) => {
         const existingIndex = prevSessions.findIndex(
@@ -154,6 +155,19 @@ export function useAllSessions(): UseAllSessionsReturn {
         ) {
           // Remove deleted session
           return prevSessions.filter((s) => s.id !== event.sessionId);
+        } else if (
+          event.type === 'session:updated' &&
+          existingIndex >= 0
+        ) {
+          // Update existing session with new status/summary/endReason
+          const updated = [...prevSessions];
+          updated[existingIndex] = {
+            ...updated[existingIndex],
+            ...(event.status && { status: event.status }),
+            ...(event.summary && { summary: event.summary }),
+            ...(event.endReason && { endReason: event.endReason }),
+          } as Session;
+          return updated;
         }
 
         return prevSessions;

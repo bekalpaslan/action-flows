@@ -263,6 +263,22 @@ router.put('/:id', writeLimiter, validateBody(updateSessionSchema), async (req, 
 
     await Promise.resolve(storage.setSession(session));
 
+    // Broadcast session:updated event
+    try {
+      const clients = clientRegistry.getAllClients();
+      const sessionUpdatedEvent: WorkspaceEvent = {
+        type: 'session:updated',
+        sessionId: session.id,
+        timestamp: brandedTypes.currentTimestamp(),
+        ...(status && { status }),
+        ...(summary && { summary }),
+        ...(endReason && { endReason }),
+      };
+      broadcastEvent(clients, sessionUpdatedEvent, session.id);
+    } catch (error) {
+      console.error('[API] Failed to broadcast session:updated:', error);
+    }
+
     console.log(`[API] Session updated: ${id}`, { status, summary, endReason });
 
     res.json(session);

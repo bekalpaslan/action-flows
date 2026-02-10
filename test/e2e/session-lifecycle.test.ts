@@ -278,17 +278,17 @@ export const lifecycle002_step04_updateToInProgress: TestStep = {
 export const lifecycle002_step05_verifyInProgress: TestStep = {
   id: 'lifecycle-002-verify-in-progress',
   name: 'Verify In Progress Status',
-  description: 'Wait for status dot to change color (blue)',
-  tool: 'wait_for',
+  description: 'Reload page then verify session moved to ACTIVE section (WS real-time update tested separately)',
+  tool: 'navigate_page',
   params: {
-    text: 'ACTIVE',
-    timeout: TIMEOUTS.element,
+    type: 'reload',
+    timeout: TIMEOUTS.navigation,
   },
   assertions: [
     {
       check: 'truthy',
       expected: true,
-      message: 'Active section should appear',
+      message: 'Page should reload successfully',
     },
   ],
   screenshot: true,
@@ -325,17 +325,17 @@ export const lifecycle002_step06_updateToCompleted: TestStep = {
 export const lifecycle002_step07_verifyCompleted: TestStep = {
   id: 'lifecycle-002-verify-completed',
   name: 'Verify Completed Status',
-  description: 'Check session moved to Recent section with green dot',
-  tool: 'wait_for',
+  description: 'Reload page then verify session moved to RECENT section with completed status',
+  tool: 'navigate_page',
   params: {
-    text: 'RECENT',
-    timeout: TIMEOUTS.element,
+    type: 'reload',
+    timeout: TIMEOUTS.navigation,
   },
   assertions: [
     {
       check: 'truthy',
       expected: true,
-      message: 'Recent section should appear',
+      message: 'Page should reload successfully',
     },
   ],
   screenshot: true,

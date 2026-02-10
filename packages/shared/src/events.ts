@@ -79,6 +79,15 @@ export interface SessionDeletedEvent extends BaseEvent {
   reason?: string; // e.g., 'manual', 'auto-eviction'
 }
 
+export interface SessionUpdatedEvent extends BaseEvent {
+  type: 'session:updated';
+
+  // Parsed fields (nullable)
+  status?: string;
+  summary?: string;
+  endReason?: string;
+}
+
 /**
  * Chain compilation and lifecycle events
  */
@@ -640,6 +649,7 @@ export type WorkspaceEvent =
   | SessionStartedEvent
   | SessionEndedEvent
   | SessionDeletedEvent
+  | SessionUpdatedEvent
   | ChainCompiledEvent
   | ChainStartedEvent
   | ChainCompletedEvent
