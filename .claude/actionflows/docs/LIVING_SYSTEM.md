@@ -4,19 +4,21 @@
 
 ActionFlows is a productivity universe. Not a framework you configure, not a tool you learn, not a dashboard you read. A universe you inhabit. You express intention, and the cosmos reshapes itself to manifest it. You use it, and it grows. You make mistakes, and it learns. The architecture underneath is designed not just to execute work, but to evolve from it -- to become smarter, more efficient, and more alive with each session.
 
-**The Natural Laws:**
+**What This Universe Is Made Of:**
 
-Every universe has physics. This one has four:
+- **Software = Building Blocks** -- The raw material. Code is what everything in this universe is constructed from -- imperfect, mutable, surprising. Not reliable or certain; just the atoms that make up reality.
 
-- **Software = Physics** -- The raw underlying reality. Code is the laws that govern this universe -- imperfect, mutable, the foundation everything runs on. Software is not certain or reliable; it is the physics that can be buggy, inconsistent, surprising -- just like real physics was before we understood it.
+- **Framework = Matter** -- The substance that holds the building blocks together. ActionFlows is the structured matter of this universe -- the contracts, flows, agents, harmony system, memory. It gives shape and coherence to raw code.
 
-- **Orchestrator = Brain** -- The intelligence that understands the physics and has the power to change them. The orchestrator does not just coordinate -- it actively reshapes the universe's laws when needed. When code needs fixing, the brain rewrites the physics.
+**Who Lives Here:**
 
-- **Human = Will** -- The prompt. The intention. The force that sets everything in motion. Humans do not code directly -- they express will, and the brain reshapes physics through agents.
+- **Human = Will** -- The intention. The force that sets everything in motion. Humans do not code directly -- they express will, and the brain reshapes matter through hands.
 
-- **Agents = Hands** -- The executors that work within the physics. They carry out the brain's decisions and transform the physics according to the will. Agents are the limbs through which the brain acts on the universe.
+- **Orchestrator = Brain** -- The intelligence that understands the matter and has the power to reshape it. The orchestrator coordinates, plans, and rewrites the universe's structure when needed.
 
-This is a human-orchestrator-agent centric future where software is no longer static code to be written, but living physics that evolve, adapt, and learn alongside their users.
+- **Agents = Hands** -- The executors that work within the matter. They carry out the brain's decisions and transform building blocks according to the will.
+
+The triad -- Will, Brain, and Hands -- are the inhabitants. The framework is the matter they inhabit. The software is what the matter is built from. This is a human-orchestrator-agent centric future where software is no longer static code to be written, but living building blocks that the inhabitants reshape, evolve, and grow alongside.
 
 **Three Audiences, One Universe:**
 
