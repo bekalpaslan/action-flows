@@ -195,6 +195,47 @@
   --nav-item-text-active: var(--system-blue);
 
   /* ==========================================================================
+     Sidebar & Navigation Token System (Material Dashboard)
+     ========================================================================== */
+
+  /* Sidebar gradients */
+  --sidebar-gradient-from: #3e3d45;
+  --sidebar-gradient-to: #202020;
+  --sidebar-bg-gradient: linear-gradient(180deg, var(--sidebar-gradient-from) 0%, var(--sidebar-gradient-to) 100%);
+
+  /* Sidebar accent colors */
+  --sidebar-accent-pink: #E91F63;
+  --sidebar-section-header-bg: #505054;
+  --sidebar-section-header-hover: #5a5a5e;
+  --sidebar-badge-bg: rgba(255, 255, 255, 0.1);
+
+  /* Avatar gradients */
+  --avatar-gradient-from: #667eea;
+  --avatar-gradient-to: #764ba2;
+  --avatar-gradient: linear-gradient(135deg, var(--avatar-gradient-from) 0%, var(--avatar-gradient-to) 100%);
+
+  /* Separator variant */
+  --separator-light: rgba(255, 255, 255, 0.15);
+
+  /* Layout dimensions */
+  --topbar-height: 50px;
+  --sidebar-width: 250px;
+  --session-sidebar-width: 240px;
+  --nav-item-height: 48px;
+  --nav-subitem-height: 40px;
+
+  /* Scrollbar system */
+  --scrollbar-width: 6px;
+  --scrollbar-radius: 3px;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.3);
+  --scrollbar-track-bg: rgba(255, 255, 255, 0.05);
+
+  /* Navigation typography */
+  --text-nav: 14px;
+  --tracking-label: 0.5px;
+
+  /* ==========================================================================
      Glass Effect Token System
      ========================================================================== */
 

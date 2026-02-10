@@ -40,14 +40,19 @@
   contain: layout style; /* CSS containment to prevent layout escape */
 }
 
-/* Add left margin when SessionSidebar is present (static: 240px) */
+/* Always offset for the DashboardSidebar (250px fixed left nav) */
+.workbench-main {
+  margin-left: var(--sidebar-width);
+}
+
+/* Add extra left margin when SessionSidebar is also present */
 .workbench-main.with-sidebar {
-  margin-left: 240px;
+  margin-left: calc(var(--sidebar-width) + var(--session-sidebar-width)); /* 250px DashboardSidebar + 240px SessionSidebar */
 }
 
 .workbench-main::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
 }
 
 .workbench-main::-webkit-scrollbar-track {
@@ -111,7 +116,7 @@
 
 .placeholder-title {
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: var(--space-2);
@@ -136,7 +141,7 @@
 
 .workbench-placeholder h1 {
   font-size: var(--text-2xl);
-  font-weight: 300;
+  font-weight: var(--font-light);
   margin-bottom: var(--space-4);
   color: var(--text-primary);
   font-family: var(--font-sans);
@@ -146,7 +151,7 @@
   font-size: var(--text-base);
   color: var(--text-secondary);
   max-width: 400px;
-  line-height: 1.5;
+  line-height: var(--leading-normal);
 }
 
 /* ============================================================================
@@ -170,6 +175,9 @@
   }
 
   /* Reduce sidebar margin on mobile */
+  .workbench-main {
+    margin-left: 0;
+  }
   .workbench-main.with-sidebar {
     margin-left: 0;
   }
