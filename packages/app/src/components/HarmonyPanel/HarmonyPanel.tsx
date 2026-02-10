@@ -6,6 +6,8 @@
 import React, { useState } from 'react';
 import { useHarmonyMetrics } from '../../hooks/useHarmonyMetrics';
 import { HarmonyBadge } from '../HarmonyBadge/HarmonyBadge';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import type { SessionId, ProjectId } from '@afw/shared';
 import './HarmonyPanel.css';
 
@@ -27,6 +29,17 @@ export const HarmonyPanel: React.FC<HarmonyPanelProps> = ({
 }) => {
   const { metrics, recentChecks, loading, error, refresh } = useHarmonyMetrics(target, targetType);
   const [expandedViolation, setExpandedViolation] = useState<string | null>(null);
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'HarmonyPanel',
+    getContext: () => metrics ? ({
+      harmonyPercentage: metrics.harmonyPercentage,
+      totalChecks: metrics.totalChecks,
+      violationCount: metrics.violationCount,
+      degradedCount: metrics.degradedCount,
+    }) : {},
+  });
 
   if (loading) {
     return (
@@ -67,6 +80,7 @@ export const HarmonyPanel: React.FC<HarmonyPanelProps> = ({
       <div className="harmony-panel__header">
         <h3 className="harmony-panel__title">Harmony Status</h3>
         <HarmonyBadge percentage={metrics.harmonyPercentage} showLabel size="large" />
+        <DiscussButton componentName="HarmonyPanel" onClick={openDialog} size="small" />
       </div>
 
       {/* Metrics Overview */}
@@ -161,6 +175,20 @@ export const HarmonyPanel: React.FC<HarmonyPanelProps> = ({
           Refresh
         </button>
       </div>
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="HarmonyPanel"
+        componentContext={metrics ? {
+          harmonyPercentage: metrics.harmonyPercentage,
+          totalChecks: metrics.totalChecks,
+          violationCount: metrics.violationCount,
+          degradedCount: metrics.degradedCount,
+        } : {}}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 };

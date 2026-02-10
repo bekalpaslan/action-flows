@@ -16,6 +16,11 @@
   z-index: 0;
 }
 
+/* DiscussButton panel */
+.flow-discuss-panel {
+  z-index: 10;
+}
+
 .swimlane-background {
   position: absolute;
   top: 0;

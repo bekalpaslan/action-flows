@@ -1,0 +1,217 @@
+/**
+ * DiscussDialog Styles
+ * BEM naming: .discuss-dialog, .discuss-dialog__*, .discuss-dialog--*
+ */
+
+/* Backdrop */
+.discuss-dialog__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* Dialog container */
+.discuss-dialog {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Header */
+.discuss-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #333;
+}
+
+.discuss-dialog__header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.discuss-dialog__close-btn {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.discuss-dialog__close-btn:hover {
+  background: #333;
+  color: #fff;
+}
+
+.discuss-dialog__close-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Body */
+.discuss-dialog__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.discuss-dialog__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #c0c0c0;
+  margin-bottom: 6px;
+}
+
+.discuss-dialog__message {
+  width: 100%;
+  padding: 10px 12px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+  outline: none;
+}
+
+.discuss-dialog__message:focus {
+  border-color: #5865f2;
+}
+
+.discuss-dialog__message:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Context section (native details/summary) */
+.discuss-dialog__context {
+  margin-top: 8px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background: #2a2a2a;
+}
+
+.discuss-dialog__context-summary {
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #c0c0c0;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: background 0.2s ease;
+}
+
+.discuss-dialog__context-summary::-webkit-details-marker {
+  display: none;
+}
+
+.discuss-dialog__context-summary::before {
+  content: '▶';
+  display: inline-block;
+  margin-right: 8px;
+  transition: transform 0.2s ease;
+}
+
+.discuss-dialog__context[open] .discuss-dialog__context-summary::before {
+  transform: rotate(90deg);
+}
+
+.discuss-dialog__context-summary:hover {
+  background: #333;
+}
+
+.discuss-dialog__context-content {
+  padding: 12px;
+  margin: 0;
+  font-size: 12px;
+  color: #b0b0b0;
+  background: #252525;
+  border-top: 1px solid #444;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Actions */
+.discuss-dialog__actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #333;
+  justify-content: flex-end;
+}
+
+.discuss-dialog__btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.discuss-dialog__btn:focus-visible {
+  box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.4);
+}
+
+.discuss-dialog__btn--primary {
+  background: #5865f2;
+  color: #ffffff;
+}
+
+.discuss-dialog__btn--primary:hover:not(:disabled) {
+  background: #4752c4;
+}
+
+.discuss-dialog__btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.discuss-dialog__btn--secondary {
+  background: #3a3a3a;
+  color: #e0e0e0;
+}
+
+.discuss-dialog__btn--secondary:hover:not(:disabled) {
+  background: #4a4a4a;
+}
+
+.discuss-dialog__btn--secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

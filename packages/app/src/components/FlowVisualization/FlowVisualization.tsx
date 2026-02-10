@@ -29,6 +29,8 @@ import {
   calculateSwimlaneEdges,
   getSwimlaneNames,
 } from '../../utils/swimlaneLayout';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './FlowVisualization.css';
 
 export interface FlowVisualizationProps {
@@ -52,6 +54,17 @@ export const FlowVisualization: React.FC<FlowVisualizationProps> = ({
 }) => {
   const [selectedStep, setSelectedStep] = useState<number | null>(null);
   const { fitView } = useReactFlow();
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'FlowVisualization',
+    getContext: () => ({
+      chainId: chain.id,
+      chainTitle: chain.title,
+      stepCount: chain.steps.length,
+      selectedStep,
+    }),
+  });
 
   // Compute swimlane assignments
   const swimlaneAssignments = useMemo(
@@ -178,6 +191,11 @@ export const FlowVisualization: React.FC<FlowVisualizationProps> = ({
           <SwimlaneBackground swimlaneNames={swimlaneNames} />
         </Panel>
 
+        {/* DiscussButton in top-right panel */}
+        <Panel position="top-right" className="flow-discuss-panel">
+          <DiscussButton componentName="FlowVisualization" onClick={openDialog} size="small" />
+        </Panel>
+
         <Background color="#e0e0e0" gap={16} />
         <Controls />
         <MiniMap
@@ -196,6 +214,20 @@ export const FlowVisualization: React.FC<FlowVisualizationProps> = ({
           maskColor="rgba(0, 0, 0, 0.05)"
         />
       </ReactFlow>
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="FlowVisualization"
+        componentContext={{
+          chainId: chain.id,
+          chainTitle: chain.title,
+          stepCount: chain.steps.length,
+          selectedStep,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 };

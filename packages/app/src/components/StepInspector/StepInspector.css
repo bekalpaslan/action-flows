@@ -43,6 +43,12 @@
   flex-shrink: 0;
 }
 
+.inspector-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Step Control Buttons */
 .inspector-step-controls {
   display: flex;

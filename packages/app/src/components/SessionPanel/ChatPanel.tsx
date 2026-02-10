@@ -21,6 +21,8 @@ import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import { useChatMessages, type ChatMessage } from '../../hooks/useChatMessages';
 import { usePromptButtons } from '../../hooks/usePromptButtons';
 import { claudeCliService } from '../../services/claudeCliService';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import type { PromptButton } from '../../services/promptButtonSelector';
 import './ChatPanel.css';
 
@@ -139,6 +141,16 @@ export function ChatPanel({
     session,
     messages,
     cliRunning: cliState === 'running',
+  });
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
+    componentName: 'ChatPanel',
+    getContext: () => ({
+      messageCount: messages.length,
+      sessionStatus: session?.status,
+      cliState,
+    }),
   });
 
   /**
@@ -297,6 +309,17 @@ export function ChatPanel({
   }, [getButtonPromptText, handleSendMessage]);
 
   /**
+   * Handle discuss dialog send - prefill the input instead of sending immediately
+   */
+  const handleDiscussDialogSend = useCallback((message: string) => {
+    const formattedMessage = handleDiscussSend(message);
+    setInput(formattedMessage);
+    closeDialog();
+    // Focus the input field
+    inputRef.current?.focus();
+  }, [handleDiscussSend, closeDialog]);
+
+  /**
    * Determine if the assistant is currently "typing" (streaming)
    * Heuristic: if last message is from assistant and was very recently updated
    */
@@ -420,6 +443,7 @@ export function ChatPanel({
               Live
             </span>
           )}
+          <DiscussButton componentName="ChatPanel" onClick={openDialog} size="small" />
           {collapsible && (
             <button
               className="collapse-toggle"
@@ -572,6 +596,19 @@ export function ChatPanel({
           </div>
         </>
       )}
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="ChatPanel"
+        componentContext={{
+          messageCount: messages.length,
+          sessionStatus: session?.status,
+          cliState,
+        }}
+        onSend={handleDiscussDialogSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

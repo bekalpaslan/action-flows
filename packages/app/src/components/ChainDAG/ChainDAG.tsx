@@ -22,6 +22,8 @@ import { layoutNodes, layoutEdges, detectParallelGroups } from './layout';
 import { ChainBadge } from '../ChainBadge';
 import { StepInspector } from '../StepInspector';
 import { detectChainType } from '../../utils/chainTypeDetection';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './ChainDAG.css';
 
 interface ChainDAGProps {
@@ -46,6 +48,30 @@ export const ChainDAG: React.FC<ChainDAGProps> = ({
     () => detectChainType(chain),
     [chain]
   );
+
+  // Compute stats
+  const stats = useMemo(() => {
+    const total = chain.steps.length;
+    const completed = chain.steps.filter(s => s.status === 'completed').length;
+    const failed = chain.steps.filter(s => s.status === 'failed').length;
+    const inProgress = chain.steps.filter(s => s.status === 'in_progress').length;
+    const pending = chain.steps.filter(s => s.status === 'pending').length;
+    const skipped = chain.steps.filter(s => s.status === 'skipped').length;
+
+    return { total, completed, failed, inProgress, pending, skipped };
+  }, [chain.steps]);
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'ChainDAG',
+    getContext: () => ({
+      chainId: chain.id,
+      chainTitle: chain.title,
+      stepCount: stats.total,
+      status: chain.status,
+      parallelGroups: parallelGroups.length,
+    }),
+  });
 
   // Compute parallel groups for visual grouping
   const parallelGroups = useMemo(
@@ -123,18 +149,6 @@ export const ChainDAG: React.FC<ChainDAGProps> = ({
     [onStepSelected]
   );
 
-  // Compute stats
-  const stats = useMemo(() => {
-    const total = chain.steps.length;
-    const completed = chain.steps.filter(s => s.status === 'completed').length;
-    const failed = chain.steps.filter(s => s.status === 'failed').length;
-    const inProgress = chain.steps.filter(s => s.status === 'in_progress').length;
-    const pending = chain.steps.filter(s => s.status === 'pending').length;
-    const skipped = chain.steps.filter(s => s.status === 'skipped').length;
-
-    return { total, completed, failed, inProgress, pending, skipped };
-  }, [chain.steps]);
-
   const selectedStepData = useMemo(
     () => chain.steps.find(s => Number(s.stepNumber) === selectedStep),
     [chain.steps, selectedStep]
@@ -148,6 +162,7 @@ export const ChainDAG: React.FC<ChainDAGProps> = ({
           <div className="chain-dag-header-top">
             <h3 className="chain-dag-title">{chain.title}</h3>
             <ChainBadge metadata={chainMetadata} />
+            <DiscussButton componentName="ChainDAG" onClick={openDialog} size="small" />
           </div>
           <div className="chain-dag-stats">
             <div className="chain-dag-stat">
@@ -236,6 +251,21 @@ export const ChainDAG: React.FC<ChainDAGProps> = ({
       <StepInspector
         step={selectedStepData || null}
         onClose={() => setSelectedStep(null)}
+      />
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="ChainDAG"
+        componentContext={{
+          chainId: chain.id,
+          chainTitle: chain.title,
+          stepCount: stats.total,
+          status: chain.status,
+          parallelGroups: parallelGroups.length,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
       />
     </div>
   );

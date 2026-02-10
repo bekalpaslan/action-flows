@@ -1,0 +1,57 @@
+/**
+ * DiscussButton Styles
+ * BEM naming: .discuss-button, .discuss-button__*, .discuss-button--*
+ */
+
+.discuss-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #5865f2;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.discuss-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 8px rgba(88, 101, 242, 0.6);
+}
+
+.discuss-button:active {
+  transform: scale(0.98);
+}
+
+.discuss-button:focus-visible {
+  box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.4);
+}
+
+/* Small variant: icon-only */
+.discuss-button--small {
+  padding: 6px;
+}
+
+/* Disabled state */
+.discuss-button--disabled,
+.discuss-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Icon */
+.discuss-button__icon {
+  flex-shrink: 0;
+}
+
+/* Label */
+.discuss-button__label {
+  white-space: nowrap;
+}

@@ -6,6 +6,8 @@
 import { useEffect, useState } from 'react';
 import type { ChainStep, SessionId } from '@afw/shared';
 import { useSessionControls } from '../../hooks/useSessionControls';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './StepInspector.css';
 
 interface StepInspectorProps {
@@ -86,6 +88,17 @@ export const StepInspector: React.FC<StepInspectorProps> = ({ step, sessionId, o
   const [isRetrying, setIsRetrying] = useState(false);
   const [isSkipping, setIsSkipping] = useState(false);
 
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'StepInspector',
+    getContext: () => step ? ({
+      stepNumber: step.stepNumber,
+      action: step.action,
+      status: step.status,
+      model: step.model,
+    }) : {},
+  });
+
   const handleRetry = async () => {
     if (!step || !sessionId || isRetrying) return;
 
@@ -160,14 +173,17 @@ export const StepInspector: React.FC<StepInspectorProps> = ({ step, sessionId, o
             <span className="inspector-step-number">Step #{step.stepNumber}</span>
             <h3>{step.action}</h3>
           </div>
-          <button
-            className="inspector-close-btn"
-            onClick={onClose}
-            aria-label="Close inspector"
-            title="Close (ESC)"
-          >
-            ✕
-          </button>
+          <div className="inspector-header-actions">
+            <DiscussButton componentName="StepInspector" onClick={openDialog} size="small" />
+            <button
+              className="inspector-close-btn"
+              onClick={onClose}
+              aria-label="Close inspector"
+              title="Close (ESC)"
+            >
+              ✕
+            </button>
+          </div>
         </div>
         <div className="inspector-status-bar">
           <span
@@ -349,6 +365,20 @@ export const StepInspector: React.FC<StepInspectorProps> = ({ step, sessionId, o
           </section>
         )}
       </div>
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="StepInspector"
+        componentContext={step ? {
+          stepNumber: step.stepNumber,
+          action: step.action,
+          status: step.status,
+          model: step.model,
+        } : {}}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 };
