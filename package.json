@@ -19,7 +19,9 @@
     "test:pw": "playwright test",
     "test:pw:ui": "playwright test --ui",
     "test:pw:headed": "playwright test --headed",
-    "test:pw:report": "playwright show-report"
+    "test:pw:report": "playwright show-report",
+    "health:check": "tsx scripts/health-check.ts",
+    "health:check:ci": "tsx scripts/health-check-ci.ts"
   },
   "workspaces": [
     "packages/*"

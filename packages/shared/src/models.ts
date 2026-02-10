@@ -547,7 +547,17 @@ export type RespectComponentType =
   | 'input'
   | 'visualization'
   | 'widget'
-  | 'modal';
+  | 'modal'
+  | 'fixed-overlay'
+  | 'editor'
+  | 'data-grid'
+  | 'tree-view'
+  | 'inspector'
+  | 'card'
+  | 'toolbar'
+  | 'workbench-variant'
+  | 'dialog'
+  | 'badge';
 
 /**
  * Types of spatial violations
@@ -559,7 +569,10 @@ export type RespectViolationType =
   | 'fixed_dim_mismatch'
   | 'min_constraint'
   | 'max_constraint'
-  | 'parent_escape';
+  | 'parent_escape'
+  | 'z_index_mismatch'
+  | 'fixed_position_escape'
+  | 'aspect_ratio_mismatch';
 
 /**
  * Single spatial violation detail
@@ -590,6 +603,20 @@ export interface RespectComponentResult {
 }
 
 /**
+ * Coverage metrics for respect check
+ */
+export interface RespectCoverageMetrics {
+  /** Estimated total known components in the dashboard */
+  totalKnownComponents: number;
+  /** Number of selectors the script checked */
+  checkedSelectors: number;
+  /** Number of selectors that found at least one element */
+  foundSelectors: number;
+  /** Percentage of known components covered (foundSelectors / totalKnownComponents * 100) */
+  coveragePercent: number;
+}
+
+/**
  * Full respect check result from a single run
  */
 export interface RespectCheckResult {
@@ -602,4 +629,6 @@ export interface RespectCheckResult {
   violations: RespectComponentResult[];
   summary: { high: number; medium: number; low: number };
   clean: Array<{ selector: string; type: RespectComponentType; width: number; height: number }>;
+  /** Coverage metrics (present when running expanded check script) */
+  coverage?: RespectCoverageMetrics;
 }

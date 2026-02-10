@@ -25,6 +25,7 @@ export function RespectCheckControls({
   const passing = result?.clean.length ?? 0;
   const warnings = result?.summary.medium ?? 0;
   const violations = result?.summary.high ?? 0;
+  const coverage = result?.coverage ?? null;
 
   // Determine overall status color
   const getStatusClass = (): string => {
@@ -75,6 +76,15 @@ export function RespectCheckControls({
           <div className="respect-controls__chip respect-controls__chip--danger">
             <span className="respect-controls__chip-label">✗ Fail</span>
             <span className="respect-controls__chip-value">{violations}</span>
+          </div>
+        )}
+
+        {coverage && (
+          <div className="respect-controls__chip respect-controls__chip--coverage">
+            <span className="respect-controls__chip-label">Coverage</span>
+            <span className="respect-controls__chip-value">
+              {coverage.foundSelectors}/{coverage.totalKnownComponents} ({coverage.coveragePercent}%)
+            </span>
           </div>
         )}
       </div>

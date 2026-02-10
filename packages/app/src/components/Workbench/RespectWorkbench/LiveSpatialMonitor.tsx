@@ -63,6 +63,16 @@ export function LiveSpatialMonitor({
     visualization: 'Visualizations',
     widget: 'Widgets',
     modal: 'Modals',
+    'fixed-overlay': 'Fixed Overlays',
+    editor: 'Editors',
+    'data-grid': 'Data Grids',
+    'tree-view': 'Tree Views',
+    inspector: 'Inspectors',
+    card: 'Cards',
+    toolbar: 'Toolbars',
+    'workbench-variant': 'Workbench Variants',
+    dialog: 'Dialogs',
+    badge: 'Badges',
   };
 
   // Show error state
@@ -106,6 +116,16 @@ export function LiveSpatialMonitor({
     'visualization',
     'widget',
     'modal',
+    'fixed-overlay',
+    'editor',
+    'data-grid',
+    'tree-view',
+    'inspector',
+    'card',
+    'toolbar',
+    'workbench-variant',
+    'dialog',
+    'badge',
   ];
 
   return (
@@ -117,12 +137,24 @@ export function LiveSpatialMonitor({
         return (
           <CategorySection
             key={type}
-            title={categoryTitles[type]}
+            title={categoryTitles[type] || type}
             type={type}
             components={components}
           />
         );
       })}
+
+      {/* Render any categories not in the ordered list (future-proofing) */}
+      {Array.from(groupedResults.entries())
+        .filter(([type]) => !categoryOrder.includes(type))
+        .map(([type, components]) => (
+          <CategorySection
+            key={type}
+            title={categoryTitles[type] || type}
+            type={type}
+            components={components}
+          />
+        ))}
 
       {groupedResults.size === 0 && (
         <div className="respect-monitor__empty">

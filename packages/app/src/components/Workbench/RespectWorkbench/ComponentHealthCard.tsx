@@ -4,7 +4,21 @@
  */
 
 import React, { useState } from 'react';
-import type { RespectViolation } from '@afw/shared';
+import type { RespectViolation, RespectViolationType } from '@afw/shared';
+
+/** Human-readable labels for violation types */
+const violationTypeLabels: Record<RespectViolationType, string> = {
+  horizontal_overflow: 'Horizontal Overflow',
+  vertical_overflow: 'Vertical Overflow',
+  viewport_escape: 'Viewport Escape',
+  fixed_dim_mismatch: 'Dimension Mismatch',
+  min_constraint: 'Min Constraint',
+  max_constraint: 'Max Constraint',
+  parent_escape: 'Parent Escape',
+  z_index_mismatch: 'Z-Index Mismatch',
+  fixed_position_escape: 'Fixed Position Escape',
+  aspect_ratio_mismatch: 'Aspect Ratio Mismatch',
+};
 
 export interface ComponentHealthCardProps {
   /** Component selector */
@@ -61,7 +75,9 @@ export function ComponentHealthCard({
                 >
                   {violation.severity}
                 </span>
-                <span className="respect-violation__type">{violation.type}</span>
+                <span className="respect-violation__type">
+                  {violationTypeLabels[violation.type as RespectViolationType] || violation.type}
+                </span>
               </div>
 
               <div className="respect-violation__message">{violation.message}</div>

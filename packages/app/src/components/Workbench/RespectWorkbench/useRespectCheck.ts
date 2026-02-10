@@ -12,6 +12,9 @@ import type { RespectCheckResult } from '@afw/shared';
  */
 const RESPECT_CHECK_SCRIPT = `(() => {
   const componentsToCheck = [
+    // ============================================================
+    // ORIGINAL 24 SELECTORS (preserved exactly)
+    // ============================================================
     { selector: '.workbench-layout', type: 'layout-shell', expected: { width: 'viewport', height: 'viewport' } },
     { selector: '.top-bar', type: 'topbar', expected: { height: 52 } },
     { selector: '.session-sidebar', type: 'sidebar', expected: { width: 240 } },
@@ -35,25 +38,86 @@ const RESPECT_CHECK_SCRIPT = `(() => {
     { selector: '.left-panel-stack', type: 'panel' },
     { selector: '.command-palette-modal', type: 'modal', expected: { maxWidth: 600, maxHeight: 500 } },
     { selector: '.sidebar-content', type: 'content-area' },
-    { selector: '.top-bar-tabs', type: 'topbar' }
+    { selector: '.top-bar-tabs', type: 'topbar' },
+
+    // ============================================================
+    // HIGH PRIORITY ADDITIONS (9 selectors)
+    // ============================================================
+    { selector: '.app-sidebar', type: 'sidebar', expected: { width: 240, minWidthCollapsed: 64, height: 'viewport' } },
+    { selector: '.squad-panel-orchestrator .agent-character-card', type: 'card', expected: { width: 200 } },
+    { selector: '.squad-panel-side .agent-character-card', type: 'card', expected: { width: 140 } },
+    { selector: '.command-palette-backdrop', type: 'fixed-overlay', expected: { width: 'viewport', height: 'viewport' } },
+    { selector: '.monaco-editor-container', type: 'editor', expected: { widthPercent: 100, heightPercent: 100 } },
+    { selector: '.work-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } },
+    { selector: '.review-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } },
+    { selector: '.harmony-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } },
+    { selector: '.registry-browser__tree', type: 'tree-view' },
+
+    // ============================================================
+    // MEDIUM PRIORITY ADDITIONS (20 selectors)
+    // ============================================================
+    { selector: '.app-sidebar__header', type: 'layout-shell', expected: { height: 60 } },
+    { selector: '.app-sidebar__nav-section', type: 'content-area' },
+    { selector: '.app-sidebar__footer', type: 'layout-shell', expected: { minHeight: 60 } },
+    { selector: '.sidebar-header', type: 'layout-shell', expected: { height: 60 } },
+    { selector: '.sidebar-footer', type: 'layout-shell', expected: { minHeight: 48 } },
+    { selector: '.session-list', type: 'content-area' },
+    { selector: '.agent-log-panel', type: 'inspector', expected: { maxWidth: 400 } },
+    { selector: '.command-palette-results', type: 'content-area', expected: { maxHeight: 400 } },
+    { selector: '.react-flow__controls', type: 'toolbar' },
+    { selector: '.react-flow__minimap', type: 'widget' },
+    { selector: '.editor-tabs-container', type: 'toolbar' },
+    { selector: '.diff-view', type: 'editor' },
+    { selector: '.change-preview', type: 'panel' },
+    { selector: '.change-preview__header', type: 'layout-shell', expected: { height: 48 } },
+    { selector: '.harmony-panel', type: 'inspector' },
+    { selector: '.harmony-violations-list', type: 'content-area', expected: { maxHeight: 300 } },
+    { selector: '.step-inspector', type: 'inspector' },
+    { selector: '.step-inspector__logs', type: 'content-area', expected: { maxHeight: 400 } },
+    { selector: '.telemetry-viewer', type: 'inspector' },
+    { selector: '.telemetry-charts', type: 'data-grid' },
+
+    // ============================================================
+    // LOW PRIORITY ADDITIONS (16 selectors)
+    // ============================================================
+    { selector: '.discuss-button', type: 'fixed-overlay', expected: { zIndex: 100 } },
+    { selector: '.discuss-dialog', type: 'dialog', expected: { maxWidth: 500, maxHeight: 400 } },
+    { selector: '.toast', type: 'fixed-overlay', expected: { zIndex: 10000 } },
+    { selector: '.persistent-toolbar', type: 'toolbar', expected: { height: 48 } },
+    { selector: '.quick-action-bar', type: 'toolbar', expected: { height: 56 } },
+    { selector: '.dossier-list', type: 'content-area' },
+    { selector: '.dossier-view', type: 'inspector' },
+    { selector: '.dossier-creation-dialog', type: 'dialog', expected: { maxWidth: 600, maxHeight: 500 } },
+    { selector: '.explore-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } },
+    { selector: '.pm-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } },
+    { selector: '.maintenance-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } },
+    { selector: '.archive-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } },
+    { selector: '.canvas-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } },
+    { selector: '.intel-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } },
+    { selector: '.settings-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } },
+    { selector: '.respect-workbench', type: 'workbench-variant', expected: { heightPercent: 100 } }
   ];
 
+  const TOTAL_KNOWN_COMPONENTS = 130;
   const vw = window.innerWidth;
   const vh = window.innerHeight;
   const violations = [];
   const clean = [];
   let totalChecked = 0;
   let totalElementsFound = 0;
+  let foundSelectors = 0;
   const summary = { high: 0, medium: 0, low: 0 };
 
   componentsToCheck.forEach(({ selector, type, expected, knownOverflowVisible }) => {
-    const elements = document.querySelectorAll(selector);
+    const elements = Array.from(document.querySelectorAll(selector));
+    if (elements.length > 0) foundSelectors++;
     totalElementsFound += elements.length;
 
     elements.forEach((el) => {
       totalChecked++;
       const rect = el.getBoundingClientRect();
       const computed = window.getComputedStyle(el);
+      if (!computed) return;
       const parent = el.parentElement;
       const parentRect = parent ? parent.getBoundingClientRect() : null;
 
@@ -232,10 +296,84 @@ const RESPECT_CHECK_SCRIPT = `(() => {
             summary.medium++;
           }
         }
+
+        // Percent-based height check (for editors and workbench-variants)
+        if (expected.heightPercent && parentRect) {
+          const expectedHeight = (parentRect.height * expected.heightPercent) / 100;
+          if (rect.height < expectedHeight * 0.8) {
+            elementViolations.push({
+              type: 'min_constraint',
+              severity: 'medium',
+              message: \`Height below \${expected.heightPercent}% of parent (threshold: 80%)\`,
+              expected: \`>= \${(expectedHeight * 0.8).toFixed(1)}px (\${expected.heightPercent}% of parent)\`,
+              actual: \`\${rect.height.toFixed(1)}px\`
+            });
+            summary.medium++;
+          }
+        }
+
+        // Percent-based width check (for editors)
+        if (expected.widthPercent && parentRect) {
+          const expectedWidth = (parentRect.width * expected.widthPercent) / 100;
+          if (rect.width < expectedWidth * 0.8) {
+            elementViolations.push({
+              type: 'min_constraint',
+              severity: 'medium',
+              message: \`Width below \${expected.widthPercent}% of parent (threshold: 80%)\`,
+              expected: \`>= \${(expectedWidth * 0.8).toFixed(1)}px (\${expected.widthPercent}% of parent)\`,
+              actual: \`\${rect.width.toFixed(1)}px\`
+            });
+            summary.medium++;
+          }
+        }
+
+        // z-index validation (for fixed-overlay, badge types)
+        if (expected.zIndex !== undefined) {
+          const actualZIndex = parseInt(computed.zIndex, 10);
+          if (!isNaN(actualZIndex) && actualZIndex !== expected.zIndex) {
+            elementViolations.push({
+              type: 'z_index_mismatch',
+              severity: 'medium',
+              message: \`z-index does not match expected value\`,
+              expected: \`z-index: \${expected.zIndex}\`,
+              actual: \`z-index: \${actualZIndex}\`
+            });
+            summary.medium++;
+          }
+        }
+
+        // Aspect ratio validation (for card types)
+        if (expected.aspectRatio) {
+          const actualRatio = rect.width / rect.height;
+          if (Math.abs(actualRatio - expected.aspectRatio) > 0.1) {
+            elementViolations.push({
+              type: 'aspect_ratio_mismatch',
+              severity: 'low',
+              message: \`Aspect ratio mismatch\`,
+              expected: \`ratio: \${expected.aspectRatio.toFixed(2)}\`,
+              actual: \`ratio: \${actualRatio.toFixed(2)}\`
+            });
+            summary.low++;
+          }
+        }
       }
 
-      // Check parent containment for panel/content-area/widget types
-      if ((type === 'panel' || type === 'content-area' || type === 'widget') && parentRect && !knownOverflowVisible) {
+      // Fixed position escape check (for fixed-overlay, toolbar types)
+      if ((type === 'fixed-overlay' || type === 'toolbar') && computed.position === 'fixed') {
+        if (rect.right > vw + 1 || rect.bottom > vh + 1 || rect.left < -1 || rect.top < -1) {
+          elementViolations.push({
+            type: 'fixed_position_escape',
+            severity: 'high',
+            message: \`position:fixed element extends outside viewport\`,
+            expected: \`rect within viewport (0, 0, \${vw}, \${vh})\`,
+            actual: \`rect: (\${rect.left.toFixed(1)}, \${rect.top.toFixed(1)}, \${rect.right.toFixed(1)}, \${rect.bottom.toFixed(1)})\`
+          });
+          summary.high++;
+        }
+      }
+
+      // Check parent containment for panel/content-area/widget/tree-view/inspector/editor types
+      if ((type === 'panel' || type === 'content-area' || type === 'widget' || type === 'tree-view' || type === 'inspector' || type === 'editor' || type === 'data-grid') && parentRect && !knownOverflowVisible) {
         if (rect.right > parentRect.right + 1 || rect.bottom > parentRect.bottom + 1) {
           elementViolations.push({
             type: 'parent_escape',
@@ -276,7 +414,13 @@ const RESPECT_CHECK_SCRIPT = `(() => {
     totalViolations: summary.high + summary.medium + summary.low,
     violations,
     summary,
-    clean
+    clean,
+    coverage: {
+      totalKnownComponents: TOTAL_KNOWN_COMPONENTS,
+      checkedSelectors: componentsToCheck.length,
+      foundSelectors: foundSelectors,
+      coveragePercent: Math.round((foundSelectors / TOTAL_KNOWN_COMPONENTS) * 100 * 10) / 10
+    }
   };
 })();`;
 
