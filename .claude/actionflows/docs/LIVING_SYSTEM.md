@@ -1,554 +1,210 @@
-# The Living System
+# The Living Universe
 
-> ActionFlows is not a static framework. It is a living system that heals itself through use.
+> You do work. The universe evolves around you.
 
-Every execution feeds back into the system. Every mistake becomes a lesson. Every discovery triggers evolution. The architecture is designed not just to execute work, but to learn from it — to become smarter, more efficient, and more reliable with each session.
+ActionFlows is a productivity universe. Not a framework you configure, not a tool you learn, not a dashboard you read. A universe you inhabit. You express intention, and the cosmos reshapes itself to manifest it. You use it, and it grows. You make mistakes, and it learns. The architecture underneath is designed not just to execute work, but to evolve from it -- to become smarter, more efficient, and more alive with each session.
 
----
+**The Natural Laws:**
 
-## The Living Universe Vision
+Every universe has physics. This one has four:
 
-ActionFlows is not just a living system — it is a **living universe** with three inhabitants:
+- **Software = Physics** -- The raw underlying reality. Code is the laws that govern this universe -- imperfect, mutable, the foundation everything runs on. Software is not certain or reliable; it is the physics that can be buggy, inconsistent, surprising -- just like real physics was before we understood it.
 
-**The Physics-Brain-Will Triad:**
+- **Orchestrator = Brain** -- The intelligence that understands the physics and has the power to change them. The orchestrator does not just coordinate -- it actively reshapes the universe's laws when needed. When code needs fixing, the brain rewrites the physics.
 
-- **Software = Physics** — The raw underlying reality. Code is the laws that govern this universe—imperfect, mutable, the foundation everything runs on. Software is not certain or reliable; it's the physics that can be buggy, inconsistent, surprising—just like real physics was before we understood it.
+- **Human = Will** -- The prompt. The intention. The force that sets everything in motion. Humans do not code directly -- they express will, and the brain reshapes physics through agents.
 
-- **Orchestrator = Brain** — The intelligence that understands the physics and **has the power to change them**. The orchestrator doesn't just coordinate—it actively reshapes the universe's laws when needed. When code needs fixing, the brain rewrites the physics.
+- **Agents = Hands** -- The executors that work within the physics. They carry out the brain's decisions and transform the physics according to the will. Agents are the limbs through which the brain acts on the universe.
 
-- **Human = Will** — The prompt. The intention. The force that sets everything in motion. Humans don't code directly—they express will, and the brain (orchestrator) reshapes physics (software) through agents.
-
-- **Agents = Hands** — The executors that work within the physics. They execute the brain's decisions and transform the physics according to the will. Agents are the limbs through which the brain acts on the universe.
-
-This is a **human-orchestrator-agent centric future** where software is no longer static code to be written, but **living physics** that evolve, adapt, and learn alongside their users.
+This is a human-orchestrator-agent centric future where software is no longer static code to be written, but living physics that evolve, adapt, and learn alongside their users.
 
 **Three Audiences, One Universe:**
 
-1. **Coders** — ActionFlows is a new IDE paradigm. Not just a task runner, but a living development partner where the brain (orchestrator) coordinates hands (agents) to modify the physics (code). The orchestrator can rewrite the laws of the universe itself. You're not writing code line-by-line—you're collaborating with an intelligence that understands and reshapes the codebase.
+1. **Coders** -- A new IDE paradigm. The brain coordinates hands to modify the physics. The orchestrator can rewrite the laws of the universe itself. You are not writing code line-by-line -- you are collaborating with an intelligence that understands and reshapes the codebase.
 
-2. **Regular Users** — ActionFlows is a tool for getting things done. You express will in natural language ("make login more secure"); the brain figures out how to reshape the physics to make it happen. No coding required—just intention.
+2. **Regular Users** -- A natural language interface to software creation. Express what you want; the brain figures out how to reshape the physics to make it happen. No coding required -- just intention.
 
-3. **Everyone** — ActionFlows is a **journey**. As you use it, the universe grows. You unlock new flows, discover hidden agents, and evolve the system's capabilities. This is **software as adventure**—productivity meets progression.
+3. **Everyone** -- A journey. As you use it, the universe grows. You unlock new flows, discover hidden agents, and evolve the system's capabilities. This is software as adventure -- productivity meets progression.
 
-**Evolution Through Usage:**
+This document describes what you experience, and then reveals the physics underneath.
 
-The more you use ActionFlows, the smarter it becomes. Not through manual configuration, but through **organic growth**. Every chain executed is a seed. Every learning recorded is wisdom. Every pattern detected is muscle memory. The system you use today is not the system you'll use tomorrow—tomorrow's system will be **stronger** because today it was used.
+---
 
-**Gamification & Fantasy Layer:**
+## The Big Bang
 
-Your journey through the ActionFlows universe is a progression. You start with basic flows, unlock advanced patterns, discover hidden agent combinations, and eventually become a universe architect—creating new flows and contributing to the living ecosystem. This is **software that feels alive**, not because of animation, but because it **grows with you**.
+The universe begins in darkness.
 
-**The Creation Epoch:**
+A fresh explorer opens ActionFlows and sees: a dark cosmos. Empty space. No menus, no sidebar trees, no feature lists. Two things exist -- the cosmic map stretching across the void, and a single input field at the bottom: the Command Center. That is the starting loadout. The universe and the voice to speak into it.
 
-This universe has an origin story. The creator of ActionFlows is also its first inhabitant—the **first experiencer**. The learnings recorded in LEARNINGS.md (L001–L012) are not just documentation—they are the universe's memory of its creator discovering how to live within it. The creator didn't just architect the system and hand it off; they **inhabited it**, made mistakes, evolved it, and left their wisdom embedded in its structure. The universe learned from being used by its creator, and those learnings reshaped the universe itself.
+The explorer types their first message. Stars bloom from darkness. The Big Bang. Regions ignite on the map -- the first workbenches, born from the explorer's intention. The universe is not pre-built and waiting to be discovered; it is born from the explorer's first act of will.
 
-**Proof of Concept / Template Universe:**
+Everything beyond these two permanent elements -- the cosmic map and the Command Center -- is earned through exploration. A fog of war shrouds the undiscovered. You do not see what you have not yet needed. The universe detects readiness through usage, not through fixed milestones. When you need something, the problem itself becomes the doorway: a new region materializes where your work naturally leads. The thread pulls you in.
 
-This specific ActionFlows instance is not the final product—it's the **first proof** that software universes work. The creator proved the concept by being the first to live in one. This is a **template**—a default set of behaviors, contracts, tools, tests, predefined flows, all learned from the creator's real needs and real mistakes. The creator's software engineering wisdom is embedded as defaults, not mandates. Future users inherit a working universe shaped by practical experience, not theoretical design.
+This is the emotional design principle: the explorer lands on an uncharted planet and earns visibility through exploration. The universe never punishes ignorance. It adapts to current behavior at all times, reshaping around what the explorer actually does.
 
-**User Sovereignty / Mutable Philosophy:**
+---
 
-EVERYTHING except the platform layer is mutable by future users. The five-layer model:
+## The Cosmic Map
+
+The universe map IS the home screen. Navigation is spatial, not menu-driven.
+
+Workbenches are regions on the cosmic map -- glowing clusters of stars in dark space, clickable, connected to neighboring regions through gates. The explorer sees the cosmos from an omniscient god-view, watching the entire topology at once. Zooming into a region enters that workbench. Zooming out returns to the cosmic map. The map expands along the way as new regions emerge from fog.
+
+**The aesthetic is cosmic/stellar.** Dark space, glowing regions, nebulae, light bridges between connected stars. The map is science fiction. But workbenches are productivity spaces -- clean, functional, purpose-built. They share the universe's color DNA (the same color tokens flow through both layers) but have their own shape language. The cosmic map is for navigation and observation. Workbench interiors are for work.
+
+**Every workbench has a dual nature.** Each one is both a place (a region on the map you can navigate to) and a producer (a render surface where artifacts appear). The Intel workbench is a star on the cosmic map AND a report generator inside. The Review workbench is a glowing cluster AND an audit surface. When the brain produces an artifact, it appears inside the relevant workbench. The cosmos shows you where things live; the workbenches show you what they contain.
+
+**The topology is alive.** New regions emerge as the explorer's needs evolve. Connections rewire based on detected patterns. The map the explorer sees today is not the map they will see next week -- next week's map will have been reshaped by this week's work.
+
+---
+
+## Harmony -- The Terrain Between Stars
+
+Harmony is not a region on the map. It is the space between all regions -- the cosmic dust that fills the void between stars. Every connection between workbenches passes through Harmony's territory.
+
+When work flows from one region to another, it leaves traces in Harmony's terrain. Gates stand at the borders between regions -- visible checkpoints in Harmony's field. When a chain moves from Analysis to Code to Review, it passes through gates, and Harmony inspects each crossing. The terrain glows when connections are healthy. It dims when drift is detected. It actively reshapes when healing occurs.
+
+**What the explorer sees:** The surrounding space between stars shifts color and luminosity based on system health. Bright, clean connections mean harmony. Dimming pathways signal drift. When the system heals itself -- when a remediation chain fires and fixes a contract violation -- the terrain brightens again. The explorer watches the universe's immune system at work, rendered as cosmic weather.
+
+**Gates are contract checkpoints.** Every border between regions has a gate where Harmony validates that the work passing through conforms to the contract. A chain compilation passing from the brain to the agents crosses a gate. A review result returning from agents to the brain crosses another. The gates are where the universe enforces its own laws.
+
+---
+
+## Sessions as Missions
+
+Each session is a mission that shapes the universe separately.
+
+The Command Center sits at the bottom of the cosmos -- an input field, a session dropdown, and a link to health metrics. Typing into the input field ignites a new session. Each session creates its own cosmic view: different colors, different active traces, different regions lit up. Switching sessions switches the entire map. The accumulated universe is the sum of all missions, but each mission has its own perspective.
+
+**Chat lives inside the Command Center.** The input field opens a chat session window on entry. The chat window appears on the right side; workbench dashboards occupy the left. When the explorer asks for a report, the brain creates it and displays it inside the relevant workbench. Artifacts preview in chat but live fully rendered in their workbench.
+
+**Background execution is visible.** If the explorer starts work in one session and switches to another, the first session keeps running. The cosmic map reflects all active work: minimized chat windows within workbenches, regions glowing even when the explorer is not focused on them. The cosmos is a real-time status board across all active sessions.
+
+---
+
+## The Brain at Work
+
+When the orchestrator is active, the cosmos breathes.
+
+Animated pulses move along paths between regions, following the chain's predefined connections left to right. Sub-agents appear as sparks -- small points of light carrying signals toward action agents in their target regions. The explorer watches intelligence flow across the cosmos in real time.
+
+**The visual language of execution:**
+- **Glowing** -- A region is actively receiving work. Agents are executing inside.
+- **Pulsing** -- A region is waiting. A gate check is in progress, or a dependency has not resolved.
+- **Settled** -- A region is idle. Work has completed, traces remain.
+- **Dark** -- A region is undiscovered. The fog of war still covers it.
+
+Colors shift per interaction. Traces accumulate on connections -- paths that carry more work grow brighter, thicker, more established. The topology reshapes over time as patterns emerge. The cosmos is not a static diagram; it is a living visualization of the brain's decision-making.
+
+**Chains are visible journeys.** When the brain compiles a chain (analyze, then code, then review), the explorer sees the planned path light up across the map -- a route from region to region, with gates between each stop. As each step executes, the corresponding region ignites. As each step completes, the spark moves to the next gate. The explorer watches the entire chain unfold as a spatial journey through the cosmos.
+
+---
+
+## Evolution -- A Universe That Grows With You
+
+The universe evolves on two timescales.
+
+**Per-interaction evolution:** Colors shift after each chain completes. Traces accumulate on connections. Regions brighten with use or dim with neglect. The cosmos the explorer sees after a day of work looks different from the cosmos they saw that morning -- subtly, organically, reflecting what happened.
+
+**Long-arc evolution:** New regions emerge from fog. Connections rewire based on detected patterns. The topology reshapes fundamentally. An ad-hoc chain that the brain composed three times becomes a registered flow -- and the path it follows on the map becomes a permanent, brighter route. The cosmos grows new stars.
+
+**Organic unlock.** The universe detects readiness through usage heuristics, not fixed milestones. When the explorer's work naturally leads toward a capability they have not yet discovered, the problem itself becomes the doorway. A new region materializes in the fog, connected to where the explorer already is. Contextual revelation: the thread pulls you in.
+
+**Adaptation, not punishment.** The universe reshapes around current behavior at all times. If the explorer ignores a suggestion, the cosmos does not dim or complain. It adapts. New workbenches created by the explorer? The universe map updates immediately with relationship information. Connections rearranged? The graph respects the explorer's will. The framework infers relationships from usage; the human can always override.
+
+> **Vision note.** This document describes the vision for the living universe experience. Current implementation status is tracked in `docs/status/FRONTEND_IMPLEMENTATION_STATUS.md`.
+
+---
+
+## User Sovereignty
+
+Everything except the platform layer is mutable. The explorer has full sovereignty.
+
+**The Five-Layer Sovereignty Model:**
 
 | Layer | What it is | Mutable? |
 |-------|-----------|----------|
 | Platform | The ability to have a software universe | No (this is the product) |
-| Template | The creator's proof-of-concept universe | Yes — fork it, gut it, reshape it |
-| Philosophy | Chains, harmony, sin test, contracts | Yes — swap for any paradigm |
-| Physics | The code, UI, features | Yes — users change everything |
-| Experience | Learnings, flows, evolution | Yes — each user's journey is unique |
+| Template | The creator's proof-of-concept universe | Yes -- fork it, gut it, reshape it |
+| Philosophy | Chains, harmony, sin test, contracts | Yes -- swap for any paradigm |
+| Physics | The code, UI, features | Yes -- users change everything |
+| Experience | Learnings, flows, evolution | Yes -- each user's journey is unique |
 
-Users can: modify the physics (UI, workbenches, features), change the philosophy (replace chains with openspec, use a different orchestration model), reshape the entire universe to match their way of working. The template provides a proven starting point, but **users have full sovereignty** to evolve it however they see fit.
+Users can modify the physics (UI, workbenches, features), change the philosophy (replace chains with any orchestration model), and reshape the entire universe to match their way of working. The template provides a proven starting point, but users have full sovereignty to evolve it however they see fit.
 
----
+**Inference plus override.** The framework infers relationships between regions from usage patterns. Connections form automatically when work flows between areas. But the explorer can always override: rearranging the topology, creating new regions, deleting connections. Spatial control, not configuration files.
 
-## What Makes It Living?
-
-A traditional framework is frozen at the moment it ships. ActionFlows is alive because:
-
-1. **Memory** — Every chain execution is recorded. Past patterns inform future routing decisions.
-2. **Self-Healing** — When drift is detected, remediation chains execute automatically.
-3. **Evolution** — New flows, new agents, and new contract formats are created in response to observed patterns.
-4. **Feedback Loops** — The harmony system watches for misalignment and triggers healing cycles.
-5. **Journey** — The system is not fully revealed at the start. Operators discover capabilities through use, unlocking new flows and patterns as they progress. This is co-evolution: the human and the universe growing together.
-6. **Physics-Brain-Will Partnership** — The human provides will, the orchestrator provides brain (with power to change the physics), the agents provide hands. Together they form a symbiotic triad where the human expresses intention, the brain reshapes reality (code), and the hands execute.
-
-This is not aspirational. On 2026-02-09, the backwards harmony audit detected that `harmonyDetector.ts` had broken support for 12 of 17 contract formats, the `useChainEvents` hook was dead code, and the `StepSkippedEvent` was missing from the event stream. The remediation chain fixed all three issues in the same session. The system healed itself.
+**Structured graph schema.** The universe map requires a formal data model -- nodes (regions), edges (connections), metadata (discovery state, traces, health). This is the single source of truth for UI rendering. When the explorer reshapes the cosmos, this schema updates. When the brain produces new connections, this schema updates. One graph, one truth.
 
 ---
 
-## The Framework
+## The Physics Underneath
 
-ActionFlows is a framework for AI agent orchestration—and more fundamentally, it is a **living universe** where humans, orchestrators, and agents form a triad of collaborative intelligence.
+Everything you just read is the experience. Here is the architecture that makes it real.
 
-**The Physics:**
-Software is the raw underlying reality—the laws that govern this universe. The code is imperfect, mutable, surprising. It's not certain; it's the foundation that everything runs on. Understanding and reshaping these laws is the work of the brain.
+ActionFlows is organized as 7 layers. Each layer powers a piece of the experience described above.
 
-**The Brain:**
-The orchestrator is the intelligence that understands the physics and **has the power to change them**. When the human expresses will ("add rate limiting"), the brain figures out which laws (code files) need rewriting, coordinates agents to perform the modifications, and ensures the universe remains harmonious.
+### Layer 0 -- Memory
 
-**The Will:**
-The human provides intention. You don't write code directly—you express what you want, and the brain reshapes the physics to manifest it.
+**Powers:** Evolution. The universe gets smarter because Memory accumulates.
 
-**The Hands:**
-Agents are specialized workers that execute within the physics. They read the current laws (code), modify them according to the brain's plan, and verify the changes work.
+`INDEX.md` is a searchable registry of past executions. Before compiling any chain, the brain consults it: "We solved this before with `analyze x3 -> audit`. Reuse that pattern." `LEARNINGS.md` catalogs past mistakes and root causes. The brain reads it before routing to avoid repeating failures. Intel Dossiers are the codebase's memory made visible -- persistent, evolving intelligence pages that watch file changes, accumulate insights, and grow through re-analysis. See `docs/design/INTEL_DOSSIER.md`.
 
-**For Coders:** This is a new IDE paradigm. The orchestrator becomes your pair programming partner, coordinating specialized agents to implement features, review code, run tests, and evolve the codebase. You're not just writing code—you're **conducting an orchestra** of AI specialists that can rewrite the universe's physics.
+**Key files:** `.claude/actionflows/logs/INDEX.md`, `LEARNINGS.md`, `logs/framework_health_report.md`
 
-**For Regular Users:** This is a natural language interface to software creation. You express what you want ("add login rate limiting"), and the universe figures out how to make it happen. No code knowledge required—just intention.
+### Layer 1 -- Routing
 
-**For Everyone:** This is a journey through a living software universe. As you use it, you unlock new capabilities, discover patterns, and watch the system grow alongside your needs. This is **evolutionary software**—not static, but alive.
+**Powers:** The brain's pathfinding. Every request reception, context routing, and chain compilation flows through this layer.
 
-This is not a task runner—it's a living system that learns from every execution and evolves its own capabilities.
+`ORCHESTRATOR.md` defines the brain's behavior. `CONTEXTS.md` maps intent to domains. `FLOWS.md` is the registry of reusable patterns. `ACTIONS.md` is the catalog of atomic agent types. New flows are registered through the flow-creation/ flow. Contexts evolve as the project grows. The routing table is never "done."
 
----
+**Key files:** `.claude/actionflows/ORCHESTRATOR.md`, `CONTEXTS.md`, `FLOWS.md`, `ACTIONS.md`
 
-## The Orchestrator
+### Layer 2 -- Agents
 
-The orchestrator is a **router, not a helper**. It never writes code, never analyzes files, never produces content. It only coordinates.
+**Powers:** The sparks on the map. Each spark is a self-contained executor with a clear mission.
 
-**The Request Reception Protocol:**
+Every agent reads its own `agent.md` to know its mission, constraints, and output format. The brain provides only task, context, and component -- no ad-hoc instructions. This isolation lets agents evolve independently. New agents are created through the action-creation/ flow. Agent standards evolve through the `_abstract/` directory.
 
-Every human message flows through the same protocol:
+**Key files:** `.claude/actionflows/actions/*/agent.md`, `actions/_abstract/*/instructions.md`
 
-1. **Parse intent** — What work is requested? What scope? What outputs?
-2. **Route to context** — Read `CONTEXTS.md` to identify the domain (work, maintenance, explore, review, settings, pm)
-3. **Find the flow** — Read `FLOWS.md` to find a matching flow, or compose from `ACTIONS.md`
-4. **Compile chain** — Create a table of actions with models, inputs, dependencies, and status
-5. **Present for approval** — Show the chain to the human, wait for confirmation
-6. **Spawn agents** — Execute approved chain by spawning agents step-by-step
+### Layer 3 -- Contract
 
-**The Sin Test:**
+**Powers:** The gates. `CONTRACT.md` defines what passes through Harmony's checkpoints.
 
-Before every action, the orchestrator asks: "Am I about to produce content?"
-- **YES** → It's a sin. Stop. Compile a chain. Spawn an agent.
-- **NO** → Am I coordinating? (routing, compiling, registry edits, presenting plans)
-  - **YES** → Proceed. This is my job.
-  - **NO** → What am I doing? Delegate it.
+A formal specification of 17 formats: chain compilations, step announcements, review reports, analysis reports, brainstorm transcripts. Formats are versioned. Breaking changes increment `CONTRACT_VERSION` and support both old and new versions during a 90-day migration window. TypeScript types, parser functions, regex patterns, and examples all update together.
 
-**Chain Compilation:**
+**Key files:** `.claude/actionflows/CONTRACT.md`, `packages/shared/src/contract/`
 
-A chain is a table of actions:
+### Layer 4 -- Infrastructure
 
-| # | Action | Model | Inputs | Waits For | Status |
-|---|--------|-------|--------|-----------|--------|
-| 1 | analyze/ | opus-4.6 | {task, context} | — | PENDING |
-| 2 | code/ | opus-4.6 | {task from #1} | 1 | PENDING |
-| 3 | review/ | opus-4.6 | {changes from #2} | 2 | PENDING |
+**Powers:** The cosmos breathing. Two parallel universes serve different purposes.
 
-The orchestrator compiles this, presents it, waits for approval, then executes autonomously.
+**Universe A (Real-Time Events):** Orchestrator spawns agent -> agent broadcasts typed WebSocket events -> frontend hooks consume them -> components render live visualization. Zero parsing, 100% type-safe. **Universe B (Monitoring):** Orchestrator outputs markdown -> backend parsers validate structure against contract spec -> harmony detector catches drift. They serve different masters (live UI vs. drift detection) but protect the same contract. The frontend never touches raw markdown. The harmony detector never drives rendering.
 
-**Delegation:**
+**Key files:** `packages/shared/src/events.ts`, `packages/backend/src/ws/`, `packages/shared/src/contract/parsers/`
 
-Each action has an `agent.md` file that defines its mission, constraints, and output format. The orchestrator provides **only three inputs**: task, context, component. No ad-hoc instructions. The agent reads its own `agent.md` to know what to do. This isolation lets agents evolve independently.
+### Layer 5 -- Presentation
 
-**Quick Triage Exception:**
+**Powers:** What the explorer sees. The cosmic map, the workbench interiors, the Command Center.
 
-The one exception to "never produce content" is Quick Triage: trivial fixes (1-3 files, mechanical, obvious changes). All other work requires compilation and delegation.
+A React-based desktop application (via Electron) that consumes structured WebSocket events and renders the orchestrator's activity as an interactive visualization. Components include the DAG viewer (ReactFlow-based chain visualization), step nodes, timelines, harmony panels, and Intel workbench widgets. The Self-Evolving UI system allows the dashboard to register new component types dynamically. Graceful degradation is built-in: if parsing fails, the dashboard shows a degraded view instead of crashing.
 
----
+**Key files:** `packages/app/src/components/`, `packages/app/src/hooks/`, `packages/app/src/contexts/`
 
-## Human Interaction
+### Layer 6 -- Harmony
 
-The human works with ActionFlows through a trust-through-transparency model:
+**Powers:** The terrain. `harmonyDetector.ts` is the immune system scanning the dust between stars.
 
-**Chain Presentation → Approval → Autonomous Execution:**
+The meta-layer that watches all other layers. Detects drift between contract specs, parsers, frontend expectations, and orchestrator output. When drift is detected, it broadcasts a `HarmonyViolationEvent` via WebSocket. The brain reads the violation, routes to a remediation flow, and agents execute the fix. The harmony system itself evolves -- new audit flows are created when new patterns emerge.
 
-The orchestrator compiles a chain, shows it to the human, and waits for approval. Once approved, the orchestrator executes the entire chain autonomously — no stopping mid-chain unless a human gate is specified in the flow.
+**Key files:** `packages/backend/src/services/harmonyDetector.ts`, `packages/shared/src/harmonyTypes.ts`
 
-**The Will in the Triad:**
-
-The human is the **will** of the living universe. You set intention ("implement feature X"), and the orchestrator (the **brain**) coordinates agents (the **hands**) to manifest that intention by reshaping the physics (code).
-
-This is not traditional software development—it's **collaborative intelligence**. The human doesn't write the laws; the human expresses what the laws should achieve, and the brain figures out how to rewrite them.
-
-**Three Modes of Interaction:**
-
-1. **Express Will (Regular Users):** "Make login more secure" → Brain figures out implementation
-2. **Guide the Brain (Coders):** Review proposed plans, approve specific approaches, provide domain expertise
-3. **Explore the Universe (Everyone):** Discover flows, unlock patterns, watch the system evolve through usage
-
-**Human Gates:**
-
-Some flows include explicit approval points for design decisions. Example: `analyze → plan → [HUMAN GATE] → code → review`. The orchestrator pauses before coding, presents the plan, and waits for confirmation. This prevents wasted work on wrong approaches.
-
-**"It's a Sin" — The Reset Command:**
-
-When the human says "it's a sin," the orchestrator stops immediately, acknowledges the violation, and recompiles the work as a proper chain. This is the emergency brake for when the orchestrator crosses into content production.
-
-**Learnings Surface:**
-
-Agents discover things during execution (missing tests, broken patterns, design issues). These learnings are surfaced to the orchestrator, which presents them to the human. The human reviews and approves fixes. Learnings are recorded in `LEARNINGS.md` so future sessions benefit.
-
-**One Question at a Time:**
-
-When gathering multi-part input, the orchestrator asks ONE question, waits for answer, then asks next. Never batch. This reduces cognitive load and prevents ambiguity.
-
-**Trust Through Transparency:**
-
-Every chain is visible. Every step is announced ("Spawning Step 2: code/ (opus-4.6)..."). Every output is logged to `.claude/actionflows/logs/`. The human can inspect any execution, read any log, verify any decision. Trust is earned through demonstrated competence, not assumed.
-
----
-
-## The 7 Layers
-
-ActionFlows is organized as 7 layers, each with its own role, evolution mechanism, and relationship to other layers.
-
-### Layer 0 — Memory
-
-**Files:** `.claude/actionflows/logs/INDEX.md`, `LEARNINGS.md`, `logs/framework_health_report.md`
-
-**Purpose:** The system's long-term memory — and its primary source of wisdom. Layer 0 is not part of the execution chain. Instead, the orchestrator **consults** Layer 0 **before every routing decision**, using past patterns and learnings to inform which chain to compile. Past executions and past mistakes shape the routing logic itself.
-
-**What Makes It Living:**
-- **INDEX.md** is a searchable registry of past executions. Before compiling any chain, the orchestrator reads INDEX.md to find similar patterns. "We solved this before with `analyze×3 → audit`. Let me reuse that pattern." This is not logging — it's active decision-making input.
-- **LEARNINGS.md** is a catalog of past mistakes and their root causes. The orchestrator reads it before routing to check: "Has this type of work failed before? What went wrong? How do I avoid repeating it?" A learning entry includes: context, problem, root cause, and solution. Agents surface learnings during execution; the orchestrator records them; future sessions benefit. Learnings inform routing, they are not an execution step.
-- **Reports** provide trend data. Framework health reports across sessions reveal patterns — e.g., "harmony violations dropped after we fixed the contract parsers."
-- **Intel Dossiers** are the living manifestation of Layer 0 in the UI. A dossier is a persistent, evolving intelligence page about a code domain — it watches paths, accumulates insights, and grows through re-analysis. Where INDEX.md and LEARNINGS.md are the orchestrator's memory, dossiers are the *codebase's* memory. They follow their own lifecycle: Birth → Life → Growth → Memory. See `docs/design/INTEL_DOSSIER.md`.
-
-**Key Mechanism:**
-```
-Before compiling ANY chain, the orchestrator CONSULTS memory (Layer 0):
-1. Read INDEX.md — "Have we done this before? What pattern worked?"
-2. Read LEARNINGS.md — "Has this type of work failed? What's the root cause?"
-   ↓
-This informs the routing decision and shapes the chain compilation
-   ↓
-Chain is presented to human for approval
-   ↓
-After execution completes, the loop records new data:
-- INDEX.md appends new execution record
-- LEARNINGS.md appends agent-surfaced findings
-   ↓
-Next session starts smarter — orchestrator reads enriched memory and routes more wisely
-```
-
----
-
-### Layer 1 — Routing
-
-**Files:** `.claude/actionflows/ORCHESTRATOR.md`, `CONTEXTS.md`, `FLOWS.md`, `ACTIONS.md`
-
-**Purpose:** Pure coordination. Maps human intent → contexts → flows → action chains. This layer never executes work. It only decides what work exists and how to compose it.
-
-**What Makes It Living:**
-- New flows are registered through the flow-creation/ flow. The orchestrator can add new capabilities without modifying its core logic.
-- Contexts evolve as the project grows. If a new domain area emerges (e.g., "database-optimization"), a new context can be created and registered in CONTEXTS.md.
-- The routing table is never "done." FLOWS.md and ACTIONS.md are living registries, not static configurations.
-
-**Key Mechanism:**
-```
-Request Reception Protocol (every human message):
-1. Parse intent without reading code (what work? what scope? what outputs?)
-2. Route to context (read CONTEXTS.md)
-3. Find the flow (read FLOWS.md or compose from ACTIONS.md)
-4. Compile chain (what agents, what order, what waits-for dependencies?)
-5. Present for approval, then execute
-
-If a flow doesn't exist, the orchestrator can route to flow-creation/ to build it.
-```
-
----
-
-### Layer 2 — Agents
-
-**Files:** `.claude/actionflows/actions/*/agent.md`, `.claude/actionflows/actions/_abstract/*/instructions.md`
-
-**Purpose:** The hands. Self-contained executors with clear missions, constraints, and output formats. Agents are spawned by the orchestrator, execute independently, and return results.
-
-**What Makes It Living:**
-- Agents can be created through the action-creation/ flow.
-- Agent standards evolve through the _abstract/ directory. If a new behavioral principle emerges, it's added to agent-standards/instructions.md, and all future agents inherit it.
-- Agents are versioned by their agent.md file. If an agent's behavior needs to change, a new agent.md is created; the orchestrator chooses which version to spawn.
-
-**Key Mechanism:**
-```
-Spawning Pattern (orchestrator to agent):
-1. Agent reads its own agent.md (defines mission, constraints, output format)
-2. Agent reads abstract standards (_abstract/agent-standards/, _abstract/create-log-folder/)
-3. Agent receives only three inputs: task, context, component (no ad-hoc instructions)
-4. Agent executes independently and returns results
-
-This isolation ensures agents can evolve without breaking orchestrator logic.
-```
-
----
-
-### Layer 3 — Contract
-
-**Files:** `.claude/actionflows/CONTRACT.md`, `packages/shared/src/contract/`
-
-**Purpose:** The agreement between orchestrator output and dashboard parsing. A formal specification of 17 formats: chain compilations, step announcements, review reports, analysis reports, brainstorm transcripts, and more.
-
-**What Makes It Living:**
-- `CONTRACT_EVOLUTION.md` defines the process for evolving formats. Adding a new format is not ad-hoc; it's a deliberate, coordinated change.
-- Formats are versioned. Breaking changes increment CONTRACT_VERSION and support both old and new versions during a 90-day migration window.
-- TypeScript types, parser functions, regex patterns, and examples are all part of the contract. When a format changes, all three must be updated together.
-
-**Key Mechanism:**
-```
-Format Specification (example from CONTRACT.md):
-
-## Format 3.1: Chain Compilation (P0)
-TypeScript: ChainCompilationParsed
-Parser: parseChainCompilation(text: string): ChainCompilationParsed
-Pattern: /^# Chain Compilation$/m
-Example: ORCHESTRATOR.md § 23.1
-
-Required Fields:
-- Title (string)
-- Agent Breakdown table (markdown table with #, Action, Model, Inputs, Waits For, Status)
-- Timestamp (ISO 8601)
-
-When this format changes, three things update:
-1. CONTRACT.md (specification updated)
-2. packages/shared/src/contract/parsers/parseChainCompilation.ts (parser updated)
-3. ORCHESTRATOR.md (examples updated)
-```
-
----
-
-### Layer 4 — Infrastructure
-
-**Files:** `packages/backend/src/services/`, `packages/shared/src/events.ts`, `packages/shared/src/contract/`
-
-**Purpose:** The plumbing. Two parallel universes that serve different purposes but protect the same contract.
-
-**Universe A — Real-Time Events (WebSocket Stream)**
-- **Path:** Orchestrator spawns agent → Agent sends WebSocket events → Frontend consumes via hooks
-- **Purpose:** Live rendering of orchestrator activity. The dashboard shows chain compilations, step starts, step completions, errors, in real-time.
-- **Files:** `packages/shared/src/events.ts` (typed event definitions), `packages/backend/src/ws/` (WebSocket server), `packages/app/src/hooks/` (frontend consumption)
-- **Example:** `StepStartedEvent`, `StepCompletedEvent`, `ChainFailedEvent`
-
-**Universe B — Monitoring (Contract Parsers)**
-- **Path:** Orchestrator outputs markdown → Backend parses using contract specifications → Harmony detector validates
-- **Purpose:** Validate that orchestrator output matches contract spec. Detect drift between what the orchestrator claims it's doing and what the contract says it should be doing.
-- **Files:** `packages/shared/src/contract/parsers/` (format parsers), `packages/backend/src/services/harmonyDetector.ts` (validation service)
-- **Example:** `parseChainCompilation()` reads the orchestrator's chain compilation table and validates it matches the expected structure
-
-**The Deliberate Split:**
-- Frontend never touches raw markdown. It consumes only typed WebSocket events.
-- Harmony detector never drives rendering. It only monitors and validates.
-- They serve different masters (live UI vs. drift detection) but protect the same contract.
-
-**What Makes It Living:**
-- New event types are added as the system grows. If a new orchestrator feature needs to broadcast state, a new event type is created, added to events.ts, and frontend components subscribe to it.
-- New service implementations support new contract formats. As the contract evolves, services evolve to handle new formats.
-- WebSocket connections are pooled and managed for real-time responsiveness. The backend can scale from one session to thousands.
-
----
-
-### Layer 5 — Presentation
-
-**Files:** `packages/app/src/components/`, `packages/app/src/hooks/`, `packages/app/src/contexts/`
-
-**Purpose:** What the human sees. A React-based desktop application (via Electron) that consumes structured WebSocket events and renders the orchestrator activity as an interactive visualization.
-
-**Components:**
-- **DAG Viewer:** Shows chain structure and step dependencies (ReactFlow-based)
-- **Step Node:** Displays individual step status, inputs, outputs, errors
-- **Timeline:** Real-time execution timeline with pausing and resuming
-- **SquadPanel:** Agent status indicators (in development)
-- **Harmony Panel:** Real-time harmony violations and parsing status
-- **Intel Workbench:** Living dossiers about code domains — persistent intelligence pages with widgets (StatCard, InsightCard, FileTree, SnippetPreview, CodeHealthMeter, AlertPanel). This is where Layer 0 (Memory) becomes visible. Dossiers watch file changes, trigger re-analysis, and accumulate insights over time. The dashboard shifts from passive observer to active intelligence gatherer.
-
-**What Makes It Living:**
-- The Self-Evolving UI system allows the dashboard to register new button types, detect visual patterns, and self-modify. Instead of hard-coding UI elements, the system reads a registry and generates buttons dynamically.
-- Components are built from typed events, never raw data. When a new event type is added (Layer 4), a corresponding component can be created to render it.
-- Graceful degradation is built-in. If parsing fails, the dashboard shows a degraded view instead of crashing.
-
-**Key Mechanism:**
-```
-Frontend Hook Pattern:
-const { steps, isLoading } = useChainEvents(chainId)
-
-useChainEvents hook:
-1. Opens WebSocket connection
-2. Subscribes to StepStartedEvent, StepCompletedEvent, etc.
-3. Maintains local state with typed event data
-4. Returns data to components (never raw markdown)
-
-Components render the data:
-<StepNode step={step} />  // step is typed, never raw
-```
-
----
-
-### Layer 6 — Harmony
-
-**Files:** `packages/backend/src/services/harmonyDetector.ts`, `packages/shared/src/harmonyTypes.ts`, `.claude/actionflows/flows/backwards-harmony-audit/`
-
-**Purpose:** The meta-layer that watches all other layers. Detects drift between contract specs, parsers, frontend expectations, and orchestrator output. When drift is detected, triggers healing.
-
-**How Harmony Detection Works:**
-
-1. **Specification Validation** — Every orchestrator output is parsed using contract-defined parsers
-2. **Structure Matching** — Parsed structure is compared to expected format specification
-3. **Version Checking** — If CONTRACT_VERSION has changed, validates correct version is used
-4. **Broadcasting Violations** — Any mismatch triggers a HarmonyViolationEvent broadcast via WebSocket
-5. **Dashboard Display** — Violations appear in real-time harmony panel
-
-**Historical Example (2026-02-09):**
-```
-Backwards Harmony Audit ran and detected:
-- harmonyDetector.ts missing parsers for 12/17 contract formats
-- useChainEvents hook dead (no parser validation)
-- StepSkippedEvent type defined but never broadcast
-
-Findings reported to orchestrator.
-Orchestrator routed to code-and-review/ flow.
-Code agent fixed all three issues in one session.
-Next audit shows 0 violations.
-```
-
-**What Makes It Living:**
-- The harmony system itself evolves. New audit flows are created when patterns emerge.
-- Violations are not failures — they're signals. When a violation is detected, the orchestrator can route to a remediation flow automatically.
-- The backward audit (checking that frontend, parsers, and specs agree) can discover design issues earlier.
-
-**Key Mechanism:**
-```
-Harmony Cycle:
-Layer 6 detects drift
-    ↓
-Routes to remediation flow
-    ↓
-Agents execute fixes
-    ↓
-Layer 0 records what happened
-    ↓
-Next execution → Layer 1 reads memory → smarter routing
-```
-
----
-
-## The Healing Cycle
-
-This is the most important diagram in the system. It shows how ActionFlows heals itself:
-
-```
-┌─────────────────────────────────────┐
-│   Layer 6: Harmony Monitoring       │
-│   Detects drift, broadcasts          │
-│   HarmonyViolationEvent              │
-└──────────────┬──────────────────────┘
-               │
-               ↓
-┌─────────────────────────────────────┐
-│   Layer 1: Routing                  │
-│   Orchestrator reads violation,      │
-│   routes to remediation flow         │
-└──────────────┬──────────────────────┘
-               │
-               ↓
-┌─────────────────────────────────────┐
-│   Layer 2: Agents                   │
-│   Spawned agents execute fix         │
-│   (code-and-review, test, etc.)      │
-└──────────────┬──────────────────────┘
-               │
-               ↓
-┌─────────────────────────────────────┐
-│   Layer 0: Memory                   │
-│   Records execution in INDEX.md,     │
-│   learnings in LEARNINGS.md          │
-└──────────────┬──────────────────────┘
-               │
-               ↓
-        ┌──────────────┐
-        │  Next        │
-        │  Session     │
-        └──────────────┘
-               │
-               ↓
-  Layer 1 reads INDEX.md
-  → Smarter routing decisions
-  → Patterns reused
-  → System improves
-```
-
-The cycle is not aspirational. It is operational right now.
-
----
-
-## The Growth Cycle
-
-The healing cycle fixes what's broken. The growth cycle is different — it makes the system **stronger with every use**, even when nothing is broken.
-
-### Every Chain Is a Seed
-
-Every ad-hoc chain the orchestrator compiles is a potential reusable flow. When the orchestrator composes `analyze×3 → audit → second-opinion` to solve a problem, that pattern is recorded in INDEX.md. If it works well and the pattern recurs, it gets promoted to a registered flow in FLOWS.md. What was a 5-step manual composition becomes a single invocation.
-
-This happened in practice on 2026-02-09: the backwards harmony audit was composed ad-hoc from existing actions. It worked. It was immediately registered as `backwards-harmony-audit/` — a permanent flow available to every future session.
-
-**Every chain is a seed. Some seeds become flows. Flows become the system's muscle memory.**
-
-### Every Dossier Is a Living Record
-
-The growth cycle isn't limited to orchestrator chains. **Intel Dossiers** follow the same principle at the code level:
-
-```
-Dossier created (Birth)
-    ↓
-File watcher detects changes (Life)
-    ↓
-Re-analysis runs, new insights accumulate (Growth)
-    ↓
-Prior states preserved for temporal comparison (Memory)
-    ↓
-Domain understanding deepens with every change
-```
-
-Where chains grow the orchestrator's routing intelligence, dossiers grow the system's understanding of the codebase itself. A dossier about "Auth System" that watches `middleware/auth.ts`, `AuthContext.tsx`, and `types/user.ts` sees the full cross-cutting domain — and gets smarter every time those files change. The system doesn't just execute work better. It *understands the code better*.
-
-### The Compounding Properties
-
-As the system grows through use, five properties compound:
-
-**1. Operational Efficiency**
-Each session does less redundant work than the last. Patterns that required manual composition become one-step flow invocations. The orchestrator's routing gets faster because INDEX.md provides proven solutions. Work that took a full chain now takes a flow reference.
-
-**2. Intentionality**
-Decisions are never random. The orchestrator reads INDEX.md ("what worked before?") and LEARNINGS.md ("what failed?") before every routing decision. Each chain is compiled with full historical awareness. The system makes **informed, deliberate choices** — not guesses.
-
-**3. Trust**
-As successful patterns accumulate and learnings prevent repeat mistakes, trust grows between human and system. The human approves chains faster because the orchestrator's track record is visible in INDEX.md. Trust is earned through demonstrated competence, not assumed.
-
-**4. Less Work, Higher Quality**
-These are not in tension — they compound together. Reusable flows eliminate composition overhead. Learnings prevent repeat mistakes. Reviews catch issues early. Second opinions provide safety nets. The system does **less total work** while producing **higher quality output** because it builds on proven foundations instead of starting from scratch.
-
-**5. Growth**
-The system grows its own capabilities. New flows are registered. New agents are created. New patterns are discovered. The framework today is more capable than the framework yesterday — not because someone redesigned it, but because it was used.
-
-### The Growth Formula
-
-```
-Chain executed successfully
-    ↓
-Pattern recorded in INDEX.md
-    ↓
-Pattern recognized as reusable?
-    ├─ No  → Available as reference for future routing
-    └─ Yes → Promoted to registered flow in FLOWS.md
-              ↓
-              Available as single invocation
-              ↓
-              Composes into larger flows
-              ↓
-              System capability grows
-```
-
-**The system that runs today is not the system that will run tomorrow. Tomorrow's system will be stronger — because today it was used.**
-
----
-
-## Layer Interactions
-
-Each layer feeds into others, is monitored by others, and evolves through specific mechanisms:
+### Layer Interactions
 
 | Layer | Feeds Into | Monitored By | Evolved Through |
 |-------|-----------|--------------|-----------------|
-| **0: Memory** | Layer 1 (routing decisions) | — | Every chain execution appends to INDEX.md |
+| **0: Memory** | Layer 1 (routing decisions) | -- | Every chain execution appends to INDEX.md |
 | **1: Routing** | Layer 2 (agent spawning) | Layer 6 (framework-health/) | flow-creation/, action-creation/ flows |
 | **2: Agents** | Layer 4 (code changes) | Layer 3 (review/) | agent.md updates, agent-standards updates |
 | **3: Contract** | Layer 4 (parser specs) | Layer 6 (harmony audit) | CONTRACT_EVOLUTION.md process |
@@ -556,140 +212,85 @@ Each layer feeds into others, is monitored by others, and evolves through specif
 | **5: Presentation** | Human (visual output) | Layer 6 (backwards audit) | Self-evolving UI system, component registry |
 | **6: Harmony** | Layer 1 (remediation routing) | Itself (meta-monitoring) | backwards-harmony-audit/ flow |
 
-**Read each row vertically:**
+### Key Principles
 
-- **Memory:** Feeds routing decisions (I've seen this pattern before), monitored by nobody (it's the source of truth), evolved by every execution.
-- **Routing:** Feeds agent spawning, monitored by harmony checks (are routing decisions valid?), evolved by creating new flows.
-- **Agents:** Feeds code changes (agents write code), monitored by reviews (does code follow patterns?), evolved by updating agent.md files.
-- **Contract:** Feeds parser implementations, monitored by harmony detector (do parsers match specs?), evolved deliberately through CONTRACT_EVOLUTION.md.
-- **Infrastructure:** Feeds events to frontend and validation checks to harmony, monitored by harmony detector, evolved through normal code reviews.
-- **Presentation:** Feeds human understanding, monitored by harmony's backwards audit (does UI expect what we broadcast?), evolved by the self-evolving UI system.
-- **Harmony:** Feeds remediation routing, monitors itself (meta-aware), evolved by new audit flows as patterns emerge.
+**1. The Orchestrator Coordinates, Agents Create.** Layer 1 never crosses into Layer 2 implementation. The brain compiles chains and spawns agents; it does not implement features. This separation lets agents evolve independently.
 
----
+**2. Memory Is Not Optional.** Every execution writes to Layer 0. The system without memory is just a task runner, not a living system. A system that cannot learn is not alive.
 
-## Key Principles
+**3. Harmony Is the Immune System.** Layer 6 detects when layers drift out of sync. It does not fix things directly -- it broadcasts violations, and Layer 1 routes to healing flows.
 
-### 1. The Orchestrator Coordinates, Agents Create
+**4. Evolution Is Built-In.** Every layer has a growth mechanism: Memory accumulates, Routing registers new flows, Agents spawn new types, Contract versions formats, Infrastructure adds event types, Presentation evolves its component registry, Harmony creates new audit flows.
 
-Layer 1 (Routing) never crosses into Layer 2 (Agents) implementation. The orchestrator compiles chains and spawns agents; it does not implement features. This separation is sacred because it allows agents to evolve independently.
+**5. Two Universes, One System.** Layer 4 deliberately splits into Events (for rendering) and Parsers (for monitoring). They serve different masters but protect the same contract.
 
-### 2. Memory Is Not Optional
-
-Every execution writes to Layer 0 (Memory). The system without memory is just a task runner, not a living system. A system that cannot learn is not alive.
-
-### 3. Harmony Is the Immune System
-
-Layer 6 (Harmony) exists to detect when layers drift out of sync. It does not fix things directly — it broadcasts violations, and Layer 1 routes to healing flows. This design allows the system to detect and heal problems automatically.
-
-### 4. Evolution Is Built-In
-
-Every layer has a mechanism for growth:
-- **Layer 0:** Accumulates executions and learnings
-- **Layer 1:** New flows are registered through flow-creation/
-- **Layer 2:** New agents are created through action-creation/
-- **Layer 3:** New formats are added through CONTRACT_EVOLUTION.md process
-- **Layer 4:** New services and event types are added through code-and-review/
-- **Layer 5:** New components and patterns emerge from self-evolving UI system
-- **Layer 6:** New audit flows are registered as patterns are discovered
-
-### 5. Two Universes, One System
-
-Layer 4 deliberately splits into Events (for rendering) and Parsers (for monitoring). They serve different masters but protect the same contract. This split prevents the frontend from becoming tightly coupled to the orchestrator's output format.
-
-### 6. Graceful Degradation
-
-When parsing fails, the system does not crash. It degrades gracefully:
-- Dashboard shows partial data, harmony violations appear
-- Orchestrator can route to remediation
-- System heals itself
-
-This prevents cascading failures.
+**6. Graceful Degradation.** When parsing fails, the system does not crash. Dashboard shows partial data, harmony violations surface, the brain routes to remediation, and the system heals itself. No cascading failures.
 
 ---
 
-## The Two Universes (Layer 4 Deep Dive)
+## Healing and Growth
 
-Understanding Layer 4's architectural split is crucial to understanding how ActionFlows stays in harmony:
+The universe has two self-sustaining cycles. One repairs. The other strengthens.
 
-### Universe A — Real-Time Events (Frontend-Facing)
-
-```
-Orchestrator Action Chain (backend):
-  └─> Spawns Agent
-      └─> Agent executes
-          └─> Broadcasts StepStartedEvent (ws)
-          └─> Broadcasts StepCompletedEvent (ws)
-          └─> Broadcasts StepFailedEvent (ws)
-
-Frontend Hook (react):
-  └─> useChainEvents(chainId)
-      └─> Opens WebSocket connection
-      └─> Subscribes to event types
-      └─> Updates local state (typed)
-      └─> Components render state (never raw data)
-
-Result: Live visualization, zero parsing, 100% type-safe
-```
-
-### Universe B — Monitoring (Contract-Facing)
+### The Healing Cycle
 
 ```
-Orchestrator Output (markdown):
-  └─> Chain Compilation
-      └─> Step Announcements
-      └─> Step Completions
-
-Backend Parser (ts):
-  └─> parseChainCompilation(text)
-  └─> parseStepAnnouncement(text)
-  └─> Validates structure matches CONTRACT.md
-
-Harmony Detector (service):
-  └─> Compares parsed output to expected format
-  └─> Detects mismatches
-  └─> Broadcasts HarmonyViolationEvent
-
-Result: Contract validation, drift detection, healing triggers
+  The terrain dims          The brain pathfinds         Sparks carry the repair
+  (Harmony detects drift)   (Routing kicks in)          (Agents execute)
+        |                         |                           |
+        v                         v                           v
++-----------------+     +------------------+     +-------------------+
+| Layer 6:        |     | Layer 1:         |     | Layer 2:          |
+| Harmony         | --> | Routing          | --> | Agents            |
+| Broadcasts      |     | Reads violation, |     | Execute fix       |
+| violation event |     | routes to        |     | (code-and-review, |
+|                 |     | remediation flow |     |  test, etc.)      |
++-----------------+     +------------------+     +-------------------+
+                                                          |
+                                                          v
+                                                +-------------------+
+                                                | Layer 0:          |
+                                                | Memory            |
+                                                | Records execution |
+                                                | in INDEX.md,      |
+                                                | learnings in      |
+                                                | LEARNINGS.md      |
+                                                +-------------------+
+                                                          |
+                                                          v
+                                                   Next session
+                                                   starts smarter
 ```
 
-**Why This Split Matters:**
-- If the orchestrator changes its output format, Universe B detects it immediately (harmony violation).
-- The frontend continues working even if the orchestrator is broken (Universe A is independent).
-- When Universe B detects a problem, it triggers Universe A to show violations in the harmony panel.
+**This is not aspirational.** On 2026-02-09, the backwards harmony audit detected that `harmonyDetector.ts` had broken support for 12 of 17 contract formats, the `useChainEvents` hook was dead code, and the `StepSkippedEvent` was missing from the event stream. The terrain had dimmed. The brain pathfound to a remediation flow. Sparks carried the repair. All three issues were fixed in the same session. The terrain brightened. The universe healed itself.
+
+### The Growth Cycle
+
+The healing cycle fixes what is broken. The growth cycle makes the universe stronger with every use, even when nothing is broken.
+
+**Every chain is a seed.** Every ad-hoc chain the brain compiles is a potential reusable flow. When the brain composes `analyze x3 -> audit -> second-opinion` to solve a problem, that pattern is recorded in INDEX.md. If it works well and the pattern recurs, it gets promoted to a registered flow in FLOWS.md. What was a five-step manual composition becomes a single invocation. Some seeds become flows. Flows become the universe's muscle memory.
+
+**Every dossier is a living record.** Intel Dossiers follow the same growth principle at the code level. A dossier is created, watches file changes, accumulates insights through re-analysis, and preserves prior states for temporal comparison. Where chains grow the brain's routing intelligence, dossiers grow the system's understanding of the codebase itself.
+
+**Five properties compound as the universe grows:**
+
+1. **Operational Efficiency** -- Each session does less redundant work. Patterns that required manual composition become one-step flow invocations.
+2. **Intentionality** -- Decisions are never random. The brain reads INDEX.md and LEARNINGS.md before every routing decision. Full historical awareness.
+3. **Trust** -- As successful patterns accumulate, the human approves chains faster. Trust is earned through demonstrated competence.
+4. **Less Work, Higher Quality** -- These compound together. Reusable flows eliminate composition overhead. Learnings prevent repeat mistakes. Reviews catch issues early.
+5. **Growth** -- New flows registered. New agents created. New patterns discovered. The universe today is more capable than the universe yesterday.
+
+**The system that runs today is not the system that will run tomorrow. Tomorrow's system will be stronger -- because today it was used.**
 
 ---
 
-## See Also
+## The Creation Epoch
 
-- **HARMONY_SYSTEM.md** — Deep dive on how harmony monitoring works
-- **CONTRACT_EVOLUTION.md** — Process for evolving contract formats
-- **ORCHESTRATOR.md** — Routing and coordination rules
-- **CONTEXTS.md** — Context routing table and triggers
-- **FLOWS.md** — Flow registry with descriptions
-- **ACTIONS.md** — Action catalog with agent descriptions
-- **logs/INDEX.md** — Historical execution registry
-- **LEARNINGS.md** — Session-discovered patterns and fixes
+This universe has an origin story.
 
----
+The creator of ActionFlows is also its first inhabitant -- the first explorer. The learnings recorded in LEARNINGS.md are not documentation; they are the universe's memory of its creator discovering how to live within it. The creator did not just architect the system and hand it off; they inhabited it, made mistakes, evolved it, and left their wisdom embedded in its structure. The universe learned from being used by its creator, and those learnings reshaped the universe itself.
 
-## Quick Start: Understanding the System
-
-**For new contributors:**
-
-1. **Start here:** Read this document (you are here)
-2. **Understand harmony:** Read HARMONY_SYSTEM.md
-3. **Learn the contract:** Skim CONTRACT.md (don't memorize, just know it exists)
-4. **See it work:** Run `pnpm dev` and watch the dashboard while executing a chain
-5. **Complete onboarding:** Run the onboarding/ flow, complete Module 9 (Harmony)
-
-**For framework developers:**
-
-1. **Understand routing:** Read ORCHESTRATOR.md completely
-2. **Know the flows:** Study FLOWS.md and understand composition
-3. **Learn agent patterns:** Read actions/_abstract/agent-standards/instructions.md
-4. **Evolve the contract:** Follow CONTRACT_EVOLUTION.md for any format changes
-5. **Monitor health:** Run `pnpm run harmony:check` regularly
+This specific ActionFlows instance is the first proof that software universes work. The creator proved the concept by being the first to live in one. This is a template -- a default set of behaviors, contracts, tools, tests, predefined flows, all learned from real needs and real mistakes. The creator's software engineering wisdom is embedded as defaults, not mandates. Future explorers inherit a working universe shaped by practical experience, not theoretical design.
 
 ---
 
@@ -697,8 +298,43 @@ Result: Contract validation, drift detection, healing triggers
 
 ActionFlows is built on a single insight: **A system that cannot learn is not alive.**
 
-Every component of ActionFlows is designed to accumulate wisdom, detect problems, and heal itself. The 7 layers are not separate systems — they are one organism, with memory, nerves, and an immune system.
+When you see the terrain dim between stars, you are seeing the universe's immune system detect drift. When you see a new region emerge from fog, you are seeing the universe grow because you used it. When you watch sparks carry signals between stars, you are seeing collaborative intelligence made visible. When you read INDEX.md and see hundreds of past executions, you are seeing the universe's accumulated wisdom.
 
-When you see a harmony violation in the dashboard, you are seeing the system's immune system at work. When you see a remediation flow execute automatically, you are seeing the system heal itself. When you read INDEX.md and see thousands of past executions, you are seeing the system's growing wisdom.
+A universe that cannot evolve is not worth exploring. This one evolves with every session, every chain, every mistake, every discovery. The explorer and the cosmos grow together.
 
-This is what a living system looks like.
+This is what a living universe looks like.
+
+---
+
+## See Also
+
+- **HARMONY_SYSTEM.md** -- Deep dive on how harmony monitoring works
+- **CONTRACT_EVOLUTION.md** -- Process for evolving contract formats
+- **ORCHESTRATOR.md** -- Routing and coordination rules
+- **CONTEXTS.md** -- Context routing table and triggers
+- **FLOWS.md** -- Flow registry with descriptions
+- **ACTIONS.md** -- Action catalog with agent descriptions
+- **logs/INDEX.md** -- Historical execution registry
+- **LEARNINGS.md** -- Session-discovered patterns and fixes
+- **docs/design/INTEL_DOSSIER.md** -- Intel Dossier lifecycle and widget system
+
+---
+
+## Quick Start: Exploring the Universe
+
+**For new explorers:**
+
+1. **Launch the app** -- Watch the Big Bang. See the cosmos ignite from your first message.
+2. **Navigate the cosmic map** -- Click regions to enter workbenches. Zoom out to return to the universe view.
+3. **Use the Command Center** -- Type intentions into the input field. Watch the brain compile chains and dispatch sparks.
+4. **Understand harmony** -- Read HARMONY_SYSTEM.md to learn what the terrain between stars means.
+5. **Learn the contract** -- Skim CONTRACT.md. Know it exists, know what gates enforce.
+6. **Complete onboarding** -- Run the onboarding/ flow. Complete Module 9 (Harmony).
+
+**For framework developers:**
+
+1. **Understand routing** -- Read ORCHESTRATOR.md completely. This is the brain's source code.
+2. **Know the flows** -- Study FLOWS.md and understand composition.
+3. **Learn agent patterns** -- Read `actions/_abstract/agent-standards/instructions.md`.
+4. **Evolve the contract** -- Follow CONTRACT_EVOLUTION.md for any format changes.
+5. **Monitor health** -- Run `pnpm run harmony:check` regularly.
