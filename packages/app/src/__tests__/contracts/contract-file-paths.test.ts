@@ -12,11 +12,13 @@ import { glob } from 'glob';
  * Scope: All 99+ contract files in packages/app/src/contracts/
  */
 
+const MONOREPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..', '..');
+
 describe('Contract File Path Validation (P0)', () => {
   // Find all .contract.md files except template
   const contractFiles = glob.sync('packages/app/src/contracts/**/*.contract.md', {
     ignore: '**/TEMPLATE.contract.md',
-    cwd: process.cwd()
+    cwd: MONOREPO_ROOT
   });
 
   if (contractFiles.length === 0) {
@@ -29,7 +31,7 @@ describe('Contract File Path Validation (P0)', () => {
   contractFiles.forEach((contractPath) => {
     it(`${path.basename(contractPath)} references existing component file`, () => {
       // Read the contract file
-      const content = fs.readFileSync(contractPath, 'utf-8');
+      const content = fs.readFileSync(path.resolve(MONOREPO_ROOT, contractPath), 'utf-8');
 
       // Extract the file path from **File:** metadata line
       // Format: **File:** `packages/app/src/components/...`
@@ -41,7 +43,7 @@ describe('Contract File Path Validation (P0)', () => {
       }
 
       const referencedFilePath = fileMatch[1];
-      const absolutePath = path.resolve(process.cwd(), referencedFilePath);
+      const absolutePath = path.resolve(MONOREPO_ROOT, referencedFilePath);
 
       // Check if the file exists
       expect(

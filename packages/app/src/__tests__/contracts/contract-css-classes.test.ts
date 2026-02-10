@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 
+const MONOREPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..', '..');
+
 /**
  * Contract CSS Class Existence Validation Tests (P1)
  *
@@ -112,8 +114,8 @@ const TEST_COMPONENTS = [
 describe('Contract CSS Class Existence Validation (P1)', () => {
   TEST_COMPONENTS.forEach(({ name, contractPath, stylesheetPath }) => {
     describe(`${name} CSS Classes`, () => {
-      const contractFullPath = path.resolve(process.cwd(), contractPath);
-      const stylesheetFullPath = path.resolve(process.cwd(), stylesheetPath);
+      const contractFullPath = path.resolve(MONOREPO_ROOT, contractPath);
+      const stylesheetFullPath = path.resolve(MONOREPO_ROOT, stylesheetPath);
 
       // Skip if contract doesn't exist
       if (!fs.existsSync(contractFullPath)) {

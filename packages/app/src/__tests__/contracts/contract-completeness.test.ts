@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { glob } from 'glob';
 
+const MONOREPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..', '..');
+
 /**
  * Contract Completeness Checker Tests (P1)
  *
@@ -14,7 +16,7 @@ import { glob } from 'glob';
 
 // Read the template contract to extract required sections
 function getRequiredSections(): string[] {
-  const templatePath = path.resolve(process.cwd(), 'packages/app/src/contracts/TEMPLATE.contract.md');
+  const templatePath = path.resolve(MONOREPO_ROOT, 'packages/app/src/contracts/TEMPLATE.contract.md');
 
   if (!fs.existsSync(templatePath)) {
     // Return common required sections if template not found
@@ -62,7 +64,7 @@ describe('Contract Completeness Checker (P1)', () => {
   const requiredSections = getRequiredSections();
   const contractFiles = glob.sync('packages/app/src/contracts/**/*.contract.md', {
     ignore: '**/TEMPLATE.contract.md',
-    cwd: process.cwd(),
+    cwd: MONOREPO_ROOT,
   });
 
   if (contractFiles.length === 0) {
@@ -72,7 +74,7 @@ describe('Contract Completeness Checker (P1)', () => {
 
   contractFiles.forEach((contractPath) => {
     const contractName = path.basename(contractPath, '.contract.md');
-    const content = fs.readFileSync(contractPath, 'utf-8');
+    const content = fs.readFileSync(path.resolve(MONOREPO_ROOT, contractPath), 'utf-8');
 
     describe(`${contractName}`, () => {
       it('has all required top-level sections', () => {

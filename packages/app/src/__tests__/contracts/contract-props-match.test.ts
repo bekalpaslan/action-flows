@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import ts from 'typescript';
 
+const MONOREPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..', '..');
+
 /**
  * Contract Props Interface Matching Tests (P0)
  *
@@ -95,8 +97,8 @@ const HIGH_PRIORITY_CONTRACTS = [
 describe('Contract Props Interface Matching (P0)', () => {
   HIGH_PRIORITY_CONTRACTS.forEach(({ name, contractPath, filePath }) => {
     describe(`${name} Props`, () => {
-      const contractFullPath = path.resolve(process.cwd(), contractPath);
-      const fileFullPath = path.resolve(process.cwd(), filePath);
+      const contractFullPath = path.resolve(MONOREPO_ROOT, contractPath);
+      const fileFullPath = path.resolve(MONOREPO_ROOT, filePath);
 
       // Skip if files don't exist
       if (!fs.existsSync(contractFullPath) || !fs.existsSync(fileFullPath)) {
