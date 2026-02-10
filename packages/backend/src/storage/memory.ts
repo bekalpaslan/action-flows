@@ -1,6 +1,6 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
-import { brandedTypes } from '@afw/shared';
+import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
 
 /**
  * In-memory storage for sessions, chains, events, commands, and input
@@ -21,6 +21,7 @@ const MAX_DOSSIERS = 100;
 const MAX_DOSSIER_HISTORY = 50;
 const MAX_SUGGESTIONS = 500;
 const MAX_CHAT_MESSAGES_PER_SESSION = 1_000;
+const MAX_TELEMETRY_ENTRIES = 10_000;
 export interface MemoryStorage {
   // Session storage
   sessions: Map<SessionId, Session>;
@@ -118,6 +119,18 @@ export interface MemoryStorage {
   addChatMessage(sessionId: SessionId, message: ChatMessage): void;
   clearChatHistory(sessionId: SessionId): void;
 
+  // Freshness tracking
+  resourceFreshness: Map<string, Timestamp>;
+  getFreshness(resourceType: 'session' | 'chain' | 'events', resourceId: string): FreshnessMetadata | null;
+  getStaleResources(resourceType: 'session' | 'chain' | 'events', staleThresholdMs: number): string[];
+  _updateFreshness(resourceType: 'session' | 'chain' | 'events', resourceId: string): void;
+
+  // Telemetry storage
+  telemetryEntries: TelemetryEntry[];
+  addTelemetryEntry(entry: TelemetryEntry): void;
+  queryTelemetry(filter: TelemetryQueryFilter): TelemetryEntry[];
+  getTelemetryStats(): { totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> };
+
   // Internal eviction method
   _evictOldestCompletedSession(): void;
 }
@@ -140,6 +153,8 @@ export const storage: MemoryStorage = {
       userSessions.add(session.id);
       this.sessionsByUser.set(session.user, userSessions);
     }
+    // Update freshness
+    this._updateFreshness('session', session.id);
   },
   deleteSession(sessionId: SessionId) {
     const session = this.sessions.get(sessionId);
@@ -154,6 +169,13 @@ export const storage: MemoryStorage = {
         }
       }
     }
+    // Cascade delete all related data
+    this.events.delete(sessionId);
+    this.chains.delete(sessionId);
+    this.commandsQueue.delete(sessionId);
+    this.inputQueue.delete(sessionId);
+    this.harmonyChecks.delete(sessionId);
+    this.chatHistory.delete(sessionId);
   },
 
   // User session tracking
@@ -176,6 +198,8 @@ export const storage: MemoryStorage = {
       events.splice(0, events.length - MAX_EVENTS_PER_SESSION);
     }
     this.events.set(sessionId, events);
+    // Update freshness
+    this._updateFreshness('events', sessionId);
   },
   getEvents(sessionId: SessionId) {
     return this.events.get(sessionId) || [];
@@ -202,6 +226,9 @@ export const storage: MemoryStorage = {
       chains.splice(0, chains.length - MAX_CHAINS_PER_SESSION);
     }
     this.chains.set(sessionId, chains);
+    // Update freshness for both chain and its session
+    this._updateFreshness('chain', chain.id);
+    this._updateFreshness('session', sessionId);
   },
   getChains(sessionId: SessionId) {
     return this.chains.get(sessionId) || [];
@@ -528,10 +555,63 @@ export const storage: MemoryStorage = {
       messages.splice(0, messages.length - MAX_CHAT_MESSAGES_PER_SESSION);
     }
     this.chatHistory.set(sessionId, messages);
+    // Update freshness
+    this._updateFreshness('session', sessionId);
   },
 
   clearChatHistory(sessionId: SessionId) {
     this.chatHistory.delete(sessionId);
+  },
+
+  // Freshness tracking
+  resourceFreshness: new Map(),
+
+  _updateFreshness(resourceType: 'session' | 'chain' | 'events', resourceId: string) {
+    const key = `${resourceType}:${resourceId}`;
+    const now = brandedTypes.currentTimestamp();
+    this.resourceFreshness.set(key, now);
+  },
+
+  getFreshness(resourceType: 'session' | 'chain' | 'events', resourceId: string): FreshnessMetadata | null {
+    const key = `${resourceType}:${resourceId}`;
+    const lastModifiedAt = this.resourceFreshness.get(key);
+
+    if (!lastModifiedAt) {
+      return null;
+    }
+
+    const now = Date.now();
+    const modifiedTime = new Date(lastModifiedAt).getTime();
+    const ageMs = duration.ms(now - modifiedTime);
+    const freshnessGrade = calculateFreshnessGrade(lastModifiedAt);
+
+    return {
+      lastModifiedAt,
+      lastAccessedAt: brandedTypes.currentTimestamp(),
+      freshnessGrade,
+      ageMs,
+    };
+  },
+
+  getStaleResources(resourceType: 'session' | 'chain' | 'events', staleThresholdMs: number): string[] {
+    const staleResources: string[] = [];
+    const now = Date.now();
+    const prefix = `${resourceType}:`;
+
+    for (const [key, timestamp] of this.resourceFreshness.entries()) {
+      if (key.startsWith(prefix)) {
+        const modifiedTime = new Date(timestamp).getTime();
+        const ageMs = now - modifiedTime;
+
+        if (ageMs > staleThresholdMs) {
+          // Extract resource ID from key (remove prefix)
+          const resourceId = key.substring(prefix.length);
+          staleResources.push(resourceId);
+        }
+      }
+    }
+
+    return staleResources;
   },
 
   /**
@@ -551,13 +631,8 @@ export const storage: MemoryStorage = {
       }
     }
     if (oldestId) {
+      // Use deleteSession which now handles cascade cleanup
       this.deleteSession(oldestId);
-      this.events.delete(oldestId);
-      this.chains.delete(oldestId);
-      this.commandsQueue.delete(oldestId);
-      this.inputQueue.delete(oldestId);
-      this.harmonyChecks.delete(oldestId);
-      this.chatHistory.delete(oldestId);
     }
   },
 
@@ -657,5 +732,78 @@ export const storage: MemoryStorage = {
     }
     suggestion.frequency++;
     return true;
+  },
+
+  // Telemetry storage
+  telemetryEntries: [],
+  addTelemetryEntry(entry: TelemetryEntry) {
+    this.telemetryEntries.push(entry);
+    // FIFO eviction at MAX_TELEMETRY_ENTRIES
+    if (this.telemetryEntries.length > MAX_TELEMETRY_ENTRIES) {
+      this.telemetryEntries.shift();
+    }
+  },
+
+  queryTelemetry(filter: TelemetryQueryFilter = {}) {
+    let results = this.telemetryEntries;
+
+    // Filter by level
+    if (filter.level) {
+      results = results.filter(e => e.level === filter.level);
+    }
+
+    // Filter by source
+    if (filter.source) {
+      results = results.filter(e => e.source === filter.source);
+    }
+
+    // Filter by sessionId
+    if (filter.sessionId) {
+      results = results.filter(e => e.sessionId === filter.sessionId);
+    }
+
+    // Filter by time range
+    if (filter.fromTimestamp) {
+      const fromTime = new Date(filter.fromTimestamp).getTime();
+      results = results.filter(e => new Date(e.timestamp).getTime() >= fromTime);
+    }
+
+    if (filter.toTimestamp) {
+      const toTime = new Date(filter.toTimestamp).getTime();
+      results = results.filter(e => new Date(e.timestamp).getTime() <= toTime);
+    }
+
+    // Apply limit (most recent first)
+    if (filter.limit && filter.limit > 0) {
+      results = results.slice(-filter.limit);
+    }
+
+    return results;
+  },
+
+  getTelemetryStats() {
+    const bySource: Record<string, number> = {};
+    const byLevel: Record<string, number> = {};
+    let errorCount = 0;
+
+    for (const entry of this.telemetryEntries) {
+      // Count by source
+      bySource[entry.source] = (bySource[entry.source] || 0) + 1;
+
+      // Count by level
+      byLevel[entry.level] = (byLevel[entry.level] || 0) + 1;
+
+      // Count errors
+      if (entry.level === 'error') {
+        errorCount++;
+      }
+    }
+
+    return {
+      totalEntries: this.telemetryEntries.length,
+      errorCount,
+      bySource,
+      byLevel,
+    };
   },
 };

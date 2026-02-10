@@ -3,6 +3,8 @@ import { SessionSidebarItem } from './SessionSidebarItem';
 import type { SessionId } from '@afw/shared';
 import './SessionSidebar.css';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export interface SessionSidebarProps {
   /** Callback when a session is attached to the workbench */
   onAttachSession?: (sessionId: SessionId) => void;
@@ -10,6 +12,8 @@ export interface SessionSidebarProps {
   activeSessionId?: SessionId;
   /** Callback when "New Session" is clicked */
   onNewSession?: () => void;
+  /** Callback when a session is deleted */
+  onSessionDeleted?: (sessionId: SessionId) => void;
 }
 
 /**
@@ -32,6 +36,7 @@ export function SessionSidebar({
   onAttachSession,
   activeSessionId,
   onNewSession,
+  onSessionDeleted,
 }: SessionSidebarProps) {
   const {
     activeSessions,
@@ -43,6 +48,36 @@ export function SessionSidebar({
   // Handle session click
   const handleSessionClick = (sessionId: SessionId) => {
     attachSession(sessionId);
+  };
+
+  // Handle session deletion
+  const handleDeleteSession = async (sessionId: SessionId) => {
+    try {
+      const response = await fetch(`${API_BASE}/api/sessions/${sessionId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.warn(`Session ${sessionId} not found`);
+        } else {
+          throw new Error(`Failed to delete session: ${response.statusText}`);
+        }
+      }
+
+      // Notify parent if this was the active session
+      if (sessionId === activeSessionId && onSessionDeleted) {
+        onSessionDeleted(sessionId);
+      }
+
+      // WebSocket will broadcast session:deleted event to update the UI
+    } catch (err) {
+      console.error('Error deleting session:', err);
+      alert('Failed to delete session. Please try again.');
+    }
   };
 
   // Filter recent sessions that aren't already in active sessions
@@ -91,6 +126,7 @@ export function SessionSidebar({
                   notificationCount={notificationCounts.get(session.id) || 0}
                   isActive={session.id === activeSessionId}
                   onClick={() => handleSessionClick(session.id)}
+                  onDelete={handleDeleteSession}
                 />
               ))}
             </div>
@@ -114,6 +150,7 @@ export function SessionSidebar({
                   notificationCount={notificationCounts.get(session.id) || 0}
                   isActive={session.id === activeSessionId}
                   onClick={() => handleSessionClick(session.id)}
+                  onDelete={handleDeleteSession}
                 />
               ))}
             </div>

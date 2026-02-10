@@ -218,6 +218,41 @@
   animation: pulse-badge 2s infinite;
 }
 
+/* Delete Button */
+.session-delete-btn {
+  display: none; /* Hidden by default */
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: var(--transition-all);
+}
+
+.session-sidebar-item:hover .session-delete-btn {
+  display: flex; /* Show on hover */
+}
+
+.session-delete-btn:hover {
+  background: var(--system-red);
+  border-color: var(--system-red);
+  color: var(--text-primary);
+  box-shadow: 0 0 8px rgba(255, 69, 58, 0.6);
+}
+
+.session-delete-btn:active {
+  transform: scale(0.9);
+}
+
 @keyframes pulse-badge {
   0%, 100% {
     box-shadow: 0 0 12px rgba(191, 90, 242, 0.6);

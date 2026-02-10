@@ -113,7 +113,8 @@ export function useAllSessions(): UseAllSessionsReturn {
   const handleSessionEvent = useCallback((event: WorkspaceEvent) => {
     if (
       event.type === 'session:started' ||
-      event.type === 'session:ended'
+      event.type === 'session:ended' ||
+      event.type === 'session:deleted'
     ) {
       setSessions((prevSessions) => {
         const existingIndex = prevSessions.findIndex(
@@ -147,6 +148,12 @@ export function useAllSessions(): UseAllSessionsReturn {
             endedAt: event.timestamp,
           } as Session;
           return updated;
+        } else if (
+          event.type === 'session:deleted' &&
+          existingIndex >= 0
+        ) {
+          // Remove deleted session
+          return prevSessions.filter((s) => s.id !== event.sessionId);
         }
 
         return prevSessions;

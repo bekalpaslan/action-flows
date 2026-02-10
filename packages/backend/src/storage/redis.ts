@@ -1,7 +1,7 @@
 import { Redis } from 'ioredis';
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
-import { brandedTypes } from '@afw/shared';
+import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
 
 /**
  * Redis storage adapter for sessions, chains, events, commands, and input
@@ -83,6 +83,15 @@ export interface RedisStorage {
   addChatMessage(sessionId: SessionId, message: ChatMessage): Promise<void>;
   clearChatHistory(sessionId: SessionId): Promise<void>;
 
+  // Freshness tracking
+  getFreshness(resourceType: 'session' | 'chain' | 'events', resourceId: string): Promise<FreshnessMetadata | null>;
+  getStaleResources(resourceType: 'session' | 'chain' | 'events', staleThresholdMs: number): Promise<string[]>;
+
+  // Telemetry storage
+  addTelemetryEntry(entry: TelemetryEntry): Promise<void>;
+  queryTelemetry(filter: TelemetryQueryFilter): Promise<TelemetryEntry[]>;
+  getTelemetryStats(): Promise<{ totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> }>;
+
   // Pub/Sub support
   subscribe(channel: string, callback: (message: string) => void): Promise<void>;
   publish(channel: string, message: string): Promise<void>;
@@ -128,6 +137,11 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       try {
         const key = `${keyPrefix}sessions:${session.id}`;
         await redis.setex(key, SESSION_TTL, JSON.stringify(session));
+        // Update freshness
+        const freshnessKey = `${keyPrefix}freshness:session`;
+        const now = Date.now();
+        await redis.zadd(freshnessKey, now, session.id);
+        await redis.expire(freshnessKey, SESSION_TTL);
       } catch (error) {
         console.error(`[Redis] Error setting session ${session.id}:`, error);
       }
@@ -135,8 +149,17 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async deleteSession(sessionId: SessionId) {
       try {
-        const key = `${keyPrefix}sessions:${sessionId}`;
-        await redis.del(key);
+        // Delete all related Redis keys for this session
+        const keys = [
+          `${keyPrefix}sessions:${sessionId}`,
+          `${keyPrefix}events:${sessionId}`,
+          `${keyPrefix}chains:${sessionId}`,
+          `${keyPrefix}commands:${sessionId}`,
+          `${keyPrefix}input:${sessionId}`,
+          `${keyPrefix}harmony:session:${sessionId}`,
+          `${keyPrefix}chat:${sessionId}`,
+        ];
+        await redis.del(...keys);
       } catch (error) {
         console.error(`[Redis] Error deleting session ${sessionId}:`, error);
       }
@@ -151,6 +174,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         // Push to Redis list
         await redis.rpush(key, eventData);
         await redis.expire(key, EVENT_TTL);
+
+        // Update freshness
+        const freshnessKey = `${keyPrefix}freshness:events`;
+        const now = Date.now();
+        await redis.zadd(freshnessKey, now, sessionId);
+        await redis.expire(freshnessKey, EVENT_TTL);
 
         // Publish to Pub/Sub channel for multi-instance broadcasting
         await pubClient.publish(`${keyPrefix}events`, JSON.stringify({
@@ -204,6 +233,16 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         // Also store chain by ID for fast lookup
         const chainKey = `${keyPrefix}chain:${chain.id}`;
         await redis.setex(chainKey, EVENT_TTL, JSON.stringify(chain));
+
+        // Update freshness for both chain and session
+        const now = Date.now();
+        const chainFreshnessKey = `${keyPrefix}freshness:chain`;
+        await redis.zadd(chainFreshnessKey, now, chain.id);
+        await redis.expire(chainFreshnessKey, EVENT_TTL);
+
+        const sessionFreshnessKey = `${keyPrefix}freshness:session`;
+        await redis.zadd(sessionFreshnessKey, now, sessionId);
+        await redis.expire(sessionFreshnessKey, SESSION_TTL);
       } catch (error) {
         console.error(`[Redis] Error adding chain for session ${sessionId}:`, error);
       }
@@ -852,6 +891,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         await redis.ltrim(key, -1000, -1);
         // Set TTL (24 hours, same as sessions)
         await redis.expire(key, SESSION_TTL);
+
+        // Update freshness
+        const freshnessKey = `${keyPrefix}freshness:session`;
+        const now = Date.now();
+        await redis.zadd(freshnessKey, now, sessionId);
+        await redis.expire(freshnessKey, SESSION_TTL);
       } catch (error) {
         console.error(`[Redis] Error adding chat message for ${sessionId}:`, error);
       }
@@ -863,6 +908,159 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         await redis.del(key);
       } catch (error) {
         console.error(`[Redis] Error clearing chat history for ${sessionId}:`, error);
+      }
+    },
+
+    // === Freshness Tracking ===
+    async getFreshness(resourceType: 'session' | 'chain' | 'events', resourceId: string): Promise<FreshnessMetadata | null> {
+      try {
+        const freshnessKey = `${keyPrefix}freshness:${resourceType}`;
+        const score = await redis.zscore(freshnessKey, resourceId);
+
+        if (score === null) {
+          return null;
+        }
+
+        const lastModifiedTime = parseFloat(score);
+        const lastModifiedAt = brandedTypes.timestamp(new Date(lastModifiedTime).toISOString());
+        const now = Date.now();
+        const ageMs = duration.ms(now - lastModifiedTime);
+        const freshnessGrade = calculateFreshnessGrade(lastModifiedAt);
+
+        return {
+          lastModifiedAt,
+          lastAccessedAt: brandedTypes.currentTimestamp(),
+          freshnessGrade,
+          ageMs,
+        };
+      } catch (error) {
+        console.error(`[Redis] Error getting freshness for ${resourceType}:${resourceId}:`, error);
+        return null;
+      }
+    },
+
+    async getStaleResources(resourceType: 'session' | 'chain' | 'events', staleThresholdMs: number): Promise<string[]> {
+      try {
+        const freshnessKey = `${keyPrefix}freshness:${resourceType}`;
+        const now = Date.now();
+        const maxScore = now - staleThresholdMs;
+
+        // Get all resources with score (timestamp) less than maxScore
+        // ZRANGEBYSCORE returns resources from -inf to maxScore
+        const staleResources = await redis.zrangebyscore(freshnessKey, '-inf', maxScore);
+        return staleResources;
+      } catch (error) {
+        console.error(`[Redis] Error getting stale resources for ${resourceType}:`, error);
+        return [];
+      }
+    },
+
+    // === Telemetry Storage ===
+    async addTelemetryEntry(entry: TelemetryEntry) {
+      try {
+        const key = `${keyPrefix}telemetry`;
+        const entryJson = JSON.stringify(entry);
+        // Use sorted set with timestamp as score for efficient time-based queries
+        const timestamp = new Date(entry.timestamp).getTime();
+        await redis.zadd(key, timestamp, entryJson);
+
+        // Set 7-day TTL on the telemetry key
+        await redis.expire(key, 7 * 24 * 60 * 60);
+
+        // Trim to keep max 10K entries (remove oldest)
+        const count = await redis.zcard(key);
+        if (count > 10_000) {
+          await redis.zremrangebyrank(key, 0, count - 10_001);
+        }
+      } catch (error) {
+        console.error('[Redis] Error adding telemetry entry:', error);
+      }
+    },
+
+    async queryTelemetry(filter: TelemetryQueryFilter = {}): Promise<TelemetryEntry[]> {
+      try {
+        const key = `${keyPrefix}telemetry`;
+
+        // Get entries by time range
+        let min = '-inf';
+        let max = '+inf';
+
+        if (filter.fromTimestamp) {
+          min = String(new Date(filter.fromTimestamp).getTime());
+        }
+        if (filter.toTimestamp) {
+          max = String(new Date(filter.toTimestamp).getTime());
+        }
+
+        // Get entries from sorted set
+        let entriesJson: string[] = await redis.zrangebyscore(key, min, max);
+
+        // Parse entries
+        let entries: TelemetryEntry[] = entriesJson.map(json => JSON.parse(json));
+
+        // Apply filters
+        if (filter.level) {
+          entries = entries.filter(e => e.level === filter.level);
+        }
+
+        if (filter.source) {
+          entries = entries.filter(e => e.source === filter.source);
+        }
+
+        if (filter.sessionId) {
+          entries = entries.filter(e => e.sessionId === filter.sessionId);
+        }
+
+        // Apply limit (most recent first)
+        if (filter.limit && filter.limit > 0) {
+          entries = entries.slice(-filter.limit);
+        }
+
+        return entries;
+      } catch (error) {
+        console.error('[Redis] Error querying telemetry:', error);
+        return [];
+      }
+    },
+
+    async getTelemetryStats() {
+      try {
+        const key = `${keyPrefix}telemetry`;
+        const entriesJson: string[] = await redis.zrange(key, 0, -1);
+
+        const bySource: Record<string, number> = {};
+        const byLevel: Record<string, number> = {};
+        let errorCount = 0;
+
+        for (const json of entriesJson) {
+          const entry: TelemetryEntry = JSON.parse(json);
+
+          // Count by source
+          bySource[entry.source] = (bySource[entry.source] || 0) + 1;
+
+          // Count by level
+          byLevel[entry.level] = (byLevel[entry.level] || 0) + 1;
+
+          // Count errors
+          if (entry.level === 'error') {
+            errorCount++;
+          }
+        }
+
+        return {
+          totalEntries: entriesJson.length,
+          errorCount,
+          bySource,
+          byLevel,
+        };
+      } catch (error) {
+        console.error('[Redis] Error getting telemetry stats:', error);
+        return {
+          totalEntries: 0,
+          errorCount: 0,
+          bySource: {},
+          byLevel: {},
+        };
       }
     },
 

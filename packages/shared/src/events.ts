@@ -72,6 +72,13 @@ export interface SessionEndedEvent extends BaseEvent {
   totalChainsCompleted?: number;
 }
 
+export interface SessionDeletedEvent extends BaseEvent {
+  type: 'session:deleted';
+
+  // Parsed fields (nullable)
+  reason?: string; // e.g., 'manual', 'auto-eviction'
+}
+
 /**
  * Chain compilation and lifecycle events
  */
@@ -632,6 +639,7 @@ export interface HarmonyMetricsUpdatedEvent extends BaseEvent {
 export type WorkspaceEvent =
   | SessionStartedEvent
   | SessionEndedEvent
+  | SessionDeletedEvent
   | ChainCompiledEvent
   | ChainStartedEvent
   | ChainCompletedEvent
@@ -675,6 +683,8 @@ export const eventGuards = {
     event.type === 'session:started',
   isSessionEnded: (event: WorkspaceEvent): event is SessionEndedEvent =>
     event.type === 'session:ended',
+  isSessionDeleted: (event: WorkspaceEvent): event is SessionDeletedEvent =>
+    event.type === 'session:deleted',
   isChainCompiled: (event: WorkspaceEvent): event is ChainCompiledEvent =>
     event.type === 'chain:compiled',
   isChainStarted: (event: WorkspaceEvent): event is ChainStartedEvent =>

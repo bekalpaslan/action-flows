@@ -1,4 +1,4 @@
-import type { Session, WorkbenchId } from '@afw/shared';
+import type { Session, SessionId, WorkbenchId } from '@afw/shared';
 import { GlowIndicator } from '../common';
 import { useNotificationGlowContext } from '../../hooks/useNotificationGlow';
 import './SessionSidebarItem.css';
@@ -12,6 +12,8 @@ export interface SessionSidebarItemProps {
   isActive: boolean;
   /** Handler for click-to-attach */
   onClick: () => void;
+  /** Handler for session deletion */
+  onDelete?: (sessionId: SessionId) => void;
   /** Optional routing context from session metadata */
   routingContext?: WorkbenchId;
   /** Optional routing confidence score (0-1) */
@@ -37,6 +39,7 @@ export function SessionSidebarItem({
   notificationCount,
   isActive,
   onClick,
+  onDelete,
   routingContext,
   routingConfidence,
   routingMethod,
@@ -121,6 +124,22 @@ export function SessionSidebarItem({
   };
 
   /**
+   * Handle session deletion
+   */
+  const handleDelete = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent session click
+
+    const sessionName = getSessionName();
+    const confirmed = window.confirm(
+      `Are you sure you want to delete session "${sessionName}"?\n\nThis action cannot be undone.`
+    );
+
+    if (confirmed && onDelete) {
+      onDelete(session.id);
+    }
+  };
+
+  /**
    * Get confidence level CSS class for routing badge
    */
   const getConfidenceClass = (confidence?: number): string => {
@@ -191,6 +210,18 @@ export function SessionSidebarItem({
           <div className="notification-badge" aria-label={`${notificationCount} notifications`}>
             {notificationCount > 99 ? '99+' : notificationCount}
           </div>
+        )}
+
+        {/* Delete button */}
+        {onDelete && (
+          <button
+            className="session-delete-btn"
+            onClick={handleDelete}
+            aria-label={`Delete session ${sessionName}`}
+            title="Delete session"
+          >
+            ×
+          </button>
         )}
       </div>
     </GlowIndicator>

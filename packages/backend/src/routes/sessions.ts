@@ -379,6 +379,61 @@ router.post('/:id/input', writeLimiter, validateBody(sessionInputSchema), async 
 });
 
 /**
+ * DELETE /api/sessions/:id
+ * Delete a session and all related data
+ */
+router.delete('/:id', writeLimiter, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const session = await Promise.resolve(storage.getSession(id as SessionId));
+
+    if (!session) {
+      return res.status(404).json({
+        error: 'Session not found',
+        sessionId: id,
+      });
+    }
+
+    // Stop file watching if active
+    try {
+      await stopWatching(id as SessionId);
+      console.log(`[API] File watching stopped for session ${id}`);
+    } catch (error) {
+      console.error(`[API] Error stopping file watching for session ${id}:`, error);
+      // Don't fail deletion if file watching stop fails
+    }
+
+    // Delete the session (cascade cleanup handled by storage layer)
+    await Promise.resolve(storage.deleteSession(id as SessionId));
+
+    // Broadcast session:deleted event to all connected WebSocket clients
+    try {
+      const clients = clientRegistry.getAllClients();
+      const sessionDeletedEvent: WorkspaceEvent = {
+        type: 'session:deleted',
+        sessionId: id as SessionId,
+        timestamp: brandedTypes.currentTimestamp(),
+        reason: 'manual',
+      };
+      broadcastEvent(clients, sessionDeletedEvent, id as SessionId);
+      console.log(`[API] Broadcasted session:deleted event for ${id} to ${clients.length} clients`);
+    } catch (error) {
+      console.error(`[API] Failed to broadcast session:deleted event for ${id}:`, error);
+      // Don't fail deletion if broadcast fails
+    }
+
+    console.log(`[API] Session deleted: ${id}`);
+    res.status(204).send();
+  } catch (error) {
+    console.error('[API] Error deleting session:', error);
+    res.status(500).json({
+      error: 'Failed to delete session',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
  * POST /api/sessions/:id/awaiting
  * Mark session as awaiting input (called by Stop hook)
  */
@@ -588,6 +643,71 @@ router.get('/users/:userId/sessions', (req, res) => {
     console.error('[API] Error fetching user sessions:', error);
     res.status(500).json({
       error: 'Failed to fetch user sessions',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
+ * GET /api/sessions/:id/freshness
+ * Get freshness metadata for a session
+ */
+router.get('/:id/freshness', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const sessionId = id as SessionId;
+
+    const freshness = await storage.getFreshness('session', sessionId);
+
+    if (!freshness) {
+      return res.status(404).json({ error: 'Freshness data not found for session' });
+    }
+
+    res.json(freshness);
+  } catch (error) {
+    console.error('[API] Error getting session freshness:', error);
+    res.status(500).json({
+      error: 'Failed to get session freshness',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
+ * GET /api/freshness/stale?type=session&threshold=7200000
+ * Get list of stale resource IDs
+ */
+router.get('/freshness/stale', async (req, res) => {
+  try {
+    const { type, threshold } = req.query;
+
+    if (!type || !threshold) {
+      return res.status(400).json({ error: 'Missing required query parameters: type, threshold' });
+    }
+
+    const resourceType = type as 'session' | 'chain' | 'events';
+    const thresholdMs = parseInt(threshold as string, 10);
+
+    if (!['session', 'chain', 'events'].includes(resourceType)) {
+      return res.status(400).json({ error: 'Invalid resource type. Must be session, chain, or events' });
+    }
+
+    if (isNaN(thresholdMs) || thresholdMs <= 0) {
+      return res.status(400).json({ error: 'Invalid threshold. Must be a positive number in milliseconds' });
+    }
+
+    const staleResources = await storage.getStaleResources(resourceType, thresholdMs);
+
+    res.json({
+      resourceType,
+      thresholdMs,
+      count: staleResources.length,
+      staleResources,
+    });
+  } catch (error) {
+    console.error('[API] Error getting stale resources:', error);
+    res.status(500).json({
+      error: 'Failed to get stale resources',
       message: sanitizeError(error),
     });
   }
