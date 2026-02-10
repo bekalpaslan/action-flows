@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
 import { lifecycleManager } from './lifecycleHooks.js';
@@ -24,6 +24,9 @@ const MAX_SUGGESTIONS = 500;
 const MAX_CHAT_MESSAGES_PER_SESSION = 1_000;
 const MAX_TELEMETRY_ENTRIES = 10_000;
 const MAX_REMINDER_INSTANCES = 1_000;
+const MAX_REGIONS = 100;
+const MAX_BRIDGES = 1_000;
+const MAX_EVOLUTION_TICKS = 10_000;
 export interface MemoryStorage {
   // Session storage
   sessions: Map<SessionId, Session>;
@@ -153,6 +156,25 @@ export interface MemoryStorage {
 
   // Internal eviction method
   _evictOldestCompletedSession(): void;
+
+  // Universe graph storage
+  universeGraph: UniverseGraph | undefined;
+  regions: Map<RegionId, RegionNode>;
+  bridges: Map<EdgeId, LightBridge>;
+  sessionRegionMappings: Map<SessionId, RegionId>;
+  getUniverseGraph(): UniverseGraph | undefined;
+  setUniverseGraph(graph: UniverseGraph): void;
+  getRegion(regionId: RegionId): RegionNode | undefined;
+  setRegion(region: RegionNode): void;
+  deleteRegion(regionId: RegionId): void;
+  listRegions(): RegionNode[];
+  getBridge(edgeId: EdgeId): LightBridge | undefined;
+  setBridge(bridge: LightBridge): void;
+  deleteBridge(edgeId: EdgeId): void;
+  listBridges(): LightBridge[];
+  getSessionRegion(sessionId: SessionId): RegionId | undefined;
+  setSessionRegion(sessionId: SessionId, regionId: RegionId): void;
+  deleteSessionRegion(sessionId: SessionId): void;
 }
 
 export const storage: MemoryStorage = {
@@ -957,6 +979,74 @@ export const storage: MemoryStorage = {
     };
   },
 
+  // Universe graph storage
+  universeGraph: undefined as UniverseGraph | undefined,
+  regions: new Map<RegionId, RegionNode>(),
+  bridges: new Map<EdgeId, LightBridge>(),
+  sessionRegionMappings: new Map<SessionId, RegionId>(),
+
+  getUniverseGraph() {
+    return this.universeGraph;
+  },
+
+  setUniverseGraph(graph: UniverseGraph) {
+    this.universeGraph = graph;
+  },
+
+  getRegion(regionId: RegionId) {
+    return this.regions.get(regionId);
+  },
+
+  setRegion(region: RegionNode) {
+    // Evict oldest region if at capacity (FIFO)
+    if (this.regions.size >= MAX_REGIONS && !this.regions.has(region.id)) {
+      const firstKey = this.regions.keys().next().value;
+      if (firstKey) this.regions.delete(firstKey);
+    }
+    this.regions.set(region.id, region);
+  },
+
+  deleteRegion(regionId: RegionId) {
+    this.regions.delete(regionId);
+  },
+
+  listRegions() {
+    return Array.from(this.regions.values());
+  },
+
+  getBridge(edgeId: EdgeId) {
+    return this.bridges.get(edgeId);
+  },
+
+  setBridge(bridge: LightBridge) {
+    // Evict oldest bridge if at capacity (FIFO)
+    if (this.bridges.size >= MAX_BRIDGES && !this.bridges.has(bridge.id)) {
+      const firstKey = this.bridges.keys().next().value;
+      if (firstKey) this.bridges.delete(firstKey);
+    }
+    this.bridges.set(bridge.id, bridge);
+  },
+
+  deleteBridge(edgeId: EdgeId) {
+    this.bridges.delete(edgeId);
+  },
+
+  listBridges() {
+    return Array.from(this.bridges.values());
+  },
+
+  getSessionRegion(sessionId: SessionId) {
+    return this.sessionRegionMappings.get(sessionId);
+  },
+
+  setSessionRegion(sessionId: SessionId, regionId: RegionId) {
+    this.sessionRegionMappings.set(sessionId, regionId);
+  },
+
+  deleteSessionRegion(sessionId: SessionId) {
+    this.sessionRegionMappings.delete(sessionId);
+  },
+
   // Snapshot/Restore methods for persistence
   snapshot() {
     const crypto = require('crypto');
@@ -1016,6 +1106,16 @@ export const storage: MemoryStorage = {
       ),
       resourceFreshness: Object.fromEntries(
         Array.from(this.resourceFreshness.entries()).map(([key, timestamp]) => [key, timestamp])
+      ),
+      universeGraph: this.universeGraph,
+      regions: Object.fromEntries(
+        Array.from(this.regions.entries()).map(([id, region]) => [id, region])
+      ),
+      bridges: Object.fromEntries(
+        Array.from(this.bridges.entries()).map(([id, bridge]) => [id, bridge])
+      ),
+      sessionRegionMappings: Object.fromEntries(
+        Array.from(this.sessionRegionMappings.entries()).map(([sessionId, regionId]) => [sessionId, regionId])
       ),
     };
 
@@ -1227,6 +1327,34 @@ export const storage: MemoryStorage = {
       if (data.resourceFreshness && typeof data.resourceFreshness === 'object') {
         for (const [key, timestamp] of Object.entries(data.resourceFreshness)) {
           this.resourceFreshness.set(key, timestamp as Timestamp);
+        }
+      }
+
+      // Restore universe graph
+      if (data.universeGraph) {
+        this.universeGraph = data.universeGraph as UniverseGraph;
+      }
+
+      // Restore regions
+      if (data.regions && typeof data.regions === 'object') {
+        for (const [id, region] of Object.entries(data.regions)) {
+          this.regions.set(id as RegionId, region as RegionNode);
+        }
+        console.log(`[MemoryStorage] Restored ${Object.keys(data.regions).length} regions`);
+      }
+
+      // Restore bridges
+      if (data.bridges && typeof data.bridges === 'object') {
+        for (const [id, bridge] of Object.entries(data.bridges)) {
+          this.bridges.set(id as EdgeId, bridge as LightBridge);
+        }
+        console.log(`[MemoryStorage] Restored ${Object.keys(data.bridges).length} bridges`);
+      }
+
+      // Restore session-region mappings
+      if (data.sessionRegionMappings && typeof data.sessionRegionMappings === 'object') {
+        for (const [sessionId, regionId] of Object.entries(data.sessionRegionMappings)) {
+          this.sessionRegionMappings.set(sessionId as SessionId, regionId as RegionId);
         }
       }
 

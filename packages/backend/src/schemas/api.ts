@@ -319,7 +319,7 @@ export type AnalyzePatternRequest = z.infer<typeof analyzePatternSchema>;
  * GET /api/registry/entries?type=button&source=core&enabled=true&packId=xyz&projectId=abc
  */
 export const registryEntryQuerySchema = z.object({
-  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'custom-prompt', 'modifier', 'pack']).optional(),
+  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'custom-prompt', 'modifier', 'pack', 'reminder']).optional(),
   source: z.enum(['core', 'pack', 'project']).optional(),
   enabled: z.string().optional(), // "true" or "false" as query param
   packId: z.string().max(100).optional(),
@@ -355,7 +355,7 @@ const customPromptDefinitionSchema = z.object({
 export const createRegistryEntrySchema = z.object({
   name: z.string().min(1, 'name required').max(200, 'name too long'),
   description: z.string().max(2000, 'description too long'),
-  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'custom-prompt', 'modifier', 'pack']),
+  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'custom-prompt', 'modifier', 'pack', 'reminder']),
   source: layerSourceSchema,
   version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Version must be in semver format (X.Y.Z)'),
   status: z.enum(['active', 'inactive']).optional().default('active'),
@@ -385,6 +385,10 @@ export const createRegistryEntrySchema = z.object({
       type: z.literal('modifier'),
       definition: z.record(z.unknown()),
     }),
+    z.object({
+      type: z.literal('reminder'),
+      definition: z.record(z.unknown()),
+    }),
   ]),
   metadata: z.record(z.unknown()).optional(),
 });
@@ -398,7 +402,7 @@ export type CreateRegistryEntryRequest = z.infer<typeof createRegistryEntrySchem
 export const updateRegistryEntrySchema = z.object({
   name: z.string().min(1).max(200).optional(),
   description: z.string().max(2000).optional(),
-  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'custom-prompt', 'modifier', 'pack']).optional(),
+  type: z.enum(['button', 'pattern', 'workflow', 'shortcut', 'custom-prompt', 'modifier', 'pack', 'reminder']).optional(),
   source: layerSourceSchema.optional(),
   version: z.string().regex(/^\d+\.\d+\.\d+$/, 'Version must be in semver format').optional(),
   status: z.enum(['active', 'inactive']).optional(),
@@ -542,3 +546,42 @@ export const createSuggestionSchema = z.object({
 });
 
 export type CreateSuggestionRequest = z.infer<typeof createSuggestionSchema>;
+
+// ============================================================================
+// Universe Graph Schemas
+// ============================================================================
+
+export const fogStateSchema = z.enum(['hidden', 'faint', 'revealed']);
+export const regionStatusSchema = z.enum(['idle', 'active', 'waiting', 'undiscovered']);
+export const layerSchema = z.enum(['platform', 'template', 'philosophy', 'physics', 'experience']);
+export const gateStatusSchema = z.enum(['clear', 'warning', 'violation']);
+
+export const createRegionSchema = z.object({
+  id: z.string().min(1).max(100),
+  workbenchId: z.string().min(1).max(50),
+  label: z.string().min(1).max(200),
+  description: z.string().max(2000).optional(),
+  position: z.object({ x: z.number(), y: z.number() }),
+  layer: layerSchema,
+  fogState: fogStateSchema.default('hidden'),
+});
+export type CreateRegionRequest = z.infer<typeof createRegionSchema>;
+
+export const createBridgeSchema = z.object({
+  id: z.string().min(1).max(100),
+  source: z.string().min(1).max(100),
+  target: z.string().min(1).max(100),
+  strength: z.number().min(0).max(1).default(0),
+});
+export type CreateBridgeRequest = z.infer<typeof createBridgeSchema>;
+
+export const discoverRegionSchema = z.object({
+  regionId: z.string().min(1).max(100),
+  sessionId: z.string().min(1).max(200),
+});
+export type DiscoverRegionRequest = z.infer<typeof discoverRegionSchema>;
+
+export const sessionRegionMappingSchema = z.object({
+  regionId: z.string().min(1).max(100),
+});
+export type SessionRegionMappingRequest = z.infer<typeof sessionRegionMappingSchema>;

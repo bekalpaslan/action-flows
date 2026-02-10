@@ -21,6 +21,8 @@ export type {
   StepNumber,
   UserId,
   Timestamp,
+  RegionId,
+  EdgeId,
   StatusString,
   ModelString,
   ChainSourceString,
@@ -79,6 +81,13 @@ export type {
   PatternDetectedEvent,
   FrequencyUpdatedEvent,
   BookmarkCreatedEvent,
+  HarmonyCheckEvent,
+  HarmonyViolationEvent,
+  HarmonyMetricsUpdatedEvent,
+  UniverseInitializedEvent,
+  RegionDiscoveredEvent,
+  EvolutionTickEvent,
+  SparkTravelingEvent,
   WorkspaceEvent,
 } from './events.js';
 
@@ -320,6 +329,29 @@ export {
 // Orchestrator Output Contract
 // ============================================================================
 export * from './contract/index.js';
+
+// ============================================================================
+// Living Universe Types
+// ============================================================================
+export type {
+  RegionNode,
+  LightBridge,
+  GateCheckpoint,
+  TraceAccumulation,
+  TraceEntry,
+  ColorShift,
+  HealthMetrics,
+  DiscoveryTrigger,
+  DiscoveryCondition,
+  EvolutionTick,
+  EvolutionType,
+  UniverseGraph,
+  UniverseMetadata,
+} from './universeTypes.js';
+
+export { FogState } from './universeTypes.js';
+
+export { createDefaultUniverse, DEFAULT_UNIVERSE } from './defaultUniverse.js';
 
 // ============================================================================
 // Legacy Types (for backward compatibility)

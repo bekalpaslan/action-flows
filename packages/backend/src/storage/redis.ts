@@ -1,5 +1,5 @@
 import { Redis } from 'ioredis';
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
 
@@ -103,6 +103,21 @@ export interface RedisStorage {
   // Activity-aware TTL extension
   extendSessionTtl(sessionId: string, extensionMs: number): Promise<void>;
   getSessionTtlInfo(sessionId: string): Promise<{ remainingMs: number; extensionCount: number } | null>;
+
+  // Universe graph storage (Phase 0 stubs)
+  getUniverseGraph(): Promise<UniverseGraph | undefined>;
+  setUniverseGraph(graph: UniverseGraph): Promise<void>;
+  getRegion(regionId: RegionId): Promise<RegionNode | undefined>;
+  setRegion(region: RegionNode): Promise<void>;
+  deleteRegion(regionId: RegionId): Promise<void>;
+  listRegions(): Promise<RegionNode[]>;
+  getBridge(edgeId: EdgeId): Promise<LightBridge | undefined>;
+  setBridge(bridge: LightBridge): Promise<void>;
+  deleteBridge(edgeId: EdgeId): Promise<void>;
+  listBridges(): Promise<LightBridge[]>;
+  getSessionRegion(sessionId: SessionId): Promise<RegionId | undefined>;
+  setSessionRegion(sessionId: SessionId, regionId: RegionId): Promise<void>;
+  deleteSessionRegion(sessionId: SessionId): Promise<void>;
 
   // Pub/Sub support
   subscribe(channel: string, callback: (message: string) => void): Promise<void>;
@@ -1273,6 +1288,47 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       } catch (error) {
         console.error('[Redis] Error disconnecting:', error);
       }
+    },
+
+    // Universe graph storage (stub implementations - Phase 0 uses memory storage)
+    async getUniverseGraph() {
+      return undefined;
+    },
+    async setUniverseGraph() {
+      // Stub: Universe graph not persisted to Redis in Phase 0
+    },
+    async getRegion() {
+      return undefined;
+    },
+    async setRegion() {
+      // Stub: Regions not persisted to Redis in Phase 0
+    },
+    async deleteRegion() {
+      // Stub: Regions not persisted to Redis in Phase 0
+    },
+    async listRegions() {
+      return [];
+    },
+    async getBridge() {
+      return undefined;
+    },
+    async setBridge() {
+      // Stub: Bridges not persisted to Redis in Phase 0
+    },
+    async deleteBridge() {
+      // Stub: Bridges not persisted to Redis in Phase 0
+    },
+    async listBridges() {
+      return [];
+    },
+    async getSessionRegion() {
+      return undefined;
+    },
+    async setSessionRegion() {
+      // Stub: Session-region mappings not persisted to Redis in Phase 0
+    },
+    async deleteSessionRegion() {
+      // Stub: Session-region mappings not persisted to Redis in Phase 0
     },
   };
 

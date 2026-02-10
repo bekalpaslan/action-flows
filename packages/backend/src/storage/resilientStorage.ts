@@ -35,6 +35,13 @@ import type {
   FreshnessMetadata,
   TelemetryEntry,
   TelemetryQueryFilter,
+  ReminderDefinition,
+  ReminderInstance,
+  UniverseGraph,
+  RegionNode,
+  LightBridge,
+  RegionId,
+  EdgeId,
 } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 
@@ -401,6 +408,84 @@ export class ResilientStorage implements Storage {
     byLevel: Record<string, number>;
   }> {
     return this.executeWithFallback((storage) => storage.getTelemetryStats());
+  }
+
+  // Reminder storage
+  async getReminderDefinitions(): Promise<ReminderDefinition[]> {
+    return this.executeWithFallback((storage) => storage.getReminderDefinitions());
+  }
+
+  async getReminderInstances(sessionId: SessionId, chainId?: ChainId): Promise<ReminderInstance[]> {
+    return this.executeWithFallback((storage) => storage.getReminderInstances(sessionId, chainId));
+  }
+
+  async addReminderInstance(instance: ReminderInstance): Promise<void> {
+    return this.executeWithFallback((storage) => storage.addReminderInstance(instance));
+  }
+
+  async markReminderAddressed(instanceId: string): Promise<boolean> {
+    return this.executeWithFallback((storage) => storage.markReminderAddressed(instanceId));
+  }
+
+  async markChainRemindersAddressed(chainId: ChainId): Promise<number> {
+    return this.executeWithFallback((storage) => storage.markChainRemindersAddressed(chainId));
+  }
+
+  async deleteReminderInstance(instanceId: string): Promise<boolean> {
+    return this.executeWithFallback((storage) => storage.deleteReminderInstance(instanceId));
+  }
+
+  // Universe graph storage
+  async getUniverseGraph(): Promise<UniverseGraph | undefined> {
+    return this.executeWithFallback((storage) => storage.getUniverseGraph());
+  }
+
+  async setUniverseGraph(graph: UniverseGraph): Promise<void> {
+    return this.executeWithFallback((storage) => storage.setUniverseGraph(graph));
+  }
+
+  async getRegion(regionId: RegionId): Promise<RegionNode | undefined> {
+    return this.executeWithFallback((storage) => storage.getRegion(regionId));
+  }
+
+  async setRegion(region: RegionNode): Promise<void> {
+    return this.executeWithFallback((storage) => storage.setRegion(region));
+  }
+
+  async deleteRegion(regionId: RegionId): Promise<void> {
+    return this.executeWithFallback((storage) => storage.deleteRegion(regionId));
+  }
+
+  async listRegions(): Promise<RegionNode[]> {
+    return this.executeWithFallback((storage) => storage.listRegions());
+  }
+
+  async getBridge(edgeId: EdgeId): Promise<LightBridge | undefined> {
+    return this.executeWithFallback((storage) => storage.getBridge(edgeId));
+  }
+
+  async setBridge(bridge: LightBridge): Promise<void> {
+    return this.executeWithFallback((storage) => storage.setBridge(bridge));
+  }
+
+  async deleteBridge(edgeId: EdgeId): Promise<void> {
+    return this.executeWithFallback((storage) => storage.deleteBridge(edgeId));
+  }
+
+  async listBridges(): Promise<LightBridge[]> {
+    return this.executeWithFallback((storage) => storage.listBridges());
+  }
+
+  async getSessionRegion(sessionId: SessionId): Promise<RegionId | undefined> {
+    return this.executeWithFallback((storage) => storage.getSessionRegion(sessionId));
+  }
+
+  async setSessionRegion(sessionId: SessionId, regionId: RegionId): Promise<void> {
+    return this.executeWithFallback((storage) => storage.setSessionRegion(sessionId, regionId));
+  }
+
+  async deleteSessionRegion(sessionId: SessionId): Promise<void> {
+    return this.executeWithFallback((storage) => storage.deleteSessionRegion(sessionId));
   }
 
   /**

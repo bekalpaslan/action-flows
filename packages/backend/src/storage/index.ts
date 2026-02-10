@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
 
@@ -151,6 +151,27 @@ export interface Storage {
   // Snapshot/Restore for persistence (Memory storage only)
   snapshot?(): any;
   restore?(snapshot: any): void;
+
+  // Universe graph storage
+  getUniverseGraph(): UniverseGraph | undefined | Promise<UniverseGraph | undefined>;
+  setUniverseGraph(graph: UniverseGraph): void | Promise<void>;
+
+  // Region storage
+  getRegion(regionId: RegionId): RegionNode | undefined | Promise<RegionNode | undefined>;
+  setRegion(region: RegionNode): void | Promise<void>;
+  deleteRegion(regionId: RegionId): void | Promise<void>;
+  listRegions(): RegionNode[] | Promise<RegionNode[]>;
+
+  // Light bridge storage
+  getBridge(edgeId: EdgeId): LightBridge | undefined | Promise<LightBridge | undefined>;
+  setBridge(bridge: LightBridge): void | Promise<void>;
+  deleteBridge(edgeId: EdgeId): void | Promise<void>;
+  listBridges(): LightBridge[] | Promise<LightBridge[]>;
+
+  // Session-to-Region mapping
+  getSessionRegion(sessionId: SessionId): RegionId | undefined | Promise<RegionId | undefined>;
+  setSessionRegion(sessionId: SessionId, regionId: RegionId): void | Promise<void>;
+  deleteSessionRegion(sessionId: SessionId): void | Promise<void>;
 }
 
 /**

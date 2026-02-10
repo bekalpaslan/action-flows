@@ -13,10 +13,13 @@ import type {
   ModelString,
   ChainSourceString,
   DurationMs,
+  RegionId,
+  EdgeId,
 } from './types.js';
 import type { RegistryEntryId, RegistryEntry } from './registryTypes.js';
 import type { LayerSource } from './selfEvolvingTypes.js';
 import type { ChatMessage } from './models.js';
+import type { FogState } from './universeTypes.js';
 
 /**
  * Base event structure
@@ -643,6 +646,56 @@ export interface HarmonyMetricsUpdatedEvent extends BaseEvent {
 }
 
 /**
+ * Living Universe events
+ */
+
+export interface UniverseInitializedEvent extends BaseEvent {
+  type: 'universe:initialized';
+
+  // Automatic fields
+  regionCount: number;
+
+  // Optional metadata
+  metadata?: Record<string, unknown>;
+}
+
+export interface RegionDiscoveredEvent extends BaseEvent {
+  type: 'universe:region_discovered';
+
+  // Automatic fields
+  regionId: RegionId;
+  fogState: FogState;
+
+  // Parsed fields (nullable)
+  label?: string | null;
+  workbenchId?: string | null;
+}
+
+export interface EvolutionTickEvent extends BaseEvent {
+  type: 'universe:evolution_tick';
+
+  // Automatic fields
+  tickId: string;
+  evolutionType: string;
+
+  // Parsed fields (nullable)
+  details?: Record<string, unknown> | null;
+}
+
+export interface SparkTravelingEvent extends BaseEvent {
+  type: 'chain:spark_traveling';
+
+  // Automatic fields
+  chainId: ChainId;
+  fromRegion: RegionId;
+  toRegion: RegionId;
+  progress: number; // 0.0 - 1.0
+
+  // Parsed fields (nullable)
+  chainTitle?: string | null;
+}
+
+/**
  * Union type for all events
  */
 export type WorkspaceEvent =
@@ -683,7 +736,11 @@ export type WorkspaceEvent =
   | BookmarkCreatedEvent
   | HarmonyCheckEvent
   | HarmonyViolationEvent
-  | HarmonyMetricsUpdatedEvent;
+  | HarmonyMetricsUpdatedEvent
+  | UniverseInitializedEvent
+  | RegionDiscoveredEvent
+  | EvolutionTickEvent
+  | SparkTravelingEvent;
 
 /**
  * Type guard functions for discriminating event types
@@ -759,4 +816,12 @@ export const eventGuards = {
     event.type === 'harmony:violation',
   isHarmonyMetricsUpdated: (event: WorkspaceEvent): event is HarmonyMetricsUpdatedEvent =>
     event.type === 'harmony:metrics-updated',
+  isUniverseInitialized: (event: WorkspaceEvent): event is UniverseInitializedEvent =>
+    event.type === 'universe:initialized',
+  isRegionDiscovered: (event: WorkspaceEvent): event is RegionDiscoveredEvent =>
+    event.type === 'universe:region_discovered',
+  isEvolutionTick: (event: WorkspaceEvent): event is EvolutionTickEvent =>
+    event.type === 'universe:evolution_tick',
+  isSparkTraveling: (event: WorkspaceEvent): event is SparkTravelingEvent =>
+    event.type === 'chain:spark_traveling',
 };

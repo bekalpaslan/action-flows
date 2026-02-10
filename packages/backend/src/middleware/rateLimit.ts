@@ -20,6 +20,18 @@ export const generalLimiter = rateLimit({
   },
 });
 
+// Read endpoint rate limit: 500 requests per 15 minutes per IP
+export const readLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 500,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many read requests, please try again later.' },
+  skip: (req) => {
+    return process.env.AFW_RATE_LIMIT_DISABLED === 'true';
+  },
+});
+
 // Write endpoint rate limit: 30 requests per 15 minutes per IP
 export const writeLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

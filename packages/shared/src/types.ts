@@ -26,6 +26,12 @@ export type UserId = string & { readonly __brand: 'UserId' };
 /** ISO 8601 timestamp string */
 export type Timestamp = string & { readonly __brand: 'Timestamp' };
 
+/** Unique identifier for a region (star on the cosmic map) */
+export type RegionId = string & { readonly __brand: 'RegionId' };
+
+/** Unique identifier for a light bridge (edge connecting regions) */
+export type EdgeId = string & { readonly __brand: 'EdgeId' };
+
 /**
  * Factory functions for creating branded types
  */
@@ -73,6 +79,18 @@ export const brandedTypes = {
     return value as Timestamp;
   },
   currentTimestamp: (): Timestamp => new Date().toISOString() as Timestamp,
+  regionId: (value: string): RegionId => {
+    if (!value || value.trim().length === 0) {
+      throw new Error('RegionId cannot be empty');
+    }
+    return value as RegionId;
+  },
+  edgeId: (value: string): EdgeId => {
+    if (!value || value.trim().length === 0) {
+      throw new Error('EdgeId cannot be empty');
+    }
+    return value as EdgeId;
+  },
 };
 
 /**
