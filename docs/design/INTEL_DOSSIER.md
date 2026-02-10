@@ -29,7 +29,27 @@
 
 ### Philosophy
 
+Intel Dossiers embody the **Living Universe** at the codebase level. Where humans provide will, orchestrators provide brain, and agents provide hands, **dossiers provide memory**.
+
+**Dossiers as Living Organisms:**
+
+A dossier is not a static analysis report—it's a **living organism** that:
+
+- **Watches** its domain (file paths) for changes
+- **Learns** through re-analysis (accumulates insights over time)
+- **Remembers** prior states (temporal depth)
+- **Grows** with the codebase (domain understanding deepens)
+- **Signals** when the physics (code) are changing in unexpected ways
+
+**From Passive to Active:**
+
 The ActionFlows Dashboard shifts from **passive observer** (monitoring AI work) to **active intelligence gatherer** (initiating analysis). Intel is the framework's **intelligence division** — continuously learning and growing alongside the codebase.
+
+**Journey Integration:**
+
+As you explore the ActionFlows universe, you create dossiers for domains that matter. Over time, these dossiers accumulate wisdom about your codebase. This is **co-evolution**—you and your code's memory growing together.
+
+When the brain (orchestrator) needs to understand a domain, it consults the dossier (memory). The dossier informs the brain's decisions about which laws (code) to rewrite and how.
 
 ### Key Characteristics
 

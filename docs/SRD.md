@@ -20,6 +20,19 @@ This comprehensive SRD provides the technical architecture, implementation patte
 
 The ActionFlows Dashboard is a **comprehensive real-time monitoring and control system** for AI agent orchestration flows. This SRD provides complete technical specification across three architectural layers:
 
+**Living Universe Architecture:**
+
+This SRD specifies a system that embodies the Living Universe philosophy: software that grows through use, heals itself through harmony detection, and evolves new capabilities through pattern recognition.
+
+**The Physics-Brain-Will Architecture:**
+
+- **Three-layer structure** mirrors the triad: Orchestrator-Level (brain), Agent-Level (hands), Cross-Cutting (shared laws/physics)
+- **Harmony system** = the immune system that detects when physics and behavior are out of sync
+- **Memory layer** = accumulated wisdom that makes the brain smarter over time
+- **Self-modification pipeline** = the mechanism by which the brain reshapes the physics
+
+The dashboard is not static monitoring—it's a **living visualizer** that shows evolution in action. You see the brain coordinating, the hands executing, and the physics being reshaped.
+
 **Layer 1: Orchestrator-Level Design**
 - Department routing (Engineering dept → code-and-review flow)
 - Action chain composition (shared types → backend → frontend → review)

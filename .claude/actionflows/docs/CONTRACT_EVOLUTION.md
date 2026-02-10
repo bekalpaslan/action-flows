@@ -5,6 +5,8 @@
 
 This guide consolidates the process for adding new formats or modifying existing formats in the Orchestrator Contract.
 
+> **Living Universe Context:** The contract is not a rigid specification—it's the **language** of a living universe. As the universe grows (new features, new patterns, new audiences), the contract must evolve to express richer concepts. This document guides **safe evolution**—expanding the language without breaking existing communication between the brain (orchestrator) and the hands (agents).
+
 ---
 
 ## Adding a New Format

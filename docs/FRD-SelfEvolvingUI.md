@@ -23,6 +23,12 @@ The system spans four interconnected feature areas: an inline **Button System** 
 
 The ActionFlows Dashboard currently provides monitoring and control for AI agent orchestration. The Self-Evolving Interface extends this by making the dashboard itself an adaptive system: it watches how operators interact, detects repeated patterns, and proposes interface modifications that reduce friction. Over time, the dashboard evolves from a generic monitoring tool into a personalized command center tailored to each project and operator.
 
+**Living Universe Context:**
+
+The Self-Evolving Interface is the dashboard's **adaptive nervous system**—part of the larger Living Universe where software grows through usage. Where the core ActionFlows system evolves through learning and memory (Layer 0), the Self-Evolving Interface evolves the **interface itself** based on operator behavior.
+
+This is living software at the UI layer: the dashboard learns which actions you favor, detects your patterns, and proposes interface modifications that make your workflow smoother. Over time, the dashboard **personalizes itself** to your journey through the universe.
+
 ### Status
 
 **Draft -- Not Yet Implemented**
@@ -77,6 +83,26 @@ A system that enables the ActionFlows Dashboard to observe operator behavior, de
 - Full-stack self-modification pipeline (UI + Framework + Backend)
 - Tiered approval system (minor UI changes auto-apply, major changes require confirmation)
 - Git-native versioning of all modifications
+
+---
+
+### Living Universe Integration
+
+The Self-Evolving Interface extends the Living Universe philosophy to the UI layer:
+
+**The Triad at the Interface Level:**
+
+- **Human (Will):** You express intent through actions—clicking buttons, starring responses, executing patterns. Your behavior is the signal.
+- **Dashboard (Brain):** The pattern detection engine observes your actions, detects regularities, and proposes interface optimizations. The dashboard thinks about how to adapt.
+- **UI Components (Body):** Buttons, toolbars, and panels modify themselves based on approved proposals. The interface physically transforms.
+
+**Co-evolution:**
+
+As you use the dashboard, it evolves to match your workflow. You shape the interface through usage; the interface shapes your productivity. This is **mutual growth**—you and the UI growing together through interaction.
+
+**Not Configuration, Evolution:**
+
+Traditional software requires manual configuration. The Self-Evolving Interface learns from your behavior automatically. You don't configure it—you **evolve** it by using it.
 
 ---
 

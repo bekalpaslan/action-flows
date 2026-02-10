@@ -12,6 +12,17 @@
 - Professional with personality
 - Dark mode native
 
+**Living Universe Aesthetic:**
+
+Agents are not lifeless tools—they're **living inhabitants** of a software universe. The visual design must convey:
+
+- **Personality** — Each agent has distinct character, not generic robotic uniformity
+- **Life** — Agents breathe, think, and react (via animations)
+- **Collaboration** — Visual cues show the physics-brain-will triad working together
+- **The Hands at Work** — Agents are the hands of the brain. They should appear engaged, focused, transforming the physics
+
+The aesthetic blends **professional precision** (clean UI, readable at any size) with **organic warmth** (expressive faces, fluid motion, personality). This is software with a soul.
+
 ---
 
 ## 2. Color System

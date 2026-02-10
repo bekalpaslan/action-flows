@@ -64,6 +64,21 @@ After you approve:
 
 Done!
 
+**The Living Universe in Action:**
+
+This core cycle is the **heartbeat** of a living universe:
+
+**The Triad in the Cycle:**
+
+1. **Human expresses will** — You say "implement feature X"
+2. **Brain (orchestrator) compiles a plan** — Determines which laws (code) need rewriting, which hands (agents) to use
+3. **Human approves** — You validate the plan matches your intention
+4. **Hands (agents) reshape the physics** — Execute the code modifications
+5. **Brain verifies harmony** — Ensures the universe remains in sync
+6. **System records wisdom** — Learnings accumulate in memory (Layer 0)
+
+Each cycle makes the universe smarter. Today's chain becomes tomorrow's reusable flow. Today's mistakes become tomorrow's avoided pitfalls. This is **evolution through usage**.
+
 ---
 
 ## Quiz

@@ -7,7 +7,12 @@
 ## Project
 
 - **Name:** ActionFlows Dashboard
-- **Description:** Real-time monitoring and control dashboard for AI agent orchestration flows
+- **Tagline:** A living universe for human-orchestrator-agent collaboration
+- **Description:**
+  - **For Coders:** A new IDE paradigm where the orchestrator (brain) coordinates agents (hands) to reshape your codebase (physics). The orchestrator can rewrite the laws of the universe. You express intention; the brain figures out how to modify the code. This is collaborative intelligence.
+  - **For Regular Users:** A natural language interface to software creation. Express what you want; the universe figures out how to build it. The orchestrator reshapes the code (physics) according to your will. No coding required.
+  - **For Everyone:** A journey through a living software universe that grows with you. Unlock new flows, discover agent patterns, and watch the system evolve alongside your needs. This is software as adventure.
+  - **Proof of Concept:** This is the creator's template universe—a proven starting point with defaults learned from real usage. Users have full sovereignty to modify the physics, reshape the philosophy, and evolve the universe to match their workflow.
 - **Repository:** ActionFlows Dashboard monorepo (pnpm workspaces)
 - **Working Directory:** D:/ActionFlowsDashboard
 

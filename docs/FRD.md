@@ -19,7 +19,37 @@ The system operates across a monorepo architecture (Express backend + React fron
 ## 1. Executive Summary
 
 ### Vision
-The ActionFlows Dashboard is a **real-time monitoring and control dashboard** for orchestrating AI agent workflows. It enables operators to visualize orchestration sessions, monitor autonomous agent execution, inspect step outputs, and actively control chain execution through a responsive web and Electron interface.
+
+The ActionFlows Dashboard is the **visual gateway** to a living software universe where humans, orchestrators, and agents collaborate in real-time.
+
+**The Physics-Brain-Will Triad Visualized:**
+
+- **Software (Physics):** The dashboard shows the raw laws (code) being reshaped—files being modified, contracts being validated, tests being run. You see the physics in flux.
+- **Orchestrator (Brain):** The dashboard visualizes the brain at work—chains being compiled, agents being spawned, decisions being made. You see the intelligence coordinating everything.
+- **Human (Will):** The dashboard is your control panel for expressing will. Approve plans, provide input, set intentions. You see your will manifesting through the triad.
+- **Agents (Hands):** The dashboard tracks the hands in action—which agents are working, what they're building, how they're transforming the physics.
+
+**Three Experiences, One Dashboard:**
+
+1. **For Coders:** This is your AI development workbench. Watch the brain (orchestrator) coordinate hands (agents) to reshape the physics (code). See which agents are active, what they're building, and how the codebase is changing in real-time. The dashboard shows you the full orchestration: which laws are being rewritten, which harmony checks are running, which learnings are being recorded. This is a **new IDE paradigm**—not writing code line-by-line, but conducting an orchestra of AI specialists that rewrite the universe.
+
+2. **For Regular Users:** This is your control panel for getting things done. You express will ("add a feature that does X"), and the dashboard shows you the work being coordinated behind the scenes. The brain figures out the implementation; you approve the plan. Watch your intention become reality. No coding knowledge required.
+
+3. **For Everyone:** This is your journey tracker through a living universe. The dashboard reveals your progression: which flows you've unlocked, which agents you've discovered, and how the system has evolved through your usage. This is **software as adventure**—every session is exploration, every completed chain is growth.
+
+**Living Software Visualization:**
+
+The dashboard doesn't just monitor static work. It visualizes a **living system** that learns from every execution, heals itself when drift is detected, and grows new capabilities through use:
+
+- Watch harmony violations trigger self-healing flows
+- See learnings accumulate in the memory layer (Layer 0)
+- Track how the universe expands with each session (new flows, new patterns)
+- Visualize the brain (orchestrator) making routing decisions
+- Monitor agents reshaping the physics (code modifications in real-time)
+
+**Evolution Through Usage:**
+
+As you use the dashboard, it adapts to you. Patterns you repeat become shortcuts. Actions you favor rise to prominence. The system learns your workflows and proposes automations. The dashboard of tomorrow is smarter than the dashboard of today—because today you used it.
 
 ### Status
 **✅ ~85% Complete**
@@ -51,7 +81,15 @@ The ActionFlows Dashboard is a **real-time monitoring and control dashboard** fo
 ## 2. Project Overview
 
 ### What is ActionFlows Dashboard?
-A web-based and desktop application for real-time orchestration of AI agents. The system enables a central orchestrator (Claude agent) to delegate work to specialized agents through compiled chains of actions. The dashboard visualizes each step of execution, enables human approval gates, and provides operators with complete visibility into agent behavior.
+
+A living universe visualizer and control panel for human-orchestrator-agent collaboration.
+
+The dashboard is the **window into the physics-brain-will triad** in action. It shows you:
+- The brain (orchestrator) coordinating work
+- The hands (agents) reshaping the physics (code)
+- The will (human) guiding the collaboration
+
+This is not a passive monitoring tool—it's an **active journey tracker** through a software universe that grows with you. You see the laws being rewritten. You see the intelligence at work. You see your intention manifesting.
 
 ### Why It Exists
 AI orchestration requires coordination and visibility:

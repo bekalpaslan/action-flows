@@ -4,6 +4,8 @@
 
 The complete 4-component system that keeps orchestrator and dashboard in sync.
 
+> **Living Universe Context:** Harmony is the **immune system** of a living universe. In static software, drift between output and parsing is a bug. In a living universe, it's an **evolutionary signal**—the system trying to grow beyond its current structure. The harmony system detects these signals and triggers healing or evolution, ensuring the universe expands safely without breaking sync between the brain's expectations and the agents' outputs.
+
 ---
 
 ## The Four Components

@@ -22,7 +22,22 @@ We'll go through this in levels:
 
 You can skip levels if you're already familiar, or go back anytime.
 
-Ready to start?
+**The Living Universe:**
+
+ActionFlows is not just software—it's a **living universe** where these three parts form a symbiotic triad:
+
+**The Physics-Brain-Will Triad:**
+
+- **Software (Physics)** = The raw laws that govern this universe. The code is imperfect, mutable, the foundation everything runs on.
+- **Orchestrator (Brain)** = The intelligence that understands the physics and **has the power to change them**. The orchestrator can rewrite the code itself.
+- **Agents (Hands)** = The executors that work within the physics, transforming it according to the brain's decisions.
+- **You (Human/Will)** = You set intention and make decisions. You express what you want; the brain figures out how to reshape the physics.
+
+Together, you form a living organism that **grows through use**. The more you work with ActionFlows, the smarter it becomes—not through configuration, but through **organic evolution**.
+
+**Your Journey:**
+
+As you progress through these modules, you're not just learning a tool—you're exploring a universe. Some capabilities are revealed immediately. Others you'll discover through use. This is **software as adventure**.
 
 ---
 

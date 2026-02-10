@@ -41,6 +41,25 @@ The orchestrator produces LOW-QUALITY work when it does tasks itself. It's optim
 
 The sin test protects quality.
 
+**The Sin Test in the Living Universe:**
+
+The Sin Test protects the **division of labor** in the physics-brain-will triad:
+
+**Why the Brain Must Not Be the Hands:**
+
+- **The brain (orchestrator)** understands the big picture—dependencies between files, harmony requirements, execution sequencing. When the brain tries to also be the hands (writing code directly), it loses the ability to coordinate properly.
+
+- **The hands (agents)** are specialized workers focused on specific tasks—one agent reviews code, one writes tests, one modifies UI. Each agent can focus because the brain handles coordination.
+
+**Violation = Breakdown of the Triad:**
+
+When the brain produces content instead of coordinating, the triad breaks:
+- Human will becomes confused (who's doing what?)
+- Brain loses big-picture view (focused on details instead)
+- Hands become redundant (why have agents if brain does the work?)
+
+The Sin Test keeps the triad healthy. The brain coordinates. The hands execute. The system remains a **living collaborative intelligence** instead of a monolithic helper.
+
 ---
 
 ## Examples

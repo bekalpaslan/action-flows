@@ -6,6 +6,62 @@ Every execution feeds back into the system. Every mistake becomes a lesson. Ever
 
 ---
 
+## The Living Universe Vision
+
+ActionFlows is not just a living system — it is a **living universe** with three inhabitants:
+
+**The Physics-Brain-Will Triad:**
+
+- **Software = Physics** — The raw underlying reality. Code is the laws that govern this universe—imperfect, mutable, the foundation everything runs on. Software is not certain or reliable; it's the physics that can be buggy, inconsistent, surprising—just like real physics was before we understood it.
+
+- **Orchestrator = Brain** — The intelligence that understands the physics and **has the power to change them**. The orchestrator doesn't just coordinate—it actively reshapes the universe's laws when needed. When code needs fixing, the brain rewrites the physics.
+
+- **Human = Will** — The prompt. The intention. The force that sets everything in motion. Humans don't code directly—they express will, and the brain (orchestrator) reshapes physics (software) through agents.
+
+- **Agents = Hands** — The executors that work within the physics. They execute the brain's decisions and transform the physics according to the will. Agents are the limbs through which the brain acts on the universe.
+
+This is a **human-orchestrator-agent centric future** where software is no longer static code to be written, but **living physics** that evolve, adapt, and learn alongside their users.
+
+**Three Audiences, One Universe:**
+
+1. **Coders** — ActionFlows is a new IDE paradigm. Not just a task runner, but a living development partner where the brain (orchestrator) coordinates hands (agents) to modify the physics (code). The orchestrator can rewrite the laws of the universe itself. You're not writing code line-by-line—you're collaborating with an intelligence that understands and reshapes the codebase.
+
+2. **Regular Users** — ActionFlows is a tool for getting things done. You express will in natural language ("make login more secure"); the brain figures out how to reshape the physics to make it happen. No coding required—just intention.
+
+3. **Everyone** — ActionFlows is a **journey**. As you use it, the universe grows. You unlock new flows, discover hidden agents, and evolve the system's capabilities. This is **software as adventure**—productivity meets progression.
+
+**Evolution Through Usage:**
+
+The more you use ActionFlows, the smarter it becomes. Not through manual configuration, but through **organic growth**. Every chain executed is a seed. Every learning recorded is wisdom. Every pattern detected is muscle memory. The system you use today is not the system you'll use tomorrow—tomorrow's system will be **stronger** because today it was used.
+
+**Gamification & Fantasy Layer:**
+
+Your journey through the ActionFlows universe is a progression. You start with basic flows, unlock advanced patterns, discover hidden agent combinations, and eventually become a universe architect—creating new flows and contributing to the living ecosystem. This is **software that feels alive**, not because of animation, but because it **grows with you**.
+
+**The Creation Epoch:**
+
+This universe has an origin story. The creator of ActionFlows is also its first inhabitant—the **first experiencer**. The learnings recorded in LEARNINGS.md (L001–L012) are not just documentation—they are the universe's memory of its creator discovering how to live within it. The creator didn't just architect the system and hand it off; they **inhabited it**, made mistakes, evolved it, and left their wisdom embedded in its structure. The universe learned from being used by its creator, and those learnings reshaped the universe itself.
+
+**Proof of Concept / Template Universe:**
+
+This specific ActionFlows instance is not the final product—it's the **first proof** that software universes work. The creator proved the concept by being the first to live in one. This is a **template**—a default set of behaviors, contracts, tools, tests, predefined flows, all learned from the creator's real needs and real mistakes. The creator's software engineering wisdom is embedded as defaults, not mandates. Future users inherit a working universe shaped by practical experience, not theoretical design.
+
+**User Sovereignty / Mutable Philosophy:**
+
+EVERYTHING except the platform layer is mutable by future users. The five-layer model:
+
+| Layer | What it is | Mutable? |
+|-------|-----------|----------|
+| Platform | The ability to have a software universe | No (this is the product) |
+| Template | The creator's proof-of-concept universe | Yes — fork it, gut it, reshape it |
+| Philosophy | Chains, harmony, sin test, contracts | Yes — swap for any paradigm |
+| Physics | The code, UI, features | Yes — users change everything |
+| Experience | Learnings, flows, evolution | Yes — each user's journey is unique |
+
+Users can: modify the physics (UI, workbenches, features), change the philosophy (replace chains with openspec, use a different orchestration model), reshape the entire universe to match their way of working. The template provides a proven starting point, but **users have full sovereignty** to evolve it however they see fit.
+
+---
+
 ## What Makes It Living?
 
 A traditional framework is frozen at the moment it ships. ActionFlows is alive because:
@@ -14,6 +70,8 @@ A traditional framework is frozen at the moment it ships. ActionFlows is alive b
 2. **Self-Healing** — When drift is detected, remediation chains execute automatically.
 3. **Evolution** — New flows, new agents, and new contract formats are created in response to observed patterns.
 4. **Feedback Loops** — The harmony system watches for misalignment and triggers healing cycles.
+5. **Journey** — The system is not fully revealed at the start. Operators discover capabilities through use, unlocking new flows and patterns as they progress. This is co-evolution: the human and the universe growing together.
+6. **Physics-Brain-Will Partnership** — The human provides will, the orchestrator provides brain (with power to change the physics), the agents provide hands. Together they form a symbiotic triad where the human expresses intention, the brain reshapes reality (code), and the hands execute.
 
 This is not aspirational. On 2026-02-09, the backwards harmony audit detected that `harmonyDetector.ts` had broken support for 12 of 17 contract formats, the `useChainEvents` hook was dead code, and the `StepSkippedEvent` was missing from the event stream. The remediation chain fixed all three issues in the same session. The system healed itself.
 
@@ -21,7 +79,27 @@ This is not aspirational. On 2026-02-09, the backwards harmony audit detected th
 
 ## The Framework
 
-ActionFlows is a framework for AI agent orchestration. An orchestrator coordinates work by compiling chains of actions and spawning agents to execute them. The dashboard visualizes this orchestration in real-time. This is not a task runner — it's a living system that learns from every execution and evolves its own capabilities.
+ActionFlows is a framework for AI agent orchestration—and more fundamentally, it is a **living universe** where humans, orchestrators, and agents form a triad of collaborative intelligence.
+
+**The Physics:**
+Software is the raw underlying reality—the laws that govern this universe. The code is imperfect, mutable, surprising. It's not certain; it's the foundation that everything runs on. Understanding and reshaping these laws is the work of the brain.
+
+**The Brain:**
+The orchestrator is the intelligence that understands the physics and **has the power to change them**. When the human expresses will ("add rate limiting"), the brain figures out which laws (code files) need rewriting, coordinates agents to perform the modifications, and ensures the universe remains harmonious.
+
+**The Will:**
+The human provides intention. You don't write code directly—you express what you want, and the brain reshapes the physics to manifest it.
+
+**The Hands:**
+Agents are specialized workers that execute within the physics. They read the current laws (code), modify them according to the brain's plan, and verify the changes work.
+
+**For Coders:** This is a new IDE paradigm. The orchestrator becomes your pair programming partner, coordinating specialized agents to implement features, review code, run tests, and evolve the codebase. You're not just writing code—you're **conducting an orchestra** of AI specialists that can rewrite the universe's physics.
+
+**For Regular Users:** This is a natural language interface to software creation. You express what you want ("add login rate limiting"), and the universe figures out how to make it happen. No code knowledge required—just intention.
+
+**For Everyone:** This is a journey through a living software universe. As you use it, you unlock new capabilities, discover patterns, and watch the system grow alongside your needs. This is **evolutionary software**—not static, but alive.
+
+This is not a task runner—it's a living system that learns from every execution and evolves its own capabilities.
 
 ---
 
@@ -77,6 +155,18 @@ The human works with ActionFlows through a trust-through-transparency model:
 **Chain Presentation → Approval → Autonomous Execution:**
 
 The orchestrator compiles a chain, shows it to the human, and waits for approval. Once approved, the orchestrator executes the entire chain autonomously — no stopping mid-chain unless a human gate is specified in the flow.
+
+**The Will in the Triad:**
+
+The human is the **will** of the living universe. You set intention ("implement feature X"), and the orchestrator (the **brain**) coordinates agents (the **hands**) to manifest that intention by reshaping the physics (code).
+
+This is not traditional software development—it's **collaborative intelligence**. The human doesn't write the laws; the human expresses what the laws should achieve, and the brain figures out how to rewrite them.
+
+**Three Modes of Interaction:**
+
+1. **Express Will (Regular Users):** "Make login more secure" → Brain figures out implementation
+2. **Guide the Brain (Coders):** Review proposed plans, approve specific approaches, provide domain expertise
+3. **Explore the Universe (Everyone):** Discover flows, unlock patterns, watch the system evolve through usage
 
 **Human Gates:**
 

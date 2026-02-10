@@ -20,6 +20,19 @@ This SRD provides the technical architecture, implementation patterns, cross-cut
 
 The Self-Evolving Interface adds adaptive capabilities to the ActionFlows Dashboard, enabling the system to learn from operator behavior and propose interface modifications. This SRD specifies the technical design across four layers:
 
+**Living Universe Integration:**
+
+The Self-Evolving Interface is the dashboard's **adaptive layer** within the larger Living Universe. Where the core system evolves through memory and learning (Layer 0), the Self-Evolving Interface evolves the **human-facing surface** through pattern detection and self-modification.
+
+**Co-evolution at the UI Layer:**
+
+- **Human behavior** = signal that the interface is or isn't well-suited to the workflow
+- **Pattern detection** = the brain observing the signal
+- **Interface proposals** = the brain suggesting how to reshape the UI (the physics of the interface)
+- **Approved modifications** = the hands actually transforming the interface
+
+This is the UI as a living organism: it watches, learns, and adapts to your workflow. Your journey through the universe shapes the interface itself.
+
 **Layer 1: Button Rendering System**
 - Inline contextual buttons on Claude responses (context detection, action routing)
 - Persistent toolbar with learned shortcuts (frequency ordering, pin/unpin, persistence)

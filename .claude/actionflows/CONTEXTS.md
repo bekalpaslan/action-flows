@@ -110,13 +110,13 @@ These contexts receive content automatically — not routed by user intent.
 
 | Context | Flow Directories | Rationale |
 |---------|-----------------|-----------|
-| work | engineering/ | Feature dev and new code |
-| maintenance | engineering/ | Bug fixes and refactoring |
-| explore | framework/, human/ | Research and ideation |
-| review | qa/ | Audits and quality checks |
+| work | project/ | Feature dev and new code |
+| maintenance | project/ | Bug fixes and refactoring |
+| explore | framework/ | Research, ideation, doc reorganization |
+| review | project/, framework/ | QA flows (project/) + harmony audit (framework/) |
 | settings | framework/ | Config and meta-framework |
 | pm | framework/ | Planning and coordination |
-| intel | intel/ | Code intelligence and dossiers |
+| intel | project/ | Code intelligence and dossiers |
 
 ## Routing Guide
 
@@ -145,3 +145,4 @@ These contexts receive content automatically — not routed by user intent.
 | "let's think about X" / "ideation" | explore | ideation/ |
 | "create dossier" / "intel on X" | intel | intel-analysis/ |
 | "track domain X" / "gather intel" | intel | intel-analysis/ |
+| "dissolve learnings" / "process learnings" / "learning retrospective" / "update docs from learnings" | pm | learning-dissolution/ |
