@@ -235,6 +235,19 @@
   --text-nav: 14px;
   --tracking-label: 0.5px;
 
+  /* AppSidebar dimensions */
+  --app-sidebar-width: 260px;
+  --app-sidebar-width-collapsed: 40px;
+  --app-sidebar-header-height: 60px;
+  --app-sidebar-footer-height: 60px;
+  --app-sidebar-accent-bar-width: 3px;
+  --app-sidebar-item-height: 40px;
+  --app-sidebar-group-header-height: 36px;
+  --app-sidebar-z-index: 1100;
+
+  /* AppSidebar colors */
+  --app-sidebar-accent-purple: #CB3CFF;
+
   /* ==========================================================================
      Glass Effect Token System
      ========================================================================== */

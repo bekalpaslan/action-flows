@@ -7,17 +7,23 @@
 /* Main container */
 .session-sidebar {
   position: fixed;
-  top: var(--topbar-height); /* Below TopBar */
-  left: 0; /* Leftmost sidebar */
-  height: calc(100vh - var(--topbar-height));
+  top: 0; /* Full height now that TopBar is gone */
+  left: var(--app-sidebar-width); /* Next to AppSidebar */
+  height: 100vh;
   width: var(--session-sidebar-width);
   background-color: var(--panel-bg-base);
   border-right: var(--panel-border-default);
   box-shadow: var(--panel-glow-default);
-  z-index: 100;
+  z-index: 1200; /* Higher than AppSidebar */
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: left var(--duration-normal) var(--ease-apple);
+}
+
+/* When AppSidebar is collapsed */
+.sidebar-collapsed .session-sidebar {
+  left: var(--app-sidebar-width-collapsed);
 }
 
 

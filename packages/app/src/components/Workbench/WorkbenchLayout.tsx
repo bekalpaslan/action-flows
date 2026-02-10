@@ -1,6 +1,6 @@
 import { type ReactNode, useState, useCallback, useEffect, useRef } from 'react';
 import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
-import { TopBar } from '../TopBar';
+import { AppSidebar } from '../AppSidebar';
 import { SessionSidebar } from '../SessionSidebar';
 import { WorkWorkbench } from './WorkWorkbench';
 import { CanvasWorkbench } from './CanvasWorkbench';
@@ -262,6 +262,12 @@ const initialDemoMilestones: Milestone[] = [
 
 export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
+
+  // Track AppSidebar collapse state for layout adjustment
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
+    const stored = localStorage.getItem('afw-sidebar-collapsed');
+    return stored === 'true';
+  });
 
   // Track attached sessions for the current workbench
   // TODO: Replace with actual session data from context/API
@@ -584,10 +590,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
 
   return (
     <div className="workbench-layout">
-      <TopBar
-        activeWorkbench={activeWorkbench}
-        onWorkbenchChange={setActiveWorkbench}
-      />
+      <AppSidebar onCollapseChange={setSidebarCollapsed} />
 
       {/* SessionSidebar - Only show on session-capable workbenches */}
       {showSessionSidebar && (
@@ -612,7 +615,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         />
       )}
 
-      <div className="workbench-body">
+      <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
         <main className={`workbench-main ${showSessionSidebar ? 'with-sidebar' : ''}`}>
           <div className={`workbench-content ${transitionClass}`}>
             {renderWorkbenchContent(activeWorkbench)}

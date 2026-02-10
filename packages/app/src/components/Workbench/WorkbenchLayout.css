@@ -4,7 +4,7 @@
 
 .workbench-layout {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100vh;
   width: 100vw;
   background: var(--app-bg-base);
@@ -22,6 +22,13 @@
   overflow: hidden;
   min-height: 0; /* Important for flex child scrolling */
   position: relative; /* Establish positioning context */
+  margin-left: var(--app-sidebar-width);
+  transition: margin-left var(--duration-normal) var(--ease-apple);
+}
+
+/* When AppSidebar is collapsed */
+.workbench-body.sidebar-collapsed {
+  margin-left: var(--app-sidebar-width-collapsed);
 }
 
 /* ============================================================================
@@ -40,7 +47,7 @@
   contain: layout style; /* CSS containment to prevent layout escape */
 }
 
-/* Add left margin when SessionSidebar is present */
+/* Add left margin when SessionSidebar is present (in addition to AppSidebar margin on body) */
 .workbench-main.with-sidebar {
   margin-left: var(--session-sidebar-width);
 }
@@ -154,6 +161,10 @@
  * ============================================================================ */
 
 @media (max-width: 768px) {
+  .workbench-body {
+    margin-left: 0;
+  }
+
   .workbench-main {
     padding: var(--space-3);
   }

@@ -87,7 +87,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   work: {
     id: 'work',
     label: 'Work',
-    icon: '🔨',
+    icon: 'W',
     hasNotifications: true,
     notificationCount: 0,
     glowColor: '#4caf50',
@@ -105,7 +105,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   maintenance: {
     id: 'maintenance',
     label: 'Maintenance',
-    icon: '🔧',
+    icon: 'Mt',
     hasNotifications: true,
     notificationCount: 0,
     glowColor: '#ff9800',
@@ -123,7 +123,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   explore: {
     id: 'explore',
     label: 'Explore',
-    icon: '🔍',
+    icon: 'Ex',
     hasNotifications: true,
     notificationCount: 0,
     glowColor: '#2196f3',
@@ -141,7 +141,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   review: {
     id: 'review',
     label: 'Review',
-    icon: '👁️',
+    icon: 'Rv',
     hasNotifications: true,
     notificationCount: 0,
     glowColor: '#9c27b0',
@@ -159,7 +159,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   archive: {
     id: 'archive',
     label: 'Archive',
-    icon: '📦',
+    icon: 'Ar',
     hasNotifications: false,
     notificationCount: 0,
     tooltip: 'Completed and historical sessions',
@@ -171,7 +171,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   settings: {
     id: 'settings',
     label: 'Settings',
-    icon: '⚙️',
+    icon: 'St',
     hasNotifications: false,
     notificationCount: 0,
     tooltip: 'Configuration, preferences, and system management',
@@ -188,7 +188,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   pm: {
     id: 'pm',
     label: 'PM',
-    icon: '📋',
+    icon: 'PM',
     hasNotifications: true,
     notificationCount: 0,
     glowColor: '#00bcd4',
@@ -206,7 +206,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   harmony: {
     id: 'harmony',
     label: 'Harmony',
-    icon: '🎵',
+    icon: 'H',
     hasNotifications: true,
     notificationCount: 0,
     glowColor: '#f44336',
@@ -219,7 +219,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   editor: {
     id: 'editor',
     label: 'Editor',
-    icon: '📝',
+    icon: 'Ed',
     hasNotifications: false,
     notificationCount: 0,
     tooltip: 'Full-screen code editing',
@@ -231,7 +231,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   intel: {
     id: 'intel',
     label: 'Intel',
-    icon: '🕵️',
+    icon: 'In',
     hasNotifications: true,
     notificationCount: 0,
     glowColor: '#673ab7',
@@ -249,7 +249,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   respect: {
     id: 'respect',
     label: 'Respect',
-    icon: '📐',
+    icon: 'Rs',
     hasNotifications: true,
     notificationCount: 0,
     glowColor: '#e91e63',
@@ -262,7 +262,7 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
   canvas: {
     id: 'canvas',
     label: 'Canvas',
-    icon: '🎨',
+    icon: 'Cv',
     hasNotifications: false,
     notificationCount: 0,
     tooltip: 'Live HTML/CSS preview for design collaboration',
