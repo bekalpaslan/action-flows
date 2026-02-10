@@ -52,7 +52,20 @@ export class ClaudeCliMessageAggregator {
    * Append a text chunk to the current message buffer.
    * Resets the timeout timer on each chunk.
    */
-  appendChunk(text: string): void {
+  appendChunk(text: string | unknown): void {
+    // Safety: handle Claude API content block arrays (e.g. [{type:"text",text:"..."}])
+    if (Array.isArray(text)) {
+      const extracted = text
+        .filter((b: unknown) => typeof b === 'object' && b !== null && (b as Record<string, unknown>).type === 'text')
+        .map((b: unknown) => (b as Record<string, unknown>).text)
+        .filter((t: unknown) => typeof t === 'string')
+        .join('');
+      if (!extracted) return;
+      text = extracted;
+    }
+    if (typeof text !== 'string') {
+      text = String(text);
+    }
     if (!this.currentMessageId) {
       this.currentMessageId = generateMessageId();
     }

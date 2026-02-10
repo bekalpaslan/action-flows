@@ -64,12 +64,10 @@ export function useChatMessages(sessionId: SessionId) {
     if (!onEvent) return;
 
     const unsubscribeEvent = onEvent((event: WorkspaceEvent) => {
-      console.log('[CHAT-DEBUG] event received:', event.type, 'session:', event.sessionId, 'expected:', sessionId, 'match:', event.sessionId === sessionId);
       if (event.sessionId !== sessionId) return;
 
       // Handle chat:message events (structured messages from backend aggregator)
       if (event.type === 'chat:message') {
-        console.log('[CHAT-DEBUG] chat:message payload:', JSON.stringify((event as any).message?.role), (event as any).message?.content?.substring(0, 50));
         const chatEvent = event as unknown as {
           message: {
             id: string;
@@ -111,13 +109,15 @@ export function useChatMessages(sessionId: SessionId) {
               : undefined,
           };
 
-          setMessages(prev => {
-            if (seenIdsRef.current.has(chatMsg.id)) {
-              return prev.map(m => (m.id === chatMsg.id ? chatMsg : m));
-            }
+          // Dedup check OUTSIDE updater to avoid React StrictMode double-invocation issue.
+          // StrictMode calls updater functions twice; mutating seenIdsRef inside would
+          // cause the second call to treat the message as a duplicate and drop it.
+          if (seenIdsRef.current.has(chatMsg.id)) {
+            setMessages(prev => prev.map(m => (m.id === chatMsg.id ? chatMsg : m)));
+          } else {
             seenIdsRef.current.add(chatMsg.id);
-            return [...prev, chatMsg];
-          });
+            setMessages(prev => [...prev, chatMsg]);
+          }
         }
       }
 

@@ -227,9 +227,10 @@ class ClaudeCliManager {
     // Handle raw-json messages for aggregation (message boundary detection)
     session.on('raw-json', (msg: StreamJsonMessage) => {
       try {
-        if (msg.type === 'assistant' && msg.message?.content !== undefined) {
-          // Complete assistant message — append content to aggregator
-          aggregator.appendChunk(msg.message.content);
+        if (msg.type === 'assistant' && msg.message) {
+          // Metadata only — stream_event deltas already handle content.
+          // msg.message.content is an array of content blocks, NOT a string,
+          // so appendChunk would produce "[object Object]".
           if (msg.message.model) {
             aggregator.setMetadata('model', msg.message.model);
           }
@@ -237,10 +238,8 @@ class ClaudeCliManager {
             aggregator.setMetadata('stopReason', msg.message.stop_reason);
           }
         } else if (msg.type === 'result') {
-          // End of assistant turn — finalize message with metadata
-          if (msg.result) {
-            aggregator.appendChunk(msg.result);
-          }
+          // End of assistant turn — finalize with metadata only.
+          // Don't appendChunk(msg.result) — stream events already captured content.
           if (msg.cost_usd !== undefined) {
             aggregator.setMetadata('costUsd', msg.cost_usd);
           }

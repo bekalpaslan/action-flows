@@ -45,8 +45,14 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
   const pingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const subscribedSessionsRef = useRef<Set<SessionId>>(new Set());
   const reconnectAttemptsRef = useRef(0);
+  const intentionalCloseRef = useRef(false);
 
-  // Parse and dispatch incoming events
+  // Keep onEvent in a ref so handleMessage never changes identity.
+  // This prevents connect → useEffect cascade from reconnect storms.
+  const onEventRef = useRef(onEvent);
+  onEventRef.current = onEvent;
+
+  // Parse and dispatch incoming events — stable identity (empty deps)
   const handleMessage = useCallback(
     (event: MessageEvent) => {
       try {
@@ -62,7 +68,7 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
 
         // Handle registry events (system-level, no sessionId required)
         if (data.type === 'registry-event' && data.payload) {
-          onEvent?.(data.payload as WorkspaceEvent);
+          onEventRef.current?.(data.payload as WorkspaceEvent);
           return;
         }
 
@@ -82,7 +88,7 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
 
         // Process if it's a session lifecycle event OR if client is subscribed to this session
         if (isSessionLifecycleEvent || subscribedSessionsRef.current.has(data.sessionId)) {
-          onEvent?.(data as WorkspaceEvent);
+          onEventRef.current?.(data as WorkspaceEvent);
         }
       } catch (err) {
         const parseError = err instanceof Error ? err : new Error('Failed to parse WebSocket message');
@@ -90,7 +96,7 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
         setError(parseError);
       }
     },
-    [onEvent]
+    []
   );
 
   // Reset heartbeat timer
@@ -169,16 +175,18 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
           pingIntervalRef.current = null;
         }
 
-        // Attempt to reconnect with backoff
-        const delay = Math.min(
-          reconnectInterval * Math.pow(2, reconnectAttemptsRef.current),
-          30000 // Max 30 second delay
-        );
-        reconnectAttemptsRef.current += 1;
+        // Only auto-reconnect for unexpected closes (not effect cleanup)
+        if (!intentionalCloseRef.current) {
+          const delay = Math.min(
+            reconnectInterval * Math.pow(2, reconnectAttemptsRef.current),
+            30000 // Max 30 second delay
+          );
+          reconnectAttemptsRef.current += 1;
 
-        reconnectTimeoutRef.current = setTimeout(() => {
-          connect();
-        }, delay);
+          reconnectTimeoutRef.current = setTimeout(() => {
+            connect();
+          }, delay);
+        }
       });
 
       wsRef.current = ws;
@@ -236,9 +244,11 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
 
   // Effect: Initialize connection and cleanup
   useEffect(() => {
+    intentionalCloseRef.current = false;
     connect();
 
     return () => {
+      intentionalCloseRef.current = true;
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
