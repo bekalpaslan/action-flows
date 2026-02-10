@@ -214,15 +214,14 @@ export function ChatPanel({
     : undefined;
 
   /**
-   * Register chat input with DiscussContext on mount
+   * Register chat send function with DiscussContext on mount.
+   * Uses a ref so the registered callback always calls the latest handleSendMessage.
    */
+  const handleSendMessageRef = useRef<(msg: string) => void>(() => {});
   useEffect(() => {
-    const inputSetter = (message: string) => {
-      // Add the message directly to the chat conversation
-      addUserMessage(message);
-    };
-
-    registerChatInput(inputSetter);
+    registerChatInput((message: string) => {
+      handleSendMessageRef.current(message);
+    });
 
     return () => {
       unregisterChatInput();
@@ -307,6 +306,9 @@ export function ChatPanel({
       setIsSending(false);
     }
   }, [isSending, sessionId, send, onSendMessage, startCliSession, addUserMessage]);
+
+  // Keep ref in sync so DiscussContext always calls the latest version
+  handleSendMessageRef.current = handleSendMessage;
 
   /**
    * Handle Enter key in textarea
