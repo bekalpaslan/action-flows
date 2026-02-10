@@ -1,5 +1,5 @@
 import { Redis } from 'ioredis';
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
 
@@ -91,6 +91,14 @@ export interface RedisStorage {
   addTelemetryEntry(entry: TelemetryEntry): Promise<void>;
   queryTelemetry(filter: TelemetryQueryFilter): Promise<TelemetryEntry[]>;
   getTelemetryStats(): Promise<{ totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> }>;
+
+  // Reminder storage
+  getReminderDefinitions(): Promise<ReminderDefinition[]>;
+  getReminderInstances(sessionId: SessionId, chainId?: ChainId): Promise<ReminderInstance[]>;
+  addReminderInstance(instance: ReminderInstance): Promise<void>;
+  markReminderAddressed(instanceId: string): Promise<boolean>;
+  markChainRemindersAddressed(chainId: ChainId): Promise<number>;
+  deleteReminderInstance(instanceId: string): Promise<boolean>;
 
   // Activity-aware TTL extension
   extendSessionTtl(sessionId: string, extensionMs: number): Promise<void>;
@@ -1065,6 +1073,108 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           bySource: {},
           byLevel: {},
         };
+      }
+    },
+
+    // === Reminder Storage ===
+    async getReminderDefinitions(): Promise<ReminderDefinition[]> {
+      // Fetch from registry entries
+      // Note: Registry entries are stored separately by registryStorage service
+      // This implementation would query registry entries with type: 'reminder'
+      // For now, return empty array as registry is handled separately
+      return [];
+    },
+
+    async getReminderInstances(sessionId: SessionId, chainId?: ChainId): Promise<ReminderInstance[]> {
+      try {
+        const pattern = `${keyPrefix}reminder:instance:${sessionId}:*`;
+        const keys = await redis.keys(pattern);
+        const instances = await Promise.all(
+          keys.map(async (key) => {
+            const json = await redis.get(key);
+            return json ? JSON.parse(json) as ReminderInstance : null;
+          })
+        );
+        return instances
+          .filter((i): i is ReminderInstance => i !== null)
+          .filter(i => !chainId || i.chainId === chainId);
+      } catch (error) {
+        console.error('[Redis] Error getting reminder instances:', error);
+        return [];
+      }
+    },
+
+    async addReminderInstance(instance: ReminderInstance): Promise<void> {
+      try {
+        const key = `${keyPrefix}reminder:instance:${instance.sessionId}:${instance.id}`;
+        await redis.set(key, JSON.stringify(instance));
+        await redis.expire(key, 604800); // 7 days TTL
+      } catch (error) {
+        console.error('[Redis] Error adding reminder instance:', error);
+        throw error;
+      }
+    },
+
+    async markReminderAddressed(instanceId: string): Promise<boolean> {
+      try {
+        const keys = await redis.keys(`${keyPrefix}reminder:instance:*:${instanceId}`);
+        if (keys.length === 0) return false;
+
+        const json = await redis.get(keys[0]);
+        if (!json) return false;
+
+        const instance: ReminderInstance = JSON.parse(json);
+        instance.addressed = true;
+        instance.metadata = {
+          ...instance.metadata,
+          addressedAt: new Date().toISOString(),
+        };
+
+        await redis.set(keys[0], JSON.stringify(instance));
+        return true;
+      } catch (error) {
+        console.error('[Redis] Error marking reminder addressed:', error);
+        return false;
+      }
+    },
+
+    async markChainRemindersAddressed(chainId: ChainId): Promise<number> {
+      try {
+        const keys = await redis.keys(`${keyPrefix}reminder:instance:*:*`);
+        let count = 0;
+
+        for (const key of keys) {
+          const json = await redis.get(key);
+          if (!json) continue;
+
+          const instance: ReminderInstance = JSON.parse(json);
+          if (instance.chainId === chainId && !instance.addressed) {
+            instance.addressed = true;
+            instance.metadata = {
+              ...instance.metadata,
+              addressedAt: new Date().toISOString(),
+            };
+            await redis.set(key, JSON.stringify(instance));
+            count++;
+          }
+        }
+
+        return count;
+      } catch (error) {
+        console.error('[Redis] Error marking chain reminders addressed:', error);
+        return 0;
+      }
+    },
+
+    async deleteReminderInstance(instanceId: string): Promise<boolean> {
+      try {
+        const keys = await redis.keys(`${keyPrefix}reminder:instance:*:${instanceId}`);
+        if (keys.length === 0) return false;
+        await redis.del(keys[0]);
+        return true;
+      } catch (error) {
+        console.error('[Redis] Error deleting reminder instance:', error);
+        return false;
       }
     },
 

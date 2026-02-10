@@ -8,6 +8,7 @@ import type { Timestamp } from './types.js';
 import type { LayerSource, BehaviorPackId } from './selfEvolvingTypes.js';
 import type { ButtonDefinition } from './buttonTypes.js';
 import type { PatternAction } from './patternTypes.js';
+import type { ReminderDefinition } from './reminderTypes.js';
 
 // Re-export BehaviorPackId for convenience
 export type { BehaviorPackId } from './selfEvolvingTypes.js';
@@ -30,10 +31,11 @@ export type RegistryEntryId = string & { readonly __brand: 'RegistryEntryId' };
  * - workflow: Multi-step automated workflows
  * - shortcut: Keyboard shortcut bindings
  * - custom-prompt: Custom prompt button definitions
+ * - reminder: Reminder prompt definitions
  * - modifier: Self-modification templates (legacy)
  * - pack: Behavior pack reference (legacy)
  */
-export type RegistryEntryType = 'button' | 'pattern' | 'workflow' | 'shortcut' | 'custom-prompt' | 'modifier' | 'pack';
+export type RegistryEntryType = 'button' | 'pattern' | 'workflow' | 'shortcut' | 'custom-prompt' | 'reminder' | 'modifier' | 'pack';
 
 /** Status of a registry entry */
 export type RegistryEntryStatus = 'active' | 'inactive';
@@ -147,6 +149,7 @@ export interface RegistryEntry {
     | { type: 'workflow'; definition: WorkflowDefinition }
     | { type: 'shortcut'; definition: ShortcutDefinition }
     | { type: 'custom-prompt'; definition: CustomPromptDefinition }
+    | { type: 'reminder'; definition: ReminderDefinition }
     | { type: 'modifier'; definition: ModifierDefinition };
   /** When this entry was created */
   createdAt: Timestamp;

@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
 import { lifecycleManager } from './lifecycleHooks.js';
@@ -23,6 +23,7 @@ const MAX_DOSSIER_HISTORY = 50;
 const MAX_SUGGESTIONS = 500;
 const MAX_CHAT_MESSAGES_PER_SESSION = 1_000;
 const MAX_TELEMETRY_ENTRIES = 10_000;
+const MAX_REMINDER_INSTANCES = 1_000;
 export interface MemoryStorage {
   // Session storage
   sessions: Map<SessionId, Session>;
@@ -131,6 +132,15 @@ export interface MemoryStorage {
   addTelemetryEntry(entry: TelemetryEntry): void;
   queryTelemetry(filter: TelemetryQueryFilter): TelemetryEntry[];
   getTelemetryStats(): { totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> };
+
+  // Reminder storage
+  reminderInstances: Map<string, ReminderInstance>;
+  getReminderDefinitions(): ReminderDefinition[];
+  getReminderInstances(sessionId: SessionId, chainId?: ChainId): ReminderInstance[];
+  addReminderInstance(instance: ReminderInstance): void;
+  markReminderAddressed(instanceId: string): boolean;
+  markChainRemindersAddressed(chainId: ChainId): number;
+  deleteReminderInstance(instanceId: string): boolean;
 
   // Activity-aware TTL extension
   sessionTtlExtensions: Map<string, { expiresAt: number; extensionCount: number }>;
@@ -845,6 +855,68 @@ export const storage: MemoryStorage = {
     };
   },
 
+  // Reminder storage
+  reminderInstances: new Map<string, ReminderInstance>(),
+
+  getReminderDefinitions(): ReminderDefinition[] {
+    // Fetch from registry entries with type: 'reminder'
+    // Note: Registry entries are stored in registryStorage service
+    // This is a placeholder that would normally query the registry
+    // The actual implementation will be via the registry API
+    return [];
+  },
+
+  getReminderInstances(sessionId: SessionId, chainId?: ChainId): ReminderInstance[] {
+    const instances = Array.from(this.reminderInstances.values());
+    return instances.filter(i => {
+      if (i.sessionId !== sessionId) return false;
+      if (chainId && i.chainId !== chainId) return false;
+      return true;
+    });
+  },
+
+  addReminderInstance(instance: ReminderInstance): void {
+    // FIFO eviction at MAX_REMINDER_INSTANCES
+    if (!this.reminderInstances.has(instance.id) && this.reminderInstances.size >= MAX_REMINDER_INSTANCES) {
+      // Evict oldest instance
+      const oldestId = Array.from(this.reminderInstances.keys())[0];
+      if (oldestId) {
+        this.reminderInstances.delete(oldestId);
+      }
+    }
+    this.reminderInstances.set(instance.id, instance);
+  },
+
+  markReminderAddressed(instanceId: string): boolean {
+    const instance = this.reminderInstances.get(instanceId);
+    if (!instance) return false;
+    instance.addressed = true;
+    instance.metadata = {
+      ...instance.metadata,
+      addressedAt: new Date().toISOString(),
+    };
+    return true;
+  },
+
+  markChainRemindersAddressed(chainId: ChainId): number {
+    let count = 0;
+    for (const instance of this.reminderInstances.values()) {
+      if (instance.chainId === chainId && !instance.addressed) {
+        instance.addressed = true;
+        instance.metadata = {
+          ...instance.metadata,
+          addressedAt: new Date().toISOString(),
+        };
+        count++;
+      }
+    }
+    return count;
+  },
+
+  deleteReminderInstance(instanceId: string): boolean {
+    return this.reminderInstances.delete(instanceId);
+  },
+
   // Activity-aware TTL extension
   sessionTtlExtensions: new Map(),
 
@@ -936,6 +1008,9 @@ export const storage: MemoryStorage = {
         Array.from(this.suggestions.entries()).map(([id, suggestion]) => [id, suggestion])
       ),
       telemetryEntries: this.telemetryEntries,
+      reminderInstances: Object.fromEntries(
+        Array.from(this.reminderInstances.entries()).map(([id, instance]) => [id, instance])
+      ),
       sessionTtlExtensions: Object.fromEntries(
         Array.from(this.sessionTtlExtensions.entries()).map(([sessionId, ttlInfo]) => [sessionId, ttlInfo])
       ),
@@ -995,6 +1070,7 @@ export const storage: MemoryStorage = {
       this.dossiers.clear();
       this.suggestions.clear();
       this.telemetryEntries = [];
+      this.reminderInstances.clear();
       this.sessionTtlExtensions.clear();
 
       // Restore sessions
@@ -1131,6 +1207,13 @@ export const storage: MemoryStorage = {
       // Restore telemetry
       if (data.telemetryEntries && Array.isArray(data.telemetryEntries)) {
         this.telemetryEntries = data.telemetryEntries;
+      }
+
+      // Restore reminderInstances
+      if (data.reminderInstances && typeof data.reminderInstances === 'object') {
+        for (const [id, instance] of Object.entries(data.reminderInstances)) {
+          this.reminderInstances.set(id, instance as ReminderInstance);
+        }
       }
 
       // Restore sessionTtlExtensions

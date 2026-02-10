@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
 
@@ -135,6 +135,14 @@ export interface Storage {
   addTelemetryEntry(entry: TelemetryEntry): void | Promise<void>;
   queryTelemetry(filter: TelemetryQueryFilter): TelemetryEntry[] | Promise<TelemetryEntry[]>;
   getTelemetryStats(): { totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> } | Promise<{ totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> }>;
+
+  // Reminder storage
+  getReminderDefinitions(): ReminderDefinition[] | Promise<ReminderDefinition[]>;
+  getReminderInstances(sessionId: SessionId, chainId?: ChainId): ReminderInstance[] | Promise<ReminderInstance[]>;
+  addReminderInstance(instance: ReminderInstance): void | Promise<void>;
+  markReminderAddressed(instanceId: string): boolean | Promise<boolean>;
+  markChainRemindersAddressed(chainId: ChainId): number | Promise<number>;
+  deleteReminderInstance(instanceId: string): boolean | Promise<boolean>;
 
   // Activity-aware TTL extension
   extendSessionTtl?(sessionId: string, extensionMs: number): Promise<void> | void;

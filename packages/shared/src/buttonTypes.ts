@@ -58,6 +58,7 @@ export type ButtonContext =
   | 'analysis-report'      // Analysis results and assessments
   | 'question-prompt'      // Questions and user prompts
   | 'file-modification'    // File create/update/delete operations
+  | 'approval-gate'        // Chain compilation approval gates
   | 'general';             // Generic content
 
 /**

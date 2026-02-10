@@ -16,14 +16,18 @@
  */
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import type { SessionId, Session, WorkspaceEvent } from '@afw/shared';
+import type { SessionId, Session, WorkspaceEvent, ReminderDefinition, ReminderVariant, ChainId } from '@afw/shared';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import { useDiscussContext } from '../../contexts/DiscussContext';
+import { useChatWindowContext, AVAILABLE_MODELS } from '../../contexts/ChatWindowContext';
 import { useChatMessages, type ChatMessage } from '../../hooks/useChatMessages';
 import { usePromptButtons } from '../../hooks/usePromptButtons';
 import { claudeCliService } from '../../services/claudeCliService';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { extractChainCompilation } from '../../services/chainCompilationDetector';
+import { ReminderButtonBar } from './ReminderButtonBar';
+import { useReminderButtons } from '../../hooks/useReminderButtons';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import type { PromptButton } from '../../services/promptButtonSelector';
@@ -142,19 +146,29 @@ export function ChatPanel({
   const [cliState, setCliState] = useState<CliSessionState>('not-started');
   const [copyTooltip, setCopyTooltip] = useState('Copy');
   const [expandedSpawnPrompts, setExpandedSpawnPrompts] = useState<Set<string>>(new Set());
+  const [lastChainCompilation, setLastChainCompilation] = useState<{
+    chainId: ChainId;
+    title: string;
+    timestamp: string;
+  } | null>(null);
+  const [chainApproved, setChainApproved] = useState(false);
+  const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const cliStateRef = useRef<CliSessionState>('not-started');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const modelDropdownRef = useRef<HTMLDivElement>(null);
 
   const { send } = useWebSocketContext();
   const { registerChatInput, unregisterChatInput } = useDiscussContext();
+  const { selectedModel, setSelectedModel } = useChatWindowContext();
   const { messages, addUserMessage } = useChatMessages(sessionId);
   const { buttons, getButtonPromptText } = usePromptButtons({
     session,
     messages,
     cliRunning: cliState === 'running',
   });
+  const { createInstance: createReminderInstance } = useReminderButtons();
 
   // DiscussButton integration
   const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
@@ -252,6 +266,30 @@ export function ChatPanel({
   }, [messages]);
 
   /**
+   * Detect chain compilations from assistant messages
+   */
+  useEffect(() => {
+    if (messages.length === 0) return;
+
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage.role !== 'assistant') return;
+
+    // Check if last message is a chain compilation
+    const chainId = session?.currentChain?.id;
+    if (!chainId) return;
+
+    const compilation = extractChainCompilation(lastMessage.content, chainId);
+    if (compilation) {
+      setLastChainCompilation({
+        chainId: compilation.chainId,
+        title: compilation.title,
+        timestamp: lastMessage.timestamp,
+      });
+      setChainApproved(false); // Reset approval state
+    }
+  }, [messages, session?.currentChain?.id]);
+
+  /**
    * Handle prefillMessage: when it changes and is non-empty, set input value
    */
   useEffect(() => {
@@ -261,6 +299,33 @@ export function ChatPanel({
       // Note: parent should manage the prefillMessage lifecycle
     }
   }, [prefillMessage]);
+
+  /**
+   * Close model dropdown on outside click or ESC key
+   */
+  useEffect(() => {
+    if (!isModelDropdownOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modelDropdownRef.current && !modelDropdownRef.current.contains(event.target as Node)) {
+        setIsModelDropdownOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsModelDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isModelDropdownOpen]);
 
   /**
    * Start the Claude CLI session
@@ -311,6 +376,12 @@ export function ChatPanel({
       // Add user message to chat
       addUserMessage(trimmed);
 
+      // Check if message is an approval
+      const lowerTrimmed = trimmed.toLowerCase();
+      if (lowerTrimmed === 'yes' || lowerTrimmed === 'execute' || lowerTrimmed === 'approve') {
+        setChainApproved(true);
+      }
+
       // If parent provided a handler, use it
       if (onSendMessage) {
         await onSendMessage(trimmed);
@@ -354,6 +425,85 @@ export function ChatPanel({
       handleSendMessage(text);
     }
   }, [getButtonPromptText, handleSendMessage]);
+
+  /**
+   * Handle model selection
+   */
+  const handleModelSelect = useCallback((modelId: string) => {
+    setSelectedModel(modelId);
+    setIsModelDropdownOpen(false);
+  }, [setSelectedModel]);
+
+  /**
+   * Handle add context button click
+   */
+  const handleAddContextClick = useCallback(() => {
+    console.log('[ChatPanel] Context menu not yet implemented');
+  }, []);
+
+  /**
+   * Handle reminder button click
+   */
+  const handleReminderClick = useCallback(async (
+    reminder: ReminderDefinition,
+    variant: ReminderVariant
+  ) => {
+    if (!lastChainCompilation) {
+      console.error('[ChatPanel] No chain compilation detected');
+      return;
+    }
+
+    // Create reminder instance
+    const instance = await createReminderInstance(
+      reminder.id,
+      sessionId,
+      lastChainCompilation.chainId,
+      reminder.reminderText,
+      variant
+    );
+
+    if (!instance) {
+      console.error('[ChatPanel] Failed to create reminder instance');
+      return;
+    }
+
+    // Execute variant-specific actions
+    switch (variant) {
+      case 'remind-approve':
+        // Auto-approve the chain
+        setInput('yes');
+        setTimeout(() => {
+          handleSendMessage('yes');
+        }, 100);
+        setChainApproved(true);
+        break;
+
+      case 'remind-restart':
+        // Trigger chain recompilation
+        setInput('recompile the chain');
+        setTimeout(() => {
+          handleSendMessage('recompile the chain');
+        }, 100);
+        setChainApproved(false);
+        break;
+
+      case 'double-check':
+        // Send verification prompt
+        if (reminder.checkItems && reminder.checkItems.length > 0) {
+          const prompt = `Before executing, verify:\n${reminder.checkItems.map(item => `- ${item}`).join('\n')}`;
+          setInput(prompt);
+        } else {
+          setInput(`Before executing, verify: ${reminder.reminderText}`);
+        }
+        // User must manually send this prompt
+        break;
+
+      case 'remind-generic':
+        // No chain action, just stored
+        console.log('[ChatPanel] Generic reminder stored:', instance);
+        break;
+    }
+  }, [lastChainCompilation, sessionId, createReminderInstance, handleSendMessage]);
 
 
 
@@ -597,6 +747,15 @@ export function ChatPanel({
             <div ref={messagesEndRef} />
           </div>
 
+          {/* Reminder Button Bar (at approval gates) */}
+          {lastChainCompilation && !chainApproved && (
+            <ReminderButtonBar
+              sessionId={sessionId}
+              chainId={lastChainCompilation.chainId}
+              onReminderClick={handleReminderClick}
+            />
+          )}
+
           {/* Prompt Buttons */}
           {buttons.length > 0 && (
             <div className="chat-panel__prompt-buttons">
@@ -614,47 +773,102 @@ export function ChatPanel({
             </div>
           )}
 
-          {/* Input Area */}
-          <div className="chat-panel__input-area">
-            <textarea
-              ref={inputRef}
-              className="chat-panel__input-field"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Type a message... (Enter to send)"
-              disabled={isSending}
-              rows={1}
-              aria-label="Chat message input"
-            />
-            <button
-              className="chat-panel__send-btn"
-              onClick={() => handleSendMessage(input)}
-              disabled={!input.trim() || isSending}
-              aria-label="Send message"
-            >
-              {isSending ? (
-                <svg
-                  className="chat-panel__send-icon spinning"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                >
-                  <path d="M8 1a7 7 0 1 0 7 7h-2a5 5 0 1 1-5-5V1z" />
+          {/* Input Area — NEW two-row layout */}
+          <div className="chat-panel__input-container">
+            {/* Top row: textarea */}
+            <div className="chat-panel__input-row">
+              <textarea
+                ref={inputRef}
+                className="chat-panel__input-field"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Reply to Claude"
+                disabled={isSending}
+                rows={1}
+                aria-label="Chat message input"
+              />
+            </div>
+
+            {/* Bottom row: toolbar */}
+            <div className="chat-panel__toolbar">
+              {/* Left: Add context button */}
+              <button
+                className="chat-panel__add-context-btn"
+                onClick={handleAddContextClick}
+                aria-label="Add context"
+                title="Add context (coming soon)"
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="10" y1="5" x2="10" y2="15" />
+                  <line x1="5" y1="10" x2="15" y2="10" />
                 </svg>
-              ) : (
-                <svg
-                  className="chat-panel__send-icon"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
+              </button>
+
+              {/* Right: Model selector + Send button */}
+              <div className="chat-panel__toolbar-right">
+                {/* Model selector */}
+                <div className="chat-panel__model-selector" ref={modelDropdownRef}>
+                  <button
+                    className="chat-panel__model-selector-trigger"
+                    onClick={() => setIsModelDropdownOpen(prev => !prev)}
+                    aria-label="Select AI model"
+                    aria-expanded={isModelDropdownOpen}
+                  >
+                    <span className="chat-panel__model-selector-label">
+                      {AVAILABLE_MODELS.find(m => m.id === selectedModel)?.label || 'Select Model'}
+                    </span>
+                    <svg className="chat-panel__model-selector-caret" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                    </svg>
+                  </button>
+
+                  {/* Model dropdown menu */}
+                  {isModelDropdownOpen && (
+                    <div className="chat-panel__model-selector-dropdown">
+                      {AVAILABLE_MODELS.map(model => (
+                        <button
+                          key={model.id}
+                          className={`chat-panel__model-selector-option ${selectedModel === model.id ? 'chat-panel__model-selector-option--selected' : ''}`}
+                          onClick={() => handleModelSelect(model.id)}
+                        >
+                          <span className="chat-panel__model-selector-option-label">{model.label}</span>
+                          {selectedModel === model.id && (
+                            <svg className="chat-panel__model-selector-checkmark" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                              <path d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z" />
+                            </svg>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Send button */}
+                <button
+                  className="chat-panel__send-btn"
+                  onClick={() => handleSendMessage(input)}
+                  disabled={!input.trim() || isSending}
+                  aria-label="Send message"
                 >
-                  <path d="M15.854 7.854l-5-5a.5.5 0 0 0-.708.708L14.293 7.5H.5a.5.5 0 0 0 0 1h13.793l-4.147 4.146a.5.5 0 0 0 .708.708l5-5a.5.5 0 0 0 0-.708z" />
-                </svg>
-              )}
-            </button>
+                  {isSending ? (
+                    <svg
+                      className="chat-panel__send-icon spinning"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                    >
+                      <path d="M8 1a7 7 0 1 0 7 7h-2a5 5 0 1 1-5-5V1z" />
+                    </svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M8 0a.5.5 0 01.5.5v11.793l3.146-3.147a.5.5 0 01.708.708l-4 4a.5.5 0 01-.708 0l-4-4a.5.5 0 01.708-.708L7.5 12.293V.5A.5.5 0 018 0z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
         </>
       )}

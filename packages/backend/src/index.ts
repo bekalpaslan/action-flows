@@ -36,6 +36,7 @@ import dossiersRouter, { setBroadcastDossierFunction } from './routes/dossiers.j
 import suggestionsRouter from './routes/suggestions.js';
 import telemetryRouter from './routes/telemetry.js';
 import lifecycleRouter from './routes/lifecycle.js';
+import remindersRouter from './routes/reminders.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
 import { lifecycleManager } from './services/lifecycleManager.js';
@@ -113,6 +114,7 @@ app.use('/api/dossiers', dossiersRouter);
 app.use('/api/suggestions', suggestionsRouter);
 app.use('/api/telemetry', telemetryRouter);
 app.use('/api/lifecycle', lifecycleRouter);
+app.use('/api/reminders', remindersRouter);
 // Note: patternsRouter also handles /bookmarks routes, registered at /api for cleaner URLs
 // IMPORTANT: Must come AFTER specific /api/* routes since it has /:projectId catch-all
 app.use('/api', patternsRouter);
