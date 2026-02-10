@@ -8,7 +8,7 @@
 .session-sidebar {
   position: fixed;
   top: var(--topbar-height); /* Below TopBar */
-  left: var(--sidebar-width); /* After DashboardSidebar */
+  left: 0; /* Leftmost sidebar */
   height: calc(100vh - var(--topbar-height));
   width: var(--session-sidebar-width);
   background-color: var(--panel-bg-base);

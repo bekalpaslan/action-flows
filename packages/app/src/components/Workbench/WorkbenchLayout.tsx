@@ -1,7 +1,6 @@
 import { type ReactNode, useState, useCallback, useEffect, useRef } from 'react';
 import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { TopBar } from '../TopBar';
-import { DashboardSidebar } from '../DashboardSidebar';
 import { SessionSidebar } from '../SessionSidebar';
 import { WorkWorkbench } from './WorkWorkbench';
 import { CanvasWorkbench } from './CanvasWorkbench';
@@ -589,9 +588,6 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         activeWorkbench={activeWorkbench}
         onWorkbenchChange={setActiveWorkbench}
       />
-
-      {/* DashboardSidebar - Always visible primary navigation */}
-      <DashboardSidebar />
 
       {/* SessionSidebar - Only show on session-capable workbenches */}
       {showSessionSidebar && (

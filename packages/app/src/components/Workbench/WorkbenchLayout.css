@@ -40,14 +40,9 @@
   contain: layout style; /* CSS containment to prevent layout escape */
 }
 
-/* Always offset for the DashboardSidebar (250px fixed left nav) */
-.workbench-main {
-  margin-left: var(--sidebar-width);
-}
-
-/* Add extra left margin when SessionSidebar is also present */
+/* Add left margin when SessionSidebar is present */
 .workbench-main.with-sidebar {
-  margin-left: calc(var(--sidebar-width) + var(--session-sidebar-width)); /* 250px DashboardSidebar + 240px SessionSidebar */
+  margin-left: var(--session-sidebar-width);
 }
 
 .workbench-main::-webkit-scrollbar {
