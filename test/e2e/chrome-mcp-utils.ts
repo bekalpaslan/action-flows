@@ -20,7 +20,9 @@ export type ChromeMcpTool =
   | 'list_network_requests'
   | 'get_network_request'
   | 'take_screenshot'
-  | 'list_console_messages';
+  | 'list_console_messages'
+  | 'hover'
+  | 'handle_dialog';
 
 /**
  * Assertion types for test validation
@@ -230,6 +232,74 @@ export const SELECTORS = {
   squadPanel: 'squad-panel',
   chatMessages: 'chat-panel__messages',
   chatInfoBar: 'chat-panel__info-bar',
+
+  /** Session Sidebar selectors (verified 2026-02-10) */
+  sidebarTitle: 'sidebar-title',
+  sidebarIcon: 'sidebar-icon',
+  sidebarDivider: 'sidebar-divider',
+  sessionList: 'session-list',
+  sectionTitle: 'section-title',
+  sessionCount: 'session-count',
+
+  /** Session Sidebar Item selectors (verified 2026-02-10) */
+  sessionSidebarItem: 'session-sidebar-item',
+  sessionSidebarItemActive: 'session-sidebar-item active',
+  statusDot: 'status-dot',
+  sessionName: 'session-name',
+  sessionTime: 'session-time',
+  routingBadge: 'routing-badge',
+  notificationBadge: 'notification-badge',
+  sessionDeleteBtn: 'session-delete-btn',
+
+  /** Session Info Panel selectors (verified 2026-02-10) */
+  infoPanelHeader: 'info-panel-header',
+  panelTitle: 'panel-title',
+  collapseToggle: 'collapse-toggle',
+  collapseIcon: 'collapse-icon',
+  statusBadge: 'status-badge',
+  freshnessIndicator: 'freshness-indicator',
+  sessionIdButton: 'session-id-button',
+  sessionIdText: 'session-id-text',
+  copyIcon: 'copy-icon',
+  infoChip: 'info-chip',
+
+  /** Conversation Panel selectors (verified 2026-02-10) */
+  conversationHeader: 'conversation-header',
+  awaitingBadge: 'awaiting-badge',
+  pulseDot: 'pulse-dot',
+  messagesContainer: 'messages-container',
+  noMessages: 'no-messages',
+  message: 'message',
+  messageAssistant: 'message-assistant',
+  messageUser: 'message-user',
+  messageRole: 'message-role',
+  messageContent: 'message-content',
+  messageTimestamp: 'message-timestamp',
+  quickResponses: 'quick-responses',
+  quickResponseBtn: 'quick-response-btn',
+  chatInputField: 'chat-panel__input-field',
+  notAwaitingNotice: 'not-awaiting-notice',
+
+  /** Session Pane selectors (verified 2026-02-10) */
+  userAvatarSmall: 'user-avatar-small',
+  userName: 'user-name',
+  sessionIdDisplay: 'session-id-display',
+  sessionStatus: 'session-status',
+  viewToggleBtn: 'view-toggle-btn',
+  sessionDetachBtn: 'session-detach-btn',
+
+  /** Session Archive selectors (verified 2026-02-10) */
+  sessionArchiveOverlay: 'session-archive-overlay',
+  sessionArchivePanel: 'session-archive-panel',
+  archiveHeader: 'archive-header',
+  archiveCloseBtn: 'archive-close-btn',
+  archiveEmpty: 'archive-empty',
+  archiveList: 'archive-list',
+  archiveItem: 'archive-item',
+  archiveSessionId: 'archive-session-id',
+  archiveStatusBadge: 'archive-status-badge',
+  restoreBtn: 'restore-btn',
+  deleteBtn: 'delete-btn',
 } as const;
 
 /**
@@ -240,6 +310,10 @@ export const API_ENDPOINTS = {
   sessions: '/api/sessions',
   sessionById: (id: string) => `/api/sessions/${id}`,
   sessionChat: (id: string) => `/api/sessions/${id}/chat`,
+  sessionInput: (id: string) => `/api/sessions/${id}/input`,
+  sessionAwaiting: (id: string) => `/api/sessions/${id}/awaiting`,
+  sessionChains: (id: string) => `/api/sessions/${id}/chains`,
+  sessionFreshness: (id: string) => `/api/sessions/${id}/freshness`,
 } as const;
 
 /**
