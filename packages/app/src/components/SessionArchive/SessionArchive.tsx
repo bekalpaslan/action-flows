@@ -1,4 +1,6 @@
 import type { ArchivedSession } from '../../hooks/useSessionArchive';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './SessionArchive.css';
 
 export interface SessionArchiveProps {
@@ -31,14 +33,29 @@ export function SessionArchive({
     return date.toLocaleString();
   };
 
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'SessionArchive',
+    getContext: () => ({
+      archivedCount: archivedSessions.length,
+      selectedSession: null,
+      dateRange: archivedSessions.length > 0 ? {
+        earliest: Math.min(...archivedSessions.map(s => s.archivedAt)),
+        latest: Math.max(...archivedSessions.map(s => s.archivedAt)),
+      } : null,
+    }),
+  });
+
   return (
     <div className="session-archive-overlay" onClick={onClose}>
       <div className="session-archive-panel" onClick={(e) => e.stopPropagation()}>
         <div className="archive-header">
           <h2>Archived Sessions</h2>
-          <button className="archive-close-btn" onClick={onClose} title="Close">
-            ×
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <DiscussButton componentName="SessionArchive" onClick={openDialog} size="small" />
+            <button className="archive-close-btn" onClick={onClose} title="Close">
+              ×
+            </button>
+          </div>
         </div>
 
         <div className="archive-content">
@@ -106,6 +123,20 @@ export function SessionArchive({
           )}
         </div>
       </div>
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="SessionArchive"
+        componentContext={{
+          archivedCount: archivedSessions.length,
+          selectedSession: null,
+          dateRange: archivedSessions.length > 0 ? {
+            earliest: Math.min(...archivedSessions.map(s => s.archivedAt)),
+            latest: Math.max(...archivedSessions.map(s => s.archivedAt)),
+          } : null,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

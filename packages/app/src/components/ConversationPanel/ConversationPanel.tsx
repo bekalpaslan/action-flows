@@ -14,6 +14,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Session, ButtonDefinition, ButtonId } from '@afw/shared';
 import { InlineButtons } from '../InlineButtons';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './ConversationPanel.css';
 
 /**
@@ -86,6 +88,15 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
   const canSend = isAwaiting && input.trim().length > 0 && !isSending;
 
   const quickResponses = session.lastPrompt?.quickResponses || [];
+
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'ConversationPanel',
+    getContext: () => ({
+      sessionId: session.id,
+      messageCount: messages.length,
+      conversationState: session.conversationState,
+    }),
+  });
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -184,12 +195,15 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
     <div className="conversation-panel">
       <div className="conversation-header">
         <h3>Conversation</h3>
-        {isAwaiting && (
-          <span className="awaiting-badge">
-            <span className="pulse-dot" />
-            Awaiting Input
-          </span>
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {isAwaiting && (
+            <span className="awaiting-badge">
+              <span className="pulse-dot" />
+              Awaiting Input
+            </span>
+          )}
+          <DiscussButton componentName="ConversationPanel" onClick={openDialog} size="small" />
+        </div>
       </div>
 
       <div className="messages-container">
@@ -275,6 +289,17 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
           </div>
         )}
       </div>
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="ConversationPanel"
+        componentContext={{
+          sessionId: session.id,
+          messageCount: messages.length,
+          conversationState: session.conversationState,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

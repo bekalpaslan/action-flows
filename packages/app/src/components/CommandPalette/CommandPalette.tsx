@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { useCommandPalette } from '../../hooks/useCommandPalette';
 import { CommandPaletteInput } from './CommandPaletteInput';
 import { CommandPaletteResults } from './CommandPaletteResults';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './CommandPalette.css';
 
 export const CommandPalette: React.FC = () => {
@@ -17,6 +19,15 @@ export const CommandPalette: React.FC = () => {
   } = useCommandPalette();
   const modalRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
+
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'CommandPalette',
+    getContext: () => ({
+      query,
+      resultCount: results.length,
+      selectedCommand: results[selectedIndex]?.title || null,
+    }),
+  });
 
   // Close on backdrop click
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -81,11 +92,16 @@ export const CommandPalette: React.FC = () => {
         aria-modal="true"
         aria-label="Command palette"
       >
-        <CommandPaletteInput
-          value={query}
-          onChange={setQuery}
-          autoFocus
-        />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px' }}>
+          <div style={{ flex: 1 }}>
+            <CommandPaletteInput
+              value={query}
+              onChange={setQuery}
+              autoFocus
+            />
+          </div>
+          <DiscussButton componentName="CommandPalette" onClick={openDialog} size="small" />
+        </div>
         <CommandPaletteResults
           results={results}
           selectedIndex={selectedIndex}
@@ -94,6 +110,17 @@ export const CommandPalette: React.FC = () => {
           emptyMessage="No commands found"
         />
       </div>
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="CommandPalette"
+        componentContext={{
+          query,
+          resultCount: results.length,
+          selectedCommand: results[selectedIndex]?.title || null,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 };

@@ -10,6 +10,8 @@ import 'xterm/css/xterm.css';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import { useClaudeCliControl } from '../../hooks/useClaudeCliControl';
 import type { SessionId, ClaudeCliOutputEvent, WorkspaceEvent } from '@afw/shared';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 
 interface ClaudeCliTerminalProps {
   sessionId: SessionId;
@@ -28,6 +30,16 @@ export function ClaudeCliTerminal({ sessionId, onClose }: ClaudeCliTerminalProps
   const [isTerminalReady, setIsTerminalReady] = useState(false);
   const { onEvent, subscribe, unsubscribe } = useWebSocketContext();
   const { sendInput, stop, isLoading, error } = useClaudeCliControl(sessionId);
+
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'ClaudeCliTerminal',
+    getContext: () => ({
+      sessionId,
+      isTerminalReady,
+      isLoading,
+      hasError: !!error,
+    }),
+  });
 
   // Initialize xterm.js with stdin enabled
   useEffect(() => {
@@ -219,6 +231,7 @@ export function ClaudeCliTerminal({ sessionId, onClose }: ClaudeCliTerminalProps
         backgroundColor: '#2d2d2d',
         borderBottom: '1px solid #3e3e3e',
       }}>
+        <DiscussButton componentName="ClaudeCliTerminal" onClick={openDialog} size="small" />
         <button
           onClick={handleStop}
           disabled={isLoading}
@@ -273,6 +286,19 @@ export function ClaudeCliTerminal({ sessionId, onClose }: ClaudeCliTerminalProps
           overflow: 'hidden',
           padding: '8px',
         }}
+      />
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="ClaudeCliTerminal"
+        componentContext={{
+          sessionId,
+          isTerminalReady,
+          isLoading,
+          hasError: !!error,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
       />
     </div>
   );

@@ -13,6 +13,8 @@ import { FitAddon } from '@xterm/addon-fit';
 import { SearchAddon } from '@xterm/addon-search';
 import 'xterm/css/xterm.css';
 import type { SessionId, StepNumber, TerminalOutputEvent } from '@afw/shared';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 
 interface TerminalPanelProps {
   sessionId?: SessionId;
@@ -36,6 +38,16 @@ export function TerminalPanel({
   const [isResizing, setIsResizing] = useState(false);
   const resizeStartY = useRef<number>(0);
   const resizeStartHeight = useRef<number>(0);
+
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'TerminalPanel',
+    getContext: () => ({
+      sessionId: sessionId || 'none',
+      hasSession: !!sessionId,
+      isCollapsed,
+      height,
+    }),
+  });
 
   // Initialize xterm.js
   useEffect(() => {
@@ -269,6 +281,7 @@ export function TerminalPanel({
         </span>
 
         <div style={{ display: 'flex', gap: '8px' }}>
+          <DiscussButton componentName="TerminalPanel" onClick={openDialog} size="small" />
           <button
             onClick={handleSearch}
             style={{
@@ -330,6 +343,19 @@ export function TerminalPanel({
 
       {/* Terminal */}
       <div ref={terminalRef} style={{ flex: 1, padding: '8px' }} />
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="TerminalPanel"
+        componentContext={{
+          sessionId: sessionId || 'none',
+          hasSession: !!sessionId,
+          isCollapsed,
+          height,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

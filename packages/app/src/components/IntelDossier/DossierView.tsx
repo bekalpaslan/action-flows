@@ -8,6 +8,8 @@
 import { useState } from 'react';
 import type { IntelDossier } from '@afw/shared';
 import { WidgetRenderer } from './WidgetRenderer';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './DossierView.css';
 
 export interface DossierViewProps {
@@ -26,6 +28,18 @@ export function DossierView({ dossier, onAnalyze, onDelete }: DossierViewProps) 
   const [targetsExpanded, setTargetsExpanded] = useState(false);
   const [contextExpanded, setContextExpanded] = useState(false);
 
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'DossierView',
+    getContext: () => ({
+      dossierId: dossier.id,
+      dossierName: dossier.name,
+      status: dossier.status,
+      analysisCount: dossier.analysisCount,
+      targetCount: dossier.targets.length,
+      hasError: !!dossier.error,
+    }),
+  });
+
   // Format dates
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -42,6 +56,7 @@ export function DossierView({ dossier, onAnalyze, onDelete }: DossierViewProps) 
         <div className="dossier-view__header-top">
           <h2 className="dossier-view__name">{dossier.name}</h2>
           <div className="dossier-view__header-actions">
+            <DiscussButton componentName="DossierView" onClick={openDialog} size="small" />
             <button
               className="dossier-view__action-btn dossier-view__action-btn--primary"
               onClick={onAnalyze}
@@ -135,6 +150,21 @@ export function DossierView({ dossier, onAnalyze, onDelete }: DossierViewProps) 
           <WidgetRenderer layoutDescriptor={dossier.layoutDescriptor} />
         )}
       </div>
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="DossierView"
+        componentContext={{
+          dossierId: dossier.id,
+          dossierName: dossier.name,
+          status: dossier.status,
+          analysisCount: dossier.analysisCount,
+          targetCount: dossier.targets.length,
+          hasError: !!dossier.error,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }
