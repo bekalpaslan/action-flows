@@ -24,7 +24,8 @@ export type WorkbenchId =
   | 'editor'
   | 'intel'
   | 'respect'
-  | 'canvas';
+  | 'canvas'
+  | 'coverage';
 
 /**
  * All workbench IDs as an array for iteration
@@ -42,6 +43,7 @@ export const WORKBENCH_IDS: readonly WorkbenchId[] = [
   'intel',
   'respect',
   'canvas',
+  'coverage',
 ] as const;
 
 // ============================================================================
@@ -266,6 +268,19 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
     hasNotifications: false,
     notificationCount: 0,
     tooltip: 'Live HTML/CSS preview for design collaboration',
+    routable: false,
+    triggers: [],
+    flows: [],
+    routingExamples: [],
+  },
+  coverage: {
+    id: 'coverage',
+    label: 'Coverage',
+    icon: 'Cg',
+    hasNotifications: true,
+    notificationCount: 0,
+    glowColor: '#00bcd4',
+    tooltip: 'Contract coverage and component health monitoring',
     routable: false,
     triggers: [],
     flows: [],

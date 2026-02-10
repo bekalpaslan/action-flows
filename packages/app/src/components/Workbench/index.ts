@@ -39,3 +39,5 @@ export type { HarmonyWorkbenchProps } from './HarmonyWorkbench';
 export { SettingsWorkbench } from './SettingsWorkbench';
 export { IntelWorkbench } from './IntelWorkbench';
 export type { IntelWorkbenchProps } from './IntelWorkbench';
+export { CoverageWorkbench } from './CoverageWorkbench';
+export type { CoverageWorkbenchProps } from './CoverageWorkbench';

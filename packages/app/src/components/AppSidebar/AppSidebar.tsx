@@ -18,30 +18,23 @@ import './AppSidebar.css';
 
 // Workbench grouping structure
 const WORKBENCH_GROUPS = {
-  dashboard: {
-    id: 'dashboard',
-    label: 'Dashboard',
-    icon: 'D',
-    workbenches: ['work', 'maintenance', 'explore', 'review'] as WorkbenchId[],
+  framework: {
+    id: 'framework',
+    label: 'Framework Tools',
+    icon: '⚙️',
+    workbenches: ['harmony', 'respect', 'intel', 'canvas', 'editor', 'settings'] as WorkbenchId[],
+    defaultExpanded: false,
+  },
+  project: {
+    id: 'project',
+    label: 'Project Work',
+    icon: '📦',
+    workbenches: ['work', 'maintenance', 'explore', 'review', 'pm', 'archive'] as WorkbenchId[],
     defaultExpanded: true,
-  },
-  features: {
-    id: 'features',
-    label: 'Features',
-    icon: 'F',
-    workbenches: ['intel', 'canvas', 'editor'] as WorkbenchId[],
-    defaultExpanded: false,
-  },
-  management: {
-    id: 'management',
-    label: 'Management',
-    icon: 'M',
-    workbenches: ['pm', 'archive', 'harmony', 'respect'] as WorkbenchId[],
-    defaultExpanded: false,
   },
 } as const;
 
-const STANDALONE_WORKBENCHES = ['settings'] as WorkbenchId[];
+const STANDALONE_WORKBENCHES = [] as WorkbenchId[];
 
 const COLLAPSE_STORAGE_KEY = 'afw-sidebar-collapsed';
 const EXPANDED_GROUPS_STORAGE_KEY = 'afw-sidebar-expanded-groups';
@@ -67,10 +60,10 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
       try {
         return new Set(JSON.parse(stored));
       } catch {
-        return new Set(['dashboard']);
+        return new Set(['project']);
       }
     }
-    return new Set(['dashboard']);
+    return new Set(['project']);
   });
 
   // Search state
@@ -305,29 +298,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
                   );
                 })}
               </SidebarNavGroup>
-            );
-          })}
-
-          {/* Divider */}
-          <div className="app-sidebar__divider" />
-
-          {/* Standalone workbenches */}
-          {STANDALONE_WORKBENCHES.map(workbenchId => {
-            if (filteredWorkbenches && !filteredWorkbenches.has(workbenchId)) {
-              return null;
-            }
-
-            const config = DEFAULT_WORKBENCH_CONFIGS[workbenchId];
-            return (
-              <SidebarNavItem
-                key={workbenchId}
-                workbenchId={workbenchId}
-                config={config}
-                isActive={activeWorkbench === workbenchId}
-                isCollapsed={isCollapsed}
-                notificationCount={workbenchNotifications.get(workbenchId) || 0}
-                onClick={() => handleWorkbenchClick(workbenchId)}
-              />
             );
           })}
 

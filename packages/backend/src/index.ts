@@ -31,6 +31,7 @@ import patternsRouter from './routes/patterns.js';
 import registryRouter from './routes/registry.js';
 import harmonyRouter from './routes/harmony.js';
 import routingRouter from './routes/routing.js';
+import contractsRouter from './routes/contracts.js';
 import dossiersRouter, { setBroadcastDossierFunction } from './routes/dossiers.js';
 import suggestionsRouter from './routes/suggestions.js';
 import telemetryRouter from './routes/telemetry.js';
@@ -118,6 +119,7 @@ app.use('/api', patternsRouter);
 app.use('/api/registry', registryRouter);
 app.use('/api/harmony', harmonyRouter);
 app.use('/api/routing', routingRouter);
+app.use('/api/contracts', contractsRouter);
 
 // Serve frontend static files in production (Electron desktop app)
 // Gated behind AFW_SERVE_FRONTEND=true — no effect during normal dev workflow

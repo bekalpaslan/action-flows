@@ -1,0 +1,73 @@
+Contract Coverage Dashboard Architecture Analysis - Summary
+================================================================
+
+INVESTIGATION COMPLETE
+
+Scope: Dashboard architecture for integrating a Contract Coverage Dashboard panel
+
+Key Findings:
+-------------
+
+1. WORKBENCH PATTERN
+   - Workbenches are defined in packages/shared/src/workbenchTypes.ts
+   - Mounted via WorkbenchLayout.tsx switch statement
+   - Grouped in AppSidebar (dashboard/features/management groups)
+   - Pattern: Component + CSS + Contract + Registration in 4 files
+
+2. SIDEBAR NAVIGATION
+   - Collapsible groups: dashboard, features, management
+   - Standalone workbenches: settings
+   - Coverage Dashboard recommended for "management" group
+   - Registration requires 4-file update
+
+3. DATA FLOW
+   - Backend API pattern (Express + Zod validation)
+   - Example: /api/harmony/:sessionId
+   - Custom hooks for data fetching (e.g., useHarmonyMetrics)
+   - WebSocket for real-time updates
+
+4. EXISTING HEALTH CHECK SYSTEM
+   - CLI: pnpm run health:check:ci
+   - Output: JSON with coverage, validation, drift data
+   - Already machine-readable for API consumption
+   - Validation logic in packages/shared/src/contracts/
+
+5. RECOMMENDED APPROACH
+   - Phase 1: Add 'coverage' workbench (5 file changes)
+   - Phase 2: Backend API at /api/contracts/health
+   - Phase 3: UI components (cards, lists, panels)
+   - Follow HarmonyWorkbench pattern
+
+Architecture Decision:
+----------------------
+Backend API + Caching (not frontend-only or direct CLI)
+
+Rationale:
+- Consistent with existing patterns
+- Enables real-time updates via WebSocket
+- Centralized validation logic
+- Fast with caching
+
+Files to Create:
+----------------
+1. packages/app/src/components/Workbench/CoverageWorkbench.tsx
+2. packages/app/src/components/Workbench/CoverageWorkbench.css
+3. packages/app/src/hooks/useCoverageMetrics.ts
+4. packages/backend/src/routes/contracts.ts
+5. packages/app/src/contracts/components/Workbench/CoverageWorkbench.contract.md
+
+Files to Modify:
+----------------
+1. packages/shared/src/workbenchTypes.ts (add WorkbenchId)
+2. packages/app/src/components/AppSidebar/AppSidebar.tsx (add to group)
+3. packages/app/src/components/Workbench/WorkbenchLayout.tsx (add case)
+4. packages/app/src/components/Workbench/index.ts (export)
+5. packages/backend/src/index.ts (register route)
+
+Data Source:
+------------
+pnpm run health:check:ci → JSON output → Backend caches → API serves → Frontend hook → Component renders
+
+Next Steps:
+-----------
+Ready for plan/ action to design detailed component structure, or code/ action to implement Phase 1.

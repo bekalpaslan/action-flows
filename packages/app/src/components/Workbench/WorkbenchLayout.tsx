@@ -14,6 +14,7 @@ import { ExploreWorkbench } from './ExploreWorkbench';
 import { ArchiveWorkbench } from './ArchiveWorkbench';
 import { IntelWorkbench } from './IntelWorkbench';
 import { RespectWorkbench } from './RespectWorkbench/RespectWorkbench';
+import { CoverageWorkbench } from './CoverageWorkbench';
 import { useSessionArchive } from '../../hooks/useSessionArchive';
 import {
   type WorkbenchId,
@@ -575,6 +576,8 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         return <IntelWorkbench />;
       case 'respect':
         return <RespectWorkbench />;
+      case 'coverage':
+        return <CoverageWorkbench />;
       default:
         return (
           <div className="workbench-placeholder">
