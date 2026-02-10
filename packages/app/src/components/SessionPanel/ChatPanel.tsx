@@ -216,9 +216,8 @@ export function ChatPanel({
    */
   useEffect(() => {
     const inputSetter = (message: string) => {
-      setInput(message);
-      // Focus the input field after prefill
-      inputRef.current?.focus();
+      // Add the message directly to the chat conversation
+      addUserMessage(message);
     };
 
     registerChatInput(inputSetter);
@@ -327,13 +326,6 @@ export function ChatPanel({
     }
   }, [getButtonPromptText, handleSendMessage]);
 
-  /**
-   * Handle discuss dialog send - format and send to chat, then close dialog
-   */
-  const handleDiscussDialogSend = useCallback((message: string) => {
-    handleSend(message);
-    closeDialog();
-  }, [handleSend, closeDialog]);
 
 
   /**
@@ -623,7 +615,7 @@ export function ChatPanel({
           sessionStatus: session?.status,
           cliState,
         }}
-        onSend={handleDiscussDialogSend}
+        onSend={handleSend}
         onClose={closeDialog}
       />
     </div>

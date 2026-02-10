@@ -92,8 +92,9 @@ export function DiscussDialog({
   const handleSend = useCallback(() => {
     if (message.trim() && !isSending) {
       onSend(message.trim());
+      onClose();
     }
-  }, [message, isSending, onSend]);
+  }, [message, isSending, onSend, onClose]);
 
   if (!isOpen) return null;
 
