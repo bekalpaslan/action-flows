@@ -11,6 +11,62 @@
 - **Introduced:** 2025-Q4
 - **Description:** Modal form for creating/editing projects with auto-detection.
 
+---
+
+## Render Location
+
+**Mounts Under:**
+- ClaudeCliStartDialog (conditional, replaces dialog when mode is 'add-project' or 'edit-project')
+
+**Render Conditions:**
+1. ClaudeCliStartDialog mode === 'add-project' (for new project creation)
+2. ClaudeCliStartDialog mode === 'edit-project' (for editing existing project)
+
+**Positioning:** fixed
+**Z-Index:** 1001 (overlays ClaudeCliStartDialog)
+
+---
+
+## Lifecycle
+
+**Mount Triggers:**
+- User clicks "Add New Project" button
+- User clicks "Edit Project Settings" button
+
+**Key Effects:**
+None — form state is managed purely via useState hooks, no side effects for lifecycle management.
+
+**Cleanup Actions:**
+- None (component cleans up on unmount naturally)
+
+**Unmount Triggers:**
+- User clicks Cancel button
+- Form successfully saved (onSave + callback to parent)
+
+---
+
+## State Ownership
+
+### Local State
+| State | Type | Initial | Updated By |
+|-------|------|---------|------------|
+| cwd | string | initialData?.cwd \|\| '' | setCwd (input change) |
+| name | string | initialData?.name \|\| '' | setName (input change) |
+| description | string | initialData?.description \|\| '' | setDescription (textarea change) |
+| defaultPromptTemplate | string | initialData?.defaultPromptTemplate \|\| '' | setDefaultPromptTemplate (textarea change) |
+| mcpConfigPath | string | initialData?.mcpConfigPath \|\| '' | setMcpConfigPath (input change) |
+| selectedFlags | string[] | initialData?.defaultCliFlags \|\| [] | handleFlagToggle (checkbox toggle) |
+| detecting | boolean | false | setDetecting (during auto-detect) |
+| detectionResult | ProjectAutoDetectionResult \| null | null | setDetectionResult (from onDetect callback) |
+
+### Context Consumption
+None — uses custom props for all external data
+
+### Derived State
+None — all state is primitive
+
+---
+
 ## Props Contract
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|

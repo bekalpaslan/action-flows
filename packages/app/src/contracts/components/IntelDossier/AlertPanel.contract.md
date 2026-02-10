@@ -16,12 +16,30 @@
 
 ---
 
+## Render Location
+
+Renders as a grid cell within the IntelDossier/DossierView layout container. Positioned based on `span` prop (CSS Grid column span). Typically appears in 2-column or 3-column grid layouts for dossier content visualization.
+
+---
+
+## Lifecycle
+
+Pure render component. No effects or lifecycle hooks. Receives data and renders immediately based on props. No mounting/unmounting side effects.
+
+---
+
 ## Props Contract
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
 | data.alerts | `Array<{severity: 'info'\|'warn'\|'error', message: string}>` | ✅ | Alert list |
 | span | `number` | ✅ | Grid column span |
+
+---
+
+## State Ownership
+
+None — this widget renders from props only. Alert list and messages are passed via `data.alerts` prop; no local state management.
 
 ---
 

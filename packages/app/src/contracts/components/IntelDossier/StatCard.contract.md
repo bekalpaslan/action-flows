@@ -16,6 +16,18 @@
 
 ---
 
+## Render Location
+
+Renders as a grid cell within the IntelDossier/DossierView layout container. Positioned based on `span` prop (CSS Grid column span). Typically displayed in grid layouts (often 2-3 stats per row) to show key metrics.
+
+---
+
+## Lifecycle
+
+Pure render component. No effects or lifecycle hooks. Computes trend icon and CSS class based on trend prop on each render. No side effects on mount/unmount.
+
+---
+
 ## Props Contract
 
 | Prop | Type | Required | Description |
@@ -25,6 +37,12 @@
 | data.trend | `'up' \| 'down' \| 'neutral'` | ❌ | Trend direction |
 | data.unit | `string` | ❌ | Unit suffix (e.g., '%', 'ms') |
 | span | `number` | ✅ | Grid column span (1-3) |
+
+---
+
+## State Ownership
+
+None — this widget renders from props only. Label, value, trend, and unit are passed via `data` prop; no local state management.
 
 ---
 

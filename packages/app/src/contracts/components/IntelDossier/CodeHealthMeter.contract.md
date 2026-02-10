@@ -16,6 +16,18 @@
 
 ---
 
+## Render Location
+
+Renders as a grid cell within the IntelDossier/DossierView layout container. Positioned based on `span` prop (CSS Grid column span). Typically displayed in grid layouts to show code quality metrics.
+
+---
+
+## Lifecycle
+
+Pure render component. No effects or lifecycle hooks. Computes color/status classes dynamically from score prop. No side effects on mount/unmount.
+
+---
+
 ## Props Contract
 
 | Prop | Type | Required | Description |
@@ -23,6 +35,12 @@
 | data.score | `number` | ✅ | Health score 0-100 |
 | data.factors | `Array<{label: string, value: number}>` | ❌ | Factor breakdown list |
 | span | `number` | ✅ | Grid column span |
+
+---
+
+## State Ownership
+
+None — this widget renders from props only. Score and factors are passed via `data` prop; no local state management.
 
 ---
 

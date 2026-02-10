@@ -1,7 +1,7 @@
 # Component Contract: DossierView
 
 **File:** `packages/app/src/components/IntelDossier/DossierView.tsx`
-**Type:** feature
+**Type:** React Component
 **Parent Group:** IntelDossier
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
@@ -13,6 +13,8 @@
 - **Component Name:** DossierView
 - **Introduced:** 2024-Q4 (estimated)
 - **Description:** Full dossier detail view displaying header, metadata, collapsible targets and context sections, and widget layout grid. Shows empty state when dossier hasn't been analyzed yet.
+- **Type:** React Component
+- **Props:** See `DossierViewProps` interface (dossier, onAnalyze, onDelete)
 
 ---
 
@@ -154,6 +156,89 @@
 | Channel | Direction | Purpose |
 |---------|-----------|---------|
 | N/A | N/A | N/A |
+
+---
+
+## Event Handling
+
+### User Interactions
+| Event | Target | Handler | Side Effect |
+|-------|--------|---------|-------------|
+| click | Re-analyze button | `onAnalyze` | Fires parent callback, optionally triggers `useDiscussButton` context |
+| click | Delete button | `onDelete` | Fires parent callback |
+| click | Section header | `setTargetsExpanded` / `setContextExpanded` | Toggles section visibility |
+| click | DiscussButton | `openDialog` | Opens DiscussDialog with dossier context |
+
+### Custom Events
+- None (uses React callbacks and context)
+
+### Delegation to Children
+- WidgetRenderer receives `layoutDescriptor` to render widgets
+- DiscussButton receives context from `useDiscussButton` hook
+
+---
+
+## Accessibility
+
+### ARIA Attributes
+- Collapsible section headers could have `aria-expanded` (not currently implemented)
+- Action buttons have descriptive text ("Re-analyze", "Delete")
+- Status badge provides text label for screen readers
+
+### Keyboard Support
+- All buttons are keyboard accessible via tab
+- Buttons respond to Enter/Space key
+- Collapsible section headers should support arrow keys (not implemented)
+
+### Color & Contrast
+- Status badges use color + text for clarity (not color-only)
+- Action buttons have sufficient contrast and clear hover states
+- Error message section uses color + icon indicators
+
+### Testing Assistance
+- CSS classes follow BEM naming for reliable selection
+- Status values (`pending`, `analyzing`, `completed`, `failed`) available in className
+
+---
+
+## Error Handling
+
+### Error States
+| Scenario | Current Behavior | Recovery |
+|----------|------------------|----------|
+| dossier.error is set | Shows error message section (`.dossier-view__error`) | User clicks Re-analyze to retry |
+| onAnalyze callback fails | Parent should handle and update dossier.status | Status badge shows failure |
+| WidgetRenderer fails | Falls back to unknown widget type | Degrades gracefully |
+| Missing CSS classes | Component renders but styling may be broken | CSS loading failure is non-fatal |
+
+### Error Boundaries
+- No explicit error boundary (relies on parent)
+- Widget rendering is wrapped in try-catch in WidgetRenderer
+- Components degrade gracefully on style failures
+
+---
+
+## Performance Considerations
+
+### Optimization Strategies
+- **useState** for expansion state is local and efficient
+- **useCallback** could be added to handler functions to prevent re-renders
+- **useMemo** could cache formatted dates across renders
+
+### Rendering Efficiency
+- Components render only when dossier prop changes
+- Expansion state is isolated (toggling one section doesn't re-render others)
+- Widget grid uses WidgetRenderer's internal optimization
+
+### Potential Bottlenecks
+- Rendering 20+ widgets in grid could be slow (WidgetRenderer should virtualize)
+- Date formatting runs on every render (could be memoized)
+- Section toggle animation runs on every click (CSS transition, no JS animation)
+
+### Metrics
+- Target: <100ms render after dossier selection
+- Target: <50ms section toggle animation
+- Target: <500ms widget grid layout render (10+ widgets)
 
 ---
 

@@ -16,6 +16,18 @@
 
 ---
 
+## Render Location
+
+Renders as a fixed-position modal overlay above the main DossierView or DossierList component. Backdrop covers full viewport; dialog centered. Positioned via CSS (dossier-creation-dialog-backdrop, dossier-creation-dialog).
+
+---
+
+## Lifecycle
+
+Uses React hooks: `useState` for form state (name, targets, context) and `useCallback` for event handlers (handleSubmit, handleAddTarget, handleRemoveTarget, handleTargetChange). No side effects on mount/unmount — form state initialized via default values. Handlers prevent re-creation on each render.
+
+---
+
 ## Props Contract
 
 ### Inputs

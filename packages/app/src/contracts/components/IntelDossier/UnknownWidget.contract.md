@@ -16,6 +16,18 @@
 
 ---
 
+## Render Location
+
+Renders as a grid cell within the IntelDossier/DossierView layout container (via WidgetRenderer). Used as a fallback when a widget type is not found in WIDGET_REGISTRY. Positioned based on `span` prop (CSS Grid column span).
+
+---
+
+## Lifecycle
+
+Pure render component. No effects or lifecycle hooks. Displays widget type name and JSON stringified data. No side effects on mount/unmount.
+
+---
+
 ## Props Contract
 
 | Prop | Type | Required | Description |
@@ -31,6 +43,12 @@
 - Displays type name with "Unknown Widget: " prefix
 - Renders data as formatted JSON with 2-space indentation
 - Allows developers to see widget data for debugging
+
+---
+
+## State Ownership
+
+None — this widget renders from props only. Type name and data are passed as direct props; no local state management.
 
 ---
 

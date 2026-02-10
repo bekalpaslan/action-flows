@@ -16,6 +16,18 @@
 
 ---
 
+## Render Location
+
+Renders as a grid cell within the IntelDossier/DossierView layout container. Positioned based on `span` prop (CSS Grid column span). Typically displayed in grid layouts to present analysis insights or recommendations.
+
+---
+
+## Lifecycle
+
+Pure render component. No effects or lifecycle hooks. Conditionally renders category badge and confidence bar based on prop availability. No side effects on mount/unmount.
+
+---
+
 ## Props Contract
 
 | Prop | Type | Required | Description |
@@ -24,6 +36,12 @@
 | data.confidence | `number` | ❌ | Confidence percentage 0-100 |
 | data.category | `string` | ❌ | Category label |
 | span | `number` | ✅ | Grid column span |
+
+---
+
+## State Ownership
+
+None — this widget renders from props only. Text, confidence, and category are passed via `data` prop; no local state management.
 
 ---
 

@@ -1,7 +1,7 @@
 # Component Contract: SquadPanel
 
 **File:** `packages/app/src/components/SquadPanel/SquadPanel.tsx`
-**Type:** feature
+**Type:** React Component
 **Parent Group:** Squad
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
@@ -146,6 +146,88 @@ None
 
 ### Electron IPC (if applicable)
 N/A
+
+---
+
+## Event Handling
+
+### User Interactions
+| Event | Target | Handler | Side Effect |
+|-------|--------|---------|-------------|
+| click | AgentRow card | `handleAgentClick` | Toggles expanded agent log panel, fires `onAgentClick` callback |
+| hover | Agent card | `setHoveredAgent` | Updates eye-tracking animation state |
+| contextmenu | Agent card | N/A | Could support right-click menu (not implemented) |
+
+### Custom Events
+- None (uses React callbacks)
+
+### Delegation to Children
+- AgentRow receives `onAgentClick`, `onAgentHover` handlers
+- Passes orchestrator and subagents array for render
+
+---
+
+## Accessibility
+
+### ARIA Attributes
+- `.squad-panel` has `role="region"` and `aria-label="Agent squad panel"`
+- Buttons and cards are keyboard accessible via tab key
+- Agent state changes announced to screen readers via status updates
+
+### Keyboard Support
+- Tab navigation through agent cards
+- Enter/Space to expand/collapse agent log panels
+- Escape to close expanded panels (future implementation)
+
+### Color & Contrast
+- Uses color + icon/text for agent status indication (not color-only)
+- Hover states clearly visible for all interactive elements
+- Dark/light mode support via CSS variables
+
+### Testing Assistance
+- CSS classes follow BEM naming for reliable selection
+- Test IDs could be added to agent rows for accessibility testing
+
+---
+
+## Error Handling
+
+### Error States
+| Scenario | Current Behavior | Recovery |
+|----------|------------------|----------|
+| No agents loaded | Renders `.is-empty` state (minimal panel) | Waits for WebSocket events to populate |
+| WebSocket disconnected | State persists from last successful update | Reconnection handled by WebSocketContext |
+| AgentTracking hook fails | Falls back to empty array | Shows empty state gracefully |
+| CSS/animation missing | Component still renders but no visual effects | Components degrade gracefully |
+
+### Error Boundaries
+- No explicit error boundary (relies on parent's error boundary)
+- Failed animations don't break component functionality
+- Could benefit from adding ErrorBoundary wrapper
+
+---
+
+## Performance Considerations
+
+### Optimization Strategies
+- **useCallback** on `handleAgentClick` to prevent unnecessary re-renders
+- **useMemo** could be added for derived agent lists (orchestrator vs subagents)
+- Agent tracking is lazy (only fetches data when sessionId changes)
+
+### Rendering Efficiency
+- AgentRow renders children only when needed
+- Log panel expansion state is local (doesn't re-render all agents)
+- CSS animations use GPU-accelerated transforms (aura, floating)
+
+### Potential Bottlenecks
+- Eye tracking animation runs on every mouse move (could throttle)
+- Large agent lists (10+) could benefit from virtualization
+- Audio cues (if enabled) could lag on slower devices
+
+### Metrics
+- Target: <50ms first render with orchestrator + 5 subagents
+- Target: <16ms per hover event (for eye tracking)
+- Animation frame rate: 60 FPS
 
 ---
 

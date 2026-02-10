@@ -1,7 +1,7 @@
 # Component Contract: HarmonyPanel
 
 **File:** `packages/app/src/components/HarmonyPanel/HarmonyPanel.tsx`
-**Type:** feature
+**Type:** React Component
 **Parent Group:** Harmony
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
@@ -130,6 +130,88 @@ None
 
 ### Electron IPC (if applicable)
 N/A
+
+---
+
+## Event Handling
+
+### User Interactions
+| Event | Target | Handler | Side Effect |
+|-------|--------|---------|-------------|
+| click | Refresh button | `refresh` | Re-fetches harmony metrics from `/api/harmony/metrics` |
+| click | Violation header | `toggleViolation` | Expands/collapses violation details (`.harmony-violation__details`) |
+| click | DiscussButton | `openDialog` | Opens DiscussDialog with harmony metrics context |
+
+### Custom Events
+- None (uses React callbacks and context)
+
+### Delegation to Children
+- HarmonyBadge receives `percentage`, `showLabel`, `size` props
+- DiscussButton receives context from `useDiscussButton` hook
+
+---
+
+## Accessibility
+
+### ARIA Attributes
+- Semantic HTML structure (no ARIA needed for basic lists/text)
+- Violation headers could have `aria-expanded` (not currently implemented)
+- Loading/error states could have `role="status"` for announcement
+
+### Keyboard Support
+- Refresh button is keyboard accessible (tab navigation, Enter/Space)
+- Violation headers should support arrow keys for expand/collapse (not implemented)
+- Buttons respond to standard keyboard interactions
+
+### Color & Contrast
+- Metric badges use color + icon/text for status (not color-only)
+- Violation severity uses color + text labels
+- Status states have distinct visual representation
+
+### Testing Assistance
+- CSS classes follow BEM naming for reliable selection
+- State classes (`.harmony-panel--loading`, `.harmony-panel--error`) available
+
+---
+
+## Error Handling
+
+### Error States
+| Scenario | Current Behavior | Recovery |
+|----------|------------------|----------|
+| API call fails | Shows `.harmony-panel--error` with error message and Retry button | User clicks Retry to refetch |
+| Metrics is null | Shows `.harmony-panel--empty` with message | Waits for API call or manual refresh |
+| Network timeout | Error state with timeout message | User can retry manually |
+| Invalid target/type | API returns 400 error | Should validate props before calling API |
+
+### Error Boundaries
+- No explicit error boundary (relies on parent HarmonyWorkbench)
+- API errors are caught and displayed in UI
+- Components degrade gracefully on API failure
+
+---
+
+## Performance Considerations
+
+### Optimization Strategies
+- **useState** for `expandedViolation` is efficient (single string state)
+- **useHarmonyMetrics** hook handles data fetching and caching
+- API call is memoized in hook (only runs when target/targetType changes)
+
+### Rendering Efficiency
+- Components render only when metrics state changes
+- Violation expansion state is isolated (toggling one doesn't re-render others)
+- Violation lists use efficient DOM structure
+
+### Potential Bottlenecks
+- Large violation lists (100+) could be slow (should add virtualization)
+- Metrics calculation on backend could be slow (API timeout risk)
+- Badge percentage calculation runs on every render (lightweight, acceptable)
+
+### Metrics
+- Target: <500ms API fetch for harmony metrics
+- Target: <100ms render after metrics loaded
+- Target: <50ms violation toggle animation
 
 ---
 

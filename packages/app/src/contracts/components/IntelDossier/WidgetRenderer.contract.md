@@ -16,11 +16,29 @@
 
 ---
 
+## Render Location
+
+Renders as the main layout container within IntelDossier/DossierView. Wraps all widgets in a CSS Grid container. Layout class applied: `widget-layout widget-layout--{layout}` (e.g., `widget-layout--grid-2col`).
+
+---
+
+## Lifecycle
+
+Pure render component. No effects or lifecycle hooks. Maps layoutDescriptor.widgets array to JSX on each render, looking up components from WIDGET_REGISTRY. No side effects on mount/unmount.
+
+---
+
 ## Props Contract
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
 | layoutDescriptor | `LayoutDescriptor` | ✅ | Contains layout type ('grid-2col', 'grid-3col', 'stack') and widget definitions |
+
+---
+
+## State Ownership
+
+None — computed from props only. Layout type and widget list are derived from `layoutDescriptor` prop; no local state management.
 
 ---
 

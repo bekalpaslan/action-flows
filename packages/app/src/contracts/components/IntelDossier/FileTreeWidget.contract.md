@@ -16,6 +16,18 @@
 
 ---
 
+## Render Location
+
+Renders as a grid cell within the IntelDossier/DossierView layout container. Positioned based on `span` prop (CSS Grid column span). Typically displayed in grid layouts to visualize file structure or codebase organization.
+
+---
+
+## Lifecycle
+
+FileTreeWidget itself is pure (no effects). FileTreeNode child component uses `useState(true)` for local `isExpanded` state, toggled via onClick on node labels. Each node manages its own expansion state independently.
+
+---
+
 ## Props Contract
 
 | Prop | Type | Required | Description |
@@ -26,9 +38,15 @@
 
 ---
 
-## State (per FileTreeNode)
+## State Ownership
 
-- isExpanded: boolean (default: true)
+Per FileTreeNode child: `isExpanded: boolean` (default: true). Parent FileTreeWidget itself is stateless — props only.
+
+---
+
+## Interactions
+
+Clicking on a node label with children toggles its `isExpanded` state, expanding or collapsing its children. Non-leaf nodes (directories with children) display clickable labels; leaf nodes (files) are not interactive.
 
 ---
 
