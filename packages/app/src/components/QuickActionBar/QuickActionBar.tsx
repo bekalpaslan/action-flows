@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import type { SessionId, QuickActionDefinition, SessionLifecycleState, ProjectId } from '@afw/shared';
 import { QuickActionButton } from './QuickActionButton';
 import { useCustomPromptButtons } from '../../hooks/useCustomPromptButtons';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './QuickActionBar.css';
 
 export interface QuickActionBarProps {
@@ -117,6 +119,16 @@ export function QuickActionBar({
     });
   }, [allQuickActions, lastOutput, compiledPatterns]);
 
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'QuickActionBar',
+    getContext: () => ({
+      sessionId,
+      lifecycleState,
+      visibleActionsCount: visibleActions.length,
+      isWaitingForInput,
+    }),
+  });
+
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!manualInputValue.trim() || disabled) return;
@@ -126,41 +138,57 @@ export function QuickActionBar({
   };
 
   return (
-    <div
-      className={`quick-action-bar ${isWaitingForInput ? 'pulse-animation' : ''} ${disabled ? 'disabled' : ''}`}
-      data-session-id={sessionId}
-    >
-      <div className="quick-actions-buttons">
-        {visibleActions.map((action) => (
-          <QuickActionButton
-            key={action.id}
-            label={action.label}
-            icon={action.icon}
-            value={action.value}
-            onClick={onActionClick}
+    <>
+      <div
+        className={`quick-action-bar ${isWaitingForInput ? 'pulse-animation' : ''} ${disabled ? 'disabled' : ''}`}
+        data-session-id={sessionId}
+      >
+        <div className="quick-actions-buttons">
+          {visibleActions.map((action) => (
+            <QuickActionButton
+              key={action.id}
+              label={action.label}
+              icon={action.icon}
+              value={action.value}
+              onClick={onActionClick}
+              disabled={disabled}
+            />
+          ))}
+          <DiscussButton componentName="QuickActionBar" onClick={openDialog} size="small" />
+        </div>
+
+        <form className="manual-input-form" onSubmit={handleManualSubmit}>
+          <input
+            type="text"
+            className="manual-input-field"
+            value={manualInputValue}
+            onChange={(e) => setManualInputValue(e.target.value)}
+            placeholder="Type response..."
             disabled={disabled}
           />
-        ))}
+          <button
+            type="submit"
+            className="manual-input-submit"
+            disabled={disabled || !manualInputValue.trim()}
+            title="Send input"
+          >
+            →
+          </button>
+        </form>
       </div>
 
-      <form className="manual-input-form" onSubmit={handleManualSubmit}>
-        <input
-          type="text"
-          className="manual-input-field"
-          value={manualInputValue}
-          onChange={(e) => setManualInputValue(e.target.value)}
-          placeholder="Type response..."
-          disabled={disabled}
-        />
-        <button
-          type="submit"
-          className="manual-input-submit"
-          disabled={disabled || !manualInputValue.trim()}
-          title="Send input"
-        >
-          →
-        </button>
-      </form>
-    </div>
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="QuickActionBar"
+        componentContext={{
+          sessionId,
+          lifecycleState,
+          visibleActionsCount: visibleActions.length,
+          isWaitingForInput,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
+    </>
   );
 }

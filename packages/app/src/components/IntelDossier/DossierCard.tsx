@@ -10,6 +10,8 @@
  */
 
 import type { IntelDossier } from '@afw/shared';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 
 // ============================================================================
 // Types
@@ -75,46 +77,88 @@ function getStatusLabel(status: IntelDossier['status']): string {
 // ============================================================================
 
 export function DossierCard({ dossier, isSelected, onClick }: DossierCardProps) {
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'DossierCard',
+    getContext: () => ({
+      dossierId: dossier.id,
+      name: dossier.name,
+      status: dossier.status,
+      targetCount: dossier.targets.length,
+      analysisCount: dossier.analysisCount,
+    }),
+  });
+
+  const handleDiscussClick = () => {
+    openDialog();
+  };
+
   return (
-    <button
-      className={`dossier-card ${isSelected ? 'selected' : ''}`}
-      onClick={onClick}
-      type="button"
-      aria-label={`Select dossier: ${dossier.name}`}
-    >
-      {/* Header: Name + Status Dot */}
-      <div className="dossier-card__header">
-        <h3 className="dossier-card__name">{dossier.name}</h3>
-        <span
-          className="dossier-card__status-dot"
-          style={{ backgroundColor: getStatusColor(dossier.status) }}
-          title={getStatusLabel(dossier.status)}
-          aria-label={`Status: ${getStatusLabel(dossier.status)}`}
-        />
-      </div>
-
-      {/* Meta: Target Count + Last Updated */}
-      <div className="dossier-card__meta">
-        <span className="dossier-card__target-count" title={`${dossier.targets.length} target paths`}>
-          {dossier.targets.length} {dossier.targets.length === 1 ? 'target' : 'targets'}
-        </span>
-        <span className="dossier-card__separator">•</span>
-        <span className="dossier-card__updated">{formatRelativeTime(dossier.updatedAt)}</span>
-      </div>
-
-      {/* Analysis Count Badge (if > 0) */}
-      {dossier.analysisCount > 0 && (
-        <div className="dossier-card__badge">
-          {dossier.analysisCount} {dossier.analysisCount === 1 ? 'analysis' : 'analyses'}
+    <>
+      <button
+        className={`dossier-card ${isSelected ? 'selected' : ''}`}
+        onClick={(e) => {
+          // If clicking the DiscussButton, don't trigger card selection
+          if ((e.target as HTMLElement).closest('.discuss-button__trigger')) {
+            return;
+          }
+          onClick();
+        }}
+        type="button"
+        aria-label={`Select dossier: ${dossier.name}`}
+      >
+        {/* Header: Name + Status Dot + Discuss Button */}
+        <div className="dossier-card__header">
+          <h3 className="dossier-card__name">{dossier.name}</h3>
+          <span
+            className="dossier-card__status-dot"
+            style={{ backgroundColor: getStatusColor(dossier.status) }}
+            title={getStatusLabel(dossier.status)}
+            aria-label={`Status: ${getStatusLabel(dossier.status)}`}
+          />
+          <DiscussButton
+            componentName="DossierCard"
+            onClick={handleDiscussClick}
+            size="small"
+          />
         </div>
-      )}
 
-      {/* Error Indicator */}
-      {dossier.error && (
-        <div className="dossier-card__error-indicator" title={dossier.error}>
-          Error: {dossier.error}
+        {/* Meta: Target Count + Last Updated */}
+        <div className="dossier-card__meta">
+          <span className="dossier-card__target-count" title={`${dossier.targets.length} target paths`}>
+            {dossier.targets.length} {dossier.targets.length === 1 ? 'target' : 'targets'}
+          </span>
+          <span className="dossier-card__separator">•</span>
+          <span className="dossier-card__updated">{formatRelativeTime(dossier.updatedAt)}</span>
         </div>
-      )}
-    </button>
+
+        {/* Analysis Count Badge (if > 0) */}
+        {dossier.analysisCount > 0 && (
+          <div className="dossier-card__badge">
+            {dossier.analysisCount} {dossier.analysisCount === 1 ? 'analysis' : 'analyses'}
+          </div>
+        )}
+
+        {/* Error Indicator */}
+        {dossier.error && (
+          <div className="dossier-card__error-indicator" title={dossier.error}>
+            Error: {dossier.error}
+          </div>
+        )}
+      </button>
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="DossierCard"
+        componentContext={{
+          dossierId: dossier.id,
+          name: dossier.name,
+          status: dossier.status,
+          targetCount: dossier.targets.length,
+          analysisCount: dossier.analysisCount,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
+    </>
   );
 }

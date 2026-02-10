@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import type { QuickActionDefinition } from '@afw/shared';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './QuickActionSettings.css';
 
 export interface QuickActionSettingsProps {
@@ -40,6 +42,25 @@ export function QuickActionSettings({
   const [editForm, setEditForm] = useState<Partial<QuickActionDefinition>>({});
   const [isNewUnsaved, setIsNewUnsaved] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+
+  // Track if there are unsaved changes
+  const hasUnsavedChanges = JSON.stringify(actions) !== JSON.stringify(quickActions);
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
+    componentName: 'QuickActionSettings',
+    getContext: () => ({
+      settingsCategory: 'Quick Actions',
+      unsavedChanges: hasUnsavedChanges,
+    }),
+  });
+
+  // Handle discuss dialog send
+  const handleDiscussDialogSend = (message: string) => {
+    const formattedMessage = handleDiscussSend(message);
+    console.log('Discussion message:', formattedMessage);
+    closeDialog();
+  };
 
   const handleAddNew = () => {
     const newAction: QuickActionDefinition = {
@@ -112,6 +133,7 @@ export function QuickActionSettings({
       <div className="quick-action-settings-panel" onClick={(e) => e.stopPropagation()}>
         <div className="settings-header">
           <h2>Quick Action Settings</h2>
+          <DiscussButton componentName="QuickActionSettings" onClick={openDialog} size="small" />
           <button className="settings-close-btn" onClick={onClose} title="Close">
             ×
           </button>
@@ -251,6 +273,18 @@ export function QuickActionSettings({
             Save Changes
           </button>
         </div>
+
+        {/* DiscussDialog */}
+        <DiscussDialog
+          isOpen={isDialogOpen}
+          componentName="QuickActionSettings"
+          componentContext={{
+            settingsCategory: 'Quick Actions',
+            unsavedChanges: hasUnsavedChanges,
+          }}
+          onSend={handleDiscussDialogSend}
+          onClose={closeDialog}
+        />
       </div>
     </div>
   );

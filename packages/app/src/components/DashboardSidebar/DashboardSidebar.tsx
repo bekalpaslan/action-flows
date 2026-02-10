@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './DashboardSidebar.css';
 
 interface MenuItemProps {
@@ -63,6 +65,22 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
 export const DashboardSidebar: React.FC = () => {
   const [isDashboardsExpanded, setIsDashboardsExpanded] = useState(true);
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
+    componentName: 'DashboardSidebar',
+    getContext: () => ({
+      activeView: 'Analytics',
+      pinnedItems: [],
+    }),
+  });
+
+  // Handle discuss dialog send
+  const handleDiscussDialogSend = (message: string) => {
+    const formattedMessage = handleDiscussSend(message);
+    console.log('Discussion message:', formattedMessage);
+    closeDialog();
+  };
 
   // Simple SVG icons
   const DashboardIcon = (
@@ -146,6 +164,7 @@ export const DashboardSidebar: React.FC = () => {
       <div className="dashboard-sidebar__logo">
         <span className="dashboard-sidebar__logo-icon">{LogoIcon}</span>
         <span className="dashboard-sidebar__logo-text">Material Dashboard 2 PRO</span>
+        <DiscussButton componentName="DashboardSidebar" onClick={openDialog} size="small" />
       </div>
 
       <div className="dashboard-sidebar__separator"></div>
@@ -223,6 +242,18 @@ export const DashboardSidebar: React.FC = () => {
         <MenuItem icon={GearIcon} label="Components" isExpandable />
         <MenuItem icon={ChangelogIcon} label="Changelog" />
       </ul>
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="DashboardSidebar"
+        componentContext={{
+          activeView: 'Analytics',
+          pinnedItems: [],
+        }}
+        onSend={handleDiscussDialogSend}
+        onClose={closeDialog}
+      />
     </nav>
   );
 };

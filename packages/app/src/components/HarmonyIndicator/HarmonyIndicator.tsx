@@ -4,6 +4,8 @@
  */
 
 import React from 'react';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './HarmonyIndicator.css';
 
 interface HarmonyIndicatorProps {
@@ -32,11 +34,30 @@ export const HarmonyIndicator: React.FC<HarmonyIndicatorProps> = ({
 
   const title = tooltip || defaultTooltips[status];
 
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'HarmonyIndicator',
+    getContext: () => ({
+      status,
+      tooltip: title,
+    }),
+  });
+
   return (
-    <div className={classes} title={title}>
-      {status === 'valid' && <span className="harmony-indicator__icon">✓</span>}
-      {status === 'degraded' && <span className="harmony-indicator__icon">⚠</span>}
-      {status === 'violation' && <span className="harmony-indicator__icon">✗</span>}
-    </div>
+    <>
+      <div className={classes} title={title}>
+        {status === 'valid' && <span className="harmony-indicator__icon">✓</span>}
+        {status === 'degraded' && <span className="harmony-indicator__icon">⚠</span>}
+        {status === 'violation' && <span className="harmony-indicator__icon">✗</span>}
+        <DiscussButton componentName="HarmonyIndicator" onClick={openDialog} size="small" />
+      </div>
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="HarmonyIndicator"
+        componentContext={{ status, tooltip: title }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
+    </>
   );
 };

@@ -3,6 +3,8 @@ import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { WORKBENCH_IDS, DEFAULT_WORKBENCH_CONFIGS, WorkbenchId } from '@afw/shared';
 import { WorkbenchTab } from './WorkbenchTab';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './TopBar.css';
 
 /**
@@ -18,6 +20,22 @@ interface TopBarProps {
 export function TopBar({ activeWorkbench, onWorkbenchChange }: TopBarProps) {
   const { status, error } = useWebSocketContext();
   const { workbenchNotifications } = useWorkbenchContext();
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
+    componentName: 'TopBar',
+    getContext: () => ({
+      activeTab: activeWorkbench,
+      workbenchType: DEFAULT_WORKBENCH_CONFIGS[activeWorkbench].label,
+    }),
+  });
+
+  // Handle discuss dialog send
+  const handleDiscussDialogSend = (message: string) => {
+    const formattedMessage = handleDiscussSend(message);
+    console.log('Discussion message:', formattedMessage);
+    closeDialog();
+  };
 
   // Get status display text
   const getStatusText = (): string => {
@@ -70,6 +88,7 @@ export function TopBar({ activeWorkbench, onWorkbenchChange }: TopBarProps) {
       </nav>
 
       <div className="top-bar-status">
+        <DiscussButton componentName="TopBar" onClick={openDialog} size="small" />
         <ThemeToggle />
         <div className={`status ${getStatusClass()}`} role="status" aria-live="polite">
           <span className="status-text">
@@ -78,6 +97,18 @@ export function TopBar({ activeWorkbench, onWorkbenchChange }: TopBarProps) {
           </span>
         </div>
       </div>
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="TopBar"
+        componentContext={{
+          activeTab: activeWorkbench,
+          workbenchType: DEFAULT_WORKBENCH_CONFIGS[activeWorkbench].label,
+        }}
+        onSend={handleDiscussDialogSend}
+        onClose={closeDialog}
+      />
     </header>
   );
 }

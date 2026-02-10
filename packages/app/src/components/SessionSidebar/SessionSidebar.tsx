@@ -1,6 +1,8 @@
 import { useSessionSidebar } from '../../hooks/useSessionSidebar';
 import { SessionSidebarItem } from './SessionSidebarItem';
 import type { SessionId } from '@afw/shared';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './SessionSidebar.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -45,6 +47,23 @@ export function SessionSidebar({
     attachSession,
   } = useSessionSidebar(onAttachSession);
 
+  // Filter recent sessions that aren't already in active sessions
+  const uniqueRecentSessions = recentSessions.filter(
+    (recent) => !activeSessions.some((active) => active.id === recent.id)
+  );
+
+  // Total session count (deduplicated)
+  const totalCount = activeSessions.length + uniqueRecentSessions.length;
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
+    componentName: 'SessionSidebar',
+    getContext: () => ({
+      sessionCount: totalCount,
+      activeSession: activeSessionId,
+    }),
+  });
+
   // Handle session click
   const handleSessionClick = (sessionId: SessionId) => {
     attachSession(sessionId);
@@ -80,13 +99,13 @@ export function SessionSidebar({
     }
   };
 
-  // Filter recent sessions that aren't already in active sessions
-  const uniqueRecentSessions = recentSessions.filter(
-    (recent) => !activeSessions.some((active) => active.id === recent.id)
-  );
-
-  // Total session count (deduplicated)
-  const totalCount = activeSessions.length + uniqueRecentSessions.length;
+  // Handle discuss dialog send
+  const handleDiscussDialogSend = (message: string) => {
+    const formattedMessage = handleDiscussSend(message);
+    console.log('Discussion message:', formattedMessage);
+    // For now, just log the message (can be extended to send to chat, etc.)
+    closeDialog();
+  };
 
   return (
     <aside
@@ -99,6 +118,7 @@ export function SessionSidebar({
           📋
         </div>
         <h2 className="sidebar-title">Sessions</h2>
+        <DiscussButton componentName="SessionSidebar" onClick={openDialog} size="small" />
         <button
           className="sidebar-new-session-btn"
           onClick={(e) => {
@@ -171,6 +191,18 @@ export function SessionSidebar({
           {totalCount} {totalCount === 1 ? 'session' : 'sessions'}
         </span>
       </div>
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="SessionSidebar"
+        componentContext={{
+          sessionCount: totalCount,
+          activeSession: activeSessionId,
+        }}
+        onSend={handleDiscussDialogSend}
+        onClose={closeDialog}
+      />
     </aside>
   );
 }
