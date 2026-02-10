@@ -1,0 +1,130 @@
+name: Contract Validation
+
+# TODO: Set continue-on-error: false once all contracts pass validation
+# Currently all 100 contracts fail validation - this workflow is non-blocking for now
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - 'packages/app/src/contracts/**/*.contract.md'
+      - 'packages/shared/src/contracts/**'
+      - 'scripts/health-check*.ts'
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - 'packages/app/src/contracts/**/*.contract.md'
+      - 'packages/shared/src/contracts/**'
+      - 'scripts/health-check*.ts'
+
+jobs:
+  validate-contracts:
+    runs-on: ubuntu-latest
+    # Non-blocking mode - allows workflow to complete even if contracts fail
+    continue-on-error: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm -F @afw/shared build
+        # Shared package must be built first since health check imports from it
+
+      - name: Run contract health check
+        id: health-check
+        run: |
+          pnpm run health:check:ci > contract-report.json || echo "validation_failed=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Parse validation results
+        id: parse-results
+        if: always()
+        run: |
+          if [ -f contract-report.json ]; then
+            ERROR_COUNT=$(jq -r '.summary.errorContracts' contract-report.json)
+            WARNING_COUNT=$(jq -r '.summary.warningContracts' contract-report.json)
+            VALID_COUNT=$(jq -r '.summary.validContracts' contract-report.json)
+            COVERAGE=$(jq -r '.summary.componentCoverage' contract-report.json)
+            echo "errors=$ERROR_COUNT" >> $GITHUB_OUTPUT
+            echo "warnings=$WARNING_COUNT" >> $GITHUB_OUTPUT
+            echo "valid=$VALID_COUNT" >> $GITHUB_OUTPUT
+            echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+          else
+            echo "errors=unknown" >> $GITHUB_OUTPUT
+            echo "warnings=unknown" >> $GITHUB_OUTPUT
+            echo "valid=unknown" >> $GITHUB_OUTPUT
+            echo "coverage=unknown" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload contract report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-health-report
+          path: contract-report.json
+          retention-days: 30
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            if (!fs.existsSync('contract-report.json')) {
+              const body = `## Contract Validation - Error ❌
+
+              Failed to generate contract report. Check workflow logs for details.`;
+
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+              return;
+            }
+
+            const report = JSON.parse(fs.readFileSync('contract-report.json', 'utf8'));
+            const { errorContracts, warningContracts, validContracts, componentCoverage } = report.summary;
+
+            const status = errorContracts === 0 ? '✅' : '⚠️';
+            const mode = errorContracts > 0 ? '(Non-blocking mode)' : '';
+
+            const body = `## Contract Validation ${status} ${mode}
+
+            | Metric | Value |
+            |--------|-------|
+            | ✅ Valid | ${validContracts} |
+            | ⚠️ Warnings | ${warningContracts} |
+            | ❌ Errors | ${errorContracts} |
+            | 📊 Coverage | ${componentCoverage}% |
+
+            ${errorContracts > 0 ? '> **Note:** Contract validation is currently in non-blocking mode. These errors will become blocking once all contracts pass validation.\n\n' : ''}
+            [View detailed report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
