@@ -58,6 +58,14 @@ export function useChatMessages(sessionId: SessionId) {
   }, [sessionId, subscribe, unsubscribe]);
 
   /**
+   * Clear messages when session changes
+   */
+  useEffect(() => {
+    setMessages([]);
+    seenIdsRef.current.clear();
+  }, [sessionId]);
+
+  /**
    * Listen for WebSocket events
    */
   useEffect(() => {
