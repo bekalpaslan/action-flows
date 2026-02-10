@@ -77,15 +77,6 @@
         "to": "backend/package.json"
       },
       {
-        "from": "../shared/dist",
-        "to": "backend/node_modules/@afw/shared/dist",
-        "filter": ["**/*"]
-      },
-      {
-        "from": "../shared/package.json",
-        "to": "backend/node_modules/@afw/shared/package.json"
-      },
-      {
         "from": "dist",
         "to": "app-dist",
         "filter": ["**/*"]
@@ -93,7 +84,7 @@
     ],
     "directories": {
       "buildResources": "public",
-      "output": "dist"
+      "output": "release"
     },
     "compression": "maximum",
     "win": {
