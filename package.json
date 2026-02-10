@@ -22,6 +22,7 @@
     "test:pw:report": "playwright show-report",
     "health:check": "tsx scripts/health-check.ts",
     "health:check:ci": "tsx scripts/health-check-ci.ts",
+    "generate:tests": "tsx scripts/generate-test-scaffolds.ts",
     "build:desktop": "pnpm -F @afw/shared build && pnpm -F @afw/backend build && pnpm -F @afw/app electron-build:win"
   },
   "workspaces": [

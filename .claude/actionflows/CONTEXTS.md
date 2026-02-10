@@ -139,6 +139,7 @@ These contexts receive content automatically — not routed by user intent.
 | "check test coverage" / "coverage gaps" | review | test-coverage/ |
 | "audit harmony" / "check contract" / "backwards harmony" | review | backwards-harmony-audit/ |
 | "test CLI" / "CLI integration tests" / "run CLI tests" | review | cli-integration-test/ |
+| "behavioral contracts" / "component contracts" / "contract index" | review | contract-index/ |
 | "I have an idea" / "brainstorm X" | explore | ideation/ |
 | "let's think about X" / "ideation" | explore | ideation/ |
 | "create dossier" / "intel on X" | intel | intel-analysis/ |

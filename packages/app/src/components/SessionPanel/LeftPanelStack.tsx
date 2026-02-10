@@ -69,7 +69,6 @@ export const LeftPanelStack: React.FC<LeftPanelStackProps> = ({
         <ChatPanel
           sessionId={session.id}
           session={session}
-          onSendMessage={handleSendMessage}
           collapsible
         />
       </div>

@@ -32,6 +32,7 @@
 | backwards-harmony-audit/ | Audit contract harmony from frontend backwards | analyze×3 (parallel) → audit → second-opinion/ |
 | cli-integration-test/ | Systematic CLI integration testing | analyze → code → test → review |
 | e2e-chrome-mcp/ | Chrome MCP browser E2E test creation and execution | analyze → plan → human gate → code → chrome-mcp-test → review |
+| contract-index/ | Create/update behavioral contract specifications for components | analyze → plan → human gate → code×N → review → commit |
 
 ## settings
 
