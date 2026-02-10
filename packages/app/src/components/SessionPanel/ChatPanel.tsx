@@ -24,6 +24,8 @@ import { usePromptButtons } from '../../hooks/usePromptButtons';
 import { claudeCliService } from '../../services/claudeCliService';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import type { PromptButton } from '../../services/promptButtonSelector';
 import './ChatPanel.css';
 
@@ -406,7 +408,9 @@ export function ChatPanel({
         )}
 
         {/* Message content */}
-        <div className="chat-bubble__content">{msg.content}</div>
+        <div className="chat-bubble__content">
+          <ReactMarkdown rehypePlugins={[rehypeRaw]}>{msg.content}</ReactMarkdown>
+        </div>
 
         {/* Metadata footer */}
         <div className="chat-bubble__metadata">
