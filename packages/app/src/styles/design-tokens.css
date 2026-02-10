@@ -467,6 +467,72 @@
   --status-info-text: #0a84ff;
 
   /* ==========================================================================
+     Semantic Color Tokens for Components
+     ========================================================================== */
+
+  /* Success/Added color palette */
+  --semantic-success: #32d74b;
+  --semantic-success-bg-light: #e8f5e9;
+  --semantic-success-bg-light-opacity: rgba(34, 197, 94, 0.15);
+  --semantic-success-border-light: #a5d6a7;
+  --semantic-success-text-light: #1b5e20;
+  --semantic-success-text-light-dark: #003300;
+  --semantic-success-bg-dark: #1b5e20;
+  --semantic-success-border-dark: #2e7d32;
+  --semantic-success-text-dark: #e8f5e9;
+
+  /* Error/Deleted/Warning color palette */
+  --semantic-error: #ef4444;
+  --semantic-error-dark: #ff453a;
+  --semantic-error-reduced: #dc2626;
+  --semantic-error-bg-light: rgba(239, 68, 68, 0.15);
+  --semantic-error-border-light: rgba(239, 68, 68, 0.3);
+  --semantic-error-border-light-dark: rgba(239, 68, 68, 0.5);
+
+  /* Info/Modified color palette */
+  --semantic-info: #3b82f6;
+  --semantic-info-bg-light: rgba(59, 130, 246, 0.15);
+
+  /* Blue/OpenSpec color palette (light mode) */
+  --semantic-blue-light-bg: #e3f2fd;
+  --semantic-blue-light-text: #1565c0;
+  --semantic-blue-light-border: #90caf9;
+  --semantic-blue-light-hover-bg: #bbdefb;
+  --semantic-blue-light-hover-border: #64b5f6;
+  --semantic-blue-light-inferred: #0d47a1;
+  --semantic-blue-dark-bg: #0d47a1;
+  --semantic-blue-dark-text: #e3f2fd;
+  --semantic-blue-dark-border: #1976d2;
+  --semantic-blue-dark-hover-bg: #1565c0;
+  --semantic-blue-dark-hover-border: #1e88e5;
+
+  /* Purple/Code-Review color palette (light mode) */
+  --semantic-purple-light-bg: #f3e5f5;
+  --semantic-purple-light-text: #6a1b9a;
+  --semantic-purple-light-border: #ce93d8;
+  --semantic-purple-light-hover-bg: #e1bee7;
+  --semantic-purple-light-hover-border: #ba68c8;
+  --semantic-purple-light-inferred: #4a148c;
+  --semantic-purple-dark-bg: #4a148c;
+  --semantic-purple-dark-text: #f3e5f5;
+  --semantic-purple-dark-border: #7b1fa2;
+  --semantic-purple-dark-hover-bg: #6a1b9a;
+  --semantic-purple-dark-hover-border: #8e24aa;
+
+  /* Orange/Audit color palette (light mode) */
+  --semantic-orange-light-bg: #fff3e0;
+  --semantic-orange-light-text: #e65100;
+  --semantic-orange-light-border: #ffe0b2;
+  --semantic-orange-light-hover-bg: #ffe0b2;
+  --semantic-orange-light-hover-border: #ffcc80;
+  --semantic-orange-light-inferred: #bf360c;
+  --semantic-orange-dark-bg: #bf360c;
+  --semantic-orange-dark-text: #fff3e0;
+  --semantic-orange-dark-border: #e65100;
+  --semantic-orange-dark-hover-bg: #d84315;
+  --semantic-orange-dark-hover-border: #ff6f00;
+
+  /* ==========================================================================
      Opacity Scale
      ========================================================================== */
 
@@ -483,4 +549,53 @@
   --opacity-90: 0.9;
   --opacity-95: 0.95;
   --opacity-100: 1;
+
+  /* ==========================================================================
+     Neutral/Gray Badge Colors — for idle/neutral status indicators
+     ========================================================================== */
+
+  --semantic-neutral-bg-light: rgba(156, 163, 175, 0.15);
+  --semantic-neutral-border-light: rgba(156, 163, 175, 0.3);
+  --semantic-neutral-text: #98989d;
+
+  /* ==========================================================================
+     Overlay & Background Colors — for modals, dialogs, overlays
+     ========================================================================== */
+
+  --overlay-dark-50: rgba(0, 0, 0, 0.5);
+  --overlay-dark-20: rgba(0, 0, 0, 0.2);
+
+  /* ==========================================================================
+     Component Hover State Colors — for button hover backgrounds
+     ========================================================================== */
+
+  --btn-hover-warning-light: rgba(255, 159, 10, 0.1);
+  --btn-hover-success-light: rgba(50, 215, 75, 0.1);
+  --btn-hover-error-light: rgba(255, 69, 58, 0.1);
+
+  /* ==========================================================================
+     Animation Glow Colors — for pulsing status indicators
+     ========================================================================== */
+
+  --glow-success-60: rgba(34, 197, 94, 0.6);
+  --glow-success-80: rgba(34, 197, 94, 0.8);
+  --glow-warning-60: rgba(234, 179, 8, 0.6);
+  --glow-warning-80: rgba(234, 179, 8, 0.8);
+
+  /* ==========================================================================
+     Error State Variants — for change preview delete backgrounds
+     ========================================================================== */
+
+  --semantic-error-bg-ultra-light: rgba(239, 68, 68, 0.08);
+  --semantic-error-bg-very-light: rgba(239, 68, 68, 0.1);
+  --semantic-error-border-light-10: rgba(239, 68, 68, 0.2);
+  --semantic-error-border-medium: rgba(239, 68, 68, 0.5);
+
+  /* ==========================================================================
+     Success State Variants — for change preview add backgrounds
+     ========================================================================== */
+
+  --semantic-success-bg-ultra-light: rgba(34, 197, 94, 0.08);
+  --semantic-success-bg-very-light: rgba(34, 197, 94, 0.1);
+  --semantic-success-border-light-10: rgba(34, 197, 94, 0.2);
 }

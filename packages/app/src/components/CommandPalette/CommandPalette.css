@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-dark-50);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,10 +15,10 @@
 
 /* Modal container */
 .command-palette-modal {
-  background-color: #1e1e1e;
-  border: 1px solid #404040;
+  background-color: var(--app-bg-secondary, #2c2c2e);
+  border: var(--panel-border-default);
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--panel-glow-default);
   width: 100%;
   max-width: 600px;
   max-height: 500px;

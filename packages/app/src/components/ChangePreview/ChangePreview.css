@@ -44,18 +44,18 @@
 }
 
 .summary-additions {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: var(--semantic-success-bg-light-opacity);
+  color: var(--semantic-success);
 }
 
 .summary-modifications {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
+  background: var(--semantic-info-bg-light);
+  color: var(--semantic-info);
 }
 
 .summary-removals {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
+  background: var(--semantic-error-bg-light);
+  color: var(--semantic-error);
 }
 
 .summary-total {
@@ -70,8 +70,8 @@
   align-items: center;
   gap: 10px;
   padding: 12px;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: var(--status-error-bg);
+  border: 1px solid var(--status-error-border);
   border-radius: 6px;
 }
 
@@ -81,7 +81,7 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  background: #ef4444;
+  background: var(--semantic-error);
   color: white;
   border-radius: 50%;
   font-size: 14px;
@@ -91,7 +91,7 @@
 
 .warning-text {
   font-size: 13px;
-  color: #ef4444;
+  color: var(--semantic-error);
   font-weight: 500;
 }
 
@@ -154,11 +154,11 @@
 }
 
 .change-item.change-destructive {
-  border-color: rgba(239, 68, 68, 0.5);
+  border-color: var(--semantic-error-border-light-dark);
 }
 
 .change-item.change-destructive:hover {
-  border-color: #ef4444;
+  border-color: var(--semantic-error);
 }
 
 /* Change header */
@@ -195,18 +195,18 @@
 }
 
 .change-icon-create {
-  background: rgba(34, 197, 94, 0.2);
-  color: #22c55e;
+  background: var(--semantic-success-bg-light-opacity);
+  color: var(--semantic-success);
 }
 
 .change-icon-delete {
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  background: var(--semantic-error-border-light-10);
+  color: var(--semantic-error);
 }
 
 .change-icon-modify {
-  background: rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
+  background: var(--semantic-info-bg-light);
+  color: var(--semantic-info);
 }
 
 /* Change info */
@@ -248,18 +248,18 @@
 }
 
 .change-badge-create {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: var(--semantic-success-bg-light-opacity);
+  color: var(--semantic-success);
 }
 
 .change-badge-delete {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
+  background: var(--semantic-error-bg-light);
+  color: var(--semantic-error);
 }
 
 .change-badge-modify {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
+  background: var(--semantic-info-bg-light);
+  color: var(--semantic-info);
 }
 
 /* Destructive badge */
@@ -270,7 +270,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  background: #ef4444;
+  background: var(--semantic-error);
   color: white;
   flex-shrink: 0;
 }
@@ -318,11 +318,11 @@
 }
 
 .value-removed .value-label {
-  color: #ef4444;
+  color: var(--semantic-error);
 }
 
 .value-added .value-label {
-  color: #22c55e;
+  color: var(--semantic-success);
 }
 
 .value-content {
@@ -339,17 +339,17 @@
 }
 
 .value-removed .value-content {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
+  background: var(--semantic-error-bg-very-light);
+  border: 1px solid var(--semantic-error-border-light-10);
+  color: var(--status-error-text);
   text-decoration: line-through;
-  text-decoration-color: rgba(239, 68, 68, 0.5);
+  text-decoration-color: var(--semantic-error-border-medium);
 }
 
 .value-added .value-content {
-  background: rgba(34, 197, 94, 0.1);
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  color: #86efac;
+  background: var(--semantic-success-bg-very-light);
+  border: 1px solid var(--semantic-success-border-light-10);
+  color: var(--status-success-text);
 }
 
 /* Footer with action buttons */
@@ -397,17 +397,17 @@
   background: var(--accent-color-dark);
   border-color: var(--accent-color-dark);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px var(--overlay-dark-20);
 }
 
 .confirm-btn.confirm-destructive {
-  background: #ef4444;
-  border-color: #ef4444;
+  background: var(--semantic-error);
+  border-color: var(--semantic-error);
 }
 
 .confirm-btn.confirm-destructive:hover:not(:disabled) {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: var(--semantic-error-reduced);
+  border-color: var(--semantic-error-reduced);
 }
 
 .cancel-btn:disabled,
@@ -493,10 +493,25 @@
 /* Dark mode enhancements (if needed) */
 @media (prefers-color-scheme: dark) {
   .value-removed .value-content {
-    background: rgba(239, 68, 68, 0.08);
+    background: var(--semantic-error-bg-ultra-light);
   }
 
   .value-added .value-content {
-    background: rgba(34, 197, 94, 0.08);
+    background: var(--semantic-success-bg-ultra-light);
+  }
+
+  .summary-additions {
+    background: var(--status-success-bg);
+    color: var(--status-success-text);
+  }
+
+  .summary-removals {
+    background: var(--status-error-bg);
+    color: var(--status-error-text);
+  }
+
+  .summary-modifications {
+    background: var(--status-info-bg);
+    color: var(--status-info-text);
   }
 }

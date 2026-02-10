@@ -2,8 +2,8 @@
   max-height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
-  background: #1a1a1a;
-  border-top: 1px solid #333;
+  background: var(--app-bg-primary, #1c1c1e);
+  border-top: 1px solid var(--panel-border-color-subtle, rgba(100, 160, 255, 0.18));
 }
 
 .command-palette-results::-webkit-scrollbar {
@@ -11,16 +11,16 @@
 }
 
 .command-palette-results::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: var(--app-bg-primary, #1c1c1e);
 }
 
 .command-palette-results::-webkit-scrollbar-thumb {
-  background: #444;
+  background: var(--fill-tertiary, rgba(118, 118, 128, 0.24));
   border-radius: 4px;
 }
 
 .command-palette-results::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--fill-secondary, rgba(120, 120, 128, 0.32));
 }
 
 .command-palette-group {
@@ -36,9 +36,9 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #888;
-  background: #1a1a1a;
-  border-bottom: 1px solid #2a2a2a;
+  color: var(--text-tertiary, #636366);
+  background: var(--app-bg-primary, #1c1c1e);
+  border-bottom: 1px solid var(--panel-border-color-subtle, rgba(100, 160, 255, 0.18));
 }
 
 .command-palette-item {
@@ -52,12 +52,12 @@
 }
 
 .command-palette-item:hover {
-  background: #2a2a2a;
+  background: var(--fill-tertiary, rgba(118, 118, 128, 0.24));
 }
 
 .command-palette-item.selected {
-  background: #3a3a3a;
-  border-left-color: #0078d4;
+  background: var(--fill-secondary, rgba(120, 120, 128, 0.32));
+  border-left-color: var(--system-blue, #0a84ff);
 }
 
 .command-palette-item-left {
@@ -88,7 +88,7 @@
 .command-palette-item-title {
   font-size: 14px;
   font-weight: 500;
-  color: #e0e0e0;
+  color: var(--text-primary, #ffffff);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -96,7 +96,7 @@
 
 .command-palette-item-description {
   font-size: 12px;
-  color: #999;
+  color: var(--text-secondary, #98989d);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -106,22 +106,22 @@
   padding: 4px 8px;
   font-size: 11px;
   font-family: 'Segoe UI', system-ui, sans-serif;
-  color: #aaa;
-  background: #2a2a2a;
-  border: 1px solid #444;
+  color: var(--text-secondary, #98989d);
+  background: var(--fill-tertiary, rgba(118, 118, 128, 0.24));
+  border: 1px solid var(--panel-border-color-subtle, rgba(100, 160, 255, 0.18));
   border-radius: 4px;
   flex-shrink: 0;
   margin-left: 12px;
 }
 
 .command-palette-item.selected .command-palette-item-shortcut {
-  background: #4a4a4a;
-  border-color: #555;
+  background: var(--fill-secondary, rgba(120, 120, 128, 0.32));
+  border-color: var(--panel-border-color-default, rgba(100, 160, 255, 0.30));
 }
 
 .command-palette-empty {
   padding: 24px 12px;
   text-align: center;
-  color: #888;
+  color: var(--text-tertiary, #636366);
   font-size: 14px;
 }

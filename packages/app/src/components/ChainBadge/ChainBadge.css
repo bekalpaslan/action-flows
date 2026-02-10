@@ -18,7 +18,7 @@
 
 .chain-badge:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-sm);
 }
 
 .chain-badge[role='button'] {
@@ -44,7 +44,7 @@
   opacity: 0.7;
   padding: 0.1rem 0.3rem;
   border-radius: 0.2rem;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--glass-bg-light);
 }
 
 /* Change ID indicator */
@@ -59,120 +59,120 @@
 
 /* OpenSpec badge */
 .chain-badge.chain-type-openspec {
-  background-color: #e3f2fd;
-  color: #1565c0;
-  border: 1px solid #90caf9;
+  background-color: var(--semantic-blue-light-bg);
+  color: var(--semantic-blue-light-text);
+  border: 1px solid var(--semantic-blue-light-border);
 }
 
 .chain-badge.chain-type-openspec:hover {
-  background-color: #bbdefb;
-  border-color: #64b5f6;
+  background-color: var(--semantic-blue-light-hover-bg);
+  border-color: var(--semantic-blue-light-hover-border);
 }
 
 .chain-badge.chain-type-openspec .badge-inferred {
-  background-color: rgba(255, 255, 255, 0.5);
-  color: #0d47a1;
+  background-color: var(--glass-bg-light);
+  color: var(--semantic-blue-light-inferred);
 }
 
 /* Code Review badge */
 .chain-badge.chain-type-code-review {
-  background-color: #f3e5f5;
-  color: #6a1b9a;
-  border: 1px solid #ce93d8;
+  background-color: var(--semantic-purple-light-bg);
+  color: var(--semantic-purple-light-text);
+  border: 1px solid var(--semantic-purple-light-border);
 }
 
 .chain-badge.chain-type-code-review:hover {
-  background-color: #e1bee7;
-  border-color: #ba68c8;
+  background-color: var(--semantic-purple-light-hover-bg);
+  border-color: var(--semantic-purple-light-hover-border);
 }
 
 .chain-badge.chain-type-code-review .badge-inferred {
-  background-color: rgba(255, 255, 255, 0.5);
-  color: #4a148c;
+  background-color: var(--glass-bg-light);
+  color: var(--semantic-purple-light-inferred);
 }
 
 /* Audit badge */
 .chain-badge.chain-type-audit {
-  background-color: #fff3e0;
-  color: #e65100;
-  border: 1px solid #ffe0b2;
+  background-color: var(--semantic-orange-light-bg);
+  color: var(--semantic-orange-light-text);
+  border: 1px solid var(--semantic-orange-light-border);
 }
 
 .chain-badge.chain-type-audit:hover {
-  background-color: #ffe0b2;
-  border-color: #ffcc80;
+  background-color: var(--semantic-orange-light-hover-bg);
+  border-color: var(--semantic-orange-light-hover-border);
 }
 
 .chain-badge.chain-type-audit .badge-inferred {
-  background-color: rgba(255, 255, 255, 0.5);
-  color: #bf360c;
+  background-color: var(--glass-bg-light);
+  color: var(--semantic-orange-light-inferred);
 }
 
 /* Test badge */
 .chain-badge.chain-type-test {
-  background-color: #e8f5e9;
-  color: #1b5e20;
-  border: 1px solid #a5d6a7;
+  background-color: var(--semantic-success-bg-light);
+  color: var(--semantic-success-text-light);
+  border: 1px solid var(--semantic-success-border-light);
 }
 
 .chain-badge.chain-type-test:hover {
-  background-color: #c8e6c9;
-  border-color: #81c784;
+  background-color: var(--semantic-success-bg-light);
+  border-color: var(--semantic-success-border-light);
 }
 
 .chain-badge.chain-type-test .badge-inferred {
-  background-color: rgba(255, 255, 255, 0.5);
-  color: #003300;
+  background-color: var(--glass-bg-light);
+  color: var(--semantic-success-text-light-dark);
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .chain-badge {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-sm);
   }
 
   .chain-badge.chain-type-openspec {
-    background-color: #0d47a1;
-    color: #e3f2fd;
-    border-color: #1976d2;
+    background-color: var(--semantic-blue-dark-bg);
+    color: var(--semantic-blue-dark-text);
+    border-color: var(--semantic-blue-dark-border);
   }
 
   .chain-badge.chain-type-openspec:hover {
-    background-color: #1565c0;
-    border-color: #1e88e5;
+    background-color: var(--semantic-blue-dark-hover-bg);
+    border-color: var(--semantic-blue-dark-hover-border);
   }
 
   .chain-badge.chain-type-code-review {
-    background-color: #4a148c;
-    color: #f3e5f5;
-    border-color: #7b1fa2;
+    background-color: var(--semantic-purple-dark-bg);
+    color: var(--semantic-purple-dark-text);
+    border-color: var(--semantic-purple-dark-border);
   }
 
   .chain-badge.chain-type-code-review:hover {
-    background-color: #6a1b9a;
-    border-color: #8e24aa;
+    background-color: var(--semantic-purple-dark-hover-bg);
+    border-color: var(--semantic-purple-dark-hover-border);
   }
 
   .chain-badge.chain-type-audit {
-    background-color: #bf360c;
-    color: #fff3e0;
-    border-color: #e65100;
+    background-color: var(--semantic-orange-dark-bg);
+    color: var(--semantic-orange-dark-text);
+    border-color: var(--semantic-orange-dark-border);
   }
 
   .chain-badge.chain-type-audit:hover {
-    background-color: #d84315;
-    border-color: #ff6f00;
+    background-color: var(--semantic-orange-dark-hover-bg);
+    border-color: var(--semantic-orange-dark-hover-border);
   }
 
   .chain-badge.chain-type-test {
-    background-color: #1b5e20;
-    color: #e8f5e9;
-    border-color: #2e7d32;
+    background-color: var(--semantic-success-bg-dark);
+    color: var(--semantic-success-text-dark);
+    border-color: var(--semantic-success-border-dark);
   }
 
   .chain-badge.chain-type-test:hover {
-    background-color: #388e3c;
-    border-color: #43a047;
+    background-color: var(--semantic-success-bg-dark);
+    border-color: var(--semantic-success-border-dark);
   }
 }
 
