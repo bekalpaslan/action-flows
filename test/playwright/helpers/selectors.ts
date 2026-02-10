@@ -21,6 +21,11 @@ export const SELECTORS = {
   chatSendBtn: '.chat-panel__send-btn',
   chatMessages: '.chat-panel__messages',
   chatInfoBar: '.chat-panel__info-bar',
+
+  // Dashboard
+  dashboardHeading: 'h1:has-text("Work Dashboard")',
+  sessionInfoBar: '.chat-panel__info-bar', // Contains session ID and metadata
+  sessionIdInInfoBar: '.chat-panel__info-bar', // Session ID displayed in info bar
 } as const;
 
 /**

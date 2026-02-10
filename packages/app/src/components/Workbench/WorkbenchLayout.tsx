@@ -511,6 +511,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         return (
           <WorkWorkbench
             sessions={attachedSessions}
+            activeSessionId={activeSessionId}
             onSessionClose={handleSessionClose}
             onSessionDetach={handleSessionDetach}
             onSessionInput={handleSessionInput}

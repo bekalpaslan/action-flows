@@ -22,6 +22,9 @@ export interface WorkWorkbenchProps {
   /** Sessions currently attached to this workbench */
   sessions: Session[];
 
+  /** Active session ID (determines which session to display) */
+  activeSessionId?: string;
+
   /** Callback when a session is closed */
   onSessionClose?: (sessionId: string) => void;
 
@@ -49,6 +52,7 @@ export interface WorkWorkbenchProps {
  */
 export function WorkWorkbench({
   sessions,
+  activeSessionId,
   onSessionClose,
   onSessionDetach,
   onSessionInput,
@@ -58,6 +62,11 @@ export function WorkWorkbench({
   actions = [],
 }: WorkWorkbenchProps): React.ReactElement {
   const sessionCount = sessions.length;
+
+  // Determine the active session: use activeSessionId if provided, else default to first session
+  const activeSession = activeSessionId
+    ? sessions.find(s => s.id === activeSessionId) || sessions[0]
+    : sessions[0];
 
   return (
     <div className="work-workbench">
@@ -82,19 +91,23 @@ export function WorkWorkbench({
           <div className="work-workbench__empty-state">
             <p>No sessions attached. Select a session from the sidebar to begin.</p>
           </div>
-        ) : (
+        ) : activeSession ? (
           <SessionPanelLayout
-            session={sessions[0]}
-            onSessionClose={() => onSessionClose?.(sessions[0].id)}
-            onSessionDetach={() => onSessionDetach?.(sessions[0].id)}
+            session={activeSession}
+            onSessionClose={() => onSessionClose?.(activeSession.id)}
+            onSessionDetach={() => onSessionDetach?.(activeSession.id)}
             onSubmitInput={async (input) => {
-              await onSessionInput?.(sessions[0].id, input);
+              await onSessionInput?.(activeSession.id, input);
             }}
-            onNodeClick={(nodeId) => onNodeClick?.(sessions[0].id, nodeId)}
-            onAgentClick={(agentId) => onAgentClick?.(sessions[0].id, agentId)}
+            onNodeClick={(nodeId) => onNodeClick?.(activeSession.id, nodeId)}
+            onAgentClick={(agentId) => onAgentClick?.(activeSession.id, agentId)}
             flows={flows}
             actions={actions}
           />
+        ) : (
+          <div className="work-workbench__empty-state">
+            <p>Active session not found. Select a session from the sidebar.</p>
+          </div>
         )}
       </div>
     </div>

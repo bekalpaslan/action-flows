@@ -46,3 +46,29 @@ export async function waitForSessionSidebar(page: Page): Promise<void> {
     timeout: TIMEOUTS.element,
   });
 }
+
+/**
+ * Select a session from the sidebar by session ID
+ * @param page Playwright page
+ * @param sessionId The session ID to select (will match button text containing this ID)
+ */
+export async function selectSession(
+  page: Page,
+  sessionId: string
+): Promise<void> {
+  // Session name div has title=full session ID
+  const sessionButton = page.locator(`${SELECTORS.sessionSidebarItem}:has([title="${sessionId}"])`);
+
+  await sessionButton.click();
+  await page.waitForTimeout(300); // Allow UI to update
+}
+
+/**
+ * Get the currently displayed session ID snippet from the info bar
+ * @returns The truncated session ID text (e.g. "session-...nzbl") displayed in the dashboard
+ */
+export async function getCurrentSessionId(page: Page): Promise<string> {
+  const sessionIdText = page.locator('.chat-panel__info-session-id-text');
+  const text = await sessionIdText.textContent({ timeout: TIMEOUTS.element });
+  return text?.trim() || '';
+}
