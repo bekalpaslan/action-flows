@@ -14,6 +14,8 @@ import React, { useState, useCallback, useMemo, useRef, useEffect, KeyboardEvent
 import type { DirectoryEntry } from '../FileExplorer/FileTree';
 import { FileIcon } from '../FileExplorer/FileIcon';
 import { useFileTree } from '../../hooks/useFileTree';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './ExploreWorkbench.css';
 
 export interface ExploreWorkbenchProps {
@@ -129,6 +131,16 @@ export function ExploreWorkbench({
   const treeContainerRef = useRef<HTMLDivElement>(null);
 
   const { tree, isLoading, error, refresh } = useFileTree(sessionId, showHidden);
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'ExploreWorkbench',
+    getContext: () => ({
+      currentView: showHidden ? 'with-hidden' : 'without-hidden',
+      searchQuery,
+      filteredCount: filteredEntries.length,
+    }),
+  });
 
   // Filter tree based on search query
   const filteredTree = useMemo(() => {
@@ -318,6 +330,7 @@ export function ExploreWorkbench({
           <h1 className="explore-workbench__title">Explorer</h1>
         </div>
         <div className="explore-workbench__header-right">
+          <DiscussButton componentName="ExploreWorkbench" onClick={openDialog} size="small" />
           <button
             className="explore-workbench__action-btn"
             onClick={handleToggleHidden}
@@ -472,6 +485,18 @@ export function ExploreWorkbench({
           </span>
         )}
       </div>
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="ExploreWorkbench"
+        componentContext={{
+          currentView: showHidden ? 'with-hidden' : 'without-hidden',
+          searchQuery,
+          filteredCount: flattenedEntries.length,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

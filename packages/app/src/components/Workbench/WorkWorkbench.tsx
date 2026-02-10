@@ -16,6 +16,8 @@
 import React from 'react';
 import type { Session, FlowAction } from '@afw/shared';
 import { SessionPanelLayout } from '../SessionPanel';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './WorkWorkbench.css';
 
 export interface WorkWorkbenchProps {
@@ -68,6 +70,15 @@ export function WorkWorkbench({
     ? sessions.find(s => s.id === activeSessionId) || sessions[0]
     : sessions[0];
 
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'WorkWorkbench',
+    getContext: () => ({
+      sessionCount: sessions.length,
+      activeSession: activeSession?.id || null,
+    }),
+  });
+
   return (
     <div className="work-workbench">
       {/* Header Bar */}
@@ -81,6 +92,7 @@ export function WorkWorkbench({
           </div>
         </div>
         <div className="work-workbench__header-right">
+          <DiscussButton componentName="WorkWorkbench" onClick={openDialog} size="small" />
           {/* Future: Add workbench controls (layout toggle, etc.) */}
         </div>
       </div>
@@ -110,6 +122,17 @@ export function WorkWorkbench({
           </div>
         )}
       </div>
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="WorkWorkbench"
+        componentContext={{
+          sessionCount: sessions.length,
+          activeSession: activeSession?.id || null,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

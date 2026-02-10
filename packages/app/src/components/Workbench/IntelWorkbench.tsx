@@ -13,6 +13,8 @@ import { useState } from 'react';
 import { DossierList, DossierView, DossierCreationDialog } from '../IntelDossier';
 import { useDossiers } from '../../hooks/useDossiers';
 import type { DossierId } from '@afw/shared';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './IntelWorkbench.css';
 
 // ============================================================================
@@ -44,6 +46,15 @@ export function IntelWorkbench(_props?: IntelWorkbenchProps) {
 
   // Selected dossier
   const selectedDossier = dossiers.find((d) => d.id === selectedDossierId) || null;
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'IntelWorkbench',
+    getContext: () => ({
+      dossierCount: dossiers.length,
+      activeDossier: selectedDossierId,
+    }),
+  });
 
   // Handlers
   const handleDossierSelect = (dossierId: string) => {
@@ -87,6 +98,7 @@ export function IntelWorkbench(_props?: IntelWorkbenchProps) {
       {/* Header */}
       <header className="intel-workbench__header">
         <h1 className="intel-workbench__title">Intel</h1>
+        <DiscussButton componentName="IntelWorkbench" onClick={openDialog} size="small" />
         <button
           className="intel-workbench__new-btn"
           onClick={handleNewDossier}
@@ -151,6 +163,17 @@ export function IntelWorkbench(_props?: IntelWorkbenchProps) {
           onClose={() => setShowCreateDialog(false)}
         />
       )}
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="IntelWorkbench"
+        componentContext={{
+          dossierCount: dossiers.length,
+          activeDossier: selectedDossierId,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

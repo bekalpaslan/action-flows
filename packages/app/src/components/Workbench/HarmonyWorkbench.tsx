@@ -20,6 +20,8 @@ import type { SessionId, ProjectId, HarmonyCheck } from '@afw/shared';
 import { HarmonyPanel } from '../HarmonyPanel/HarmonyPanel';
 import { HarmonyBadge } from '../HarmonyBadge/HarmonyBadge';
 import { useHarmonyMetrics } from '../../hooks/useHarmonyMetrics';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './HarmonyWorkbench.css';
 
 /**
@@ -94,6 +96,16 @@ export function HarmonyWorkbench({
     target || ('' as SessionId),
     targetType
   );
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'HarmonyWorkbench',
+    getContext: () => ({
+      harmonyStatus: metrics?.harmonyPercentage ?? 100,
+      checksCount: metrics?.formatBreakdown ? Object.keys(metrics.formatBreakdown).length : 0,
+      viewMode,
+    }),
+  });
 
   // Mock drift detection results (to be replaced with actual API call)
   const [driftResults] = useState<DriftResult[]>([
@@ -212,6 +224,7 @@ export function HarmonyWorkbench({
       <header className="harmony-workbench__header">
         <div className="harmony-workbench__header-left">
           <h1 className="harmony-workbench__title">Harmony Dashboard</h1>
+          <DiscussButton componentName="HarmonyWorkbench" onClick={openDialog} size="small" />
           <div className="harmony-workbench__subtitle">
             Contract compliance monitoring and drift detection
           </div>
@@ -452,6 +465,18 @@ export function HarmonyWorkbench({
           </button>
         </div>
       )}
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="HarmonyWorkbench"
+        componentContext={{
+          harmonyStatus: metrics?.harmonyPercentage ?? 100,
+          checksCount: metrics?.formatBreakdown ? Object.keys(metrics.formatBreakdown).length : 0,
+          viewMode,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

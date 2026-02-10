@@ -15,6 +15,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import { useAllSessions } from '../../hooks/useAllSessions';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './MaintenanceWorkbench.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -92,6 +94,16 @@ export function MaintenanceWorkbench(): React.ReactElement {
 
   // Loading state for manual refresh
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'MaintenanceWorkbench',
+    getContext: () => ({
+      taskCount: sessions.length,
+      activeTask: activeSessions,
+      wsStatus,
+    }),
+  });
 
   /**
    * Add error to recent errors list
@@ -225,6 +237,7 @@ export function MaintenanceWorkbench(): React.ReactElement {
       <div className="maintenance-workbench__header">
         <div className="maintenance-workbench__header-left">
           <h1 className="maintenance-workbench__title">System Health</h1>
+          <DiscussButton componentName="MaintenanceWorkbench" onClick={openDialog} size="small" />
           <div className={`maintenance-workbench__status-badge maintenance-workbench__status-badge--${overallStatus}`}>
             <span className="status-dot" />
             <span className="status-text">
@@ -386,6 +399,18 @@ export function MaintenanceWorkbench(): React.ReactElement {
           </div>
         </div>
       </div>
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="MaintenanceWorkbench"
+        componentContext={{
+          taskCount: sessions.length,
+          activeTask: activeSessions,
+          wsStatus,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

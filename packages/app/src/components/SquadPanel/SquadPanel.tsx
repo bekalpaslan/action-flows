@@ -20,6 +20,8 @@ import { useAgentTracking } from './useAgentTracking';
 import { useAgentInteractions } from './useAgentInteractions';
 import { AgentRow } from './AgentRow';
 import type { SquadPanelProps } from './types';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './SquadPanel.css';
 import './animations.css';
 
@@ -50,6 +52,20 @@ export function SquadPanel({
   // Manage hover, click, and expand state
   const { setHoveredAgent, expandedAgentId, toggleExpanded } =
     useAgentInteractions();
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'SquadPanel',
+    getContext: () => ({
+      sessionId,
+      orchestratorName: orchestrator?.name,
+      orchestratorAction: orchestrator?.action,
+      orchestratorModel: orchestrator?.model,
+      subagentCount: subagents.length,
+      placement,
+      overlayPosition,
+    }),
+  });
 
   /**
    * Handle agent card click - toggle expand state and call callback
@@ -104,6 +120,11 @@ export function SquadPanel({
       role="region"
       aria-label="Agent squad panel"
     >
+      {/* DiscussButton in top-right corner */}
+      <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 10 }}>
+        <DiscussButton componentName="SquadPanel" onClick={openDialog} size="small" />
+      </div>
+
       {/* Use AgentRow for responsive layout */}
       {orchestrator && (
         <AgentRow
@@ -114,6 +135,23 @@ export function SquadPanel({
           onAgentClick={handleAgentClick}
         />
       )}
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="SquadPanel"
+        componentContext={{
+          sessionId,
+          orchestratorName: orchestrator?.name,
+          orchestratorAction: orchestrator?.action,
+          orchestratorModel: orchestrator?.model,
+          subagentCount: subagents.length,
+          placement,
+          overlayPosition,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import type { ChangePreviewProps, ChangePreviewData, ChangeSummary } from './types';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './ChangePreview.css';
 
 /**
@@ -155,7 +157,7 @@ export function ChangePreview({
   // Track which items are expanded
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
 
-  // Calculate summary
+  // Calculate summary first for use in hook
   const summary: ChangeSummary = useMemo(() => {
     return changes.reduce(
       (acc, change) => {
@@ -177,6 +179,26 @@ export function ChangePreview({
       { additions: 0, modifications: 0, removals: 0, destructive: 0, total: 0 }
     );
   }, [changes]);
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'ChangePreview',
+    getContext: () => ({
+      fileCount: changes.length,
+      totalChanges: summary.total,
+      additions: summary.additions,
+      modifications: summary.modifications,
+      removals: summary.removals,
+      destructiveChanges: summary.destructive,
+      changesSummary: changes.map(c => ({
+        field: c.field,
+        path: c.path,
+        changeType: c.changeType,
+        isDestructive: c.isDestructive,
+      })),
+    }),
+  });
+
 
   // Toggle item expansion
   const toggleItem = useCallback((index: number) => {
@@ -207,6 +229,7 @@ export function ChangePreview({
       {/* Header with summary */}
       <div className="change-preview-header">
         <h3 className="change-preview-title">Preview Changes</h3>
+        <DiscussButton componentName="ChangePreview" onClick={openDialog} size="small" />
         <div className="change-summary">
           {summary.additions > 0 && (
             <span className="summary-item summary-additions">+{summary.additions} added</span>
@@ -289,6 +312,28 @@ export function ChangePreview({
           </button>
         )}
       </div>
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="ChangePreview"
+        componentContext={{
+          fileCount: changes.length,
+          totalChanges: summary.total,
+          additions: summary.additions,
+          modifications: summary.modifications,
+          removals: summary.removals,
+          destructiveChanges: summary.destructive,
+          changesSummary: changes.map(c => ({
+            field: c.field,
+            path: c.path,
+            changeType: c.changeType,
+            isDestructive: c.isDestructive,
+          })),
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

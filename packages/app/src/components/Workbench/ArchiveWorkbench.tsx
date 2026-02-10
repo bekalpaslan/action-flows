@@ -13,6 +13,8 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import type { ArchivedSession } from '../../hooks/useSessionArchive';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './ArchiveWorkbench.css';
 
 export interface ArchiveWorkbenchProps {
@@ -53,6 +55,18 @@ export function ArchiveWorkbench({
 
   // Selection state for bulk actions
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'ArchiveWorkbench',
+    getContext: () => ({
+      archivedCount: archivedSessions.length,
+      selectedSession: selectedIds.size > 0 ? Array.from(selectedIds)[0] : null,
+      filteredCount: filteredSessions.length,
+      searchQuery,
+      statusFilter,
+    }),
+  });
 
   // Get unique statuses for filter dropdown
   const uniqueStatuses = useMemo(() => {
@@ -205,6 +219,7 @@ export function ArchiveWorkbench({
           </div>
         </div>
         <div className="archive-workbench__header-right">
+          <DiscussButton componentName="ArchiveWorkbench" onClick={openDialog} size="small" />
           {onClearAll && archivedSessions.length > 0 && (
             <button
               className="archive-workbench__clear-all-btn"
@@ -442,6 +457,20 @@ export function ArchiveWorkbench({
           </>
         )}
       </div>
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="ArchiveWorkbench"
+        componentContext={{
+          archivedCount: archivedSessions.length,
+          selectedSession: selectedIds.size > 0 ? Array.from(selectedIds)[0] : null,
+          filteredCount: filteredSessions.length,
+          searchQuery,
+          statusFilter,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

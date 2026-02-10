@@ -17,6 +17,8 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './PMWorkbench.css';
 
 /**
@@ -161,6 +163,15 @@ export function PMWorkbench({
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority>('medium');
 
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'PMWorkbench',
+    getContext: () => ({
+      projectStats: { total: tasks.length, completed: taskCounts.done },
+      milestones: milestones.length,
+    }),
+  });
+
   // Filter tasks based on status
   const filteredTasks = useMemo(() => {
     if (statusFilter === 'all') {
@@ -230,6 +241,7 @@ export function PMWorkbench({
           </div>
         </div>
         <div className="pm-workbench__header-right">
+          <DiscussButton componentName="PMWorkbench" onClick={openDialog} size="small" />
           <button
             className="pm-workbench__create-btn"
             onClick={() => setShowCreateForm(!showCreateForm)}
@@ -493,6 +505,17 @@ export function PMWorkbench({
           </div>
         </div>
       )}
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="PMWorkbench"
+        componentContext={{
+          projectStats: { total: tasks.length, completed: taskCounts.done },
+          milestones: milestones.length,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import { DiffEditor } from '@monaco-editor/react';
 import { useCallback, useState, useEffect } from 'react';
 import type { SessionId } from '@afw/shared';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './DiffView.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
@@ -30,6 +32,19 @@ export function DiffView({ sessionId, path, onClose }: DiffViewProps) {
   const [diffData, setDiffData] = useState<DiffData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'DiffView',
+    getContext: () => ({
+      sessionId,
+      filePath: path,
+      language: getLanguage(path),
+      hasPreviousVersion: diffData?.hasPreviousVersion ?? false,
+      linesAdded: diffData?.after ? diffData.after.split('\n').length : 0,
+      linesRemoved: diffData?.before ? diffData.before.split('\n').length : 0,
+    }),
+  });
 
   /**
    * Load diff data from backend
@@ -110,6 +125,7 @@ export function DiffView({ sessionId, path, onClose }: DiffViewProps) {
       <div className="diff-view-container">
         <div className="diff-view-header">
           <h3 className="diff-view-title">Diff: {path}</h3>
+          <DiscussButton componentName="DiffView" onClick={openDialog} size="small" />
           <button
             className="diff-close-btn"
             onClick={onClose}
@@ -156,6 +172,22 @@ export function DiffView({ sessionId, path, onClose }: DiffViewProps) {
           )}
         </div>
       </div>
+
+      {/* DiscussDialog */}
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="DiffView"
+        componentContext={{
+          sessionId,
+          filePath: path,
+          language: getLanguage(path),
+          hasPreviousVersion: diffData?.hasPreviousVersion ?? false,
+          linesAdded: diffData?.after ? diffData.after.split('\n').length : 0,
+          linesRemoved: diffData?.before ? diffData.before.split('\n').length : 0,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

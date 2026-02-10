@@ -16,6 +16,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useTheme, type Theme } from '../../contexts/ThemeContext';
 import { useVimContext } from '../../contexts/VimNavigationContext';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './SettingsWorkbench.css';
 
 // Storage keys
@@ -98,6 +100,15 @@ export function SettingsWorkbench(): React.ReactElement {
   const [settings, setSettings] = useState<SettingsState>(loadSettings);
   const [hasChanges, setHasChanges] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'SettingsWorkbench',
+    getContext: () => ({
+      category: activeSection,
+      unsavedChanges: hasChanges,
+    }),
+  });
 
   // Auto-save settings when they change
   useEffect(() => {
@@ -509,6 +520,7 @@ export function SettingsWorkbench(): React.ReactElement {
       <div className="settings-workbench__header">
         <div className="settings-workbench__header-left">
           <h1 className="settings-workbench__title">Settings</h1>
+          <DiscussButton componentName="SettingsWorkbench" onClick={openDialog} size="small" />
           {saveMessage && (
             <span className="settings-workbench__save-message">{saveMessage}</span>
           )}
@@ -584,6 +596,17 @@ export function SettingsWorkbench(): React.ReactElement {
           {activeSection === 'advanced' && renderAdvancedSection()}
         </div>
       </div>
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="SettingsWorkbench"
+        componentContext={{
+          category: activeSection,
+          unsavedChanges: hasChanges,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }

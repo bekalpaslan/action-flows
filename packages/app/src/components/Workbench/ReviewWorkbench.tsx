@@ -12,6 +12,8 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { DiffEditor } from '@monaco-editor/react';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './ReviewWorkbench.css';
 
 // ============================================================================
@@ -625,6 +627,16 @@ export function ReviewWorkbench({
   }>({ isOpen: false, actionType: 'comment' });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'ReviewWorkbench',
+    getContext: () => ({
+      reviewCount: pullRequests.length,
+      activeReview: selectedPRId,
+      statusFilter,
+    }),
+  });
+
   // Update PRs when external data changes
   useEffect(() => {
     if (externalPRs) {
@@ -732,6 +744,7 @@ export function ReviewWorkbench({
       <header className="review-workbench__header">
         <div className="review-workbench__header-left">
           <h1 className="review-workbench__title">Review Dashboard</h1>
+          <DiscussButton componentName="ReviewWorkbench" onClick={openDialog} size="small" />
           <div className="review-workbench__stats">
             <span className="stat pending">{stats.pending} pending</span>
             <span className="stat approved">{stats.approved} approved</span>
@@ -891,6 +904,18 @@ export function ReviewWorkbench({
         onSubmit={handleSubmitReview}
         onCancel={handleCloseDialog}
         isSubmitting={isSubmitting}
+      />
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="ReviewWorkbench"
+        componentContext={{
+          reviewCount: pullRequests.length,
+          activeReview: selectedPRId,
+          statusFilter,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
       />
     </div>
   );

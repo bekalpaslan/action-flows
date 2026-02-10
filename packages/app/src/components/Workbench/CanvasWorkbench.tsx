@@ -18,6 +18,8 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import { configureMonaco } from '../../monaco-config';
+import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './CanvasWorkbench.css';
 
 // Configure Monaco workers on module load
@@ -49,6 +51,16 @@ export function CanvasWorkbench({
   const [isEditorCollapsed, setIsEditorCollapsed] = useState<boolean>(false);
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // DiscussButton integration
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
+    componentName: 'CanvasWorkbench',
+    getContext: () => ({
+      canvasType: 'HTML/CSS',
+      itemCount: markup.length,
+      isEditorCollapsed,
+    }),
+  });
 
   // Persist markup to localStorage with debounce
   useEffect(() => {
@@ -131,6 +143,7 @@ export function CanvasWorkbench({
       <header className="canvas-workbench__header">
         <h1 className="canvas-workbench__title">Canvas</h1>
         <div className="canvas-workbench__controls">
+          <DiscussButton componentName="CanvasWorkbench" onClick={openDialog} size="small" />
           <button
             type="button"
             className="canvas-workbench__button"
@@ -186,6 +199,18 @@ export function CanvasWorkbench({
           />
         </div>
       </div>
+
+      <DiscussDialog
+        isOpen={isDialogOpen}
+        componentName="CanvasWorkbench"
+        componentContext={{
+          canvasType: 'HTML/CSS',
+          itemCount: markup.length,
+          isEditorCollapsed,
+        }}
+        onSend={handleSend}
+        onClose={closeDialog}
+      />
     </div>
   );
 }
