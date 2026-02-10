@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
-import type { WorkspaceEvent, SessionId, StepNumber } from '@afw/shared';
+import type { WorkspaceEvent, SessionId, StepNumber, ChainCompiledEvent, ChainStartedEvent, ChainCompletedEvent, Chain, ChainStep } from '@afw/shared';
+import { brandedTypes } from '@afw/shared';
 import { storage, isAsyncStorage } from '../storage/index.js';
 import { setActiveStep, clearActiveStep } from '../services/fileWatcher.js';
 import { activityTracker } from '../services/activityTracker.js';
@@ -17,6 +18,43 @@ const pollingRateLimiter = new Map<string, number>();
 const POLLING_RATE_LIMIT_MS = 5000; // 5 seconds
 
 /**
+ * Convert ChainCompiledEvent to Chain domain object
+ * Maps event data to Chain structure for storage and retrieval
+ */
+function buildChainFromEvent(event: ChainCompiledEvent): Chain {
+  // Generate chainId if not provided
+  const chainId = event.chainId || brandedTypes.chainId(`${event.sessionId}-${Date.now()}`);
+
+  // Map steps from ChainStepSnapshot to ChainStep
+  const steps: ChainStep[] = (event.steps || []).map((snapshot) => ({
+    stepNumber: brandedTypes.stepNumber(snapshot.stepNumber),
+    action: snapshot.action,
+    model: (snapshot.model || 'haiku') as 'haiku' | 'sonnet' | 'opus',
+    inputs: snapshot.inputs || {},
+    waitsFor: (snapshot.waitsFor || []).map(n => brandedTypes.stepNumber(n)),
+    status: 'pending' as const,
+    description: snapshot.description,
+  }));
+
+  // Build Chain object
+  const chain: Chain = {
+    id: chainId,
+    sessionId: event.sessionId || ('' as SessionId),
+    userId: event.user,
+    title: event.title || 'Untitled Chain',
+    steps,
+    source: event.source || 'composed',
+    ref: event.ref || undefined,
+    status: 'pending',
+    compiledAt: event.timestamp,
+    executionMode: event.executionMode,
+    estimatedDuration: event.estimatedDuration,
+  };
+
+  return chain;
+}
+
+/**
  * POST /api/events
  * Receive events from hooks/systems, store and broadcast
  */
@@ -31,6 +69,48 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
 
       // Track activity for TTL extension
       activityTracker.trackActivity(event.sessionId, 'event');
+
+      // Convert chain events to Chain domain objects
+      if (event.type === 'chain:compiled') {
+        const chainEvent = event as ChainCompiledEvent;
+        const chain = buildChainFromEvent(chainEvent);
+        // Check for duplicate — don't create if chain with same ID already exists
+        const existing = await Promise.resolve(storage.getChain(chain.id));
+        if (!existing) {
+          await Promise.resolve(storage.addChain(event.sessionId, chain));
+          console.log(`[API] Created chain: ${chain.id} with ${chain.steps.length} steps`);
+        }
+      }
+
+      // Update chain status when chain starts
+      if (event.type === 'chain:started') {
+        const chainEvent = event as ChainStartedEvent;
+        const chain = await Promise.resolve(storage.getChain(chainEvent.chainId));
+        if (chain) {
+          chain.status = 'in_progress';
+          chain.startedAt = event.timestamp;
+          chain.currentStep = chainEvent.currentStep;
+          await Promise.resolve(storage.addChain(event.sessionId, chain));
+          console.log(`[API] Updated chain status: ${chain.id} -> in_progress`);
+        }
+      }
+
+      // Update chain status when chain completes
+      if (event.type === 'chain:completed') {
+        const chainEvent = event as ChainCompletedEvent;
+        const chain = await Promise.resolve(storage.getChain(chainEvent.chainId));
+        if (chain) {
+          chain.status = chainEvent.status || 'completed';
+          chain.completedAt = event.timestamp;
+          chain.duration = chainEvent.duration;
+          chain.successfulSteps = chainEvent.successfulSteps || undefined;
+          chain.failedSteps = chainEvent.failedSteps || undefined;
+          chain.skippedSteps = chainEvent.skippedSteps || undefined;
+          chain.summary = chainEvent.summary || undefined;
+          await Promise.resolve(storage.addChain(event.sessionId, chain));
+          console.log(`[API] Completed chain: ${chain.id} with status ${chain.status}`);
+        }
+      }
     }
 
     // Update active step for file change attribution (step events always have sessionId)

@@ -8,6 +8,7 @@
 import React from 'react';
 import type { Session } from '@afw/shared';
 import { HybridFlowViz } from '../SessionTile/HybridFlowViz';
+import { useActiveChain } from '../../hooks/useActiveChain';
 import './RightVisualizationArea.css';
 
 export interface RightVisualizationAreaProps {
@@ -33,13 +34,28 @@ export const RightVisualizationArea: React.FC<RightVisualizationAreaProps> = ({
   onAgentClick,
   showAgents = true,
 }) => {
-  // Check if session has chains to display
-  const hasChains = session.chains && session.chains.length > 0;
-  const activeChain = hasChains ? session.chains[session.chains.length - 1] : null;
+  // Fetch chains from backend using the new hook
+  const { activeChain, loading, error } = useActiveChain(session.id);
 
   return (
     <div className="right-visualization-area">
-      {hasChains && activeChain ? (
+      {loading ? (
+        <div className="right-visualization-area__empty-state">
+          <div className="empty-state__icon">⏳</div>
+          <div className="empty-state__title">Loading Chain...</div>
+          <div className="empty-state__message">
+            Fetching flow visualization data from backend.
+          </div>
+        </div>
+      ) : error ? (
+        <div className="right-visualization-area__empty-state">
+          <div className="empty-state__icon">⚠️</div>
+          <div className="empty-state__title">Error Loading Chain</div>
+          <div className="empty-state__message">
+            {error}
+          </div>
+        </div>
+      ) : activeChain ? (
         <HybridFlowViz
           sessionId={session.id}
           chain={activeChain}

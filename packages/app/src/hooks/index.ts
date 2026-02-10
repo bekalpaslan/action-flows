@@ -14,6 +14,9 @@ export type { UseChainStateReturn } from './useChainState';
 export { useChainEvents, useChainEventSummary } from './useChainEvents';
 export type { ChainEventSummary } from './useChainEvents';
 
+export { useActiveChain } from './useActiveChain';
+export type { UseActiveChainResult } from './useActiveChain';
+
 export { useUsers } from './useUsers';
 export type { UseUsersReturn, User } from './useUsers';
 
