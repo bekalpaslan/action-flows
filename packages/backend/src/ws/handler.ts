@@ -4,6 +4,7 @@ import type { Storage } from '../storage/index.js';
 import { clientRegistry } from './clientRegistry.js';
 import { wsMessageSchema, type ValidatedWSMessage } from '../schemas/ws.js';
 import { claudeCliManager } from '../services/claudeCliManager.js';
+import { activityTracker } from '../services/activityTracker.js';
 
 /**
  * WebSocket message format for server->client
@@ -134,6 +135,9 @@ export function handleWebSocket(
           if (message.payload) {
             const inputSessionId = message.sessionId as SessionId;
             const inputText = String(message.payload);
+
+            // Track activity for TTL extension
+            activityTracker.trackActivity(inputSessionId, 'input');
 
             // Capture user message for chat history
             try {

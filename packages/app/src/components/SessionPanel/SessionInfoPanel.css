@@ -372,6 +372,35 @@
   }
 }
 
+/* Active Indicator */
+.active-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full, 9999px);
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  font-size: 11px;
+  font-weight: 600;
+  color: #22c55e;
+  white-space: nowrap;
+}
+
+.active-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+  animation: pulse-green 2s ease-in-out infinite;
+}
+
+.active-text {
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+
 /* Freshness Indicator */
 .freshness-indicator {
   display: inline-flex;

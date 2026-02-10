@@ -186,6 +186,12 @@ export interface Session {
 
   /** Session metadata */
   metadata?: Record<string, unknown>;
+
+  /** Last activity timestamp (for TTL tracking) */
+  lastActivityAt?: Timestamp;
+
+  /** Number of TTL extensions applied to this session */
+  activityTtlExtensions?: number;
 }
 
 /**

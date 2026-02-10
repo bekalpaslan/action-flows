@@ -6,9 +6,10 @@ export interface UseWebSocketOptions {
   onEvent?: (event: WorkspaceEvent) => void;
   reconnectInterval?: number; // default 3000ms
   heartbeatInterval?: number; // default 30000ms
+  pollingFallbackUrl?: string; // Base URL for HTTP polling fallback (default: http://localhost:3001/api/events)
 }
 
-export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
+export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error' | 'polling';
 
 export interface UseWebSocketReturn {
   status: ConnectionStatus;
@@ -34,6 +35,7 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
     onEvent,
     reconnectInterval = 3000,
     heartbeatInterval = 30000,
+    pollingFallbackUrl = 'http://localhost:3001/api/events',
   } = options;
 
   const [status, setStatus] = useState<ConnectionStatus>('connecting');
@@ -46,11 +48,83 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
   const subscribedSessionsRef = useRef<Set<SessionId>>(new Set());
   const reconnectAttemptsRef = useRef(0);
   const intentionalCloseRef = useRef(false);
+  const consecutiveFailuresRef = useRef(0);
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const lastPollingTimestampRef = useRef<Record<SessionId, string>>({});
+  const isPollingModeRef = useRef(false);
+
+  const FAILURE_THRESHOLD_FOR_POLLING = 3; // Switch to polling after 3 consecutive failures
+  const POLLING_INTERVAL_MS = 5000; // Poll every 5 seconds (matches rate limit)
 
   // Keep onEvent in a ref so handleMessage never changes identity.
   // This prevents connect → useEffect cascade from reconnect storms.
   const onEventRef = useRef(onEvent);
   onEventRef.current = onEvent;
+
+  /**
+   * HTTP polling fallback for when WebSocket is unavailable
+   */
+  const startPolling = useCallback(() => {
+    if (pollingIntervalRef.current) {
+      return; // Already polling
+    }
+
+    console.warn('[WS] Switching to HTTP polling fallback mode');
+    setStatus('polling');
+    isPollingModeRef.current = true;
+
+    const pollSession = async (sessionId: SessionId) => {
+      try {
+        const since = lastPollingTimestampRef.current[sessionId];
+        const params = since ? `?since=${encodeURIComponent(since)}` : '';
+        const response = await fetch(`${pollingFallbackUrl}/poll/${sessionId}${params}`);
+
+        if (!response.ok) {
+          if (response.status === 429) {
+            // Rate limited - wait for next interval
+            return;
+          }
+          throw new Error(`Polling failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Update last timestamp
+        if (data.timestamp) {
+          lastPollingTimestampRef.current[sessionId] = data.timestamp;
+        }
+
+        // Process events
+        if (data.events && Array.isArray(data.events)) {
+          data.events.forEach((event: WorkspaceEvent) => {
+            onEventRef.current?.(event);
+          });
+        }
+      } catch (err) {
+        console.error(`[Polling] Error polling session ${sessionId}:`, err);
+      }
+    };
+
+    // Poll all subscribed sessions
+    pollingIntervalRef.current = setInterval(() => {
+      subscribedSessionsRef.current.forEach(pollSession);
+    }, POLLING_INTERVAL_MS);
+
+    // Do initial poll immediately
+    subscribedSessionsRef.current.forEach(pollSession);
+  }, [pollingFallbackUrl]);
+
+  /**
+   * Stop HTTP polling
+   */
+  const stopPolling = useCallback(() => {
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+      isPollingModeRef.current = false;
+      console.log('[WS] Stopped HTTP polling');
+    }
+  }, []);
 
   // Parse and dispatch incoming events — stable identity (empty deps)
   const handleMessage = useCallback(
@@ -130,7 +204,13 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
         setStatus('connected');
         setError(null);
         reconnectAttemptsRef.current = 0;
+        consecutiveFailuresRef.current = 0; // Reset failure counter on successful connection
         resetHeartbeat();
+
+        // Stop polling if it was active
+        if (isPollingModeRef.current) {
+          stopPolling();
+        }
 
         // Send subscribe messages for all currently subscribed sessions
         subscribedSessionsRef.current.forEach((sessionId) => {
@@ -160,14 +240,22 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
 
       ws.addEventListener('error', (event) => {
         console.error('WebSocket error:', event);
+        consecutiveFailuresRef.current++;
         setStatus('error');
         setError(new Error('WebSocket connection error'));
+
+        // Check if we should switch to polling mode
+        if (consecutiveFailuresRef.current >= FAILURE_THRESHOLD_FOR_POLLING && !isPollingModeRef.current) {
+          console.warn(`[WS] ${consecutiveFailuresRef.current} consecutive failures detected, switching to polling mode`);
+          startPolling();
+        }
       });
 
       ws.addEventListener('close', () => {
         console.log('WebSocket disconnected');
         wsRef.current = null;
         setStatus('disconnected');
+        consecutiveFailuresRef.current++;
 
         // Stop ping interval
         if (pingIntervalRef.current) {
@@ -175,8 +263,14 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
           pingIntervalRef.current = null;
         }
 
+        // Check if we should switch to polling mode
+        if (consecutiveFailuresRef.current >= FAILURE_THRESHOLD_FOR_POLLING && !isPollingModeRef.current) {
+          console.warn(`[WS] ${consecutiveFailuresRef.current} consecutive failures detected, switching to polling mode`);
+          startPolling();
+        }
+
         // Only auto-reconnect for unexpected closes (not effect cleanup)
-        if (!intentionalCloseRef.current) {
+        if (!intentionalCloseRef.current && !isPollingModeRef.current) {
           const delay = Math.min(
             reconnectInterval * Math.pow(2, reconnectAttemptsRef.current),
             30000 // Max 30 second delay
@@ -195,7 +289,7 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
       setError(err instanceof Error ? err : new Error('Failed to connect'));
       console.error('WebSocket connection error:', err);
     }
-  }, [url, reconnectInterval, handleMessage, resetHeartbeat]);
+  }, [url, reconnectInterval, handleMessage, resetHeartbeat, startPolling, stopPolling]);
 
   // Subscribe to session events
   const subscribe = useCallback(
@@ -261,8 +355,10 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
       if (wsRef.current) {
         wsRef.current.close();
       }
+      // Stop polling on cleanup
+      stopPolling();
     };
-  }, [connect]);
+  }, [connect, stopPolling]);
 
   return {
     status,

@@ -135,6 +135,10 @@ export interface Storage {
   addTelemetryEntry(entry: TelemetryEntry): void | Promise<void>;
   queryTelemetry(filter: TelemetryQueryFilter): TelemetryEntry[] | Promise<TelemetryEntry[]>;
   getTelemetryStats(): { totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> } | Promise<{ totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> }>;
+
+  // Activity-aware TTL extension
+  extendSessionTtl?(sessionId: string, extensionMs: number): Promise<void> | void;
+  getSessionTtlInfo?(sessionId: string): Promise<{ remainingMs: number; extensionCount: number } | null> | { remainingMs: number; extensionCount: number } | null;
 }
 
 /**

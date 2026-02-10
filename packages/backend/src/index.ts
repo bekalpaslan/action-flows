@@ -5,7 +5,8 @@ import { WebSocketServer } from 'ws';
 import type { IncomingMessage } from 'http';
 import type { Socket } from 'net';
 
-import { storage, isAsyncStorage } from './storage/index.js';
+import { storage as baseStorage, isAsyncStorage } from './storage/index.js';
+import { ResilientStorage } from './storage/resilientStorage.js';
 import { handleWebSocket } from './ws/handler.js';
 import { clientRegistry } from './ws/clientRegistry.js';
 import { cleanupService } from './services/cleanup.js';
@@ -40,6 +41,11 @@ import { generalLimiter } from './middleware/rateLimit.js';
 import { globalErrorHandler } from './middleware/errorHandler.js';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3001;
+
+// Wrap storage with circuit breaker protection (enabled by default, can be disabled with AFW_DISABLE_CIRCUIT_BREAKER=true)
+const storage = process.env.AFW_DISABLE_CIRCUIT_BREAKER === 'true'
+  ? baseStorage
+  : new ResilientStorage(baseStorage);
 
 // Create Express app
 const app = express();

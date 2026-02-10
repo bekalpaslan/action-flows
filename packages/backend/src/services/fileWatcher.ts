@@ -72,6 +72,59 @@ export function setBroadcastFunction(fn: BroadcastFunction) {
 }
 
 /**
+ * Retry configuration for watcher crashes
+ */
+const MAX_RETRY_ATTEMPTS = 3;
+const INITIAL_RETRY_DELAY_MS = 1000; // 1 second
+
+/**
+ * Track retry attempts per session
+ */
+const retryAttempts = new Map<SessionId, number>();
+
+/**
+ * Start watching a session's working directory with auto-retry on failure
+ */
+export async function startWatchingWithRetry(sessionId: SessionId, cwd: string): Promise<void> {
+  const currentAttempt = retryAttempts.get(sessionId) ?? 0;
+
+  try {
+    await startWatching(sessionId, cwd);
+    // Success - reset retry counter
+    retryAttempts.delete(sessionId);
+  } catch (error) {
+    telemetry.log('error', 'fileWatcher', `Failed to start watcher for session ${sessionId}`, {
+      sessionId,
+      error: error instanceof Error ? error.message : String(error),
+      attempt: currentAttempt + 1,
+    });
+
+    if (currentAttempt < MAX_RETRY_ATTEMPTS) {
+      const delay = INITIAL_RETRY_DELAY_MS * Math.pow(2, currentAttempt); // Exponential backoff: 1s, 2s, 4s
+      retryAttempts.set(sessionId, currentAttempt + 1);
+
+      telemetry.log('info', 'fileWatcher', `Retrying watcher start for session ${sessionId} in ${delay}ms`, {
+        sessionId,
+        attempt: currentAttempt + 1,
+        maxAttempts: MAX_RETRY_ATTEMPTS,
+        delay,
+      });
+
+      setTimeout(() => {
+        startWatchingWithRetry(sessionId, cwd);
+      }, delay);
+    } else {
+      telemetry.log('error', 'fileWatcher', `Max retry attempts reached for session ${sessionId}, giving up`, {
+        sessionId,
+        attempts: MAX_RETRY_ATTEMPTS,
+      });
+      retryAttempts.delete(sessionId);
+      throw error;
+    }
+  }
+}
+
+/**
  * Start watching a session's working directory
  */
 export async function startWatching(sessionId: SessionId, cwd: string): Promise<void> {
@@ -118,9 +171,15 @@ export async function startWatching(sessionId: SessionId, cwd: string): Promise<
     handleFileChange(sessionId, dirPath, 'deleted', cwd);
   });
 
-  // Error handler
+  // Error handler with auto-restart
   watcher.on('error', (error: Error) => {
     telemetry.log('error', 'fileWatcher', `Error watching session ${sessionId}: ${error.message}`, { sessionId, error: error.stack }, sessionId);
+
+    // Critical error - attempt to restart the watcher
+    stopWatching(sessionId).then(() => {
+      telemetry.log('warn', 'fileWatcher', `Attempting to restart watcher for session ${sessionId} after error`, { sessionId });
+      startWatchingWithRetry(sessionId, cwd);
+    });
   });
 
   activeWatchers.set(sessionId, watcher);

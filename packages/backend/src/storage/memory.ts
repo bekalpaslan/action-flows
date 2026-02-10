@@ -131,6 +131,11 @@ export interface MemoryStorage {
   queryTelemetry(filter: TelemetryQueryFilter): TelemetryEntry[];
   getTelemetryStats(): { totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> };
 
+  // Activity-aware TTL extension
+  sessionTtlExtensions: Map<string, { expiresAt: number; extensionCount: number }>;
+  extendSessionTtl(sessionId: string, extensionMs: number): void;
+  getSessionTtlInfo(sessionId: string): { remainingMs: number; extensionCount: number } | null;
+
   // Internal eviction method
   _evictOldestCompletedSession(): void;
 }
@@ -804,6 +809,46 @@ export const storage: MemoryStorage = {
       errorCount,
       bySource,
       byLevel,
+    };
+  },
+
+  // Activity-aware TTL extension
+  sessionTtlExtensions: new Map(),
+
+  extendSessionTtl(sessionId: string, extensionMs: number) {
+    const now = Date.now();
+    const existing = this.sessionTtlExtensions.get(sessionId);
+
+    if (existing) {
+      // Extend existing TTL
+      existing.expiresAt = now + extensionMs;
+      existing.extensionCount += 1;
+    } else {
+      // Initialize TTL tracking (24h initial + extension)
+      const initialTtl = 24 * 60 * 60 * 1000; // 24 hours
+      this.sessionTtlExtensions.set(sessionId, {
+        expiresAt: now + initialTtl + extensionMs,
+        extensionCount: 1,
+      });
+    }
+  },
+
+  getSessionTtlInfo(sessionId: string) {
+    const now = Date.now();
+    const ttlInfo = this.sessionTtlExtensions.get(sessionId);
+
+    if (!ttlInfo) {
+      // No TTL info tracked - return default (assume fresh session)
+      return {
+        remainingMs: 24 * 60 * 60 * 1000, // 24 hours default
+        extensionCount: 0,
+      };
+    }
+
+    const remainingMs = Math.max(0, ttlInfo.expiresAt - now);
+    return {
+      remainingMs,
+      extensionCount: ttlInfo.extensionCount,
     };
   },
 };

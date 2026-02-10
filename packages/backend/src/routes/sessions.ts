@@ -6,6 +6,7 @@ import { filePersistence } from '../storage/file-persistence.js';
 import { startWatching, stopWatching } from '../services/fileWatcher.js';
 import { clientRegistry } from '../ws/clientRegistry.js';
 import { broadcastEvent } from '../ws/handler.js';
+import { activityTracker } from '../services/activityTracker.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
@@ -104,6 +105,8 @@ router.post('/', sessionCreateLimiter, validateBody(createSessionSchema), async 
       chains: [],
       status: 'pending',
       startedAt: brandedTypes.currentTimestamp(),
+      lastActivityAt: brandedTypes.currentTimestamp(),
+      activityTtlExtensions: 0,
     };
 
     await Promise.resolve(storage.setSession(session));
@@ -402,6 +405,9 @@ router.delete('/:id', writeLimiter, async (req, res) => {
       console.error(`[API] Error stopping file watching for session ${id}:`, error);
       // Don't fail deletion if file watching stop fails
     }
+
+    // Clean up activity tracking for this session
+    activityTracker.removeSession(id as SessionId);
 
     // Delete the session (cascade cleanup handled by storage layer)
     await Promise.resolve(storage.deleteSession(id as SessionId));
@@ -708,6 +714,48 @@ router.get('/freshness/stale', async (req, res) => {
     console.error('[API] Error getting stale resources:', error);
     res.status(500).json({
       error: 'Failed to get stale resources',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
+ * GET /api/sessions/:id/activity
+ * Get activity metadata for a session (for TTL tracking)
+ */
+router.get('/:id/activity', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const sessionId = id as SessionId;
+
+    // Check if session exists
+    const session = await Promise.resolve(storage.getSession(sessionId));
+    if (!session) {
+      return res.status(404).json({
+        error: 'Session not found',
+        sessionId: id,
+      });
+    }
+
+    // Get activity info from tracker
+    const activityInfo = activityTracker.getSessionActivity(sessionId);
+
+    // Get TTL info from storage (if supported)
+    let ttlInfo: { remainingMs: number; extensionCount: number } | null = null;
+    if (storage.getSessionTtlInfo) {
+      ttlInfo = await Promise.resolve(storage.getSessionTtlInfo(id));
+    }
+
+    res.json({
+      sessionId: id,
+      activity: activityInfo,
+      ttl: ttlInfo,
+      isActive: activityInfo ? activityTracker.isSessionActive(sessionId) : false,
+    });
+  } catch (error) {
+    console.error('[API] Error fetching session activity:', error);
+    res.status(500).json({
+      error: 'Failed to fetch session activity',
       message: sanitizeError(error),
     });
   }

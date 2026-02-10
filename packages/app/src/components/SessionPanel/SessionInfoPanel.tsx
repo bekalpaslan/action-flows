@@ -130,6 +130,15 @@ export function SessionInfoPanel({
   // Fetch freshness data for this session
   const { grade, freshness } = useFreshness('session', session.id);
 
+  // Check if session is active (has activity within 5 minutes)
+  const isActive = React.useMemo(() => {
+    if (!session.lastActivityAt) return false;
+    const lastActivity = new Date(session.lastActivityAt).getTime();
+    const now = Date.now();
+    const inactiveDuration = now - lastActivity;
+    return inactiveDuration < 5 * 60 * 1000; // 5 minutes
+  }, [session.lastActivityAt]);
+
   /**
    * Copy session ID to clipboard
    */
@@ -194,7 +203,7 @@ export function SessionInfoPanel({
       {/* Panel Content — Compact horizontal layout */}
       {!isCollapsed && (
         <div className="info-panel-content">
-          {/* Row 1: Status + Freshness + Session ID */}
+          {/* Row 1: Status + Freshness + Active + Session ID */}
           <div className="info-row-compact">
             <div className={`status-badge status-${statusColor}`}>
               <span className="status-dot" />
@@ -206,6 +215,15 @@ export function SessionInfoPanel({
                 title={freshness ? `Last modified: ${formatRelativeTime(new Date(freshness.lastModifiedAt).getTime())}` : undefined}
               >
                 <span className="freshness-dot" />
+              </div>
+            )}
+            {isActive && (
+              <div
+                className="active-indicator"
+                title="Session has recent activity (within 5 minutes)"
+              >
+                <span className="active-dot" />
+                <span className="active-text">Active</span>
               </div>
             )}
             <button

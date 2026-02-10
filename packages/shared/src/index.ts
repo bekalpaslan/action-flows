@@ -30,6 +30,8 @@ export type {
   TelemetryLevel,
   TelemetryEntry,
   TelemetryQueryFilter,
+  CircuitState,
+  CircuitBreakerStats,
 } from './types.js';
 
 export { Status, Model, ChainSource, brandedTypes, duration, FRESHNESS_THRESHOLDS, calculateFreshnessGrade } from './types.js';

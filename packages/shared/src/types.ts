@@ -215,3 +215,19 @@ export interface TelemetryQueryFilter {
   toTimestamp?: Timestamp;
   limit?: number;
 }
+
+/**
+ * Circuit Breaker types
+ */
+
+/** Circuit breaker states */
+export type CircuitState = 'closed' | 'open' | 'half-open';
+
+/** Circuit breaker statistics for monitoring */
+export interface CircuitBreakerStats {
+  name: string;
+  state: CircuitState;
+  failureCount: number;
+  lastFailureTime: Timestamp | null;
+  totalTrips: number;
+}

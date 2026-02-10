@@ -92,6 +92,10 @@ export interface RedisStorage {
   queryTelemetry(filter: TelemetryQueryFilter): Promise<TelemetryEntry[]>;
   getTelemetryStats(): Promise<{ totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> }>;
 
+  // Activity-aware TTL extension
+  extendSessionTtl(sessionId: string, extensionMs: number): Promise<void>;
+  getSessionTtlInfo(sessionId: string): Promise<{ remainingMs: number; extensionCount: number } | null>;
+
   // Pub/Sub support
   subscribe(channel: string, callback: (message: string) => void): Promise<void>;
   publish(channel: string, message: string): Promise<void>;
@@ -1086,6 +1090,61 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         await pubClient.publish(channel, message);
       } catch (error) {
         console.error(`[Redis] Error publishing to channel ${channel}:`, error);
+      }
+    },
+
+    // Activity-aware TTL extension
+    async extendSessionTtl(sessionId: string, extensionMs: number) {
+      try {
+        const sessionKey = `${keyPrefix}sessions:${sessionId}`;
+        const ttlInfoKey = `${keyPrefix}session:ttl:${sessionId}`;
+
+        // Get current TTL
+        const currentTtl = await redis.pttl(sessionKey);
+        if (currentTtl < 0) {
+          // Key doesn't exist or has no TTL
+          console.warn(`[Redis] Cannot extend TTL for session ${sessionId} - session not found or expired`);
+          return;
+        }
+
+        // Extend the session key TTL
+        const newTtlMs = currentTtl + extensionMs;
+        await redis.pexpire(sessionKey, newTtlMs);
+
+        // Update extension count in hash
+        const extensionCount = await redis.hincrby(ttlInfoKey, 'extensionCount', 1);
+        await redis.pexpire(ttlInfoKey, newTtlMs); // Same TTL as session
+
+        console.log(`[Redis] Extended TTL for session ${sessionId} by ${extensionMs}ms (extension #${extensionCount})`);
+      } catch (error) {
+        console.error(`[Redis] Error extending TTL for session ${sessionId}:`, error);
+        throw error;
+      }
+    },
+
+    async getSessionTtlInfo(sessionId: string) {
+      try {
+        const sessionKey = `${keyPrefix}sessions:${sessionId}`;
+        const ttlInfoKey = `${keyPrefix}session:ttl:${sessionId}`;
+
+        // Get remaining TTL in milliseconds
+        const remainingMs = await redis.pttl(sessionKey);
+        if (remainingMs < 0) {
+          // Key doesn't exist or has no TTL
+          return null;
+        }
+
+        // Get extension count
+        const extensionCountStr = await redis.hget(ttlInfoKey, 'extensionCount');
+        const extensionCount = extensionCountStr ? parseInt(extensionCountStr, 10) : 0;
+
+        return {
+          remainingMs: Math.max(0, remainingMs),
+          extensionCount,
+        };
+      } catch (error) {
+        console.error(`[Redis] Error getting TTL info for session ${sessionId}:`, error);
+        return null;
       }
     },
 
