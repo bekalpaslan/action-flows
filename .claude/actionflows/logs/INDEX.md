@@ -6,6 +6,20 @@
 
 | Date | Description | Pattern | Outcome |
 |------|-------------|---------|---------|
+| 2026-02-10 | Spawn prompt expandable UI in chat panel | analyze → code/frontend → review → second-opinion → commit | Success — 3 files, expandable panel with ARIA, BEM CSS, type sync, APPROVED 95% (34bfb57) |
+| 2026-02-10 | Capture Task spawn prompts from CLI stream | analyze → code → review → second-opinion → triage fix → commit | Success — 3 files, passive spawn prompt capture via metadata, APPROVED 95%, array guard triage (f94aade, 04f912a) |
+| 2026-02-10 | Session creation live update — WS broadcast + event handler fixes | analyze → code×2 → review → second-opinion → triage fix → commit | Success — 4 files, +51/-50, broadcast added, phantom event removed, subscription bypass, event.data access fixed, NEEDS_CHANGES 80% → triage fixed (8952ff8) |
+| 2026-02-09 | LIVING_SYSTEM.md — Foundations restructure | code → review → commit | Success — 3 new sections (Framework, Orchestrator, Human Interaction) before 7 layers, APPROVED (cc3ed2d) |
+| 2026-02-09 | CLI non-response fix + cli-integration-test/ flow | analyze → code → review → second-opinion → triage fix → plan → commit | Success — 3 files, stream-json JSONL parser, buffer safety, flow registered, NEEDS_CHANGES 75% → triage fixed (4db8ebf) |
+| 2026-02-09 | Canvas Workbench Layout Refinement — vertical collapse + containment | analyze → code/frontend → review → triage fix → commit | Success — 3 files, vertical layout, collapsible editor, CSS containment, NEEDS_CHANGES 35% → triage fixed (5210a21) |
+| 2026-02-09 | Canvas Workbench — live HTML/CSS preview | analyze → plan → human gate → code/frontend → review → second-opinion → commit | Success — 5 files, 2 new + 3 modified, CSP security fix, NEEDS_CHANGES 82% → triage fixed (ef861cc) |
+| 2026-02-09 | LIVING_SYSTEM.md — Intel Dossier integration | quick triage → commit | Success — Intel connected at Layer 0, Layer 5, Growth Cycle (ef861cc) |
+| 2026-02-09 | LIVING_SYSTEM.md — Growth Cycle + Layer 0 reframing | quick triage → commit | Success — learnings reframed as routing input, growth cycle added (ff35764) |
+| 2026-02-09 | Living System Architecture Document | code×2 → review → second-opinion → commit | Success — 4 files, LIVING_SYSTEM.md (452 lines), cross-refs wired, APPROVED 95% (5456e1a) |
+| 2026-02-09 | Harmony Audit Remediation — 3 critical fixes | code×3 → review → second-opinion → commit | Success — 4 files, harmonyDetector 17/17, StepSkippedEvent added, useChainEvents fixed, APPROVED 100% (aafa433) |
+| 2026-02-09 | Register backwards-harmony-audit/ flow | plan → human gate → code → review → commit | Success — 3 files, flow registered in review context, FLOWS.md + CONTEXTS.md updated (dfb8fb1) |
+| 2026-02-09 | Backwards Harmony Audit — cross-reference frontend → parsers → specs | analyze×3 → audit → second-opinion | Complete — Score 28/100, 3 critical findings (harmonyDetector broken 12/17, useChainEvents dead, StepSkippedEvent missing), two-universe architecture validated |
+| 2026-02-09 | Fix CLI "Prompt is too long" error | analyze → code → review → second-opinion → commit | Success — 1 file, +10/-4 lines, prompt moved from CLI arg to stdin, APPROVED 95% (5ead864) |
 | 2026-02-09 | Custom Prompt Button Tests — hook + dialog coverage | code×2 → review → commit | Success — 4 files, +1,631 lines, 63 tests (23 hook + 40 dialog), APPROVED 92% (0ca4c6b) |
 | 2026-02-09 | Session Panel Redesign Phase 3 — Cleanup & Deprecation | code → review → second-opinion → commit | Success — 27 files, +655/-3,823 lines, 22 old components deleted, APPROVED 95% (82b9847) |
 | 2026-02-09 | Session Panel Redesign Phase 2 — Integration + wiring | code×2 → review → second-opinion → triage fix → commit | Success — 7 files, +458/-93 lines, LeftPanelStack wired, WorkbenchLayout migrated, BottomControlPanel removed, review 75% → triage fixed (4ef71e9) |
