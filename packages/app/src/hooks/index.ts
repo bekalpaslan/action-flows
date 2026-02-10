@@ -49,3 +49,5 @@ export { useNotificationGlow, useNotificationGlowContext, NotificationGlowContex
 export type { UseNotificationGlowReturn, GlowState, NotificationInput } from './useNotificationGlow';
 
 export { useFreshness } from './useFreshness';
+
+export { useChatKeyboardShortcuts } from './useChatKeyboardShortcuts';

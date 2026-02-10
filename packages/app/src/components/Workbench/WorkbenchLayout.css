@@ -18,6 +18,7 @@
 
 .workbench-body {
   display: flex;
+  flex-direction: row;
   flex: 1;
   overflow: hidden;
   min-height: 0; /* Important for flex child scrolling */
@@ -29,6 +30,23 @@
 /* When AppSidebar is collapsed */
 .workbench-body.sidebar-collapsed {
   margin-left: var(--app-sidebar-width-collapsed);
+}
+
+/* ============================================================================
+ * Dashboard Container (contains main content, shrinks when chat opens)
+ * ============================================================================ */
+
+.workbench-dashboard {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  transition: flex 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workbench-dashboard {
+    transition: none;
+  }
 }
 
 /* ============================================================================

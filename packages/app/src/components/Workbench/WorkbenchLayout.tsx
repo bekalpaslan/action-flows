@@ -1,7 +1,12 @@
 import { type ReactNode, useState, useCallback, useEffect, useRef } from 'react';
 import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
+import { useSessionContext } from '../../contexts/SessionContext';
+import { useChatWindowContext } from '../../contexts/ChatWindowContext';
+import { useChatKeyboardShortcuts } from '../../hooks/useChatKeyboardShortcuts';
 import { AppSidebar } from '../AppSidebar';
 import { SessionSidebar } from '../SessionSidebar';
+import { SlidingChatWindow } from '../SlidingChatWindow/SlidingChatWindow';
+import { ChatPanel } from '../SessionPanel/ChatPanel';
 import { WorkWorkbench } from './WorkWorkbench';
 import { CanvasWorkbench } from './CanvasWorkbench';
 import { EditorWorkbench } from './EditorWorkbench';
@@ -262,7 +267,12 @@ const initialDemoMilestones: Milestone[] = [
 ];
 
 export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
-  const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
+  const { activeWorkbench } = useWorkbenchContext();
+  const { getSession } = useSessionContext();
+  const { sessionId: chatSessionId, closeChat } = useChatWindowContext();
+
+  // Enable keyboard shortcuts for chat window
+  useChatKeyboardShortcuts();
 
   // Track AppSidebar collapse state for layout adjustment
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
@@ -619,12 +629,25 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
       )}
 
       <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
-        <main className={`workbench-main ${showSessionSidebar ? 'with-sidebar' : ''}`}>
-          <div className={`workbench-content ${transitionClass}`}>
-            {renderWorkbenchContent(activeWorkbench)}
-            {children}
-          </div>
-        </main>
+        <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }}>
+          <main className={`workbench-main ${showSessionSidebar ? 'with-sidebar' : ''}`}>
+            <div className={`workbench-content ${transitionClass}`}>
+              {renderWorkbenchContent(activeWorkbench)}
+              {children}
+            </div>
+          </main>
+        </div>
+
+        <SlidingChatWindow>
+          {chatSessionId !== null && (
+            <ChatPanel
+              sessionId={chatSessionId}
+              session={getSession(chatSessionId)}
+              showCloseButton={true}
+              onClose={closeChat}
+            />
+          )}
+        </SlidingChatWindow>
       </div>
 
       {/* BottomControlPanel removed in Phase 2 - functionality moved to ConversationPanel + SmartPromptLibrary */}

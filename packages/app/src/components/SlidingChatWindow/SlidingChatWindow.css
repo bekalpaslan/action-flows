@@ -14,6 +14,7 @@
   overflow: hidden;
   transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
+  position: relative;
 }
 
 .sliding-chat-window__header {
@@ -100,4 +101,31 @@
   .sliding-chat-window__close-btn {
     transition-duration: 0ms;
   }
+
+  .sliding-chat-window__resize-handle {
+    transition-duration: 0ms;
+  }
+}
+
+/* Resize Handle */
+.sliding-chat-window__resize-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 10;
+  transition: background 150ms ease;
+}
+
+.sliding-chat-window__resize-handle:hover,
+.sliding-chat-window__resize-handle:active {
+  background: var(--fill-tertiary, rgba(118, 118, 128, 0.24));
+}
+
+.sliding-chat-window__resize-handle:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
 }

@@ -2,7 +2,9 @@ import './App.css'
 import './styles/themes/index.css'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { WebSocketProvider } from './contexts/WebSocketContext'
+import { SessionProvider } from './contexts/SessionContext'
 import { WorkbenchProvider } from './contexts/WorkbenchContext'
+import { ChatWindowProvider } from './contexts/ChatWindowContext'
 import { VimNavigationProvider } from './contexts/VimNavigationContext'
 import { DiscussProvider } from './contexts/DiscussContext'
 import { NotificationGlowProvider } from './hooks/useNotificationGlow'
@@ -29,15 +31,19 @@ function App() {
     <ThemeProvider>
       <ToastProvider>
         <WebSocketProvider url="ws://localhost:3001/ws">
-          <WorkbenchProvider>
-            <DiscussProvider>
-              <NotificationGlowProvider>
-                <VimNavigationProvider>
-                  <AppWithVim />
-                </VimNavigationProvider>
-              </NotificationGlowProvider>
-            </DiscussProvider>
-          </WorkbenchProvider>
+          <SessionProvider>
+            <WorkbenchProvider>
+              <ChatWindowProvider>
+                <DiscussProvider>
+                  <NotificationGlowProvider>
+                    <VimNavigationProvider>
+                      <AppWithVim />
+                    </VimNavigationProvider>
+                  </NotificationGlowProvider>
+                </DiscussProvider>
+              </ChatWindowProvider>
+            </WorkbenchProvider>
+          </SessionProvider>
         </WebSocketProvider>
       </ToastProvider>
     </ThemeProvider>
