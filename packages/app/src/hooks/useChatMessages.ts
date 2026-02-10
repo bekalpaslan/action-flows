@@ -22,6 +22,9 @@ export interface ChatMessage {
     model?: string;
     stopReason?: string;
     toolName?: string;
+    toolUseId?: string;
+    toolInput?: unknown;
+    spawnPrompt?: string;
     stepNumber?: number;
     cost?: string;
     duration?: string;
@@ -61,10 +64,12 @@ export function useChatMessages(sessionId: SessionId) {
     if (!onEvent) return;
 
     const unsubscribeEvent = onEvent((event: WorkspaceEvent) => {
+      console.log('[CHAT-DEBUG] event received:', event.type, 'session:', event.sessionId, 'expected:', sessionId, 'match:', event.sessionId === sessionId);
       if (event.sessionId !== sessionId) return;
 
       // Handle chat:message events (structured messages from backend aggregator)
       if (event.type === 'chat:message') {
+        console.log('[CHAT-DEBUG] chat:message payload:', JSON.stringify((event as any).message?.role), (event as any).message?.content?.substring(0, 50));
         const chatEvent = event as unknown as {
           message: {
             id: string;
@@ -91,6 +96,9 @@ export function useChatMessages(sessionId: SessionId) {
                   model: msg.metadata.model as string | undefined,
                   stopReason: msg.metadata.stopReason as string | undefined,
                   toolName: msg.metadata.toolName as string | undefined,
+                  toolUseId: msg.metadata.toolUseId as string | undefined,
+                  toolInput: msg.metadata.toolInput,
+                  spawnPrompt: msg.metadata.spawnPrompt as string | undefined,
                   cost:
                     typeof msg.metadata.costUsd === 'number'
                       ? `$${msg.metadata.costUsd.toFixed(4)}`
@@ -137,6 +145,9 @@ export function useChatMessages(sessionId: SessionId) {
                   model: msg.metadata.model as string | undefined,
                   stopReason: msg.metadata.stopReason as string | undefined,
                   toolName: msg.metadata.toolName as string | undefined,
+                  toolUseId: msg.metadata.toolUseId as string | undefined,
+                  toolInput: msg.metadata.toolInput,
+                  spawnPrompt: msg.metadata.spawnPrompt as string | undefined,
                   cost:
                     typeof msg.metadata.costUsd === 'number'
                       ? `$${msg.metadata.costUsd.toFixed(4)}`

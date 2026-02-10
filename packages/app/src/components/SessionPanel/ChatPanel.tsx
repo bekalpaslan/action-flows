@@ -127,6 +127,7 @@ export function ChatPanel({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [cliState, setCliState] = useState<CliSessionState>('not-started');
   const [copyTooltip, setCopyTooltip] = useState('Copy');
+  const [expandedSpawnPrompts, setExpandedSpawnPrompts] = useState<Set<string>>(new Set());
   const cliStateRef = useRef<CliSessionState>('not-started');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -167,6 +168,21 @@ export function ChatPanel({
     }
   }, [sessionId]);
 
+  /**
+   * Toggle spawn prompt expansion for a message
+   */
+  const toggleSpawnPrompt = useCallback((msgId: string) => {
+    setExpandedSpawnPrompts(prev => {
+      const next = new Set(prev);
+      if (next.has(msgId)) {
+        next.delete(msgId);
+      } else {
+        next.add(msgId);
+      }
+      return next;
+    });
+  }, []);
+
   // Derive session info metrics
   const sessionStatus = session?.status ?? 'active';
   const statusColor = getStatusColor(sessionStatus);
@@ -205,8 +221,14 @@ export function ChatPanel({
       setCliStateSync('running');
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      // If session already exists on backend, treat as running (reconnect case)
+      if (errorMsg.includes('already exists')) {
+        setCliStateSync('running');
+        return true;
+      }
       setCliStateSync('stopped');
-      addUserMessage(`Failed to start CLI session: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      addUserMessage(`Failed to start CLI session: ${errorMsg}`);
       return false;
     }
   }, [sessionId, cwd, setCliStateSync, addUserMessage]);
@@ -321,6 +343,34 @@ export function ChatPanel({
           <span className="chat-bubble__tool-badge">
             Tool: {msg.metadata.toolName}
           </span>
+        )}
+
+        {/* Spawn Prompt Expandable Section */}
+        {isToolUse && msg.metadata?.spawnPrompt && (
+          <div className="chat-bubble__spawn-prompt">
+            <button
+              className="chat-bubble__spawn-prompt-header"
+              onClick={() => toggleSpawnPrompt(msg.id)}
+              aria-expanded={expandedSpawnPrompts.has(msg.id)}
+              aria-controls={`spawn-prompt-${msg.id}`}
+              aria-label={expandedSpawnPrompts.has(msg.id) ? 'Collapse spawn prompt' : 'Expand spawn prompt'}
+            >
+              <span className="chat-bubble__spawn-prompt-icon">
+                {expandedSpawnPrompts.has(msg.id) ? '▼' : '▶'}
+              </span>
+              <span className="chat-bubble__spawn-prompt-label">
+                Spawn Prompt
+              </span>
+            </button>
+            {expandedSpawnPrompts.has(msg.id) && (
+              <pre
+                className="chat-bubble__spawn-prompt-content"
+                id={`spawn-prompt-${msg.id}`}
+              >
+                <code>{msg.metadata.spawnPrompt}</code>
+              </pre>
+            )}
+          </div>
         )}
 
         {/* Message content */}

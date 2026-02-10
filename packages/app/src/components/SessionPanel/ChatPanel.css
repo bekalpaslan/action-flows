@@ -389,6 +389,75 @@
   font-weight: 600;
 }
 
+/* ============================================================================
+ * Spawn Prompt Expandable Section
+ * ============================================================================ */
+
+.chat-bubble__spawn-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.chat-bubble__spawn-prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 8px;
+  background: var(--panel-bg-elevated);
+  border: var(--panel-border-default);
+  border-radius: var(--btn-radius-sm);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-all);
+  text-align: left;
+  font-family: var(--font-sans);
+}
+
+.chat-bubble__spawn-prompt-header:hover {
+  background: var(--glass-bg-medium);
+  color: var(--text-primary);
+}
+
+.chat-bubble__spawn-prompt-icon {
+  flex-shrink: 0;
+  width: 10px;
+  font-size: 9px;
+  transition: transform 0.2s ease;
+  color: var(--text-tertiary);
+}
+
+.chat-bubble__spawn-prompt-label {
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chat-bubble__spawn-prompt-content {
+  margin: 0;
+  padding: var(--space-3);
+  background: var(--app-bg-primary);
+  border: var(--panel-border-default);
+  border-radius: var(--btn-radius-sm);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.chat-bubble__spawn-prompt-content code {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
 .chat-bubble__role {
   font-size: 10px;
   font-weight: 600;
