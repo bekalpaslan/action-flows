@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Chain, SessionId } from '@afw/shared';
 import { useEvents } from './useEvents';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+
 /**
  * Hook that fetches and subscribes to chain updates for a session
  *
@@ -40,7 +42,7 @@ export function useActiveChain(sessionId: SessionId): UseActiveChainResult {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/sessions/${sessionId}/chains`);
+      const response = await fetch(`${BACKEND_URL}/api/sessions/${sessionId}/chains`);
       if (!response.ok) {
         throw new Error(`Failed to fetch chains: ${response.statusText}`);
       }

@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import type { IncomingMessage } from 'http';
@@ -51,7 +52,10 @@ const storage = process.env.AFW_DISABLE_CIRCUIT_BREAKER === 'true'
   : new ResilientStorage(baseStorage);
 
 // Initialize snapshot service for MemoryStorage persistence
-const snapshotService = new SnapshotService(storage);
+// AFW_SNAPSHOT_DIR lets Electron set a stable path (e.g. %APPDATA%/ActionFlows Workspace/snapshots/)
+const snapshotService = new SnapshotService(storage, {
+  snapshotDir: process.env.AFW_SNAPSHOT_DIR || '.actionflows-snapshot',
+});
 
 // Create Express app
 const app = express();
@@ -114,6 +118,21 @@ app.use('/api', patternsRouter);
 app.use('/api/registry', registryRouter);
 app.use('/api/harmony', harmonyRouter);
 app.use('/api/routing', routingRouter);
+
+// Serve frontend static files in production (Electron desktop app)
+// Gated behind AFW_SERVE_FRONTEND=true — no effect during normal dev workflow
+if (process.env.AFW_SERVE_FRONTEND === 'true') {
+  const frontendPath = process.env.AFW_FRONTEND_PATH || path.join(__dirname, '../../../app/dist');
+  app.use(express.static(frontendPath));
+
+  // SPA fallback — must come after all /api routes
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/ws') || req.path.startsWith('/health')) {
+      return next();
+    }
+    res.sendFile(path.join(frontendPath, 'index.html'));
+  });
+}
 
 // Global error handler (must be after all routes) (Agent A)
 app.use(globalErrorHandler);
@@ -336,8 +355,15 @@ async function initializeRedisPubSub() {
 }
 
 // Only start server if this is the main module (not when imported for testing)
-const isMainModule = import.meta.url === `file://${process.argv[1]}` ||
-  import.meta.url === new URL(`file:///${process.argv[1]?.replace(/\\/g, '/')}`).href;
+const isMainModule = (() => {
+  try {
+    const self = new URL(import.meta.url).pathname.toLowerCase();
+    const entry = new URL(`file:///${process.argv[1]?.replace(/\\/g, '/')}`).pathname.toLowerCase();
+    return self === entry;
+  } catch {
+    return false;
+  }
+})();
 if (isMainModule) {
   server.listen(PORT, async () => {
     // Initialize Redis Pub/Sub after server starts
@@ -443,6 +469,17 @@ if (isMainModule) {
 
   process.on('SIGTERM', gracefulShutdown);
   process.on('SIGINT', gracefulShutdown);
+
+  // IPC shutdown handler for Electron production deployment
+  // On Windows, process.kill() calls TerminateProcess() immediately without
+  // triggering Node.js signal handlers. IPC is the only reliable way to do
+  // graceful shutdown when spawned as a child process from Electron.
+  process.on('message', (msg: any) => {
+    if (msg && msg.type === 'shutdown') {
+      console.log('[Server] Received IPC shutdown message');
+      gracefulShutdown();
+    }
+  });
 }
 
 export { app, server, wss, storage };

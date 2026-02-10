@@ -57,10 +57,39 @@
     "productName": "ActionFlows Workspace",
     "copyright": "Copyright © 2026 ActionFlows",
     "files": [
-      "dist/**/*",
       "dist-electron/**/*",
       "!node_modules/**/*",
       "!src/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend/dist",
+        "to": "backend/dist",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "../backend/node_modules",
+        "to": "backend/node_modules",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "../backend/package.json",
+        "to": "backend/package.json"
+      },
+      {
+        "from": "../shared/dist",
+        "to": "backend/node_modules/@afw/shared/dist",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "../shared/package.json",
+        "to": "backend/node_modules/@afw/shared/package.json"
+      },
+      {
+        "from": "dist",
+        "to": "app-dist",
+        "filter": ["**/*"]
+      }
     ],
     "directories": {
       "buildResources": "public",
