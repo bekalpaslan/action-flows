@@ -24,7 +24,7 @@ export function RespectWorkbench(): React.ReactElement {
   const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
     componentName: 'RespectWorkbench',
     getContext: () => ({
-      spatialChecks: result ? Object.keys(result.categories).length : 0,
+      spatialChecks: result?.categories ? Object.keys(result.categories).length : 0,
       boundaryViolations: result?.summary.violations || 0,
     }),
   });
@@ -59,7 +59,7 @@ export function RespectWorkbench(): React.ReactElement {
         isOpen={isDialogOpen}
         componentName="RespectWorkbench"
         componentContext={{
-          spatialChecks: result ? Object.keys(result.categories).length : 0,
+          spatialChecks: result?.categories ? Object.keys(result.categories).length : 0,
           boundaryViolations: result?.summary.violations || 0,
         }}
         onSend={handleSend}
