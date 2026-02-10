@@ -3,10 +3,10 @@
   display: flex;
   align-items: center;
   width: 100%;
-  height: 48px;
+  height: var(--space-12);
   border-bottom: var(--panel-border-default);
-  padding: 0 16px;
-  gap: 12px;
+  padding: 0 var(--space-4);
+  gap: var(--space-3);
 }
 
 .command-palette-input__icon {
@@ -15,8 +15,8 @@
   justify-content: center;
   flex-shrink: 0;
   color: var(--text-tertiary, #636366);
-  width: 20px;
-  height: 20px;
+  width: var(--space-5);
+  height: var(--space-5);
 }
 
 .command-palette-input__field {
@@ -44,12 +44,12 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  width: var(--space-6);
+  height: var(--space-6);
   padding: 0;
   background: transparent;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-4px);
   color: var(--text-tertiary, #636366);
   cursor: pointer;
   transition: all 0.15s ease;
@@ -66,6 +66,6 @@
 }
 
 .command-palette-input__clear:focus-visible {
-  outline: 2px solid var(--system-blue, #0a84ff);
-  outline-offset: 2px;
+  outline: var(--space-0-5) solid var(--system-blue, #0a84ff);
+  outline-offset: var(--space-0-5);
 }

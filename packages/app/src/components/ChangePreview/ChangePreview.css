@@ -2,11 +2,11 @@
 .change-preview {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--space-3);
+  padding: var(--space-4);
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   max-height: 80vh;
   overflow: hidden;
 }
@@ -15,8 +15,8 @@
 .change-preview-header {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding-bottom: 12px;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -31,14 +31,14 @@
 .change-summary {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
   align-items: center;
 }
 
 .summary-item {
   display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-xs);
   font-size: 12px;
   font-weight: 600;
 }
@@ -68,19 +68,19 @@
 .destructive-warning {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px;
+  gap: var(--space-2-5);
+  padding: var(--space-3);
   background: var(--status-error-bg);
   border: 1px solid var(--status-error-border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .warning-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: var(--space-6);
+  height: var(--space-6);
   background: var(--semantic-error);
   color: white;
   border-radius: 50%;
@@ -98,14 +98,14 @@
 /* Expand/Collapse controls */
 .expand-controls {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .expand-btn {
-  padding: 6px 12px;
+  padding: var(--space-1-5) var(--space-3);
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   font-size: 12px;
   color: var(--text-secondary);
   cursor: pointer;
@@ -127,14 +127,14 @@
 .change-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
   overflow-y: auto;
   flex: 1;
   min-height: 0;
 }
 
 .no-changes {
-  padding: 24px;
+  padding: var(--space-6);
   text-align: center;
   color: var(--text-secondary);
   font-size: 14px;
@@ -143,7 +143,7 @@
 /* Individual change item */
 .change-item {
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--bg-primary);
   overflow: hidden;
   transition: border-color 0.2s;
@@ -165,8 +165,8 @@
 .change-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
+  gap: var(--space-2-5);
+  padding: var(--space-2-5) var(--space-3);
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
 }
@@ -185,9 +185,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 4px;
+  width: calc(var(--space-1) + var(--space-6));
+  height: calc(var(--space-1) + var(--space-6));
+  border-radius: var(--radius-xs);
   font-size: 14px;
   font-weight: 700;
   font-family: monospace;
@@ -215,7 +215,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-0-5);
 }
 
 .change-field {
@@ -238,8 +238,8 @@
 
 /* Change type badge */
 .change-badge {
-  padding: 3px 8px;
-  border-radius: 3px;
+  padding: var(--space-px) var(--space-2);
+  border-radius: var(--radius-xs-sm);
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
@@ -264,8 +264,8 @@
 
 /* Destructive badge */
 .destructive-badge {
-  padding: 3px 8px;
-  border-radius: 3px;
+  padding: var(--space-px) var(--space-2);
+  border-radius: var(--radius-xs-sm);
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
@@ -291,15 +291,15 @@
 .change-values {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px;
+  gap: var(--space-2);
+  padding: var(--space-3);
   transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease;
   overflow: hidden;
 }
 
 .change-values.collapsed {
   max-height: 0;
-  padding: 0 12px;
+  padding: 0 var(--space-3);
   opacity: 0;
 }
 
@@ -307,7 +307,7 @@
 .value-block {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .value-label {
@@ -327,11 +327,11 @@
 
 .value-content {
   margin: 0;
-  padding: 10px 12px;
+  padding: var(--space-2-5) var(--space-3);
   font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
   font-size: 12px;
   line-height: 1.5;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   overflow-x: auto;
   white-space: pre-wrap;
   word-break: break-word;
@@ -355,8 +355,8 @@
 /* Footer with action buttons */
 .change-preview-footer {
   display: flex;
-  gap: 12px;
-  padding-top: 12px;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
   border-top: 1px solid var(--border-color);
   margin-top: auto;
 }
@@ -364,8 +364,8 @@
 .cancel-btn,
 .confirm-btn {
   flex: 1;
-  padding: 10px 16px;
-  border-radius: 6px;
+  padding: var(--space-2-5) var(--space-4);
+  border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -373,7 +373,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .cancel-btn {
@@ -420,8 +420,8 @@
 
 /* Loading spinner */
 .spinner {
-  width: 14px;
-  height: 14px;
+  width: calc(var(--space-3) + var(--space-1) + var(--space-2));
+  height: calc(var(--space-3) + var(--space-1) + var(--space-2));
   border: 2px solid transparent;
   border-top-color: currentColor;
   border-radius: 50%;
@@ -440,7 +440,7 @@
 /* Responsive Design */
 @media (max-width: 600px) {
   .change-preview {
-    padding: 12px;
+    padding: var(--space-3);
   }
 
   .change-summary {
@@ -450,7 +450,7 @@
 
   .summary-total {
     margin-left: 0;
-    margin-top: 4px;
+    margin-top: var(--space-1);
   }
 
   .change-header {
@@ -460,7 +460,7 @@
   .change-info {
     width: 100%;
     order: 10;
-    margin-top: 8px;
+    margin-top: var(--space-2);
   }
 
   .change-badge,

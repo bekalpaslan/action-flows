@@ -1,22 +1,22 @@
 .control-buttons {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   align-items: center;
 }
 
 .control-btn {
-  padding: 6px 12px;
+  padding: var(--space-1-5) var(--space-3);
   font-size: 13px;
   font-weight: 500;
   border: var(--btn-border-default);
-  border-radius: 4px;
+  border-radius: var(--radius-4px);
   background: var(--btn-bg-tertiary);
   color: var(--text-primary);
   cursor: pointer;
   transition: all 0.15s ease;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .control-btn:hover:not(:disabled) {
@@ -85,8 +85,8 @@
 
 .cancel-confirm-dialog {
   background: var(--panel-bg-elevated);
-  border-radius: 8px;
-  padding: 24px;
+  border-radius: var(--radius-8px);
+  padding: var(--space-6);
   max-width: 400px;
   box-shadow: var(--panel-glow-default);
   animation: slideUp 0.2s ease;
@@ -105,13 +105,13 @@
 }
 
 .cancel-confirm-dialog h3 {
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
   font-size: 18px;
   color: var(--text-primary);
 }
 
 .cancel-confirm-dialog p {
-  margin: 0 0 20px;
+  margin: 0 0 var(--space-5);
   font-size: 14px;
   line-height: 1.5;
   color: var(--text-secondary);
@@ -119,16 +119,16 @@
 
 .cancel-confirm-actions {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   justify-content: flex-end;
 }
 
 .confirm-btn {
-  padding: 8px 16px;
+  padding: var(--space-2) var(--space-4);
   font-size: 14px;
   font-weight: 500;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-4px);
   cursor: pointer;
   transition: all 0.15s ease;
 }

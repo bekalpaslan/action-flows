@@ -303,6 +303,11 @@
   --radius-2xl: 18px;   /* Huge (full-screen panels) */
   --radius-3xl: 24px;   /* Massive (hero cards) */
   --radius-full: 9999px; /* Circular/pill-shaped */
+  --radius-2px: 2px;     /* Subtle borders */
+  --radius-xs-sm: 3px;   /* Between xs and sm */
+  --radius-4px: 4px;     /* Common small radius */
+  --radius-8px: 8px;     /* Buttons, inputs */
+  --radius-12px: 12px;   /* Modals, dialogs */
 
   /* ==========================================================================
      Typography Scale — Apple System
@@ -378,6 +383,7 @@
   --space-24: 96px;     /* 96px */
   --space-28: 112px;    /* 112px */
   --space-32: 128px;    /* 128px */
+
 
   /* ==========================================================================
      Shadow System — Layered Depth
