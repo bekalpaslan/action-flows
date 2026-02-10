@@ -22,7 +22,7 @@ const WORKBENCH_GROUPS = {
     id: 'framework',
     label: 'Framework Tools',
     icon: '⚙️',
-    workbenches: ['harmony', 'respect', 'intel', 'canvas', 'editor', 'settings'] as WorkbenchId[],
+    workbenches: ['harmony', 'respect', 'intel', 'canvas', 'editor', 'settings', 'coverage'] as WorkbenchId[],
     defaultExpanded: false,
   },
   project: {
@@ -33,8 +33,6 @@ const WORKBENCH_GROUPS = {
     defaultExpanded: true,
   },
 } as const;
-
-const STANDALONE_WORKBENCHES = [] as WorkbenchId[];
 
 const COLLAPSE_STORAGE_KEY = 'afw-sidebar-collapsed';
 const EXPANDED_GROUPS_STORAGE_KEY = 'afw-sidebar-expanded-groups';
@@ -130,16 +128,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
           matches.add(id);
         }
       });
-    });
-
-    STANDALONE_WORKBENCHES.forEach(id => {
-      const config = DEFAULT_WORKBENCH_CONFIGS[id];
-      if (
-        config.label.toLowerCase().includes(query) ||
-        id.toLowerCase().includes(query)
-      ) {
-        matches.add(id);
-      }
     });
 
     return matches;
