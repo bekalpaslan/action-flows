@@ -282,6 +282,7 @@ class ClaudeCliManager {
                 msg.event.content_block.name === 'Task' &&
                 typeof msg.event.content_block.input === 'object' &&
                 msg.event.content_block.input !== null &&
+                !Array.isArray(msg.event.content_block.input) &&
                 'prompt' in msg.event.content_block.input
               ) {
                 const prompt = (msg.event.content_block.input as { prompt?: unknown }).prompt;
