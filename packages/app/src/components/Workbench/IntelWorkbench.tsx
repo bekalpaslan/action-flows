@@ -15,6 +15,7 @@ import { useDossiers } from '../../hooks/useDossiers';
 import type { DossierId } from '@afw/shared';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { OrchestratorButton } from '../OrchestratorButton';
 import './IntelWorkbench.css';
 
 // ============================================================================
@@ -99,6 +100,9 @@ export function IntelWorkbench(_props?: IntelWorkbenchProps) {
       <header className="intel-workbench__header">
         <h1 className="intel-workbench__title">Intel</h1>
         <DiscussButton componentName="IntelWorkbench" onClick={openDialog} size="small" />
+        <OrchestratorButton source="intel-analyze" context={{ action: 'analyze-intel' }}>
+          <button className="intel-workbench__action-btn">Analyze with Orchestrator</button>
+        </OrchestratorButton>
         <button
           className="intel-workbench__new-btn"
           onClick={handleNewDossier}

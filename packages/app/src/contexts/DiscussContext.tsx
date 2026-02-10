@@ -9,10 +9,22 @@
  * - useDiscussButton hook calls the registered function to prefill chat input
  * - Provider can be placed at any level in the component tree
  *
+ * Also manages discussion context (message/metadata) for the sliding chat window integration:
+ * - useDiscussButton hook registers the discussion message and context
+ * - DiscussButton reads this registered context when clicked
+ * - DiscussButton opens the chat window via ChatWindowContext with the registered message
+ *
  * This allows all 41+ components with DiscussButton to "send to chat" without any rewiring.
  */
 
 import { createContext, useContext, useRef, useCallback, type ReactNode } from 'react';
+
+export interface DiscussMessageContext {
+  /** The discussion message to send */
+  message: string;
+  /** Additional context to include with the message */
+  context?: Record<string, unknown>;
+}
 
 interface DiscussContextType {
   /** Register the chat input setter function (called by ChatPanel on mount) */
@@ -21,6 +33,12 @@ interface DiscussContextType {
   unregisterChatInput: () => void;
   /** Prefill the chat input with a message (called by useDiscussButton) */
   prefillChatInput: (message: string) => void;
+  /** Register discussion message and context (called by useDiscussButton) */
+  registerDiscussionMessage: (message: string, context?: Record<string, unknown>) => void;
+  /** Get the registered discussion message (called by DiscussButton) */
+  getDiscussionMessage: () => DiscussMessageContext | null;
+  /** Clear the registered discussion message */
+  clearDiscussionMessage: () => void;
 }
 
 const DiscussContext = createContext<DiscussContextType | undefined>(undefined);
@@ -38,6 +56,9 @@ export function DiscussProvider({ children }: DiscussProviderProps) {
   // Store the chat input setter as a ref (not state, to avoid re-renders)
   const chatInputSetterRef = useRef<((message: string) => void) | null>(null);
 
+  // Store the discussion message and context for sliding chat window integration
+  const discussionMessageRef = useRef<DiscussMessageContext | null>(null);
+
   const registerChatInput = useCallback((setter: (message: string) => void) => {
     chatInputSetterRef.current = setter;
   }, []);
@@ -54,10 +75,28 @@ export function DiscussProvider({ children }: DiscussProviderProps) {
     }
   }, []);
 
+  const registerDiscussionMessage = useCallback(
+    (message: string, context?: Record<string, unknown>) => {
+      discussionMessageRef.current = { message, context };
+    },
+    []
+  );
+
+  const getDiscussionMessage = useCallback(() => {
+    return discussionMessageRef.current;
+  }, []);
+
+  const clearDiscussionMessage = useCallback(() => {
+    discussionMessageRef.current = null;
+  }, []);
+
   const value: DiscussContextType = {
     registerChatInput,
     unregisterChatInput,
     prefillChatInput,
+    registerDiscussionMessage,
+    getDiscussionMessage,
+    clearDiscussionMessage,
   };
 
   return (

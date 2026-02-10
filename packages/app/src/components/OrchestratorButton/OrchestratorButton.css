@@ -1,0 +1,68 @@
+/**
+ * OrchestratorButton — Styles for orchestrator chat indicator badge
+ *
+ * Uses Apple-inspired design tokens from design-tokens.css:
+ * - system-purple (#bf5af2) and system-blue (#0a84ff) gradient
+ * - Full keyboard accessibility with focus-visible ring
+ * - Pulsing animation with prefers-reduced-motion support
+ */
+
+.orchestrator-button {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+  border-radius: var(--radius-sm, 6px);
+  transition: var(--transition-all);
+}
+
+.orchestrator-button__indicator {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(
+    135deg,
+    var(--system-purple, #bf5af2) 0%,
+    var(--system-blue, #0a84ff) 100%
+  );
+  border-radius: var(--radius-full, 9999px);
+  border: 2px solid var(--app-bg-primary, #1c1c1e);
+  animation: orchestrator-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(191, 90, 242, 0.4),
+              0 0 4px rgba(10, 132, 255, 0.3);
+}
+
+/**
+ * Pulsing animation for the indicator
+ * Creates a subtle scale and opacity pulse effect
+ */
+@keyframes orchestrator-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.15);
+  }
+}
+
+/**
+ * Keyboard focus state
+ * Provides clear visual feedback for keyboard navigation
+ */
+.orchestrator-button:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+/**
+ * Respect user's motion preferences
+ * Disables animation for users who prefer reduced motion
+ */
+@media (prefers-reduced-motion: reduce) {
+  .orchestrator-button__indicator {
+    animation: none;
+  }
+}

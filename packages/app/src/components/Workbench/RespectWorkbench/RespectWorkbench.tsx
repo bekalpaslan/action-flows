@@ -15,6 +15,7 @@ import { RespectCheckControls } from './RespectCheckControls';
 import { LiveSpatialMonitor } from './LiveSpatialMonitor';
 import { DiscussButton, DiscussDialog } from '../../DiscussButton';
 import { useDiscussButton } from '../../../hooks/useDiscussButton';
+import { OrchestratorButton } from '../../OrchestratorButton';
 import './RespectWorkbench.css';
 
 export function RespectWorkbench(): React.ReactElement {
@@ -39,6 +40,9 @@ export function RespectWorkbench(): React.ReactElement {
       <div className="respect-workbench__header">
         <h1 className="respect-workbench__title">Respect Workbench</h1>
         <DiscussButton componentName="RespectWorkbench" onClick={openDialog} size="small" />
+        <OrchestratorButton source="respect-rescore" context={{ action: 'rescore-respect' }}>
+          <button className="respect-workbench__action-btn">Re-score Respect</button>
+        </OrchestratorButton>
       </div>
 
       <RespectCheckControls

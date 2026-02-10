@@ -7,7 +7,8 @@
  * Features:
  * - Dialog state management (open/close)
  * - Message formatting with markdown <details> block for context
- * - Automatic routing to ChatPanel via DiscussContext
+ * - Automatic routing to ChatPanel via DiscussContext (legacy)
+ * - Integration with ChatWindowContext for sliding chat window
  * - Works with all 41+ components without requiring individual wiring
  */
 
@@ -39,7 +40,7 @@ export function useDiscussButton({
   getContext,
 }: UseDiscussButtonParams): UseDiscussButtonReturn {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { prefillChatInput } = useDiscussContext();
+  const { prefillChatInput, registerDiscussionMessage } = useDiscussContext();
 
   const openDialog = useCallback(() => {
     setIsDialogOpen(true);
@@ -73,10 +74,13 @@ ${JSON.stringify(context, null, 2)}
 </details>`;
       }
 
-      // Send to chat via context
+      // Register message for sliding chat window integration
+      registerDiscussionMessage(formattedMessage, context);
+
+      // Also send to chat via context (legacy support)
       prefillChatInput(formattedMessage);
     },
-    [getContext, prefillChatInput]
+    [getContext, prefillChatInput, registerDiscussionMessage]
   );
 
   return {

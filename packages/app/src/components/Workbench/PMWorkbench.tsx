@@ -19,6 +19,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { OrchestratorButton } from '../OrchestratorButton';
 import './PMWorkbench.css';
 
 /**
@@ -242,6 +243,9 @@ export function PMWorkbench({
         </div>
         <div className="pm-workbench__header-right">
           <DiscussButton componentName="PMWorkbench" onClick={openDialog} size="small" />
+          <OrchestratorButton source="pm-plan" context={{ action: 'plan-review' }}>
+            <button className="pm-workbench__action-btn">Plan with Orchestrator</button>
+          </OrchestratorButton>
           <button
             className="pm-workbench__create-btn"
             onClick={() => setShowCreateForm(!showCreateForm)}

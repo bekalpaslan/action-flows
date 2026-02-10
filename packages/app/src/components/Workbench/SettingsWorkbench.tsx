@@ -18,6 +18,7 @@ import { useTheme, type Theme } from '../../contexts/ThemeContext';
 import { useVimContext } from '../../contexts/VimNavigationContext';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { OrchestratorButton } from '../OrchestratorButton';
 import './SettingsWorkbench.css';
 
 // Storage keys
@@ -521,6 +522,9 @@ export function SettingsWorkbench(): React.ReactElement {
         <div className="settings-workbench__header-left">
           <h1 className="settings-workbench__title">Settings</h1>
           <DiscussButton componentName="SettingsWorkbench" onClick={openDialog} size="small" />
+          <OrchestratorButton source="settings-validate" context={{ action: 'validate-settings' }}>
+            <button className="settings-workbench__action-btn">Validate Configuration</button>
+          </OrchestratorButton>
           {saveMessage && (
             <span className="settings-workbench__save-message">{saveMessage}</span>
           )}

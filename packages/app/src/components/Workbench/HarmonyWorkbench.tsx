@@ -22,6 +22,7 @@ import { HarmonyBadge } from '../HarmonyBadge/HarmonyBadge';
 import { useHarmonyMetrics } from '../../hooks/useHarmonyMetrics';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { OrchestratorButton } from '../OrchestratorButton';
 import './HarmonyWorkbench.css';
 
 /**
@@ -269,12 +270,14 @@ export function HarmonyWorkbench({
           </div>
 
           {/* Actions */}
-          <button
-            className="harmony-workbench__action-btn harmony-workbench__action-btn--primary"
-            onClick={handleTriggerFullCheck}
-          >
-            Run Check
-          </button>
+          <OrchestratorButton source="harmony-recheck" context={{ action: 'recheck-harmony' }}>
+            <button
+              className="harmony-workbench__action-btn harmony-workbench__action-btn--primary"
+              onClick={handleTriggerFullCheck}
+            >
+              Re-check Harmony
+            </button>
+          </OrchestratorButton>
           <button
             className="harmony-workbench__action-btn"
             onClick={() => setShowManualCheck(!showManualCheck)}

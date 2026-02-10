@@ -75,6 +75,26 @@
   background-color: #2563eb;
 }
 
+.pm-workbench__action-btn {
+  padding: 0.5rem 1rem;
+  background-color: #10b981;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.pm-workbench__action-btn:hover {
+  background-color: #059669;
+}
+
+.pm-workbench__action-btn:active {
+  background-color: #047857;
+}
+
 /* Task Creation Form */
 .pm-workbench__create-form {
   padding: 1rem 1.5rem;

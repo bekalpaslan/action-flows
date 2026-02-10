@@ -1,11 +1,18 @@
 /**
  * DiscussButton Component
  *
- * A compact button that opens a dialog for discussing a specific UI component.
+ * A compact button that opens a sliding chat window for discussing a specific UI component.
  * Appears as a full button with label by default, or icon-only when size="small".
+ *
+ * Integration:
+ * - Reads discussion context from DiscussContext (registered by useDiscussButton)
+ * - Opens sliding chat window via ChatWindowContext
+ * - Falls back to onClick callback if ChatWindowContext is unavailable
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useDiscussContext } from '../../contexts/DiscussContext';
+import { useChatWindowContext } from '../../contexts/ChatWindowContext';
 import './DiscussButton.css';
 
 export interface DiscussButtonProps {
@@ -22,7 +29,7 @@ export interface DiscussButtonProps {
 }
 
 /**
- * DiscussButton - Opens a modal to discuss a specific component
+ * DiscussButton - Opens a sliding chat window to discuss a specific component
  */
 export function DiscussButton({
   componentName,
@@ -31,6 +38,41 @@ export function DiscussButton({
   size = 'medium',
   className = '',
 }: DiscussButtonProps): React.ReactElement {
+  // Try to get ChatWindowContext - graceful fallback if not available
+  let chatContext: ReturnType<typeof useChatWindowContext> | null = null;
+  let discussContext: ReturnType<typeof useDiscussContext> | null = null;
+
+  try {
+    chatContext = useChatWindowContext();
+  } catch (e) {
+    // ChatWindowContext not available, will fall back to onClick
+  }
+
+  try {
+    discussContext = useDiscussContext();
+  } catch (e) {
+    // DiscussContext not available, will fall back to onClick
+  }
+
+  const handleClick = useCallback(() => {
+    // Primary: Use ChatWindowContext if available
+    if (chatContext && discussContext) {
+      const discussionMessage = discussContext.getDiscussionMessage();
+      if (discussionMessage) {
+        // Open chat window with the discussion message as context
+        chatContext.openChat('discuss-button', {
+          message: discussionMessage.message,
+          componentName,
+          ...discussionMessage.context,
+        });
+        return;
+      }
+    }
+
+    // Fallback: Call the onClick callback (for backward compatibility)
+    onClick();
+  }, [chatContext, discussContext, componentName, onClick]);
+
   const buttonClasses = [
     'discuss-button',
     `discuss-button--${size}`,
@@ -43,7 +85,7 @@ export function DiscussButton({
   return (
     <button
       className={buttonClasses}
-      onClick={onClick}
+      onClick={handleClick}
       disabled={disabled}
       aria-label={`Discuss ${componentName}`}
       title={size === 'small' ? `Discuss ${componentName}` : undefined}
