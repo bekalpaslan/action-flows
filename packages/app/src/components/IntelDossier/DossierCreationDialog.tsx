@@ -64,10 +64,18 @@ export function DossierCreationDialog({
     targets.some((t) => t.trim().length > 0);
 
   return (
-    <div className="dossier-creation-dialog-backdrop">
-      <div className="dossier-creation-dialog">
+    <div
+      className="dossier-creation-dialog-backdrop"
+      role="presentation"
+    >
+      <div
+        className="dossier-creation-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="dossier-creation-dialog-title"
+      >
         <div className="dossier-creation-dialog-header">
-          <h3>Create Intel Dossier</h3>
+          <h3 id="dossier-creation-dialog-title">Create Intel Dossier</h3>
           <button
             className="close-button"
             onClick={onClose}

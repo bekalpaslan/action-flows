@@ -42,3 +42,36 @@ code {
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.9em;
 }
+
+/* ============================================================================
+   Accessibility: Focus Visible Indicators
+   Applies to all focusable elements (buttons, inputs, links, etc.)
+   Uses :focus-visible to only show on keyboard navigation, not mouse clicks
+   ============================================================================ */
+
+:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+/* Optional: Add subtle glow for extra visibility on dark backgrounds */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+}
+
+/* Reduced motion: Disable glow effects but keep outline for visibility */
+@media (prefers-reduced-motion: reduce) {
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible {
+    box-shadow: none;
+  }
+}

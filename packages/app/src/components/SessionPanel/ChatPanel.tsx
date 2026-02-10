@@ -165,6 +165,11 @@ export function ChatPanel({
     setCliState(state);
   }, []);
 
+  // Reset CLI state when switching sessions so startCliSession fires for the new session
+  useEffect(() => {
+    setCliStateSync('not-started');
+  }, [sessionId, setCliStateSync]);
+
   /**
    * Toggle collapse state
    */
@@ -522,7 +527,14 @@ export function ChatPanel({
       {!isCollapsed && (
         <>
           {/* Messages */}
-          <div className="chat-panel__messages" ref={messagesContainerRef}>
+          <div
+            className="chat-panel__messages"
+            ref={messagesContainerRef}
+            role="log"
+            aria-label="Chat messages"
+            aria-live="polite"
+            aria-atomic="false"
+          >
             {messages.length === 0 && (
               <div className="chat-panel__empty">
                 <div className="chat-panel__empty-icon">&#x1F4AC;</div>

@@ -66,6 +66,13 @@
 }
 
 .command-palette-input__clear:focus-visible {
-  outline: var(--space-0-5) solid var(--system-blue, #0a84ff);
-  outline-offset: var(--space-0-5);
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+}
+
+.command-palette-input__field:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
 }

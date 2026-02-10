@@ -38,7 +38,11 @@ export const SidebarNavGroup: React.FC<SidebarNavGroupProps> = ({
   };
 
   return (
-    <div className="app-sidebar__nav-group">
+    <div
+      className="app-sidebar__nav-group"
+      role="group"
+      aria-label={`${label} workbenches`}
+    >
       <button
         className="app-sidebar__nav-group-header"
         onClick={handleToggle}

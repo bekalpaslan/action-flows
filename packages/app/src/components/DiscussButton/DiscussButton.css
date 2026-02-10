@@ -29,7 +29,9 @@
 }
 
 .discuss-button:focus-visible {
-  box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.4);
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
 }
 
 /* Small variant: icon-only */
@@ -54,4 +56,24 @@
 /* Label */
 .discuss-button__label {
   white-space: nowrap;
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .discuss-button {
+    transition: none;
+  }
+
+  .discuss-button:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .discuss-button:active {
+    transform: none;
+  }
+
+  .discuss-button:focus-visible {
+    box-shadow: none;
+  }
 }

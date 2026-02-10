@@ -106,10 +106,18 @@ export function StarBookmarkDialog({
       : messageContent;
 
   return (
-    <div className="star-bookmark-dialog-backdrop">
-      <div className="star-bookmark-dialog">
+    <div
+      className="star-bookmark-dialog-backdrop"
+      role="presentation"
+    >
+      <div
+        className="star-bookmark-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="star-bookmark-dialog-title"
+      >
         <div className="star-bookmark-dialog-header">
-          <h3>★ Why are you starring this?</h3>
+          <h3 id="star-bookmark-dialog-title">★ Why are you starring this?</h3>
           <button
             className="close-button"
             onClick={onCancel}

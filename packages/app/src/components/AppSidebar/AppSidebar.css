@@ -104,6 +104,12 @@
   transform: scale(0.95);
 }
 
+.app-sidebar__collapse-btn:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+}
+
 .app-sidebar__collapse-btn svg {
   transition: transform var(--duration-normal) var(--ease-apple);
 }
@@ -199,6 +205,12 @@
   box-shadow: var(--input-glow-focus);
 }
 
+.app-sidebar__search-input:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+  box-shadow: var(--input-glow-focus), var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+}
+
 .app-sidebar__search-clear {
   position: absolute;
   right: calc(var(--space-3) + var(--space-2));
@@ -221,6 +233,12 @@
 .app-sidebar__search-clear:hover {
   background: var(--nav-item-bg-hover);
   color: var(--text-primary);
+}
+
+.app-sidebar__search-clear:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
 }
 
 /* ============================================================================
@@ -280,6 +298,13 @@
 
 .app-sidebar__nav-group-header:hover {
   background: var(--nav-item-bg-hover);
+  color: var(--text-primary);
+}
+
+.app-sidebar__nav-group-header:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: calc(var(--focus-ring-offset, 2px) * -1);
+  background: var(--nav-item-bg-active);
   color: var(--text-primary);
 }
 
@@ -375,6 +400,15 @@
 .app-sidebar__nav-item--disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.app-sidebar__nav-item:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: calc(var(--focus-ring-offset, 2px) * -1);
+  background: var(--nav-item-bg-active);
+  color: var(--text-primary);
+  border-left-color: var(--app-sidebar-accent-purple);
+  padding-left: calc(var(--space-3) - var(--app-sidebar-accent-bar-width));
 }
 
 .app-sidebar__nav-item-icon {
@@ -580,6 +614,59 @@
   z-index: calc(var(--app-sidebar-z-index) - 1);
 }
 
+.app-sidebar__hamburger:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+}
+
+/* ============================================================================
+   Accessibility: Reduced Motion
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar {
+    transition: width 0ms var(--ease-apple);
+  }
+
+  .app-sidebar__collapse-btn svg {
+    transition: transform 0ms var(--ease-apple);
+  }
+
+  .app-sidebar__nav-group-expand-btn {
+    transition: transform 0ms var(--ease-apple);
+  }
+
+  .app-sidebar__nav-group-items {
+    transition: max-height 0ms var(--ease-apple), opacity 0ms var(--ease-apple);
+  }
+
+  .app-sidebar__nav-item-tooltip {
+    transition: opacity 0ms var(--ease-in-out);
+  }
+
+  .app-sidebar__connection-status[data-status='connecting'],
+  .app-sidebar__connection-status[data-status='reconnecting'] {
+    animation: none;
+  }
+
+  .app-sidebar__search-input,
+  .app-sidebar__collapse-btn,
+  .app-sidebar__search-clear,
+  .app-sidebar__nav-group-header,
+  .app-sidebar__nav-item {
+    transition: none;
+  }
+
+  .app-sidebar__collapse-btn:focus-visible,
+  .app-sidebar__search-clear:focus-visible,
+  .app-sidebar__nav-group-header:focus-visible,
+  .app-sidebar__nav-item:focus-visible,
+  .app-sidebar__hamburger:focus-visible {
+    box-shadow: none;
+  }
+}
+
 @media (max-width: 768px) {
   .app-sidebar {
     transform: translateX(-100%);
@@ -602,5 +689,11 @@
 
   .app-sidebar--mobile-open ~ .app-sidebar__backdrop {
     display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-sidebar {
+      transition: transform 0ms var(--ease-apple);
+    }
   }
 }

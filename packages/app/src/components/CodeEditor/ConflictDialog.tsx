@@ -31,10 +31,18 @@ export function ConflictDialog({
   const externalLineCount = externalVersion.split('\n').length;
 
   return (
-    <div className="conflict-dialog-backdrop">
-      <div className="conflict-dialog">
+    <div
+      className="conflict-dialog-backdrop"
+      role="presentation"
+    >
+      <div
+        className="conflict-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="conflict-dialog-title"
+      >
         <div className="conflict-dialog-header">
-          <h2>⚠️ File Conflict Detected</h2>
+          <h2 id="conflict-dialog-title">⚠️ File Conflict Detected</h2>
         </div>
 
         <div className="conflict-dialog-body">
@@ -60,6 +68,8 @@ export function ConflictDialog({
           <button
             className="show-details-btn"
             onClick={() => setShowDetails(!showDetails)}
+            aria-expanded={showDetails}
+            aria-label={showDetails ? 'Hide version details' : 'Show version details'}
           >
             {showDetails ? 'Hide Details' : 'Show Details'}
           </button>
@@ -73,6 +83,7 @@ export function ConflictDialog({
               className="btn btn-primary"
               onClick={() => onResolve('keep-mine')}
               title="Keep your unsaved changes and discard external changes"
+              aria-label="Keep my changes and discard external changes"
             >
               📝 Keep My Changes
             </button>
@@ -81,6 +92,7 @@ export function ConflictDialog({
               className="btn btn-secondary"
               onClick={() => onResolve('take-theirs')}
               title="Discard your changes and use the external version"
+              aria-label="Take external version and discard my changes"
             >
               ⬇️ Take External Version
             </button>
@@ -89,6 +101,7 @@ export function ConflictDialog({
               className="btn btn-tertiary"
               onClick={onShowDiff}
               title="View differences between versions"
+              aria-label="Show differences between my version and external version"
             >
               🔍 Show Diff
             </button>
@@ -96,7 +109,11 @@ export function ConflictDialog({
         </div>
 
         <div className="conflict-dialog-footer">
-          <button className="btn btn-text" onClick={onCancel}>
+          <button
+            className="btn btn-text"
+            onClick={onCancel}
+            aria-label="Close conflict dialog without resolving"
+          >
             Cancel
           </button>
         </div>

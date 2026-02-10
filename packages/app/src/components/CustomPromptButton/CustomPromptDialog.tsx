@@ -61,10 +61,18 @@ export function CustomPromptDialog({
   const isValid = label.trim().length > 0 && prompt.trim().length > 0;
 
   return (
-    <div className="custom-prompt-dialog-backdrop">
-      <div className="custom-prompt-dialog">
+    <div
+      className="custom-prompt-dialog-backdrop"
+      role="presentation"
+    >
+      <div
+        className="custom-prompt-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="custom-prompt-dialog-title"
+      >
         <div className="custom-prompt-dialog-header">
-          <h3>Create Custom Prompt Button</h3>
+          <h3 id="custom-prompt-dialog-title">Create Custom Prompt Button</h3>
           <button
             className="close-button"
             onClick={onCancel}

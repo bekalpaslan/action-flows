@@ -29,6 +29,12 @@
   cursor: not-allowed;
 }
 
+.control-btn:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+}
+
 .pause-btn {
   border-color: var(--status-warning-text, #ff9f0a);
   color: var(--status-warning-text, #ff9f0a);
@@ -149,4 +155,31 @@
 
 .confirm-btn.secondary:hover {
   background: var(--fill-tertiary);
+}
+
+.confirm-btn:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline-offset: var(--focus-ring-offset, 2px);
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .cancel-confirm-overlay {
+    animation: none;
+  }
+
+  .cancel-confirm-dialog {
+    animation: none;
+  }
+
+  .control-btn,
+  .confirm-btn {
+    transition: none;
+  }
+
+  .control-btn:focus-visible,
+  .confirm-btn:focus-visible {
+    box-shadow: none;
+  }
 }
