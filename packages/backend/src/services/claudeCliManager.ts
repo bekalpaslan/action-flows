@@ -205,9 +205,8 @@ class ClaudeCliManager {
 
     // Create message aggregator for this session
     const aggregator = new ClaudeCliMessageAggregator(sessionId);
-    this.aggregators.set(sessionId, aggregator);
 
-    // When aggregator emits a complete message, broadcast it and store in history
+    // Register callback BEFORE storing in map (prevents access-before-callback-set)
     aggregator.setMessageCallback((message: ChatMessage) => {
       // Store in chat history
       Promise.resolve(storage.addChatMessage(sessionId, message)).catch(err => {
@@ -223,6 +222,7 @@ class ClaudeCliManager {
       };
       this.broadcast(sessionId, chatEvent);
     });
+    this.aggregators.set(sessionId, aggregator);
 
     // Handle raw-json messages for aggregation (message boundary detection)
     session.on('raw-json', (msg: StreamJsonMessage) => {
@@ -360,6 +360,12 @@ class ClaudeCliManager {
 
     session.on('error', (error) => {
       console.error(`[ClaudeCliManager] Session ${sessionId} error:`, error);
+      // Dispose aggregator on error to prevent memory leaks
+      const errAggregator = this.aggregators.get(sessionId);
+      if (errAggregator) {
+        errAggregator.dispose();
+        this.aggregators.delete(sessionId);
+      }
       // Remove from sessions map on error
       this.sessions.delete(sessionId);
     });
@@ -448,6 +454,12 @@ class ClaudeCliManager {
     }
 
     try {
+      // Dispose aggregator proactively (exit handler also disposes, but this is a safety net)
+      const agg = this.aggregators.get(sessionId);
+      if (agg) {
+        agg.dispose();
+        this.aggregators.delete(sessionId);
+      }
       session.stop(signal);
       return true;
     } catch (error) {

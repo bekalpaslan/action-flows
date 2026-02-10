@@ -169,7 +169,7 @@ export class ClaudeCliMessageAggregator {
   }
 
   /**
-   * Clean up timers on session end
+   * Clean up timers and references on session end
    */
   dispose(): void {
     this.clearTimeout();
@@ -177,6 +177,11 @@ export class ClaudeCliMessageAggregator {
     if (this.hasBufferedContent()) {
       this.finalizeMessage();
     }
+    // Break closure references to prevent memory leaks
+    this.onMessage = null;
+    this.buffer = '';
+    this.currentMessageId = null;
+    this.currentMetadata = {};
   }
 
   /**
