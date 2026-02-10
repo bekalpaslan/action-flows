@@ -23,6 +23,7 @@ export type WorkbenchId =
   | 'harmony'
   | 'editor'
   | 'intel'
+  | 'respect'
   | 'canvas';
 
 /**
@@ -39,6 +40,7 @@ export const WORKBENCH_IDS: readonly WorkbenchId[] = [
   'harmony',
   'editor',
   'intel',
+  'respect',
   'canvas',
 ] as const;
 
@@ -243,6 +245,19 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<WorkbenchId, WorkbenchConfig> = {
       'track changes in the API routes',
       'intelligence on WebSocket implementation',
     ],
+  },
+  respect: {
+    id: 'respect',
+    label: 'Respect',
+    icon: '📐',
+    hasNotifications: true,
+    notificationCount: 0,
+    glowColor: '#e91e63',
+    tooltip: 'Spatial boundary compliance and component health monitoring',
+    routable: false,
+    triggers: [],
+    flows: [],
+    routingExamples: [],
   },
   canvas: {
     id: 'canvas',

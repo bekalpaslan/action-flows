@@ -94,6 +94,11 @@ export type {
   ChatMessage,
   DiscoveredClaudeSession,
   DiscoveredSessionEnrichment,
+  RespectComponentType,
+  RespectViolationType,
+  RespectViolation,
+  RespectComponentResult,
+  RespectCheckResult,
 } from './models.js';
 
 // ============================================================================

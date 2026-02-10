@@ -31,6 +31,7 @@
 | test-coverage/ | Analyze test coverage and address gaps | test → analyze → code (conditional) |
 | backwards-harmony-audit/ | Audit contract harmony from frontend backwards | analyze×3 (parallel) → audit → second-opinion/ |
 | cli-integration-test/ | Systematic CLI integration testing | analyze → code → test → review |
+| e2e-chrome-mcp/ | Chrome MCP browser E2E test creation and execution | analyze → plan → human gate → code → chrome-mcp-test → review |
 
 ## settings
 

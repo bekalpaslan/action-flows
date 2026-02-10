@@ -13,6 +13,7 @@ import { HarmonyWorkbench } from './HarmonyWorkbench';
 import { ExploreWorkbench } from './ExploreWorkbench';
 import { ArchiveWorkbench } from './ArchiveWorkbench';
 import { IntelWorkbench } from './IntelWorkbench';
+import { RespectWorkbench } from './RespectWorkbench/RespectWorkbench';
 import { useSessionArchive } from '../../hooks/useSessionArchive';
 import {
   type WorkbenchId,
@@ -565,6 +566,8 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         );
       case 'intel':
         return <IntelWorkbench />;
+      case 'respect':
+        return <RespectWorkbench />;
       default:
         return (
           <div className="workbench-placeholder">

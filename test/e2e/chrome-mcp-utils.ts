@@ -213,6 +213,23 @@ export const SELECTORS = {
 
   /** Session title in workbench */
   sessionTitle: 'Sessions',
+
+  /** Respect check selectors (verified from CSS analysis 2026-02-10) */
+  workbenchLayout: 'workbench-layout',
+  workbenchBody: 'workbench-body',
+  workbenchMain: 'workbench-main',
+  workbenchContent: 'workbench-content',
+  workbenchBottom: 'workbench-bottom',
+  topBar: 'top-bar',
+  topBarTabs: 'top-bar-tabs',
+  leftPanelStack: 'left-panel-stack',
+  sessionPanelLayout: 'session-panel-layout',
+  rightVisualizationArea: 'right-visualization-area',
+  flowVisualization: 'flow-visualization',
+  chainDagContainer: 'chain-dag-container',
+  squadPanel: 'squad-panel',
+  chatMessages: 'chat-panel__messages',
+  chatInfoBar: 'chat-panel__info-bar',
 } as const;
 
 /**
@@ -224,3 +241,40 @@ export const API_ENDPOINTS = {
   sessionById: (id: string) => `/api/sessions/${id}`,
   sessionChat: (id: string) => `/api/sessions/${id}/chat`,
 } as const;
+
+/**
+ * Respect Check Types
+ */
+export interface RespectCheckViolation {
+  type: string;
+  severity: 'high' | 'medium' | 'low';
+  message: string;
+  expected: string;
+  actual: string;
+}
+
+export interface ComponentCheckResult {
+  selector: string;
+  type: string;
+  violations: RespectCheckViolation[];
+  metrics: {
+    width: number;
+    height: number;
+    scrollWidth: number;
+    scrollHeight: number;
+    clientWidth: number;
+    clientHeight: number;
+  };
+}
+
+export interface RespectCheckResult {
+  timestamp: string;
+  viewportWidth: number;
+  viewportHeight: number;
+  totalChecked: number;
+  totalElementsFound: number;
+  totalViolations: number;
+  violations: ComponentCheckResult[];
+  summary: { high: number; medium: number; low: number };
+  clean: Array<{ selector: string; type: string; width: number; height: number }>;
+}

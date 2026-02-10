@@ -524,3 +524,76 @@ export interface DiscoveredSessionEnrichment {
   /** Total number of JSONL session files found */
   totalSessionFiles: number;
 }
+
+// ============================================================================
+// Respect Check Types
+// ============================================================================
+
+/**
+ * Component type categories for spatial checking
+ */
+export type RespectComponentType =
+  | 'layout-shell'
+  | 'topbar'
+  | 'sidebar'
+  | 'panel'
+  | 'content-area'
+  | 'input'
+  | 'visualization'
+  | 'widget'
+  | 'modal';
+
+/**
+ * Types of spatial violations
+ */
+export type RespectViolationType =
+  | 'horizontal_overflow'
+  | 'vertical_overflow'
+  | 'viewport_escape'
+  | 'fixed_dim_mismatch'
+  | 'min_constraint'
+  | 'max_constraint'
+  | 'parent_escape';
+
+/**
+ * Single spatial violation detail
+ */
+export interface RespectViolation {
+  type: RespectViolationType;
+  severity: 'high' | 'medium' | 'low';
+  message: string;
+  expected: string;
+  actual: string;
+}
+
+/**
+ * Check result for a single component
+ */
+export interface RespectComponentResult {
+  selector: string;
+  type: RespectComponentType;
+  violations: RespectViolation[];
+  metrics: {
+    width: number;
+    height: number;
+    scrollWidth: number;
+    scrollHeight: number;
+    clientWidth: number;
+    clientHeight: number;
+  };
+}
+
+/**
+ * Full respect check result from a single run
+ */
+export interface RespectCheckResult {
+  timestamp: string;
+  viewportWidth: number;
+  viewportHeight: number;
+  totalChecked: number;
+  totalElementsFound: number;
+  totalViolations: number;
+  violations: RespectComponentResult[];
+  summary: { high: number; medium: number; low: number };
+  clean: Array<{ selector: string; type: RespectComponentType; width: number; height: number }>;
+}
