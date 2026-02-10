@@ -471,6 +471,9 @@ export interface ChatMessage {
     model?: string;
     stopReason?: string;
     toolName?: string;
+    toolUseId?: string;
+    toolInput?: unknown;
+    spawnPrompt?: string;
     stepNumber?: number;
     costUsd?: number;
     durationMs?: number;

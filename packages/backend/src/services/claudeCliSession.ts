@@ -18,7 +18,12 @@ export interface StreamJsonMessage {
   event?: {
     type?: string;
     delta?: { text?: string; type?: string };
-    content_block?: { type?: string; name?: string };
+    content_block?: {
+      type?: string;
+      name?: string;
+      id?: string;
+      input?: unknown;
+    };
   };
   cost_usd?: number;
   duration_ms?: number;

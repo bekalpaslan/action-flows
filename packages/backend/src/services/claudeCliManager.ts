@@ -272,6 +272,24 @@ class ClaudeCliManager {
             if (msg.event.content_block.name) {
               aggregator.setMetadata('toolName', msg.event.content_block.name);
             }
+            if (msg.event.content_block.id) {
+              aggregator.setMetadata('toolUseId', msg.event.content_block.id);
+            }
+            if (msg.event.content_block.input) {
+              aggregator.setMetadata('toolInput', msg.event.content_block.input);
+              // Special handling for Task tool spawn prompts
+              if (
+                msg.event.content_block.name === 'Task' &&
+                typeof msg.event.content_block.input === 'object' &&
+                msg.event.content_block.input !== null &&
+                'prompt' in msg.event.content_block.input
+              ) {
+                const prompt = (msg.event.content_block.input as { prompt?: unknown }).prompt;
+                if (typeof prompt === 'string') {
+                  aggregator.setMetadata('spawnPrompt', prompt);
+                }
+              }
+            }
           } else if (msg.event.type === 'message_stop') {
             // End of message — finalize
             aggregator.finalizeMessage();
