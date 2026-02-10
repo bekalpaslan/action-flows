@@ -153,6 +153,7 @@ export function ChatPanel({
   } | null>(null);
   const [chainApproved, setChainApproved] = useState(false);
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
+  const [focusedOptionIndex, setFocusedOptionIndex] = useState(0);
   const cliStateRef = useRef<CliSessionState>('not-started');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -432,7 +433,56 @@ export function ChatPanel({
   const handleModelSelect = useCallback((modelId: string) => {
     setSelectedModel(modelId);
     setIsModelDropdownOpen(false);
+    setFocusedOptionIndex(0);
   }, [setSelectedModel]);
+
+  /**
+   * Handle keyboard navigation in model selector
+   */
+  const handleModelSelectorKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!isModelDropdownOpen) {
+      // Open dropdown on Enter, Space, or ArrowDown when closed
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        setIsModelDropdownOpen(true);
+        setFocusedOptionIndex(AVAILABLE_MODELS.findIndex(m => m.id === selectedModel));
+      }
+      return;
+    }
+
+    // Dropdown is open - handle navigation
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setFocusedOptionIndex(prev => Math.min(prev + 1, AVAILABLE_MODELS.length - 1));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setFocusedOptionIndex(prev => Math.max(prev - 1, 0));
+        break;
+      case 'Home':
+        e.preventDefault();
+        setFocusedOptionIndex(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        setFocusedOptionIndex(AVAILABLE_MODELS.length - 1);
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        handleModelSelect(AVAILABLE_MODELS[focusedOptionIndex].id);
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setIsModelDropdownOpen(false);
+        break;
+      case 'Tab':
+        // Allow Tab to close dropdown and move focus naturally
+        setIsModelDropdownOpen(false);
+        break;
+    }
+  }, [isModelDropdownOpen, focusedOptionIndex, selectedModel, handleModelSelect]);
 
   /**
    * Handle add context button click
@@ -812,7 +862,9 @@ export function ChatPanel({
                   <button
                     className="chat-panel__model-selector-trigger"
                     onClick={() => setIsModelDropdownOpen(prev => !prev)}
+                    onKeyDown={handleModelSelectorKeyDown}
                     aria-label="Select AI model"
+                    aria-haspopup="listbox"
                     aria-expanded={isModelDropdownOpen}
                   >
                     <span className="chat-panel__model-selector-label">
@@ -825,12 +877,21 @@ export function ChatPanel({
 
                   {/* Model dropdown menu */}
                   {isModelDropdownOpen && (
-                    <div className="chat-panel__model-selector-dropdown">
-                      {AVAILABLE_MODELS.map(model => (
+                    <div
+                      className="chat-panel__model-selector-dropdown"
+                      role="listbox"
+                      aria-label="Available AI models"
+                    >
+                      {AVAILABLE_MODELS.map((model, index) => (
                         <button
                           key={model.id}
+                          role="option"
+                          aria-selected={selectedModel === model.id}
                           className={`chat-panel__model-selector-option ${selectedModel === model.id ? 'chat-panel__model-selector-option--selected' : ''}`}
                           onClick={() => handleModelSelect(model.id)}
+                          onKeyDown={handleModelSelectorKeyDown}
+                          tabIndex={focusedOptionIndex === index ? 0 : -1}
+                          ref={focusedOptionIndex === index ? (el) => el?.focus() : null}
                         >
                           <span className="chat-panel__model-selector-option-label">{model.label}</span>
                           {selectedModel === model.id && (

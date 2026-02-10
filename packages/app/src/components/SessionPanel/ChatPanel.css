@@ -709,45 +709,46 @@
 }
 
 /* ============================================================================
- * Input Area
+ * Input Area — NEW TWO-ROW DESIGN
  * ============================================================================ */
 
-.chat-panel__input-area {
+/* Main container — replaces old .chat-panel__input-area */
+.chat-panel__input-container {
   flex-shrink: 0;
-  padding: 8px 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: var(--panel-header-bg);
+  background: var(--panel-bg-elevated);
+  border: 1px solid var(--panel-border-color-default);
+  border-radius: var(--radius-16px);
+  box-shadow: var(--shadow-input);
+  margin: 8px 12px 12px 12px;
+  overflow: hidden;
   display: flex;
-  gap: 6px;
-  align-items: flex-end;
+  flex-direction: column;
 }
 
+/* Top row — wraps textarea */
+.chat-panel__input-row {
+  display: flex;
+  padding: 12px 16px;
+}
+
+/* Textarea — PRESERVE class name for E2E tests */
 .chat-panel__input-field {
   flex: 1;
-  min-height: 36px;
+  min-height: 24px;
   max-height: 120px;
-  padding: 8px 10px;
-  background: var(--input-bg-default);
-  border: var(--input-border-default);
-  border-radius: var(--input-radius-md);
-  box-shadow: var(--input-glow-default);
+  padding: 0;
+  background: transparent;
+  border: none;
   color: var(--text-primary);
-  font-size: var(--text-sm);
+  font-size: 16px;
   font-family: var(--font-sans);
-  resize: vertical;
+  resize: none;
   outline: none;
-  transition: var(--transition-all);
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .chat-panel__input-field::placeholder {
-  color: var(--text-tertiary);
-  font-size: var(--text-xs);
-}
-
-.chat-panel__input-field:focus {
-  border: var(--input-border-focus);
-  box-shadow: var(--input-glow-focus);
+  color: var(--input-placeholder-color);
 }
 
 .chat-panel__input-field:disabled {
@@ -755,30 +756,179 @@
   cursor: not-allowed;
 }
 
-.chat-panel__send-btn {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
+/* Bottom toolbar row */
+.chat-panel__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-top: 1px solid var(--panel-border-color-subtle);
+}
+
+/* Add context button (left side) */
+.chat-panel__add-context-btn {
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  background: var(--btn-bg-primary);
+  background: transparent;
   border: none;
-  border-radius: var(--btn-radius-md);
-  box-shadow: var(--btn-glow-default);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-all);
+}
+
+.chat-panel__add-context-btn:hover {
+  background: var(--btn-hover-tertiary);
   color: var(--text-primary);
+}
+
+.chat-panel__add-context-btn:active {
+  background: var(--btn-active-tertiary);
+}
+
+/* Right side of toolbar — model selector + send button */
+.chat-panel__toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Model selector container */
+.chat-panel__model-selector {
+  position: relative;
+}
+
+/* Model selector trigger button */
+.chat-panel__model-selector-trigger {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 8px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: var(--transition-all);
+}
+
+.chat-panel__model-selector-trigger:hover {
+  background: var(--btn-hover-tertiary);
+  color: var(--text-primary);
+}
+
+.chat-panel__model-selector-trigger:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
+.chat-panel__model-selector-label {
+  white-space: nowrap;
+}
+
+.chat-panel__model-selector-caret {
+  width: 16px;
+  height: 16px;
+  opacity: 0.6;
+  transition: transform 0.2s ease;
+}
+
+.chat-panel__model-selector-trigger[aria-expanded="true"] .chat-panel__model-selector-caret {
+  transform: rotate(180deg);
+}
+
+/* Model dropdown menu */
+.chat-panel__model-selector-dropdown {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  right: 0;
+  min-width: 160px;
+  background: var(--panel-bg-elevated);
+  border: 1px solid var(--panel-border-color-default);
+  border-radius: var(--radius-8px);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  z-index: var(--z-dropdown, 1000);
+}
+
+/* Model option button */
+.chat-panel__model-selector-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+
+.chat-panel__model-selector-option:hover {
+  background: var(--btn-hover-tertiary);
+}
+
+.chat-panel__model-selector-option:focus-visible {
+  outline: none;
+  background: var(--btn-hover-tertiary);
+  box-shadow: inset 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+.chat-panel__model-selector-option--selected {
+  color: var(--system-blue);
+  font-weight: 500;
+}
+
+.chat-panel__model-selector-option-label {
+  flex: 1;
+}
+
+.chat-panel__model-selector-checkmark {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Send button — PRESERVE class name for E2E tests, restyled per Figma */
+.chat-panel__send-btn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: var(--afw-color-accent-main);
+  border: 1px solid var(--btn-border-color-default);
+  border-radius: var(--radius-8px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  color: #ffffff;
   cursor: pointer;
   transition: var(--transition-all);
 }
 
 .chat-panel__send-btn:hover:not(:disabled) {
-  box-shadow: var(--btn-glow-hover);
+  background: #d4744f;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
   transform: translateY(-1px);
 }
 
 .chat-panel__send-btn:active:not(:disabled) {
   transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .chat-panel__send-btn:disabled {
@@ -788,8 +938,8 @@
 }
 
 .chat-panel__send-icon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   color: currentColor;
 }
 

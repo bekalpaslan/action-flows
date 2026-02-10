@@ -308,6 +308,19 @@
   --radius-4px: 4px;     /* Common small radius */
   --radius-8px: 8px;     /* Buttons, inputs */
   --radius-12px: 12px;   /* Modals, dialogs */
+  --radius-16px: 16px;   /* Input container border radius */
+
+  /* ==========================================================================
+     Shadow Variations
+     ========================================================================== */
+
+  --shadow-input: 0px 2px 8px rgba(0, 0, 0, 0.08);  /* Input container shadow */
+
+  /* ==========================================================================
+     Accent Colors
+     ========================================================================== */
+
+  --afw-color-accent-main: #c6613f;  /* Send button background */
 
   /* ==========================================================================
      Typography Scale — Apple System
