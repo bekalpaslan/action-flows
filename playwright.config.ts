@@ -11,7 +11,7 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   // Test directory containing Playwright specs
-  testDir: './test/playwright',
+  testDir: './test/playwright/specs',
 
   // Run tests in parallel
   fullyParallel: true,
