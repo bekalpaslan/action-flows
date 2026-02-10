@@ -372,6 +372,45 @@
   }
 }
 
+/* Freshness Indicator */
+.freshness-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: var(--panel-radius-sm);
+  background: var(--panel-bg-inset);
+  border: 1px solid var(--separator-base);
+}
+
+.freshness-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transition: var(--transition-colors);
+}
+
+/* Freshness grades */
+.freshness-fresh .freshness-dot {
+  background: rgb(34, 197, 94);
+  box-shadow: 0 0 4px rgba(34, 197, 94, 0.5);
+}
+
+.freshness-recent .freshness-dot {
+  background: rgb(234, 179, 8);
+  box-shadow: 0 0 4px rgba(234, 179, 8, 0.5);
+}
+
+.freshness-aging .freshness-dot {
+  background: rgb(249, 115, 22);
+  box-shadow: 0 0 4px rgba(249, 115, 22, 0.5);
+}
+
+.freshness-stale .freshness-dot {
+  background: rgb(239, 68, 68);
+  box-shadow: 0 0 4px rgba(239, 68, 68, 0.5);
+}
+
 /* Scrollbar Styling */
 .info-panel-content::-webkit-scrollbar {
   width: 4px;

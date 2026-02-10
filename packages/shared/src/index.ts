@@ -25,9 +25,14 @@ export type {
   ModelString,
   ChainSourceString,
   DurationMs,
+  FreshnessGrade,
+  FreshnessMetadata,
+  TelemetryLevel,
+  TelemetryEntry,
+  TelemetryQueryFilter,
 } from './types.js';
 
-export { Status, Model, ChainSource, brandedTypes, duration } from './types.js';
+export { Status, Model, ChainSource, brandedTypes, duration, FRESHNESS_THRESHOLDS, calculateFreshnessGrade } from './types.js';
 
 // ============================================================================
 // Event Types

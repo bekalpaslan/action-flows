@@ -143,3 +143,75 @@ export enum PromptType {
 }
 
 export type PromptTypeString = keyof typeof PromptType | 'binary' | 'text' | 'chain_approval';
+
+/**
+ * Freshness grades for temporal data aging
+ */
+export type FreshnessGrade = 'fresh' | 'recent' | 'aging' | 'stale';
+
+/**
+ * Freshness metadata for tracking data age and staleness
+ */
+export interface FreshnessMetadata {
+  lastModifiedAt: Timestamp;
+  lastAccessedAt: Timestamp;
+  freshnessGrade: FreshnessGrade;
+  ageMs: DurationMs;
+}
+
+/**
+ * Freshness thresholds in milliseconds
+ */
+export const FRESHNESS_THRESHOLDS = {
+  FRESH: 60_000, // < 1 minute
+  RECENT: 1_800_000, // < 30 minutes
+  AGING: 7_200_000, // < 2 hours
+  // > 2 hours = stale
+} as const;
+
+/**
+ * Calculate freshness grade based on last modified timestamp
+ */
+export function calculateFreshnessGrade(lastModifiedAt: Timestamp): FreshnessGrade {
+  const now = Date.now();
+  const modifiedTime = new Date(lastModifiedAt).getTime();
+  const ageMs = now - modifiedTime;
+
+  if (ageMs < FRESHNESS_THRESHOLDS.FRESH) {
+    return 'fresh';
+  } else if (ageMs < FRESHNESS_THRESHOLDS.RECENT) {
+    return 'recent';
+  } else if (ageMs < FRESHNESS_THRESHOLDS.AGING) {
+    return 'aging';
+  } else {
+    return 'stale';
+  }
+}
+
+/**
+ * Telemetry system types
+ */
+
+/** Telemetry severity levels */
+export type TelemetryLevel = 'debug' | 'info' | 'warn' | 'error';
+
+/** Telemetry entry representing a single log event */
+export interface TelemetryEntry {
+  id: string;
+  level: TelemetryLevel;
+  source: string; // e.g., 'fileWatcher', 'clientRegistry', 'claudeCliManager'
+  message: string;
+  metadata?: Record<string, unknown>;
+  sessionId?: SessionId;
+  timestamp: Timestamp;
+}
+
+/** Filter options for querying telemetry entries */
+export interface TelemetryQueryFilter {
+  level?: TelemetryLevel;
+  source?: string;
+  sessionId?: SessionId;
+  fromTimestamp?: Timestamp;
+  toTimestamp?: Timestamp;
+  limit?: number;
+}

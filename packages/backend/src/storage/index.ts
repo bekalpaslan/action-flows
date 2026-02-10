@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
 
@@ -125,6 +125,16 @@ export interface Storage {
   addSuggestion(suggestion: SuggestionEntry): void | Promise<void>;
   deleteSuggestion(id: string): boolean | Promise<boolean>;
   incrementSuggestionFrequency(id: string): boolean | Promise<boolean>;
+
+  // Freshness tracking
+  getFreshness(resourceType: 'session' | 'chain' | 'events', resourceId: string): FreshnessMetadata | null | Promise<FreshnessMetadata | null>;
+  getStaleResources(resourceType: 'session' | 'chain' | 'events', staleThresholdMs: number): string[] | Promise<string[]>;
+
+  // Telemetry storage
+  telemetryEntries?: TelemetryEntry[]; // Memory only
+  addTelemetryEntry(entry: TelemetryEntry): void | Promise<void>;
+  queryTelemetry(filter: TelemetryQueryFilter): TelemetryEntry[] | Promise<TelemetryEntry[]>;
+  getTelemetryStats(): { totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> } | Promise<{ totalEntries: number; errorCount: number; bySource: Record<string, number>; byLevel: Record<string, number> }>;
 }
 
 /**

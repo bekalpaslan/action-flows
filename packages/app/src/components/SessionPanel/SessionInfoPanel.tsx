@@ -15,6 +15,7 @@
 
 import React, { useCallback, useState } from 'react';
 import type { Session } from '@afw/shared';
+import { useFreshness } from '../../hooks/useFreshness';
 import './SessionInfoPanel.css';
 
 export interface SessionInfoPanelProps {
@@ -126,6 +127,9 @@ export function SessionInfoPanel({
   const [copyTooltip, setCopyTooltip] = useState<string>('Copy');
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
+  // Fetch freshness data for this session
+  const { grade, freshness } = useFreshness('session', session.id);
+
   /**
    * Copy session ID to clipboard
    */
@@ -190,12 +194,20 @@ export function SessionInfoPanel({
       {/* Panel Content — Compact horizontal layout */}
       {!isCollapsed && (
         <div className="info-panel-content">
-          {/* Row 1: Status + Session ID */}
+          {/* Row 1: Status + Freshness + Session ID */}
           <div className="info-row-compact">
             <div className={`status-badge status-${statusColor}`}>
               <span className="status-dot" />
               <span className="status-text">{statusText}</span>
             </div>
+            {grade && (
+              <div
+                className={`freshness-indicator freshness-${grade}`}
+                title={freshness ? `Last modified: ${formatRelativeTime(new Date(freshness.lastModifiedAt).getTime())}` : undefined}
+              >
+                <span className="freshness-dot" />
+              </div>
+            )}
             <button
               className="session-id-button"
               onClick={handleCopyId}

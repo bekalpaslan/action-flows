@@ -30,6 +30,7 @@ import harmonyRouter from './routes/harmony.js';
 import routingRouter from './routes/routing.js';
 import dossiersRouter, { setBroadcastDossierFunction } from './routes/dossiers.js';
 import suggestionsRouter from './routes/suggestions.js';
+import telemetryRouter from './routes/telemetry.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
 
@@ -93,6 +94,7 @@ app.use('/api/toolbar', toolbarRouter);
 app.use('/api/patterns', patternsRouter);
 app.use('/api/dossiers', dossiersRouter);
 app.use('/api/suggestions', suggestionsRouter);
+app.use('/api/telemetry', telemetryRouter);
 // Note: patternsRouter also handles /bookmarks routes, registered at /api for cleaner URLs
 // IMPORTANT: Must come AFTER specific /api/* routes since it has /:projectId catch-all
 app.use('/api', patternsRouter);
