@@ -2,15 +2,17 @@
  * useDiscussButton Hook
  *
  * Manages the state and behavior for the DiscussButton + DiscussDialog combo.
- * Formats the discussion message with optional context for sending to chat.
+ * Formats the discussion message with optional context and sends it to ChatPanel.
  *
- * MVP Scope:
+ * Features:
  * - Dialog state management (open/close)
  * - Message formatting with markdown <details> block for context
- * - Returns formatted message string (parent component decides what to do with it)
+ * - Automatic routing to ChatPanel via DiscussContext
+ * - Works with all 41+ components without requiring individual wiring
  */
 
 import { useState, useCallback } from 'react';
+import { useDiscussContext } from '../contexts/DiscussContext';
 
 export interface UseDiscussButtonParams {
   /** Name of the component being discussed */
@@ -26,8 +28,8 @@ export interface UseDiscussButtonReturn {
   openDialog: () => void;
   /** Close the dialog */
   closeDialog: () => void;
-  /** Handle sending the message (formats and returns the message) */
-  handleSend: (message: string) => string;
+  /** Handle sending the message (formats and sends to chat) */
+  handleSend: (message: string) => void;
 }
 
 /**
@@ -37,6 +39,7 @@ export function useDiscussButton({
   getContext,
 }: UseDiscussButtonParams): UseDiscussButtonReturn {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { prefillChatInput } = useDiscussContext();
 
   const openDialog = useCallback(() => {
     setIsDialogOpen(true);
@@ -47,18 +50,18 @@ export function useDiscussButton({
   }, []);
 
   /**
-   * Format the message with optional context as markdown <details> block
+   * Format the message with optional context and send to chat
+   * Note: Does NOT close the dialog - the caller should do that
    */
   const handleSend = useCallback(
-    (message: string): string => {
+    (message: string): void => {
       const context = getContext?.();
 
-      if (!context || Object.keys(context).length === 0) {
-        return message;
-      }
+      let formattedMessage = message;
 
-      // Format as markdown with collapsible details
-      const formattedMessage = `${message}
+      if (context && Object.keys(context).length > 0) {
+        // Format as markdown with collapsible details
+        formattedMessage = `${message}
 
 <details>
 <summary>Component Context</summary>
@@ -68,10 +71,12 @@ ${JSON.stringify(context, null, 2)}
 \`\`\`
 
 </details>`;
+      }
 
-      return formattedMessage;
+      // Send to chat via context
+      prefillChatInput(formattedMessage);
     },
-    [getContext]
+    [getContext, prefillChatInput]
   );
 
   return {

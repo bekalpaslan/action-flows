@@ -18,6 +18,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { SessionId, Session, WorkspaceEvent } from '@afw/shared';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
+import { useDiscussContext } from '../../contexts/DiscussContext';
 import { useChatMessages, type ChatMessage } from '../../hooks/useChatMessages';
 import { usePromptButtons } from '../../hooks/usePromptButtons';
 import { claudeCliService } from '../../services/claudeCliService';
@@ -136,6 +137,7 @@ export function ChatPanel({
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const { send } = useWebSocketContext();
+  const { registerChatInput, unregisterChatInput } = useDiscussContext();
   const { messages, addUserMessage } = useChatMessages(sessionId);
   const { buttons, getButtonPromptText } = usePromptButtons({
     session,
@@ -144,7 +146,7 @@ export function ChatPanel({
   });
 
   // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
+  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
     componentName: 'ChatPanel',
     getContext: () => ({
       messageCount: messages.length,
@@ -208,6 +210,23 @@ export function ChatPanel({
         ? formatDuration(Date.now() - new Date(session.startedAt).getTime())
         : undefined
     : undefined;
+
+  /**
+   * Register chat input with DiscussContext on mount
+   */
+  useEffect(() => {
+    const inputSetter = (message: string) => {
+      setInput(message);
+      // Focus the input field after prefill
+      inputRef.current?.focus();
+    };
+
+    registerChatInput(inputSetter);
+
+    return () => {
+      unregisterChatInput();
+    };
+  }, [registerChatInput, unregisterChatInput]);
 
   /**
    * Auto-scroll to bottom when new messages arrive
@@ -309,15 +328,13 @@ export function ChatPanel({
   }, [getButtonPromptText, handleSendMessage]);
 
   /**
-   * Handle discuss dialog send - prefill the input instead of sending immediately
+   * Handle discuss dialog send - format and send to chat, then close dialog
    */
   const handleDiscussDialogSend = useCallback((message: string) => {
-    const formattedMessage = handleDiscussSend(message);
-    setInput(formattedMessage);
+    handleSend(message);
     closeDialog();
-    // Focus the input field
-    inputRef.current?.focus();
-  }, [handleDiscussSend, closeDialog]);
+  }, [handleSend, closeDialog]);
+
 
   /**
    * Determine if the assistant is currently "typing" (streaming)
