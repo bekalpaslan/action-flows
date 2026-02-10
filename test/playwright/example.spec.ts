@@ -21,12 +21,12 @@ test.describe('ActionFlows Dashboard - Smoke Test', () => {
     await expect(workbench).toBeVisible({ timeout: 10000 });
   });
 
-  test('should have a session panel', async ({ page }) => {
+  test('should have the session sidebar', async ({ page }) => {
     await page.goto('/');
 
-    // Wait for the session panel to render
-    const sessionPanel = page.locator('.session-panel-layout');
-    await expect(sessionPanel).toBeVisible({ timeout: 10000 });
+    // Session sidebar is always rendered on the left
+    const sidebar = page.locator('.session-sidebar');
+    await expect(sidebar).toBeVisible({ timeout: 10000 });
   });
 
   test('should load without console errors', async ({ page }) => {
@@ -45,8 +45,10 @@ test.describe('ActionFlows Dashboard - Smoke Test', () => {
     // Check that no critical errors were logged
     // Filter out expected/known errors if necessary
     const criticalErrors = consoleErrors.filter((error) => {
-      // Add filters here for known non-critical errors
-      return !error.includes('DevTools');
+      // Filter known non-critical errors
+      if (error.includes('DevTools')) return false;
+      if (error.includes('WebSocket')) return false; // WS errors expected when no session active
+      return true;
     });
 
     expect(criticalErrors).toHaveLength(0);
