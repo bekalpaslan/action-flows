@@ -3,19 +3,17 @@
  * Primary workbench for active development sessions
  *
  * Features:
- * - Displays active session using SessionPanelLayout with 25/75 split panel architecture
  * - Header showing attached session count
  * - Empty state when no sessions are attached
  * - Session control callbacks (close, detach, input)
+ * - Chat interface now provided by SlidingChatWindow in WorkbenchLayout
  *
  * Layout:
  * - Header bar with session count and controls
- * - SessionPanelLayout for displaying active session
  */
 
 import React from 'react';
 import type { Session, FlowAction } from '@afw/shared';
-import { SessionPanelLayout } from '../SessionPanel';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './WorkWorkbench.css';
@@ -97,25 +95,17 @@ export function WorkWorkbench({
         </div>
       </div>
 
-      {/* Main Content - SessionPanelLayout for active session */}
+      {/* Main Content - Chat functionality now provided by SlidingChatWindow */}
       <div className="work-workbench__content">
         {sessionCount === 0 ? (
           <div className="work-workbench__empty-state">
             <p>No sessions attached. Select a session from the sidebar to begin.</p>
           </div>
         ) : activeSession ? (
-          <SessionPanelLayout
-            session={activeSession}
-            onSessionClose={() => onSessionClose?.(activeSession.id)}
-            onSessionDetach={() => onSessionDetach?.(activeSession.id)}
-            onSubmitInput={async (input) => {
-              await onSessionInput?.(activeSession.id, input);
-            }}
-            onNodeClick={(nodeId) => onNodeClick?.(activeSession.id, nodeId)}
-            onAgentClick={(agentId) => onAgentClick?.(activeSession.id, agentId)}
-            flows={flows}
-            actions={actions}
-          />
+          <div className="work-workbench__session-info">
+            <p>Session: {activeSession.id}</p>
+            <p>Use the chat panel on the right to interact with this session.</p>
+          </div>
         ) : (
           <div className="work-workbench__empty-state">
             <p>Active session not found. Select a session from the sidebar.</p>

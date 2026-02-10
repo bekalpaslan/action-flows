@@ -240,7 +240,6 @@ export {
   DEFAULT_WORKBENCH_CONFIGS,
   getWorkbenchForSessionTag,
   getSessionCapableWorkbenches,
-  canWorkbenchHaveSessions,
   ROUTABLE_WORKBENCHES,
   isRoutable,
 } from './workbenchTypes.js';

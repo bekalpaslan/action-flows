@@ -26,7 +26,6 @@ import {
   type SessionId,
   type Session,
   type FlowAction,
-  canWorkbenchHaveSessions,
   brandedTypes,
 } from '@afw/shared';
 import './WorkbenchLayout.css';
@@ -598,39 +597,34 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
     }
   };
 
-  // Check if current workbench supports sessions
-  const showSessionSidebar = canWorkbenchHaveSessions(activeWorkbench);
-
   return (
     <div className="workbench-layout">
       <AppSidebar onCollapseChange={setSidebarCollapsed} />
 
-      {/* SessionSidebar - Only show on session-capable workbenches */}
-      {showSessionSidebar && (
-        <SessionSidebar
-          onAttachSession={handleAttachSession}
-          activeSessionId={activeSessionId}
-          onNewSession={async () => {
-            try {
-              const res = await fetch('http://localhost:3001/api/sessions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cwd: 'D:/ActionFlowsDashboard' }),
-              });
-              if (!res.ok) throw new Error(`Failed to create session: ${res.status}`);
-              const data = await res.json();
-              const newId = data.id as SessionId;
-              handleAttachSession(newId);
-            } catch (err) {
-              console.error('Failed to create new session:', err);
-            }
-          }}
-        />
-      )}
+      {/* SessionSidebar - Always show for session management */}
+      <SessionSidebar
+        onAttachSession={handleAttachSession}
+        activeSessionId={activeSessionId}
+        onNewSession={async () => {
+          try {
+            const res = await fetch('http://localhost:3001/api/sessions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ cwd: 'D:/ActionFlowsDashboard' }),
+            });
+            if (!res.ok) throw new Error(`Failed to create session: ${res.status}`);
+            const data = await res.json();
+            const newId = data.id as SessionId;
+            handleAttachSession(newId);
+          } catch (err) {
+            console.error('Failed to create new session:', err);
+          }
+        }}
+      />
 
       <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
         <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }}>
-          <main className={`workbench-main ${showSessionSidebar ? 'with-sidebar' : ''}`}>
+          <main className="workbench-main with-sidebar">
             <div className={`workbench-content ${transitionClass}`}>
               {renderWorkbenchContent(activeWorkbench)}
               {children}

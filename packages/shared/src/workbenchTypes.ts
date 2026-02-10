@@ -355,12 +355,6 @@ export function getSessionCapableWorkbenches(): WorkbenchId[] {
   return ['work', 'maintenance', 'explore', 'review'];
 }
 
-/**
- * Check if a workbench can contain sessions
- */
-export function canWorkbenchHaveSessions(workbenchId: WorkbenchId): boolean {
-  return getSessionCapableWorkbenches().includes(workbenchId);
-}
 
 // ============================================================================
 // Context-Native Routing

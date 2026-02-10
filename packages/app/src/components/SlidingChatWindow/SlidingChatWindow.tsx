@@ -7,8 +7,13 @@
  * Supports draggable left-edge resize handle with localStorage persistence.
  */
 
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import { useChatWindowContext } from '../../contexts/ChatWindowContext';
+import { useSessionContext } from '../../contexts/SessionContext';
+import { useActiveChain } from '../../hooks/useActiveChain';
+import type { SessionId } from '@afw/shared';
+import { HybridFlowViz } from '../SessionTile/HybridFlowViz';
+import { ReactFlowProvider } from 'reactflow';
 import './SlidingChatWindow.css';
 
 interface SlidingChatWindowProps {
@@ -16,8 +21,13 @@ interface SlidingChatWindowProps {
 }
 
 export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children }) => {
-  const { isOpen, chatWidth, source, closeChat, setChatWidth } = useChatWindowContext();
+  const { isOpen, chatWidth, source, sessionId, closeChat, setChatWidth, setSessionId } = useChatWindowContext();
+  const { sessions } = useSessionContext();
   const panelRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState<'chat' | 'flow'>('chat');
+
+  // Fetch active chain for flow visualization
+  const { activeChain, loading: chainLoading } = useActiveChain(sessionId || ('' as SessionId));
 
   /**
    * Handle resize start - attach mouse move/up listeners and update cursor
@@ -84,6 +94,19 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children }
         {source && (
           <span className="sliding-chat-window__source">{source}</span>
         )}
+        <select
+          className="sliding-chat-window__session-select"
+          value={sessionId || ''}
+          onChange={(e) => setSessionId(e.target.value ? e.target.value as SessionId : null)}
+          aria-label="Select chat session"
+        >
+          <option value="">No session</option>
+          {sessions.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name || s.id}
+            </option>
+          ))}
+        </select>
         <button
           className="sliding-chat-window__close-btn"
           onClick={closeChat}
@@ -93,8 +116,61 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children }
           ×
         </button>
       </div>
-      <div className="sliding-chat-window__body">
-        {children}
+
+      {/* Tab Navigation */}
+      <div className="sliding-chat-window__tabs">
+        <button
+          className={`sliding-chat-window__tab ${activeTab === 'chat' ? 'sliding-chat-window__tab--active' : ''}`}
+          onClick={() => setActiveTab('chat')}
+          aria-selected={activeTab === 'chat'}
+          role="tab"
+          type="button"
+        >
+          Chat
+        </button>
+        <button
+          className={`sliding-chat-window__tab ${activeTab === 'flow' ? 'sliding-chat-window__tab--active' : ''}`}
+          onClick={() => setActiveTab('flow')}
+          aria-selected={activeTab === 'flow'}
+          role="tab"
+          type="button"
+        >
+          Flow
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      <div className="sliding-chat-window__body" role="tabpanel">
+        {activeTab === 'chat' ? (
+          children
+        ) : (
+          <div className="sliding-chat-window__flow-container">
+            {chainLoading ? (
+              <div className="sliding-chat-window__empty-state">
+                <div className="empty-state__icon">⏳</div>
+                <div className="empty-state__title">Loading Flow...</div>
+              </div>
+            ) : activeChain && sessionId ? (
+              <ReactFlowProvider>
+                <HybridFlowViz
+                  sessionId={sessionId}
+                  chain={activeChain}
+                  chainId={activeChain.id}
+                  enableAnimations={true}
+                  showAgents={true}
+                />
+              </ReactFlowProvider>
+            ) : (
+              <div className="sliding-chat-window__empty-state">
+                <div className="empty-state__icon">📊</div>
+                <div className="empty-state__title">No Active Chain</div>
+                <div className="empty-state__message">
+                  Flow visualization will appear here once a chain is compiled.
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
