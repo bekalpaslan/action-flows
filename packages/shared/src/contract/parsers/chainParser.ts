@@ -1,6 +1,7 @@
 /**
  * Chain Format Parsers
  * Implements parsers for Format 1.1-1.4
+ * With Zod validation for enum/range constraints
  */
 
 import type {
@@ -15,6 +16,13 @@ import type {
 import { ChainPatterns } from '../patterns/chainPatterns.js';
 import { CONTRACT_VERSION } from '../version.js';
 import type { ModelString, StatusString } from '../../types.js';
+import {
+  ChainCompilationSchema,
+  ChainExecutionStartSchema,
+  ChainStatusUpdateSchema,
+  ExecutionCompleteSchema,
+  validateWithLogging,
+} from '../validation/index.js';
 
 /**
  * Parse a chain compilation table from orchestrator output
@@ -53,10 +61,10 @@ export function parseChainCompilation(text: string): ChainCompilationParsed | nu
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate (manual validation, no Zod in Phase 1)
-  // If critical fields are missing, still return partial parse
-  if (!parsed.title && !parsed.steps) {
-    console.warn('Chain compilation parsing incomplete: missing title and steps');
+  // 4. Validate with Zod
+  const validation = validateWithLogging('ChainCompilation', ChainCompilationSchema, parsed);
+  if (!validation.success) {
+    console.warn('ChainCompilation validation issues:', validation.error.issues);
   }
 
   return parsed;
@@ -125,7 +133,12 @@ export function parseChainExecutionStart(text: string): ChainExecutionStartParse
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('ChainExecutionStart', ChainExecutionStartSchema, parsed);
+  if (!validation.success) {
+    console.warn('ChainExecutionStart validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -153,7 +166,12 @@ export function parseChainStatusUpdate(text: string): ChainStatusUpdateParsed | 
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('ChainStatusUpdate', ChainStatusUpdateSchema, parsed);
+  if (!validation.success) {
+    console.warn('ChainStatusUpdate validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -183,7 +201,12 @@ export function parseExecutionComplete(text: string): ExecutionCompleteParsed | 
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('ExecutionComplete', ExecutionCompleteSchema, parsed);
+  if (!validation.success) {
+    console.warn('ExecutionComplete validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 

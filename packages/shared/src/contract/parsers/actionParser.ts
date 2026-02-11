@@ -1,6 +1,7 @@
 /**
  * Action Output Format Parsers
  * Implements parsers for Format 5.1-5.3
+ * With Zod validation for enum/range constraints
  */
 
 import type {
@@ -15,6 +16,12 @@ import type {
 } from '../types/actionFormats.js';
 import { ActionPatterns } from '../patterns/actionPatterns.js';
 import { CONTRACT_VERSION } from '../version.js';
+import {
+  ReviewReportSchema,
+  AnalysisReportSchema,
+  BrainstormTranscriptSchema,
+  validateWithLogging,
+} from '../validation/index.js';
 
 /**
  * Parse review report
@@ -62,7 +69,13 @@ export function parseReviewReport(text: string): ReviewReportParsed | null {
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('ReviewReport', ReviewReportSchema, parsed);
+  if (!validation.success) {
+    // Log validation errors but still return parsed object for graceful degradation
+    console.warn('ReviewReport validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -155,7 +168,13 @@ export function parseAnalysisReport(text: string): AnalysisReportParsed | null {
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('AnalysisReport', AnalysisReportSchema, parsed);
+  if (!validation.success) {
+    // Log validation errors but still return parsed object for graceful degradation
+    console.warn('AnalysisReport validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -252,7 +271,13 @@ export function parseBrainstormTranscript(text: string): BrainstormTranscriptPar
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('BrainstormTranscript', BrainstormTranscriptSchema, parsed);
+  if (!validation.success) {
+    // Log validation errors but still return parsed object for graceful degradation
+    console.warn('BrainstormTranscript validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 

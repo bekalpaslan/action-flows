@@ -1,6 +1,7 @@
 /**
  * Registry Format Parsers
  * Implements parsers for Format 4.1-4.3
+ * With Zod validation for enum/range constraints
  */
 
 import type {
@@ -10,6 +11,12 @@ import type {
 } from '../types/registryFormats.js';
 import { RegistryPatterns } from '../patterns/registryPatterns.js';
 import { CONTRACT_VERSION } from '../version.js';
+import {
+  RegistryUpdateSchema,
+  IndexEntrySchema,
+  LearningEntrySchema,
+  validateWithLogging,
+} from '../validation/index.js';
 
 /**
  * Parse registry update
@@ -36,7 +43,12 @@ export function parseRegistryUpdate(text: string): RegistryUpdateParsed | null {
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('RegistryUpdate', RegistryUpdateSchema, parsed);
+  if (!validation.success) {
+    console.warn('RegistryUpdate validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -72,7 +84,12 @@ export function parseIndexEntry(text: string): IndexEntryParsed | null {
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('IndexEntry', IndexEntrySchema, parsed);
+  if (!validation.success) {
+    console.warn('IndexEntry validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -110,6 +127,11 @@ export function parseLearningEntry(text: string): LearningEntryParsed | null {
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('LearningEntry', LearningEntrySchema, parsed);
+  if (!validation.success) {
+    console.warn('LearningEntry validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }

@@ -37,6 +37,7 @@ import type {
   TelemetryQueryFilter,
   ReminderDefinition,
   ReminderInstance,
+  ErrorInstance,
   UniverseGraph,
   RegionNode,
   LightBridge,
@@ -433,6 +434,27 @@ export class ResilientStorage implements Storage {
 
   async deleteReminderInstance(instanceId: string): Promise<boolean> {
     return this.executeWithFallback((storage) => storage.deleteReminderInstance(instanceId));
+  }
+
+  // Error storage
+  async addError(error: ErrorInstance): Promise<void> {
+    return this.executeWithFallback((storage) => storage.addError(error));
+  }
+
+  async getErrors(sessionId: SessionId, filter?: { chainId?: ChainId; dismissedOnly?: boolean }): Promise<ErrorInstance[]> {
+    return this.executeWithFallback((storage) => storage.getErrors(sessionId, filter));
+  }
+
+  async dismissError(errorId: string, dismissed: boolean): Promise<boolean> {
+    return this.executeWithFallback((storage) => storage.dismissError(errorId, dismissed));
+  }
+
+  async deleteError(errorId: string): Promise<boolean> {
+    return this.executeWithFallback((storage) => storage.deleteError(errorId));
+  }
+
+  async deleteChainErrors(chainId: ChainId): Promise<number> {
+    return this.executeWithFallback((storage) => storage.deleteChainErrors(chainId));
   }
 
   // Universe graph storage

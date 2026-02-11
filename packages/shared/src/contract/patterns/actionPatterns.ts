@@ -28,7 +28,7 @@ export const ReviewReportPatterns = {
  */
 export const AnalysisReportPatterns = {
   heading: /^# (.+)$/m,
-  aspect: /^\*\*Aspect:\*\* (coverage|dependencies|structure|drift|inventory|impact)$/m,
+  aspect: /^\*\*Aspect:\*\* (.+)$/m,
   scope: /^\*\*Scope:\*\* (.+)$/m,
   date: /^\*\*Date:\*\* (\d{4}-\d{2}-\d{2})$/m,
   agent: /^\*\*Agent:\*\* analyze$/m,

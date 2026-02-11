@@ -144,3 +144,8 @@ export {
   isErrorAnnouncementParsed,
   isContextRoutingParsed,
 } from './guards.js';
+
+// ============================================================================
+// Validation Schemas & Utilities
+// ============================================================================
+export * from './validation/index.js';

@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import type { UniverseGraph, RegionNode, LightBridge, SessionId, RegionId, EdgeId, WorkbenchId } from '@afw/shared';
+import type { UniverseGraph, RegionNode, LightBridge, SessionId, RegionId, EdgeId, WorkbenchId, ChainId } from '@afw/shared';
 import { brandedTypes, FogState } from '@afw/shared';
 import { storage } from '../storage/index.js';
 import { validateBody } from '../middleware/validate.js';
@@ -10,7 +10,12 @@ import {
   createBridgeSchema,
   sessionRegionMappingSchema,
   discoverRegionSchema,
+  recordActivitySchema,
+  revealRegionSchema,
+  revealAllRegionsSchema,
 } from '../schemas/api.js';
+import { getDiscoveryService } from '../services/discoveryService.js';
+import * as universeEvents from '../ws/universeEvents.js';
 
 const router = Router();
 
@@ -445,6 +450,254 @@ router.delete('/sessions/:sessionId/region', writeLimiter, async (req, res) => {
     console.error('[API] Error deleting session-region mapping:', error);
     res.status(500).json({
       error: 'Failed to delete session-region mapping',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+// ============================================================================
+// Discovery System Endpoints (Phase 3)
+// ============================================================================
+
+/**
+ * GET /api/universe/discovery/progress/:sessionId
+ * Poll current discovery progress for all regions
+ */
+router.get('/discovery/progress/:sessionId', readLimiter, async (req, res) => {
+  try {
+    const sessionId = req.params.sessionId as SessionId;
+
+    // Verify session exists
+    const session = await Promise.resolve(storage.getSession(sessionId));
+    if (!session) {
+      return res.status(404).json({
+        error: 'Session not found',
+        sessionId,
+      });
+    }
+
+    const discoveryService = getDiscoveryService();
+    if (!discoveryService) {
+      return res.status(503).json({
+        error: 'Discovery service not initialized',
+      });
+    }
+
+    const result = await discoveryService.evaluateDiscovery(sessionId);
+
+    res.json({
+      discoveryProgress: result.progress,
+      readyToReveal: result.readyRegions,
+    });
+  } catch (error) {
+    console.error('[API] Error fetching discovery progress:', error);
+    res.status(500).json({
+      error: 'Failed to fetch discovery progress',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
+ * POST /api/universe/discovery/record
+ * Record user activity (interactions, chains, errors)
+ */
+router.post('/discovery/record', writeLimiter, validateBody(recordActivitySchema), async (req, res) => {
+  try {
+    const { sessionId, activityType, context, chainId } = req.body;
+
+    // Verify session exists
+    const session = await Promise.resolve(storage.getSession(sessionId as SessionId));
+    if (!session) {
+      return res.status(404).json({
+        error: 'Session not found',
+        sessionId,
+      });
+    }
+
+    const discoveryService = getDiscoveryService();
+    if (!discoveryService) {
+      return res.status(503).json({
+        error: 'Discovery service not initialized',
+      });
+    }
+
+    // Record activity based on type
+    switch (activityType) {
+      case 'interaction':
+        await discoveryService.recordInteraction(sessionId as SessionId, context || 'unknown');
+        break;
+      case 'chain_completed':
+        if (!chainId) {
+          return res.status(400).json({ error: 'chainId required for chain_completed activity' });
+        }
+        await discoveryService.recordChainCompleted(sessionId as SessionId, chainId as ChainId);
+        break;
+      case 'error':
+        await discoveryService.recordError(sessionId as SessionId);
+        break;
+      default:
+        return res.status(400).json({ error: 'Invalid activityType' });
+    }
+
+    // Evaluate and return updated progress
+    const result = await discoveryService.evaluateDiscovery(sessionId as SessionId);
+
+    // Broadcast WebSocket events for newly revealed regions
+    if (result.readyRegions.length > 0) {
+      for (const regionId of result.readyRegions) {
+        // Get region details for the event
+        const region = await Promise.resolve(storage.getRegion(regionId));
+        if (region) {
+          universeEvents.broadcastRegionDiscovered(
+            sessionId as SessionId,
+            regionId,
+            region.fogState,
+            undefined
+          );
+        }
+      }
+    }
+
+    console.log(`[API] Activity recorded: ${activityType} for session ${sessionId}`);
+
+    res.json({
+      success: true,
+      progress: result.progress,
+      newlyRevealed: result.readyRegions,
+    });
+  } catch (error) {
+    console.error('[API] Error recording activity:', error);
+    res.status(500).json({
+      error: 'Failed to record activity',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
+ * POST /api/universe/discovery/reveal/:regionId
+ * Manually reveal a specific region (testing/debug)
+ */
+router.post('/discovery/reveal/:regionId', writeLimiter, validateBody(revealRegionSchema), async (req, res) => {
+  try {
+    const regionId = req.params.regionId as RegionId;
+    const { sessionId } = req.body;
+
+    // Verify session exists
+    const session = await Promise.resolve(storage.getSession(sessionId as SessionId));
+    if (!session) {
+      return res.status(404).json({
+        error: 'Session not found',
+        sessionId,
+      });
+    }
+
+    // Verify region exists
+    const region = await Promise.resolve(storage.getRegion(regionId));
+    if (!region) {
+      return res.status(404).json({
+        error: 'Region not found',
+        regionId,
+      });
+    }
+
+    const discoveryService = getDiscoveryService();
+    if (!discoveryService) {
+      return res.status(503).json({
+        error: 'Discovery service not initialized',
+      });
+    }
+
+    await discoveryService.revealRegion(sessionId as SessionId, regionId);
+
+    // Get updated region for broadcast
+    const updatedRegion = await Promise.resolve(storage.getRegion(regionId));
+    if (updatedRegion) {
+      universeEvents.broadcastRegionDiscovered(
+        sessionId as SessionId,
+        regionId,
+        updatedRegion.fogState,
+        undefined
+      );
+    }
+
+    console.log(`[API] Region manually revealed: ${regionId} for session ${sessionId}`);
+
+    res.json({
+      success: true,
+      regionId,
+    });
+  } catch (error) {
+    console.error('[API] Error revealing region:', error);
+    res.status(500).json({
+      error: 'Failed to reveal region',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
+ * POST /api/universe/discovery/reveal-all
+ * Manually reveal all regions (testing/debug)
+ */
+router.post('/discovery/reveal-all', writeLimiter, validateBody(revealAllRegionsSchema), async (req, res) => {
+  try {
+    const { sessionId } = req.body;
+
+    // Verify session exists
+    const session = await Promise.resolve(storage.getSession(sessionId as SessionId));
+    if (!session) {
+      return res.status(404).json({
+        error: 'Session not found',
+        sessionId,
+      });
+    }
+
+    const discoveryService = getDiscoveryService();
+    if (!discoveryService) {
+      return res.status(503).json({
+        error: 'Discovery service not initialized',
+      });
+    }
+
+    // Get universe to count regions before revealing
+    const universe = await Promise.resolve(storage.getUniverseGraph());
+    if (!universe) {
+      return res.status(404).json({
+        error: 'Universe graph not initialized',
+      });
+    }
+
+    const regionsToReveal = universe.regions.filter((r) => r.fogState !== 'revealed');
+    const regionIds = regionsToReveal.map((r) => r.id);
+
+    // Reveal all regions
+    await discoveryService.revealAll(sessionId as SessionId);
+
+    // Broadcast WebSocket events for all revealed regions
+    for (const regionId of regionIds) {
+      const region = await Promise.resolve(storage.getRegion(regionId));
+      if (region) {
+        universeEvents.broadcastRegionDiscovered(
+          sessionId as SessionId,
+          regionId,
+          region.fogState,
+          undefined
+        );
+      }
+    }
+
+    console.log(`[API] All regions revealed for session ${sessionId} (count: ${regionIds.length})`);
+
+    res.json({
+      success: true,
+      revealedCount: regionIds.length,
+    });
+  } catch (error) {
+    console.error('[API] Error revealing all regions:', error);
+    res.status(500).json({
+      error: 'Failed to reveal all regions',
       message: sanitizeError(error),
     });
   }

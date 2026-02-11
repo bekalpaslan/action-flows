@@ -13,7 +13,7 @@ export const ErrorAnnouncementPatterns = {
   context: /^\*\*Context:\*\* (.+)$/m,
   stackTrace: /^Stack trace:$/m,
   recoveryOptionsLabel: /^\*\*Recovery options:\*\*$/m,
-  recoveryOption: /^- (Retry|Skip|Cancel) (.+)$/m,
+  recoveryOption: /^- (Retry|Skip|Cancel)(?: (.+))?$/mi,
 } as const;
 
 /**
@@ -22,7 +22,7 @@ export const ErrorAnnouncementPatterns = {
 export const ContextRoutingPatterns = {
   heading: /^## Routing: (.+)$/m,
   context: /^\*\*Context:\*\* (work|maintenance|explore|review|settings|pm|archive|harmony|editor)$/mi,
-  confidence: /^\*\*Confidence:\*\* ([\d.]+)$/m,
+  confidence: /^\*\*Confidence:\*\* (\d+(?:\.\d+)?)$/m,
   flow: /^\*\*Flow:\*\* (.+)$/m,
   actions: /^\*\*Actions:\*\* (.+)$/m,
   disambiguated: /^\*\*Disambiguated:\*\* (true|false)$/mi,

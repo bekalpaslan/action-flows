@@ -17,7 +17,7 @@ export const RegistryUpdatePatterns = {
  * Format 4.2: INDEX.md Entry
  */
 export const IndexEntryPatterns = {
-  tableRow: /^\| (\d{4}-\d{2}-\d{2}) \| (.+) \| (.+) \| (Success|Failed) — (.+) \(([a-f0-9]{7})\) \|$/m,
+  tableRow: /^\| (\d{4}-\d{2}-\d{2}) \| (.+) \| (.+) \| (Success|Failed) — (.+) \(([a-f0-9]{7,40})\) \|$/m,
 } as const;
 
 /**

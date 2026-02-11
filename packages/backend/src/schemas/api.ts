@@ -585,3 +585,25 @@ export const sessionRegionMappingSchema = z.object({
   regionId: z.string().min(1).max(100),
 });
 export type SessionRegionMappingRequest = z.infer<typeof sessionRegionMappingSchema>;
+
+// ============================================================================
+// Discovery System Schemas (Phase 3)
+// ============================================================================
+
+export const recordActivitySchema = z.object({
+  sessionId: z.string().min(1).max(200),
+  activityType: z.enum(['interaction', 'chain_completed', 'error']),
+  context: z.string().max(500).optional(),
+  chainId: z.string().max(200).optional(),
+});
+export type RecordActivityRequest = z.infer<typeof recordActivitySchema>;
+
+export const revealRegionSchema = z.object({
+  sessionId: z.string().min(1).max(200),
+});
+export type RevealRegionRequest = z.infer<typeof revealRegionSchema>;
+
+export const revealAllRegionsSchema = z.object({
+  sessionId: z.string().min(1).max(200),
+});
+export type RevealAllRegionsRequest = z.infer<typeof revealAllRegionsSchema>;

@@ -1,6 +1,7 @@
 /**
  * Status and Error Format Parsers
  * Implements parsers for Format 6.1-6.2
+ * With Zod validation for enum/range constraints
  */
 
 import type {
@@ -10,6 +11,11 @@ import type {
 import type { WorkbenchId } from '../../workbenchTypes.js';
 import { StatusPatterns } from '../patterns/statusPatterns.js';
 import { CONTRACT_VERSION } from '../version.js';
+import {
+  ErrorAnnouncementSchema,
+  ContextRoutingSchema,
+  validateWithLogging,
+} from '../validation/index.js';
 
 /**
  * Parse error announcement
@@ -52,7 +58,13 @@ export function parseErrorAnnouncement(text: string): ErrorAnnouncementParsed | 
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('ErrorAnnouncement', ErrorAnnouncementSchema, parsed);
+  if (!validation.success) {
+    // Log validation errors but still return parsed object for graceful degradation
+    console.warn('ErrorAnnouncement validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -119,7 +131,13 @@ export function parseContextRouting(text: string): ContextRoutingParsed | null {
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('ContextRouting', ContextRoutingSchema, parsed);
+  if (!validation.success) {
+    // Log validation errors but still return parsed object for graceful degradation
+    console.warn('ContextRouting validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 

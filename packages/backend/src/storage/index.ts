@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
 
@@ -143,6 +143,13 @@ export interface Storage {
   markReminderAddressed(instanceId: string): boolean | Promise<boolean>;
   markChainRemindersAddressed(chainId: ChainId): number | Promise<number>;
   deleteReminderInstance(instanceId: string): boolean | Promise<boolean>;
+
+  // Error storage
+  addError(error: ErrorInstance): void | Promise<void>;
+  getErrors(sessionId: SessionId, filter?: { chainId?: ChainId; dismissedOnly?: boolean }): ErrorInstance[] | Promise<ErrorInstance[]>;
+  dismissError(errorId: string, dismissed: boolean): boolean | Promise<boolean>;
+  deleteError(errorId: string): boolean | Promise<boolean>;
+  deleteChainErrors(chainId: ChainId): number | Promise<number>;
 
   // Activity-aware TTL extension
   extendSessionTtl?(sessionId: string, extensionMs: number): Promise<void> | void;

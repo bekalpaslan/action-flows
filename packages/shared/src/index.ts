@@ -233,6 +233,16 @@ export type {
 } from './reminderTypes.js';
 
 // ============================================================================
+// Error Announcement Types
+// ============================================================================
+export type {
+  ErrorInstance,
+  ErrorRecoveryAction,
+  ErrorSeverity,
+  CreateErrorInput,
+} from './errorTypes.js';
+
+// ============================================================================
 // Harmony Detection Types
 // ============================================================================
 export type {

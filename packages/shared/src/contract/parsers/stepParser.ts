@@ -1,6 +1,7 @@
 /**
  * Step Format Parsers
  * Implements parsers for Format 2.1-2.3
+ * With Zod validation for enum/range constraints
  */
 
 import type {
@@ -10,6 +11,12 @@ import type {
 } from '../types/stepFormats.js';
 import { StepPatterns } from '../patterns/stepPatterns.js';
 import { CONTRACT_VERSION } from '../version.js';
+import {
+  StepCompletionSchema,
+  DualOutputSchema,
+  SecondOpinionSkipSchema,
+  validateWithLogging,
+} from '../validation/index.js';
 
 /**
  * Parse step completion announcement
@@ -39,7 +46,12 @@ export function parseStepCompletion(text: string): StepCompletionParsed | null {
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('StepCompletion', StepCompletionSchema, parsed);
+  if (!validation.success) {
+    console.warn('StepCompletion validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -111,7 +123,12 @@ export function parseDualOutput(text: string): DualOutputParsed | null {
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('DualOutput', DualOutputSchema, parsed);
+  if (!validation.success) {
+    console.warn('DualOutput validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -142,6 +159,11 @@ export function parseSecondOpinionSkip(text: string): SecondOpinionSkipParsed | 
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('SecondOpinionSkip', SecondOpinionSkipSchema, parsed);
+  if (!validation.success) {
+    console.warn('SecondOpinionSkip validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }

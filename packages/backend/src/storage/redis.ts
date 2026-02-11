@@ -1,5 +1,5 @@
 import { Redis } from 'ioredis';
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
 
@@ -99,6 +99,13 @@ export interface RedisStorage {
   markReminderAddressed(instanceId: string): Promise<boolean>;
   markChainRemindersAddressed(chainId: ChainId): Promise<number>;
   deleteReminderInstance(instanceId: string): Promise<boolean>;
+
+  // Error storage
+  addError(error: ErrorInstance): Promise<void>;
+  getErrors(sessionId: SessionId, filter?: { chainId?: ChainId; dismissedOnly?: boolean }): Promise<ErrorInstance[]>;
+  dismissError(errorId: string, dismissed: boolean): Promise<boolean>;
+  deleteError(errorId: string): Promise<boolean>;
+  deleteChainErrors(chainId: ChainId): Promise<number>;
 
   // Activity-aware TTL extension
   extendSessionTtl(sessionId: string, extensionMs: number): Promise<void>;
@@ -1190,6 +1197,118 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       } catch (error) {
         console.error('[Redis] Error deleting reminder instance:', error);
         return false;
+      }
+    },
+
+    // === Error Storage ===
+    async addError(error: ErrorInstance) {
+      try {
+        const key = `${keyPrefix}errors:${error.sessionId}`;
+        const errorData = JSON.stringify(error);
+
+        // Push to Redis list
+        await redis.rpush(key, errorData);
+        await redis.expire(key, 86400); // 24h TTL
+
+        // Update freshness
+        const freshnessKey = `${keyPrefix}freshness:errors`;
+        const now = Date.now();
+        await redis.zadd(freshnessKey, now, error.sessionId);
+        await redis.expire(freshnessKey, 86400);
+      } catch (error) {
+        console.error('[Redis] Error adding error instance:', error);
+      }
+    },
+
+    async getErrors(sessionId: SessionId, filter?: { chainId?: ChainId; dismissedOnly?: boolean }): Promise<ErrorInstance[]> {
+      try {
+        const key = `${keyPrefix}errors:${sessionId}`;
+        const errors = await redis.lrange(key, 0, -1);
+        const parsed = errors.map((e: string) => JSON.parse(e) as ErrorInstance);
+
+        return parsed.filter(error => {
+          if (filter?.chainId && error.chainId !== filter.chainId) return false;
+          if (filter?.dismissedOnly && !error.dismissed) return false;
+          return true;
+        });
+      } catch (error) {
+        console.error('[Redis] Error getting errors for session:', error);
+        return [];
+      }
+    },
+
+    async dismissError(errorId: string, dismissed: boolean): Promise<boolean> {
+      try {
+        // Scan all error lists to find and update the error
+        const keys = await redis.keys(`${keyPrefix}errors:*`);
+        for (const key of keys) {
+          const errors = await redis.lrange(key, 0, -1);
+          for (let i = 0; i < errors.length; i++) {
+            const error = JSON.parse(errors[i]) as ErrorInstance;
+            if (error.id === errorId) {
+              error.dismissed = dismissed;
+              await redis.lset(key, i, JSON.stringify(error));
+              return true;
+            }
+          }
+        }
+        return false;
+      } catch (error) {
+        console.error('[Redis] Error dismissing error:', error);
+        return false;
+      }
+    },
+
+    async deleteError(errorId: string): Promise<boolean> {
+      try {
+        const keys = await redis.keys(`${keyPrefix}errors:*`);
+        for (const key of keys) {
+          const errors = await redis.lrange(key, 0, -1);
+          const filtered = errors.map((e: string) => JSON.parse(e) as ErrorInstance)
+            .filter(e => e.id !== errorId)
+            .map(e => JSON.stringify(e));
+
+          // Replace list if error was found
+          if (filtered.length < errors.length) {
+            await redis.del(key);
+            if (filtered.length > 0) {
+              await redis.rpush(key, ...filtered);
+              await redis.expire(key, 86400);
+            }
+            return true;
+          }
+        }
+        return false;
+      } catch (error) {
+        console.error('[Redis] Error deleting error:', error);
+        return false;
+      }
+    },
+
+    async deleteChainErrors(chainId: ChainId): Promise<number> {
+      try {
+        let count = 0;
+        const keys = await redis.keys(`${keyPrefix}errors:*`);
+        for (const key of keys) {
+          const errors = await redis.lrange(key, 0, -1);
+          const filtered = errors.map((e: string) => JSON.parse(e) as ErrorInstance)
+            .filter(e => e.chainId !== chainId)
+            .map(e => JSON.stringify(e));
+
+          const beforeLength = errors.length;
+          count += beforeLength - filtered.length;
+
+          // Replace list
+          await redis.del(key);
+          if (filtered.length > 0) {
+            await redis.rpush(key, ...filtered);
+            await redis.expire(key, 86400);
+          }
+        }
+        return count;
+      } catch (error) {
+        console.error('[Redis] Error deleting chain errors:', error);
+        return 0;
       }
     },
 

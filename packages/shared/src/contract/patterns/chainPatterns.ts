@@ -11,9 +11,9 @@ export const ChainCompilationPatterns = {
   request: /^\*\*Request:\*\* (.+)$/m,
   source: /^\*\*Source:\*\* (.+)$/m,
   tableHeader: /^\| # \| Action \| Model \| Key Inputs \| Waits For \| Status \|$/m,
-  tableRow: /^\| (\d+) \| ([a-z\-_/]+) \| (haiku|sonnet|opus) \| (.+) \| (--|#\d+(?:,#\d+)*) \| (Pending|Done|Awaiting) \|$/m,
+  tableRow: /^\| (\d+) \| ([a-z\-_/]+) \| (haiku|sonnet|opus) \| ([^|]+) \| (--|#\d+(?:,#\d+)*) \| (Pending|Done|Awaiting) \|$/m,
   execution: /^\*\*Execution:\*\* (.+)$/m,
-  stepDescription: /^(\d+)\. \*\*(.+?)\*\* -- (.+)$/m,
+  stepDescription: /^(\d+)\. \*\*([a-z\-_/]+)\*\* -- (.+)$/m,
   approvalPrompt: /^Execute\?$/m,
 } as const;
 

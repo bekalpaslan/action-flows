@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
 import { lifecycleManager } from './lifecycleHooks.js';
@@ -24,6 +24,7 @@ const MAX_SUGGESTIONS = 500;
 const MAX_CHAT_MESSAGES_PER_SESSION = 1_000;
 const MAX_TELEMETRY_ENTRIES = 10_000;
 const MAX_REMINDER_INSTANCES = 1_000;
+const MAX_ERRORS_PER_SESSION = 500;
 const MAX_REGIONS = 100;
 const MAX_BRIDGES = 1_000;
 const MAX_EVOLUTION_TICKS = 10_000;
@@ -144,6 +145,14 @@ export interface MemoryStorage {
   markReminderAddressed(instanceId: string): boolean;
   markChainRemindersAddressed(chainId: ChainId): number;
   deleteReminderInstance(instanceId: string): boolean;
+
+  // Error storage
+  errors: Map<SessionId, ErrorInstance[]>;
+  addError(error: ErrorInstance): void;
+  getErrors(sessionId: SessionId, filter?: { chainId?: ChainId; dismissedOnly?: boolean }): ErrorInstance[];
+  dismissError(errorId: string, dismissed: boolean): boolean;
+  deleteError(errorId: string): boolean;
+  deleteChainErrors(chainId: ChainId): number;
 
   // Activity-aware TTL extension
   sessionTtlExtensions: Map<string, { expiresAt: number; extensionCount: number }>;
@@ -937,6 +946,70 @@ export const storage: MemoryStorage = {
 
   deleteReminderInstance(instanceId: string): boolean {
     return this.reminderInstances.delete(instanceId);
+  },
+
+  // Error storage
+  errors: new Map<SessionId, ErrorInstance[]>(),
+
+  addError(error: ErrorInstance): void {
+    if (!this.errors.has(error.sessionId)) {
+      this.errors.set(error.sessionId, []);
+    }
+
+    const sessionErrors = this.errors.get(error.sessionId)!;
+
+    // FIFO eviction at MAX_ERRORS_PER_SESSION
+    if (sessionErrors.length >= MAX_ERRORS_PER_SESSION) {
+      sessionErrors.shift();
+    }
+
+    sessionErrors.push(error);
+  },
+
+  getErrors(sessionId: SessionId, filter?: { chainId?: ChainId; dismissedOnly?: boolean }): ErrorInstance[] {
+    const sessionErrors = this.errors.get(sessionId) || [];
+
+    return sessionErrors.filter(error => {
+      if (filter?.chainId && error.chainId !== filter.chainId) return false;
+      if (filter?.dismissedOnly && !error.dismissed) return false;
+      return true;
+    });
+  },
+
+  dismissError(errorId: string, dismissed: boolean): boolean {
+    for (const sessionErrors of this.errors.values()) {
+      const error = sessionErrors.find(e => e.id === errorId);
+      if (error) {
+        error.dismissed = dismissed;
+        return true;
+      }
+    }
+    return false;
+  },
+
+  deleteError(errorId: string): boolean {
+    for (const sessionErrors of this.errors.values()) {
+      const index = sessionErrors.findIndex(e => e.id === errorId);
+      if (index !== -1) {
+        sessionErrors.splice(index, 1);
+        return true;
+      }
+    }
+    return false;
+  },
+
+  deleteChainErrors(chainId: ChainId): number {
+    let count = 0;
+    for (const sessionErrors of this.errors.values()) {
+      const beforeLength = sessionErrors.length;
+      const filtered = sessionErrors.filter(e => e.chainId !== chainId);
+      count += beforeLength - filtered.length;
+      if (count > 0) {
+        // Replace the array with filtered version
+        sessionErrors.splice(0, sessionErrors.length, ...filtered);
+      }
+    }
+    return count;
   },
 
   // Activity-aware TTL extension

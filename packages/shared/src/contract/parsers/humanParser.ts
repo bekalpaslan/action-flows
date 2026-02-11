@@ -1,6 +1,7 @@
 /**
  * Human Interaction Format Parsers
  * Implements parsers for Format 3.1-3.3
+ * With Zod validation for enum/range constraints
  */
 
 import type {
@@ -11,6 +12,12 @@ import type {
 import { HumanPatterns } from '../patterns/humanPatterns.js';
 import { CONTRACT_VERSION } from '../version.js';
 import type { ModelString } from '../../types.js';
+import {
+  HumanGateSchema,
+  LearningSurfaceSchema,
+  SessionStartProtocolSchema,
+  validateWithLogging,
+} from '../validation/index.js';
 
 /**
  * Parse human gate presentation
@@ -52,7 +59,12 @@ export function parseHumanGate(text: string): HumanGateParsed | null {
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('HumanGate', HumanGateSchema, parsed);
+  if (!validation.success) {
+    console.warn('HumanGate validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -83,7 +95,12 @@ export function parseLearningSurface(text: string): LearningSurfaceParsed | null
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('LearningSurface', LearningSurfaceSchema, parsed);
+  if (!validation.success) {
+    console.warn('LearningSurface validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }
 
@@ -113,6 +130,11 @@ export function parseSessionStartProtocol(text: string): SessionStartProtocolPar
     contractVersion: CONTRACT_VERSION,
   };
 
-  // 4. Validate
+  // 4. Validate with Zod
+  const validation = validateWithLogging('SessionStartProtocol', SessionStartProtocolSchema, parsed);
+  if (!validation.success) {
+    console.warn('SessionStartProtocol validation issues:', validation.error.issues);
+  }
+
   return parsed;
 }

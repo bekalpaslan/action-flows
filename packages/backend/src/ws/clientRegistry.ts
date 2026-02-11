@@ -161,6 +161,19 @@ class ClientRegistry {
   }
 
   /**
+   * Get all clients subscribed to a specific session
+   */
+  getClientsForSession(sessionId: SessionId): WebSocket[] {
+    const result: WebSocket[] = [];
+    for (const [ws, info] of this.clients) {
+      if (info.subscribedSessionIds.has(sessionId)) {
+        result.push(ws);
+      }
+    }
+    return result;
+  }
+
+  /**
    * Get the total number of connected clients
    */
   getClientCount(): number {

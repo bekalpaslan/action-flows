@@ -37,10 +37,12 @@ import suggestionsRouter from './routes/suggestions.js';
 import telemetryRouter from './routes/telemetry.js';
 import lifecycleRouter from './routes/lifecycle.js';
 import remindersRouter from './routes/reminders.js';
+import errorsRouter from './routes/errors.js';
 import universeRouter from './routes/universe.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
 import { lifecycleManager } from './services/lifecycleManager.js';
+import { initDiscoveryService } from './services/discoveryService.js';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -116,6 +118,7 @@ app.use('/api/suggestions', suggestionsRouter);
 app.use('/api/telemetry', telemetryRouter);
 app.use('/api/lifecycle', lifecycleRouter);
 app.use('/api/reminders', remindersRouter);
+app.use('/api/errors', errorsRouter);
 app.use('/api/universe', universeRouter);
 // Note: patternsRouter also handles /bookmarks routes, registered at /api for cleaner URLs
 // IMPORTANT: Must come AFTER specific /api/* routes since it has /:projectId catch-all
@@ -402,6 +405,10 @@ if (isMainModule) {
     // Initialize harmony detector
     initializeHarmonyDetector(storage);
     harmonyDetector.setBroadcastFunction(broadcastHarmonyEvent);
+
+    // Initialize discovery service (Phase 3 - Living Universe)
+    initDiscoveryService(storage);
+    console.log('[Discovery] Service initialized for Living Universe Phase 3');
 
     // Start cleanup service
     cleanupService.start();
