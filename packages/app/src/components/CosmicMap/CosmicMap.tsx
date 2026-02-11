@@ -17,15 +17,19 @@ import ReactFlow, {
   type NodeTypes,
   type EdgeTypes,
   ReactFlowProvider,
+  getSmoothStepPath,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import type { RegionNode, LightBridge } from '@afw/shared';
+import type { RegionNode, LightBridge, ChainId, SparkTravelingEvent } from '@afw/shared';
+import { eventGuards } from '@afw/shared';
 import { useUniverseContext } from '../../contexts/UniverseContext';
+import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import { CosmicBackground } from './CosmicBackground';
 import { RegionStar, type RegionStarData } from './RegionStar';
 import { LightBridgeEdge, type LightBridgeData } from './LightBridgeEdge';
 import { CommandCenter } from './CommandCenter';
 import { BigBangAnimation } from './BigBangAnimation';
+import { SparkAnimation } from './SparkAnimation';
 import '../../styles/cosmic-tokens.css';
 import './CosmicMap.css';
 
@@ -39,13 +43,25 @@ const edgeTypes: EdgeTypes = {
 };
 
 /**
+ * Spark state for tracking active sparks
+ */
+interface SparkState {
+  fromRegion: string;
+  toRegion: string;
+  progress: number;
+  edgePath: string;
+}
+
+/**
  * CosmicMapInner - Inner component with ReactFlow hooks
  */
 function CosmicMapInner() {
   const { universe, isLoading, error, zoomTargetRegionId, clearZoomTarget } = useUniverseContext();
   const { fitView, setCenter } = useReactFlow();
+  const wsContext = useWebSocketContext();
   const [hasInitialFit, setHasInitialFit] = useState(false);
   const [showBigBang, setShowBigBang] = useState(false);
+  const [activeSparks, setActiveSparks] = useState<Map<ChainId, SparkState>>(new Map());
 
   // Transform RegionNode[] → ReactFlow Node[]
   const initialNodes = useMemo(() => {
@@ -133,6 +149,84 @@ function CosmicMapInner() {
       clearZoomTarget();
     }
   }, [zoomTargetRegionId, nodes, setCenter, clearZoomTarget]);
+
+  // Subscribe to spark traveling events
+  useEffect(() => {
+    if (!wsContext.onEvent) return;
+
+    const unsubscribe = wsContext.onEvent((event) => {
+      if (eventGuards.isSparkTraveling(event)) {
+        const sparkEvent = event as SparkTravelingEvent;
+
+        // Find the edge between fromRegion and toRegion
+        const edge = edges.find(
+          (e) => e.source === sparkEvent.fromRegion && e.target === sparkEvent.toRegion
+        );
+
+        if (!edge) {
+          console.warn(
+            `[CosmicMap] No edge found for spark: ${sparkEvent.fromRegion} → ${sparkEvent.toRegion}`
+          );
+          return;
+        }
+
+        // Find source and target node positions
+        const sourceNode = nodes.find((n) => n.id === sparkEvent.fromRegion);
+        const targetNode = nodes.find((n) => n.id === sparkEvent.toRegion);
+
+        if (!sourceNode || !targetNode) {
+          console.warn(
+            `[CosmicMap] Source or target node not found for spark: ${sparkEvent.fromRegion} → ${sparkEvent.toRegion}`
+          );
+          return;
+        }
+
+        // Compute edge path using ReactFlow's getSmoothStepPath
+        const [edgePath] = getSmoothStepPath({
+          sourceX: sourceNode.position.x,
+          sourceY: sourceNode.position.y,
+          sourcePosition: 'right',
+          targetX: targetNode.position.x,
+          targetY: targetNode.position.y,
+          targetPosition: 'left',
+        });
+
+        // Update active sparks state
+        setActiveSparks((prev) => {
+          const next = new Map(prev);
+
+          // Enforce max 5 concurrent sparks
+          if (next.size >= 5 && !next.has(sparkEvent.chainId)) {
+            // Remove oldest spark (first entry)
+            const firstKey = next.keys().next().value;
+            if (firstKey) {
+              next.delete(firstKey);
+            }
+          }
+
+          next.set(sparkEvent.chainId, {
+            fromRegion: sparkEvent.fromRegion,
+            toRegion: sparkEvent.toRegion,
+            progress: sparkEvent.progress,
+            edgePath,
+          });
+
+          return next;
+        });
+      }
+    });
+
+    return unsubscribe;
+  }, [wsContext, edges, nodes]);
+
+  // Cleanup completed sparks
+  const handleSparkComplete = useCallback((chainId: ChainId) => {
+    setActiveSparks((prev) => {
+      const next = new Map(prev);
+      next.delete(chainId);
+      return next;
+    });
+  }, []);
 
   // Handle escape key to return to god view
   useEffect(() => {
@@ -263,6 +357,32 @@ function CosmicMapInner() {
           }}
           maskColor="rgba(0, 0, 0, 0.8)"
         />
+
+        {/* Spark animations layer (rendered as SVG overlay) */}
+        <svg
+          className="cosmic-map__spark-layer"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            zIndex: 100,
+          }}
+        >
+          {Array.from(activeSparks.entries()).map(([chainId, spark]) => (
+            <SparkAnimation
+              key={chainId}
+              chainId={chainId}
+              fromRegion={spark.fromRegion}
+              toRegion={spark.toRegion}
+              progress={spark.progress}
+              edgePath={spark.edgePath}
+              onComplete={() => handleSparkComplete(chainId)}
+            />
+          ))}
+        </svg>
       </ReactFlow>
 
       {/* Return to god view button */}

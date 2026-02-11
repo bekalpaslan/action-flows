@@ -42,6 +42,10 @@
   --cosmic-bridge-glow: rgba(120, 200, 255, 0.4);     /* Bridge glow effect */
   --cosmic-bridge-spark: rgba(255, 220, 100, 1.0);    /* Traveling spark */
 
+  /* Spark Animation — Chain execution visualization */
+  --cosmic-spark-core: rgba(255, 240, 100, 0.95);     /* Bright spark core */
+  --cosmic-spark-trail: rgba(255, 240, 100, 0.4);     /* Trailing glow effect */
+
   /* ==========================================================================
      Fog of War — Discovery states
      ========================================================================== */

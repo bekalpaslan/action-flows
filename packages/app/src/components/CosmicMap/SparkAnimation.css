@@ -1,0 +1,69 @@
+/**
+ * SparkAnimation Styles
+ *
+ * Visual styling for animated sparks traveling along light bridges.
+ * Uses CSS variables from cosmic-tokens.css and hardware-accelerated transforms.
+ */
+
+/* Spark animation container */
+.spark-animation {
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Main spark dot (bright core) */
+.spark-dot {
+  fill: var(--cosmic-spark-core, rgba(255, 240, 100, 0.95));
+  filter: drop-shadow(0 0 4px rgba(255, 240, 100, 0.8))
+          drop-shadow(0 0 8px rgba(255, 240, 100, 0.4));
+  will-change: transform; /* Hint for GPU acceleration */
+}
+
+/* Trail effect (follows spark with 10% delay) */
+.spark-trail {
+  fill: var(--cosmic-spark-trail, rgba(255, 240, 100, 0.4));
+  filter: blur(2px);
+  will-change: transform; /* Hint for GPU acceleration */
+}
+
+/* Pulse animation for spark core (optional enhancement) */
+.spark-dot {
+  animation: spark-pulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes spark-pulse {
+  from {
+    opacity: 1;
+    r: 4;
+  }
+  to {
+    opacity: 0.8;
+    r: 4.5;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .spark-dot,
+  .spark-trail {
+    animation: none;
+    transition: none;
+  }
+
+  /* Disable animateMotion via display:none for reduced motion */
+  .spark-animation animateMotion {
+    display: none;
+  }
+
+  /* Static position at end of path for accessibility */
+  .spark-dot,
+  .spark-trail {
+    opacity: 0.5;
+  }
+}
+
+/* Performance optimizations */
+.spark-animation * {
+  transform: translateZ(0); /* Force GPU layer */
+  backface-visibility: hidden;
+}

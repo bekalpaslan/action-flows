@@ -17,11 +17,18 @@ import { getDiscoveryService } from '../services/discoveryService.js';
 // Universe events for region discovery broadcasts (Phase 3)
 import { broadcastRegionDiscovered } from '../ws/universeEvents.js';
 
+// Spark broadcaster for chain execution visualization (Phase 4)
+import { getSparkBroadcaster } from '../services/sparkBroadcaster.js';
+
 const router = Router();
 
 // Polling rate limit tracker (1 request per 5 seconds per client)
 const pollingRateLimiter = new Map<string, number>();
 const POLLING_RATE_LIMIT_MS = 5000; // 5 seconds
+
+// Active chain tracker for spark animation (Phase 4)
+// Maps sessionId -> chainId
+const activeChainBySession = new Map<SessionId, string>();
 
 /**
  * Convert ChainCompiledEvent to Chain domain object
@@ -98,6 +105,9 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
           chain.currentStep = chainEvent.currentStep;
           await Promise.resolve(storage.addChain(event.sessionId, chain));
           console.log(`[API] Updated chain status: ${chain.id} -> in_progress`);
+
+          // Track active chain for spark animation (Phase 4)
+          activeChainBySession.set(event.sessionId, chainEvent.chainId);
         }
       }
 
@@ -115,6 +125,9 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
           chain.summary = chainEvent.summary || undefined;
           await Promise.resolve(storage.addChain(event.sessionId, chain));
           console.log(`[API] Completed chain: ${chain.id} with status ${chain.status}`);
+
+          // Clear active chain for spark animation (Phase 4)
+          activeChainBySession.delete(event.sessionId);
 
           // Record chain completion for discovery (Phase 3)
           try {
@@ -155,11 +168,57 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
           setActiveStep(event.sessionId, stepEvent.stepNumber, stepEvent.action);
           // Track step progress activity
           activityTracker.trackActivity(event.sessionId, 'step_progress');
+
+          // Start spark animation for chain execution visualization (Phase 4)
+          if (event.type === 'step:started' && stepEvent.action) {
+            try {
+              const sparkBroadcaster = getSparkBroadcaster();
+              const chainId = activeChainBySession.get(event.sessionId);
+
+              if (chainId) {
+                const chain = await Promise.resolve(storage.getChain(chainId as any));
+
+                if (chain) {
+                  // Find current step and previous step
+                  const currentStepIndex = chain.steps.findIndex(
+                    (s) => s.stepNumber === stepEvent.stepNumber
+                  );
+
+                  if (currentStepIndex > 0) {
+                    // Get previous completed step
+                    const previousStep = chain.steps[currentStepIndex - 1];
+
+                    // Start spark from previous step to current step
+                    sparkBroadcaster.startSpark(
+                      chain.id,
+                      event.sessionId,
+                      previousStep.action,
+                      stepEvent.action,
+                      3000 // 3 second default animation duration
+                    );
+                  }
+                }
+              }
+            } catch (error) {
+              console.warn('[SparkBroadcaster] Failed to start spark animation:', error);
+            }
+          }
         }
       } else if (event.type === 'step:completed' || event.type === 'step:failed') {
         clearActiveStep(event.sessionId);
         // Track step progress activity
         activityTracker.trackActivity(event.sessionId, 'step_progress');
+
+        // Complete spark animation for chain execution visualization (Phase 4)
+        const chainId = activeChainBySession.get(event.sessionId);
+        if (chainId) {
+          try {
+            const sparkBroadcaster = getSparkBroadcaster();
+            sparkBroadcaster.completeSpark(chainId as any);
+          } catch (error) {
+            console.warn('[SparkBroadcaster] Failed to complete spark animation:', error);
+          }
+        }
 
         // Record error for discovery when step fails (Phase 3)
         if (event.type === 'step:failed') {

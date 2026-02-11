@@ -43,6 +43,7 @@ import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, 
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
 import { lifecycleManager } from './services/lifecycleManager.js';
 import { initDiscoveryService } from './services/discoveryService.js';
+import { initSparkBroadcaster, getSparkBroadcaster } from './services/sparkBroadcaster.js';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -330,6 +331,17 @@ function broadcastDossierEvent(
   });
 }
 
+// Broadcast spark traveling events to WebSocket clients subscribed to this session (Phase 4)
+function broadcastSparkEvent(event: any) {
+  const message = JSON.stringify({
+    type: 'event',
+    sessionId: event.sessionId,
+    payload: event,
+  });
+
+  clientRegistry.broadcastToSession(event.sessionId, message);
+}
+
 // Initialize Redis Pub/Sub if using Redis storage
 async function initializeRedisPubSub() {
   if (isAsyncStorage(storage) && storage.subscribe) {
@@ -416,6 +428,18 @@ if (isMainModule) {
       // Discovery endpoints will return 503 if service unavailable
     }
 
+    // Initialize spark broadcaster (Phase 4 - Chain Execution Visualization)
+    try {
+      const sparkBroadcaster = initSparkBroadcaster();
+
+      // Wire spark events to WebSocket broadcast
+      sparkBroadcaster.on('spark:traveling', broadcastSparkEvent);
+
+      console.log('[SparkBroadcaster] ✅ Service initialized successfully for Living Universe Phase 4');
+    } catch (error) {
+      console.error('[SparkBroadcaster] ❌ Failed to initialize SparkBroadcaster:', error);
+    }
+
     // Start cleanup service
     cleanupService.start();
 
@@ -459,6 +483,14 @@ if (isMainModule) {
 
     // Stop lifecycle manager checking
     lifecycleManager.stopChecking();
+
+    // Shutdown spark broadcaster (Phase 4)
+    try {
+      const sparkBroadcaster = getSparkBroadcaster();
+      sparkBroadcaster.shutdown();
+    } catch (error) {
+      console.warn('[SparkBroadcaster] Not initialized or already shut down');
+    }
 
     // Shutdown file watchers
     await shutdownAllWatchers();
