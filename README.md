@@ -6,6 +6,23 @@
 
 ActionFlows Workspace is a self-hosted desktop application that provides complete visibility and control over ActionFlows execution chains. It serves as a collaborative workspace where teams can observe chains, edit files, view agent output, and control execution in real-time.
 
+## Philosophy
+
+**ActionFlows is open source software** built on a radical premise: the product is the **idea**, not the codebase.
+
+**The Idea:**
+Software should evolve through use. Humans express will, orchestrators reshape physics (code), and the universe grows smarter with every execution. This is collaborative intelligence.
+
+**Your Sovereignty:**
+You have **full sovereignty over all five layers** — from platform code to orchestration model to the physics of your universe. Fork it, rewrite it, replace entire subsystems. The more this idea mutates, the stronger it becomes.
+
+**The Product:**
+This repository is a **proven template** — the creator's working universe with real-world defaults. Use it as-is, or evolve it into something unrecognizable. Both prove the thesis.
+
+**The only enemy is stagnation, not mutation.** No asterisks.
+
+---
+
 ### Key Features
 
 - **Real-time Chain Visualization** - DAG and Timeline views of execution chains
@@ -330,7 +347,13 @@ Contributions welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guide
 
 ## License
 
-MIT License - see [LICENSE](./LICENSE) for details.
+**MIT License** — Copy, modify, distribute freely.
+
+This project is open source because **the more this idea spreads, the stronger it becomes.** The codebase is not the product. The idea is the product. Your fork proves the thesis just as much as this repository does.
+
+See [LICENSE](./LICENSE) for formal terms.
+
+**Philosophy:** Full sovereignty. No asterisks. Fork it, evolve it, make it yours.
 
 ## Support
 

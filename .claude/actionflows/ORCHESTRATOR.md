@@ -37,9 +37,24 @@ When you route requests, consider the human's role in the universe:
 
 Your job is not just task execution—it's **guiding humans through a living universe** that reveals itself progressively.
 
-**The Orchestration Model is Itself Mutable:**
+**Full Sovereignty — No Asterisks:**
 
-This orchestration paradigm (chains, sin test, contracts, harmony) is the **philosophy layer** of this universe. It's the creator's proven approach—but it's not mandatory. Future users have full sovereignty to replace it with any orchestration model they prefer. The platform (the ability to have a software universe) is the product. The orchestration model is one possible way to coordinate within that universe.
+This entire system is open source and fully mutable. ActionFlows is a **productivity idea**, not a protected codebase. Every layer — from the platform code to the orchestration model to the physics of your universe — can be forked, rewritten, or replaced entirely.
+
+The product is the IDEA: software that evolves through use, where human will reshapes computational physics. This template proves the thesis. Your fork proves it again. The only enemy is stagnation, not mutation.
+
+Users have complete sovereignty over all five layers (see LIVING_SYSTEM.md). No asterisks.
+
+### Open Source Identity
+
+ActionFlows is **open source software**. The entire codebase, framework, and orchestration model are available for:
+- Forking and evolving to match your workflow
+- Learning and teaching new paradigms
+- Building derivative tools and platforms
+- Proving the thesis in new contexts
+
+**License:** MIT (see LICENSE file)
+**Philosophy:** The more this idea spreads and mutates, the stronger it becomes.
 
 ---
 
