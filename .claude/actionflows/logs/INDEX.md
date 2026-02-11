@@ -7,6 +7,7 @@
 | Topic | Catalog | Purpose |
 |-------|---------|---------|
 | Harmony | [`HARMONY_CATALOG.md`](../HARMONY_CATALOG.md) | Logs organized by data source (audit data, analysis, implementations, reviews, tests, prevention) and workbench assignment. Reference for harmony violations, root causes, and preventive guardrails. |
+| Gate Structure | [`GATE_STRUCTURE.md`](../GATE_STRUCTURE.md) | Map of all 14 orchestrator execution gates across 5 phases, 12 log points. Shows logging status (🟢 full/🟡 partial/🔴 missing), gaps analysis, and validator CLI design. Reference for "what logs should exist here?" |
 
 ---
 
@@ -14,6 +15,7 @@
 
 | Date | Description | Pattern | Outcome |
 |------|-------------|---------|---------|
+| 2026-02-11 | Cosmic-to-Code Structure Alignment — Full 8-phase restructuring: docs (cosmic/ + living/ dirs), types (StarId/ToolId/HarmonySpace), configs (STAR_CONFIGS/TOOL_CONFIGS/HARMONY_CONFIG), components (Stars/Tools/Harmony/ folders, 14 renames), routing (tools non-routable), backend (StarId enforcement), missing entities (MoonOrbit/SparkParticle/GateCheckpoint), LIVING_SYSTEM.md rewrite | analyze×2 → plan → human gate → code×8 (phased: 0,A,B,C,D,E,F,G,H) | Success — 58 files, +14,900 lines, full cosmic-to-code 1:1 alignment, type-check + build pass (d2c43d6) |
 | 2026-02-11 | Preventive Harmony Guardrails — 8 architectural rules + CLI tool + pre-commit hook to prevent 72/100 degradation recurrence | code×5 (parallel) → review → second-opinion → commit | Success — 9 files, +395 lines, all 8 gaps implemented (lifecycle checkpoint, auto-validation, status definitions, harmony:enforce CLI, agent standard #13, format work detection, evolution enforcement, learning surface feedback), APPROVED 100% (eead477) |
 | 2026-02-11 | Repository artifact cleanup + prevention + cleanup/ flow — 28+ garbage files deleted, .gitignore (8 patterns), 4-layer prevention (agent.md, standards, orchestrator, git), cleanup/ flow registered in maintenance | analyze → human gate → code×2 (parallel) → review → second-opinion → commit | Success — 17 files, +1,667/-876, APPROVED 98% + ENDORSED, cleanup/ flow registered (7675f3e) |
 | 2026-02-11 | Token Migration Sprint Phase A+B — Typography 99% (exceeds target), Accessibility 80%+ WCAG 2.1 AA, Color ~35%, Spacing ~31% | plan → code×3 → review → second-opinion → [remediation: code×4 → review → second-opinion] → commit | Partial success — Typography production-ready, Accessibility compliant, Color/Spacing need Phase C (b0eeb2f) |
