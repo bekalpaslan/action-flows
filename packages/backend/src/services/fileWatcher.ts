@@ -68,7 +68,7 @@ let broadcastFunction: BroadcastFunction | null = null;
  */
 export function setBroadcastFunction(fn: BroadcastFunction) {
   broadcastFunction = fn;
-  telemetry.log('info', 'fileWatcher', 'Broadcast function registered');
+  telemetry.log('info', 'FileWatcher', 'Broadcast function registered');
 }
 
 /**
@@ -93,7 +93,7 @@ export async function startWatchingWithRetry(sessionId: SessionId, cwd: string):
     // Success - reset retry counter
     retryAttempts.delete(sessionId);
   } catch (error) {
-    telemetry.log('error', 'fileWatcher', `Failed to start watcher for session ${sessionId}`, {
+    telemetry.log('error', 'FileWatcher', `Failed to start watcher for session ${sessionId}`, {
       sessionId,
       error: error instanceof Error ? error.message : String(error),
       attempt: currentAttempt + 1,
@@ -103,7 +103,7 @@ export async function startWatchingWithRetry(sessionId: SessionId, cwd: string):
       const delay = INITIAL_RETRY_DELAY_MS * Math.pow(2, currentAttempt); // Exponential backoff: 1s, 2s, 4s
       retryAttempts.set(sessionId, currentAttempt + 1);
 
-      telemetry.log('info', 'fileWatcher', `Retrying watcher start for session ${sessionId} in ${delay}ms`, {
+      telemetry.log('info', 'FileWatcher', `Retrying watcher start for session ${sessionId} in ${delay}ms`, {
         sessionId,
         attempt: currentAttempt + 1,
         maxAttempts: MAX_RETRY_ATTEMPTS,
@@ -114,7 +114,7 @@ export async function startWatchingWithRetry(sessionId: SessionId, cwd: string):
         startWatchingWithRetry(sessionId, cwd);
       }, delay);
     } else {
-      telemetry.log('error', 'fileWatcher', `Max retry attempts reached for session ${sessionId}, giving up`, {
+      telemetry.log('error', 'FileWatcher', `Max retry attempts reached for session ${sessionId}, giving up`, {
         sessionId,
         attempts: MAX_RETRY_ATTEMPTS,
       });
@@ -133,7 +133,7 @@ export async function startWatching(sessionId: SessionId, cwd: string): Promise<
     await stopWatching(sessionId);
   }
 
-  telemetry.log('info', 'fileWatcher', `Starting file watch for session ${sessionId} in ${cwd}`, { sessionId, cwd });
+  telemetry.log('info', 'FileWatcher', `Starting file watch for session ${sessionId} in ${cwd}`, { sessionId, cwd });
 
   const watcher = chokidar.watch(cwd, {
     ignored: IGNORE_PATTERNS,
@@ -173,7 +173,7 @@ export async function startWatching(sessionId: SessionId, cwd: string): Promise<
 
   // Error handler with auto-restart
   watcher.on('error', (error: Error) => {
-    telemetry.log('error', 'fileWatcher', `Error watching session ${sessionId}: ${error.message}`, { sessionId, error: error.stack }, sessionId);
+    telemetry.log('error', 'FileWatcher', `Error watching session ${sessionId}: ${error.message}`, { sessionId, error: error.stack }, sessionId);
 
     // Critical error - attempt to restart the watcher
     stopWatching(sessionId).then(() => {
@@ -187,7 +187,7 @@ export async function startWatching(sessionId: SessionId, cwd: string): Promise<
   // Wait for watcher to be ready
   await new Promise<void>((resolve) => {
     watcher.on('ready', () => {
-      telemetry.log('info', 'fileWatcher', `Ready for session ${sessionId}`, { sessionId }, sessionId);
+      telemetry.log('info', 'FileWatcher', `Ready for session ${sessionId}`, { sessionId }, sessionId);
       resolve();
     });
   });
@@ -199,7 +199,7 @@ export async function startWatching(sessionId: SessionId, cwd: string): Promise<
 export async function stopWatching(sessionId: SessionId): Promise<void> {
   const watcher = activeWatchers.get(sessionId);
   if (watcher) {
-    telemetry.log('info', 'fileWatcher', `Stopping file watch for session ${sessionId}`, { sessionId }, sessionId);
+    telemetry.log('info', 'FileWatcher', `Stopping file watch for session ${sessionId}`, { sessionId }, sessionId);
     await watcher.close();
     activeWatchers.delete(sessionId);
   }
@@ -222,7 +222,7 @@ export async function stopWatching(sessionId: SessionId): Promise<void> {
  */
 export function setActiveStep(sessionId: SessionId, stepNumber: StepNumber, action: string): void {
   activeSteps.set(sessionId, { stepNumber, action });
-  telemetry.log('debug', 'fileWatcher', `Active step for ${sessionId}: #${stepNumber} (${action})`, { sessionId, stepNumber, action }, sessionId);
+  telemetry.log('debug', 'FileWatcher', `Active step for ${sessionId}: #${stepNumber} (${action})`, { sessionId, stepNumber, action }, sessionId);
 }
 
 /**
@@ -231,7 +231,7 @@ export function setActiveStep(sessionId: SessionId, stepNumber: StepNumber, acti
  */
 export function clearActiveStep(sessionId: SessionId): void {
   activeSteps.delete(sessionId);
-  telemetry.log('debug', 'fileWatcher', `Cleared active step for ${sessionId}`, { sessionId }, sessionId);
+  telemetry.log('debug', 'FileWatcher', `Cleared active step for ${sessionId}`, { sessionId }, sessionId);
 }
 
 /**
@@ -271,7 +271,7 @@ function emitFileChangeEvent(
   cwd: string
 ): void {
   if (!broadcastFunction) {
-    telemetry.log('warn', 'fileWatcher', 'Broadcast function not set, skipping event', { sessionId, filePath, changeType }, sessionId);
+    telemetry.log('warn', 'FileWatcher', 'Broadcast function not set, skipping event', { sessionId, filePath, changeType }, sessionId);
     return;
   }
 
@@ -318,14 +318,14 @@ function emitFileChangeEvent(
     } as FileDeletedEvent;
   }
 
-  telemetry.log('debug', 'fileWatcher', `${changeType.toUpperCase()}: ${relativePath}`, { sessionId, changeType, relativePath, stepNumber: activeStep?.stepNumber }, sessionId);
+  telemetry.log('debug', 'FileWatcher', `${changeType.toUpperCase()}: ${relativePath}`, { sessionId, changeType, relativePath, stepNumber: activeStep?.stepNumber }, sessionId);
 
   // Broadcast event with error recovery (H3 fix)
   try {
     broadcastFunction(sessionId, event);
   } catch (error) {
     // CRITICAL: This error was previously swallowed - now captured in telemetry
-    telemetry.log('error', 'fileWatcher', `Error broadcasting event for session ${sessionId}: ${error instanceof Error ? error.message : String(error)}`, { sessionId, error: error instanceof Error ? error.stack : String(error), changeType, relativePath }, sessionId);
+    telemetry.log('error', 'FileWatcher', `Error broadcasting event for session ${sessionId}: ${error instanceof Error ? error.message : String(error)}`, { sessionId, error: error instanceof Error ? error.stack : String(error), changeType, relativePath }, sessionId);
     // Don't throw - continue processing other events
   }
 
@@ -337,13 +337,13 @@ function emitFileChangeEvent(
  * Cleanup all watchers on server shutdown
  */
 export async function shutdownAllWatchers(): Promise<void> {
-  telemetry.log('info', 'fileWatcher', 'Shutting down all file watchers...', { watcherCount: activeWatchers.size });
+  telemetry.log('info', 'FileWatcher', 'Shutting down all file watchers...', { watcherCount: activeWatchers.size });
   const promises: Promise<void>[] = [];
 
   for (const [sessionId, watcher] of activeWatchers.entries()) {
     promises.push(
       watcher.close().then(() => {
-        telemetry.log('info', 'fileWatcher', `Closed watcher for session ${sessionId}`, { sessionId }, sessionId);
+        telemetry.log('info', 'FileWatcher', `Closed watcher for session ${sessionId}`, { sessionId }, sessionId);
       })
     );
   }
@@ -358,5 +358,5 @@ export async function shutdownAllWatchers(): Promise<void> {
   }
   debounceMap.clear();
 
-  telemetry.log('info', 'fileWatcher', 'All file watchers shut down');
+  telemetry.log('info', 'FileWatcher', 'All file watchers shut down');
 }

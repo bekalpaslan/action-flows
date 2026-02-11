@@ -5,7 +5,9 @@ import { TimelineView } from '../TimelineView';
 import { ControlButtons } from '../ControlButtons/ControlButtons';
 import { StepInspector } from '../StepInspector/StepInspector';
 import { ConversationPanel } from '../ConversationPanel';
+import { ErrorModal } from '../ErrorModal';
 import { useSessionInput } from '../../hooks/useSessionInput';
+import { useErrorAnnouncements } from '../../hooks/useErrorAnnouncements';
 import { claudeCliService } from '../../services/claudeCliService';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
@@ -32,9 +34,14 @@ export function SessionPane({ session, onDetach, onClose, position }: SessionPan
   const [selectedStep, setSelectedStep] = useState<number | null>(null);
   const [viewMode, setViewMode] = useState<'dag' | 'timeline'>('dag');
   const [isClosing, setIsClosing] = useState(false);
+  const [displayedErrorIndex, setDisplayedErrorIndex] = useState(0);
   const { submitInput } = useSessionInput();
 
   const isCliSession = session.metadata?.type === 'claude-cli';
+
+  // Error announcements management
+  const { unreadErrors, dismissError, handleRecoveryAction } = useErrorAnnouncements(session.id);
+  const currentError = unreadErrors.length > 0 ? unreadErrors[displayedErrorIndex] : null;
 
   const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
     componentName: 'SessionPane',
@@ -108,6 +115,31 @@ export function SessionPane({ session, onDetach, onClose, position }: SessionPan
 
   const statusColor = getStatusColor(session.status);
   const statusLabel = getStatusLabel(session.status);
+
+  const handleErrorDismiss = (errorId: string) => {
+    dismissError(errorId);
+    // Move to next unread error if available
+    if (displayedErrorIndex < unreadErrors.length - 1) {
+      setDisplayedErrorIndex(displayedErrorIndex + 1);
+    } else {
+      setDisplayedErrorIndex(0);
+    }
+  };
+
+  const handleErrorRetry = (errorId: string) => {
+    handleRecoveryAction(errorId, 'retry');
+    handleErrorDismiss(errorId);
+  };
+
+  const handleErrorSkip = (errorId: string) => {
+    handleRecoveryAction(errorId, 'skip');
+    handleErrorDismiss(errorId);
+  };
+
+  const handleErrorCancel = (errorId: string) => {
+    handleRecoveryAction(errorId, 'cancel');
+    handleErrorDismiss(errorId);
+  };
 
   return (
     <div
@@ -274,6 +306,15 @@ export function SessionPane({ session, onDetach, onClose, position }: SessionPan
         }}
         onSend={handleSend}
         onClose={closeDialog}
+      />
+
+      <ErrorModal
+        isOpen={currentError !== null}
+        error={currentError}
+        onDismiss={handleErrorDismiss}
+        onRetry={handleErrorRetry}
+        onSkip={handleErrorSkip}
+        onCancel={handleErrorCancel}
       />
     </div>
   );

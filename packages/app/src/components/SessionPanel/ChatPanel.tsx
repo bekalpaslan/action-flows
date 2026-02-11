@@ -24,7 +24,9 @@ import { useChatMessages, type ChatMessage } from '../../hooks/useChatMessages';
 import { usePromptButtons } from '../../hooks/usePromptButtons';
 import { claudeCliService } from '../../services/claudeCliService';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { ErrorModal } from '../ErrorModal';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { useErrorAnnouncements } from '../../hooks/useErrorAnnouncements';
 import { extractChainCompilation } from '../../services/chainCompilationDetector';
 import { ReminderButtonBar } from './ReminderButtonBar';
 import { useReminderButtons } from '../../hooks/useReminderButtons';
@@ -154,6 +156,7 @@ export function ChatPanel({
   const [chainApproved, setChainApproved] = useState(false);
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const [focusedOptionIndex, setFocusedOptionIndex] = useState(0);
+  const [displayedErrorIndex, setDisplayedErrorIndex] = useState(0);
   const cliStateRef = useRef<CliSessionState>('not-started');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -170,6 +173,10 @@ export function ChatPanel({
     cliRunning: cliState === 'running',
   });
   const { createInstance: createReminderInstance } = useReminderButtons();
+
+  // Error announcements management
+  const { unreadErrors, dismissError, handleRecoveryAction } = useErrorAnnouncements(sessionId);
+  const currentError = unreadErrors.length > 0 ? unreadErrors[displayedErrorIndex] : null;
 
   // DiscussButton integration
   const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
@@ -554,6 +561,31 @@ export function ChatPanel({
         break;
     }
   }, [lastChainCompilation, sessionId, createReminderInstance, handleSendMessage]);
+
+  const handleErrorDismiss = (errorId: string) => {
+    dismissError(errorId);
+    // Move to next unread error if available
+    if (displayedErrorIndex < unreadErrors.length - 1) {
+      setDisplayedErrorIndex(displayedErrorIndex + 1);
+    } else {
+      setDisplayedErrorIndex(0);
+    }
+  };
+
+  const handleErrorRetry = (errorId: string) => {
+    handleRecoveryAction(errorId, 'retry');
+    handleErrorDismiss(errorId);
+  };
+
+  const handleErrorSkip = (errorId: string) => {
+    handleRecoveryAction(errorId, 'skip');
+    handleErrorDismiss(errorId);
+  };
+
+  const handleErrorCancel = (errorId: string) => {
+    handleRecoveryAction(errorId, 'cancel');
+    handleErrorDismiss(errorId);
+  }
 
 
 
@@ -945,6 +977,15 @@ export function ChatPanel({
         }}
         onSend={handleSend}
         onClose={closeDialog}
+      />
+
+      <ErrorModal
+        isOpen={currentError !== null}
+        error={currentError}
+        onDismiss={handleErrorDismiss}
+        onRetry={handleErrorRetry}
+        onSkip={handleErrorSkip}
+        onCancel={handleErrorCancel}
       />
     </div>
   );

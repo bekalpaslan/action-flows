@@ -15,7 +15,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { Session, ButtonDefinition, ButtonId } from '@afw/shared';
 import { InlineButtons } from '../InlineButtons';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { ErrorModal } from '../ErrorModal';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { useErrorAnnouncements } from '../../hooks/useErrorAnnouncements';
 import './ConversationPanel.css';
 
 /**
@@ -88,6 +90,11 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
   const canSend = isAwaiting && input.trim().length > 0 && !isSending;
 
   const quickResponses = session.lastPrompt?.quickResponses || [];
+
+  // Error announcements management
+  const { unreadErrors, dismissError, handleRecoveryAction } = useErrorAnnouncements(session.id);
+  const [displayedErrorIndex, setDisplayedErrorIndex] = useState(0);
+  const currentError = unreadErrors.length > 0 ? unreadErrors[displayedErrorIndex] : null;
 
   const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
     componentName: 'ConversationPanel',
@@ -189,6 +196,31 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
 
   const handleQuickResponse = (response: string) => {
     handleSubmit(response);
+  };
+
+  const handleErrorDismiss = (errorId: string) => {
+    dismissError(errorId);
+    // Move to next unread error if available
+    if (displayedErrorIndex < unreadErrors.length - 1) {
+      setDisplayedErrorIndex(displayedErrorIndex + 1);
+    } else {
+      setDisplayedErrorIndex(0);
+    }
+  };
+
+  const handleErrorRetry = (errorId: string) => {
+    handleRecoveryAction(errorId, 'retry');
+    handleErrorDismiss(errorId);
+  };
+
+  const handleErrorSkip = (errorId: string) => {
+    handleRecoveryAction(errorId, 'skip');
+    handleErrorDismiss(errorId);
+  };
+
+  const handleErrorCancel = (errorId: string) => {
+    handleRecoveryAction(errorId, 'cancel');
+    handleErrorDismiss(errorId);
   };
 
   return (
@@ -299,6 +331,15 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
         }}
         onSend={handleSend}
         onClose={closeDialog}
+      />
+
+      <ErrorModal
+        isOpen={currentError !== null}
+        error={currentError}
+        onDismiss={handleErrorDismiss}
+        onRetry={handleErrorRetry}
+        onSkip={handleErrorSkip}
+        onCancel={handleErrorCancel}
       />
     </div>
   );

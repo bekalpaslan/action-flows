@@ -17,6 +17,7 @@ vi.mock('../../storage/index.js', () => ({
     setSession: vi.fn(),
     getSession: vi.fn(),
     addEvent: vi.fn(),
+    addChatMessage: vi.fn(),
   },
 }));
 
