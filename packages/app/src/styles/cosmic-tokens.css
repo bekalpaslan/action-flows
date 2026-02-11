@@ -1,0 +1,106 @@
+/* ============================================================================
+   ActionFlows Dashboard — Cosmic Map Design Tokens
+
+   Living Universe visualization tokens extending the base design system.
+   Follows the established naming convention: --{category}-{property}-{variant}
+
+   Phase 1: Cosmic Map Renderer foundation tokens
+   ============================================================================ */
+
+:root {
+  /* ==========================================================================
+     Space — Deep void backgrounds
+     ========================================================================== */
+
+  --cosmic-void: #000000;                   /* True void, deepest space */
+  --cosmic-deep-space: #050510;             /* Deep space with hint of blue */
+
+  /* ==========================================================================
+     Nebulae — Soft background clouds
+     ========================================================================== */
+
+  --cosmic-nebula-blue: rgba(30, 60, 180, 0.12);      /* Cool blue nebula */
+  --cosmic-nebula-purple: rgba(120, 40, 180, 0.10);   /* Purple nebula */
+  --cosmic-nebula-pink: rgba(180, 40, 120, 0.08);     /* Pink nebula accent */
+  --cosmic-nebula-teal: rgba(40, 180, 180, 0.10);     /* Teal nebula accent */
+
+  /* ==========================================================================
+     Stars & Glow — Region star states
+     ========================================================================== */
+
+  --cosmic-star-glow: rgba(255, 255, 240, 0.9);       /* Bright active star */
+  --cosmic-star-idle: rgba(180, 180, 200, 0.4);       /* Dormant star */
+  --cosmic-star-pulse: rgba(255, 240, 200, 0.7);      /* Pulsing state */
+  --cosmic-star-core: rgba(255, 255, 255, 1.0);       /* Blazing core */
+
+  /* ==========================================================================
+     Bridges — Light paths between regions
+     ========================================================================== */
+
+  --cosmic-bridge-active: rgba(100, 200, 255, 0.7);   /* Active traveled bridge */
+  --cosmic-bridge-idle: rgba(100, 160, 255, 0.25);    /* Faint untraveled bridge */
+  --cosmic-bridge-glow: rgba(120, 200, 255, 0.4);     /* Bridge glow effect */
+  --cosmic-bridge-spark: rgba(255, 220, 100, 1.0);    /* Traveling spark */
+
+  /* ==========================================================================
+     Fog of War — Discovery states
+     ========================================================================== */
+
+  --cosmic-fog-hidden: rgba(0, 0, 0, 0.92);           /* Completely hidden region */
+  --cosmic-fog-faint: rgba(0, 0, 0, 0.55);            /* Outline visible, not accessible */
+  --cosmic-fog-revealed: rgba(0, 0, 0, 0);            /* Fully discovered */
+
+  /* ==========================================================================
+     Layer Colors — 7-layer sovereignty model
+     ========================================================================== */
+
+  --cosmic-layer-platform: #ff6b6b;         /* Layer 1: Platform (foundation) */
+  --cosmic-layer-template: #ffd93d;         /* Layer 2: Template (structure) */
+  --cosmic-layer-philosophy: #6bcb77;       /* Layer 3: Philosophy (principles) */
+  --cosmic-layer-physics: #4d96ff;          /* Layer 4: Physics (behavior) */
+  --cosmic-layer-experience: #9b59b6;       /* Layer 5: Experience (interface) */
+
+  /* ==========================================================================
+     Animation Timing — Cosmic rhythms
+     ========================================================================== */
+
+  --cosmic-glow-pulse-duration: 2s;         /* Star glow pulse cycle */
+  --cosmic-spark-travel-duration: 1.5s;     /* Spark travel time along bridge */
+  --cosmic-nebula-drift-duration: 20s;      /* Slow nebula drift */
+  --cosmic-reveal-duration: 0.8s;           /* Fog lift animation */
+
+  /* ==========================================================================
+     Gate Status — Checkpoint colors
+     ========================================================================== */
+
+  --cosmic-gate-passed: #32d74b;            /* Gate passed successfully */
+  --cosmic-gate-pending: #ffd60a;           /* Gate pending evaluation */
+  --cosmic-gate-failed: #ff453a;            /* Gate failed/blocked */
+  --cosmic-gate-skipped: #98989d;           /* Gate skipped */
+
+  /* ==========================================================================
+     Health States — Region health visualization
+     ========================================================================== */
+
+  --cosmic-health-high: rgba(50, 215, 75, 0.8);       /* Healthy region (>80%) */
+  --cosmic-health-medium: rgba(255, 214, 10, 0.8);    /* Moderate health (40-80%) */
+  --cosmic-health-low: rgba(255, 69, 58, 0.8);        /* Low health (<40%) */
+  --cosmic-health-unknown: rgba(152, 152, 157, 0.5);  /* No health data */
+
+  /* ==========================================================================
+     Interaction States — User interaction feedback
+     ========================================================================== */
+
+  --cosmic-hover-glow: rgba(100, 200, 255, 0.3);      /* Hover state glow */
+  --cosmic-focus-ring: rgba(10, 132, 255, 0.6);       /* Focused element ring */
+  --cosmic-selected-glow: rgba(10, 132, 255, 0.5);    /* Selected region glow */
+
+  /* ==========================================================================
+     Particle Effects — Background starfield
+     ========================================================================== */
+
+  --cosmic-particle-small: rgba(255, 255, 255, 0.3);  /* Distant stars */
+  --cosmic-particle-medium: rgba(255, 255, 255, 0.5); /* Mid-distance stars */
+  --cosmic-particle-large: rgba(255, 255, 255, 0.7);  /* Near stars */
+  --cosmic-particle-twinkle: rgba(255, 255, 255, 0.9);/* Twinkling state */
+}

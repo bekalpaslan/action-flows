@@ -1,0 +1,207 @@
+/**
+ * RegionStar - Cosmic map node styles
+ *
+ * Uses cosmic design tokens and performance-optimized animations.
+ */
+
+.region-star {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+/* Star core container */
+.region-star__core {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Glow effect */
+.region-star__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--cosmic-star-glow) 0%, transparent 70%);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Star center */
+.region-star__center {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--cosmic-star-core);
+  box-shadow: 0 0 8px var(--cosmic-star-glow);
+  z-index: 1;
+}
+
+/* Layer-based coloring */
+.region-star.layer-platform .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-platform) 0%, transparent 70%);
+}
+
+.region-star.layer-template .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-template) 0%, transparent 70%);
+}
+
+.region-star.layer-philosophy .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-philosophy) 0%, transparent 70%);
+}
+
+.region-star.layer-physics .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-physics) 0%, transparent 70%);
+}
+
+.region-star.layer-experience .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-experience) 0%, transparent 70%);
+}
+
+/* Label */
+.region-star__label {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: center;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.region-star__name {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.region-star__locked {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* Status indicator */
+.region-star__status-indicator {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--panel-bg-base);
+  border: 1px solid var(--panel-border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  z-index: 2;
+}
+
+.region-star__status-indicator.status-active {
+  background: var(--system-blue);
+  animation: cosmicPulse 2s ease-in-out infinite;
+}
+
+.region-star__status-indicator.status-waiting {
+  background: var(--system-purple);
+  animation: cosmicPulse 3s ease-in-out infinite;
+}
+
+/* Health indicator */
+.region-star__health {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+/* Fog states */
+.region-star.fog-hidden {
+  pointer-events: none;
+}
+
+.region-star.fog-hidden .region-star__label {
+  opacity: 0.3;
+}
+
+.region-star.fog-faint .region-star__label {
+  opacity: 0.6;
+}
+
+.region-star.fog-revealed:hover .region-star__glow {
+  opacity: 1 !important;
+  filter: brightness(1.2);
+}
+
+/* Selected state */
+.region-star.selected .region-star__core {
+  box-shadow: 0 0 16px var(--cosmic-selected-glow);
+}
+
+/* Status animations */
+.region-star.status-active .region-star__glow {
+  animation: cosmicGlow var(--cosmic-glow-pulse-duration) ease-in-out infinite;
+}
+
+.region-star.status-waiting .region-star__glow {
+  animation: cosmicGlow calc(var(--cosmic-glow-pulse-duration) * 1.5) ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes cosmicGlow {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+}
+
+@keyframes cosmicPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+/* ReactFlow handles */
+.region-star .react-flow__handle {
+  width: 8px;
+  height: 8px;
+  background: var(--cosmic-bridge-idle);
+  border: 1px solid var(--cosmic-star-core);
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.region-star:hover .react-flow__handle {
+  opacity: 1;
+}
+
+.region-star.fog-hidden .react-flow__handle,
+.region-star.fog-faint .react-flow__handle {
+  opacity: 0.2;
+}

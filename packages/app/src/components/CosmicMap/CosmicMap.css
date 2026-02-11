@@ -1,0 +1,162 @@
+/**
+ * CosmicMap - Main container styles
+ *
+ * Full-viewport cosmic map with ReactFlow integration.
+ */
+
+.cosmic-map {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--cosmic-void);
+  overflow: hidden;
+}
+
+/* ReactFlow container */
+.cosmic-map__flow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Controls styling */
+.cosmic-map__controls {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: var(--panel-bg-base);
+  border: var(--panel-border-default);
+  border-radius: var(--panel-radius-md);
+  box-shadow: var(--panel-glow-default);
+}
+
+.cosmic-map__controls button {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.cosmic-map__controls button:hover {
+  color: var(--system-blue);
+}
+
+/* MiniMap styling */
+.cosmic-map__minimap {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: var(--panel-bg-base);
+  border: var(--panel-border-default);
+  border-radius: var(--panel-radius-md);
+  box-shadow: var(--panel-glow-default);
+  opacity: 0.9;
+}
+
+/* God view button */
+.cosmic-map__god-view-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  padding: 8px 16px;
+  background: var(--panel-bg-base);
+  border: var(--panel-border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--panel-glow-default);
+  transition: all 0.2s ease;
+}
+
+.cosmic-map__god-view-button:hover {
+  background: var(--panel-bg-hover);
+  border-color: var(--system-blue);
+  box-shadow: 0 0 12px rgba(10, 132, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.cosmic-map__god-view-button:active {
+  transform: translateY(0);
+}
+
+/* Loading state */
+.cosmic-map--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cosmic-map__loading-message {
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.cosmic-map__spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 16px;
+  border: 3px solid var(--panel-border-default);
+  border-top-color: var(--system-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error state */
+.cosmic-map--error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cosmic-map__error-message {
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.cosmic-map__error-detail {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Empty state */
+.cosmic-map--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cosmic-map__empty-message {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* ReactFlow theme overrides for cosmic aesthetic */
+.cosmic-map .react-flow__node {
+  cursor: default;
+}
+
+.cosmic-map .react-flow__edge {
+  pointer-events: stroke;
+}
+
+.cosmic-map .react-flow__edge:hover {
+  stroke-width: 3 !important;
+}
+
+.cosmic-map .react-flow__attribution {
+  display: none;
+}

@@ -12,6 +12,35 @@
   font-family: var(--font-sans);
 }
 
+/* Return to Universe button */
+.workbench-layout__return-to-universe {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  padding: 8px 16px;
+  background: var(--panel-bg-base);
+  border: var(--panel-border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--panel-glow-default);
+  transition: all 0.2s ease;
+}
+
+.workbench-layout__return-to-universe:hover {
+  background: var(--panel-bg-hover);
+  border-color: var(--system-blue);
+  box-shadow: 0 0 12px rgba(10, 132, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.workbench-layout__return-to-universe:active {
+  transform: translateY(0);
+}
+
 /* ============================================================================
  * Body Section (Main content only - Sidebar is fixed position)
  * ============================================================================ */

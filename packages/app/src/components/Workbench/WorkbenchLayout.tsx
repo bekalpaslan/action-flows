@@ -3,10 +3,12 @@ import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { useSessionContext } from '../../contexts/SessionContext';
 import { useChatWindowContext } from '../../contexts/ChatWindowContext';
 import { useChatKeyboardShortcuts } from '../../hooks/useChatKeyboardShortcuts';
+import { useFeatureFlag, FEATURE_FLAGS } from '../../hooks/useFeatureFlag';
 import { AppSidebar } from '../AppSidebar';
 import { SessionSidebar } from '../SessionSidebar';
 import { SlidingChatWindow } from '../SlidingChatWindow/SlidingChatWindow';
 import { ChatPanel } from '../SessionPanel/ChatPanel';
+import { CosmicMap } from '../CosmicMap/CosmicMap';
 import { WorkWorkbench } from './WorkWorkbench';
 import { CanvasWorkbench } from './CanvasWorkbench';
 import { EditorWorkbench } from './EditorWorkbench';
@@ -266,12 +268,20 @@ const initialDemoMilestones: Milestone[] = [
 ];
 
 export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
-  const { activeWorkbench } = useWorkbenchContext();
+  const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
   const { getSession } = useSessionContext();
   const { sessionId: chatSessionId, closeChat } = useChatWindowContext();
 
   // Enable keyboard shortcuts for chat window
   useChatKeyboardShortcuts();
+
+  // Feature flag for cosmic map
+  const [cosmicMapEnabled] = useFeatureFlag(FEATURE_FLAGS.COSMIC_MAP, false);
+
+  // View mode state: 'cosmic-map' or 'workbench'
+  const [viewMode, setViewMode] = useState<'cosmic-map' | 'workbench'>(
+    cosmicMapEnabled ? 'cosmic-map' : 'workbench'
+  );
 
   // Track AppSidebar collapse state for layout adjustment
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
@@ -518,6 +528,27 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   }, [demoDocs]);
 
   /**
+   * Handle cosmic map region navigation
+   * When user clicks a region in cosmic map, switch to workbench view
+   */
+  useEffect(() => {
+    // Listen for region navigation events from UniverseContext
+    // When navigateToRegion is called, switch to workbench view
+    // This effect would be triggered by WorkbenchContext changes
+    if (viewMode === 'cosmic-map' && activeWorkbench) {
+      // User navigated to a workbench from cosmic map
+      setViewMode('workbench');
+    }
+  }, [activeWorkbench, viewMode]);
+
+  /**
+   * Handle return to universe button click
+   */
+  const handleReturnToUniverse = useCallback(() => {
+    setViewMode('cosmic-map');
+  }, []);
+
+  /**
    * Render workbench-specific content based on activeWorkbench
    */
   const renderWorkbenchContent = (workbench: WorkbenchId): ReactNode => {
@@ -601,36 +632,57 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
     <div className="workbench-layout">
       <AppSidebar onCollapseChange={setSidebarCollapsed} />
 
-      {/* SessionSidebar - Always show for session management */}
-      <SessionSidebar
-        onAttachSession={handleAttachSession}
-        activeSessionId={activeSessionId}
-        onNewSession={async () => {
-          try {
-            const res = await fetch('http://localhost:3001/api/sessions', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ cwd: 'D:/ActionFlowsDashboard' }),
-            });
-            if (!res.ok) throw new Error(`Failed to create session: ${res.status}`);
-            const data = await res.json();
-            const newId = data.id as SessionId;
-            handleAttachSession(newId);
-          } catch (err) {
-            console.error('Failed to create new session:', err);
-          }
-        }}
-      />
+      {/* SessionSidebar - Show only in workbench view */}
+      {viewMode === 'workbench' && (
+        <SessionSidebar
+          onAttachSession={handleAttachSession}
+          activeSessionId={activeSessionId}
+          onNewSession={async () => {
+            try {
+              const res = await fetch('http://localhost:3001/api/sessions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cwd: 'D:/ActionFlowsDashboard' }),
+              });
+              if (!res.ok) throw new Error(`Failed to create session: ${res.status}`);
+              const data = await res.json();
+              const newId = data.id as SessionId;
+              handleAttachSession(newId);
+            } catch (err) {
+              console.error('Failed to create new session:', err);
+            }
+          }}
+        />
+      )}
 
       <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
-        <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }}>
-          <main className="workbench-main with-sidebar">
-            <div className={`workbench-content ${transitionClass}`}>
-              {renderWorkbenchContent(activeWorkbench)}
-              {children}
-            </div>
-          </main>
-        </div>
+        {/* Cosmic Map View */}
+        {cosmicMapEnabled && viewMode === 'cosmic-map' ? (
+          <div className="workbench-dashboard" style={{ flex: 1 }}>
+            <CosmicMap />
+          </div>
+        ) : (
+          /* Workbench View */
+          <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }}>
+            <main className="workbench-main with-sidebar">
+              <div className={`workbench-content ${transitionClass}`}>
+                {/* Return to Universe button (visible when cosmic map is enabled) */}
+                {cosmicMapEnabled && (
+                  <button
+                    className="workbench-layout__return-to-universe"
+                    onClick={handleReturnToUniverse}
+                    title="Return to universe view (U)"
+                  >
+                    🌌 Universe
+                  </button>
+                )}
+
+                {renderWorkbenchContent(activeWorkbench)}
+                {children}
+              </div>
+            </main>
+          </div>
+        )}
 
         <SlidingChatWindow>
           {chatSessionId !== null && (
