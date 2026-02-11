@@ -132,19 +132,23 @@ The universe evolves on two timescales.
 
 ## User Sovereignty
 
-Everything except the platform layer is mutable. You have full sovereignty.
+Everything is mutable. Full sovereignty. No asterisks.
+
+ActionFlows is open source. Forking and evolving is not just permitted — it is the highest expression of the system's own thesis. A system that believes in evolution does not exempt itself from evolution.
 
 **The Five-Layer Sovereignty Model:**
 
 | Layer | What it is | Mutable? |
 |-------|-----------|----------|
-| Platform | The ability to have evolving productivity software | No (this is the product) |
+| Platform | The ability to have evolving productivity software | Yes -- and if you evolve this, you've proven the thesis |
 | Template | The creator's proof-of-concept system | Yes -- fork it, gut it, reshape it |
 | Philosophy | Chains, harmony, sin test, contracts | Yes -- swap for any paradigm |
 | Physics | The code, UI, features | Yes -- you can change everything |
 | Experience | Learnings, flows, evolution | Yes -- each user's journey is unique |
 
-You can modify the physics (UI, workbenches, features), change the philosophy (replace chains with any orchestration model), and reshape the entire system to match your way of working. The template provides a proven starting point, but you have full sovereignty to evolve it however you see fit.
+You can modify the physics (UI, workbenches, features), change the philosophy (replace chains with any orchestration model), reshape the template, and even evolve the platform concept itself. This is open source software — the product is not a protected codebase, it is an idea: that productivity software should learn from use and grow alongside its users. Ideas spread through adoption and mutation, not immutability.
+
+The only thing that defeats the purpose is stagnation. Nobody using it. Nobody forking it. Nobody evolving it. That is death. Everything else — every fork, every mutation, every radical reimagining — proves the thesis.
 
 **Inference plus override.** The framework infers relationships between regions from usage patterns. Connections form automatically when work flows between areas. But you can always override: rearranging the topology, creating new regions, deleting connections. Spatial control, not configuration files.
 
