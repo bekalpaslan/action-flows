@@ -1,0 +1,199 @@
+/**
+ * Performance Settings Styles
+ */
+
+.performance-settings {
+  padding: var(--spacing-4);
+  max-width: 1200px;
+}
+
+.performance-settings h2 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-4);
+  color: var(--text-primary);
+}
+
+.performance-settings h3 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-3);
+  color: var(--text-secondary);
+}
+
+.performance-settings h4 {
+  font-size: var(--font-size-md);
+  margin-bottom: var(--spacing-2);
+  color: var(--text-secondary);
+}
+
+/* Web Vitals Section */
+.web-vitals {
+  margin-bottom: var(--spacing-6);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-3);
+}
+
+.metric {
+  padding: var(--spacing-3);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  background: var(--panel-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.metric.good {
+  border-left: 4px solid var(--system-success);
+}
+
+.metric.fair {
+  border-left: 4px solid var(--system-warning);
+}
+
+.metric.poor {
+  border-left: 4px solid var(--system-error);
+}
+
+.metric.pending {
+  border-left: 4px solid var(--text-tertiary);
+}
+
+.metric label {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-2);
+  font-weight: var(--font-weight-medium);
+}
+
+.metric .metric-value {
+  display: block;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.metric .target {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+/* FPS Counter Section */
+.fps-counter {
+  margin-bottom: var(--spacing-6);
+}
+
+.fps-toggle {
+  margin-bottom: var(--spacing-3);
+}
+
+.fps-toggle label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.fps-toggle input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.fps-display {
+  margin-top: var(--spacing-3);
+  padding: var(--spacing-3);
+  background: var(--panel-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--panel-border);
+}
+
+.fps-display .metric-value {
+  display: block;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-2);
+}
+
+.fps-display span {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.fps-display span.good {
+  color: var(--system-success);
+}
+
+.fps-display span.fair {
+  color: var(--system-warning);
+}
+
+.fps-display span.poor {
+  color: var(--system-error);
+}
+
+/* Reduced Motion Status Section */
+.reduced-motion-status {
+  margin-bottom: var(--spacing-6);
+}
+
+.status-display {
+  padding: var(--spacing-3);
+  background: var(--panel-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--panel-border);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-2);
+}
+
+.status-badge.enabled {
+  background: var(--system-success-bg);
+  color: var(--system-success);
+}
+
+.status-badge.disabled {
+  background: var(--panel-bg-hover);
+  color: var(--text-tertiary);
+}
+
+/* Memory Usage Section */
+.memory-usage {
+  margin-bottom: var(--spacing-6);
+}
+
+.info-text {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-3);
+}
+
+.memory-instructions {
+  padding: var(--spacing-3);
+  background: var(--panel-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--panel-border);
+}
+
+.memory-instructions ol {
+  margin-left: var(--spacing-4);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+.memory-instructions li {
+  margin-bottom: var(--spacing-1);
+}

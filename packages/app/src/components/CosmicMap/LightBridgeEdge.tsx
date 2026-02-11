@@ -174,6 +174,8 @@ export const LightBridgeEdge: React.FC<EdgeProps<LightBridgeData>> = ({
               pointerEvents: 'all',
             }}
             className="light-bridge__label"
+            role="img"
+            aria-label={`Connection from ${source} to ${target}, strength ${data.strength.toFixed(1)}, traversed ${data.traversalCount} times`}
           >
             <div className={`bridge-label-content ${isActive ? 'active' : ''}`}>
               {data.traversalCount}×

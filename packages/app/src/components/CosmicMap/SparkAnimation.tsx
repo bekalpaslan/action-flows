@@ -7,6 +7,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import type { ChainId, RegionId } from '@afw/shared';
+import { useFPSCounter } from '../../utils/performance';
 import './SparkAnimation.css';
 
 export interface SparkAnimationProps {
@@ -36,11 +37,21 @@ export const SparkAnimation: React.FC<SparkAnimationProps> = ({
   const sparkRef = useRef<SVGCircleElement>(null);
   const pathIdRef = useRef(`spark-path-${chainId}-${Date.now()}`);
 
+  // Performance monitoring (dev mode only)
+  const fps = useFPSCounter(import.meta.env.DEV);
+
   useEffect(() => {
     if (progress >= 1.0 && onComplete) {
       onComplete();
     }
   }, [progress, onComplete]);
+
+  // Log FPS in dev mode for performance monitoring
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.log(`[PERF] SparkAnimation FPS: ${fps}`);
+    }
+  }, [fps]);
 
   if (!edgePath) {
     console.warn(`[SparkAnimation] No edge path found for ${fromRegion} → ${toRegion}`);
@@ -53,6 +64,9 @@ export const SparkAnimation: React.FC<SparkAnimationProps> = ({
   return (
     <g
       className="spark-animation"
+      role="status"
+      aria-label={`Chain execution in progress: traveling from ${fromRegion} to ${toRegion}`}
+      aria-live="polite"
       data-chain-id={chainId}
       data-from-region={fromRegion}
       data-to-region={toRegion}

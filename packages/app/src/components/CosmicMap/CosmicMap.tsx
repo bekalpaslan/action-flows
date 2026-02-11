@@ -24,12 +24,17 @@ import type { RegionNode, LightBridge, ChainId, SparkTravelingEvent } from '@afw
 import { eventGuards } from '@afw/shared';
 import { useUniverseContext } from '../../contexts/UniverseContext';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
+import { useFeatureFlagSimple } from '../../hooks/useFeatureFlag';
 import { CosmicBackground } from './CosmicBackground';
 import { RegionStar, type RegionStarData } from './RegionStar';
 import { LightBridgeEdge, type LightBridgeData } from './LightBridgeEdge';
 import { CommandCenter } from './CommandCenter';
 import { BigBangAnimation } from './BigBangAnimation';
 import { SparkAnimation } from './SparkAnimation';
+import { LiveRegion } from './LiveRegion';
+import { UniverseOnboarding } from '../Onboarding/UniverseOnboarding';
+import { useWebVitals } from '../../hooks/useWebVitals';
+import { useRenderTiming } from '../../utils/performance';
 import '../../styles/cosmic-tokens.css';
 import './CosmicMap.css';
 
@@ -69,6 +74,14 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
   const [hasInitialFit, setHasInitialFit] = useState(false);
   const [showBigBang, setShowBigBang] = useState(false);
   const [activeSparks, setActiveSparks] = useState<Map<ChainId, SparkState>>(new Map());
+
+  // Feature flags
+  const commandCenterEnabled = useFeatureFlagSimple('COMMAND_CENTER_ENABLED');
+  const sparkAnimationEnabled = useFeatureFlagSimple('SPARK_ANIMATION_ENABLED');
+
+  // Performance monitoring
+  useWebVitals(); // Captured globally for Settings → Performance
+  useRenderTiming('CosmicMap');
 
   // Transform RegionNode[] → ReactFlow Node[]
   const initialNodes = useMemo(() => {
@@ -168,7 +181,7 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
 
   // Subscribe to spark traveling events
   useEffect(() => {
-    if (!wsContext.onEvent) return;
+    if (!wsContext.onEvent || !sparkAnimationEnabled) return;
 
     const unsubscribe = wsContext.onEvent((event) => {
       if (eventGuards.isSparkTraveling(event)) {
@@ -233,7 +246,7 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
     });
 
     return unsubscribe;
-  }, [wsContext, edges, nodes]);
+  }, [wsContext, edges, nodes, sparkAnimationEnabled]);
 
   // Cleanup completed sparks
   const handleSparkComplete = useCallback((chainId: ChainId) => {
@@ -343,6 +356,9 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
         enableAnimation={true}
       />
 
+      {/* Screen reader announcements for region discoveries */}
+      <LiveRegion />
+
       {/* ReactFlow visualization */}
       <ReactFlow
         nodes={nodes}
@@ -357,6 +373,8 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
         defaultViewport={{ x: 0, y: 0, zoom: 1 }}
         className="cosmic-map__flow"
         proOptions={{ hideAttribution: true }}
+        aria-label="Living Universe cosmic map - navigable visualization of workbench regions"
+        role="application"
       >
         <Controls className="cosmic-map__controls" />
         <MiniMap
@@ -382,30 +400,32 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
         />
 
         {/* Spark animations layer (rendered as SVG overlay) */}
-        <svg
-          className="cosmic-map__spark-layer"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            zIndex: 100,
-          }}
-        >
-          {Array.from(activeSparks.entries()).map(([chainId, spark]) => (
-            <SparkAnimation
-              key={chainId}
-              chainId={chainId}
-              fromRegion={spark.fromRegion}
-              toRegion={spark.toRegion}
-              progress={spark.progress}
-              edgePath={spark.edgePath}
-              onComplete={() => handleSparkComplete(chainId)}
-            />
-          ))}
-        </svg>
+        {sparkAnimationEnabled && (
+          <svg
+            className="cosmic-map__spark-layer"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              zIndex: 100,
+            }}
+          >
+            {Array.from(activeSparks.entries()).map(([chainId, spark]) => (
+              <SparkAnimation
+                key={chainId}
+                chainId={chainId}
+                fromRegion={spark.fromRegion}
+                toRegion={spark.toRegion}
+                progress={spark.progress}
+                edgePath={spark.edgePath}
+                onComplete={() => handleSparkComplete(chainId)}
+              />
+            ))}
+          </svg>
+        )}
       </ReactFlow>
 
       {/* Return to god view button */}
@@ -418,10 +438,12 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
       </button>
 
       {/* Command Center bottom bar */}
-      <CommandCenter
-        onCommand={handleCommand}
-        showHealthStatus={true}
-      />
+      {commandCenterEnabled && (
+        <CommandCenter onCommand={handleCommand} showHealthStatus={true} />
+      )}
+
+      {/* Onboarding tooltip sequence */}
+      <UniverseOnboarding />
     </div>
   );
 }

@@ -50,6 +50,7 @@ import { initDiscoveryService } from './services/discoveryService.js';
 import { initSparkBroadcaster, getSparkBroadcaster } from './services/sparkBroadcaster.js';
 import { initGateValidator, getGateValidator } from './services/gateValidator.js';
 import { initGateCheckpoint, getGateCheckpoint } from './services/gateCheckpoint.js';
+import { initConversationWatcher, getConversationWatcher } from './services/conversationWatcher.js';
 import { initBridgeStrengthService } from './services/bridgeStrengthService.js';
 import { initHealingRecommendationEngine, getHealingRecommendationEngine } from './services/healingRecommendations.js';
 import { initHealthScoreCalculator } from './services/healthScoreCalculator.js';
@@ -516,6 +517,14 @@ if (isMainModule) {
       console.error('[GateCheckpoint] ❌ Failed to initialize GateCheckpoint:', error);
     }
 
+    // Initialize ConversationWatcher (Gate validation for Claude Code sessions)
+    try {
+      initConversationWatcher(storage, process.cwd());
+      console.log('[ConversationWatcher] ✅ Service initialized successfully for JSONL log monitoring');
+    } catch (error) {
+      console.error('[ConversationWatcher] ❌ Failed to initialize ConversationWatcher:', error);
+    }
+
     // Initialize healing recommendation engine (Component 7 - Healing Recommendation Engine)
     try {
       const healingEngine = initHealingRecommendationEngine(storage);
@@ -595,6 +604,16 @@ if (isMainModule) {
     // Start server-side WebSocket heartbeat
     startServerHeartbeat();
 
+    // Start conversation watcher (non-blocking)
+    if (process.env.AFW_ENABLE_CONVERSATION_WATCHER !== 'false') {
+      const conversationWatcher = getConversationWatcher();
+      if (conversationWatcher) {
+        conversationWatcher.start().catch((error) => {
+          console.warn('[ConversationWatcher] ⚠️  Failed to start (graceful degradation):', error instanceof Error ? error.message : String(error));
+        });
+      }
+    }
+
     console.log(`
 ╔════════════════════════════════════════════╗
 ║   ActionFlows Backend Server Running      ║
@@ -652,6 +671,16 @@ if (isMainModule) {
       gateCheckpoint.shutdown();
     } catch (error) {
       console.warn('[GateCheckpoint] Not initialized or already shut down');
+    }
+
+    // Stop conversation watcher
+    try {
+      const conversationWatcher = getConversationWatcher();
+      if (conversationWatcher) {
+        await conversationWatcher.stop();
+      }
+    } catch (error) {
+      console.warn('[ConversationWatcher] Error stopping:', error);
     }
 
     // Shutdown file watchers

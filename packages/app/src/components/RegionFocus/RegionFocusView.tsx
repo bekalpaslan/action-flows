@@ -9,7 +9,7 @@
  * This is the critical path for Phase 5 region navigation.
  */
 
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 import type { WorkbenchId, SessionId } from '@afw/shared';
 import { SlidingChatWindow } from '../SlidingChatWindow/SlidingChatWindow';
 import { ChatPanel } from '../SessionPanel/ChatPanel';
@@ -40,9 +40,21 @@ export function RegionFocusView({
 }: RegionFocusViewProps) {
   const { getSession } = useSessionContext();
   const { closeChat } = useChatWindowContext();
+  const regionRef = useRef<HTMLDivElement>(null);
+
+  // Focus management: Move focus to first interactive element when entering region
+  useEffect(() => {
+    if (regionRef.current) {
+      // Move focus to return button when region loads
+      const returnButton = regionRef.current.querySelector('.region-focus__return') as HTMLButtonElement;
+      if (returnButton) {
+        returnButton.focus();
+      }
+    }
+  }, [workbenchId]);
 
   return (
-    <div className={`region-focus region-focus--${workbenchId}`}>
+    <div className={`region-focus region-focus--${workbenchId}`} ref={regionRef}>
       {/* Return to Universe button (top-left corner) */}
       <button
         className="region-focus__return"

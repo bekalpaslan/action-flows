@@ -1,6 +1,7 @@
 import './App.css'
 import './styles/themes/index.css'
 import { ThemeProvider } from './contexts/ThemeContext'
+import { FeatureFlagsProvider } from './contexts/FeatureFlagsContext'
 import { WebSocketProvider } from './contexts/WebSocketContext'
 import { SessionProvider } from './contexts/SessionContext'
 import { WorkbenchProvider } from './contexts/WorkbenchContext'
@@ -34,27 +35,29 @@ function AppWithVim() {
 function App() {
   return (
     <ThemeProvider>
-      <ToastProvider>
-        <WebSocketProvider url="ws://localhost:3001/ws">
-          <SessionProvider>
-            <WorkbenchProvider>
-              <UniverseProvider>
-                <DiscoveryProvider>
-                  <ChatWindowProvider>
-                    <DiscussProvider>
-                      <NotificationGlowProvider>
-                        <VimNavigationProvider>
-                          <AppWithVim />
-                        </VimNavigationProvider>
-                      </NotificationGlowProvider>
-                    </DiscussProvider>
-                  </ChatWindowProvider>
-                </DiscoveryProvider>
-              </UniverseProvider>
-            </WorkbenchProvider>
-          </SessionProvider>
-        </WebSocketProvider>
-      </ToastProvider>
+      <FeatureFlagsProvider>
+        <ToastProvider>
+          <WebSocketProvider url="ws://localhost:3001/ws">
+            <SessionProvider>
+              <WorkbenchProvider>
+                <UniverseProvider>
+                  <DiscoveryProvider>
+                    <ChatWindowProvider>
+                      <DiscussProvider>
+                        <NotificationGlowProvider>
+                          <VimNavigationProvider>
+                            <AppWithVim />
+                          </VimNavigationProvider>
+                        </NotificationGlowProvider>
+                      </DiscussProvider>
+                    </ChatWindowProvider>
+                  </DiscoveryProvider>
+                </UniverseProvider>
+              </WorkbenchProvider>
+            </SessionProvider>
+          </WebSocketProvider>
+        </ToastProvider>
+      </FeatureFlagsProvider>
     </ThemeProvider>
   )
 }

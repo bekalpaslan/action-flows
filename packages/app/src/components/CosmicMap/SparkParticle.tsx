@@ -34,12 +34,14 @@ export const SparkParticleComponent: React.FC<SparkParticleProps> = ({ spark, pa
         top: `${y}px`,
         transform: 'translate(-50%, -50%)',
       }}
+      role="presentation"
+      aria-hidden="true"
       data-spark-id={spark.id}
       data-agent-type={spark.agentType}
       data-progress={spark.progress}
     >
-      <div className="spark-particle__glow" />
-      <div className="spark-particle__core" />
+      <div className="spark-particle__glow" role="presentation" aria-hidden="true" />
+      <div className="spark-particle__core" role="presentation" aria-hidden="true" />
     </div>
   );
 };

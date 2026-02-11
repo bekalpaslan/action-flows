@@ -4,7 +4,7 @@ import { useUniverseContext } from '../../contexts/UniverseContext';
 import { useSessionContext } from '../../contexts/SessionContext';
 import { useChatWindowContext } from '../../contexts/ChatWindowContext';
 import { useChatKeyboardShortcuts } from '../../hooks/useChatKeyboardShortcuts';
-import { useFeatureFlag, FEATURE_FLAGS } from '../../hooks/useFeatureFlag';
+import { useFeatureFlagSimple } from '../../hooks/useFeatureFlag';
 import { AppSidebar } from '../AppSidebar';
 import { SessionSidebar } from '../SessionSidebar';
 import { SlidingChatWindow } from '../SlidingChatWindow/SlidingChatWindow';
@@ -280,7 +280,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   useChatKeyboardShortcuts();
 
   // Feature flag for cosmic map
-  const [cosmicMapEnabled] = useFeatureFlag(FEATURE_FLAGS.COSMIC_MAP, false);
+  const cosmicMapEnabled = useFeatureFlagSimple('COSMIC_MAP_ENABLED');
 
   // View mode state: 4-state FSM for zoom transitions
   // 'cosmic-map' -> 'zooming-in' -> 'region-focus' -> 'zooming-out' -> 'cosmic-map'

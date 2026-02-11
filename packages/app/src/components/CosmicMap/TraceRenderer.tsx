@@ -60,7 +60,11 @@ export const TraceRenderer: React.FC<TraceRendererProps> = ({
   const heatLevel = bridge.traces?.heatLevel || 0;
 
   return (
-    <>
+    <g
+      role="img"
+      aria-label="Activity heat map showing interaction traces"
+      aria-hidden={particles.length === 0 && heatLevel <= 0.3}
+    >
       {/* Heat map glow overlay */}
       {heatLevel > 0.3 && (
         <circle
@@ -85,6 +89,6 @@ export const TraceRenderer: React.FC<TraceRendererProps> = ({
           className="trace-particle"
         />
       ))}
-    </>
+    </g>
   );
 };

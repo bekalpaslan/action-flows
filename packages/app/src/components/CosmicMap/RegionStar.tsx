@@ -151,9 +151,12 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
       className={`region-star ${fogClass} ${statusClass} ${layerClass} ${regionClass} ${glowClass} ${selectedClass} ${revealingClass} ${burstClass}`}
       onClick={isClickable ? handleClick : undefined}
       role={isClickable ? 'button' : 'presentation'}
+      aria-label={isClickable ? `${data.label} region - ${data.status} - fog state: ${data.fogState}` : undefined}
+      aria-describedby={isClickable ? `region-${data.regionId}-description` : undefined}
       tabIndex={isClickable ? 0 : -1}
       onKeyDown={isClickable ? (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
           handleClick();
         }
       } : undefined}

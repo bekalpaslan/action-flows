@@ -19,6 +19,8 @@ import { useVimContext } from '../../contexts/VimNavigationContext';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { OrchestratorButton } from '../OrchestratorButton';
+import { PerformanceSettings } from '../Settings/PerformanceSettings';
+import { FeatureFlagSettings } from '../Settings/FeatureFlagSettings';
 import './SettingsStar.css';
 
 // Storage keys
@@ -88,7 +90,7 @@ function saveSettings(settings: SettingsState): void {
   }
 }
 
-type SettingsSection = 'general' | 'appearance' | 'keyboard' | 'advanced';
+type SettingsSection = 'general' | 'appearance' | 'keyboard' | 'performance' | 'feature-flags' | 'advanced';
 
 /**
  * SettingsWorkbench - Configuration UI
@@ -244,6 +246,30 @@ export function SettingsStar(): React.ReactElement {
               />
               <span className="settings-toggle__slider"></span>
             </label>
+          </div>
+        </div>
+
+        <div className="settings-item">
+          <div className="settings-item__label">
+            <span className="settings-item__name">Onboarding</span>
+            <span className="settings-item__description">
+              Replay the 3-step cosmic map introduction on next page load
+            </span>
+          </div>
+          <div className="settings-item__control">
+            <button
+              className="settings-btn settings-btn--secondary"
+              onClick={() => {
+                try {
+                  localStorage.removeItem('afw-onboarding-completed');
+                  window.location.reload();
+                } catch (e) {
+                  console.error('Failed to reset onboarding:', e);
+                }
+              }}
+            >
+              Reset Onboarding
+            </button>
           </div>
         </div>
       </div>
@@ -580,6 +606,25 @@ export function SettingsStar(): React.ReactElement {
             Keyboard
           </button>
           <button
+            className={`settings-nav__item ${activeSection === 'performance' ? 'settings-nav__item--active' : ''}`}
+            onClick={() => setActiveSection('performance')}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+            Performance
+          </button>
+          <button
+            className={`settings-nav__item ${activeSection === 'feature-flags' ? 'settings-nav__item--active' : ''}`}
+            onClick={() => setActiveSection('feature-flags')}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+              <line x1="4" y1="22" x2="4" y2="15" />
+            </svg>
+            Feature Flags
+          </button>
+          <button
             className={`settings-nav__item ${activeSection === 'advanced' ? 'settings-nav__item--active' : ''}`}
             onClick={() => setActiveSection('advanced')}
           >
@@ -597,6 +642,8 @@ export function SettingsStar(): React.ReactElement {
           {activeSection === 'general' && renderGeneralSection()}
           {activeSection === 'appearance' && renderAppearanceSection()}
           {activeSection === 'keyboard' && renderKeyboardSection()}
+          {activeSection === 'performance' && <PerformanceSettings />}
+          {activeSection === 'feature-flags' && <FeatureFlagSettings />}
           {activeSection === 'advanced' && renderAdvancedSection()}
         </div>
       </div>

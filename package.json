@@ -16,6 +16,7 @@
     "test": "pnpm -r test",
     "test:e2e": "bash test/curl-commands.sh",
     "test:e2e:docs": "echo 'See E2E_TEST_GUIDE.md for complete testing instructions'",
+    "test:e2e:cosmic": "playwright test --config test/playwright.cosmic.config.ts",
     "test:pw": "playwright test",
     "test:pw:ui": "playwright test --ui",
     "test:pw:headed": "playwright test --headed",

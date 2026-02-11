@@ -406,6 +406,17 @@
   border-color: var(--system-orange);
 }
 
+.settings-btn--secondary {
+  background-color: var(--color-bg-secondary, #ffffff);
+  border: var(--space-px) solid var(--color-border, #d1d5db);
+  color: var(--color-text-primary, #111827);
+}
+
+.settings-btn--secondary:hover {
+  background-color: var(--color-bg-hover, #f3f4f6);
+  border-color: var(--color-text-secondary, #9ca3af);
+}
+
 /* Version display */
 .settings-version {
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;

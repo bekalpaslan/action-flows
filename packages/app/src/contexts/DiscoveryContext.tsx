@@ -12,6 +12,7 @@ import type { RegionId, ChainId, RegionDiscoveredEvent } from '@afw/shared';
 import { useSessionContext } from './SessionContext.js';
 import { useUniverseContext } from './UniverseContext.js';
 import { useWebSocket } from '../hooks/useWebSocket.js';
+import { useFeatureFlagSimple } from '../hooks/useFeatureFlag.js';
 
 /**
  * DiscoveryContext Type Definition
@@ -78,6 +79,9 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
   const { activeSessionId } = useSessionContext();
   const { universe, refreshUniverse } = useUniverseContext();
 
+  // Use feature flag for fog of war
+  const fogOfWarEnabled = useFeatureFlagSimple('FOG_OF_WAR_ENABLED');
+
   const [discoveryProgress, setDiscoveryProgress] = useState<Record<RegionId, number>>({});
   const [readyToReveal, setReadyToReveal] = useState<RegionId[]>([]);
   const [discoveryEnabled, setDiscoveryEnabled] = useState<boolean>(() => {
@@ -85,6 +89,9 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
     return stored === null ? true : stored === 'true';
   });
   const [lastDiscoveryTime, setLastDiscoveryTime] = useState<number>(Date.now());
+
+  // Combine feature flag with local toggle
+  const isDiscoveryActive = fogOfWarEnabled && discoveryEnabled;
 
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
   const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
@@ -154,7 +161,7 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
    * Debounced to avoid excessive API calls
    */
   const checkDiscovery = useCallback(async () => {
-    if (!activeSessionId || !discoveryEnabled) return;
+    if (!activeSessionId || !isDiscoveryActive) return;
 
     try {
       const response = await fetch(
@@ -180,14 +187,14 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
     } catch (error) {
       console.error('[Discovery] Error checking discovery:', error);
     }
-  }, [activeSessionId, discoveryEnabled, API_BASE_URL]);
+  }, [activeSessionId, isDiscoveryActive, API_BASE_URL]);
 
   /**
    * Start adaptive polling when session is active
    * Slows down polling when no discoveries have happened recently
    */
   useEffect(() => {
-    if (!activeSessionId || !discoveryEnabled) {
+    if (!activeSessionId || !isDiscoveryActive) {
       // Clear polling if no session or discovery disabled
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
@@ -220,14 +227,14 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
         pollingIntervalRef.current = null;
       }
     };
-  }, [activeSessionId, discoveryEnabled, lastDiscoveryTime, checkDiscovery]);
+  }, [activeSessionId, isDiscoveryActive, lastDiscoveryTime, checkDiscovery]);
 
   /**
    * Record user interaction for discovery progress
    */
   const recordInteraction = useCallback(
     async (context: string) => {
-      if (!activeSessionId || !discoveryEnabled) return;
+      if (!activeSessionId || !isDiscoveryActive) return;
 
       try {
         await fetch(`${API_BASE_URL}/api/universe/discovery/record`, {
@@ -246,7 +253,7 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
         console.error('[Discovery] Failed to record interaction:', error);
       }
     },
-    [activeSessionId, discoveryEnabled, API_BASE_URL, checkDiscovery]
+    [activeSessionId, isDiscoveryActive, API_BASE_URL, checkDiscovery]
   );
 
   /**
@@ -254,7 +261,7 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
    */
   const recordChainCompleted = useCallback(
     async (chainId: ChainId) => {
-      if (!activeSessionId || !discoveryEnabled) return;
+      if (!activeSessionId || !isDiscoveryActive) return;
 
       try {
         await fetch(`${API_BASE_URL}/api/universe/discovery/record`, {
@@ -273,14 +280,14 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
         console.error('[Discovery] Failed to record chain completion:', error);
       }
     },
-    [activeSessionId, discoveryEnabled, API_BASE_URL, checkDiscovery]
+    [activeSessionId, isDiscoveryActive, API_BASE_URL, checkDiscovery]
   );
 
   /**
    * Record error event for discovery triggers
    */
   const recordError = useCallback(async () => {
-    if (!activeSessionId || !discoveryEnabled) return;
+    if (!activeSessionId || !isDiscoveryActive) return;
 
     try {
       await fetch(`${API_BASE_URL}/api/universe/discovery/record`, {
@@ -297,7 +304,7 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
     } catch (error) {
       console.error('[Discovery] Failed to record error:', error);
     }
-  }, [activeSessionId, discoveryEnabled, API_BASE_URL, checkDiscovery]);
+  }, [activeSessionId, isDiscoveryActive, API_BASE_URL, checkDiscovery]);
 
   /**
    * Manually reveal a specific region (testing/debug)

@@ -33,6 +33,8 @@ export const MoonOrbitComponent: React.FC<MoonOrbitProps> = ({ moon, parentPosit
         top: `${y}px`,
         transform: 'translate(-50%, -50%)',
       }}
+      role="img"
+      aria-label={`${moon.label} embedded in parent region`}
       data-moon-id={moon.id}
       data-data-source-type={moon.dataSourceType}
     >

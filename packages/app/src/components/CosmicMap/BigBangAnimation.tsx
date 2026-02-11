@@ -14,6 +14,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import './BigBangAnimation.css';
 
 interface BigBangAnimationProps {
@@ -45,10 +46,8 @@ export const BigBangAnimation: React.FC<BigBangAnimationProps> = ({
   const particlesRef = useRef<Particle[]>([]);
   const [showSkip, setShowSkip] = useState(false);
 
-  // Check for prefers-reduced-motion
-  const prefersReducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Check for prefers-reduced-motion using hook
+  const prefersReducedMotion = useReducedMotion();
 
   // Skip animation if requested or motion reduced or already seen
   useEffect(() => {
