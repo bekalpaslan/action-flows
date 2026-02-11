@@ -8,6 +8,7 @@
 |------|---------|-------|
 | code-and-review/ | Implement and review code | code → review → second-opinion/ → (loop if needed) |
 | post-completion/ | Wrap-up after work | commit → registry update |
+| contract-format-implementation/ | Implement CONTRACT.md formats end-to-end | code/contract/parser → code/frontend/component → code/frontend/integration → validate/harmony → review → commit |
 
 ## maintenance
 

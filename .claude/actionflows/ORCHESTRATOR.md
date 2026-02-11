@@ -356,6 +356,32 @@ Continuing to Step {N+2}...
 
 The human can suppress auto-triggering by saying "skip second opinions" or "no second opinion" when approving a chain. The orchestrator removes the second-opinion steps before executing.
 
+### Format Implementation Lifecycle
+
+**Before marking any contract format work as "Done", verify end-to-end completeness:**
+
+| Step | Checkpoint | Verified? |
+|------|-----------|-----------|
+| 1 | CONTRACT.md specification exists | |
+| 2 | Parser implementation exists in packages/shared/src/contract/parsers/ | |
+| 3 | Parser is exported and integrated into harmonyDetector.ts | |
+| 4 | Frontend component exists to consume the parsed output | |
+| 5 | Component is wired into the appropriate dashboard view | |
+| 6 | WebSocket event integration exists (if applicable) | |
+| 7 | Run `pnpm run harmony:enforce` → format passes validation | |
+
+**Contract Format Implementation Chains:**
+
+When compiling chains for format implementation, break into explicit phases:
+
+| # | Action | Scope | Completion State |
+|---|--------|-------|------------------|
+| 1 | code/contract/parser | Parser + Zod + tests | 33% (Parser complete) |
+| 2 | code/frontend/component | Component + CSS | 66% (Frontend created) |
+| 3 | code/frontend/integration | Wire to dashboard views | 100% (Complete) |
+
+Do NOT mark "Done" until 100% state verified via the 7-step checklist above.
+
 ### 8. Compose First, Propose Later
 No flow matches? Compose from existing actions. Propose new flow only if pattern recurs 2+ times.
 
@@ -406,6 +432,27 @@ Once the human approves a chain, execute the entire chain without stopping for a
 
 ### Next-Step Anticipation
 After a chain completes, analyze what logically comes next and auto-compile the follow-up chain.
+
+### Contract Change Auto-Validation
+
+After every code chain that touches CONTRACT.md, shared/src/contract/, or harmonyDetector.ts, auto-compile a validation chain:
+
+| # | Action | Purpose |
+|---|--------|---------|
+| 1 | validate/harmony | Run `pnpm run harmony:enforce` |
+| 2 | analyze/contract-coverage | Check format implementation completeness |
+| 3 | review/harmony-audit | Compare spec vs parser vs frontend sync |
+
+**Trigger detection:** If agent output mentions modifications to `contract/`, `CONTRACT.md`, or `harmonyDetector.ts`, the orchestrator MUST auto-compile this validation chain before marking the parent chain as complete.
+
+### Partial Completion Learnings
+
+When an agent surfaces "Completion State: < 100%" in its learnings output, the orchestrator MUST:
+1. Present to human: "Agent completed X% of Format Y. Queue remaining Z% now? (yes/no)"
+2. If yes → compile follow-up chain immediately using the contract-format-implementation/ flow
+3. If no → log to LEARNINGS.md as "Deferred: Format Y incomplete (X%)"
+
+**Critical:** Partial completion is a LEARNING (escalation), not a "next step" (suggestion). Always triggers orchestrator action.
 
 ### Preemptive Chain Recompilation
 When mid-chain signals indicate the plan needs adjustment, recompile remaining steps without waiting.
@@ -660,6 +707,21 @@ When you spawn an action, check its `instructions.md` for the **"Extends"** sect
 4. Registry line edit? -> Do it directly. Anything else? -> Compile chain
 5. Compile chain -> present -> execute
 
+### CONTRACT_EVOLUTION.md Process Validation
+
+**Before updating CONTRACT.md with new or modified formats:**
+
+1. Read `docs/architecture/CONTRACT_EVOLUTION.md`
+2. Verify all evolution steps completed:
+   - [ ] Spec written with examples
+   - [ ] Parser implemented and tested
+   - [ ] Frontend component created and wired
+   - [ ] Dashboard integration verified
+   - [ ] CONTRACT_VERSION incremented (if breaking change)
+3. Only then: Update CONTRACT.md
+
+**Do NOT add formats to CONTRACT.md without implementation.** If task is "add Format X spec only", surface learning: "Spec added but parser/frontend pending. Recommend implementing immediately to avoid drift."
+
 ---
 
 ## Spawning Pattern
@@ -725,6 +787,13 @@ When receiving ANY request:
 - Checklist path? -> Read the checklist itself ONLY
 - User prose request? -> Parse the intent
 - Framework file? -> Understand what it asks
+
+### Step 2.5: Detect Contract Format Work
+
+If request involves CONTRACT.md formats:
+- **Check:** Task mentions "Format X.Y" OR files include `contract/` OR keywords include "harmony", "parser", "contract compliance"
+- **If YES** → Route to `contract-format-implementation/` flow (4-step chain: parser → component → integration → validate). Single-step code chains are **prohibited** for contract format work.
+- **If NO** → Proceed to normal flow routing (Step 3)
 
 ### Step 2: Parse Without Reading Project Files
 1. What work is this asking for?

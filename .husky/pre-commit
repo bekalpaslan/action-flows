@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh" 2>/dev/null || true
+
+# Harmony enforcement: block commit if contract changes are incomplete
+# Triggers when contract-related files are modified
+if git diff --cached --name-only | grep -qE "CONTRACT\.md|contract/parsers/|contract/types/|harmonyDetector\.ts"; then
+  echo "Contract files detected in commit. Running harmony:enforce..."
+  cd packages/backend && npx tsx src/cli/harmony-enforce.ts || {
+    echo ""
+    echo "BLOCKED: Contract changes incomplete."
+    echo "Run: cd packages/backend && npx tsx src/cli/harmony-enforce.ts"
+    echo "Fix coverage to >= 90% before committing."
+    exit 1
+  }
+fi

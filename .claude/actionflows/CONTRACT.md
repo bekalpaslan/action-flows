@@ -4,12 +4,35 @@
 **Last Updated:** 2026-02-09
 **TypeScript Definitions:** `packages/shared/src/contract/`
 
+**⚠️ ENFORCEMENT:** Adding or modifying formats in this contract MUST follow the evolution process in `docs/architecture/CONTRACT_EVOLUTION.md`. Formats without paired parser + frontend implementations create spec-without-implementation drift. See ORCHESTRATOR.md § CONTRACT_EVOLUTION.md Process Validation.
+
+---
+
+## Implementation Status Definitions
+
+A format progresses through these states. **A format is COMPLETE only when all three layers are functional.**
+
+| State | Spec | Parser | Frontend | Score |
+|-------|------|--------|----------|-------|
+| 📝 Planned | ✓ | ❌ | ❌ | 0% |
+| 🚧 In Progress (Parser) | ✓ | ✓ | ❌ | 33% |
+| 🚧 In Progress (Frontend) | ✓ | ✓ | 🚧 Created but not wired | 66% |
+| ✅ Complete | ✓ | ✓ | ✓ Wired & tested | 100% |
+
+**Terminology:**
+- **Specified** — Format exists in this document with examples
+- **Parsed** — Parser implemented, Zod schema exists, exports integrated
+- **Consumed** — Frontend component exists, wired to dashboard, WebSocket connected
+- **Complete = Specified + Parsed + Consumed** (all three required)
+
+When agents or orchestrator refer to "implementing Format X", the target is 100% (Complete) unless explicitly scoped otherwise. Partial completions (33%/66%) MUST be surfaced as learnings to trigger follow-up chains.
+
 ---
 
 ## Cross-References
 
-**Philosophy & System:** See `.claude/actionflows/docs/HARMONY_SYSTEM.md`
-**Evolution Process:** See `.claude/actionflows/docs/CONTRACT_EVOLUTION.md`
+**Philosophy & System:** See `.claude/actionflows/docs/living/HARMONY.md`
+**Evolution Process:** See `docs/architecture/CONTRACT_EVOLUTION.md`
 **Code API Reference:** See `packages/shared/src/contract/README.md`
 **Parser Priority:** See `packages/app/docs/PARSER_PRIORITY.md`
 

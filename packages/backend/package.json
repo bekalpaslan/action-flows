@@ -10,7 +10,8 @@
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "harmony:enforce": "npx tsx src/cli/harmony-enforce.ts"
   },
   "dependencies": {
     "@afw/shared": "workspace:*",

@@ -118,6 +118,15 @@ Exception: Project code files (packages/**) that are part of your implementation
 - Import shared types from `@afw/shared`
 - Run `pnpm type-check` after changes
 
+### Contract Format Work
+- If implementing CONTRACT.md formats, follow Agent Standard #13 (Contract Format Completeness)
+- Verify your scope: parser (33%), component (66%), or full integration (100%)
+- Mark completion state explicitly in changes.md
+- If < 100%, list remaining work in "Learnings" section (NOT "Next Steps")
+- If creating component but not wiring to consumer → surface as learning: "Component created (66%) but integration pending"
+- Follow CONTRACT_EVOLUTION.md process when modifying CONTRACT.md
+- Do NOT add formats to CONTRACT.md without implementation
+
 ### DO NOT
 - Create duplicate utilities that already exist in shared package
 - Use `any` type — use proper TypeScript types

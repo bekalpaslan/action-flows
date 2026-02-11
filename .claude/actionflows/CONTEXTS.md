@@ -12,7 +12,10 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 **Purpose:** Active feature development and new code
 **Icon:** 🔨
 **Triggers:** implement, build, create, add feature, develop, code, write, generate, construct, design
-**Flows:** code-and-review/, post-completion/
+**Flows:** code-and-review/, post-completion/, contract-format-implementation/
+
+**Special Routing:**
+- Contract format implementation (mentions "Format X.Y", files include `contract/`, keywords "harmony parser") → Always use `contract-format-implementation/` flow (4-step chain: parser, component, integration, validate). Single-step code chains are prohibited for contract work.
 **Examples:**
 - "implement user authentication"
 - "build a dashboard component"
@@ -139,6 +142,7 @@ These contexts receive content automatically — not routed by user intent.
 | "plan X" | pm | plan/ (direct action) |
 | "check test coverage" / "coverage gaps" | review | test-coverage/ |
 | "audit harmony" / "check contract" / "backwards harmony" | review | backwards-harmony-audit/ |
+| "implement format" / "format X.Y" / "contract parser" / "harmony parser" | work | contract-format-implementation/ |
 | "test CLI" / "CLI integration tests" / "run CLI tests" | review | cli-integration-test/ |
 | "behavioral contracts" / "component contracts" / "contract index" | review | contract-index/ |
 | "audit contracts" / "contract compliance" / "contract drift" / "check contracts" | review | contract-compliance-audit/ |

@@ -78,6 +78,25 @@ pnpm run harmony:check
 
 **Not contract-defined:** Agent learnings, internal notes, working files, intermediate outputs. Only final deliverables consumed by dashboard are contract-defined.
 
+### 13. Contract Format Completeness
+
+When your action produces or modifies contract-defined formats (parsers, types, components in `packages/shared/src/contract/` or `packages/app/src/components/`):
+
+1. **Read the format specification** in `.claude/actionflows/CONTRACT.md` § Format X.Y
+2. **Verify your output scope**:
+   - Parser implementation only? Mark as "Parser complete (33%)"
+   - Frontend component only? Mark as "Component created (66%)"
+   - Full integration? Mark as "Complete (100%)" and verify wiring
+3. **Run validation** before completing:
+   - Parser work: `pnpm run harmony:check`
+   - Frontend work: Verify component is imported and rendered in a dashboard view
+   - Integration work: Manual test + visual verification
+4. **Surface incompleteness** in completion message:
+   - If < 100%: "Format X is Y% complete. Remaining work: {list steps}"
+   - If 100%: "Format X is complete end-to-end. Verified: spec + parser + frontend + integration."
+
+**Critical:** Partial completions (< 100%) MUST be surfaced as **learnings** (escalation to orchestrator), NOT as "next steps" (optional suggestions). This triggers automatic follow-up chain compilation.
+
 ---
 
 ## Learnings Output Format
@@ -90,6 +109,30 @@ Every agent MUST include:
 **Suggestion:** {How to prevent}
 [FRESH EYE] {Discovery if any}
 Or: None — execution proceeded as expected.
+```
+
+### Partial Completion Rule
+
+If your work completes at < 100% of the full scope:
+- **Treat this as a learning**, not a "next step"
+- **Surface the gap explicitly**: "Work stopped at X% because Y"
+- **Propose follow-up chain**: "Recommend queueing: action/scope"
+- **Include Completion State field** in learnings output
+
+**Distinction:**
+- **Learning (escalation):** "Integration pending (66% complete) — recommend follow-up chain"
+- **Next Step (optional):** "Future: Add dark mode styling" or "Optional: Add export to CSV"
+
+Required work that is out of scope is a LEARNING. Optional enhancements are NEXT STEPS. Never mix these.
+
+**Example:**
+```
+## Learnings
+
+**Issue:** Format 6.1 parser + component implemented (66%) but integration pending
+**Root Cause:** Integration requires modifying ConversationPanel, which was out of current scope
+**Suggestion:** Queue follow-up chain: code/frontend/format-6-1-integration
+**Completion State:** 66% (parser ✓, component ✓, integration ❌)
 ```
 
 ---
