@@ -190,6 +190,24 @@
   border-color: var(--cosmic-layer-experience);
 }
 
+/* Story: Open book shape (narrative, flowing) */
+.region-star--story .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-experience) 0%, transparent 70%);
+}
+
+.region-star--story .region-star__center {
+  border-radius: 20px 4px 20px 4px;
+  box-shadow: 0 0 14px rgba(155, 89, 182, 0.7);
+}
+
+.region-focus--story {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--story .region-focus__return {
+  border-color: var(--cosmic-layer-experience);
+}
+
 /* ============================================================================
    PLATFORM LAYER (Red) — Configuration & Infrastructure
    ============================================================================ */
@@ -289,7 +307,8 @@
 }
 
 .region-star--canvas:hover .region-star__glow,
-.region-star--editor:hover .region-star__glow {
+.region-star--editor:hover .region-star__glow,
+.region-star--story:hover .region-star__glow {
   filter: brightness(1.3) saturate(1.2);
 }
 

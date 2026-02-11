@@ -22,7 +22,8 @@ export type StarId =
   | 'settings'
   | 'pm'
   | 'intel'      // Custom star (demo)
-  | 'respect';   // Custom star (demo)
+  | 'respect'    // Custom star (demo)
+  | 'story';     // Custom star (demo)
 
 /**
  * Tools: embedded capabilities within star interiors (NOT stars themselves).
@@ -84,6 +85,7 @@ export const STAR_IDS: readonly StarId[] = [
   'pm',
   'intel',
   'respect',
+  'story',
 ] as const;
 
 /**
@@ -384,6 +386,20 @@ export const STAR_CONFIGS: Record<StarId, StarConfig> = {
     routingExamples: [],
     cosmicName: 'The Guardian',
   },
+  story: {
+    id: 'story',
+    label: 'Story',
+    icon: 'So',
+    hasNotifications: true,
+    notificationCount: 0,
+    glowColor: '#9b59b6',
+    tooltip: 'Story of Us — poetic narrative of the project journey',
+    routable: false,
+    triggers: [],
+    flows: ['story-of-us/'],
+    routingExamples: [],
+    cosmicName: 'The Chronicle',
+  },
 };
 
 /**
@@ -561,6 +577,20 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<NavigationTarget, WorkbenchConfig
     triggers: STAR_CONFIGS.respect.triggers,
     flows: STAR_CONFIGS.respect.flows,
     routingExamples: STAR_CONFIGS.respect.routingExamples,
+  },
+  story: {
+    id: 'story',
+    label: STAR_CONFIGS.story.label,
+    icon: STAR_CONFIGS.story.icon,
+    hasNotifications: STAR_CONFIGS.story.hasNotifications,
+    notificationCount: STAR_CONFIGS.story.notificationCount,
+    glowColor: STAR_CONFIGS.story.glowColor,
+    disabled: STAR_CONFIGS.story.disabled,
+    tooltip: STAR_CONFIGS.story.tooltip,
+    routable: STAR_CONFIGS.story.routable,
+    triggers: STAR_CONFIGS.story.triggers,
+    flows: STAR_CONFIGS.story.flows,
+    routingExamples: STAR_CONFIGS.story.routingExamples,
   },
   // Harmony
   harmony: {

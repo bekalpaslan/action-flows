@@ -38,3 +38,5 @@ export { IntelStar } from './IntelStar';
 export type { IntelStarProps } from './IntelStar';
 
 export { RespectStar } from './RespectStar/RespectStar';
+
+export { StoryStar } from './StoryStar/StoryStar';

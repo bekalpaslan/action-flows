@@ -23,6 +23,7 @@ import { ExploreStar } from '../Stars/ExploreStar';
 import { ArchiveStar } from '../Stars/ArchiveStar';
 import { IntelStar } from '../Stars/IntelStar';
 import { RespectStar } from '../Stars/RespectStar/RespectStar';
+import { StoryStar } from '../Stars/StoryStar/StoryStar';
 import { CoverageTool } from '../Tools/CoverageTool/CoverageTool';
 import { useSessionArchive } from '../../hooks/useSessionArchive';
 import {
@@ -642,6 +643,8 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         return <IntelStar />;
       case 'respect':
         return <RespectStar />;
+      case 'story':
+        return <StoryStar />;
       default:
         return (
           <div className="workbench-placeholder">
