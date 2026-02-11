@@ -2,13 +2,24 @@
 
 > Orchestrator reads this before compiling chains.
 
+## Topic Catalogs
+
+| Topic | Catalog | Purpose |
+|-------|---------|---------|
+| Harmony | [`HARMONY_CATALOG.md`](../HARMONY_CATALOG.md) | Logs organized by data source (audit data, analysis, implementations, reviews, tests, prevention) and workbench assignment. Reference for harmony violations, root causes, and preventive guardrails. |
+
+---
+
 ## Recent Executions
 
 | Date | Description | Pattern | Outcome |
 |------|-------------|---------|---------|
+| 2026-02-11 | Preventive Harmony Guardrails — 8 architectural rules + CLI tool + pre-commit hook to prevent 72/100 degradation recurrence | code×5 (parallel) → review → second-opinion → commit | Success — 9 files, +395 lines, all 8 gaps implemented (lifecycle checkpoint, auto-validation, status definitions, harmony:enforce CLI, agent standard #13, format work detection, evolution enforcement, learning surface feedback), APPROVED 100% (eead477) |
+| 2026-02-11 | Repository artifact cleanup + prevention + cleanup/ flow — 28+ garbage files deleted, .gitignore (8 patterns), 4-layer prevention (agent.md, standards, orchestrator, git), cleanup/ flow registered in maintenance | analyze → human gate → code×2 (parallel) → review → second-opinion → commit | Success — 17 files, +1,667/-876, APPROVED 98% + ENDORSED, cleanup/ flow registered (7675f3e) |
 | 2026-02-11 | Token Migration Sprint Phase A+B — Typography 99% (exceeds target), Accessibility 80%+ WCAG 2.1 AA, Color ~35%, Spacing ~31% | plan → code×3 → review → second-opinion → [remediation: code×4 → review → second-opinion] → commit | Partial success — Typography production-ready, Accessibility compliant, Color/Spacing need Phase C (b0eeb2f) |
 | 2026-02-11 | Cosmic Model design spec — interactive brainstorm defining 6-entity universe taxonomy (Harmony/Stars/Moons/Gates/Tools/Sparks), 8 framework default stars, 2 custom stars, 3 tools, vision for each star interior | analyze → brainstorm (interactive) → code → commit | Success — COSMIC_MODEL.md created (544 lines), workbench inventory report, confirmed by human (97bafbd) |
 | 2026-02-11 | Open-source framing propagation — sovereignty model + MIT LICENSE across ORCHESTRATOR.md, project.config.md, CLAUDE.md, README.md | analyze → code → review → second-opinion → commit | Success — 5 files (4 modified + LICENSE created), APPROVED 100%, "No asterisks" (fb88de4, c3d6076) |
+| 2026-02-11 | Harmony Root Cause & Architecture Gap Analysis — investigate WHY violations accumulated + identify missing rules | analyze×2 (a626dda + a7cd334 parallel) | Complete — 4 architectural patterns found (incremental implementation without completion trigger, specification-before-implementation, graceful degradation masking incompleteness, no forcing functions), 8 instruction gaps identified (lifecycle checkpoint, validation chain, status definitions, CLI tool, agent standard, work detection, evolution enforcement, learning surface). Preventability: all 8 gaps = violations impossible. |
 | 2026-02-11 | Harmony Remediation — Priority 1-3 (validation + Format 6.1 + regex fixes) | plan → human gate → code×3 (parallel) → review → second-opinion → commit | Success — 30 files, +2,597/-31 lines, Zod validation (17 formats), Format 6.1 end-to-end (API+storage+component), 7 regex edge cases fixed, APPROVED 92% + ENDORSED (9d3bd2b) |
 | 2026-02-11 | Backwards Harmony Audit — 3-layer cross-reference (frontend consumption, parser implementation, specification) | analyze×3 (parallel) → audit → second-opinion | Complete — Harmony score 72/100, 11 critical violations (35% parser implementation gap, P1 error handling missing, P2 workflow blocker, validation gaps CRITICAL), remediation roadmap compiled |
 | 2026-02-11 | UI Consistency Design System Brainstorming — comprehensive audit, roadmap alignment, token migration priority | analyze → brainstorm → code | Success — 650-line summary, 29%→90% token migration blocking Phase 1, accessibility + component decomp recommendations |
