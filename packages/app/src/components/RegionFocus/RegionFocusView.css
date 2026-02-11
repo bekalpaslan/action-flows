@@ -1,0 +1,146 @@
+/**
+ * RegionFocusView - Dual-panel layout styles
+ *
+ * CSS Grid layout with 65/35 split and cosmic aesthetic
+ */
+
+.region-focus {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--app-bg-base);
+  overflow: hidden;
+  /* Fade in animation: 200ms delay + 200ms duration = complete at 400ms */
+  /* TODO: Plan specifies 100ms duration, code implements 200ms. Review found timing discrepancy.
+     Second opinion disputes changing plan. Human decision pending: (A) keep 200ms + update plan, or (B) revert to 100ms. */
+  animation: region-focus-fade-in 200ms ease-out 200ms forwards;
+  opacity: 0;
+}
+
+@keyframes region-focus-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Return to Universe button (top-left corner) */
+.region-focus__return {
+  position: absolute;
+  top: var(--space-5);
+  left: var(--space-5);
+  z-index: 100;
+  padding: var(--space-2) var(--space-4);
+  background: var(--panel-bg-base);
+  border: var(--panel-border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  box-shadow: var(--panel-glow-default);
+  transition: all 0.2s ease;
+}
+
+.region-focus__return:hover {
+  background: var(--panel-bg-hover);
+  border-color: var(--system-blue);
+  box-shadow: 0 0 var(--space-3) var(--glow-color-accent);
+  transform: translateY(-var(--space-px));
+}
+
+.region-focus__return:active {
+  transform: translateY(0);
+}
+
+/* Dual-panel container (CSS Grid) */
+.region-focus__panels {
+  display: grid;
+  grid-template-columns: 65% 35%;
+  width: 100%;
+  height: 100%;
+  gap: 0;
+  overflow: hidden;
+}
+
+/* Left panel: Workbench content */
+.region-focus__workbench {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: var(--app-bg-base);
+  border-right: 1px solid var(--panel-border-color-subtle);
+  /* Ensure workbench content fits */
+  display: flex;
+  flex-direction: column;
+}
+
+.region-focus__workbench::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+.region-focus__workbench::-webkit-scrollbar-track {
+  background: var(--app-bg-base);
+}
+
+.region-focus__workbench::-webkit-scrollbar-thumb {
+  background: var(--panel-border-color-default);
+  border-radius: var(--panel-radius-sm);
+}
+
+.region-focus__workbench::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Right panel: Chat */
+.region-focus__chat {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--panel-bg-base);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .region-focus__panels {
+    grid-template-columns: 60% 40%;
+  }
+}
+
+@media (max-width: 768px) {
+  .region-focus__panels {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60% 40%;
+  }
+
+  .region-focus__workbench {
+    border-right: none;
+    border-bottom: 1px solid var(--panel-border-color-subtle);
+  }
+}
+
+@media (max-width: 480px) {
+  .region-focus__return {
+    padding: var(--space-1-5) var(--space-3);
+    font-size: var(--text-xs);
+  }
+}
+
+/* Accessibility: Respect prefers-reduced-motion (WCAG 2.1 Level AAA) */
+@media (prefers-reduced-motion: reduce) {
+  .region-focus {
+    animation: none !important;
+    opacity: 1;
+  }
+
+  .region-focus__return {
+    transition: opacity 50ms !important;
+  }
+}

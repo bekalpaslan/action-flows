@@ -1,5 +1,6 @@
 import { type ReactNode, useState, useCallback, useEffect, useRef } from 'react';
 import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
+import { useUniverseContext } from '../../contexts/UniverseContext';
 import { useSessionContext } from '../../contexts/SessionContext';
 import { useChatWindowContext } from '../../contexts/ChatWindowContext';
 import { useChatKeyboardShortcuts } from '../../hooks/useChatKeyboardShortcuts';
@@ -9,6 +10,7 @@ import { SessionSidebar } from '../SessionSidebar';
 import { SlidingChatWindow } from '../SlidingChatWindow/SlidingChatWindow';
 import { ChatPanel } from '../SessionPanel/ChatPanel';
 import { CosmicMap } from '../CosmicMap/CosmicMap';
+import { RegionFocusView } from '../RegionFocus/RegionFocusView';
 import { WorkStar } from '../Stars/WorkStar';
 import { CanvasTool } from '../Tools/CanvasTool/CanvasTool';
 import { EditorTool } from '../Tools/EditorTool/EditorTool';
@@ -269,6 +271,7 @@ const initialDemoMilestones: Milestone[] = [
 
 export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
+  const { targetWorkbenchId } = useUniverseContext();
   const { getSession } = useSessionContext();
   const { sessionId: chatSessionId, closeChat } = useChatWindowContext();
 
@@ -278,8 +281,10 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   // Feature flag for cosmic map
   const [cosmicMapEnabled] = useFeatureFlag(FEATURE_FLAGS.COSMIC_MAP, false);
 
-  // View mode state: 'cosmic-map' or 'workbench'
-  const [viewMode, setViewMode] = useState<'cosmic-map' | 'workbench'>(
+  // View mode state: 4-state FSM for zoom transitions
+  // 'cosmic-map' -> 'zooming-in' -> 'region-focus' -> 'zooming-out' -> 'cosmic-map'
+  type ViewMode = 'cosmic-map' | 'zooming-in' | 'region-focus' | 'zooming-out' | 'workbench';
+  const [viewMode, setViewMode] = useState<ViewMode>(
     cosmicMapEnabled ? 'cosmic-map' : 'workbench'
   );
 
@@ -298,8 +303,9 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const [transitionClass, setTransitionClass] = useState<string>('workbench-enter-done');
   const prevWorkbench = useRef<WorkbenchId>(activeWorkbench);
   const transitionTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const returnTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Handle workbench transitions
+  // Handle workbench transitions (180ms for normal, 400ms for region-focus)
   useEffect(() => {
     if (prevWorkbench.current !== activeWorkbench) {
       // Clear any pending timeout
@@ -315,10 +321,13 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         requestAnimationFrame(() => {
           setTransitionClass('workbench-enter-active');
 
+          // Use 400ms duration when switching to region-focus, 180ms otherwise
+          const duration = viewMode === 'region-focus' ? 400 : 180;
+
           // Transition to done state after animation completes
           transitionTimeout.current = setTimeout(() => {
             setTransitionClass('workbench-enter-done');
-          }, 180); // Match --transition-duration from transitions.css
+          }, duration);
         });
       });
 
@@ -330,7 +339,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         clearTimeout(transitionTimeout.current);
       }
     };
-  }, [activeWorkbench]);
+  }, [activeWorkbench, viewMode]);
 
   // PM Workbench state
   const [demoTasks, setDemoTasks] = useState<PMTask[]>(initialDemoTasks);
@@ -529,24 +538,48 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
 
   /**
    * Handle cosmic map region navigation
-   * When user clicks a region in cosmic map, switch to workbench view
+   * When user clicks a region in cosmic map, switch to region-focus view with zoom transition
    */
   useEffect(() => {
-    // Listen for region navigation events from UniverseContext
-    // When navigateToRegion is called, switch to workbench view
-    // This effect would be triggered by WorkbenchContext changes
-    if (viewMode === 'cosmic-map' && activeWorkbench) {
-      // User navigated to a workbench from cosmic map
-      setViewMode('workbench');
+    // Listen for targetWorkbenchId from UniverseContext (set by navigateToRegion)
+    if (viewMode === 'cosmic-map' && targetWorkbenchId) {
+      // Set active workbench immediately
+      setActiveWorkbench(targetWorkbenchId);
+
+      // Start zoom-in transition (FSM: cosmic-map -> zooming-in)
+      setViewMode('zooming-in');
+
+      // Switch to region-focus after 400ms zoom animation (FSM: zooming-in -> region-focus)
+      const timerId = setTimeout(() => {
+        setViewMode('region-focus');
+      }, 400);
+
+      // Cleanup: prevent setState on unmounted component
+      return () => clearTimeout(timerId);
     }
-  }, [activeWorkbench, viewMode]);
+  }, [targetWorkbenchId, viewMode, setActiveWorkbench]);
 
   /**
    * Handle return to universe button click
+   * Triggers zoom-out transition back to cosmic map
    */
   const handleReturnToUniverse = useCallback(() => {
-    setViewMode('cosmic-map');
-  }, []);
+    // Prevent double-triggering during transition
+    if (viewMode === 'zooming-out' || viewMode === 'zooming-in') return;
+
+    // Clear any pending return timeout to prevent stacking
+    if (returnTimeout.current) {
+      clearTimeout(returnTimeout.current);
+    }
+
+    // Start zoom-out transition (FSM: region-focus -> zooming-out)
+    setViewMode('zooming-out');
+
+    // Switch to cosmic-map after 400ms zoom animation (FSM: zooming-out -> cosmic-map)
+    returnTimeout.current = setTimeout(() => {
+      setViewMode('cosmic-map');
+    }, 400);
+  }, [viewMode]);
 
   /**
    * Render workbench-specific content based on activeWorkbench
@@ -647,13 +680,23 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
       )}
 
       <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
-        {/* Cosmic Map View */}
-        {cosmicMapEnabled && viewMode === 'cosmic-map' ? (
+        {/* Cosmic Map View + Zooming In/Out states */}
+        {cosmicMapEnabled && (viewMode === 'cosmic-map' || viewMode === 'zooming-in' || viewMode === 'zooming-out') ? (
           <div className="workbench-dashboard" style={{ flex: 1 }}>
-            <CosmicMap />
+            <CosmicMap visible={viewMode === 'cosmic-map'} zooming={viewMode === 'zooming-in' || viewMode === 'zooming-out'} />
+          </div>
+        ) : cosmicMapEnabled && viewMode === 'region-focus' ? (
+          /* Region Focus View - Dual-panel with workbench + chat */
+          <div className="workbench-dashboard" style={{ flex: 1 }}>
+            <RegionFocusView
+              workbenchContent={renderWorkbenchContent(activeWorkbench)}
+              chatSessionId={chatSessionId}
+              onReturnToUniverse={handleReturnToUniverse}
+              workbenchId={activeWorkbench}
+            />
           </div>
         ) : (
-          /* Workbench View */
+          /* Workbench View (legacy mode when cosmic map disabled) */
           <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }}>
             <main id="main-content" className="workbench-main with-sidebar" role="main">
               <div className={`workbench-content ${transitionClass}`}>

@@ -52,10 +52,17 @@ interface SparkState {
   edgePath: string;
 }
 
+export interface CosmicMapProps {
+  /** Whether cosmic map should be visible (opacity 1) */
+  visible?: boolean;
+  /** Whether cosmic map is in zooming transition (triggers fade-out) */
+  zooming?: boolean;
+}
+
 /**
  * CosmicMapInner - Inner component with ReactFlow hooks
  */
-function CosmicMapInner() {
+function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
   const { universe, isLoading, error, zoomTargetRegionId, clearZoomTarget } = useUniverseContext();
   const { fitView, setCenter } = useReactFlow();
   const wsContext = useWebSocketContext();
@@ -136,17 +143,25 @@ function CosmicMapInner() {
     }
   }, [hasInitialFit, nodes.length, fitView]);
 
-  // Handle zoom to region
+  // Handle zoom to region animation
   useEffect(() => {
     if (zoomTargetRegionId) {
       const targetNode = nodes.find((n) => n.id === zoomTargetRegionId);
       if (targetNode) {
+        // Start zoom animation (0-300ms)
         setCenter(targetNode.position.x, targetNode.position.y, {
           zoom: 1.5,
-          duration: 800,
+          duration: 300,
         });
+
+        // Complete animation at 400ms (fade handled by CSS via `zooming` prop)
+        const timerId = setTimeout(() => {
+          clearZoomTarget();
+        }, 400);
+
+        // Cleanup: prevent clearZoomTarget on unmounted component
+        return () => clearTimeout(timerId);
       }
-      clearZoomTarget();
     }
   }, [zoomTargetRegionId, nodes, setCenter, clearZoomTarget]);
 
@@ -310,8 +325,15 @@ function CosmicMapInner() {
     );
   }
 
+  // Compute CSS classes for fade states
+  const cosmicMapClass = [
+    'cosmic-map',
+    !visible && 'cosmic-map--hidden',
+    zooming && 'cosmic-map--zooming',
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className="cosmic-map">
+    <div className={cosmicMapClass}>
       {/* Cosmic background */}
       <CosmicBackground
         width={window.innerWidth}
@@ -406,10 +428,10 @@ function CosmicMapInner() {
 /**
  * CosmicMap - Main component with ReactFlowProvider
  */
-export function CosmicMap() {
+export function CosmicMap({ visible, zooming }: CosmicMapProps = {}) {
   return (
     <ReactFlowProvider>
-      <CosmicMapInner />
+      <CosmicMapInner visible={visible} zooming={zooming} />
     </ReactFlowProvider>
   );
 }
