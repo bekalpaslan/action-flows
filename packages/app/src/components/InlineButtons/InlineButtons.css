@@ -13,11 +13,11 @@
   gap: 6px;
   padding: 6px 12px;
   background: #0e639c;
-  color: #ffffff;
+  color: var(--text-primary);
   border: 1px solid #1177bb;
   border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
@@ -40,13 +40,13 @@
 
 /* Loading state - gray with spinner animation */
 .inline-button-item.inline-button-loading {
-  background: #3c3c3c;
+  background: var(--app-bg-tertiary);
   border-color: #4c4c4c;
-  color: #999999;
+  color: var(--text-tertiary);
 }
 
 .inline-button-item.inline-button-loading:hover:not(:disabled) {
-  background: #3c3c3c;
+  background: var(--app-bg-tertiary);
   border-color: #4c4c4c;
   transform: none;
 }
@@ -55,7 +55,7 @@
 .inline-button-item.inline-button-success {
   background: #0d8659;
   border-color: #0fa570;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .inline-button-item.inline-button-success:hover:not(:disabled) {
@@ -68,7 +68,7 @@
 .inline-button-item.inline-button-error {
   background: #941713;
   border-color: #c8302e;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .inline-button-item.inline-button-error:hover:not(:disabled) {
@@ -93,7 +93,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 
 .inline-button-spinner {
@@ -128,6 +128,6 @@
 
   .inline-button-item {
     padding: 5px 10px;
-    font-size: 11px;
+    font-size: var(--text-xs);
   }
 }

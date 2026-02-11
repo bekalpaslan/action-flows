@@ -23,8 +23,8 @@
   border: var(--panel-border-default);
   border-radius: var(--radius-md);
   color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
   box-shadow: var(--panel-glow-default);
   transition: all 0.2s ease;
@@ -33,7 +33,7 @@
 .workbench-layout__return-to-universe:hover {
   background: var(--panel-bg-hover);
   border-color: var(--system-blue);
-  box-shadow: 0 0 12px rgba(10, 132, 255, 0.3);
+  box-shadow: 0 0 12px var(--glow-color-accent);
   transform: translateY(-1px);
 }
 
@@ -142,7 +142,7 @@
   min-height: 120px;
   background: var(--panel-bg-elevated);
   border-top: var(--panel-border-default);
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1), var(--panel-glow-default);
+  box-shadow: 0 -2px 4px var(--glass-bg-dark), var(--panel-glow-default);
   overflow: visible;
   display: flex;
   flex-direction: column;

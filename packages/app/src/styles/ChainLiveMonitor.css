@@ -9,13 +9,13 @@
   height: 100%;
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--glass-bg-dark);
   overflow: hidden;
 }
 
 .monitor-header {
   padding: 16px;
-  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  background: linear-gradient(135deg, var(--system-blue) 0%, #1565c0 100%);
   color: white;
   border-bottom: 2px solid #0d47a1;
   display: flex;
@@ -25,15 +25,15 @@
 
 .monitor-header h2 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
 }
 
 .event-status {
   display: flex;
   gap: 20px;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 
 .status-indicator {
@@ -50,7 +50,7 @@
 }
 
 .indicator-dot.online {
-  background-color: #4caf50;
+  background-color: var(--system-green);
   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
   animation: pulse-dot 2s ease-in-out infinite;
 }
@@ -65,18 +65,18 @@
 }
 
 .indicator-text {
-  font-weight: 500;
+  font-weight: var(--font-medium);
 }
 
 .event-counter {
   background-color: rgba(255, 255, 255, 0.2);
   padding: 4px 8px;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: var(--text-xs);
 }
 
 .event-counter strong {
-  font-weight: 600;
+  font-weight: var(--font-semibold);
 }
 
 /* Monitor Content */
@@ -91,9 +91,9 @@
 .monitor-footer {
   padding: 12px 16px;
   background-color: #f5f5f5;
-  border-top: 1px solid #e0e0e0;
-  font-size: 12px;
-  color: #666;
+  border-top: 1px solid var(--panel-border-color-subtle);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
 }
 
 .event-info {
@@ -114,8 +114,8 @@
   border-radius: 3px;
   border: 1px solid #ddd;
   font-family: 'Monaco', 'Menlo', monospace;
-  font-size: 11px;
-  color: #333;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
 }
 
 /* Loading State */
@@ -126,14 +126,14 @@
   justify-content: center;
   height: 100%;
   background-color: #f5f5f5;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .chain-monitor-loading .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #e0e0e0;
-  border-top-color: #1976d2;
+  border: 4px solid var(--panel-border-color-subtle);
+  border-top-color: var(--system-blue);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
@@ -146,7 +146,7 @@
 }
 
 .chain-monitor-loading p {
-  font-size: 14px;
+  font-size: var(--text-sm);
   margin: 0;
 }
 

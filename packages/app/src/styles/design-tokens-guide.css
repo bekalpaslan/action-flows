@@ -574,7 +574,7 @@
   OLD: padding: 16px;
   NEW: padding: var(--space-4);
 
-  OLD: font-size: 14px;
+  OLD: font-size: var(--text-sm);
   NEW: font-size: var(--text-base);
 
   OLD: color: #e0e0e0;

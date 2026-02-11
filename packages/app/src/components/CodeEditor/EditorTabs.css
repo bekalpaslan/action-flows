@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   background-color: #252526;
-  border-bottom: 1px solid #3c3c3c;
+  border-bottom: 1px solid var(--app-bg-tertiary);
   height: 35px;
   overflow: hidden;
   position: relative;
@@ -43,7 +43,7 @@
   padding: 0 12px;
   height: 35px;
   background-color: #2d2d30;
-  border-right: 1px solid #3c3c3c;
+  border-right: 1px solid var(--app-bg-tertiary);
   cursor: pointer;
   white-space: nowrap;
   transition: background-color 0.2s;
@@ -57,7 +57,7 @@
 }
 
 .editor-tab.active {
-  background-color: #1e1e1e;
+  background-color: var(--app-bg-secondary);
   border-bottom: 2px solid #007acc;
 }
 
@@ -65,16 +65,16 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 13px;
-  color: #cccccc;
+  font-size: var(--text-sm);
+  color: var(--panel-border-color-default);
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .dirty-indicator {
   color: #007acc;
-  font-size: 18px;
-  line-height: 1;
+  font-size: var(--text-lg);
+  line-height: var(--leading-tight);
 }
 
 .tab-close-btn {
@@ -88,30 +88,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  line-height: 1;
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
   border-radius: 3px;
   transition: background-color 0.2s, color 0.2s;
   flex-shrink: 0;
 }
 
 .tab-close-btn:hover {
-  background-color: #3c3c3c;
-  color: #ffffff;
+  background-color: var(--app-bg-tertiary);
+  color: var(--text-primary);
 }
 
 .tab-scroll-btn {
   background-color: #2d2d30;
   border: none;
-  color: #cccccc;
+  color: var(--panel-border-color-default);
   cursor: pointer;
   padding: 0 8px;
   height: 35px;
-  font-size: 20px;
-  line-height: 1;
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
   transition: background-color 0.2s;
   flex-shrink: 0;
-  border-right: 1px solid #3c3c3c;
+  border-right: 1px solid var(--app-bg-tertiary);
 }
 
 .tab-scroll-btn:hover {
@@ -119,9 +119,9 @@
 }
 
 .tab-scroll-left {
-  border-left: 1px solid #3c3c3c;
+  border-left: 1px solid var(--app-bg-tertiary);
 }
 
 .tab-scroll-right {
-  border-right: 1px solid #3c3c3c;
+  border-right: 1px solid var(--app-bg-tertiary);
 }

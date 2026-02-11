@@ -42,12 +42,27 @@ export const HarmonyIndicator: React.FC<HarmonyIndicatorProps> = ({
     }),
   });
 
+  const statusLabels = {
+    valid: 'Valid harmony - output parsed successfully',
+    degraded: 'Degraded harmony - partial parse',
+    violation: 'Harmony violation - output failed to parse',
+  };
+
   return (
     <>
-      <div className={classes} title={title}>
-        {status === 'valid' && <span className="harmony-indicator__icon">✓</span>}
-        {status === 'degraded' && <span className="harmony-indicator__icon">⚠</span>}
-        {status === 'violation' && <span className="harmony-indicator__icon">✗</span>}
+      <div
+        className={classes}
+        title={title}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {status === 'valid' && <span className="harmony-indicator__icon" aria-hidden="true">✓</span>}
+        {status === 'degraded' && <span className="harmony-indicator__icon" aria-hidden="true">⚠</span>}
+        {status === 'violation' && <span className="harmony-indicator__icon" aria-hidden="true">✗</span>}
+        <span className="sr-only">
+          Harmony status: {statusLabels[status]}
+        </span>
         <DiscussButton componentName="HarmonyIndicator" onClick={openDialog} size="small" />
       </div>
 

@@ -42,7 +42,7 @@
 
 .sidebar-icon {
   font-size: var(--space-5);
-  line-height: 1;
+  line-height: var(--leading-tight);
   user-select: none;
   flex-shrink: 0;
   color: var(--text-primary);
@@ -71,7 +71,7 @@
   color: var(--text-secondary);
   font-size: var(--text-lg);
   font-weight: var(--font-normal);
-  line-height: 1;
+  line-height: var(--leading-tight);
   cursor: pointer;
   flex-shrink: 0;
   box-shadow: var(--btn-glow-default);
@@ -113,7 +113,7 @@
 }
 
 .sidebar-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--btn-hover-tertiary);
 }
 
 /* Section */
@@ -163,7 +163,7 @@
   border-top: var(--panel-header-border);
   padding: var(--space-3);
   background-color: var(--panel-header-bg);
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -2px 4px var(--glass-bg-dark);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -182,16 +182,16 @@
 @media (prefers-color-scheme: light) {
   .session-sidebar {
     background-color: rgba(245, 245, 247, 0.95);
-    border-right-color: rgba(0, 0, 0, 0.1);
+    border-right-color: var(--glass-bg-dark);
   }
 
   .sidebar-header {
     background-color: rgba(0, 0, 0, 0.03);
-    border-bottom-color: rgba(0, 0, 0, 0.1);
+    border-bottom-color: var(--glass-bg-dark);
   }
 
   .sidebar-title {
-    color: rgba(0, 0, 0, 0.85);
+    color: var(--panel-bg-inset);
   }
 
   .section-title {
@@ -199,7 +199,7 @@
   }
 
   .sidebar-divider {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--glass-bg-dark);
   }
 
   .empty-message {
@@ -213,7 +213,7 @@
 
   .sidebar-footer {
     background-color: rgba(0, 0, 0, 0.03);
-    border-top-color: rgba(0, 0, 0, 0.1);
+    border-top-color: var(--glass-bg-dark);
   }
 
   .sidebar-content::-webkit-scrollbar-thumb {

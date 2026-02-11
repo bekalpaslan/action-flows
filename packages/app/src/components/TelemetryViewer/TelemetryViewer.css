@@ -20,8 +20,8 @@
 }
 
 .telemetry-viewer__title {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
 }
 
@@ -32,7 +32,7 @@
 }
 
 .telemetry-viewer__filter-label {
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--text-secondary);
   margin-right: 8px;
 }
@@ -43,7 +43,7 @@
   border: 1px solid var(--border-primary);
   background: var(--background-secondary);
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: var(--text-sm);
   cursor: pointer;
 }
 
@@ -73,8 +73,8 @@
 .telemetry-viewer__table-header-cell {
   padding: 12px;
   text-align: left;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
   border-bottom: 2px solid var(--border-primary);
 }
@@ -106,7 +106,7 @@
 
 .telemetry-viewer__table-cell {
   padding: 12px;
-  font-size: 13px;
+  font-size: var(--text-sm);
   color: var(--text-primary);
 }
 
@@ -117,9 +117,9 @@
 }
 
 .telemetry-viewer__table-cell--level {
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
-  font-size: 11px;
+  font-size: var(--text-xs);
   letter-spacing: 0.5px;
 }
 
@@ -166,15 +166,15 @@
 }
 
 .telemetry-viewer__stat-label {
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .telemetry-viewer__stat-value {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
 }
 
@@ -184,5 +184,5 @@
   justify-content: center;
   height: 200px;
   color: var(--text-tertiary);
-  font-size: 14px;
+  font-size: var(--text-sm);
 }

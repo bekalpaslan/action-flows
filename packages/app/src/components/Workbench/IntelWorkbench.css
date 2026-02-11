@@ -31,8 +31,8 @@
 }
 
 .intel-workbench__title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
   color: #e0e0e0;
   margin: 0;
 }
@@ -43,8 +43,8 @@
   color: #fff;
   border: none;
   border-radius: 4px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -63,8 +63,8 @@
   color: #fff;
   border: none;
   border-radius: 4px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -108,7 +108,7 @@
 
 .intel-workbench__error .error-message {
   font-family: monospace;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   background-color: #3c3c3c;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -156,14 +156,14 @@
 }
 
 .intel-workbench__empty h2 {
-  font-size: 1.5rem;
-  font-weight: 300;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-light);
   color: #a0a0a0;
   margin-bottom: 0.5rem;
 }
 
 .intel-workbench__empty p {
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: #808080;
   margin: 0;
 }
@@ -185,17 +185,17 @@
 }
 
 .dossier-view-placeholder h2 {
-  font-size: 1.75rem;
-  font-weight: 600;
+  font-size: var(--text-3xl);
+  font-weight: var(--font-semibold);
   color: #e0e0e0;
   margin: 0 0 1rem 0;
 }
 
 .dossier-view-placeholder .dossier-context {
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: #b0b0b0;
   margin: 0 0 1.5rem 0;
-  line-height: 1.5;
+  line-height: var(--leading-normal);
 }
 
 .dossier-view-placeholder .dossier-meta {
@@ -209,7 +209,7 @@
 }
 
 .dossier-view-placeholder .dossier-meta span {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: #a0a0a0;
 }
 
@@ -220,11 +220,11 @@
   border-radius: 6px;
   margin-bottom: 1.5rem;
   color: #f44336;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 
 .dossier-view-placeholder .dossier-error strong {
-  font-weight: 600;
+  font-weight: var(--font-semibold);
 }
 
 .dossier-view-placeholder .dossier-placeholder-note {
@@ -236,7 +236,7 @@
 }
 
 .dossier-view-placeholder .dossier-placeholder-note p {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: #808080;
   margin: 0.5rem 0;
 }
@@ -278,7 +278,7 @@
 
 @media (max-width: 480px) {
   .intel-workbench__title {
-    font-size: 1.25rem;
+    font-size: var(--text-xl);
   }
 
   .intel-workbench__dossier-view {

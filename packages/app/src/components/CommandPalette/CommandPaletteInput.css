@@ -25,7 +25,7 @@
   background: transparent;
   border: none;
   outline: none;
-  font-size: 18px;
+  font-size: var(--text-lg);
   font-family: inherit;
   color: var(--text-primary, #ffffff);
   padding: 0;
@@ -61,7 +61,7 @@
 }
 
 .command-palette-input__clear:active {
-  background: var(--fill-tertiary, rgba(118, 118, 128, 0.24));
+  background: var(--fill-tertiary, var(--input-bg-default));
   transform: scale(0.95);
 }
 

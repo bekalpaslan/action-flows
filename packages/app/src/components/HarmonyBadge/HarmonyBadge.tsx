@@ -3,7 +3,7 @@
  * Displays harmony percentage with color-coded status
  */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useHarmonyStatus } from '../../hooks/useHarmonyMetrics';
 import './HarmonyBadge.css';
 
@@ -35,12 +35,25 @@ export const HarmonyBadge: React.FC<HarmonyBadgeProps> = ({
 
   const classes = `harmony-badge harmony-badge--${size} harmony-badge--${color} ${className}`.trim();
 
+  // Keyboard accessibility handler for interactive badges
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        onClick();
+      }
+    },
+    [onClick]
+  );
+
   return (
     <div
       className={classes}
       onClick={onClick}
+      onKeyDown={onClick ? handleKeyDown : undefined}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
+      aria-label={`Harmony status: ${percentage.toFixed(1)}% - ${label}`}
       title={`Harmony: ${percentage.toFixed(1)}% (${label})`}
     >
       <div className="harmony-badge__icon">

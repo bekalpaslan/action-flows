@@ -28,7 +28,7 @@
 
 .session-sidebar-item:hover {
   background: var(--nav-item-bg-hover);
-  border-color: rgba(10, 132, 255, 0.3);
+  border-color: var(--glow-color-accent);
   box-shadow: var(--panel-glow-hover);
 }
 
@@ -49,7 +49,7 @@
 }
 
 .session-sidebar-item.active:hover {
-  background: rgba(10, 132, 255, 0.2);
+  background: var(--glow-color-accent);
   box-shadow: var(--btn-glow-hover);
 }
 
@@ -116,7 +116,7 @@
 /* Session Name */
 .session-name {
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--font-medium);
   color: var(--text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -136,7 +136,7 @@
 .session-time {
   font-size: var(--text-xs);
   color: var(--text-tertiary);
-  font-weight: 400;
+  font-weight: var(--font-normal);
   transition: var(--transition-colors);
 }
 
@@ -156,7 +156,7 @@
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-sm);
   font-size: var(--text-xs);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.025em;
   flex-shrink: 0;
@@ -173,7 +173,7 @@
 }
 
 .routing-badge.confidence-medium {
-  background: rgba(255, 159, 10, 0.15);
+  background: var(--glow-color-warning);
   color: var(--system-orange);
   border-color: rgba(255, 159, 10, 0.4);
 }
@@ -185,12 +185,12 @@
 }
 
 .session-sidebar-item:hover .routing-badge.confidence-high {
-  background: rgba(50, 215, 75, 0.2);
+  background: var(--glow-color-success);
   border-color: rgba(50, 215, 75, 0.6);
 }
 
 .session-sidebar-item:hover .routing-badge.confidence-medium {
-  background: rgba(255, 159, 10, 0.2);
+  background: var(--glow-color-warning);
   border-color: rgba(255, 159, 10, 0.6);
 }
 
@@ -210,9 +210,9 @@
   background: var(--system-purple);
   color: var(--text-primary);
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-bg-light);
   font-size: var(--text-xs);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   flex-shrink: 0;
   box-shadow: 0 0 12px rgba(191, 90, 242, 0.6);
   animation: pulse-badge 2s infinite;
@@ -228,13 +228,13 @@
   width: 20px;
   height: 20px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-bg-light);
   border-radius: 4px;
   background: transparent;
   color: var(--text-tertiary);
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 1;
+  font-size: var(--text-lg);
+  font-weight: var(--font-light);
+  line-height: var(--leading-tight);
   cursor: pointer;
   flex-shrink: 0;
   transition: var(--transition-all);
@@ -269,7 +269,7 @@
 .session-sidebar-item.active .notification-badge {
   background: var(--system-blue);
   color: var(--text-primary);
-  box-shadow: 0 0 12px rgba(10, 132, 255, 0.6);
+  box-shadow: 0 0 12px var(--panel-border-color-accent);
 }
 
 /* Responsive adjustments */
@@ -279,17 +279,17 @@
   }
 
   .session-name {
-    font-size: 0.8125rem;
+    font-size: var(--text-sm);
   }
 
   .session-time {
-    font-size: 0.6875rem;
+    font-size: var(--text-xs);
   }
 
   .notification-badge {
     min-width: 18px;
     height: 18px;
-    font-size: 0.65rem;
+    font-size: var(--text-xs);
   }
 }
 

@@ -36,13 +36,13 @@
 .widget-stat-card__label {
   font-size: var(--text-sm);
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: var(--font-medium);
 }
 
 .widget-stat-card__value {
   font-size: var(--text-2xl);
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: var(--font-bold);
   font-family: var(--font-mono);
 }
 
@@ -89,7 +89,7 @@
   border-radius: var(--btn-radius-sm);
   font-size: var(--text-xs);
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -97,7 +97,7 @@
 .widget-insight-card__text {
   font-size: var(--text-sm);
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
 }
 
 .widget-insight-card__confidence {
@@ -137,7 +137,7 @@
 
 .widget-alert-panel__title {
   font-size: var(--text-base);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
 }
 
@@ -193,7 +193,7 @@
 
 .widget-code-health__title {
   font-size: var(--text-base);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
 }
 
@@ -212,8 +212,8 @@
 }
 
 .widget-code-health__score-value {
-  font-size: 48px;
-  font-weight: 700;
+  font-size: var(--text-6xl);
+  font-weight: var(--font-bold);
 }
 
 .widget-code-health__score-max {
@@ -236,7 +236,7 @@
 .widget-code-health__score-label {
   font-size: var(--text-sm);
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: var(--font-medium);
 }
 
 .widget-code-health__factors {
@@ -291,7 +291,7 @@
 
 .widget-file-tree__root {
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
   font-family: var(--font-mono);
   padding-bottom: var(--space-2);
@@ -376,7 +376,7 @@
   overflow-x: auto;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  line-height: 1.5;
+  line-height: var(--leading-normal);
   color: var(--text-primary);
 }
 
@@ -415,7 +415,7 @@
 
 .widget-unknown__type {
   font-size: var(--text-sm);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   color: #FF9500;
 }
 
@@ -428,7 +428,7 @@
   overflow-x: auto;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  line-height: 1.5;
+  line-height: var(--leading-normal);
   color: var(--text-primary);
 }
 

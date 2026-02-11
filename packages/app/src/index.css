@@ -17,7 +17,7 @@ body,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: var(--app-bg-primary, #1a1a1a);
-  color: var(--text-primary, #e0e0e0);
+  color: var(--text-primary, var(--panel-border-color-subtle));
 }
 
 body {
@@ -40,7 +40,7 @@ code {
   padding: 2px 6px;
   border-radius: 3px;
   font-family: 'Courier New', Courier, monospace;
-  font-size: 0.9em;
+  font-size: var(--text-base);
 }
 
 /* ============================================================================
@@ -50,7 +50,7 @@ code {
    ============================================================================ */
 
 :focus-visible {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--system-blue));
   outline-offset: var(--focus-ring-offset, 2px);
 }
 

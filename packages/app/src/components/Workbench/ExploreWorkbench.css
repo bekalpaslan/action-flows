@@ -31,8 +31,8 @@
 }
 
 .explore-workbench__title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
   color: #111827;
   margin: 0;
 }
@@ -50,8 +50,8 @@
   cursor: pointer;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   transition: all 0.2s ease;
 }
 
@@ -90,7 +90,7 @@
 }
 
 .explore-workbench__search-icon {
-  font-size: 1rem;
+  font-size: var(--text-base);
   color: #9ca3af;
   margin-right: 0.5rem;
 }
@@ -100,7 +100,7 @@
   background: transparent;
   border: none;
   padding: 0.625rem 0;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: #111827;
   outline: none;
 }
@@ -116,8 +116,8 @@
   cursor: pointer;
   padding: 0.25rem;
   border-radius: 4px;
-  font-size: 0.875rem;
-  line-height: 1;
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
   transition: all 0.2s ease;
 }
 
@@ -128,7 +128,7 @@
 
 .explore-workbench__search-results {
   margin-top: 0.5rem;
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   color: #6b7280;
 }
 
@@ -154,7 +154,7 @@
   gap: 0.75rem;
   padding: 3rem;
   color: #6b7280;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 
 .explore-workbench__loading-spinner {
@@ -180,7 +180,7 @@
 }
 
 .explore-workbench__error-message {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   margin-top: 0.5rem;
   color: #7f1d1d;
 }
@@ -193,7 +193,7 @@
   padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   transition: background-color 0.2s ease;
 }
 
@@ -206,7 +206,7 @@
   padding: 3rem;
   text-align: center;
   color: #6b7280;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 
 .explore-workbench__clear-btn {
@@ -217,7 +217,7 @@
   padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   transition: background-color 0.2s ease;
 }
 
@@ -266,7 +266,7 @@
 }
 
 .explore-workbench__toggle {
-  font-size: 0.625rem;
+  font-size: var(--text-xs);
   color: #6b7280;
   width: 1rem;
   flex-shrink: 0;
@@ -279,7 +279,7 @@
 
 .explore-workbench__entry-name {
   flex: 1;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: #111827;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -287,7 +287,7 @@
 }
 
 .explore-workbench__tree-entry.directory .explore-workbench__entry-name {
-  font-weight: 500;
+  font-weight: var(--font-medium);
 }
 
 .explore-workbench__entry-meta {
@@ -299,14 +299,14 @@
 }
 
 .explore-workbench__entry-size {
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   color: #9ca3af;
   min-width: 4rem;
   text-align: right;
 }
 
 .explore-workbench__entry-date {
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   color: #9ca3af;
   min-width: 6rem;
   text-align: right;
@@ -320,7 +320,7 @@
   padding: 0.5rem 1.5rem;
   background-color: #f9fafb;
   border-top: 1px solid #e5e7eb;
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   color: #6b7280;
   flex-shrink: 0;
 }
@@ -361,7 +361,7 @@
 }
 
 [data-theme="dark"] .explore-workbench__action-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--glass-bg-light);
   border-color: var(--color-text-muted);
 }
 
@@ -402,7 +402,7 @@
 }
 
 [data-theme="dark"] .explore-workbench__search-clear:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--glass-bg-light);
   color: var(--color-text-secondary);
 }
 
@@ -440,7 +440,7 @@
 }
 
 [data-theme="dark"] .explore-workbench__tree-entry:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--glass-bg-light);
 }
 
 [data-theme="dark"] .explore-workbench__tree-entry.selected {
@@ -485,7 +485,7 @@
   }
 
   .explore-workbench__title {
-    font-size: 1.25rem;
+    font-size: var(--text-xl);
   }
 
   .explore-workbench__search {

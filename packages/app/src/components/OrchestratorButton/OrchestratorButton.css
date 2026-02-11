@@ -2,7 +2,7 @@
  * OrchestratorButton — Styles for orchestrator chat indicator badge
  *
  * Uses Apple-inspired design tokens from design-tokens.css:
- * - system-purple (#bf5af2) and system-blue (#0a84ff) gradient
+ * - system-purple (#bf5af2) and system-blue (var(--system-blue)) gradient
  * - Full keyboard accessibility with focus-visible ring
  * - Pulsing animation with prefers-reduced-motion support
  */
@@ -24,7 +24,7 @@
   background: linear-gradient(
     135deg,
     var(--system-purple, #bf5af2) 0%,
-    var(--system-blue, #0a84ff) 100%
+    var(--system-blue, var(--system-blue)) 100%
   );
   border-radius: var(--radius-full, 9999px);
   border: 2px solid var(--app-bg-primary, #1c1c1e);
@@ -53,7 +53,7 @@
  * Provides clear visual feedback for keyboard navigation
  */
 .orchestrator-button:focus-visible {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--system-blue));
   outline-offset: var(--focus-ring-offset, 2px);
 }
 

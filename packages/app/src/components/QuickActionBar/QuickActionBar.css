@@ -47,8 +47,8 @@
   border: 1px solid var(--border-color);
   border-radius: 6px;
   color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
@@ -93,8 +93,8 @@
 }
 
 .quick-action-label {
-  font-size: 12px;
-  line-height: 1;
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
 }
 
 /* Manual input form */
@@ -113,7 +113,7 @@
   border: 1px solid var(--border-color);
   border-radius: 6px;
   color: var(--text-primary);
-  font-size: 12px;
+  font-size: var(--text-xs);
   outline: none;
   transition: all 0.2s ease;
 }
@@ -138,7 +138,7 @@
   border: none;
   border-radius: 6px;
   color: white;
-  font-size: 16px;
+  font-size: var(--text-base);
   cursor: pointer;
   transition: all 0.2s ease;
 }

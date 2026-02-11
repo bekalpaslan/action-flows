@@ -664,7 +664,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         ) : (
           /* Workbench View */
           <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }}>
-            <main className="workbench-main with-sidebar">
+            <main id="main-content" className="workbench-main with-sidebar" role="main">
               <div className={`workbench-content ${transitionClass}`}>
                 {/* Return to Universe button (visible when cosmic map is enabled) */}
                 {cosmicMapEnabled && (

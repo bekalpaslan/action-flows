@@ -19,15 +19,15 @@
   justify-content: space-between;
   padding: 0.75rem 1.5rem;
   background-color: #252526;
-  border-bottom: 1px solid #3c3c3c;
+  border-bottom: 1px solid var(--app-bg-tertiary);
   flex-shrink: 0;
   height: 60px;
 }
 
 .canvas-workbench__title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #e0e0e0;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--panel-border-color-subtle);
   margin: 0;
   letter-spacing: 0.5px;
 }
@@ -39,12 +39,12 @@
 
 .canvas-workbench__button {
   padding: 0.5rem 1rem;
-  background-color: #3c3c3c;
-  color: #e0e0e0;
+  background-color: var(--app-bg-tertiary);
+  color: var(--panel-border-color-subtle);
   border: 1px solid #4c4c4c;
   border-radius: 4px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -52,11 +52,11 @@
 .canvas-workbench__button:hover {
   background-color: #4c4c4c;
   border-color: #5c5c5c;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .canvas-workbench__button:active {
-  background-color: #3c3c3c;
+  background-color: var(--app-bg-tertiary);
   transform: scale(0.98);
 }
 
@@ -75,7 +75,7 @@
   flex: 0 0 40%;  /* Use 40% HEIGHT when expanded (in column layout) */
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid #3c3c3c;  /* CHANGE: was border-right, now border-bottom */
+  border-bottom: 1px solid var(--app-bg-tertiary);  /* CHANGE: was border-right, now border-bottom */
   overflow: hidden;
   transition: flex-basis 0.3s ease, opacity 0.3s ease;
   opacity: 1;
@@ -106,7 +106,7 @@
   flex: 1;
   width: 100%;
   height: 100%;  /* ADD: fill full height */
-  background-color: #ffffff;
+  background-color: var(--text-primary);
   border: none;  /* CHANGE: remove border for clean look */
   border-radius: 0;  /* CHANGE: remove radius for edge-to-edge */
   min-height: 0;  /* CHANGE: allow flex shrinking, was 300px */
@@ -116,7 +116,7 @@
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
   .canvas-workbench__iframe {
-    background-color: #ffffff;
+    background-color: var(--text-primary);
     filter: brightness(0.95);
   }
 }

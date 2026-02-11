@@ -11,7 +11,7 @@
   background-color: #f5f5f5;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--glass-bg-dark);
 }
 
 .chain-dag-main {
@@ -22,45 +22,45 @@
 }
 
 .chain-dag-header {
-  padding: 16px;
+  padding: var(--space-4);
   background-color: white;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--panel-border-color-subtle);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .chain-dag-header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .chain-dag-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
   margin: 0;
   flex: 1;
 }
 
 .chain-dag-stats {
   display: flex;
-  gap: 20px;
-  font-size: 13px;
-  color: #666;
+  gap: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
 }
 
 .chain-dag-stat {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1-5);
 }
 
 .chain-dag-stat-value {
-  font-weight: 600;
-  color: #333;
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
 }
 
 .chain-dag-canvas {
@@ -109,19 +109,19 @@
   border: 2px solid #ccc;
   cursor: pointer;
   transition: all 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--glass-bg-dark);
   min-width: 160px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 .step-node:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px var(--glass-bg-dark);
   transform: translateY(-2px);
 }
 
 .step-node.selected {
-  border-color: #1976d2;
+  border-color: var(--system-blue);
   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
   background-color: #f0f7ff;
 }
@@ -141,18 +141,18 @@
 }
 
 .step-node.status-in_progress {
-  border-color: #fbc02d;
+  border-color: var(--system-yellow);
   background-color: #fffde7;
   animation: pulse-border 2s ease-in-out infinite, pulse-glow 1.5s ease-out infinite;
 }
 
 .step-node.status-completed {
-  border-color: #4caf50;
+  border-color: var(--system-green);
   background-color: #f1f8e9;
 }
 
 .step-node.status-failed {
-  border-color: #f44336;
+  border-color: var(--system-red);
   background-color: #ffebee;
 }
 
@@ -205,27 +205,27 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: 600;
-  color: #333;
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
 }
 
 .step-number {
   background-color: rgba(0, 0, 0, 0.05);
   padding: 2px 6px;
   border-radius: 3px;
-  font-size: 11px;
+  font-size: var(--text-xs);
 }
 
 .parallel-indicator {
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: #ff6f00;
-  font-weight: bold;
+  font-weight: var(--font-bold);
   title: 'Parallel execution';
 }
 
 .step-node-action {
-  font-weight: 600;
-  color: #1976d2;
+  font-weight: var(--font-semibold);
+  color: var(--system-blue);
   word-break: break-word;
 }
 
@@ -238,8 +238,8 @@
   display: inline-block;
   padding: 2px 6px;
   border-radius: 3px;
-  font-size: 10px;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -260,15 +260,15 @@
 }
 
 .step-node-duration {
-  font-size: 10px;
-  color: #4caf50;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  color: var(--system-green);
+  font-weight: var(--font-semibold);
 }
 
 .step-node-error {
-  font-size: 10px;
-  color: #f44336;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  color: var(--system-red);
+  font-weight: var(--font-semibold);
   padding: 2px 4px;
   background-color: rgba(244, 67, 54, 0.1);
   border-radius: 2px;
@@ -284,7 +284,7 @@
   width: 12px;
   height: 12px;
   border: 2px solid rgba(251, 192, 45, 0.3);
-  border-top-color: #fbc02d;
+  border-top-color: var(--system-yellow);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -297,7 +297,7 @@
 
 /* React Flow handles */
 .react-flow__handle {
-  background-color: #1976d2;
+  background-color: var(--system-blue);
   border: 2px solid white;
   width: 8px;
   height: 8px;
@@ -308,7 +308,7 @@
 }
 
 .react-flow__handle.valid {
-  background-color: #4caf50;
+  background-color: var(--system-green);
 }
 
 /* Edges */
@@ -318,7 +318,7 @@
 }
 
 .react-flow__edge.selected .react-flow__edge-path {
-  stroke: #1976d2;
+  stroke: var(--system-blue);
   stroke-width: 3;
 }
 
@@ -328,7 +328,7 @@
 
 /* Animated edges for in-progress steps */
 .react-flow__edge.animated .react-flow__edge-path {
-  stroke: #fbc02d;
+  stroke: var(--system-yellow);
   stroke-dasharray: 5, 5;
   animation: dash 20s linear infinite;
 }
@@ -343,7 +343,7 @@
 .chain-dag-controls {
   padding: 12px;
   background-color: white;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--panel-border-color-subtle);
   display: flex;
   gap: 8px;
   justify-content: center;
@@ -356,18 +356,18 @@
   background-color: white;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
   transition: all 0.2s ease;
 }
 
 .chain-dag-button:hover {
   background-color: #f5f5f5;
-  border-color: #999;
+  border-color: var(--text-tertiary);
 }
 
 .chain-dag-button.primary {
-  background-color: #1976d2;
+  background-color: var(--system-blue);
   color: white;
   border-color: #1565c0;
 }
@@ -398,8 +398,8 @@
   color: white;
   padding: 2px 6px;
   border-radius: 3px;
-  font-size: 10px;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
   z-index: 100;
 }
 
@@ -409,14 +409,14 @@
   display: inline-block;
   padding: 2px 6px;
   border-radius: 3px;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
   text-transform: capitalize;
 }
 
 .status-badge.status-pending {
   background-color: #f5f5f5;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .status-badge.status-in_progress {
@@ -440,20 +440,20 @@
 }
 
 .error-message {
-  color: #f44336 !important;
+  color: var(--system-red) !important;
   font-family: 'Monaco', 'Menlo', monospace;
-  font-size: 11px !important;
+  font-size: var(--text-xs) !important;
 }
 
 /* Legend */
 .chain-dag-legend {
   padding: 12px;
   background-color: #fafafa;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--panel-border-color-subtle);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 
 .legend-item {
@@ -476,17 +476,17 @@
 
 .legend-indicator.in-progress {
   background-color: #fffde7;
-  border-color: #fbc02d;
+  border-color: var(--system-yellow);
 }
 
 .legend-indicator.completed {
   background-color: #f1f8e9;
-  border-color: #4caf50;
+  border-color: var(--system-green);
 }
 
 .legend-indicator.failed {
   background-color: #ffebee;
-  border-color: #f44336;
+  border-color: var(--system-red);
 }
 
 .legend-indicator.skipped {
@@ -515,7 +515,7 @@
 
   .step-node {
     min-width: 140px;
-    font-size: 11px;
+    font-size: var(--text-xs);
     padding: 10px;
   }
 

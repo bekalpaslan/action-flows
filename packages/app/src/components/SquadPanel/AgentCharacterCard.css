@@ -3,7 +3,7 @@
  * Interactive card with character avatar, status, and expand interface
  *
  * Performance: Uses transform/opacity only for animations
- * Dark theme: #1a1a1a/#1e1e1e backgrounds, #3c3c3c borders
+ * Dark theme: var(--app-bg-primary)/var(--app-bg-secondary) backgrounds, var(--app-bg-tertiary) borders
  * Features: Hover effects, scale, aura brightening, click-to-expand
  */
 
@@ -16,8 +16,8 @@
   align-items: center;
   gap: 12px;
   padding: 16px 12px;
-  background: #1a1a1a;
-  border: 2px solid #3c3c3c;
+  background: var(--app-bg-primary);
+  border: 2px solid var(--app-bg-tertiary);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -26,7 +26,7 @@
 }
 
 .agent-character-card:focus-visible {
-  outline: 2px solid #6f9dff;
+  outline: 2px solid var(--system-blue);
   outline-offset: 2px;
 }
 
@@ -50,7 +50,7 @@
 .agent-character-card.is-hovered {
   transform: scale(1.05);
   border-color: currentColor;
-  background: #1e1e1e;
+  background: var(--app-bg-secondary);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   transition: all 0.3s var(--ease-natural);
 }
@@ -63,7 +63,7 @@
 
 /* Status-based border colors on hover */
 .agent-character-card.is-hovered.status-working {
-  border-color: #fbc02d;
+  border-color: var(--system-yellow);
   box-shadow: 0 8px 24px rgba(251, 192, 45, 0.2);
 }
 
@@ -73,7 +73,7 @@
 }
 
 .agent-character-card.is-hovered.status-success {
-  border-color: #4caf50;
+  border-color: var(--system-green);
   box-shadow: 0 8px 24px rgba(76, 175, 80, 0.2);
 }
 
@@ -86,7 +86,7 @@
 
 .agent-character-card.is-expanded {
   border-color: currentColor;
-  background: #1e1e1e;
+  background: var(--app-bg-secondary);
 }
 
 .agent-character-card.is-expanded .card-status-section {
@@ -136,28 +136,28 @@
 
 .card-name {
   margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  color: #e8e8e8;
-  line-height: 1.2;
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  line-height: var(--leading-tight);
   word-break: break-word;
 }
 
 .agent-character-card.size-orchestrator .card-name {
-  font-size: 16px;
+  font-size: var(--text-base);
   margin-bottom: 2px;
 }
 
 .agent-character-card.size-subagent .card-name {
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 
 .card-archetype {
   margin: 0;
-  font-size: 11px;
-  color: #999;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
   font-style: italic;
-  line-height: 1.1;
+  line-height: var(--leading-tight);
   opacity: 0.8;
 }
 
@@ -198,9 +198,9 @@
 }
 
 .status-text {
-  font-size: 12px;
-  font-weight: 600;
-  color: #e8e8e8;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -209,7 +209,7 @@
 }
 
 .agent-character-card.size-subagent .status-text {
-  font-size: 11px;
+  font-size: var(--text-xs);
 }
 
 /* Status indicator dot */
@@ -278,12 +278,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 2px;
-  font-size: 10px;
-  color: #999;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
 }
 
 .progress-text {
-  font-weight: 600;
+  font-weight: var(--font-semibold);
 }
 
 .progress-value {
@@ -298,7 +298,7 @@
   background: rgba(60, 60, 60, 0.8);
   border-radius: 2px;
   overflow: hidden;
-  border: 1px solid #3c3c3c;
+  border: 1px solid var(--app-bg-tertiary);
 }
 
 .progress-fill {
@@ -339,7 +339,7 @@
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease, color 0.3s ease;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .agent-character-card:hover .card-expand-indicator,
@@ -348,8 +348,8 @@
 }
 
 .expand-icon {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -369,11 +369,11 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 4px 8px;
-  background: rgba(30, 30, 30, 0.95);
-  border: 1px solid #3c3c3c;
+  background: var(--panel-bg-base);
+  border: 1px solid var(--app-bg-tertiary);
   border-radius: 4px;
-  font-size: 11px;
-  color: #999;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
@@ -404,7 +404,7 @@
 /* ===== KEYBOARD INTERACTION ===== */
 
 .agent-character-card:focus-visible {
-  outline: 2px solid #6f9dff;
+  outline: 2px solid var(--system-blue);
   outline-offset: 2px;
 }
 
@@ -470,16 +470,16 @@
   }
 
   .card-hint {
-    font-size: 10px;
+    font-size: var(--text-xs);
     top: -26px;
   }
 
   .card-name {
-    font-size: 13px;
+    font-size: var(--text-sm);
   }
 
   .card-archetype {
-    font-size: 10px;
+    font-size: var(--text-xs);
   }
 }
 
@@ -493,22 +493,22 @@
   }
 
   .card-name {
-    font-size: 12px;
+    font-size: var(--text-xs);
   }
 
   .card-archetype {
-    font-size: 9px;
+    font-size: var(--text-xs);
   }
 }
 
 /* ===== DARK THEME COLORS ===== */
 
 .agent-character-card {
-  color: #e8e8e8;
-  background: linear-gradient(135deg, #1a1a1a 0%, #1e1e1e 100%);
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--app-bg-primary) 0%, var(--app-bg-secondary) 100%);
 }
 
 .agent-character-card:hover,
 .agent-character-card.is-hovered {
-  background: linear-gradient(135deg, #1e1e1e 0%, #252525 100%);
+  background: linear-gradient(135deg, var(--app-bg-secondary) 0%, var(--app-bg-tertiary) 100%);
 }

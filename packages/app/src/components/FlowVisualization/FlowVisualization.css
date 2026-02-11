@@ -50,14 +50,14 @@
 
 /* Controls styling */
 .flow-visualization .react-flow__controls {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--glass-bg-dark);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .flow-visualization .react-flow__controls-button {
   background-color: white;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--panel-border-color-subtle);
   transition: background-color 0.2s ease;
 }
 
@@ -66,15 +66,15 @@
 }
 
 .flow-visualization .react-flow__controls-button svg {
-  fill: #666;
+  fill: var(--text-secondary);
 }
 
 /* MiniMap styling */
 .flow-visualization .react-flow__minimap {
   background-color: white;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--panel-border-color-subtle);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--glass-bg-dark);
 }
 
 /* Chain recompilation animations */

@@ -7,10 +7,10 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 1.5rem;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
+  background-color: var(--text-primary);
+  border: 1px solid var(--panel-border-color-subtle);
   border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--glass-bg-dark);
   font-family: 'Inter', sans-serif;
 }
 
@@ -20,14 +20,14 @@
   justify-content: space-between;
   align-items: center;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--panel-border-color-subtle);
 }
 
 .harmony-panel__title {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #333;
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
 }
 
 /* Metrics Grid */
@@ -48,17 +48,17 @@
 }
 
 .harmony-metric__label {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #666;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .harmony-metric__value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #333;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--text-secondary);
 }
 
 .harmony-metric--success .harmony-metric__value {
@@ -82,8 +82,8 @@
 
 .harmony-panel__section-title {
   margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
   color: #555;
 }
 
@@ -104,14 +104,14 @@
 }
 
 .harmony-format-item__name {
-  font-size: 0.875rem;
-  color: #333;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
 }
 
 .harmony-format-item__count {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #666;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
 }
 
 /* Violations */
@@ -142,23 +142,23 @@
 
 .harmony-violation__icon {
   color: #721c24;
-  font-weight: bold;
+  font-weight: var(--font-bold);
 }
 
 .harmony-violation__timestamp {
   flex: 1;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: #721c24;
 }
 
 .harmony-violation__expand {
   color: #721c24;
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
 }
 
 .harmony-violation__details {
   padding: 0.75rem;
-  background-color: #ffffff;
+  background-color: var(--text-primary);
   border-top: 1px solid #f5c6cb;
 }
 
@@ -168,7 +168,7 @@
   background-color: #f8f9fa;
   border-radius: 0.25rem;
   font-family: 'Fira Code', monospace;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   overflow-x: auto;
   white-space: pre-wrap;
   word-break: break-word;
@@ -176,7 +176,7 @@
 
 .harmony-violation__context {
   margin-top: 0.75rem;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: #555;
 }
 
@@ -186,22 +186,22 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 1rem;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--panel-border-color-subtle);
 }
 
 .harmony-panel__last-check {
-  font-size: 0.8125rem;
-  color: #666;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
 }
 
 .harmony-panel__refresh {
   padding: 0.5rem 1rem;
   background-color: #007bff;
-  color: #ffffff;
+  color: var(--text-primary);
   border: none;
   border-radius: 0.25rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -223,8 +223,8 @@
 }
 
 .harmony-panel__spinner {
-  color: #666;
-  font-size: 1rem;
+  color: var(--text-secondary);
+  font-size: var(--text-base);
 }
 
 .harmony-panel__error {
@@ -237,10 +237,10 @@
 .harmony-panel__retry {
   padding: 0.5rem 1rem;
   background-color: #dc3545;
-  color: #ffffff;
+  color: var(--text-primary);
   border: none;
   border-radius: 0.25rem;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   cursor: pointer;
 }
 

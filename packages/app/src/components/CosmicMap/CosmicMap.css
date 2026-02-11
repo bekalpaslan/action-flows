@@ -68,8 +68,8 @@
   border: var(--panel-border-default);
   border-radius: var(--radius-md);
   color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
   box-shadow: var(--panel-glow-default);
   transition: all 0.2s ease;
@@ -78,7 +78,7 @@
 .cosmic-map__god-view-button:hover {
   background: var(--panel-bg-hover);
   border-color: var(--system-blue);
-  box-shadow: 0 0 12px rgba(10, 132, 255, 0.3);
+  box-shadow: 0 0 12px var(--glow-color-accent);
   transform: translateY(-1px);
 }
 
@@ -128,7 +128,7 @@
 
 .cosmic-map__error-detail {
   margin-top: 8px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: var(--text-secondary);
 }
 

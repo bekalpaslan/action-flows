@@ -3,11 +3,12 @@
  *
  * Modal dialog asking "Why are you starring this?" with category selection,
  * explanation textarea, and optional tags input.
+ * Includes keyboard navigation, focus trapping, and focus restoration.
  *
  * SRD Section 3.4: Bookmark System
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { BookmarkCategory } from '@afw/shared';
 import './StarBookmark.css';
 
@@ -62,6 +63,53 @@ export function StarBookmarkDialog({
   const [explanation, setExplanation] = useState('');
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState<string[]>([]);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  // Setup focus management on mount/unmount
+  useEffect(() => {
+    triggerRef.current = document.activeElement as HTMLElement;
+
+    // Focus trap
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      const focusableElements = dialogRef.current?.querySelectorAll(
+        'button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    // Handle Escape key
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onCancel();
+      }
+    };
+
+    dialogRef.current?.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      dialogRef.current?.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [onCancel]);
 
   const handleAddTag = useCallback(() => {
     if (tagInput.trim()) {
@@ -95,10 +143,22 @@ export function StarBookmarkDialog({
       e.preventDefault();
       if (explanation.trim()) {
         onSubmit(category, explanation, tags);
+        // Restore focus
+        setTimeout(() => {
+          triggerRef.current?.focus();
+        }, 100);
       }
     },
     [category, explanation, tags, onSubmit]
   );
+
+  const handleCancel = useCallback(() => {
+    onCancel();
+    // Restore focus
+    setTimeout(() => {
+      triggerRef.current?.focus();
+    }, 100);
+  }, [onCancel]);
 
   const messagePreview =
     messageContent.length > MAX_MESSAGE_PREVIEW
@@ -111,6 +171,7 @@ export function StarBookmarkDialog({
       role="presentation"
     >
       <div
+        ref={dialogRef}
         className="star-bookmark-dialog"
         role="dialog"
         aria-modal="true"
@@ -120,7 +181,7 @@ export function StarBookmarkDialog({
           <h3 id="star-bookmark-dialog-title">★ Why are you starring this?</h3>
           <button
             className="close-button"
-            onClick={onCancel}
+            onClick={handleCancel}
             disabled={isLoading}
             aria-label="Close dialog"
           >

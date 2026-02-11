@@ -61,7 +61,7 @@
 .folder-hierarchy__title {
   margin: 0;
   font-size: var(--text-xs);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -181,7 +181,7 @@
   display: inline-block;
   width: 14px;
   height: 14px;
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--text-secondary);
   transition: var(--transition-all);
   flex-shrink: 0;
@@ -200,7 +200,7 @@
   display: inline-block;
   width: 18px;
   height: 18px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   text-align: center;
   flex-shrink: 0;
 }
@@ -216,12 +216,12 @@
 
 /* Directory-specific styles */
 .folder-hierarchy__node.directory {
-  font-weight: 500;
+  font-weight: var(--font-medium);
 }
 
 /* File-specific styles */
 .folder-hierarchy__node.file {
-  font-weight: 400;
+  font-weight: var(--font-normal);
 }
 
 /* Nested list indentation */

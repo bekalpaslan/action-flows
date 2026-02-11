@@ -31,8 +31,8 @@
 }
 
 .editor-workbench__title {
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
   color: #cccccc;
   margin: 0;
 }
@@ -44,8 +44,8 @@
   background-color: #4d3a00;
   color: #ffcc00;
   border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
 }
 
 .editor-workbench__header-right {
@@ -60,7 +60,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: #858585;
   overflow: hidden;
   white-space: nowrap;
@@ -78,7 +78,7 @@
 
 .breadcrumb-segment--file {
   color: #cccccc;
-  font-weight: 500;
+  font-weight: var(--font-medium);
 }
 
 .breadcrumb-separator {
@@ -140,14 +140,14 @@
   height: 48px;
   background-color: #5a1d1d;
   border-radius: 50%;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
   margin-bottom: 1rem;
 }
 
 .error-message {
   font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   background-color: #3c3c3c;
   padding: 0.75rem 1rem;
   border-radius: 4px;
@@ -179,14 +179,14 @@
 }
 
 .editor-workbench__empty h2 {
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: var(--text-xl);
+  font-weight: var(--font-medium);
   color: #cccccc;
   margin: 0 0 0.5rem 0;
 }
 
 .empty-hint {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: #858585;
   margin: 0 0 1rem 0;
 }
@@ -195,7 +195,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   color: #6a6a6a;
   margin: 0;
 }
@@ -209,7 +209,7 @@
   border: 1px solid #4a4a4a;
   border-radius: 3px;
   font-family: inherit;
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   color: #cccccc;
   box-shadow: 0 1px 0 #2d2d2d;
 }
@@ -228,11 +228,11 @@
   }
 
   .editor-workbench__title {
-    font-size: 1rem;
+    font-size: var(--text-base);
   }
 
   .editor-workbench__breadcrumb {
-    font-size: 0.75rem;
+    font-size: var(--text-sm);
     max-width: 100%;
   }
 

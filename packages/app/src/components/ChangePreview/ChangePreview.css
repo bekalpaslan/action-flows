@@ -22,8 +22,8 @@
 
 .change-preview-title {
   margin: 0;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
 }
 
@@ -39,8 +39,8 @@
   display: inline-block;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-xs);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
 }
 
 .summary-additions {
@@ -59,7 +59,7 @@
 }
 
 .summary-total {
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: var(--text-secondary);
   margin-left: auto;
 }
@@ -84,15 +84,15 @@
   background: var(--semantic-error);
   color: white;
   border-radius: 50%;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
   flex-shrink: 0;
 }
 
 .warning-text {
-  font-size: 13px;
+  font-size: var(--text-sm);
   color: var(--semantic-error);
-  font-weight: 500;
+  font-weight: var(--font-medium);
 }
 
 /* Expand/Collapse controls */
@@ -106,7 +106,7 @@
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xs);
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
@@ -137,7 +137,7 @@
   padding: var(--space-6);
   text-align: center;
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
 /* Individual change item */
@@ -188,8 +188,8 @@
   width: calc(var(--space-1) + var(--space-6));
   height: calc(var(--space-1) + var(--space-6));
   border-radius: var(--radius-xs);
-  font-size: 14px;
-  font-weight: 700;
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
   font-family: monospace;
   flex-shrink: 0;
 }
@@ -219,8 +219,8 @@
 }
 
 .change-field {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -228,7 +228,7 @@
 }
 
 .change-path {
-  font-size: 11px;
+  font-size: var(--text-xs);
   font-family: monospace;
   color: var(--text-secondary);
   white-space: nowrap;
@@ -240,8 +240,8 @@
 .change-badge {
   padding: var(--space-px) var(--space-2);
   border-radius: var(--radius-xs-sm);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   flex-shrink: 0;
@@ -266,8 +266,8 @@
 .destructive-badge {
   padding: var(--space-px) var(--space-2);
   border-radius: var(--radius-xs-sm);
-  font-size: 10px;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   background: var(--semantic-error);
@@ -277,7 +277,7 @@
 
 /* Expand/collapse icon */
 .expand-icon {
-  font-size: 10px;
+  font-size: var(--text-xs);
   color: var(--text-secondary);
   transition: transform 0.2s;
   flex-shrink: 0;
@@ -311,8 +311,8 @@
 }
 
 .value-label {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -329,8 +329,8 @@
   margin: 0;
   padding: var(--space-2-5) var(--space-3);
   font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
   border-radius: var(--radius-xs);
   overflow-x: auto;
   white-space: pre-wrap;
@@ -366,8 +366,8 @@
   flex: 1;
   padding: var(--space-2-5) var(--space-4);
   border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   cursor: pointer;
   transition: all 0.2s;
   display: flex;

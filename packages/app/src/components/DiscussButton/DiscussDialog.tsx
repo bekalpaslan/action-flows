@@ -42,12 +42,15 @@ export function DiscussDialog({
   const [message, setMessage] = useState('');
   const dialogRef = useRef<HTMLDivElement>(null);
   const messageTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
   // Initialize message when dialog opens
   useEffect(() => {
     if (isOpen) {
       setMessage(`I want to discuss this ${componentName} element`);
-      // Focus the textarea
+      // Save the element that triggered the dialog for focus restoration
+      triggerRef.current = document.activeElement as HTMLElement;
+      // Focus the textarea after render
       setTimeout(() => {
         messageTextareaRef.current?.focus();
       }, 100);
@@ -80,19 +83,67 @@ export function DiscussDialog({
     };
   }, [isOpen]);
 
+  // Focus trap - keep focus within dialog when open
+  useEffect(() => {
+    if (!isOpen || !dialogRef.current) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      const focusableElements = dialogRef.current?.querySelectorAll(
+        'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+
+    dialogRef.current.addEventListener('keydown', handleKeyDown);
+    return () => dialogRef.current?.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent) => {
       if (e.target === e.currentTarget) {
         onClose();
+        // Restore focus to trigger element
+        setTimeout(() => {
+          triggerRef.current?.focus();
+        }, 100);
       }
     },
     [onClose]
   );
 
+  const handleCloseClick = useCallback(() => {
+    onClose();
+    // Restore focus to trigger element
+    setTimeout(() => {
+      triggerRef.current?.focus();
+    }, 100);
+  }, [onClose]);
+
   const handleSend = useCallback(() => {
     if (message.trim() && !isSending) {
       onSend(message.trim());
       onClose();
+      // Restore focus to trigger element
+      setTimeout(() => {
+        triggerRef.current?.focus();
+      }, 100);
     }
   }, [message, isSending, onSend, onClose]);
 
@@ -112,7 +163,7 @@ export function DiscussDialog({
           <h3 id="discuss-dialog-title">Discuss {componentName}</h3>
           <button
             className="discuss-dialog__close-btn"
-            onClick={onClose}
+            onClick={handleCloseClick}
             disabled={isSending}
             aria-label="Close dialog"
           >

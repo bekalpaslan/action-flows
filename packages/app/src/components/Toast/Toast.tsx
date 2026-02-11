@@ -42,12 +42,23 @@ export function Toast({ toast, onDismiss, duration = 3000 }: ToastProps) {
   };
 
   return (
-    <div className={`toast toast-${toast.type}`} role="alert" aria-live="polite">
+    <div
+      className={`toast toast-${toast.type}`}
+      role="status"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
       <span className="toast-icon" aria-hidden="true">{getIcon()}</span>
       <span className="toast-message">{toast.message}</span>
       <button
         className="toast-close"
         onClick={() => onDismiss(toast.id)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onDismiss(toast.id);
+          }
+        }}
         aria-label="Dismiss notification"
       >
         ✕

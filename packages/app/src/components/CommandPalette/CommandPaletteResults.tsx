@@ -98,7 +98,14 @@ export const CommandPaletteResults: React.FC<CommandPaletteResultsProps> = ({
                 role="option"
                 aria-selected={isSelected}
                 onClick={() => onSelect(command)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelect(command);
+                  }
+                }}
                 onMouseEnter={() => onHover(itemIndex)}
+                tabIndex={isSelected ? 0 : -1}
               >
                 <div className="command-palette-item-left">
                   {command.icon && (

@@ -34,15 +34,15 @@
 
 .timeline-view-title {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
   color: #fff;
 }
 
 .timeline-view-stats {
   display: flex;
   gap: 20px;
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 
 .timeline-view-stat {
@@ -53,8 +53,8 @@
 }
 
 .timeline-view-stat-value {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
   color: inherit;
 }
 
@@ -106,27 +106,27 @@
 }
 
 .timeline-step-number {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
   opacity: 0.8;
 }
 
 .timeline-step-action {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .timeline-step-model {
-  font-size: 11px;
+  font-size: var(--text-xs);
   opacity: 0.7;
   text-transform: uppercase;
 }
 
 .timeline-step-duration {
-  font-size: 10px;
+  font-size: var(--text-xs);
   opacity: 0.6;
   margin-top: 2px;
 }
@@ -196,12 +196,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 10px;
-  font-size: 11px;
+  font-size: var(--text-xs);
   color: #999;
 }
 
 .timeline-axis-label {
-  font-weight: 600;
+  font-weight: var(--font-semibold);
 }
 
 /* Legend */
@@ -211,7 +211,7 @@
   padding: 12px 16px;
   border-top: 1px solid #333;
   background: #252525;
-  font-size: 12px;
+  font-size: var(--text-xs);
   flex-wrap: wrap;
 }
 

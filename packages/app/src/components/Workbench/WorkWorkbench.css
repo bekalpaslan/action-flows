@@ -32,7 +32,7 @@
 
 .work-workbench__title {
   font-size: var(--text-lg);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
   margin: 0;
   font-family: var(--font-sans);
@@ -52,7 +52,7 @@
   border: var(--glass-border-default);
   border-radius: var(--panel-radius-md);
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--font-medium);
   box-shadow: var(--panel-glow-default);
   transition: var(--transition-colors);
 }
@@ -84,7 +84,7 @@
 
 .work-workbench__empty-state::before {
   content: '📊';
-  font-size: 4rem;
+  font-size: var(--text-6xl);
   margin-bottom: var(--space-4);
   opacity: 0.3;
   display: block;

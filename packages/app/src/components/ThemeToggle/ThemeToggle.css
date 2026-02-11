@@ -5,7 +5,7 @@
   border-radius: 50%;
   border: none;
   background: transparent;
-  color: var(--color-text-primary, #333);
+  color: var(--color-text-primary, var(--text-secondary));
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -20,7 +20,7 @@
 }
 
 .theme-toggle:active {
-  background-color: var(--color-bg-active, rgba(0, 0, 0, 0.1));
+  background-color: var(--color-bg-active, var(--glass-bg-dark));
 }
 
 .theme-toggle:focus-visible {
@@ -41,15 +41,15 @@
 
 /* Dark mode adjustments */
 [data-theme="dark"] .theme-toggle {
-  color: var(--color-text-primary, #E0E0E0);
+  color: var(--color-text-primary, var(--panel-border-color-subtle));
 }
 
 [data-theme="dark"] .theme-toggle:hover {
-  background-color: var(--color-bg-hover, rgba(255, 255, 255, 0.1));
+  background-color: var(--color-bg-hover, var(--glass-bg-light));
 }
 
 [data-theme="dark"] .theme-toggle:active {
-  background-color: var(--color-bg-active, rgba(255, 255, 255, 0.15));
+  background-color: var(--color-bg-active, var(--glow-color-default));
 }
 
 /* Accessibility: Reduced motion */

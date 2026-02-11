@@ -59,7 +59,7 @@
 .app-sidebar__logo-icon {
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
-  line-height: 1;
+  line-height: var(--leading-tight);
   user-select: none;
   flex-shrink: 0;
   color: var(--app-sidebar-accent-purple);
@@ -183,7 +183,7 @@
   border: var(--input-border-default);
   border-radius: 4px;
   color: var(--input-text-color);
-  font-size: 12px;
+  font-size: var(--text-xs);
   font-weight: var(--font-medium);
   font-family: var(--font-sans);
   transition: var(--transition-colors);
@@ -288,7 +288,7 @@
   border: none;
   background: transparent;
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: var(--font-medium);
   font-family: var(--font-sans);
   text-align: left;
@@ -311,7 +311,7 @@
 .app-sidebar__nav-group-icon {
   font-size: var(--text-xs);
   font-weight: var(--font-semibold);
-  line-height: 1;
+  line-height: var(--leading-tight);
   flex-shrink: 0;
   color: var(--text-tertiary);
   width: 20px;
@@ -370,7 +370,7 @@
   border-left: var(--app-sidebar-accent-bar-width) solid transparent;
   background: transparent;
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-weight: var(--font-medium);
   font-family: var(--font-sans);
   text-align: left;
@@ -414,7 +414,7 @@
 .app-sidebar__nav-item-icon {
   font-size: var(--text-xs);
   font-weight: var(--font-medium);
-  line-height: 1;
+  line-height: var(--leading-tight);
   flex-shrink: 0;
   color: var(--text-tertiary);
   width: 20px;
@@ -433,7 +433,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 14px;
+  line-height: var(--leading-normal);
 }
 
 .app-sidebar--collapsed .app-sidebar__nav-item-label {
@@ -452,7 +452,7 @@
   color: var(--text-primary);
   font-size: var(--text-xs);
   font-weight: var(--font-semibold);
-  line-height: 1;
+  line-height: var(--leading-tight);
   flex-shrink: 0;
 }
 

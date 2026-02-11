@@ -17,13 +17,13 @@
 
 .history-header h2 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
   color: #111827;
 }
 
 .retention-note {
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: #6b7280;
   padding: 4px 8px;
   background-color: #f3f4f6;
@@ -53,7 +53,7 @@
   background-color: white;
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px var(--glass-bg-dark);
   overflow-y: auto;
 }
 
@@ -61,8 +61,8 @@
 .session-list h3,
 .session-details h3 {
   margin: 0 0 12px 0;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   color: #374151;
   text-transform: uppercase;
   letter-spacing: 0.025em;
@@ -95,12 +95,12 @@
   background-color: #eff6ff;
   border-color: #3b82f6;
   color: #1e40af;
-  font-weight: 500;
+  font-weight: var(--font-medium);
 }
 
 .session-id {
   font-family: 'Courier New', monospace;
-  font-size: 12px;
+  font-size: var(--text-xs);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -110,14 +110,14 @@
   padding: 24px;
   text-align: center;
   color: #6b7280;
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
 .empty-state {
   padding: 24px;
   text-align: center;
   color: #9ca3af;
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
 .details-grid {
@@ -128,16 +128,16 @@
 }
 
 .detail-item {
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: #374151;
 }
 
 .detail-item strong {
   display: block;
   margin-bottom: 4px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: #6b7280;
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.025em;
 }
@@ -145,21 +145,21 @@
 .session-summary {
   padding-top: 16px;
   border-top: 1px solid #e5e7eb;
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: #374151;
 }
 
 .session-summary strong {
   display: block;
   margin-bottom: 8px;
-  font-size: 12px;
+  font-size: var(--text-xs);
   color: #6b7280;
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.025em;
 }
 
 .session-summary p {
   margin: 0;
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
 }

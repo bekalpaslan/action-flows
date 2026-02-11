@@ -33,8 +33,8 @@
 }
 
 .settings-workbench__title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
   color: var(--color-text-primary, #111827);
   margin: 0;
 }
@@ -44,8 +44,8 @@
   background-color: var(--color-success-bg, #d1fae5);
   color: var(--color-success-text, #065f46);
   border-radius: 4px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   animation: fadeIn 0.2s ease;
 }
 
@@ -55,8 +55,8 @@
   color: #ffffff;
   border: none;
   border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
@@ -110,8 +110,8 @@
   border-radius: 6px;
   background: transparent;
   color: var(--color-text-secondary, #6b7280);
-  font-size: 0.9375rem;
-  font-weight: 500;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
   text-align: left;
@@ -149,8 +149,8 @@
 }
 
 .settings-section__title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
   color: var(--color-text-primary, #111827);
   margin: 0 0 1.5rem 0;
   padding-bottom: 0.5rem;
@@ -195,15 +195,15 @@
 }
 
 .settings-item__name {
-  font-weight: 500;
+  font-weight: var(--font-medium);
   color: var(--color-text-primary, #111827);
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
 }
 
 .settings-item__description {
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: var(--color-text-secondary, #6b7280);
-  line-height: 1.4;
+  line-height: var(--leading-normal);
 }
 
 .settings-item__control {
@@ -216,7 +216,7 @@
 .settings-input {
   min-width: 280px;
   padding: 0.5rem 0.75rem;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   border: 1px solid var(--color-border, #d1d5db);
   border-radius: 6px;
   background-color: var(--color-bg-primary, #ffffff);
@@ -234,7 +234,7 @@
 .settings-select {
   min-width: 140px;
   padding: 0.5rem 2rem 0.5rem 0.75rem;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   border: 1px solid var(--color-border, #d1d5db);
   border-radius: 6px;
   background-color: var(--color-bg-primary, #ffffff);
@@ -321,8 +321,8 @@
   border-radius: 8px;
   background-color: var(--color-bg-primary, #ffffff);
   color: var(--color-text-secondary, #6b7280);
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
 }
@@ -352,8 +352,8 @@
   border-radius: 6px;
   background-color: var(--color-bg-primary, #ffffff);
   color: var(--color-text-primary, #111827);
-  font-size: 1.125rem;
-  font-weight: 500;
+  font-size: var(--text-lg);
+  font-weight: var(--font-medium);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -369,8 +369,8 @@
 .settings-number-value {
   min-width: 50px;
   text-align: center;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   color: var(--color-text-primary, #111827);
 }
 
@@ -378,8 +378,8 @@
 .settings-btn {
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: background-color 0.15s ease, border-color 0.15s ease;
 }
@@ -409,7 +409,7 @@
 /* Version display */
 .settings-version {
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--color-text-secondary, #6b7280);
   padding: 0.25rem 0.5rem;
   background-color: var(--color-bg-tertiary, #f3f4f6);
@@ -432,8 +432,8 @@
 }
 
 .settings-shortcuts__category-title {
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   color: var(--color-text-primary, #111827);
   margin: 0;
   padding: 0.75rem 1rem;
@@ -459,13 +459,13 @@
 }
 
 .settings-shortcut__action {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   color: var(--color-text-primary, #111827);
 }
 
 .settings-shortcut__keys {
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   padding: 0.25rem 0.5rem;
   background-color: var(--color-bg-tertiary, #f3f4f6);
   border: 1px solid var(--color-border, #e5e7eb);
@@ -480,7 +480,7 @@
   background-color: var(--color-info-bg, #eff6ff);
   border-left: 3px solid var(--color-info, #3b82f6);
   border-radius: 0 6px 6px 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: var(--color-info-text, #1e40af);
 }
 
@@ -513,7 +513,7 @@
 }
 
 [data-theme="dark"] .settings-nav__item:hover {
-  background-color: var(--color-bg-hover, rgba(255, 255, 255, 0.05));
+  background-color: var(--color-bg-hover, var(--glass-bg-medium));
   color: var(--color-text-primary, #f1f5f9);
 }
 
@@ -630,7 +630,7 @@
   }
 
   .settings-workbench__title {
-    font-size: 1.25rem;
+    font-size: var(--text-xl);
   }
 
   .settings-workbench__content {
@@ -652,7 +652,7 @@
     min-width: calc(50% - 0.5rem);
     padding: 0.5rem 0.75rem;
     margin: 0;
-    font-size: 0.8125rem;
+    font-size: var(--text-sm);
     justify-content: center;
   }
 

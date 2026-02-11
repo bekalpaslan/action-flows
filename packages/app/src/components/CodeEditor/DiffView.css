@@ -29,15 +29,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   background-color: #252526;
   border-bottom: 1px solid #3c3c3c;
 }
 
 .diff-view-title {
   margin: 0;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
   color: #cccccc;
   white-space: nowrap;
   overflow: hidden;
@@ -55,8 +55,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
-  line-height: 1;
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
   border-radius: 4px;
   transition: background-color 0.2s;
   flex-shrink: 0;
@@ -80,7 +80,7 @@
   justify-content: center;
   height: 100%;
   color: #cccccc;
-  padding: 20px;
+  padding: var(--space-5);
 }
 
 .diff-error {
@@ -89,10 +89,10 @@
 
 .diff-error .error-message {
   font-family: monospace;
-  font-size: 12px;
-  margin-top: 8px;
+  font-size: var(--text-xs);
+  margin-top: var(--space-2);
   background-color: #3c3c3c;
-  padding: 8px;
+  padding: var(--space-2);
   border-radius: 4px;
   max-width: 600px;
 }
@@ -100,10 +100,10 @@
 .diff-warning {
   background-color: #3c3c3c;
   color: #f0ad4e;
-  padding: 12px;
-  margin: 12px;
+  padding: var(--space-3);
+  margin: var(--space-3);
   border-radius: 4px;
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 
 .diff-warning p {

@@ -71,7 +71,7 @@
 .dossier-creation-dialog-header h3 {
   margin: 0;
   font-size: var(--text-base);
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
   font-family: var(--font-sans);
 }
@@ -79,7 +79,7 @@
 .close-button {
   background: transparent;
   border: none;
-  font-size: 24px;
+  font-size: var(--text-2xl);
   color: var(--text-tertiary);
   cursor: pointer;
   padding: 0;
@@ -124,7 +124,7 @@ form {
 }
 
 .form-label {
-  font-weight: 600;
+  font-weight: var(--font-semibold);
   font-size: var(--text-sm);
   color: var(--text-primary);
   font-family: var(--font-sans);
@@ -161,7 +161,7 @@ form {
   resize: vertical;
   font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
   font-size: var(--text-sm);
-  line-height: 1.5;
+  line-height: var(--leading-normal);
 }
 
 .field-hint {
@@ -192,7 +192,7 @@ form {
 .btn-remove-target {
   background: transparent;
   border: none;
-  font-size: 20px;
+  font-size: var(--text-xl);
   color: var(--text-tertiary);
   cursor: pointer;
   padding: 0;
@@ -242,7 +242,7 @@ form {
   border: none;
   border-radius: var(--btn-radius-md);
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--font-medium);
   cursor: pointer;
   transition: var(--transition-all);
   white-space: nowrap;
