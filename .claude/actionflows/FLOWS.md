@@ -15,6 +15,7 @@
 |------|---------|-------|
 | bug-triage/ | Structured bug fix | analyze → code → test → review |
 | code-and-review/ | Refactor and review code | code → review → second-opinion/ → (loop if needed) |
+| cleanup/ | Human-directed repository cleanup | analyze → plan → human gate → code → review → second-opinion/ → commit |
 
 ## explore
 
@@ -50,3 +51,4 @@
 | Flow | Purpose | Chain |
 |------|---------|-------|
 | planning/ | Structured roadmap review and prioritization | analyze → plan → human gate → code → commit |
+| learning-dissolution/ | Process accumulated learnings into doc updates, agent patches, template fixes | analyze → plan → human gate → code×N (parallel) → review → commit |

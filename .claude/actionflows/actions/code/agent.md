@@ -83,6 +83,17 @@ Format:
 - Notes: {any issues}
 ```
 
+## Output File Rules
+
+**CRITICAL:** Write ALL output files to your assigned log folder ONLY.
+
+- Write changes.md, SUMMARY.md, IMPLEMENTATION.md etc. to your log folder
+- NEVER write files to the repository root directory
+- NEVER write report files (*.json, *.txt, *.md) to arbitrary locations
+- The ONLY files you modify outside your log folder are the project source code files explicitly listed in your task
+
+Exception: Project code files (packages/**) that are part of your implementation task.
+
 ---
 
 ## Project Context

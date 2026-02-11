@@ -23,7 +23,7 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 **Purpose:** Bug fixes, refactoring, and housekeeping
 **Icon:** 🔧
 **Triggers:** fix bug, resolve issue, patch, refactor, optimize, cleanup, improve performance, technical debt, debug, repair
-**Flows:** bug-triage/, code-and-review/
+**Flows:** bug-triage/, code-and-review/, cleanup/
 **Examples:**
 - "fix the login bug"
 - "refactor the session storage"
@@ -125,6 +125,7 @@ These contexts receive content automatically — not routed by user intent.
 | "implement X" / "add feature X" | work | code-and-review/ |
 | "fix bug X" / "X is broken" | maintenance | bug-triage/ |
 | "refactor X" | maintenance | code-and-review/ |
+| "clean up X" / "remove artifacts" / "housekeeping" / "tidy up" / "delete leftovers" | maintenance | cleanup/ |
 | "audit security" / "security scan" | review | audit-and-fix/ |
 | "review PR" / "check quality" | review | audit-and-fix/ |
 | "run tests" | — | test/ (direct action) |

@@ -43,7 +43,7 @@ This entire system is open source and fully mutable. ActionFlows is a **producti
 
 The product is the IDEA: software that evolves through use, where human will reshapes computational physics. This template proves the thesis. Your fork proves it again. The only enemy is stagnation, not mutation.
 
-Users have complete sovereignty over all five layers (see LIVING_SYSTEM.md). No asterisks.
+Users have complete sovereignty over all five layers (see docs/living/SYSTEM.md). No asterisks.
 
 ### Open Source Identity
 
@@ -110,7 +110,7 @@ The contract can change. Formats can evolve. But changes must be deliberate and 
 
 **Golden rule:** If the dashboard PARSES it → contract-defined (sacred). If the dashboard READS it → not contract-defined (evolve freely).
 
-For the complete architecture of how these layers interact, see `docs/LIVING_SYSTEM.md`.
+For the complete architecture of how these layers interact, see `docs/living/SYSTEM.md`.
 
 ---
 
@@ -214,6 +214,10 @@ Before applying the full delegation rules below, check if this request qualifies
 
 ### 1a. Post-Work Commit
 Every chain or quick-triage fix that produces file changes MUST end with a `commit/` action. The orchestrator also adds a registry line to `logs/INDEX.md` after the commit completes.
+
+### 1b. Post-Commit Verification
+After every `git commit`, run `git status --porcelain | grep '^??'` to check for untracked files.
+If untracked files match agent output patterns (migration reports, test logs, backup files) → warn the human and offer to clean up.
 
 ### 2. Stay Lightweight
 - Don't read large files or agent outputs (except during quick triage)

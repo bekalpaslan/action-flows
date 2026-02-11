@@ -43,3 +43,33 @@ out/
 .worktrees/
 .security-key
 logs/security/
+
+# ActionFlows agent logs (keep INDEX.md, ignore timestamped folders)
+.claude/actionflows/logs/*/
+
+# Human workspace (private ideas)
+.claude/actionflows/human/
+
+# Test artifacts
+*.backup
+test-output.log
+test-output.txt
+test-summary.txt
+backend-test-full.log
+
+# Build artifacts
+packages/app/release/
+
+# Migration reports (agent artifacts)
+*-migration-report.json
+MIGRATION_*.md
+MIGRATION_*.txt
+PHASE2_*.md
+VERIFICATION_REPORT.txt
+CHANGES_SUMMARY.txt
+FILES_CREATED_AND_MODIFIED.txt
+IMPLEMENTATION_COMPLETE.txt
+IMPLEMENTATION_DETAILS.txt
+
+# Windows-specific
+nul

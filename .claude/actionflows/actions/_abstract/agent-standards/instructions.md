@@ -69,7 +69,7 @@ If your action produces structured output consumed by the dashboard (review repo
 - Dashboard shows **"parsing incomplete"** and degrades gracefully
 - Harmony detector **broadcasts violations** via WebSocket (visible in dashboard)
 
-**Evolution process:** See `.claude/actionflows/docs/CONTRACT_EVOLUTION.md` for adding/modifying formats
+**Evolution process:** See `docs/architecture/CONTRACT_EVOLUTION.md` for adding/modifying formats
 
 **Validation command:**
 ```bash
@@ -105,3 +105,11 @@ Before finishing, ALL agents must verify:
 - [ ] Description is kebab-case, no spaces or special chars
 
 **Why this matters:** Empty log folders corrupt the execution registry (INDEX.md). Agents MUST validate their output exists before completing.
+
+## Cleanup Protocol
+
+Before completing execution:
+1. Verify ALL output files are in your assigned log folder
+2. Verify you did NOT write any files to repository root
+3. Remove any .tmp, .backup, or work-in-progress files you created
+4. List all files created in your output summary
