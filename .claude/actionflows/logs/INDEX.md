@@ -8,6 +8,7 @@
 |-------|---------|---------|
 | Harmony | [`HARMONY_CATALOG.md`](../HARMONY_CATALOG.md) | Logs organized by data source (audit data, analysis, implementations, reviews, tests, prevention) and workbench assignment. Reference for harmony violations, root causes, and preventive guardrails. |
 | Gate Structure | [`GATE_STRUCTURE.md`](../GATE_STRUCTURE.md) | Map of all 14 orchestrator execution gates across 5 phases, 12 log points. Shows logging status (🟢 full/🟡 partial/🔴 missing), gaps analysis, and validator CLI design. Reference for "what logs should exist here?" |
+| Logging Standards | [`LOGGING_STANDARDS_CATALOG.md`](../LOGGING_STANDARDS_CATALOG.md) | Comprehensive logging specification: 5 log levels (TRACE-ERROR), 7 log types, per-action requirements, gate logging specs, configurable trace depth, tool usage tracking, subagent reasoning capture, data flow monitoring. Complete examples, JSON schema, CLI tools (logs:validate, logs:audit, logs:query), and Phase 1-4 implementation roadmap. |
 
 ---
 
@@ -15,6 +16,7 @@
 
 | Date | Description | Pattern | Outcome |
 |------|-------------|---------|---------|
+| 2026-02-11 | Living Universe Phase 4 Batches A-C — Chain Execution Visualization foundation (chain-to-region mapping, spark broadcasting, spark animation) | analyze → plan → human gate → code/shared (A) → code/backend+frontend (B+C parallel) → review → second-opinion → commit | Success — 11 files, +1,476/-1, chainRegionMapping (80+ mappings, 12 tests), SparkBroadcaster (100ms+5% throttling, 12 tests), SparkAnimation (SVG animateMotion, 13 tests), APPROVED AS-IS, 36/36 tests passing, Batches D-F deferred (0217b53) |
 | 2026-02-11 | Cosmic-to-Code Structure Alignment — Full 8-phase restructuring: docs (cosmic/ + living/ dirs), types (StarId/ToolId/HarmonySpace), configs (STAR_CONFIGS/TOOL_CONFIGS/HARMONY_CONFIG), components (Stars/Tools/Harmony/ folders, 14 renames), routing (tools non-routable), backend (StarId enforcement), missing entities (MoonOrbit/SparkParticle/GateCheckpoint), LIVING_SYSTEM.md rewrite | analyze×2 → plan → human gate → code×8 (phased: 0,A,B,C,D,E,F,G,H) | Success — 58 files, +14,900 lines, full cosmic-to-code 1:1 alignment, type-check + build pass (d2c43d6) |
 | 2026-02-11 | Preventive Harmony Guardrails — 8 architectural rules + CLI tool + pre-commit hook to prevent 72/100 degradation recurrence | code×5 (parallel) → review → second-opinion → commit | Success — 9 files, +395 lines, all 8 gaps implemented (lifecycle checkpoint, auto-validation, status definitions, harmony:enforce CLI, agent standard #13, format work detection, evolution enforcement, learning surface feedback), APPROVED 100% (eead477) |
 | 2026-02-11 | Repository artifact cleanup + prevention + cleanup/ flow — 28+ garbage files deleted, .gitignore (8 patterns), 4-layer prevention (agent.md, standards, orchestrator, git), cleanup/ flow registered in maintenance | analyze → human gate → code×2 (parallel) → review → second-opinion → commit | Success — 17 files, +1,667/-876, APPROVED 98% + ENDORSED, cleanup/ flow registered (7675f3e) |
