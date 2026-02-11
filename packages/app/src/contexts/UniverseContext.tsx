@@ -69,6 +69,9 @@ interface UniverseContextType {
   /** Target region ID for zoom animation */
   zoomTargetRegionId: RegionId | null;
 
+  /** Target workbench ID from last region navigation */
+  targetWorkbenchId: WorkbenchId | null;
+
   /** Clear zoom target after animation completes */
   clearZoomTarget: () => void;
 }
@@ -93,6 +96,7 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [zoomTargetRegionId, setZoomTargetRegionId] = useState<RegionId | null>(null);
+  const [targetWorkbenchId, setTargetWorkbenchId] = useState<WorkbenchId | null>(null);
 
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -132,7 +136,7 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
   //   return () => { /* cleanup */ };
   // }, []);
 
-  // Navigation: Navigate to region (sets active workbench)
+  // Navigation: Navigate to region (stores target workbench, triggers zoom)
   const navigateToRegion = useCallback(
     (regionId: RegionId) => {
       if (!universe) return;
@@ -149,14 +153,13 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
         return;
       }
 
-      // NOTE: This requires WorkbenchContext to be available.
-      // For now, we'll just log the navigation intent.
-      // In full implementation, this would call setActiveWorkbench(region.workbenchId)
-      console.log(`[UniverseContext] Navigate to region ${regionId} (workbench: ${region.workbenchId})`);
+      // Store target workbench ID for WorkbenchLayout to pick up
+      setTargetWorkbenchId(region.workbenchId);
 
-      // TODO: Integrate with WorkbenchContext when ready
-      // const { setActiveWorkbench } = useWorkbenchContext();
-      // setActiveWorkbench(region.workbenchId);
+      // Trigger zoom animation
+      setZoomTargetRegionId(regionId);
+
+      console.log(`[UniverseContext] Navigate to region ${regionId} (workbench: ${region.workbenchId})`);
     },
     [universe]
   );
@@ -225,6 +228,7 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
   // Clear zoom target
   const clearZoomTarget = useCallback(() => {
     setZoomTargetRegionId(null);
+    setTargetWorkbenchId(null);
   }, []);
 
   const value = useMemo(
@@ -241,6 +245,7 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
       isRegionAccessible,
       refreshUniverse,
       zoomTargetRegionId,
+      targetWorkbenchId,
       clearZoomTarget,
     }),
     [
@@ -256,6 +261,7 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
       isRegionAccessible,
       refreshUniverse,
       zoomTargetRegionId,
+      targetWorkbenchId,
       clearZoomTarget,
     ]
   );

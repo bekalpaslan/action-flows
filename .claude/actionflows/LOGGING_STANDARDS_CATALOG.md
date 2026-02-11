@@ -633,7 +633,258 @@ Result: 17/17 parsers implemented
 
 ---
 
-## Part 4: Gate Logging Requirements
+## Part 4: Gate Checkpoint Logging Requirements
+
+**Background:** Orchestrator outputs are validated at backend gate checkpoints. This section documents checkpoint-level logging for the verification infrastructure.
+
+### 4.1 Gate Checkpoint Overview
+
+**Architecture Pattern:**
+```
+Orchestrator outputs Format X.Y (e.g., Chain Compilation)
+            ↓
+Backend parses at gate checkpoint (e.g., Gate 4)
+            ↓
+Validation passes/fails
+            ↓
+Gate trace stored in Harmony (Redis, 7d TTL)
+            ↓
+Frontend displays via GateTraceViewer component
+```
+
+**Checkpoint Service:** `packages/backend/src/services/gateCheckpoint.ts`
+**Trace Schema:** `packages/shared/src/types/gateTrace.ts`
+
+### 4.2 Gate 2: Route to Context Checkpoint
+
+**Trigger:** Orchestrator outputs context routing decision (e.g., "Routing to work context")
+
+**Checkpoint Logs to Produce:**
+- `orchestrator-decision` (routing decision)
+- `gate-passage` (entering/exiting gate)
+
+**Backend Checkpoint Validation:**
+- Extract context name from orchestrator output prose
+- Validate context exists in enum (work | maintenance | explore | review | settings | pm)
+- Store GateTrace with validation result
+
+**Harmony Storage:**
+```
+gate:gate-02:{chainId}:{timestamp}
+  gateId: "gate-02"
+  gateName: "Route to Context"
+  selected: "work"
+  confidence: "high"
+  validationResult: { passed: true, violations: [], harmonyScore: 100 }
+```
+
+**Trace Depth (Backend):**
+- INFO: Selected context only, passed/failed status
+- DEBUG: + all context alternatives scored
+- TRACE: + keyword extraction details, stopword removal logic
+
+---
+
+### 4.3 Gate 4: Compile Chain Checkpoint
+
+**Trigger:** Orchestrator outputs Format 1.1 (Chain Compilation Table)
+
+**Checkpoint Logs to Produce:**
+- `orchestrator-decision` (which flow selected)
+- `chain-compilation` (chain structure)
+- `gate-passage` (entering/exiting)
+- `configuration` (config injected into agents)
+
+**Backend Checkpoint Validation:**
+- Parse Format 1.1 using existing `parseChainCompilation()` parser
+- Validate required fields: title, table columns, execution mode
+- Check step counts and dependencies
+- Store GateTrace with parsed chain metadata
+
+**Harmony Storage:**
+```
+gate:gate-04:{chainId}:{timestamp}
+  gateId: "gate-04"
+  gateName: "Compile Chain"
+  selected: "3 steps, Sequential execution"
+  parsedFormat: "Format 1.1"
+  validationResult: { passed: true, violations: [], harmonyScore: 100 }
+  metadata: {
+    stepCount: 3,
+    executionMode: "Sequential",
+    flowSource: "code-and-review/"
+  }
+```
+
+**Trace Depth (Backend):**
+- INFO: Chain steps only, passed/failed
+- DEBUG: + rationale, alternatives considered
+- TRACE: + parallelization analysis, dependency resolution details, scoring of discarded flows
+
+---
+
+### 4.4 Gate 6: Step Boundary Evaluation Checkpoint
+
+**Trigger:** Orchestrator outputs Format 2.1 (Step Completion Announcement)
+
+**Checkpoint Logs to Produce:**
+- `orchestrator-decision` (stay/recompile/halt decision)
+- `gate-passage` (checkpoint result)
+- `agent-reasoning` (6-trigger evaluation)
+
+**Backend Checkpoint Validation:**
+- Parse Format 2.1 using existing `parseStepCompletion()` parser
+- Check for 6-trigger signals in result text: [SIGNAL], [PATTERN], [DEPENDENCY], [QUALITY], [REDESIGN], [REUSE]
+- Determine if any triggers require chain recompilation
+- Store GateTrace with trigger analysis
+
+**Harmony Storage:**
+```
+gate:gate-06:{chainId}:{stepId}:{timestamp}
+  gateId: "gate-06"
+  gateName: "Step Boundary Evaluation"
+  selected: "Continue to next step"
+  validationResult: { passed: true, violations: [], harmonyScore: 100 }
+  metadata: {
+    triggersDetected: 2,
+    signals: ["PATTERN", "DEPENDENCY"],
+    nextAction: "continue"
+  }
+```
+
+**Trace Depth (Backend):**
+- INFO: Decision only (continue vs. recompile)
+- DEBUG: + 6-trigger evaluation results, which triggers fired
+- TRACE: + detailed trigger matching logic, alternative chains considered
+
+---
+
+### 4.5 Gate 9: Agent Output Validation Checkpoint
+
+**Trigger:** Agent completes execution, output file written to log folder
+
+**Checkpoint Logs to Produce:**
+- `agent-reasoning` (validation logic)
+- `tool-usage` (reading output file)
+- `data-flow` (parsing agent output)
+
+**Backend Checkpoint Validation:**
+- Delegate to AgentValidator service (`packages/backend/src/services/agentValidator.ts`)
+- Determine expected format based on action type (review → Format 5.1, analyze → Format 5.2, etc.)
+- Parse output file and validate required fields
+- Calculate harmony score based on critical/warning violations
+- Store GateTrace with validation result
+
+**Harmony Storage:**
+```
+gate:gate-09:{chainId}:{stepId}:{timestamp}
+  gateId: "gate-09"
+  gateName: "Agent Output Validation"
+  selected: "PASS" or "FAIL"
+  validationResult: {
+    passed: true,
+    violations: [],
+    harmonyScore: 100,
+    formatType: "Format 5.1"
+  }
+  metadata: {
+    actionType: "review/code",
+    outputPath: ".claude/actionflows/logs/review/.../report.md",
+    requiredFields: ["verdict", "score", "findings"],
+    presentFields: ["verdict", "score", "findings", "summary"]
+  }
+```
+
+**Trace Depth (Backend):**
+- INFO: Pass/fail status, harmony score
+- DEBUG: + violations list, validation details, missing fields
+- TRACE: + parsing details, field mapping, alternative validation rules
+
+---
+
+### 4.6 Gate 13: Learning Surface Checkpoint
+
+**Trigger:** Orchestrator outputs Format 3.2 (Learning Surface Presentation)
+
+**Checkpoint Logs to Produce:**
+- `orchestrator-decision` (issue categorization)
+- `gate-passage` (learning recorded)
+
+**Backend Checkpoint Validation:**
+- Parse Format 3.2 learning output
+- Validate Issue, Root Cause, Suggestion fields present
+- Extract action type and learning ID
+- Store GateTrace with learning metadata
+
+**Harmony Storage:**
+```
+gate:gate-13:{chainId}:{timestamp}
+  gateId: "gate-13"
+  gateName: "Learning Surface"
+  selected: "RECORDED"
+  validationResult: { passed: true, violations: [], harmonyScore: 100 }
+  metadata: {
+    learning_id: "L012",
+    action_type: "code/backend",
+    issue: "...",
+    root_cause: "...",
+    suggestion: "..."
+  }
+```
+
+**Trace Depth (Backend):**
+- INFO: Learning recorded, summary
+- DEBUG: + full Issue/Root/Suggestion text
+- TRACE: + learning categorization, related learnings (L000-L011)
+
+---
+
+### 4.7 General Gate Checkpoint Logs
+
+**All gates produce the following logs:**
+
+| Log Type | Level | Required? | Content |
+|----------|-------|-----------|---------|
+| gate-passage | INFO | ✅ Yes | Gate ID, name, status (entering/exiting) |
+| validation-result | INFO | ✅ Yes | Passed/failed, violations count, harmony score |
+| gate-trace | DEBUG | ✅ Yes | Structured GateTrace record for Harmony storage |
+| parse-debug | TRACE | Optional | Parser-specific debugging (tokens, scores, etc.) |
+
+**GateTrace Fields (all gates):**
+```typescript
+interface GateTrace {
+  gateId: "gate-01" | "gate-02" | ... | "gate-14";
+  gateName: string;                    // Human-readable name
+  timestamp: number;                   // Unix timestamp
+  chainId: ChainId;                    // Chain context
+  stepId?: StepId;                     // Optional step context
+  traceLevel: "TRACE" | "DEBUG" | "INFO" | "WARN" | "ERROR";
+
+  // Checkpoint context
+  orchestratorOutput: string;          // Raw orchestrator output (first 500 chars)
+  parsedFormat?: string;               // e.g., "Format 1.1"
+
+  // Decision context
+  input: string;                       // What triggered this gate
+  alternatives?: string[];             // Other options considered
+  selected: string;                    // What was chosen
+  rationale: string;                   // Why this decision
+  confidence: "high" | "medium" | "low";
+
+  // Validation result
+  validationResult?: {
+    passed: boolean;
+    violations: string[];              // List of issues
+    harmonyScore: number;              // 0-100
+  };
+
+  // Metadata
+  duration?: number;                   // milliseconds
+  metadata?: Record<string, unknown>;  // Gate-specific metadata
+}
+```
+
+---
 
 ### Gate 2: Route to Context
 

@@ -35,8 +35,36 @@ When agents or orchestrator refer to "implementing Format X", the target is 100%
 **Evolution Process:** See `docs/architecture/CONTRACT_EVOLUTION.md`
 **Code API Reference:** See `packages/shared/src/contract/README.md`
 **Parser Priority:** See `packages/app/docs/PARSER_PRIORITY.md`
+**Gate Checkpoints & Verification:** See `docs/architecture/GATE_LOGGING.md`
+**Orchestrator Observability:** See `.claude/actionflows/ORCHESTRATOR_OBSERVABILITY.md`
 
 **Golden Rule:** If the dashboard PARSES it → contract-defined (sacred). If the dashboard READS it → not contract-defined (evolve freely).
+
+---
+
+## Gate Checkpoint References
+
+**Backend Verification Architecture:**
+
+All orchestrator outputs defined in this contract are validated at backend gate checkpoints. Formats with P-priority values indicate which gates perform validation:
+
+| Format | Gate | Validation | Trace Storage |
+|--------|------|-----------|---|
+| **1.1** Chain Compilation Table | Gate 4 | Parse table structure, validate step counts | Harmony (7d TTL) |
+| **1.2** Chain Execution Start | Gate 7 | Parse step metadata, validate action paths | Harmony (7d TTL) |
+| **2.1** Step Completion Announcement | Gate 6 | Parse completion, check 6-trigger signals | Harmony (7d TTL) |
+| **3.2** Learning Surface Presentation | Gate 13 | Validate Issue/Root/Suggestion structure | Harmony (7d TTL) |
+| **4.1** Registry Update | Gate 12 | Verify INDEX.md entry format | Harmony (7d TTL) |
+
+**Validation Architecture:**
+- **Orchestrator Role:** Produce contract-compliant outputs naturally (zero burden)
+- **Backend Role:** Parse outputs at gate checkpoints, validate format compliance
+- **Harmony Role:** Store gate traces for auditability, detect violations (→ healing)
+- **Frontend Role:** Display gate traces and validation results in dashboard
+
+**Graceful Degradation:** If backend cannot parse an orchestrator output, it logs a violation but does NOT block execution. This creates a maintenance signal (visible in Harmony workbench) rather than a cascade failure.
+
+See `docs/architecture/GATE_LOGGING.md` § Zero-Burden Architecture for complete explanation.
 
 ---
 

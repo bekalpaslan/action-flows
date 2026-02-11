@@ -14,14 +14,17 @@ import { useActiveChain } from '../../hooks/useActiveChain';
 import type { SessionId } from '@afw/shared';
 import { HybridFlowViz } from '../SessionTile/HybridFlowViz';
 import { ReactFlowProvider } from 'reactflow';
+import { ChatMinimizedIndicator } from './ChatMinimizedIndicator';
 import './SlidingChatWindow.css';
 
 interface SlidingChatWindowProps {
   children: React.ReactNode;
+  /** Embedded mode disables sliding mechanics, renders as full-width panel */
+  embedded?: boolean;
 }
 
-export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children }) => {
-  const { isOpen, chatWidth, source, sessionId, closeChat, setChatWidth, setSessionId } = useChatWindowContext();
+export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, embedded = false }) => {
+  const { isOpen, chatWidth, source, sessionId, closeChat, setChatWidth, setSessionId, isMinimized, unreadCount, minimizeChat, restoreChat } = useChatWindowContext();
   const { sessions } = useSessionContext();
   const panelRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<'chat' | 'flow'>('chat');
@@ -72,23 +75,34 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children }
     setChatWidth(40);
   }, [setChatWidth]);
 
+  // In embedded mode, always render at full width without sliding mechanics
+  const effectiveWidth = embedded ? '100%' : (isOpen ? `${chatWidth}%` : '0%');
+  const showResizeHandle = !embedded;
+
+  // If minimized, show floating indicator instead of full chat
+  if (isMinimized && !embedded) {
+    return <ChatMinimizedIndicator unreadCount={unreadCount} onClick={restoreChat} />;
+  }
+
   return (
     <div
       ref={panelRef}
-      className="sliding-chat-window"
-      style={{ width: isOpen ? `${chatWidth}%` : '0%' }}
+      className={`sliding-chat-window ${embedded ? 'sliding-chat-window--embedded' : ''}`}
+      style={{ width: effectiveWidth }}
     >
-      <div
-        className="sliding-chat-window__resize-handle"
-        onMouseDown={handleResizeStart}
-        onDoubleClick={handleDoubleClick}
-        role="separator"
-        aria-orientation="vertical"
-        aria-label="Resize chat panel"
-        aria-valuenow={Math.round(chatWidth)}
-        aria-valuemin={25}
-        aria-valuemax={60}
-      />
+      {showResizeHandle && (
+        <div
+          className="sliding-chat-window__resize-handle"
+          onMouseDown={handleResizeStart}
+          onDoubleClick={handleDoubleClick}
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize chat panel"
+          aria-valuenow={Math.round(chatWidth)}
+          aria-valuemin={25}
+          aria-valuemax={60}
+        />
+      )}
       <div className="sliding-chat-window__header">
         <span className="sliding-chat-window__title">Chat</span>
         {source && (
@@ -107,6 +121,16 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children }
             </option>
           ))}
         </select>
+        {!embedded && (
+          <button
+            className="sliding-chat-window__minimize-btn"
+            onClick={minimizeChat}
+            aria-label="Minimize chat panel"
+            type="button"
+          >
+            −
+          </button>
+        )}
         <button
           className="sliding-chat-window__close-btn"
           onClick={closeChat}

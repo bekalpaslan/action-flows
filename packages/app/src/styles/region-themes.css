@@ -1,0 +1,315 @@
+/**
+ * Region-Specific Themes
+ *
+ * Phase 5 Batch C: 13 distinct region themes for RegionStar and RegionFocusView
+ * Each region gets:
+ * - Layer color DNA (from cosmic-tokens.css)
+ * - Unique shape language (border-radius variations)
+ * - Consistent cosmic aesthetic
+ *
+ * Layer color assignments:
+ * - Philosophy layer (green #6bcb77): work, maintenance, explore, review, pm
+ * - Physics layer (blue #4d96ff): intel, harmony
+ * - Experience layer (purple #9b59b6): canvas, editor
+ * - Platform layer (red #ff6b6b): settings, coverage
+ * - Template layer (yellow #ffd93d): archive, respect
+ */
+
+/* ============================================================================
+   PHILOSOPHY LAYER (Green) — Strategic Work & Learning
+   ============================================================================ */
+
+/* Work: Sharp corners (precision, focus) */
+.region-star--work .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-philosophy) 0%, transparent 70%);
+}
+
+.region-star--work .region-star__center {
+  border-radius: 4px;
+  box-shadow: 0 0 12px rgba(107, 203, 119, 0.6);
+}
+
+.region-focus--work {
+  background: linear-gradient(135deg, rgba(107, 203, 119, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--work .region-focus__return {
+  border-color: var(--cosmic-layer-philosophy);
+}
+
+/* Maintenance: Rounded corners (iterative, continuous) */
+.region-star--maintenance .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-philosophy) 0%, transparent 70%);
+}
+
+.region-star--maintenance .region-star__center {
+  border-radius: 16px;
+  box-shadow: 0 0 12px rgba(107, 203, 119, 0.6);
+}
+
+.region-focus--maintenance {
+  background: linear-gradient(135deg, rgba(107, 203, 119, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--maintenance .region-focus__return {
+  border-color: var(--cosmic-layer-philosophy);
+}
+
+/* Explore: Circular (boundless, discovery) */
+.region-star--explore .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-philosophy) 0%, transparent 70%);
+}
+
+.region-star--explore .region-star__center {
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(107, 203, 119, 0.6);
+}
+
+.region-focus--explore {
+  background: linear-gradient(135deg, rgba(107, 203, 119, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--explore .region-focus__return {
+  border-color: var(--cosmic-layer-philosophy);
+}
+
+/* Review: Octagon (structured inspection) */
+.region-star--review .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-philosophy) 0%, transparent 70%);
+}
+
+.region-star--review .region-star__center {
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(107, 203, 119, 0.6);
+}
+
+.region-focus--review {
+  background: linear-gradient(135deg, rgba(107, 203, 119, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--review .region-focus__return {
+  border-color: var(--cosmic-layer-philosophy);
+}
+
+/* PM: Hexagon (planning, organization) */
+.region-star--pm .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-philosophy) 0%, transparent 70%);
+}
+
+.region-star--pm .region-star__center {
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(107, 203, 119, 0.6);
+}
+
+.region-focus--pm {
+  background: linear-gradient(135deg, rgba(107, 203, 119, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--pm .region-focus__return {
+  border-color: var(--cosmic-layer-philosophy);
+}
+
+/* ============================================================================
+   PHYSICS LAYER (Blue) — Intelligence & Harmony
+   ============================================================================ */
+
+/* Intel: Diamond (sharp intelligence) */
+.region-star--intel .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-physics) 0%, transparent 70%);
+}
+
+.region-star--intel .region-star__center {
+  border-radius: 2px;
+  transform: rotate(45deg);
+  box-shadow: 0 0 12px rgba(77, 150, 255, 0.6);
+}
+
+.region-focus--intel {
+  background: linear-gradient(135deg, rgba(77, 150, 255, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--intel .region-focus__return {
+  border-color: var(--cosmic-layer-physics);
+}
+
+/* Harmony: Perfect circle (unity, balance) */
+.region-star--harmony .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-physics) 0%, transparent 70%);
+}
+
+.region-star--harmony .region-star__center {
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(77, 150, 255, 0.7);
+}
+
+.region-focus--harmony {
+  background: linear-gradient(135deg, rgba(77, 150, 255, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--harmony .region-focus__return {
+  border-color: var(--cosmic-layer-physics);
+}
+
+/* ============================================================================
+   EXPERIENCE LAYER (Purple) — Interface & Creation
+   ============================================================================ */
+
+/* Canvas: Soft rounded (creative flow) */
+.region-star--canvas .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-experience) 0%, transparent 70%);
+}
+
+.region-star--canvas .region-star__center {
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(155, 89, 182, 0.6);
+}
+
+.region-focus--canvas {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--canvas .region-focus__return {
+  border-color: var(--cosmic-layer-experience);
+}
+
+/* Editor: Rectangle (structured editing) */
+.region-star--editor .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-experience) 0%, transparent 70%);
+}
+
+.region-star--editor .region-star__center {
+  border-radius: 3px;
+  box-shadow: 0 0 12px rgba(155, 89, 182, 0.6);
+}
+
+.region-focus--editor {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--editor .region-focus__return {
+  border-color: var(--cosmic-layer-experience);
+}
+
+/* ============================================================================
+   PLATFORM LAYER (Red) — Configuration & Infrastructure
+   ============================================================================ */
+
+/* Settings: Gear-like (mechanical, precise) */
+.region-star--settings .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-platform) 0%, transparent 70%);
+}
+
+.region-star--settings .region-star__center {
+  border-radius: 5px;
+  box-shadow: 0 0 12px rgba(255, 107, 107, 0.6);
+}
+
+.region-focus--settings {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--settings .region-focus__return {
+  border-color: var(--cosmic-layer-platform);
+}
+
+/* Coverage: Octagon (protective shell) */
+.region-star--coverage .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-platform) 0%, transparent 70%);
+}
+
+.region-star--coverage .region-star__center {
+  border-radius: 7px;
+  box-shadow: 0 0 12px rgba(255, 107, 107, 0.6);
+}
+
+.region-focus--coverage {
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--coverage .region-focus__return {
+  border-color: var(--cosmic-layer-platform);
+}
+
+/* ============================================================================
+   TEMPLATE LAYER (Yellow) — Archive & History
+   ============================================================================ */
+
+/* Archive: Square (stable storage) */
+.region-star--archive .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-template) 0%, transparent 70%);
+}
+
+.region-star--archive .region-star__center {
+  border-radius: 0;
+  box-shadow: 0 0 12px rgba(255, 217, 61, 0.6);
+}
+
+.region-focus--archive {
+  background: linear-gradient(135deg, rgba(255, 217, 61, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--archive .region-focus__return {
+  border-color: var(--cosmic-layer-template);
+}
+
+/* Respect: Rounded square (reverent preservation) */
+.region-star--respect .region-star__glow {
+  background: radial-gradient(circle, var(--cosmic-layer-template) 0%, transparent 70%);
+}
+
+.region-star--respect .region-star__center {
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(255, 217, 61, 0.6);
+}
+
+.region-focus--respect {
+  background: linear-gradient(135deg, rgba(255, 217, 61, 0.05) 0%, var(--app-bg-base) 100%);
+}
+
+.region-focus--respect .region-focus__return {
+  border-color: var(--cosmic-layer-template);
+}
+
+/* ============================================================================
+   HOVER & INTERACTION STATES
+   ============================================================================ */
+
+/* Enhanced glow on hover for themed regions */
+.region-star--work:hover .region-star__glow,
+.region-star--maintenance:hover .region-star__glow,
+.region-star--explore:hover .region-star__glow,
+.region-star--review:hover .region-star__glow,
+.region-star--pm:hover .region-star__glow {
+  filter: brightness(1.3) saturate(1.2);
+}
+
+.region-star--intel:hover .region-star__glow,
+.region-star--harmony:hover .region-star__glow {
+  filter: brightness(1.3) saturate(1.2);
+}
+
+.region-star--canvas:hover .region-star__glow,
+.region-star--editor:hover .region-star__glow {
+  filter: brightness(1.3) saturate(1.2);
+}
+
+.region-star--settings:hover .region-star__glow,
+.region-star--coverage:hover .region-star__glow {
+  filter: brightness(1.3) saturate(1.2);
+}
+
+.region-star--archive:hover .region-star__glow,
+.region-star--respect:hover .region-star__glow {
+  filter: brightness(1.3) saturate(1.2);
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+
+/* Respect prefers-reduced-motion for themed animations */
+@media (prefers-reduced-motion: reduce) {
+  .region-star--intel .region-star__center {
+    transform: none; /* Disable rotation for diamond shape */
+  }
+}

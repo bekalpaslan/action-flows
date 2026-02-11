@@ -17,6 +17,17 @@
   position: relative;
 }
 
+/* Embedded mode: full-width panel without sliding mechanics */
+.sliding-chat-window--embedded {
+  width: 100% !important;
+  border-left: none;
+  transition: none;
+}
+
+.sliding-chat-window--embedded .sliding-chat-window__resize-handle {
+  display: none;
+}
+
 .sliding-chat-window__header {
   display: flex;
   flex-direction: row;
@@ -66,6 +77,39 @@
 .sliding-chat-window__session-select:focus-visible {
   outline: 2px solid var(--color-focus-ring, #0066cc);
   outline-offset: 2px;
+}
+
+.sliding-chat-window__minimize-btn {
+  flex: 0 0 auto;
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-2xl);
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm, 3px);
+  transition: color 150ms ease-out, background-color 150ms ease-out;
+  font-weight: var(--font-light);
+  line-height: var(--leading-tight);
+}
+
+.sliding-chat-window__minimize-btn:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+.sliding-chat-window__minimize-btn:focus-visible {
+  outline: 2px solid var(--color-focus-ring, #0066cc);
+  outline-offset: 2px;
+}
+
+.sliding-chat-window__minimize-btn:active {
+  background-color: var(--color-bg-active);
 }
 
 .sliding-chat-window__close-btn {
@@ -192,6 +236,7 @@
     transition-duration: 0ms;
   }
 
+  .sliding-chat-window__minimize-btn,
   .sliding-chat-window__close-btn {
     transition-duration: 0ms;
   }

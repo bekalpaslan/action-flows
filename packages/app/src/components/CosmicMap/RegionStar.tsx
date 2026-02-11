@@ -12,6 +12,7 @@ import { Handle, Position, type NodeProps } from 'reactflow';
 import { useUniverseContext } from '../../contexts/UniverseContext';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import '../../styles/cosmic-tokens.css';
+import '../../styles/region-themes.css';
 import './RegionStar.css';
 
 export interface RegionStarData {
@@ -126,6 +127,7 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
   const fogClass = `fog-${data.fogState}`;
   const statusClass = `status-${data.status}`;
   const layerClass = `layer-${data.layer}`;
+  const regionClass = `region-star--${data.workbenchId}`;
   const glowClass = `glow-${glowState}`;
   const selectedClass = selected ? 'selected' : '';
   const revealingClass = isRevealing ? 'revealing' : '';
@@ -146,7 +148,7 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
 
   return (
     <div
-      className={`region-star ${fogClass} ${statusClass} ${layerClass} ${glowClass} ${selectedClass} ${revealingClass} ${burstClass}`}
+      className={`region-star ${fogClass} ${statusClass} ${layerClass} ${regionClass} ${glowClass} ${selectedClass} ${revealingClass} ${burstClass}`}
       onClick={isClickable ? handleClick : undefined}
       role={isClickable ? 'button' : 'presentation'}
       tabIndex={isClickable ? 0 : -1}

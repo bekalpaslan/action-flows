@@ -42,6 +42,17 @@ export type {
 export { Status, Model, ChainSource, brandedTypes, duration, FRESHNESS_THRESHOLDS, calculateFreshnessGrade } from './types.js';
 
 // ============================================================================
+// Gate Checkpoint Tracing Types
+// ============================================================================
+export type {
+  GateTrace,
+  GateTraceLevel,
+  GateId,
+  GateStats,
+  GateTraceFilter,
+} from './gateTrace.js';
+
+// ============================================================================
 // Event Types
 // ============================================================================
 export type {
@@ -88,6 +99,7 @@ export type {
   RegionDiscoveredEvent,
   EvolutionTickEvent,
   SparkTravelingEvent,
+  GateUpdatedEvent,
   WorkspaceEvent,
 } from './events.js';
 

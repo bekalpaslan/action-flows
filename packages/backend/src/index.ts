@@ -32,6 +32,7 @@ import registryRouter from './routes/registry.js';
 import harmonyRouter from './routes/harmony.js';
 import routingRouter from './routes/routing.js';
 import contractsRouter from './routes/contracts.js';
+import agentValidatorRouter from './routes/agentValidator.js';
 import dossiersRouter, { setBroadcastDossierFunction } from './routes/dossiers.js';
 import suggestionsRouter from './routes/suggestions.js';
 import telemetryRouter from './routes/telemetry.js';
@@ -41,10 +42,12 @@ import errorsRouter from './routes/errors.js';
 import universeRouter from './routes/universe.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
+import { initializeAgentValidator } from './services/agentValidator.js';
 import { lifecycleManager } from './services/lifecycleManager.js';
 import { initDiscoveryService } from './services/discoveryService.js';
 import { initSparkBroadcaster, getSparkBroadcaster } from './services/sparkBroadcaster.js';
 import { initGateValidator, getGateValidator } from './services/gateValidator.js';
+import { initGateCheckpoint, getGateCheckpoint } from './services/gateCheckpoint.js';
 import { initBridgeStrengthService } from './services/bridgeStrengthService.js';
 
 // Middleware imports (Agent A)
@@ -130,6 +133,7 @@ app.use('/api/registry', registryRouter);
 app.use('/api/harmony', harmonyRouter);
 app.use('/api/routing', routingRouter);
 app.use('/api/contracts', contractsRouter);
+app.use('/api/agent-validator', agentValidatorRouter);
 
 // Serve frontend static files in production (Electron desktop app)
 // Gated behind AFW_SERVE_FRONTEND=true — no effect during normal dev workflow
@@ -420,6 +424,15 @@ if (isMainModule) {
     initializeHarmonyDetector(storage);
     harmonyDetector.setBroadcastFunction(broadcastHarmonyEvent);
 
+    // Initialize agent validator (Component 3 - Agent Behavior Validation)
+    try {
+      initializeAgentValidator(storage);
+      console.log('[AgentValidator] ✅ Service initialized successfully for agent behavior validation');
+    } catch (error) {
+      console.error('[AgentValidator] ❌ Failed to initialize AgentValidator:', error);
+      // Don't crash the server, but log the error
+    }
+
     // Initialize discovery service (Phase 3 - Living Universe)
     try {
       initDiscoveryService(storage);
@@ -466,6 +479,30 @@ if (isMainModule) {
       console.log('[BridgeStrengthService] ✅ Service initialized successfully for Living Universe Phase 4 Batch F');
     } catch (error) {
       console.error('[BridgeStrengthService] ❌ Failed to initialize BridgeStrengthService:', error);
+    }
+
+    // Initialize gate checkpoint service (Component 2 - Auditable Verification System)
+    try {
+      const gateCheckpoint = initGateCheckpoint(storage);
+
+      // Wire gate checkpoint events to WebSocket broadcast
+      gateCheckpoint.on('gate:checkpoint', (trace: any) => {
+        // Broadcast to all connected clients
+        const message = JSON.stringify({
+          type: 'chain:gate_updated',
+          payload: trace,
+        });
+
+        clientRegistry.getAllClients().forEach((client) => {
+          if (client.readyState === 1) { // WebSocket.OPEN
+            client.send(message);
+          }
+        });
+      });
+
+      console.log('[GateCheckpoint] ✅ Service initialized successfully for Auditable Verification System Component 2');
+    } catch (error) {
+      console.error('[GateCheckpoint] ❌ Failed to initialize GateCheckpoint:', error);
     }
 
     // Start cleanup service

@@ -117,3 +117,19 @@
 - **Root Cause:** Migration moved content to new contract sections but didn't fully remove the originals from Steps subsections. Single-pass migration without deduplication check.
 - **Fix:** Review agent removed the duplicates in review-and-fix mode. Future: when restructuring agent.md files, add a verification pass that checks for content appearing in both contract sections AND steps sections.
 - **Status:** Closed (duplicates removed during review)
+
+### L015: Requirements Validation Against Type Definitions
+- **Date:** 2026-02-11
+- **From:** code/frontend/ (sonnet) during Phase 5 Batch C implementation
+- **Issue:** Requirements specified implementing themes for "squad" and "command" regions that don't exist in the system architecture. The actual 13 navigation targets are defined in `workbenchTypes.ts` as 9 stars + 3 tools + 1 harmony, not an arbitrary list including "squad" and "command".
+- **Root Cause:** Requirements document was written before verifying the actual `WorkbenchId` type definitions in `packages/shared/src/workbenchTypes.ts`. Plan assumed 13 regions without validating against source of truth.
+- **Fix:** When implementing cross-layer features (themes spanning backend types + frontend styles), always read the shared types first to verify the exact entities that need theming. Don't assume requirements are correct without validation against type definitions.
+- **Status:** Closed (Batch C discovered all themes already implemented correctly per actual types)
+
+### L016: Review Severity Classification Consistency
+- **Date:** 2026-02-11
+- **From:** second-opinion/ (qwen2.5-coder:7b) during Phase 5 final review
+- **Issue:** Second opinion flagged a "missed issue" (returnTimeout cleanup) that was actually identified by the review as Finding #2, but with different severity interpretation. Review classified it as "non-critical" (low severity), second opinion argued it should be elevated as a "best practice improvement".
+- **Root Cause:** Review and second opinion use slightly different criteria for severity classification. Review categorized it as low-severity based on component lifecycle (WorkbenchLayout rarely unmounts), second opinion focused on potential memory leak pattern regardless of frequency.
+- **Fix:** For future reviews, clarify severity levels (CRITICAL/HIGH/MEDIUM/LOW) upfront in spawn prompts so second opinion uses consistent thresholds. Consider defining severity criteria in review/agent.md: CRITICAL=blocks production, HIGH=significant quality impact, MEDIUM=should fix, LOW=nice to have.
+- **Status:** Open (pattern documented, severity criteria definition pending)

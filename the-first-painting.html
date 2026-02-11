@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The First Painting — ActionFlows Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+            color: #e0e6ed;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 200;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            color: #8892b0;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .architecture-canvas {
+            position: relative;
+            width: 100%;
+            min-height: 1400px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Layers */
+        .layer {
+            position: absolute;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .layer:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .layer-will {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 146, 60, 0.1));
+            border-color: #f59e0b;
+            color: #fbbf24;
+        }
+
+        .layer-brain {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.1));
+            border-color: #8b5cf6;
+            color: #a78bfa;
+        }
+
+        .layer-health {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+            border-color: #10b981;
+            color: #34d399;
+        }
+
+        .layer-physics {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(96, 165, 250, 0.1));
+            border-color: #3b82f6;
+            color: #60a5fa;
+        }
+
+        .layer-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .layer-subtitle {
+            font-size: 0.9em;
+            opacity: 0.7;
+            margin-bottom: 15px;
+        }
+
+        .layer-content {
+            font-size: 0.85em;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* Components */
+        .component {
+            position: absolute;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 180px;
+            transition: all 0.3s ease;
+        }
+
+        .component:hover {
+            transform: scale(1.05);
+            border-color: rgba(148, 163, 184, 0.6);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .component-title {
+            font-weight: 600;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            color: #e0e6ed;
+        }
+
+        .component-desc {
+            font-size: 0.75em;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Data flow arrows */
+        .flow-arrow {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .flow-arrow path {
+            fill: none;
+            stroke-width: 2;
+            stroke-dasharray: 5, 5;
+            animation: flow 2s linear infinite;
+        }
+
+        @keyframes flow {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: 20; }
+        }
+
+        .flow-orchestrator { stroke: #a78bfa; }
+        .flow-backend { stroke: #60a5fa; }
+        .flow-harmony { stroke: #34d399; }
+        .flow-human { stroke: #fbbf24; }
+
+        /* Folder visualization */
+        .folder-tree {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.75em;
+            color: #94a3b8;
+            line-height: 1.8;
+        }
+
+        .folder-tree .folder {
+            color: #fbbf24;
+        }
+
+        .folder-tree .file {
+            color: #60a5fa;
+        }
+
+        /* Trust badges */
+        .trust-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .trust-t0 {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid #dc2626;
+        }
+
+        .trust-t1 {
+            background: rgba(251, 146, 60, 0.2);
+            color: #fdba74;
+            border: 1px solid #ea580c;
+        }
+
+        .trust-t2 {
+            background: rgba(34, 197, 94, 0.2);
+            color: #86efac;
+            border: 1px solid #16a34a;
+        }
+
+        .trust-t3 {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border: 1px solid #2563eb;
+        }
+
+        /* Healing cycle */
+        .healing-cycle {
+            position: absolute;
+            right: 40px;
+            top: 40px;
+            width: 300px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .healing-cycle h3 {
+            color: #34d399;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .healing-step {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 3px solid #10b981;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .healing-step.active {
+            background: rgba(16, 185, 129, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Legend */
+        .legend {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 200px;
+        }
+
+        .legend h4 {
+            margin-bottom: 15px;
+            color: #e0e6ed;
+            font-size: 0.9em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.8em;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 3px;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Interactive tooltips */
+        .tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.98);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 0.85em;
+            max-width: 300px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        /* Gate badges */
+        .gate-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            background: rgba(139, 92, 246, 0.3);
+            border: 1px solid #8b5cf6;
+            border-radius: 3px;
+            font-size: 0.7em;
+            margin-right: 4px;
+            color: #c4b5fd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>THE FIRST PAINTING</h1>
+            <div class="subtitle">ActionFlows Architecture — Detection · Observation · Healing</div>
+        </div>
+
+        <div class="architecture-canvas" id="canvas">
+            <!-- SVG for flow arrows -->
+            <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                <!-- Orchestrator → JSONL -->
+                <path class="flow-arrow flow-orchestrator" d="M 350 150 Q 450 200 550 250" />
+
+                <!-- JSONL → Backend -->
+                <path class="flow-arrow flow-backend" d="M 650 300 Q 750 350 850 400" />
+
+                <!-- Backend → Harmony -->
+                <path class="flow-arrow flow-harmony" d="M 950 450 Q 1050 500 1150 550" />
+
+                <!-- Harmony → Frontend -->
+                <path class="flow-arrow flow-harmony" d="M 1150 650 Q 1000 700 850 750" />
+
+                <!-- Frontend → Human -->
+                <path class="flow-arrow flow-human" d="M 750 800 Q 600 850 450 900" />
+
+                <!-- Human → Orchestrator (healing) -->
+                <path class="flow-arrow flow-human" d="M 350 950 Q 250 500 300 200"
+                      stroke-dasharray="10,5" stroke-width="3" />
+            </svg>
+
+            <!-- Layer 1: Human (Will) -->
+            <div class="layer layer-will" style="top: 850px; left: 200px; width: 400px;">
+                <div class="layer-title">👤 Human (Will)</div>
+                <div class="layer-subtitle">Decision Authority</div>
+                <div class="layer-content">
+                    • Reviews health score in Harmony workbench<br>
+                    • Decides: "Fix Now" / "Investigate" / "Ignore"<br>
+                    • Approves healing chains before execution<br>
+                    • <strong>Complete sovereignty over all layers</strong><br>
+                    <span class="trust-badge trust-t0">T0</span> All human input validated
+                </div>
+            </div>
+
+            <!-- Layer 2: Orchestrator (Brain) -->
+            <div class="layer layer-brain" style="top: 100px; left: 100px; width: 450px;">
+                <div class="layer-title">🧠 Orchestrator (Brain)</div>
+                <div class="layer-subtitle">Light & Trusted Coordinator</div>
+                <div class="layer-content">
+                    • Outputs CONTRACT.md formats naturally<br>
+                    • Routes to contexts & flows<br>
+                    • Spawns agents via Task tool<br>
+                    • Compiles chains (Format 1.1)<br>
+                    • <strong>Zero observability burden</strong><br>
+                    <span class="trust-badge trust-t3">T3</span> Internal reasoning trusted<br>
+                    <span class="trust-badge trust-t2">T2</span> Outputs monitored
+                </div>
+            </div>
+
+            <!-- Layer 3: Backend (Physics) -->
+            <div class="layer layer-physics" style="top: 350px; left: 700px; width: 450px;">
+                <div class="layer-title">⚙️ Backend (Physics)</div>
+                <div class="layer-subtitle">Strict but Graceful Validator</div>
+                <div class="layer-content">
+                    • Tails conversation JSONL in real-time<br>
+                    • Validates at gate checkpoints (14 gates)<br>
+                    • Stores traces in Harmony (Redis, 7d TTL)<br>
+                    • Calculates health scores (0-100)<br>
+                    • Generates healing recommendations<br>
+                    <strong>Never blocks orchestrator</strong> — Graceful degradation
+                </div>
+            </div>
+
+            <!-- Layer 4: Harmony (Health) -->
+            <div class="layer layer-health" style="top: 550px; left: 1000px; width: 400px;">
+                <div class="layer-title">💚 Harmony (Health)</div>
+                <div class="layer-subtitle">Self-Monitoring System</div>
+                <div class="layer-content">
+                    • Stores gate traces (7-day TTL)<br>
+                    • Monitors violation patterns<br>
+                    • Triggers recommendations at threshold<br>
+                    • Learns from every cycle (LEARNINGS.md)<br>
+                    • Broadcasts health score to frontend<br>
+                    <strong>Resilience built in</strong> — No cascading failures
+                </div>
+            </div>
+
+            <!-- Component: Conversation JSONL -->
+            <div class="component" style="top: 200px; left: 550px;">
+                <div class="component-title">📝 Conversation JSONL <span class="trust-badge trust-t3">T3</span></div>
+                <div class="component-desc">
+                    Real-time conversation log<br>
+                    <code>session-{id}.jsonl</code><br>
+                    Tailed by backend (~50-200ms)
+                </div>
+            </div>
+
+            <!-- Component: Gate Checkpoints -->
+            <div class="component" style="top: 450px; left: 850px;">
+                <div class="component-title">🚪 Gate Checkpoints <span class="trust-badge trust-t2">T2</span></div>
+                <div class="component-desc">
+                    14 decision boundaries:<br>
+                    <span class="gate-badge">G2</span> Route to Context<br>
+                    <span class="gate-badge">G4</span> Compile Chain<br>
+                    <span class="gate-badge">G6</span> Human Approval<br>
+                    <span class="gate-badge">G9</span> Agent Output<br>
+                    Graceful degradation on failure
+                </div>
+            </div>
+
+            <!-- Component: Agent Outputs -->
+            <div class="component" style="top: 250px; left: 250px;">
+                <div class="component-title">🤖 Agent Outputs <span class="trust-badge trust-t1">T1</span></div>
+                <div class="component-desc">
+                    Validated against CONTRACT.md:<br>
+                    • Format 5.1 (Review)<br>
+                    • Format 5.2 (Analysis)<br>
+                    • Format 5.3 (Brainstorm)<br>
+                    Strict validation + healing trigger
+                </div>
+            </div>
+
+            <!-- Component: Frontend Display -->
+            <div class="component" style="top: 750px; left: 700px;">
+                <div class="component-title">🖥️ Harmony Workbench <span class="trust-badge trust-t3">T3</span></div>
+                <div class="component-desc">
+                    • Health score: 87/100<br>
+                    • Gate trace viewer<br>
+                    • Violation alerts<br>
+                    • "Fix Now" button<br>
+                    Real-time WebSocket updates
+                </div>
+            </div>
+
+            <!-- Folder structure visualization -->
+            <div class="folder-tree" style="top: 50px; left: 1300px;">
+                <div style="color: #e0e6ed; font-weight: 600; margin-bottom: 10px;">📂 Log Structure</div>
+                <div class="folder">.claude/actionflows/logs/</div>
+                <div style="margin-left: 15px;">
+                    <div class="folder">├── gates/</div>
+                    <div style="margin-left: 30px;">
+                        <div class="folder">│   ├── routing-decision_*/</div>
+                        <div class="folder">│   ├── chain-compilation_*/</div>
+                        <div class="folder">│   └── human-approval_*/</div>
+                    </div>
+                    <div class="folder">├── analyze/</div>
+                    <div class="folder">├── code/</div>
+                    <div class="folder">├── review/</div>
+                    <div class="folder">├── second-opinion/</div>
+                    <div class="folder">└── INDEX.md</div>
+                </div>
+            </div>
+
+            <!-- Healing cycle visualization -->
+            <div class="healing-cycle">
+                <h3>🔄 Healing Initiation Cycle</h3>
+                <div class="healing-step">
+                    <strong>1. Backend Detects</strong><br>
+                    3+ violations in 24h → Threshold met
+                </div>
+                <div class="healing-step">
+                    <strong>2. Frontend Presents</strong><br>
+                    Health score drops to 87/100
+                </div>
+                <div class="healing-step active">
+                    <strong>3. Human Decides</strong><br>
+                    Clicks "Fix Now" button
+                </div>
+                <div class="healing-step">
+                    <strong>4. Orchestrator Routes</strong><br>
+                    Routes to harmony-audit-and-fix/
+                </div>
+                <div class="healing-step">
+                    <strong>5. Healing Executes</strong><br>
+                    analyze → fix → review → commit
+                </div>
+                <div class="healing-step">
+                    <strong>6. Health Restored</strong><br>
+                    Score rises to 100/100 ✅
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <h4>Data Flow Legend</h4>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #a78bfa;"></div>
+                <span>Orchestrator Output</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #60a5fa;"></div>
+                <span>Backend Processing</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #34d399;"></div>
+                <span>Harmony Storage</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #fbbf24;"></div>
+                <span>Human Decision</span>
+            </div>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(148, 163, 184, 0.2);">
+                <h4 style="margin-bottom: 10px;">Trust Levels</h4>
+                <div class="legend-item">
+                    <span class="trust-badge trust-t0">T0</span>
+                    <span>Zero Trust</span>
+                </div>
+                <div class="legend-item">
+                    <span class="trust-badge trust-t1">T1</span>
+                    <span>Validate Always</span>
+                </div>
+                <div class="legend-item">
+                    <span class="trust-badge trust-t2">T2</span>
+                    <span>Monitor + Degrade</span>
+                </div>
+                <div class="legend-item">
+                    <span class="trust-badge trust-t3">T3</span>
+                    <span>Complete Trust</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tooltip element -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Interactive tooltip on hover
+        const components = document.querySelectorAll('.component, .layer');
+        const tooltip = document.getElementById('tooltip');
+
+        components.forEach(comp => {
+            comp.addEventListener('mouseenter', (e) => {
+                const title = comp.querySelector('.component-title, .layer-title')?.textContent;
+                const desc = comp.querySelector('.component-desc, .layer-content')?.textContent;
+
+                if (title) {
+                    tooltip.innerHTML = `<strong>${title}</strong><br>${desc || ''}`;
+                    tooltip.classList.add('show');
+                }
+            });
+
+            comp.addEventListener('mousemove', (e) => {
+                tooltip.style.left = e.pageX + 15 + 'px';
+                tooltip.style.top = e.pageY + 15 + 'px';
+            });
+
+            comp.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
+        });
+
+        // Animate healing cycle
+        const healingSteps = document.querySelectorAll('.healing-step');
+        let currentStep = 0;
+
+        setInterval(() => {
+            healingSteps.forEach(step => step.classList.remove('active'));
+            healingSteps[currentStep].classList.add('active');
+            currentStep = (currentStep + 1) % healingSteps.length;
+        }, 2000);
+    </script>
+</body>
+</html>

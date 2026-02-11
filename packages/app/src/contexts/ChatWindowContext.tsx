@@ -8,12 +8,18 @@ interface ChatWindowContextType {
   source: string | null;        // what triggered the chat (e.g., "discuss-button", "orchestrator-btn")
   chatWidth: number;            // percentage (25-60, default 40)
   selectedModel: string;        // selected AI model (e.g., "sonnet-4.5")
+  isMinimized: boolean;         // whether chat is minimized to floating indicator
+  unreadCount: number;          // unread message count when minimized
   openChat: (source: string, context?: Record<string, unknown>) => Promise<void>;
   closeChat: () => void;
   toggleChat: () => void;
   setChatWidth: (width: number) => void;
   setSessionId: (id: SessionId | null) => void;
   setSelectedModel: (model: string) => void;
+  minimizeChat: () => void;
+  restoreChat: () => void;
+  incrementUnreadCount: () => void;
+  resetUnreadCount: () => void;
 }
 
 const ChatWindowContext = createContext<ChatWindowContextType | undefined>(undefined);
@@ -62,6 +68,8 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [sessionId, setSessionIdState] = useState<SessionId | null>(null);
   const [source, setSource] = useState<string | null>(null);
+  const [isMinimized, setIsMinimized] = useState<boolean>(false);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
 
   // Get session context for auto-creation
   const { createSession, activeSessionId } = useSessionContext();
@@ -92,11 +100,48 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
 
   const closeChat = useCallback(() => {
     setIsOpen(false);
+    setIsMinimized(false);
+    setUnreadCount(0);
     // Note: we do NOT clear sessionId — it's preserved for state continuity
   }, []);
 
   const toggleChat = useCallback(() => {
     setIsOpen((prev) => !prev);
+  }, []);
+
+  const minimizeChat = useCallback(() => {
+    setIsMinimized(true);
+    // Announce to screen readers
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.textContent = 'Chat minimized';
+    announcement.style.position = 'absolute';
+    announcement.style.left = '-10000px';
+    document.body.appendChild(announcement);
+    setTimeout(() => document.body.removeChild(announcement), 1000);
+  }, []);
+
+  const restoreChat = useCallback(() => {
+    setIsMinimized(false);
+    setUnreadCount(0);
+    // Announce to screen readers
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.textContent = 'Chat restored';
+    announcement.style.position = 'absolute';
+    announcement.style.left = '-10000px';
+    document.body.appendChild(announcement);
+    setTimeout(() => document.body.removeChild(announcement), 1000);
+  }, []);
+
+  const incrementUnreadCount = useCallback(() => {
+    setUnreadCount((prev) => prev + 1);
+  }, []);
+
+  const resetUnreadCount = useCallback(() => {
+    setUnreadCount(0);
   }, []);
 
   const setChatWidth = useCallback((width: number) => {
@@ -116,12 +161,18 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
     source,
     chatWidth,
     selectedModel,
+    isMinimized,
+    unreadCount,
     openChat,
     closeChat,
     toggleChat,
     setChatWidth,
     setSessionId: setSessionIdState,
     setSelectedModel,
+    minimizeChat,
+    restoreChat,
+    incrementUnreadCount,
+    resetUnreadCount,
   };
 
   return (

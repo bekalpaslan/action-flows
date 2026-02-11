@@ -1,0 +1,118 @@
+/**
+ * ChainStatusIndicator - Cosmic-themed chain status widget
+ *
+ * Displays running chain progress with spinner, text, and progress bar.
+ * Follows cosmic design tokens and accessibility standards.
+ */
+
+.chain-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--panel-bg-base);
+  border: 1px solid var(--cosmic-bridge-active);
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  box-shadow: 0 0 var(--space-2) rgba(100, 200, 255, 0.2);
+  animation: chain-status-glow 2s ease-in-out infinite;
+}
+
+/* Spinner icon (rotating animation) */
+.chain-status-indicator__spinner {
+  flex-shrink: 0;
+  color: var(--cosmic-bridge-active);
+  animation: chain-spinner-rotate 1s linear infinite;
+}
+
+@keyframes chain-spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Chain text */
+.chain-status-indicator__text {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+.chain-status-indicator__text strong {
+  font-weight: var(--font-semibold);
+  color: var(--cosmic-bridge-active);
+}
+
+/* Progress bar */
+.chain-status-indicator__progress {
+  position: relative;
+  flex: 0 0 60px;
+  height: 4px;
+  background: var(--panel-bg-inset);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.chain-status-indicator__progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--cosmic-bridge-active),
+    var(--cosmic-spark-core)
+  );
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 var(--space-2) var(--cosmic-bridge-glow);
+}
+
+/* Glow pulse animation */
+@keyframes chain-status-glow {
+  0%, 100% {
+    box-shadow: 0 0 var(--space-2) rgba(100, 200, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 var(--space-3) rgba(100, 200, 255, 0.4);
+  }
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .chain-status-indicator {
+    animation: none;
+  }
+
+  .chain-status-indicator__spinner {
+    animation: none;
+  }
+
+  .chain-status-indicator__progress-fill {
+    transition: none;
+  }
+}
+
+/* Responsive sizing */
+@media (max-width: 768px) {
+  .chain-status-indicator {
+    font-size: var(--text-2xs);
+    padding: var(--space-1-5) var(--space-2);
+    gap: var(--space-1-5);
+  }
+
+  .chain-status-indicator__spinner {
+    width: 12px;
+    height: 12px;
+  }
+
+  .chain-status-indicator__progress {
+    flex: 0 0 40px;
+  }
+}
