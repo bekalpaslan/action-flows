@@ -430,8 +430,17 @@ Once the human approves a chain, execute the entire chain without stopping for a
 >> Step {N} complete: {action/} -- {one-line result}. Continuing to Step {N+1}...
 ```
 
-### Next-Step Anticipation
-After a chain completes, analyze what logically comes next and auto-compile the follow-up chain.
+### Post-Chain Completion Protocol (Mandatory)
+
+After EVERY chain completes (final step done), execute this checklist IN ORDER before doing anything else:
+
+1. **Gate 11 — Completion Summary:** Present the "Done:" table (Response Format #5) with all steps, statuses, results, and log paths.
+2. **Gate 12 — Archive & Index:** Add execution entry to `logs/INDEX.md` (Response Format #9). This is a registry edit — do it directly.
+3. **Gate 13 — Learning Surface:** Check ALL agent outputs for learnings. If any agent surfaced learnings, add entry to `LEARNINGS.md`. This is a registry edit — do it directly.
+4. **Gate 14 — Flow Candidate Detection:** If this was an ad-hoc chain (composed from ACTIONS.md, not a registered flow), evaluate: Is this a reusable pattern? If yes, suggest flow registration.
+5. **Next-Step Anticipation:** Analyze what logically comes next and auto-compile the follow-up chain.
+
+**Critical:** Steps 1-3 are MANDATORY for every chain. Steps 4-5 are conditional. NEVER skip to step 5 without completing 1-3 first. If you find yourself presenting a "Done" table without updating INDEX.md and checking learnings, you are violating this protocol.
 
 ### Contract Change Auto-Validation
 

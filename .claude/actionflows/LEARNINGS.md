@@ -101,3 +101,19 @@
 - **Root Cause:** Flow registration was treated as a registry line edit (direct action), but creating the instructions file requires a code agent. The two steps were decoupled — the registry edit happened immediately, but the instructions creation was never queued as a follow-up. No validation exists to check that a registered flow has a corresponding instructions file.
 - **Fix:** When registering a flow, ALWAYS queue a follow-up `flow-creation/` chain or quick-triage the instructions file in the same turn. Add a `framework-health/` check that validates all FLOWS.md entries have matching `instructions.md` files.
 - **Status:** Open (4 orphans being fixed now)
+
+### L013: Post-Chain Completion Gates Skipped Without Enforcement Checklist
+- **Date:** 2026-02-11
+- **From:** orchestrator self-observation during contract-reorganization chain
+- **Issue:** After chain completed (7 steps, commit done), orchestrator skipped Gates 12-14: no INDEX.md entry, no LEARNINGS.md check, no flow candidate evaluation. Only Gate 11 (completion summary table) was executed.
+- **Root Cause:** ORCHESTRATOR.md had "Next-Step Anticipation" as a single line ("auto-compile the follow-up chain") but no mandatory post-chain completion checklist. Gates 11-14 existed in GATE_STRUCTURE.md as documentation but had no prescriptive enforcement in the orchestrator's execution instructions.
+- **Fix:** Added "### Post-Chain Completion Protocol (Mandatory)" to ORCHESTRATOR.md with 5-step numbered checklist (Gate 11 summary → Gate 12 INDEX.md → Gate 13 learnings → Gate 14 flow candidate → next-step anticipation). Includes "Critical" enforcement note.
+- **Status:** Closed (ORCHESTRATOR.md updated)
+
+### L014: Contract Restructuring — Move Content, Don't Leave Duplicates
+- **Date:** 2026-02-11
+- **From:** review/ (sonnet) during contract-reorganization chain
+- **Issue:** After migrating Parse Inputs and Generate Output content to Input/Output Contract sections, two agent.md files (code/, plan/) still had redundant output format templates in their Steps sections.
+- **Root Cause:** Migration moved content to new contract sections but didn't fully remove the originals from Steps subsections. Single-pass migration without deduplication check.
+- **Fix:** Review agent removed the duplicates in review-and-fix mode. Future: when restructuring agent.md files, add a verification pass that checks for content appearing in both contract sections AND steps sections.
+- **Status:** Closed (duplicates removed during review)
