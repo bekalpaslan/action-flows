@@ -11,6 +11,12 @@ import { createEventSchema } from '../schemas/api.js';
 import { writeLimiter } from '../middleware/rateLimit.js';
 import { sanitizeError } from '../middleware/errorHandler.js';
 
+// Discovery service for activity recording (Phase 3)
+import { getDiscoveryService } from '../services/discoveryService.js';
+
+// Universe events for region discovery broadcasts (Phase 3)
+import { broadcastRegionDiscovered } from '../ws/universeEvents.js';
+
 const router = Router();
 
 // Polling rate limit tracker (1 request per 5 seconds per client)
@@ -109,6 +115,34 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
           chain.summary = chainEvent.summary || undefined;
           await Promise.resolve(storage.addChain(event.sessionId, chain));
           console.log(`[API] Completed chain: ${chain.id} with status ${chain.status}`);
+
+          // Record chain completion for discovery (Phase 3)
+          try {
+            const discoveryService = getDiscoveryService();
+            if (discoveryService) {
+              await discoveryService.recordChainCompleted(event.sessionId, chainEvent.chainId);
+
+              // Check if any regions became ready to reveal
+              const { readyRegions } = await discoveryService.evaluateDiscovery(event.sessionId);
+
+              // Broadcast WebSocket events for newly revealed regions
+              if (readyRegions.length > 0) {
+                // Get updated universe graph to get fog state
+                const universe = await Promise.resolve(storage.getUniverseGraph());
+                if (universe) {
+                  for (const regionId of readyRegions) {
+                    const region = universe.regions.find((r: any) => r.id === regionId);
+                    if (region) {
+                      broadcastRegionDiscovered(event.sessionId, regionId, region.fogState);
+                      console.log(`[Discovery] Region ${regionId} revealed for session ${event.sessionId}`);
+                    }
+                  }
+                }
+              }
+            }
+          } catch (error) {
+            console.warn('[Discovery] Failed to record chain completion:', error);
+          }
         }
       }
     }
@@ -126,6 +160,18 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
         clearActiveStep(event.sessionId);
         // Track step progress activity
         activityTracker.trackActivity(event.sessionId, 'step_progress');
+
+        // Record error for discovery when step fails (Phase 3)
+        if (event.type === 'step:failed') {
+          try {
+            const discoveryService = getDiscoveryService();
+            if (discoveryService) {
+              await discoveryService.recordError(event.sessionId);
+            }
+          } catch (error) {
+            console.warn('[Discovery] Failed to record step failure:', error);
+          }
+        }
       }
     }
 

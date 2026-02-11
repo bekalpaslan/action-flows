@@ -84,13 +84,16 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
     const stored = localStorage.getItem('afw-discovery-enabled');
     return stored === null ? true : stored === 'true';
   });
+  const [lastDiscoveryTime, setLastDiscoveryTime] = useState<number>(Date.now());
 
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
   const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
 
-  // Debounced polling interval
+  // Adaptive polling intervals
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const POLLING_INTERVAL_MS = 5000; // 5 seconds
+  const POLLING_INTERVAL_ACTIVE = 10000; // 10 seconds when active
+  const POLLING_INTERVAL_IDLE = 30000;   // 30 seconds when idle (no discoveries for 5 min)
+  const IDLE_THRESHOLD_MS = 300000;      // 5 minutes
 
   // WebSocket connection
   const ws = useWebSocket({
@@ -122,6 +125,9 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
         if (prev.includes(event.regionId)) return prev;
         return [...prev, event.regionId];
       });
+
+      // Update last discovery time for adaptive polling
+      setLastDiscoveryTime(Date.now());
 
       // Refresh universe to get updated fog states
       refreshUniverse();
@@ -177,7 +183,8 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
   }, [activeSessionId, discoveryEnabled, API_BASE_URL]);
 
   /**
-   * Start debounced polling when session is active
+   * Start adaptive polling when session is active
+   * Slows down polling when no discoveries have happened recently
    */
   useEffect(() => {
     if (!activeSessionId || !discoveryEnabled) {
@@ -189,13 +196,23 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
       return;
     }
 
+    // Calculate adaptive interval based on last discovery time
+    const timeSinceLastDiscovery = Date.now() - lastDiscoveryTime;
+    const pollInterval = timeSinceLastDiscovery > IDLE_THRESHOLD_MS
+      ? POLLING_INTERVAL_IDLE
+      : POLLING_INTERVAL_ACTIVE;
+
+    console.log(
+      `[Discovery] Setting poll interval to ${pollInterval}ms (${timeSinceLastDiscovery > IDLE_THRESHOLD_MS ? 'idle' : 'active'})`
+    );
+
     // Initial check
     checkDiscovery();
 
-    // Start polling interval
+    // Start polling interval with adaptive timing
     pollingIntervalRef.current = setInterval(() => {
       checkDiscovery();
-    }, POLLING_INTERVAL_MS);
+    }, pollInterval);
 
     return () => {
       if (pollingIntervalRef.current) {
@@ -203,7 +220,7 @@ export function DiscoveryProvider({ children }: DiscoveryProviderProps) {
         pollingIntervalRef.current = null;
       }
     };
-  }, [activeSessionId, discoveryEnabled, checkDiscovery]);
+  }, [activeSessionId, discoveryEnabled, lastDiscoveryTime, checkDiscovery]);
 
   /**
    * Record user interaction for discovery progress

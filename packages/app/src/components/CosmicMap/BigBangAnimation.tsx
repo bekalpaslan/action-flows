@@ -50,8 +50,23 @@ export const BigBangAnimation: React.FC<BigBangAnimationProps> = ({
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Skip animation if requested or motion reduced
+  // Skip animation if requested or motion reduced or already seen
   useEffect(() => {
+    // Check localStorage for Big Bang seen flag
+    try {
+      const bigBangSeen = localStorage.getItem('afw-big-bang-seen');
+      if (bigBangSeen === 'true' && !skipAnimation) {
+        // Already seen, skip immediately
+        console.log('[BigBang] Animation already seen, skipping');
+        onComplete();
+        return;
+      }
+    } catch (e) {
+      // localStorage unavailable (private mode, Electron), play animation anyway
+      console.warn('[BigBang] localStorage unavailable, showing Big Bang animation');
+    }
+
+    // Skip if explicitly requested or motion reduced
     if (skipAnimation || prefersReducedMotion) {
       onComplete();
       return;

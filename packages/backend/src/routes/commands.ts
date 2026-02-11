@@ -9,6 +9,9 @@ import { createCommandSchema, ackCommandSchema } from '../schemas/api.js';
 import { writeLimiter } from '../middleware/rateLimit.js';
 import { sanitizeError } from '../middleware/errorHandler.js';
 
+// Discovery service for activity recording (Phase 3)
+import { getDiscoveryService } from '../services/discoveryService.js';
+
 const router = Router();
 
 /**
@@ -42,6 +45,17 @@ router.post('/:id/commands', writeLimiter, validateBody(createCommandSchema), as
     await Promise.resolve(storage.queueCommand(id as SessionId, commandPayload as any));
 
     console.log(`[API] Command queued for session ${id}:`, type);
+
+    // Record interaction for discovery (Phase 3)
+    try {
+      const discoveryService = getDiscoveryService();
+      if (discoveryService) {
+        await discoveryService.recordInteraction(id as SessionId, 'command-submitted');
+      }
+    } catch (error) {
+      // Don't fail command if discovery recording fails
+      console.warn('[Discovery] Failed to record interaction:', error);
+    }
 
     res.status(201).json({
       success: true,

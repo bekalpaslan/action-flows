@@ -25,6 +25,7 @@ import { CosmicBackground } from './CosmicBackground';
 import { RegionStar, type RegionStarData } from './RegionStar';
 import { LightBridgeEdge, type LightBridgeData } from './LightBridgeEdge';
 import { CommandCenter } from './CommandCenter';
+import { BigBangAnimation } from './BigBangAnimation';
 import '../../styles/cosmic-tokens.css';
 import './CosmicMap.css';
 
@@ -44,6 +45,7 @@ function CosmicMapInner() {
   const { universe, isLoading, error, zoomTargetRegionId, clearZoomTarget } = useUniverseContext();
   const { fitView, setCenter } = useReactFlow();
   const [hasInitialFit, setHasInitialFit] = useState(false);
+  const [showBigBang, setShowBigBang] = useState(false);
 
   // Transform RegionNode[] → ReactFlow Node[]
   const initialNodes = useMemo(() => {
@@ -88,6 +90,19 @@ function CosmicMapInner() {
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  // Check localStorage for Big Bang animation on mount
+  useEffect(() => {
+    try {
+      const bigBangSeen = localStorage.getItem('afw-big-bang-seen');
+      if (!bigBangSeen || bigBangSeen !== 'true') {
+        setShowBigBang(true);
+      }
+    } catch (e) {
+      // localStorage unavailable (private mode, Electron), skip Big Bang
+      console.warn('[CosmicMap] localStorage unavailable, skipping Big Bang check');
+    }
+  }, []);
 
   // Update nodes/edges when universe changes
   useEffect(() => {
@@ -174,6 +189,30 @@ function CosmicMapInner() {
           <p>No universe data available</p>
         </div>
       </div>
+    );
+  }
+
+  // Show Big Bang animation on first load
+  if (showBigBang) {
+    return (
+      <>
+        <CosmicBackground
+          width={window.innerWidth}
+          height={window.innerHeight}
+          seed={universe.metadata.createdAt}
+          enableAnimation={true}
+        />
+        <BigBangAnimation
+          onComplete={() => {
+            try {
+              localStorage.setItem('afw-big-bang-seen', 'true');
+            } catch (e) {
+              console.warn('[CosmicMap] localStorage unavailable, cannot persist Big Bang state');
+            }
+            setShowBigBang(false);
+          }}
+        />
+      </>
     );
   }
 

@@ -106,6 +106,7 @@ const VALID_EVENT_TYPES = [
   'claude-cli:exited',
   'error:occurred',
   'warning:occurred',
+  'universe:region_discovered',
 ] as const;
 
 export const createEventSchema = z.object({

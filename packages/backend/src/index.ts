@@ -407,8 +407,14 @@ if (isMainModule) {
     harmonyDetector.setBroadcastFunction(broadcastHarmonyEvent);
 
     // Initialize discovery service (Phase 3 - Living Universe)
-    initDiscoveryService(storage);
-    console.log('[Discovery] Service initialized for Living Universe Phase 3');
+    try {
+      initDiscoveryService(storage);
+      console.log('[Discovery] ✅ Service initialized successfully for Living Universe Phase 3');
+    } catch (error) {
+      console.error('[Discovery] ❌ Failed to initialize DiscoveryService:', error);
+      // Don't crash the server, but log the error
+      // Discovery endpoints will return 503 if service unavailable
+    }
 
     // Start cleanup service
     cleanupService.start();

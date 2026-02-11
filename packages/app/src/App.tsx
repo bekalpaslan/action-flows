@@ -5,6 +5,7 @@ import { WebSocketProvider } from './contexts/WebSocketContext'
 import { SessionProvider } from './contexts/SessionContext'
 import { WorkbenchProvider } from './contexts/WorkbenchContext'
 import { UniverseProvider } from './contexts/UniverseContext'
+import { DiscoveryProvider } from './contexts/DiscoveryContext'
 import { ChatWindowProvider } from './contexts/ChatWindowContext'
 import { VimNavigationProvider } from './contexts/VimNavigationContext'
 import { DiscussProvider } from './contexts/DiscussContext'
@@ -38,15 +39,17 @@ function App() {
           <SessionProvider>
             <WorkbenchProvider>
               <UniverseProvider>
-                <ChatWindowProvider>
-                  <DiscussProvider>
-                    <NotificationGlowProvider>
-                      <VimNavigationProvider>
-                        <AppWithVim />
-                      </VimNavigationProvider>
-                    </NotificationGlowProvider>
-                  </DiscussProvider>
-                </ChatWindowProvider>
+                <DiscoveryProvider>
+                  <ChatWindowProvider>
+                    <DiscussProvider>
+                      <NotificationGlowProvider>
+                        <VimNavigationProvider>
+                          <AppWithVim />
+                        </VimNavigationProvider>
+                      </NotificationGlowProvider>
+                    </DiscussProvider>
+                  </ChatWindowProvider>
+                </DiscoveryProvider>
               </UniverseProvider>
             </WorkbenchProvider>
           </SessionProvider>

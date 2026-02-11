@@ -354,6 +354,9 @@ let discoveryServiceInstance: DiscoveryService | null = null;
  * Initialize the discovery service with storage
  */
 export function initDiscoveryService(storage: Storage): DiscoveryService {
+  if (!storage) {
+    throw new Error('DiscoveryService requires valid storage instance');
+  }
   discoveryServiceInstance = new DiscoveryService(storage);
   return discoveryServiceInstance;
 }

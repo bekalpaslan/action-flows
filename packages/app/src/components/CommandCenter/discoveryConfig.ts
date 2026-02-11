@@ -13,43 +13,43 @@ import type { RegionId } from '@afw/shared';
  */
 export const DISCOVERY_SUGGESTIONS: Record<RegionId, string> = {
   // Work region (starting loadout, always visible)
-  'region-work': 'Ask about implementing a feature or building something',
+  ['region-work' as RegionId]: 'Ask about implementing a feature or building something',
 
   // Canvas region (starting loadout, always visible)
-  'region-canvas': 'Brainstorm ideas or design a new feature',
+  ['region-canvas' as RegionId]: 'Brainstorm ideas or design a new feature',
 
   // Maintenance region (unlocked after encountering an error)
-  'region-maintenance': 'Encounter or fix a bug',
+  ['region-maintenance' as RegionId]: 'Encounter or fix a bug',
 
   // Explore region (unlocked after research question)
-  'region-explore': 'Ask a research question or investigate something',
+  ['region-explore' as RegionId]: 'Ask a research question or investigate something',
 
   // Review region (unlocked after code chain completion)
-  'region-review': 'Complete a code review or audit',
+  ['region-review' as RegionId]: 'Complete a code review or audit',
 
   // Archive region (unlocked after 3+ sessions)
-  'region-archive': 'Create multiple sessions to access history',
+  ['region-archive' as RegionId]: 'Create multiple sessions to access history',
 
   // Settings region (unlocked after config question)
-  'region-settings': 'Ask about configuration or customization',
+  ['region-settings' as RegionId]: 'Ask about configuration or customization',
 
   // PM region (unlocked after planning activity)
-  'region-pm': 'Ask about roadmaps, priorities, or project planning',
+  ['region-pm' as RegionId]: 'Ask about roadmaps, priorities, or project planning',
 
   // Harmony region (unlocked after first gate checkpoint)
-  'region-harmony': 'Complete a chain with contract validation',
+  ['region-harmony' as RegionId]: 'Complete a chain with contract validation',
 
   // Editor region (unlocked after file editing)
-  'region-editor': 'Request file editing or code modifications',
+  ['region-editor' as RegionId]: 'Request file editing or code modifications',
 
   // Intel region (unlocked after dossier creation)
-  'region-intel': 'Create an intel dossier on any topic',
+  ['region-intel' as RegionId]: 'Create an intel dossier on any topic',
 
   // Respect region (unlocked after boundary check)
-  'region-respect': 'Ask about patterns, practices, or standards',
+  ['region-respect' as RegionId]: 'Ask about patterns, practices, or standards',
 
   // Coverage region (unlocked after testing/quality work)
-  'region-coverage': 'Ask about testing, quality, or code coverage',
+  ['region-coverage' as RegionId]: 'Ask about testing, quality, or code coverage',
 } as const;
 
 /**

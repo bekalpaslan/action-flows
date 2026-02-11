@@ -1,4 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
+import type { SessionId } from '@afw/shared';
+import { getDiscoveryService } from '../services/discoveryService.js';
 
 /**
  * Error Sanitization Utility
@@ -31,6 +33,25 @@ export function globalErrorHandler(
 ) {
   // Log full error server-side for debugging
   console.error(`[Error Handler] ${req.method} ${req.path}:`, err);
+
+  // Record error for discovery (Phase 3)
+  // Extract sessionId from request (might be in body, params, or query)
+  const sessionId = req.body?.sessionId || req.params?.sessionId || req.params?.id || req.query?.sessionId;
+
+  if (sessionId) {
+    try {
+      const discoveryService = getDiscoveryService();
+      if (discoveryService) {
+        discoveryService.recordError(sessionId as SessionId).catch(error => {
+          // Silent fail - don't compound errors
+          console.debug('[Discovery] Failed to record error:', error);
+        });
+      }
+    } catch (error) {
+      // Silent fail - don't compound errors
+      console.debug('[Discovery] Failed to record error:', error);
+    }
+  }
 
   // Send sanitized response to client
   res.status(500).json({
