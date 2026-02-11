@@ -6,9 +6,10 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import type { GateCheckpoint, ChainId, EdgeId, RegionId } from '@afw/shared';
+import type { GateCheckpoint, ChainId, EdgeId, RegionId, LightBridge } from '@afw/shared';
 import { BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type EdgeProps } from 'reactflow';
 import { GateCheckpointMarker, type GateStatus } from './GateCheckpointMarker';
+import { TraceRenderer } from './TraceRenderer';
 import '../../styles/cosmic-tokens.css';
 import './LightBridgeEdge.css';
 
@@ -18,6 +19,7 @@ export interface LightBridgeData {
   strength: number;
   activeSparkChainId?: ChainId;
   traversalCount: number;
+  bridge?: LightBridge; // Full bridge data for trace rendering
 }
 
 export const LightBridgeEdge: React.FC<EdgeProps<LightBridgeData>> = ({
@@ -139,6 +141,17 @@ export const LightBridgeEdge: React.FC<EdgeProps<LightBridgeData>> = ({
             />
           </circle>
         </>
+      )}
+
+      {/* Trace renderer overlay (Phase 6 evolution visualization) */}
+      {data?.bridge && (
+        <TraceRenderer
+          bridge={data.bridge}
+          sourceX={sourceX}
+          sourceY={sourceY}
+          targetX={targetX}
+          targetY={targetY}
+        />
       )}
 
       {/* Gate checkpoint marker at bridge midpoint */}

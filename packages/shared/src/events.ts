@@ -679,7 +679,29 @@ export interface EvolutionTickEvent extends BaseEvent {
   evolutionType: string;
 
   // Parsed fields (nullable)
-  details?: Record<string, unknown> | null;
+  details?: {
+    colorDeltas?: Record<string, ColorShiftDelta> | null;
+    traceDeltas?: Record<string, TraceIncrement> | null;
+    regionsActive?: RegionId[] | null;
+    bridgesTraversed?: EdgeId[] | null;
+  } | null;
+}
+
+/**
+ * Color shift delta for evolution
+ */
+export interface ColorShiftDelta {
+  hueRotationDegrees: number;
+  saturationDelta: number;
+  temperatureDelta: number;
+}
+
+/**
+ * Trace increment for bridges
+ */
+export interface TraceIncrement {
+  timestamp: string;
+  strengthIncrement: number;
 }
 
 export interface SparkTravelingEvent extends BaseEvent {
@@ -704,6 +726,14 @@ export interface GateUpdatedEvent extends BaseEvent {
   status: 'pending' | 'pass' | 'fail';
   passCount: number;
   failCount: number;
+}
+
+export interface MapExpandedEvent extends BaseEvent {
+  type: 'universe:map_expanded';
+
+  // Automatic fields
+  newRegionId: RegionId | null;
+  newBridgeIds: EdgeId[];
 }
 
 /**
@@ -752,7 +782,8 @@ export type WorkspaceEvent =
   | RegionDiscoveredEvent
   | EvolutionTickEvent
   | SparkTravelingEvent
-  | GateUpdatedEvent;
+  | GateUpdatedEvent
+  | MapExpandedEvent;
 
 /**
  * Type guard functions for discriminating event types
@@ -838,4 +869,6 @@ export const eventGuards = {
     event.type === 'chain:spark_traveling',
   isGateUpdated: (event: WorkspaceEvent): event is GateUpdatedEvent =>
     event.type === 'chain:gate_updated',
+  isMapExpanded: (event: WorkspaceEvent): event is MapExpandedEvent =>
+    event.type === 'universe:map_expanded',
 };

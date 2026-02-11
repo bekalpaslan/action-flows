@@ -101,3 +101,39 @@ export interface GateTraceFilter {
   limit?: number;
   offset?: number;
 }
+
+/**
+ * Health score for an individual gate
+ */
+export interface GateHealthScore {
+  gateId: GateId;
+  score: number;                              // 0-100
+  passCount: number;
+  violationCount: number;
+  trend: 'improving' | 'stable' | 'degrading';
+  lastViolation?: Timestamp;
+}
+
+/**
+ * Detected drift pattern across gates
+ */
+export interface DriftPattern {
+  pattern: string;                            // e.g., "missing-status-column"
+  gates: GateId[];                            // Which gates affected
+  frequency: number;                          // How many times seen
+  firstSeen: Timestamp;
+  lastSeen: Timestamp;
+}
+
+/**
+ * Overall harmony health score
+ */
+export interface HarmonyHealthScore {
+  overall: number;                           // 0-100
+  timestamp: Timestamp;
+  byGate: Record<GateId, GateHealthScore>;
+  violations24h: number;
+  violationsTotal: number;
+  driftPatterns: DriftPattern[];
+  recommendations: string[];                  // Reference to healing flows
+}

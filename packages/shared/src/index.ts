@@ -50,6 +50,9 @@ export type {
   GateId,
   GateStats,
   GateTraceFilter,
+  GateHealthScore,
+  DriftPattern,
+  HarmonyHealthScore,
 } from './gateTrace.js';
 
 // ============================================================================

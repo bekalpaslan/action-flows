@@ -1,0 +1,35 @@
+/**
+ * TraceRenderer Styles
+ *
+ * Styles for trace particle visualization and heat glow effects
+ */
+
+.trace-heat-glow {
+  filter: blur(15px);
+  animation: pulse-heat 2s ease-in-out infinite;
+}
+
+@keyframes pulse-heat {
+  0%, 100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.trace-particle {
+  filter: blur(1px);
+  animation: fade-particle 10s linear forwards;
+}
+
+@keyframes fade-particle {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}

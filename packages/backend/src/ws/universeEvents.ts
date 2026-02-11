@@ -5,7 +5,7 @@
  * @module universeEvents
  */
 
-import type { SessionId, RegionId, FogState, DiscoveryTrigger } from '@afw/shared';
+import type { SessionId, RegionId, EdgeId, FogState, DiscoveryTrigger } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { clientRegistry } from './clientRegistry.js';
 
@@ -57,7 +57,9 @@ export function broadcastRegionDiscovered(
 }
 
 /**
- * Broadcast evolution tick event (future Phase 4+)
+ * Broadcast evolution tick event
+ *
+ * Called by evolutionService after computing tick.
  */
 export function broadcastEvolutionTick(
   sessionId: SessionId,
@@ -82,6 +84,39 @@ export function broadcastEvolutionTick(
 
   clientRegistry.broadcastToSession(sessionId, message);
   console.log(`[Universe] Evolution tick: ${evolutionType} for session ${sessionId}`);
+}
+
+/**
+ * Broadcast map expanded event
+ *
+ * Called when new region is created (user workbench, inferred connection).
+ */
+export function broadcastMapExpanded(
+  sessionId: SessionId,
+  newRegionId: RegionId | null,
+  newBridgeIds: EdgeId[]
+): void {
+  const event = {
+    type: 'universe:map_expanded',
+    sessionId,
+    newRegionId,
+    newBridgeIds,
+    timestamp: brandedTypes.currentTimestamp(),
+  };
+
+  const message = JSON.stringify({
+    type: 'event',
+    sessionId,
+    payload: event,
+  });
+
+  clientRegistry.broadcastToSession(sessionId, message);
+
+  if (newRegionId) {
+    console.log(`[Universe] Map expanded: new region ${newRegionId}, ${newBridgeIds.length} bridges`);
+  } else {
+    console.log(`[Universe] Map expanded: ${newBridgeIds.length} new bridges`);
+  }
 }
 
 /**

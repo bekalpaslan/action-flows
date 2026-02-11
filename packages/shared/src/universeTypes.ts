@@ -123,6 +123,12 @@ export interface LightBridge {
   /** Last time this bridge was traversed */
   lastTraversed?: Timestamp;
 
+  /** Accumulated traces from traversals (Phase 6 evolution) */
+  traces: TraceAccumulation;
+
+  /** Whether this bridge is pinned (immune to auto-removal) */
+  pinned?: boolean;
+
   /** Additional metadata */
   metadata?: Record<string, unknown>;
 }

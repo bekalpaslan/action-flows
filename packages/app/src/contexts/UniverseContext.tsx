@@ -16,6 +16,7 @@ import type {
   WorkbenchId,
 } from '@afw/shared';
 import { FogState } from '@afw/shared';
+import { useWebSocketContext } from './WebSocketContext';
 
 /**
  * UniverseContext Type Definition
@@ -99,6 +100,7 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
   const [targetWorkbenchId, setTargetWorkbenchId] = useState<WorkbenchId | null>(null);
 
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+  const wsContext = useWebSocketContext();
 
   // Initialize: Fetch universe from backend
   useEffect(() => {
@@ -126,15 +128,20 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
     initializeUniverse();
   }, [API_BASE_URL]);
 
-  // WebSocket event handling (future implementation)
-  // TODO: Listen to 'universe:region_discovered', 'universe:evolution_tick', 'chain:spark_traveling'
-  // useEffect(() => {
-  //   const ws = useWebSocket();
-  //   ws.on('universe:region_discovered', handleRegionDiscovered);
-  //   ws.on('universe:evolution_tick', handleEvolutionTick);
-  //   ws.on('chain:spark_traveling', handleSparkTraveling);
-  //   return () => { /* cleanup */ };
-  // }, []);
+  // WebSocket event handling: Evolution tick and map expansion
+  useEffect(() => {
+    if (!wsContext?.ws) return;
+
+    const unsubscribe = wsContext.onEvent((event) => {
+      if (event.type === 'universe:evolution_tick') {
+        applyEvolutionTick(event as any);
+      } else if (event.type === 'universe:map_expanded') {
+        handleMapExpanded(event as any);
+      }
+    });
+
+    return unsubscribe;
+  }, [wsContext]);
 
   // Navigation: Navigate to region (stores target workbench, triggers zoom)
   const navigateToRegion = useCallback(
@@ -230,6 +237,104 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
     setZoomTargetRegionId(null);
     setTargetWorkbenchId(null);
   }, []);
+
+  /**
+   * Apply evolution tick to local universe state.
+   * Called when 'universe:evolution_tick' WebSocket event received.
+   */
+  const applyEvolutionTick = useCallback((event: any) => {
+    if (!universe) return;
+
+    const { colorDeltas, traceDeltas, regionsActive, bridgesTraversed } = event.details || {};
+
+    // Import color evolution utilities dynamically
+    import('../../systems/ColorEvolution').then(({ applyColorShift, calculateGlowIntensity }) => {
+      // Apply color deltas to regions
+      const updatedRegions = universe.regions.map((region) => {
+        const delta = colorDeltas?.[region.id];
+        if (!delta) return region;
+
+        // Apply color shift
+        const newColor = applyColorShift(region.colorShift.currentColor, delta);
+
+        return {
+          ...region,
+          colorShift: {
+            ...region.colorShift,
+            currentColor: newColor,
+            saturation: Math.min(1.0, region.colorShift.saturation + delta.saturationDelta),
+            temperature: Math.min(1.0, region.colorShift.temperature + delta.temperatureDelta),
+          },
+          glowIntensity: calculateGlowIntensity(
+            Math.min(1.0, region.colorShift.temperature + delta.temperatureDelta)
+          ),
+        };
+      });
+
+      // Apply trace deltas to bridges
+      const updatedBridges = universe.bridges.map((bridge) => {
+        const delta = traceDeltas?.[bridge.id];
+        if (!delta) return bridge;
+
+        // Ensure traces object exists
+        const currentTraces = bridge.traces || {
+          totalInteractions: 0,
+          recentTraces: [],
+          heatLevel: 0.0,
+        };
+
+        return {
+          ...bridge,
+          strength: Math.min(1.0, bridge.strength + delta.strengthIncrement),
+          traces: {
+            ...currentTraces,
+            totalInteractions: currentTraces.totalInteractions + 1,
+            recentTraces: [
+              {
+                timestamp: delta.timestamp,
+                chainId: event.sessionId,
+                sessionId: event.sessionId,
+                action: 'traversal',
+                result: 'success',
+              } as any,
+              ...currentTraces.recentTraces.slice(0, 9), // Keep last 10
+            ],
+            heatLevel: Math.min(1.0, currentTraces.heatLevel + 0.05),
+          },
+        };
+      });
+
+      // Update universe state
+      setUniverse({
+        ...universe,
+        regions: updatedRegions,
+        bridges: updatedBridges,
+      });
+
+      console.log(
+        `[UniverseContext] Applied evolution tick: ${regionsActive?.length || 0} regions, ${bridgesTraversed?.length || 0} bridges`
+      );
+    }).catch((err) => {
+      console.error('[UniverseContext] Failed to apply evolution tick:', err);
+    });
+  }, [universe]);
+
+  /**
+   * Handle map expansion event.
+   * Called when new region or bridge is created.
+   */
+  const handleMapExpanded = useCallback((event: any) => {
+    // Trigger fade-in animation for new region if applicable
+    if (event.newRegionId) {
+      // Store fade-in region ID for CosmicMap to apply animation
+      setTargetWorkbenchId(event.newRegionId as any);
+    }
+
+    // Refresh universe to fetch new region/bridges
+    refreshUniverse();
+
+    console.log(`[UniverseContext] Map expanded: ${event.newRegionId || 'bridges only'}`);
+  }, [refreshUniverse]);
 
   const value = useMemo(
     () => ({

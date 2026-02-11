@@ -30,6 +30,7 @@ import toolbarRouter from './routes/toolbar.js';
 import patternsRouter from './routes/patterns.js';
 import registryRouter from './routes/registry.js';
 import harmonyRouter from './routes/harmony.js';
+import healingRecommendationsRouter from './routes/healingRecommendations.js';
 import routingRouter from './routes/routing.js';
 import contractsRouter from './routes/contracts.js';
 import agentValidatorRouter from './routes/agentValidator.js';
@@ -49,6 +50,9 @@ import { initSparkBroadcaster, getSparkBroadcaster } from './services/sparkBroad
 import { initGateValidator, getGateValidator } from './services/gateValidator.js';
 import { initGateCheckpoint, getGateCheckpoint } from './services/gateCheckpoint.js';
 import { initBridgeStrengthService } from './services/bridgeStrengthService.js';
+import { initHealingRecommendationEngine, getHealingRecommendationEngine } from './services/healingRecommendations.js';
+import { initHealthScoreCalculator } from './services/healthScoreCalculator.js';
+import createHarmonyHealthRouter from './routes/harmonyHealth.js';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -67,6 +71,9 @@ const storage = process.env.AFW_DISABLE_CIRCUIT_BREAKER === 'true'
 const snapshotService = new SnapshotService(storage, {
   snapshotDir: process.env.AFW_SNAPSHOT_DIR || '.actionflows-snapshot',
 });
+
+// Initialize health score calculator
+const healthScoreCalculator = initHealthScoreCalculator(storage);
 
 // Create Express app
 const app = express();
@@ -131,6 +138,8 @@ app.use('/api/universe', universeRouter);
 app.use('/api', patternsRouter);
 app.use('/api/registry', registryRouter);
 app.use('/api/harmony', harmonyRouter);
+app.use('/api/harmony/recommendations', healingRecommendationsRouter);
+app.use('/api/harmony', createHarmonyHealthRouter(healthScoreCalculator));
 app.use('/api/routing', routingRouter);
 app.use('/api/contracts', contractsRouter);
 app.use('/api/agent-validator', agentValidatorRouter);
@@ -505,6 +514,76 @@ if (isMainModule) {
       console.error('[GateCheckpoint] ❌ Failed to initialize GateCheckpoint:', error);
     }
 
+    // Initialize healing recommendation engine (Component 7 - Healing Recommendation Engine)
+    try {
+      const healingEngine = initHealingRecommendationEngine(storage);
+
+      // Wire healing recommendation events to WebSocket broadcast
+      healingEngine.on('harmony:recommendation_ready', (data: any) => {
+        const message = JSON.stringify({
+          type: 'harmony:recommendation_ready',
+          payload: data,
+        });
+
+        clientRegistry.getAllClients().forEach((client) => {
+          if (client.readyState === 1) { // WebSocket.OPEN
+            client.send(message);
+          }
+        });
+      });
+
+      healingEngine.on('recommendation:status_changed', (data: any) => {
+        const message = JSON.stringify({
+          type: 'recommendation:status_changed',
+          payload: data,
+        });
+
+        clientRegistry.getAllClients().forEach((client) => {
+          if (client.readyState === 1) { // WebSocket.OPEN
+            client.send(message);
+          }
+        });
+      });
+
+      console.log('[HealingRecommendations] ✅ Service initialized successfully for Auditable Verification System Component 7');
+    } catch (error) {
+      console.error('[HealingRecommendations] ❌ Failed to initialize HealingRecommendationEngine:', error);
+    }
+
+    // Initialize health score calculator WebSocket events (Component 6 - Health Score Aggregation)
+    try {
+      // Wire health score events to WebSocket broadcast
+      healthScoreCalculator.on('health:updated', (healthScore: any) => {
+        const message = JSON.stringify({
+          type: 'harmony:health_updated',
+          payload: healthScore,
+        });
+
+        clientRegistry.getAllClients().forEach((client) => {
+          if (client.readyState === 1) { // WebSocket.OPEN
+            client.send(message);
+          }
+        });
+      });
+
+      healthScoreCalculator.on('harmony:threshold_exceeded', (data: any) => {
+        const message = JSON.stringify({
+          type: 'harmony:threshold_exceeded',
+          payload: data,
+        });
+
+        clientRegistry.getAllClients().forEach((client) => {
+          if (client.readyState === 1) { // WebSocket.OPEN
+            client.send(message);
+          }
+        });
+      });
+
+      console.log('[HealthScore] ✅ Event broadcasting wired successfully for Auditable Verification System Component 6');
+    } catch (error) {
+      console.error('[HealthScore] ❌ Failed to wire health score events:', error);
+    }
+
     // Start cleanup service
     cleanupService.start();
 
@@ -555,6 +634,22 @@ if (isMainModule) {
       sparkBroadcaster.shutdown();
     } catch (error) {
       console.warn('[SparkBroadcaster] Not initialized or already shut down');
+    }
+
+    // Shutdown HealingRecommendationEngine
+    try {
+      const healingEngine = getHealingRecommendationEngine();
+      healingEngine.shutdown();
+    } catch (error) {
+      console.warn('[HealingRecommendations] Not initialized or already shut down');
+    }
+
+    // Shutdown GateCheckpoint
+    try {
+      const gateCheckpoint = getGateCheckpoint();
+      gateCheckpoint.shutdown();
+    } catch (error) {
+      console.warn('[GateCheckpoint] Not initialized or already shut down');
     }
 
     // Shutdown file watchers

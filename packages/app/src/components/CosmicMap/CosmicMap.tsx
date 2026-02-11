@@ -107,6 +107,7 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
         strength: bridge.strength,
         activeSparkChainId: bridge.activeSparkChainId,
         traversalCount: bridge.traversalCount,
+        bridge: bridge, // Pass full bridge data for trace rendering
       },
     }));
   }, [universe]);

@@ -195,6 +195,11 @@ function createBridge(sourceId: StarId, targetId: StarId): LightBridge {
     ],
     strength: 0.0,
     traversalCount: 0,
+    traces: {
+      totalInteractions: 0,
+      recentTraces: [],
+      heatLevel: 0.0,
+    },
   };
 }
 

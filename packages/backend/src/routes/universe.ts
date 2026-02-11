@@ -280,6 +280,11 @@ router.post('/bridges', writeLimiter, validateBody(createBridgeSchema), async (r
       gates: [],
       strength: bridgeData.strength || 0,
       traversalCount: 0,
+      traces: {
+        totalInteractions: 0,
+        recentTraces: [],
+        heatLevel: 0.0,
+      },
     };
 
     await Promise.resolve(storage.setBridge(bridge));
@@ -763,6 +768,70 @@ router.get('/bridge-strengths', readLimiter, async (req, res) => {
     console.error('[API] Error fetching all bridge strengths:', error);
     res.status(500).json({
       error: 'Failed to fetch bridge strengths',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
+ * PUT /api/universe/evolution/settings
+ * Update evolution service settings
+ */
+router.put('/evolution/settings', writeLimiter, async (req, res) => {
+  try {
+    const { speed, autoInference } = req.body;
+
+    // Dynamically import to avoid circular dependency
+    const { getEvolutionService } = await import('../services/evolutionService.js');
+    const evolutionService = getEvolutionService();
+
+    // Update settings
+    if (speed !== undefined) {
+      evolutionService.setEvolutionSpeed(speed);
+    }
+
+    if (autoInference !== undefined) {
+      evolutionService.setAutoInference(autoInference);
+    }
+
+    console.log(`[API] Evolution settings updated: speed=${speed}, autoInference=${autoInference}`);
+
+    res.json({
+      success: true,
+      settings: {
+        speed: evolutionService.getEvolutionSpeed(),
+        autoInference: evolutionService.getAutoInference(),
+        tickCounter: evolutionService.getTickCounter(),
+      },
+    });
+  } catch (error) {
+    console.error('[API] Error updating evolution settings:', error);
+    res.status(500).json({
+      error: 'Failed to update evolution settings',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
+ * GET /api/universe/evolution/settings
+ * Get current evolution service settings
+ */
+router.get('/evolution/settings', readLimiter, async (req, res) => {
+  try {
+    // Dynamically import to avoid circular dependency
+    const { getEvolutionService } = await import('../services/evolutionService.js');
+    const evolutionService = getEvolutionService();
+
+    res.json({
+      speed: evolutionService.getEvolutionSpeed(),
+      autoInference: evolutionService.getAutoInference(),
+      tickCounter: evolutionService.getTickCounter(),
+    });
+  } catch (error) {
+    console.error('[API] Error fetching evolution settings:', error);
+    res.status(500).json({
+      error: 'Failed to fetch evolution settings',
       message: sanitizeError(error),
     });
   }
