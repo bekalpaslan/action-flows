@@ -14,9 +14,12 @@
  */
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import type { SessionId, Session } from '@afw/shared';
+import type { SessionId, Session, RegionId } from '@afw/shared';
 import { useSessionContext } from '../../contexts/SessionContext';
 import { useUniverseContext } from '../../contexts/UniverseContext';
+import { useDiscoveryContext } from '../../contexts/DiscoveryContext';
+import { DiscoveryHint } from '../CommandCenter/DiscoveryHint';
+import { DISCOVERY_SUGGESTIONS, getRegionName } from '../CommandCenter/discoveryConfig';
 import './CommandCenter.css';
 
 export interface CommandCenterProps {
@@ -35,11 +38,13 @@ export function CommandCenter({
 }: CommandCenterProps): React.ReactElement {
   const [commandInput, setCommandInput] = useState('');
   const [isSessionDropdownOpen, setIsSessionDropdownOpen] = useState(false);
+  const [dismissedHints, setDismissedHints] = useState<Set<RegionId>>(new Set());
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { sessions, activeSessionId, setActiveSession } = useSessionContext();
   const { universe } = useUniverseContext();
+  const { discoveryProgress } = useDiscoveryContext();
 
   /**
    * Get active session object
@@ -173,10 +178,57 @@ export function CommandCenter({
     return 'low';
   };
 
+  /**
+   * Find regions that are near discovery (≥90% progress, not yet revealed)
+   * Only show the highest progress region to avoid spam
+   */
+  const nearDiscoveryRegions = Object.entries(discoveryProgress)
+    .filter(([regionId, progress]) => {
+      // Must be ≥90% progress
+      if (progress < 0.9) return false;
+
+      // Must not be fully discovered (100%)
+      if (progress >= 1.0) return false;
+
+      // Must not be dismissed
+      if (dismissedHints.has(regionId as RegionId)) return false;
+
+      return true;
+    })
+    .sort(([, progressA], [, progressB]) => progressB - progressA) // Highest progress first
+    .map(([regionId]) => regionId as RegionId);
+
+  // Show only the first hint (highest progress)
+  const activeHint = nearDiscoveryRegions[0];
+
+  /**
+   * Handle hint dismissal
+   */
+  const handleDismissHint = useCallback((regionId: RegionId) => {
+    setDismissedHints((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(regionId);
+      return newSet;
+    });
+  }, []);
+
   return (
     <div className="command-center" role="region" aria-label="Command Center">
-      {/* Left: Command Input */}
-      <div className="command-center__input-section">
+      {/* Discovery Hint (appears above command input when region is 90%+ ready) */}
+      {activeHint && (
+        <DiscoveryHint
+          regionId={activeHint}
+          regionName={getRegionName(activeHint)}
+          progress={discoveryProgress[activeHint]}
+          suggestion={DISCOVERY_SUGGESTIONS[activeHint]}
+          onDismiss={handleDismissHint}
+        />
+      )}
+
+      {/* Control Row */}
+      <div className="command-center__controls">
+        {/* Left: Command Input */}
+        <div className="command-center__input-section">
         <div className="command-center__input-icon">
           <svg
             width="18"
@@ -304,32 +356,33 @@ export function CommandCenter({
         )}
       </div>
 
-      {/* Right: Health Status */}
-      {showHealthStatus && (
-        <div className="command-center__health-section">
-          <div
-            className={`command-center__health-indicator command-center__health-indicator--${getHealthColorClass(
-              universeHealth
-            )}`}
-            title={`Universe health: ${universeHealth}%`}
-            aria-label={`Universe health: ${universeHealth}%`}
-          >
-            <svg
-              className="command-center__health-icon"
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="currentColor"
+        {/* Right: Health Status */}
+        {showHealthStatus && (
+          <div className="command-center__health-section">
+            <div
+              className={`command-center__health-indicator command-center__health-indicator--${getHealthColorClass(
+                universeHealth
+              )}`}
+              title={`Universe health: ${universeHealth}%`}
+              aria-label={`Universe health: ${universeHealth}%`}
             >
-              <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 13A6 6 0 118 2a6 6 0 010 12z" />
-              <path d="M8 4.5a.5.5 0 01.5.5v3.5H12a.5.5 0 010 1H8.5v3.5a.5.5 0 01-1 0V9H4a.5.5 0 010-1h3.5V4.5a.5.5 0 01.5-.5z" />
-            </svg>
-            <span className="command-center__health-value">
-              {universeHealth}%
-            </span>
+              <svg
+                className="command-center__health-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 13A6 6 0 118 2a6 6 0 010 12z" />
+                <path d="M8 4.5a.5.5 0 01.5.5v3.5H12a.5.5 0 010 1H8.5v3.5a.5.5 0 01-1 0V9H4a.5.5 0 010-1h3.5V4.5a.5.5 0 01.5-.5z" />
+              </svg>
+              <span className="command-center__health-value">
+                {universeHealth}%
+              </span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -81,10 +81,11 @@ const INITIAL_POSITIONS: Record<WorkbenchId, { x: number; y: number }> = {
 
 /**
  * Initial fog-of-war states
- * Work starts revealed, others at faint or hidden
+ * Work + Canvas start revealed (Phase 3 Big Bang loadout), others at faint or hidden
  */
 const INITIAL_FOG_STATES: Record<WorkbenchId, FogState> = {
-  work: FogState.REVEALED,           // Starting region
+  work: FogState.REVEALED,           // Starting region (always visible)
+  canvas: FogState.REVEALED,         // Starting region (brainstorm & design)
   maintenance: FogState.FAINT,       // Adjacent to work
   explore: FogState.FAINT,           // Adjacent to work
   review: FogState.FAINT,            // Adjacent to work
@@ -95,7 +96,6 @@ const INITIAL_FOG_STATES: Record<WorkbenchId, FogState> = {
   editor: FogState.HIDDEN,           // Unlocked after first edit
   intel: FogState.HIDDEN,            // Unlocked after dossier creation
   respect: FogState.HIDDEN,          // Unlocked after boundary check
-  canvas: FogState.HIDDEN,           // Unlocked after design work
   coverage: FogState.HIDDEN,         // Unlocked after contract work
 };
 
@@ -217,15 +217,59 @@ function createBridge(sourceId: WorkbenchId, targetId: WorkbenchId): LightBridge
 
 /**
  * Creates discovery triggers for hidden regions
+ * Phase 3: All 13 regions now have discovery conditions
  */
 function createDiscoveryTriggers(): DiscoveryTrigger[] {
   const triggers: DiscoveryTrigger[] = [];
 
+  // Work - always visible (no trigger, starts REVEALED)
+  // Canvas - always visible (no trigger, starts REVEALED)
+
+  // Maintenance unlocks after encountering a bug/error
+  triggers.push({
+    regionId: brandedTypes.regionId('region-maintenance'),
+    condition: { type: 'error_encountered', errorType: 'any' },
+    description: 'Encounter a bug or error to unlock Maintenance',
+    triggered: false,
+  });
+
+  // Explore unlocks after asking research questions
+  triggers.push({
+    regionId: brandedTypes.regionId('region-explore'),
+    condition: { type: 'interaction_count', threshold: 3 },
+    description: 'Ask 3 research questions to unlock Explore',
+    triggered: false,
+  });
+
+  // Review unlocks after completing code chains
+  triggers.push({
+    regionId: brandedTypes.regionId('region-review'),
+    condition: { type: 'chain_completed', action: 'code/' },
+    description: 'Complete 2 code chains to unlock Review',
+    triggered: false,
+  });
+
+  // Settings unlocks after asking about config
+  triggers.push({
+    regionId: brandedTypes.regionId('region-settings'),
+    condition: { type: 'interaction_count', threshold: 1 },
+    description: 'Ask about configuration to unlock Settings',
+    triggered: false,
+  });
+
+  // Archive unlocks after creating multiple sessions
+  triggers.push({
+    regionId: brandedTypes.regionId('region-archive'),
+    condition: { type: 'chain_completed', action: 'code/' },
+    description: 'Complete 3 sessions to unlock Archive',
+    triggered: false,
+  });
+
   // PM unlocks after first planning chain
   triggers.push({
     regionId: brandedTypes.regionId('region-pm'),
-    condition: { type: 'chain_completed', action: 'plan/' },
-    description: 'Complete a planning chain to unlock Project Management',
+    condition: { type: 'interaction_count', threshold: 5 },
+    description: 'Ask 5 planning questions to unlock Project Management',
     triggered: false,
   });
 
@@ -248,32 +292,24 @@ function createDiscoveryTriggers(): DiscoveryTrigger[] {
   // Intel unlocks after creating a dossier
   triggers.push({
     regionId: brandedTypes.regionId('region-intel'),
-    condition: { type: 'chain_completed', action: 'intel/' },
-    description: 'Create an intelligence dossier to unlock Intel',
+    condition: { type: 'chain_completed', action: 'analyze/' },
+    description: 'Create an analysis report to unlock Intel',
     triggered: false,
   });
 
   // Respect unlocks after boundary check
   triggers.push({
     regionId: brandedTypes.regionId('region-respect'),
-    condition: { type: 'chain_completed', action: 'respect/' },
-    description: 'Run a spatial boundary check to unlock Respect',
-    triggered: false,
-  });
-
-  // Canvas unlocks after design work
-  triggers.push({
-    regionId: brandedTypes.regionId('region-canvas'),
-    condition: { type: 'chain_completed', action: 'canvas/' },
-    description: 'Open a design preview to unlock Canvas',
+    condition: { type: 'chain_completed', action: 'review/' },
+    description: 'Complete a code review to unlock Respect',
     triggered: false,
   });
 
   // Coverage unlocks after contract work
   triggers.push({
     regionId: brandedTypes.regionId('region-coverage'),
-    condition: { type: 'chain_completed', action: 'coverage/' },
-    description: 'Check contract coverage to unlock Coverage',
+    condition: { type: 'chain_completed', action: 'test/' },
+    description: 'Run tests to unlock Coverage',
     triggered: false,
   });
 
@@ -306,7 +342,7 @@ export function createDefaultUniverse(): UniverseGraph {
       lastModifiedAt: brandedTypes.currentTimestamp(),
       evolutionHistory: [],
       totalInteractions: 0,
-      discoveredRegionCount: 1, // Work starts revealed
+      discoveredRegionCount: 2, // Work + Canvas start revealed
       totalRegionCount: regions.length,
       mapBounds: {
         minX: Math.min(...xs) - 100,

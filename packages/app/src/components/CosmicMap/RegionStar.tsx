@@ -5,6 +5,7 @@
  * Features layer-based coloring, fog of war states, and glow intensity.
  */
 
+import { useState, useEffect, useRef } from 'react';
 import type { RegionId, WorkbenchId, ColorShift, HealthMetrics } from '@afw/shared';
 import { FogState } from '@afw/shared';
 import { Handle, Position, type NodeProps } from 'reactflow';
@@ -26,6 +27,28 @@ export interface RegionStarData {
 
 export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected }) => {
   const { navigateToRegion, isRegionAccessible } = useUniverseContext();
+  const [isRevealing, setIsRevealing] = useState(false);
+  const prevFogStateRef = useRef<FogState>(data.fogState);
+
+  // Watch for fog state changes (HIDDEN → REVEALED)
+  useEffect(() => {
+    const prevFogState = prevFogStateRef.current;
+
+    // Trigger revelation animation when transitioning from HIDDEN to REVEALED
+    if (data.fogState === FogState.REVEALED && prevFogState === FogState.HIDDEN) {
+      setIsRevealing(true);
+
+      // Clear animation flag after animation completes (1500ms total duration)
+      const timer = setTimeout(() => {
+        setIsRevealing(false);
+      }, 1500);
+
+      return () => clearTimeout(timer);
+    }
+
+    // Update ref for next comparison
+    prevFogStateRef.current = data.fogState;
+  }, [data.fogState]);
 
   const handleClick = () => {
     if (isRegionAccessible(data.regionId)) {
@@ -38,6 +61,7 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
   const statusClass = `status-${data.status}`;
   const layerClass = `layer-${data.layer}`;
   const selectedClass = selected ? 'selected' : '';
+  const revealingClass = isRevealing ? 'revealing' : '';
 
   // Calculate opacity based on fog state
   const opacity = data.fogState === FogState.HIDDEN
@@ -54,7 +78,7 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
 
   return (
     <div
-      className={`region-star ${fogClass} ${statusClass} ${layerClass} ${selectedClass}`}
+      className={`region-star ${fogClass} ${statusClass} ${layerClass} ${selectedClass} ${revealingClass}`}
       onClick={isClickable ? handleClick : undefined}
       role={isClickable ? 'button' : 'presentation'}
       tabIndex={isClickable ? 0 : -1}
@@ -73,6 +97,11 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
       {/* Connection handles */}
       <Handle type="target" position={Position.Left} />
       <Handle type="source" position={Position.Right} />
+
+      {/* Fog overlay (for revelation animation) */}
+      {data.fogState === FogState.HIDDEN && (
+        <div className="region-star__fog" />
+      )}
 
       {/* Star core */}
       <div className="region-star__core">

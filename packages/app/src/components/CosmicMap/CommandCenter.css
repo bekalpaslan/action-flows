@@ -16,13 +16,20 @@
   right: 0;
   z-index: 10;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 0;
   padding: 12px 20px;
   background: var(--panel-bg-elevated);
   border-top: var(--panel-border-default);
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.3), var(--panel-glow-default);
   backdrop-filter: blur(20px);
+}
+
+/* Control row wrapper (input, session, health) */
+.command-center__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 /* ============================================================================
@@ -71,7 +78,7 @@
   background: transparent;
   border: none;
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: var(--text-sm);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   outline: none;
 }
@@ -126,8 +133,8 @@
   border: var(--panel-border-default);
   border-radius: var(--btn-radius-md);
   color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s ease;
@@ -212,7 +219,7 @@
   padding: 12px;
   text-align: center;
   color: var(--text-tertiary);
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 
 .command-center__session-option {
@@ -224,7 +231,7 @@
   border: none;
   border-radius: var(--btn-radius-sm);
   color: var(--text-primary);
-  font-size: 13px;
+  font-size: var(--text-sm);
   cursor: pointer;
   width: 100%;
   text-align: left;
@@ -247,8 +254,8 @@
 
 .command-center__session-status {
   padding: 2px 6px;
-  font-size: 10px;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   border-radius: 4px;
   background: var(--fill-tertiary);
@@ -257,7 +264,7 @@
 
 .command-center__session-status--in_progress,
 .command-center__session-status--active {
-  background: rgba(50, 215, 75, 0.2);
+  background: var(--glow-color-success);
   color: var(--system-green);
 }
 
@@ -268,7 +275,7 @@
 
 .command-center__session-status--failed,
 .command-center__session-status--error {
-  background: rgba(255, 69, 58, 0.2);
+  background: var(--glow-color-error);
   color: var(--system-red);
 }
 
@@ -294,8 +301,8 @@
   background: var(--panel-bg-raised);
   border: var(--panel-border-default);
   border-radius: var(--btn-radius-md);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   cursor: help;
   transition: all 0.2s ease;
 }
@@ -335,8 +342,11 @@
 
 @media (max-width: 768px) {
   .command-center {
-    flex-wrap: wrap;
     padding: 8px 12px;
+  }
+
+  .command-center__controls {
+    flex-wrap: wrap;
     gap: 8px;
   }
 
