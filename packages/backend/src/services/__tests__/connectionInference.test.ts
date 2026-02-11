@@ -285,6 +285,7 @@ describe('ConnectionInferenceService', () => {
         gates: [],
         strength: 0.3,
         pinned: true,
+        traversalCount: 0,
         traces: {
           totalInteractions: 0,
           recentTraces: [],
@@ -303,12 +304,14 @@ describe('ConnectionInferenceService', () => {
         gates: [],
         strength: 0.3,
         pinned: false,
+        traversalCount: 0,
         traces: {
           totalInteractions: 2,
           recentTraces: [
             {
               timestamp: Date.now() - 1000 as any, // 1 second ago
               chainId: 'chain-1' as any,
+              sessionId: 'session-test' as any,
               action: 'traversal',
               result: 'success',
             },
@@ -330,12 +333,14 @@ describe('ConnectionInferenceService', () => {
         gates: [],
         strength: 0.3,
         pinned: false,
+        traversalCount: 0,
         traces: {
           totalInteractions: 2, // Below threshold (5)
           recentTraces: [
             {
               timestamp: oneWeekAgo as any,
               chainId: 'chain-1' as any,
+              sessionId: 'session-test' as any,
               action: 'traversal',
               result: 'success',
             },
@@ -357,12 +362,14 @@ describe('ConnectionInferenceService', () => {
         gates: [],
         strength: 0.5,
         pinned: false,
+        traversalCount: 0,
         traces: {
           totalInteractions: 5, // At threshold
           recentTraces: [
             {
               timestamp: oneWeekAgo as any,
               chainId: 'chain-1' as any,
+              sessionId: 'session-test' as any,
               action: 'traversal',
               result: 'success',
             },
@@ -382,6 +389,7 @@ describe('ConnectionInferenceService', () => {
         gates: [],
         strength: 0.3,
         pinned: false,
+        traversalCount: 0,
         traces: {
           totalInteractions: 0,
           recentTraces: [],
@@ -394,7 +402,7 @@ describe('ConnectionInferenceService', () => {
     });
   });
 
-  describe('suggestNewBridges', () => {
+  describe('applyBridgeSuggestions', () => {
     it('should only create bridges with >= 0.7 confidence', () => {
       const universe: UniverseGraph = {
         regions: [
@@ -402,6 +410,16 @@ describe('ConnectionInferenceService', () => {
           { id: 'region-B' as RegionId } as any,
         ],
         bridges: [],
+        discoveryTriggers: [],
+        metadata: {
+          createdAt: Date.now() as any,
+          lastModifiedAt: Date.now() as any,
+          evolutionHistory: [],
+          totalInteractions: 0,
+          discoveredRegionCount: 0,
+          totalRegionCount: 2,
+          mapBounds: { minX: 0, minY: 0, maxX: 1000, maxY: 1000 },
+        },
       };
 
       const suggestions: BridgeSuggestion[] = [
@@ -419,7 +437,7 @@ describe('ConnectionInferenceService', () => {
         },
       ];
 
-      const newBridgeIds = service.suggestNewBridges(universe, suggestions);
+      const newBridgeIds = service.applyBridgeSuggestions(universe, suggestions);
 
       expect(newBridgeIds.length).toBe(1);
       expect(universe.bridges.length).toBe(1);
@@ -439,6 +457,7 @@ describe('ConnectionInferenceService', () => {
             gates: [],
             strength: 0.5,
             pinned: false,
+            traversalCount: 0,
             traces: {
               totalInteractions: 10,
               recentTraces: [],
@@ -446,6 +465,16 @@ describe('ConnectionInferenceService', () => {
             },
           },
         ],
+        discoveryTriggers: [],
+        metadata: {
+          createdAt: Date.now() as any,
+          lastModifiedAt: Date.now() as any,
+          evolutionHistory: [],
+          totalInteractions: 0,
+          discoveredRegionCount: 0,
+          totalRegionCount: 2,
+          mapBounds: { minX: 0, minY: 0, maxX: 1000, maxY: 1000 },
+        },
       };
 
       const suggestions: BridgeSuggestion[] = [
@@ -457,7 +486,7 @@ describe('ConnectionInferenceService', () => {
         },
       ];
 
-      const newBridgeIds = service.suggestNewBridges(universe, suggestions);
+      const newBridgeIds = service.applyBridgeSuggestions(universe, suggestions);
 
       // Should not create duplicate
       expect(newBridgeIds.length).toBe(0);
@@ -471,6 +500,16 @@ describe('ConnectionInferenceService', () => {
           { id: 'region-B' as RegionId } as any,
         ],
         bridges: [],
+        discoveryTriggers: [],
+        metadata: {
+          createdAt: Date.now() as any,
+          lastModifiedAt: Date.now() as any,
+          evolutionHistory: [],
+          totalInteractions: 0,
+          discoveredRegionCount: 0,
+          totalRegionCount: 2,
+          mapBounds: { minX: 0, minY: 0, maxX: 1000, maxY: 1000 },
+        },
       };
 
       const suggestions: BridgeSuggestion[] = [
@@ -482,7 +521,7 @@ describe('ConnectionInferenceService', () => {
         },
       ];
 
-      service.suggestNewBridges(universe, suggestions);
+      service.applyBridgeSuggestions(universe, suggestions);
 
       const newBridge = universe.bridges[0];
       expect(newBridge.strength).toBe(0.3); // Minimum strength
@@ -505,6 +544,7 @@ describe('ConnectionInferenceService', () => {
             gates: [],
             strength: 0.5,
             pinned: false,
+            traversalCount: 0,
             traces: {
               totalInteractions: 10,
               recentTraces: [],
@@ -512,6 +552,16 @@ describe('ConnectionInferenceService', () => {
             },
           },
         ],
+        discoveryTriggers: [],
+        metadata: {
+          createdAt: Date.now() as any,
+          lastModifiedAt: Date.now() as any,
+          evolutionHistory: [],
+          totalInteractions: 0,
+          discoveredRegionCount: 0,
+          totalRegionCount: 2,
+          mapBounds: { minX: 0, minY: 0, maxX: 1000, maxY: 1000 },
+        },
       };
 
       const suggestions: BridgeSuggestion[] = [
@@ -523,7 +573,7 @@ describe('ConnectionInferenceService', () => {
         },
       ];
 
-      const newBridgeIds = service.suggestNewBridges(universe, suggestions);
+      const newBridgeIds = service.applyBridgeSuggestions(universe, suggestions);
 
       // Should detect B→A is same as A→B
       expect(newBridgeIds.length).toBe(0);
@@ -544,12 +594,14 @@ describe('ConnectionInferenceService', () => {
             gates: [],
             strength: 0.3,
             pinned: false,
+            traversalCount: 0,
             traces: {
               totalInteractions: 2,
               recentTraces: [
                 {
                   timestamp: oneWeekAgo as any,
                   chainId: 'chain-1' as any,
+                  sessionId: 'session-test' as any,
                   action: 'traversal',
                   result: 'success',
                 },
@@ -558,6 +610,16 @@ describe('ConnectionInferenceService', () => {
             },
           },
         ],
+        discoveryTriggers: [],
+        metadata: {
+          createdAt: Date.now() as any,
+          lastModifiedAt: Date.now() as any,
+          evolutionHistory: [],
+          totalInteractions: 0,
+          discoveredRegionCount: 0,
+          totalRegionCount: 0,
+          mapBounds: { minX: 0, minY: 0, maxX: 1000, maxY: 1000 },
+        },
       };
 
       const removedIds = service.pruneWeakBridges(universe);
@@ -580,12 +642,14 @@ describe('ConnectionInferenceService', () => {
             gates: [],
             strength: 0.3,
             pinned: true, // Pinned by user
+            traversalCount: 0,
             traces: {
               totalInteractions: 0,
               recentTraces: [
                 {
                   timestamp: oneWeekAgo as any,
                   chainId: 'chain-1' as any,
+                  sessionId: 'session-test' as any,
                   action: 'traversal',
                   result: 'success',
                 },
@@ -594,6 +658,16 @@ describe('ConnectionInferenceService', () => {
             },
           },
         ],
+        discoveryTriggers: [],
+        metadata: {
+          createdAt: Date.now() as any,
+          lastModifiedAt: Date.now() as any,
+          evolutionHistory: [],
+          totalInteractions: 0,
+          discoveredRegionCount: 0,
+          totalRegionCount: 0,
+          mapBounds: { minX: 0, minY: 0, maxX: 1000, maxY: 1000 },
+        },
       };
 
       const removedIds = service.pruneWeakBridges(universe);
@@ -606,6 +680,16 @@ describe('ConnectionInferenceService', () => {
       const universe: UniverseGraph = {
         regions: [],
         bridges: [],
+        discoveryTriggers: [],
+        metadata: {
+          createdAt: Date.now() as any,
+          lastModifiedAt: Date.now() as any,
+          evolutionHistory: [],
+          totalInteractions: 0,
+          discoveredRegionCount: 0,
+          totalRegionCount: 0,
+          mapBounds: { minX: 0, minY: 0, maxX: 1000, maxY: 1000 },
+        },
       };
 
       const removedIds = service.pruneWeakBridges(universe);

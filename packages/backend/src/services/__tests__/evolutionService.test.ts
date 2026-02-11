@@ -31,10 +31,11 @@ describe('EvolutionService', () => {
 
       expect(tick).toBeDefined();
       expect(tick).not.toBeNull();
-      expect(tick!.details.colorDeltas).toBeDefined();
-      expect(tick!.details.colorDeltas['region-platform']).toBeDefined();
-      expect(tick!.details.colorDeltas['region-platform'].hueRotationDegrees).toBeGreaterThan(0);
-      expect(tick!.details.colorDeltas['region-philosophy']).toBeDefined();
+      const details = tick!.details as any;
+      expect(details.colorDeltas).toBeDefined();
+      expect(details.colorDeltas['region-platform']).toBeDefined();
+      expect(details.colorDeltas['region-platform'].hueRotationDegrees).toBeGreaterThan(0);
+      expect(details.colorDeltas['region-philosophy']).toBeDefined();
     });
 
     it('should compute trace deltas for traversed bridges', async () => {
@@ -51,10 +52,11 @@ describe('EvolutionService', () => {
 
       expect(tick).toBeDefined();
       expect(tick).not.toBeNull();
-      expect(tick!.details.traceDeltas).toBeDefined();
-      expect(tick!.details.traceDeltas['bridge-1']).toBeDefined();
-      expect(tick!.details.traceDeltas['bridge-1'].strengthIncrement).toBe(0.05);
-      expect(tick!.details.traceDeltas['bridge-2']).toBeDefined();
+      const details = tick!.details as any;
+      expect(details.traceDeltas).toBeDefined();
+      expect(details.traceDeltas['bridge-1']).toBeDefined();
+      expect(details.traceDeltas['bridge-1'].strengthIncrement).toBe(0.05);
+      expect(details.traceDeltas['bridge-2']).toBeDefined();
     });
 
     it('should respect evolution speed setting - off', async () => {
@@ -135,8 +137,9 @@ describe('EvolutionService', () => {
       const tick = await service.processInteraction(context);
 
       expect(tick).not.toBeNull();
-      expect(tick!.details.colorDeltas).toEqual({});
-      expect(tick!.details.traceDeltas).toEqual({});
+      const details = tick!.details as any;
+      expect(details.colorDeltas).toEqual({});
+      expect(details.traceDeltas).toEqual({});
     });
 
     it('should handle empty traversed bridges gracefully', async () => {
@@ -152,7 +155,8 @@ describe('EvolutionService', () => {
       const tick = await service.processInteraction(context);
 
       expect(tick).not.toBeNull();
-      expect(tick!.details.traceDeltas).toEqual({});
+      const details = tick!.details as any;
+      expect(details.traceDeltas).toEqual({});
     });
   });
 
@@ -266,7 +270,8 @@ describe('EvolutionService', () => {
       const tick = await service.processInteraction(context);
 
       expect(tick).not.toBeNull();
-      const delta = tick!.details.colorDeltas['region-platform'];
+      const details = tick!.details as any;
+      const delta = details.colorDeltas['region-platform'];
       expect(delta.hueRotationDegrees).toBe(0.5);
     });
 
@@ -283,7 +288,8 @@ describe('EvolutionService', () => {
       const tick = await service.processInteraction(context);
 
       expect(tick).not.toBeNull();
-      const delta = tick!.details.colorDeltas['region-platform'];
+      const details = tick!.details as any;
+      const delta = details.colorDeltas['region-platform'];
       expect(delta.temperatureDelta).toBe(0.01);
     });
 
@@ -300,7 +306,8 @@ describe('EvolutionService', () => {
       const tick = await service.processInteraction(context);
 
       expect(tick).not.toBeNull();
-      const delta = tick!.details.colorDeltas['region-platform'];
+      const details = tick!.details as any;
+      const delta = details.colorDeltas['region-platform'];
       expect(delta.saturationDelta).toBe(0.005);
     });
   });
@@ -319,7 +326,8 @@ describe('EvolutionService', () => {
       const tick = await service.processInteraction(context);
 
       expect(tick).not.toBeNull();
-      const delta = tick!.details.traceDeltas['bridge-1'];
+      const details = tick!.details as any;
+      const delta = details.traceDeltas['bridge-1'];
       expect(delta.strengthIncrement).toBe(0.05);
       expect(delta.timestamp).toBeGreaterThan(0);
     });

@@ -32,10 +32,18 @@ describe('ForceDirectedLayoutService', () => {
           temperature: 0.0,
         },
         health: {
-          overall: 1.0,
-          gatePassRate: 0.0,
-          activeConnections: 0,
+          contractCompliance: 1.0,
+          activityLevel: 0.0,
+          errorRate: 0.0,
         },
+        traces: {
+          totalInteractions: 0,
+          recentTraces: [],
+          heatLevel: 0.0,
+        },
+        glowIntensity: 0.0,
+        status: 'idle',
+        sessionCount: 0,
       };
 
       const existingRegions: RegionNode[] = [];
@@ -110,6 +118,7 @@ describe('ForceDirectedLayoutService', () => {
           gates: [],
           strength: 0.5,
           pinned: false,
+          traversalCount: 0,
           traces: {
             totalInteractions: 10,
             recentTraces: [],
