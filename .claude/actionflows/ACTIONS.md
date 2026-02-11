@@ -47,6 +47,14 @@ See `.claude/actionflows/CONTRACT.md` for format specifications.
 | `code/backend/` | Express 4.18 + TypeScript + Zod | task, context | haiku |
 | `code/frontend/` | React 18.2 + Vite 5 + Electron 28 | task, context | haiku |
 
+## Stack-Specific Test Actions
+
+**Prefer these over generic `test/` when the test framework is known.**
+
+| Action | Stack | Required Inputs | Model |
+|--------|-------|-----------------|-------|
+| `test/playwright/` | Playwright E2E (browser tests) | target, mode, browser | sonnet |
+
 ## Code-Backed Actions
 
 **Code-backed actions have real TypeScript packages backing them.** Unlike generic actions where Claude IS the tool, these actions wrap existing code packages. Claude is a thin wrapper that runs the code and interprets results.

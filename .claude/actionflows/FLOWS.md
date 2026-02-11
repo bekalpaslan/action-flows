@@ -51,6 +51,12 @@
 | framework-health/ | Validate structure | analyze |
 | contract-drift-fix/ | Update CONTRACT.md when formats evolve | analyze/contract-code-drift → code/update-contract → review/contract-update → commit |
 
+## intel
+
+| Flow | Purpose | Chain |
+|------|---------|-------|
+| intel-analysis/ | Create living dossiers of code domains | analyze → plan → human gate → code → review → commit |
+
 ## pm
 
 | Flow | Purpose | Chain |

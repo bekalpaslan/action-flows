@@ -81,7 +81,7 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 **Purpose:** Code intelligence, living dossiers, domain monitoring
 **Icon:** 🕵️
 **Triggers:** dossier, intel, intelligence, monitor, watch, track, insight, analyze domain, code health, gather intel
-**Flows:** intel-analysis/
+**Flows:** intel-analysis/ (registered)
 **Examples:**
 - "create an intel dossier for the auth system"
 - "analyze the backend services"
