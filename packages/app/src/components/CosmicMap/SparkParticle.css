@@ -1,0 +1,127 @@
+/**
+ * SparkParticle - Executing agent particle
+ *
+ * Placeholder visual styles for Phase E.
+ */
+
+.spark-particle {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  /* GPU optimization */
+  will-change: transform, opacity;
+}
+
+/* Glow effect */
+.spark-particle__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--system-blue) 0%, transparent 70%);
+  opacity: 0.6;
+  animation: sparkGlow 1.5s ease-in-out infinite;
+}
+
+/* Core particle */
+.spark-particle__core {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--system-blue);
+  box-shadow: 0 0 4px var(--system-blue);
+  z-index: 1;
+}
+
+/* Status variants */
+.spark-particle--spawning .spark-particle__glow {
+  background: radial-gradient(circle, var(--system-purple) 0%, transparent 70%);
+  animation: sparkSpawning 1s ease-in-out infinite;
+}
+
+.spark-particle--spawning .spark-particle__core {
+  background: var(--system-purple);
+  box-shadow: 0 0 4px var(--system-purple);
+}
+
+.spark-particle--executing .spark-particle__glow {
+  background: radial-gradient(circle, var(--system-blue) 0%, transparent 70%);
+}
+
+.spark-particle--executing .spark-particle__core {
+  background: var(--system-blue);
+  box-shadow: 0 0 4px var(--system-blue);
+}
+
+.spark-particle--completing .spark-particle__glow {
+  background: radial-gradient(circle, var(--system-green) 0%, transparent 70%);
+  animation: sparkCompleting 0.8s ease-out forwards;
+}
+
+.spark-particle--completing .spark-particle__core {
+  background: var(--system-green);
+  box-shadow: 0 0 4px var(--system-green);
+}
+
+.spark-particle--vanished {
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+/* Animations */
+@keyframes sparkGlow {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+@keyframes sparkSpawning {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.9;
+  }
+}
+
+@keyframes sparkCompleting {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .spark-particle__glow {
+    animation: none;
+  }
+
+  .spark-particle--spawning .spark-particle__glow {
+    animation: none;
+  }
+
+  .spark-particle--completing .spark-particle__glow {
+    animation: none;
+    opacity: 0;
+  }
+}

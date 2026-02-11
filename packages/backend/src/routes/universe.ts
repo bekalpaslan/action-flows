@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import type { UniverseGraph, RegionNode, LightBridge, SessionId, RegionId, EdgeId, WorkbenchId, ChainId } from '@afw/shared';
+import type { UniverseGraph, RegionNode, LightBridge, SessionId, RegionId, EdgeId, StarId, ChainId } from '@afw/shared';
 import { brandedTypes, FogState } from '@afw/shared';
 import { storage } from '../storage/index.js';
 import { validateBody } from '../middleware/validate.js';
@@ -116,7 +116,7 @@ router.post('/regions', writeLimiter, validateBody(createRegionSchema), async (r
     // Build full region node with defaults
     const region: RegionNode = {
       id: brandedTypes.regionId(regionData.id),
-      workbenchId: regionData.workbenchId as WorkbenchId,
+      workbenchId: regionData.workbenchId as StarId,
       label: regionData.label,
       description: regionData.description,
       position: regionData.position,

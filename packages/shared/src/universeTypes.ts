@@ -4,7 +4,7 @@
  */
 
 import type { SessionId, ChainId, Timestamp, DurationMs } from './types.js';
-import type { WorkbenchId } from './workbenchTypes.js';
+import type { StarId } from './workbenchTypes.js';
 
 // ============================================================================
 // Branded IDs
@@ -37,14 +37,16 @@ export enum FogState {
 // ============================================================================
 
 /**
- * A region represents a workbench as a star on the cosmic map
+ * A region represents a star on the cosmic map.
+ * Note: Regions map to StarId, NOT WorkbenchId (which includes harmony).
+ * Tools (editor, canvas, coverage) are embedded inside stars, not regions themselves.
  */
 export interface RegionNode {
   /** Unique region identifier */
   id: RegionId;
 
-  /** Associated workbench */
-  workbenchId: WorkbenchId;
+  /** Associated star (the workbench this region represents) */
+  workbenchId: StarId;
 
   /** Display label */
   label: string;
@@ -153,6 +155,63 @@ export interface GateCheckpoint {
 
   /** Current gate status */
   status: 'clear' | 'warning' | 'violation';
+
+  /** Total number of trace records through this gate */
+  traceCount?: number;
+}
+
+// ============================================================================
+// Moon Orbit (Data Sources orbiting Stars)
+// ============================================================================
+
+/**
+ * A moon represents a data source orbiting a star (region)
+ */
+export interface MoonOrbit {
+  /** Unique moon identifier */
+  id: string;
+
+  /** Parent star/region this moon orbits */
+  parentRegion: RegionId;
+
+  /** Display label */
+  label: string;
+
+  /** Type of data source */
+  dataSourceType: 'external-api' | 'log-feed' | 'database' | 'file-watcher';
+
+  /** Orbital radius (distance from parent star) */
+  orbitRadius: number;
+
+  /** Orbital speed (animation speed) */
+  orbitSpeed: number;
+
+  /** Current operational status */
+  status: 'active' | 'idle' | 'error';
+}
+
+// ============================================================================
+// Spark Particle (Executing Agents)
+// ============================================================================
+
+/**
+ * A spark represents an executing agent visible on the cosmic map
+ */
+export interface SparkParticle {
+  /** Unique spark identifier */
+  id: string;
+
+  /** Type of agent this spark represents */
+  agentType: string;
+
+  /** Parent star/region where this agent is executing */
+  parentStar: RegionId;
+
+  /** Current execution status */
+  status: 'spawning' | 'executing' | 'completing' | 'vanished';
+
+  /** Execution progress (0.0 - 1.0) */
+  progress: number;
 }
 
 // ============================================================================

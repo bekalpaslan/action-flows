@@ -977,7 +977,7 @@ How do we know Intel is working?
 
 - Brainstorm session summary: `.claude/actionflows/logs/ideation/intel-dossier_{datetime}/summary.md`
 - Self-Evolving UI design: `docs/design/SELF_EVOLVING_UI.md` (if exists)
-- Contract evolution guide: `.claude/actionflows/docs/CONTRACT_EVOLUTION.md`
+- Contract evolution guide: `docs/architecture/CONTRACT_EVOLUTION.md`
 - Context routing spec: `.claude/actionflows/CONTEXTS.md`
 
 ---

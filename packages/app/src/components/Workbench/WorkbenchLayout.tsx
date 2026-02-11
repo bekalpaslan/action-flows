@@ -9,19 +9,19 @@ import { SessionSidebar } from '../SessionSidebar';
 import { SlidingChatWindow } from '../SlidingChatWindow/SlidingChatWindow';
 import { ChatPanel } from '../SessionPanel/ChatPanel';
 import { CosmicMap } from '../CosmicMap/CosmicMap';
-import { WorkWorkbench } from './WorkWorkbench';
-import { CanvasWorkbench } from './CanvasWorkbench';
-import { EditorWorkbench } from './EditorWorkbench';
-import { ReviewWorkbench } from './ReviewWorkbench';
-import { PMWorkbench, type PMTask, type DocLink, type Milestone, type TaskStatus } from './PMWorkbench';
-import { MaintenanceWorkbench } from './MaintenanceWorkbench';
-import { SettingsWorkbench } from './SettingsWorkbench';
-import { HarmonyWorkbench } from './HarmonyWorkbench';
-import { ExploreWorkbench } from './ExploreWorkbench';
-import { ArchiveWorkbench } from './ArchiveWorkbench';
-import { IntelWorkbench } from './IntelWorkbench';
-import { RespectWorkbench } from './RespectWorkbench/RespectWorkbench';
-import { CoverageWorkbench } from './CoverageWorkbench';
+import { WorkStar } from '../Stars/WorkStar';
+import { CanvasTool } from '../Tools/CanvasTool/CanvasTool';
+import { EditorTool } from '../Tools/EditorTool/EditorTool';
+import { ReviewStar } from '../Stars/ReviewStar';
+import { PMStar, type PMTask, type DocLink, type Milestone, type TaskStatus } from '../Stars/PMStar';
+import { MaintenanceStar } from '../Stars/MaintenanceStar';
+import { SettingsStar } from '../Stars/SettingsStar';
+import { HarmonySpaceWorkbench } from '../Harmony/HarmonySpaceWorkbench';
+import { ExploreStar } from '../Stars/ExploreStar';
+import { ArchiveStar } from '../Stars/ArchiveStar';
+import { IntelStar } from '../Stars/IntelStar';
+import { RespectStar } from '../Stars/RespectStar/RespectStar';
+import { CoverageTool } from '../Tools/CoverageTool/CoverageTool';
 import { useSessionArchive } from '../../hooks/useSessionArchive';
 import {
   type WorkbenchId,
@@ -370,18 +370,18 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   }, [clearAllArchives]);
 
   /**
-   * Handle file selection in ExploreWorkbench
+   * Handle file selection in ExploreStar
    */
   const handleFileSelect = useCallback((path: string) => {
     console.log('File selected:', path);
   }, []);
 
   /**
-   * Handle file open in ExploreWorkbench
+   * Handle file open in ExploreStar
    */
   const handleFileOpen = useCallback((path: string) => {
     console.log('File opened:', path);
-    // TODO: Navigate to editor workbench or open in a tab
+    // TODO: Navigate to editor tool or open in a tab
   }, []);
 
   /**
@@ -550,12 +550,13 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
 
   /**
    * Render workbench-specific content based on activeWorkbench
+   * Phase D: Only handles stars + harmony. Tools are NOT routable destinations.
    */
   const renderWorkbenchContent = (workbench: WorkbenchId): ReactNode => {
     switch (workbench) {
       case 'work':
         return (
-          <WorkWorkbench
+          <WorkStar
             sessions={attachedSessions}
             activeSessionId={activeSessionId}
             onSessionClose={handleSessionClose}
@@ -568,20 +569,20 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
           />
         );
       case 'maintenance':
-        return <MaintenanceWorkbench />;
+        return <MaintenanceStar />;
       case 'explore':
         return (
-          <ExploreWorkbench
+          <ExploreStar
             sessionId={activeSessionId}
             onFileSelect={handleFileSelect}
             onFileOpen={handleFileOpen}
           />
         );
       case 'review':
-        return <ReviewWorkbench />;
+        return <ReviewStar />;
       case 'archive':
         return (
-          <ArchiveWorkbench
+          <ArchiveStar
             archivedSessions={archivedSessions}
             onRestore={handleArchiveRestore}
             onDelete={handleArchiveDelete}
@@ -589,10 +590,10 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
           />
         );
       case 'settings':
-        return <SettingsWorkbench />;
+        return <SettingsStar />;
       case 'pm':
         return (
-          <PMWorkbench
+          <PMStar
             tasks={demoTasks}
             docs={demoDocs}
             milestones={demoMilestones}
@@ -603,26 +604,16 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
           />
         );
       case 'harmony':
-        return <HarmonyWorkbench sessionId={activeSessionId} />;
-      case 'canvas':
-        return <CanvasWorkbench />;
-      case 'editor':
-        return (
-          <EditorWorkbench
-            sessionId={activeSessionId || ('' as SessionId)}
-          />
-        );
+        return <HarmonySpaceWorkbench sessionId={activeSessionId} />;
       case 'intel':
-        return <IntelWorkbench />;
+        return <IntelStar />;
       case 'respect':
-        return <RespectWorkbench />;
-      case 'coverage':
-        return <CoverageWorkbench />;
+        return <RespectStar />;
       default:
         return (
           <div className="workbench-placeholder">
             <h1>Unknown Workbench</h1>
-            <p>Workbench not found</p>
+            <p>Workbench not found: {workbench}</p>
           </div>
         );
     }

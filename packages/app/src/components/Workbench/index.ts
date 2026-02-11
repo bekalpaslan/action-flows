@@ -6,38 +6,42 @@
  */
 
 export { WorkbenchLayout } from './WorkbenchLayout';
-export { WorkWorkbench } from './WorkWorkbench';
-export { CanvasWorkbench } from './CanvasWorkbench';
-export type { CanvasWorkbenchProps } from './CanvasWorkbench';
-export { EditorWorkbench } from './EditorWorkbench';
-export type { EditorWorkbenchProps } from './EditorWorkbench';
-export { ArchiveWorkbench } from './ArchiveWorkbench';
-export type { ArchiveWorkbenchProps } from './ArchiveWorkbench';
-export { ExploreWorkbench } from './ExploreWorkbench';
-export type { ExploreWorkbenchProps } from './ExploreWorkbench';
-export { PMWorkbench } from './PMWorkbench';
-export { MaintenanceWorkbench } from './MaintenanceWorkbench';
-export { ReviewWorkbench } from './ReviewWorkbench';
+
+// Re-exports from new cosmic structure
+export { WorkStar } from '../Stars/WorkStar';
+export { MaintenanceStar } from '../Stars/MaintenanceStar';
+export { ExploreStar } from '../Stars/ExploreStar';
+export type { ExploreStarProps } from '../Stars/ExploreStar';
+export { ReviewStar } from '../Stars/ReviewStar';
+export { SettingsStar } from '../Stars/SettingsStar';
+export { PMStar } from '../Stars/PMStar';
 export type {
   PMTask,
   TaskStatus,
   TaskPriority,
   DocLink,
   Milestone,
-  PMWorkbenchProps,
-} from './PMWorkbench';
+  PMStarProps,
+} from '../Stars/PMStar';
 export type {
-  ReviewWorkbenchProps,
   PullRequest,
   ReviewFile,
   ReviewComment,
   ReviewStatus,
   DiffViewMode,
-} from './ReviewWorkbench';
-export { HarmonyWorkbench } from './HarmonyWorkbench';
-export type { HarmonyWorkbenchProps } from './HarmonyWorkbench';
-export { SettingsWorkbench } from './SettingsWorkbench';
-export { IntelWorkbench } from './IntelWorkbench';
-export type { IntelWorkbenchProps } from './IntelWorkbench';
-export { CoverageWorkbench } from './CoverageWorkbench';
-export type { CoverageWorkbenchProps } from './CoverageWorkbench';
+} from '../Stars/ReviewStar';
+export { ArchiveStar } from '../Stars/ArchiveStar';
+export type { ArchiveStarProps } from '../Stars/ArchiveStar';
+export { IntelStar } from '../Stars/IntelStar';
+export type { IntelStarProps } from '../Stars/IntelStar';
+export { RespectStar } from '../Stars/RespectStar/RespectStar';
+
+export { EditorTool } from '../Tools/EditorTool/EditorTool';
+export type { EditorToolProps } from '../Tools/EditorTool/EditorTool';
+export { CanvasTool } from '../Tools/CanvasTool/CanvasTool';
+export type { CanvasToolProps } from '../Tools/CanvasTool/CanvasTool';
+export { CoverageTool } from '../Tools/CoverageTool/CoverageTool';
+export type { CoverageToolProps } from '../Tools/CoverageTool/CoverageTool';
+
+export { HarmonySpaceWorkbench } from '../Harmony/HarmonySpaceWorkbench';
+export type { HarmonySpaceWorkbenchProps } from '../Harmony/HarmonySpaceWorkbench';

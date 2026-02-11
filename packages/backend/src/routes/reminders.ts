@@ -44,10 +44,8 @@ router.get('/definitions', async (req, res) => {
     // Extract the reminder definitions from the data union
     const definitions = reminderEntries.map((entry) => {
       if (entry.data.type === 'reminder') {
-        return {
-          id: entry.id,
-          ...entry.data.definition,
-        };
+        // ReminderDefinition already has an id field, no need to add entry.id
+        return entry.data.definition;
       }
       return null;
     }).filter(Boolean);

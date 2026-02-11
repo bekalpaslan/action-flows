@@ -1,0 +1,116 @@
+/**
+ * GateCheckpoint - Contract checkpoint on light bridge
+ *
+ * Placeholder visual styles for Phase E.
+ */
+
+.gate-checkpoint {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.gate-checkpoint:hover {
+  transform: scale(1.2);
+}
+
+/* Diamond shape */
+.gate-checkpoint__diamond {
+  width: 12px;
+  height: 12px;
+  transform: rotate(45deg);
+  background: var(--panel-bg-base);
+  border: 2px solid var(--panel-border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Inner diamond (status indicator) */
+.gate-checkpoint__inner {
+  width: 6px;
+  height: 6px;
+  background: var(--text-tertiary);
+  transition: background 0.2s ease;
+}
+
+/* Status: passing (clear) */
+.gate-checkpoint--clear .gate-checkpoint__diamond {
+  border-color: var(--system-green);
+}
+
+.gate-checkpoint--clear .gate-checkpoint__inner {
+  background: var(--system-green);
+}
+
+.gate-checkpoint--clear:hover .gate-checkpoint__diamond {
+  box-shadow: 0 0 8px var(--system-green);
+}
+
+/* Status: warning */
+.gate-checkpoint--warning .gate-checkpoint__diamond {
+  border-color: var(--system-amber);
+}
+
+.gate-checkpoint--warning .gate-checkpoint__inner {
+  background: var(--system-amber);
+}
+
+.gate-checkpoint--warning:hover .gate-checkpoint__diamond {
+  box-shadow: 0 0 8px var(--system-amber);
+}
+
+.gate-checkpoint--warning .gate-checkpoint__diamond {
+  animation: gateWarning 2s ease-in-out infinite;
+}
+
+/* Status: violation */
+.gate-checkpoint--violation .gate-checkpoint__diamond {
+  border-color: var(--system-red);
+}
+
+.gate-checkpoint--violation .gate-checkpoint__inner {
+  background: var(--system-red);
+}
+
+.gate-checkpoint--violation:hover .gate-checkpoint__diamond {
+  box-shadow: 0 0 8px var(--system-red);
+}
+
+.gate-checkpoint--violation .gate-checkpoint__diamond {
+  animation: gateViolation 1s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes gateWarning {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes gateViolation {
+  0%, 100% {
+    transform: rotate(45deg) scale(1);
+  }
+  50% {
+    transform: rotate(45deg) scale(1.1);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .gate-checkpoint--warning .gate-checkpoint__diamond,
+  .gate-checkpoint--violation .gate-checkpoint__diamond {
+    animation: none;
+  }
+}

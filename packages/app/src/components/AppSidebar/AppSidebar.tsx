@@ -17,12 +17,13 @@ import type { WorkbenchId } from '@afw/shared';
 import './AppSidebar.css';
 
 // Workbench grouping structure
+// Phase D: Tools (editor, canvas, coverage) removed - they're not navigable destinations
 const WORKBENCH_GROUPS = {
   framework: {
     id: 'framework',
     label: 'Framework Tools',
     icon: '⚙️',
-    workbenches: ['harmony', 'respect', 'intel', 'canvas', 'editor', 'settings', 'coverage'] as WorkbenchId[],
+    workbenches: ['harmony', 'respect', 'intel', 'settings'] as WorkbenchId[],
     defaultExpanded: false,
   },
   project: {

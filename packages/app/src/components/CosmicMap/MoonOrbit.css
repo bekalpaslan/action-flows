@@ -1,0 +1,85 @@
+/**
+ * MoonOrbit - Data source orbiting a star
+ *
+ * Placeholder visual styles for Phase E.
+ */
+
+.moon-orbit {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.moon-orbit:hover {
+  transform: scale(1.1);
+}
+
+/* Moon core */
+.moon-orbit__core {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--cosmic-star-core);
+  border: 1px solid var(--panel-border-default);
+  box-shadow: 0 0 4px var(--cosmic-star-glow);
+  transition: box-shadow 0.2s ease;
+}
+
+.moon-orbit:hover .moon-orbit__core {
+  box-shadow: 0 0 8px var(--cosmic-star-glow);
+}
+
+/* Label */
+.moon-orbit__label {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Status variants */
+.moon-orbit--active .moon-orbit__core {
+  background: var(--system-blue);
+  box-shadow: 0 0 6px var(--system-blue);
+}
+
+.moon-orbit--idle .moon-orbit__core {
+  background: var(--text-tertiary);
+  opacity: 0.6;
+}
+
+.moon-orbit--error .moon-orbit__core {
+  background: var(--system-red);
+  box-shadow: 0 0 6px var(--system-red);
+  animation: moonError 1s ease-in-out infinite;
+}
+
+/* Error pulse animation */
+@keyframes moonError {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .moon-orbit--error .moon-orbit__core {
+    animation: none;
+  }
+}

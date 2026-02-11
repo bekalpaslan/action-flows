@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import * as path from 'path';
+import { STAR_IDS } from '@afw/shared';
 
 /**
  * Zod Schemas for REST API Request Bodies
@@ -89,6 +90,7 @@ const VALID_EVENT_TYPES = [
   'chain:compiled',
   'chain:started',
   'chain:completed',
+  'chain:spark_traveling',
   'step:spawned',
   'step:started',
   'step:completed',
@@ -557,9 +559,12 @@ export const regionStatusSchema = z.enum(['idle', 'active', 'waiting', 'undiscov
 export const layerSchema = z.enum(['platform', 'template', 'philosophy', 'physics', 'experience']);
 export const gateStatusSchema = z.enum(['clear', 'warning', 'violation']);
 
+// StarId validation - regions can only be created for stars, not tools or harmony
+export const starIdSchema = z.enum(STAR_IDS as any as [string, ...string[]]);
+
 export const createRegionSchema = z.object({
   id: z.string().min(1).max(100),
-  workbenchId: z.string().min(1).max(50),
+  workbenchId: starIdSchema,
   label: z.string().min(1).max(200),
   description: z.string().max(2000).optional(),
   position: z.object({ x: z.number(), y: z.number() }),

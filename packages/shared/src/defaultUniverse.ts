@@ -12,8 +12,8 @@ import type {
   EdgeId,
 } from './universeTypes.js';
 import { FogState } from './universeTypes.js';
-import type { WorkbenchId } from './workbenchTypes.js';
-import { WORKBENCH_IDS, DEFAULT_WORKBENCH_CONFIGS } from './workbenchTypes.js';
+import type { StarId, NavigationTarget } from './workbenchTypes.js';
+import { NAVIGATION_TARGETS, DEFAULT_WORKBENCH_CONFIGS } from './workbenchTypes.js';
 import { brandedTypes } from './types.js';
 
 // ============================================================================
@@ -21,9 +21,10 @@ import { brandedTypes } from './types.js';
 // ============================================================================
 
 /**
- * Maps workbenches to Living System layers
+ * Maps stars to Living System layers
+ * Note: Only stars have layers. Harmony is the space. Tools inherit layers from their host stars.
  */
-const LAYER_ASSIGNMENTS: Record<WorkbenchId, 'platform' | 'template' | 'philosophy' | 'physics' | 'experience'> = {
+const LAYER_ASSIGNMENTS: Record<StarId, 'platform' | 'template' | 'philosophy' | 'physics' | 'experience'> = {
   // Experience Layer (user-facing workbenches)
   archive: 'experience',
   intel: 'experience',
@@ -32,14 +33,10 @@ const LAYER_ASSIGNMENTS: Record<WorkbenchId, 'platform' | 'template' | 'philosop
   // Physics Layer (execution workbenches)
   work: 'physics',
   maintenance: 'physics',
-  editor: 'physics',
   review: 'physics',
-  coverage: 'physics',
 
   // Philosophy Layer (framework workbenches)
-  harmony: 'philosophy',
   settings: 'philosophy',
-  canvas: 'philosophy',
 
   // Template Layer (exploratory workbenches)
   explore: 'template',
@@ -55,16 +52,13 @@ const LAYER_ASSIGNMENTS: Record<WorkbenchId, 'platform' | 'template' | 'philosop
 /**
  * Initial positions for regions on the cosmic map
  * Organized into two spatial clusters matching existing workbench groups
+ * Note: Only stars have positions. Harmony is the space itself. Tools are embedded inside stars.
  */
-const INITIAL_POSITIONS: Record<WorkbenchId, { x: number; y: number }> = {
+const INITIAL_POSITIONS: Record<StarId, { x: number; y: number }> = {
   // Framework Tools Cluster (upper region)
-  harmony: { x: -400, y: -300 },
   respect: { x: -200, y: -350 },
   intel: { x: 0, y: -300 },
-  canvas: { x: 200, y: -350 },
-  editor: { x: 400, y: -300 },
   settings: { x: -100, y: -150 },
-  coverage: { x: 100, y: -150 },
 
   // Project Work Cluster (lower region)
   work: { x: -300, y: 150 },
@@ -81,22 +75,19 @@ const INITIAL_POSITIONS: Record<WorkbenchId, { x: number; y: number }> = {
 
 /**
  * Initial fog-of-war states
- * Work + Canvas start revealed (Phase 3 Big Bang loadout), others at faint or hidden
+ * Work starts revealed. Canvas is a tool (not a star), so removed from fog states.
+ * Note: Only stars have fog states. Harmony is the space itself. Tools don't appear on the map.
  */
-const INITIAL_FOG_STATES: Record<WorkbenchId, FogState> = {
+const INITIAL_FOG_STATES: Record<StarId, FogState> = {
   work: FogState.REVEALED,           // Starting region (always visible)
-  canvas: FogState.REVEALED,         // Starting region (brainstorm & design)
   maintenance: FogState.FAINT,       // Adjacent to work
   explore: FogState.FAINT,           // Adjacent to work
   review: FogState.FAINT,            // Adjacent to work
   archive: FogState.FAINT,           // Always visible but inactive
   settings: FogState.FAINT,          // Framework config
   pm: FogState.HIDDEN,               // Unlocked after planning activity
-  harmony: FogState.HIDDEN,          // Unlocked after first violation
-  editor: FogState.HIDDEN,           // Unlocked after first edit
   intel: FogState.HIDDEN,            // Unlocked after dossier creation
   respect: FogState.HIDDEN,          // Unlocked after boundary check
-  coverage: FogState.HIDDEN,         // Unlocked after contract work
 };
 
 // ============================================================================
@@ -104,17 +95,18 @@ const INITIAL_FOG_STATES: Record<WorkbenchId, FogState> = {
 // ============================================================================
 
 /**
- * Creates a region node from a workbench
+ * Creates a region node from a star
+ * Note: Only stars become regions. Tools and harmony do not.
  */
-function createRegion(workbenchId: WorkbenchId): RegionNode {
-  const config = DEFAULT_WORKBENCH_CONFIGS[workbenchId];
-  const layer = LAYER_ASSIGNMENTS[workbenchId];
-  const position = INITIAL_POSITIONS[workbenchId];
-  const fogState = INITIAL_FOG_STATES[workbenchId];
+function createRegion(starId: StarId): RegionNode {
+  const config = DEFAULT_WORKBENCH_CONFIGS[starId as NavigationTarget];
+  const layer = LAYER_ASSIGNMENTS[starId];
+  const position = INITIAL_POSITIONS[starId];
+  const fogState = INITIAL_FOG_STATES[starId];
 
   return {
-    id: brandedTypes.regionId(`region-${workbenchId}`),
-    workbenchId,
+    id: brandedTypes.regionId(`region-${starId}`),
+    workbenchId: starId,
     label: config.label,
     description: config.tooltip,
     position,
@@ -147,9 +139,10 @@ function createRegion(workbenchId: WorkbenchId): RegionNode {
 // ============================================================================
 
 /**
- * Default connections between related workbenches
+ * Default connections between related stars
+ * Note: Connections are between stars only. Tools don't have bridges. Harmony is the space itself.
  */
-const DEFAULT_CONNECTIONS: Array<[WorkbenchId, WorkbenchId]> = [
+const DEFAULT_CONNECTIONS: Array<[StarId, StarId]> = [
   // Primary workflow bridges
   ['work', 'maintenance'],
   ['work', 'explore'],
@@ -157,11 +150,9 @@ const DEFAULT_CONNECTIONS: Array<[WorkbenchId, WorkbenchId]> = [
   ['maintenance', 'review'],
   ['explore', 'review'],
 
-  // Framework bridges
-  ['settings', 'harmony'],
-  ['settings', 'coverage'],
-  ['harmony', 'respect'],
-  ['coverage', 'respect'],
+  // Framework bridges (harmony removed - it's the space, not a star)
+  // (coverage removed - it's a tool, not a star)
+  ['settings', 'respect'],
 
   // Archival bridges
   ['review', 'archive'],
@@ -171,13 +162,9 @@ const DEFAULT_CONNECTIONS: Array<[WorkbenchId, WorkbenchId]> = [
   ['work', 'intel'],
   ['explore', 'intel'],
 
-  // Editor bridges
-  ['work', 'editor'],
-  ['maintenance', 'editor'],
+  // Editor bridges removed (editor is a tool, not a star)
 
-  // Canvas bridges
-  ['work', 'canvas'],
-  ['explore', 'canvas'],
+  // Canvas bridges removed (canvas is a tool, not a star)
 
   // PM bridges
   ['work', 'pm'],
@@ -185,9 +172,9 @@ const DEFAULT_CONNECTIONS: Array<[WorkbenchId, WorkbenchId]> = [
 ];
 
 /**
- * Creates a light bridge between two regions
+ * Creates a light bridge between two star regions
  */
-function createBridge(sourceId: WorkbenchId, targetId: WorkbenchId): LightBridge {
+function createBridge(sourceId: StarId, targetId: StarId): LightBridge {
   const edgeId = brandedTypes.edgeId(`edge-${sourceId}-${targetId}`);
   const sourceRegionId = brandedTypes.regionId(`region-${sourceId}`);
   const targetRegionId = brandedTypes.regionId(`region-${targetId}`);
@@ -324,7 +311,12 @@ function createDiscoveryTriggers(): DiscoveryTrigger[] {
  * Creates the default universe graph
  */
 export function createDefaultUniverse(): UniverseGraph {
-  const regions = WORKBENCH_IDS.map(createRegion);
+  // Only stars become regions (filter out tools and harmony)
+  const starIds: StarId[] = NAVIGATION_TARGETS.filter(
+    (id) => id !== 'harmony' && id !== 'editor' && id !== 'canvas' && id !== 'coverage'
+  ) as StarId[];
+
+  const regions = starIds.map(createRegion);
   const bridges = DEFAULT_CONNECTIONS.map(([source, target]) => createBridge(source, target));
   const discoveryTriggers = createDiscoveryTriggers();
 
@@ -342,7 +334,7 @@ export function createDefaultUniverse(): UniverseGraph {
       lastModifiedAt: brandedTypes.currentTimestamp(),
       evolutionHistory: [],
       totalInteractions: 0,
-      discoveredRegionCount: 2, // Work + Canvas start revealed
+      discoveredRegionCount: 1, // Only Work starts revealed (Canvas is a tool, not a star)
       totalRegionCount: regions.length,
       mapBounds: {
         minX: Math.min(...xs) - 100,

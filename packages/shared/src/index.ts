@@ -257,7 +257,14 @@ export type {
 // ============================================================================
 export type {
   WorkbenchId,
+  StarId,
+  ToolId,
+  HarmonySpace,
+  NavigationTarget,
   WorkbenchConfig,
+  StarConfig,
+  ToolConfig,
+  HarmonyConfig,
   WorkbenchState,
   WorkbenchNotification,
   SessionWorkbenchTag,
@@ -265,11 +272,21 @@ export type {
 
 export {
   WORKBENCH_IDS,
+  STAR_IDS,
+  TOOL_IDS,
+  NAVIGATION_TARGETS,
+  STAR_CONFIGS,
+  TOOL_CONFIGS,
+  HARMONY_CONFIG,
   DEFAULT_WORKBENCH_CONFIGS,
   getWorkbenchForSessionTag,
   getSessionCapableWorkbenches,
   ROUTABLE_WORKBENCHES,
   isRoutable,
+  isStarId,
+  isToolId,
+  isHarmonySpace,
+  isNavigationTarget,
 } from './workbenchTypes.js';
 
 // ============================================================================
@@ -347,6 +364,8 @@ export type {
   RegionNode,
   LightBridge,
   GateCheckpoint,
+  MoonOrbit,
+  SparkParticle,
   TraceAccumulation,
   TraceEntry,
   ColorShift,
@@ -362,6 +381,18 @@ export type {
 export { FogState } from './universeTypes.js';
 
 export { createDefaultUniverse, DEFAULT_UNIVERSE } from './defaultUniverse.js';
+
+// ============================================================================
+// Chain-to-Region Mapping
+// ============================================================================
+export {
+  mapActionToRegion,
+  mapChainToBridges,
+  getChainRegions,
+  validateMapping,
+  ACTION_TO_REGION_MAP,
+  DEFAULT_REGION,
+} from './chainRegionMapping.js';
 
 // ============================================================================
 // Legacy Types (for backward compatibility)

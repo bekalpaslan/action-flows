@@ -7,7 +7,7 @@ import {
   useCallback,
   type ReactNode,
 } from 'react';
-import type { WorkbenchId, WorkbenchConfig, Session } from '@afw/shared';
+import type { WorkbenchId, WorkbenchConfig, Session, ToolId } from '@afw/shared';
 import { DEFAULT_WORKBENCH_CONFIGS } from '@afw/shared';
 
 // ============================================================================
@@ -26,6 +26,9 @@ interface WorkbenchContextValue {
   routingFilter: WorkbenchId | null;
   setRoutingFilter: (filter: WorkbenchId | null) => void;
   filterSessionsByContext: (sessions: Session[]) => Session[];
+  // Phase D: Tool embedding support
+  activeTool: ToolId | null;
+  setActiveTool: (tool: ToolId | null) => void;
 }
 
 // ============================================================================
@@ -79,6 +82,9 @@ export function WorkbenchProvider({ children }: WorkbenchProviderProps) {
 
   // Track routing filter (null = show all sessions)
   const [routingFilter, setRoutingFilter] = useState<WorkbenchId | null>(null);
+
+  // Phase D: Track active tool (tools embed in stars, not navigable)
+  const [activeTool, setActiveTool] = useState<ToolId | null>(null);
 
   // Persist active workbench to localStorage
   useEffect(() => {
@@ -153,6 +159,8 @@ export function WorkbenchProvider({ children }: WorkbenchProviderProps) {
       routingFilter,
       setRoutingFilter,
       filterSessionsByContext,
+      activeTool,
+      setActiveTool,
     }),
     [
       activeWorkbench,
@@ -161,6 +169,7 @@ export function WorkbenchProvider({ children }: WorkbenchProviderProps) {
       previousWorkbench,
       routingFilter,
       filterSessionsByContext,
+      activeTool,
     ]
   );
 

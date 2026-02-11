@@ -52,7 +52,7 @@ This is **synchronized evolution** — not rigid specification.
 
 ## Learn More
 
-- **System Architecture:** See `.claude/actionflows/docs/LIVING_SYSTEM.md` for the 7-layer living system architecture
+- **System Architecture:** See `.claude/actionflows/docs/living/SYSTEM.md` for the 7-layer living system architecture
 - **Teaching:** Complete `.claude/actionflows/flows/framework/onboarding/` (Module 9)
 - **Implementation:** Read `packages/backend/src/services/harmonyDetector.ts`
 - **Monitoring:** Check dashboard harmony panel (real-time status)

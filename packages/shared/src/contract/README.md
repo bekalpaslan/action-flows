@@ -284,8 +284,8 @@ pnpm test packages/shared/src/contract/
 ## Related Documentation
 
 - **Contract Specification:** `.claude/actionflows/CONTRACT.md`
-- **Evolution Process:** `.claude/actionflows/docs/CONTRACT_EVOLUTION.md`
-- **Harmony System:** `.claude/actionflows/docs/HARMONY_SYSTEM.md`
+- **Evolution Process:** `docs/architecture/CONTRACT_EVOLUTION.md`
+- **Harmony System:** `.claude/actionflows/docs/living/HARMONY.md`
 - **Onboarding:** Complete Module 9 for interactive learning
 
 ---
