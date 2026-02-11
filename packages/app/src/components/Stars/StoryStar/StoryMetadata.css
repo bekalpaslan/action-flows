@@ -1,0 +1,50 @@
+/**
+ * Story Metadata Styles
+ * Display story statistics in header
+ */
+
+.story-metadata {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--cosmic-text-secondary, #a8a8b8);
+}
+
+.story-metadata__stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.story-metadata__label {
+  opacity: 0.7;
+  font-weight: 500;
+}
+
+.story-metadata__value {
+  font-weight: 600;
+  color: var(--cosmic-glow-accent, #8b5cf6);
+}
+
+.story-metadata__separator {
+  opacity: 0.3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .story-metadata {
+    gap: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .story-metadata__stat {
+    gap: 0.25rem;
+  }
+
+  .story-metadata__label {
+    display: none;
+  }
+}

@@ -36,8 +36,8 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 ### explore
 **Purpose:** Research, codebase exploration, and learning
 **Icon:** 🔍
-**Triggers:** explore, investigate, research, learn, understand, explain, how does, study, analyze, discover
-**Flows:** doc-reorganization/, ideation/
+**Triggers:** explore, investigate, research, learn, understand, explain, how does, study, analyze, discover, story, narrative, chronicle, tale
+**Flows:** doc-reorganization/, ideation/, story-of-us/
 **Examples:**
 - "explore the WebSocket implementation"
 - "research best practices for state management"
@@ -148,6 +148,8 @@ These contexts receive content automatically — not routed by user intent.
 | "audit contracts" / "contract compliance" / "contract drift" / "check contracts" | review | contract-compliance-audit/ |
 | "I have an idea" / "brainstorm X" | explore | ideation/ |
 | "let's think about X" / "ideation" | explore | ideation/ |
+| "tell me a story" / "write the next chapter" | explore | story-of-us/ |
+| "story of us" / "continue the story" | explore | story-of-us/ |
 | "create dossier" / "intel on X" | intel | intel-analysis/ |
 | "track domain X" / "gather intel" | intel | intel-analysis/ |
 | "dissolve learnings" / "process learnings" / "learning retrospective" / "update docs from learnings" | pm | learning-dissolution/ |

@@ -27,6 +27,7 @@ These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 | plan/ | Implementation planning | YES | requirements, context | sonnet | NO |
 | commit/ | Git commit + push | YES | summary, files | haiku | NO |
 | brainstorm/ | Interactive ideation facilitation | YES | idea, classification, context | opus | YES (5.3) |
+| narrate/ | Write poetic narrative chapters | YES | chapterNumber, analysisPath | opus | NO |
 | onboarding/ | Facilitate interactive onboarding questionnaire | NO | (none) | opus | NO |
 
 **Contract Output Column:**

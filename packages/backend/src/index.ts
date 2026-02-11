@@ -17,6 +17,7 @@ import { registryStorage } from './services/registryStorage.js';
 import { SnapshotService } from './services/snapshotService.js';
 import terminalRouter, { setBroadcastTerminalFunction } from './routes/terminal.js';
 import eventsRouter from './routes/events.js';
+import storyRouter from './routes/story.js';
 import sessionsRouter from './routes/sessions.js';
 import commandsRouter from './routes/commands.js';
 import historyRouter from './routes/history.js';
@@ -115,6 +116,7 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/events', eventsRouter);
 app.use('/api/sessions', sessionsRouter);
+app.use('/api/story', storyRouter);
 app.use('/api/commands', commandsRouter);
 app.use('/api/history', historyRouter);
 app.use('/api/files', filesRouter);

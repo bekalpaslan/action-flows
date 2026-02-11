@@ -1,0 +1,202 @@
+/**
+ * Story Star Workbench Styles
+ * Cosmic theme with purple accent for narrative presentation
+ */
+
+.story-star {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: var(--cosmic-void, #0a0e27);
+  color: var(--cosmic-text-primary, #e8e8f0);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+/* Header Section */
+.story-star__header {
+  flex-shrink: 0;
+  padding: 2rem;
+  border-bottom: 1px solid var(--cosmic-border-subtle, rgba(139, 92, 246, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.05) 0%,
+    rgba(59, 130, 246, 0.02) 100%
+  );
+}
+
+.story-star__header h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.5px;
+}
+
+/* Main Content Area */
+.story-star__content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+/* Chapter List Sidebar */
+.story-star__chapter-list {
+  flex-shrink: 0;
+  width: 240px;
+  background: rgba(30, 27, 75, 0.4);
+  border: 1px solid var(--cosmic-border-subtle, rgba(139, 92, 246, 0.1));
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.3) rgba(10, 14, 39, 0.5);
+}
+
+.story-star__chapter-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.story-star__chapter-list::-webkit-scrollbar-track {
+  background: rgba(10, 14, 39, 0.5);
+}
+
+.story-star__chapter-list::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 3px;
+}
+
+.story-star__chapter-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
+}
+
+/* Chapter Viewer */
+.story-star__chapter-viewer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: rgba(30, 27, 75, 0.2);
+  border: 1px solid var(--cosmic-border-subtle, rgba(139, 92, 246, 0.1));
+  border-radius: 8px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.3) rgba(10, 14, 39, 0.5);
+}
+
+.story-star__chapter-viewer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.story-star__chapter-viewer::-webkit-scrollbar-track {
+  background: rgba(10, 14, 39, 0.5);
+}
+
+.story-star__chapter-viewer::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 3px;
+}
+
+.story-star__chapter-viewer::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 92, 246, 0.5);
+}
+
+/* Empty State */
+.story-star__empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--cosmic-text-secondary, #a8a8b8);
+  padding: 2rem;
+  text-align: center;
+}
+
+.story-star__empty-state p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Loading State */
+.story-star__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--cosmic-text-secondary, #a8a8b8);
+}
+
+.story-star__loading-spinner {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(139, 92, 246, 0.2);
+  border-top: 3px solid var(--cosmic-glow-accent, #8b5cf6);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .story-star__content {
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .story-star__chapter-list {
+    width: 180px;
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .story-star {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .story-star__header {
+    padding: 1.5rem;
+  }
+
+  .story-star__header h1 {
+    font-size: 1.5rem;
+  }
+
+  .story-star__content {
+    flex-direction: column-reverse;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .story-star__chapter-list {
+    width: 100%;
+    max-height: 150px;
+    overflow-x: auto;
+    overflow-y: visible;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .story-star__chapter-viewer {
+    flex: 1;
+  }
+}

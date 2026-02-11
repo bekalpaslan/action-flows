@@ -457,3 +457,35 @@ export interface HookDefinition {
 }
 
 export type { HookExecutionEvent as HookEvent };
+
+// ============================================================================
+// Story of Us System Types
+// ============================================================================
+/**
+ * Chapter metadata (used in index)
+ */
+export interface ChapterMeta {
+  id: string;
+  number: number;
+  title: string;
+  filePath: string;
+  createdAt: string;
+  wordCount: number;
+  theme?: string;
+}
+
+/**
+ * Story metadata index
+ */
+export interface StoryMetadata {
+  version: string;
+  lastUpdated: string;
+  chapters: ChapterMeta[];
+}
+
+/**
+ * Full chapter with content
+ */
+export interface Chapter extends ChapterMeta {
+  content: string;
+}

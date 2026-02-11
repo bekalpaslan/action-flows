@@ -26,6 +26,7 @@
 |------|---------|-------|
 | doc-reorganization/ | Reorganize documentation | analyze → human gate → plan → human gate → code → review |
 | ideation/ | Structured ideation sessions | classify (human gate) → analyze → brainstorm → code (summary) |
+| story-of-us/ | Poetic narrative of project journey | analyze → narrate → human gate → (narrate → human gate)× |
 
 ## review
 
