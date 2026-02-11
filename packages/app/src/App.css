@@ -66,7 +66,7 @@
 .app-header .status-indicator {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   flex-shrink: 0;
   margin-left: auto;
   width: auto;
@@ -92,42 +92,42 @@
 .app-header .status::before {
   content: '';
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: var(--space-2);
+  height: var(--space-2);
   border-radius: 50%;
-  background: #ff9800;
+  background: var(--system-orange);
   flex-shrink: 0;
-  box-shadow: 0 0 6px currentColor;
+  box-shadow: 0 0 var(--space-1-5) currentColor;
 }
 
 .app-header .status.connected {
-  background: rgba(76, 175, 80, 0.1);
-  color: #4caf50;
-  border-color: rgba(76, 175, 80, 0.2);
+  background: rgba(50, 215, 75, 0.1);
+  color: var(--system-green);
+  border-color: rgba(50, 215, 75, 0.2);
 }
 
 .app-header .status.connected::before {
-  background: #4caf50;
+  background: var(--system-green);
 }
 
 .app-header .status.error {
-  background: rgba(244, 67, 54, 0.1);
-  color: #f44336;
-  border-color: rgba(244, 67, 54, 0.2);
+  background: rgba(255, 69, 58, 0.1);
+  color: var(--system-red);
+  border-color: rgba(255, 69, 58, 0.2);
 }
 
 .app-header .status.error::before {
-  background: #f44336;
+  background: var(--system-red);
 }
 
 .app-header .status.disconnected {
-  background: rgba(255, 152, 0, 0.1);
-  color: #ff9800;
-  border-color: rgba(255, 152, 0, 0.2);
+  background: rgba(255, 159, 10, 0.1);
+  color: var(--system-orange);
+  border-color: rgba(255, 159, 10, 0.2);
 }
 
 .app-header .status.disconnected::before {
-  background: #ff9800;
+  background: var(--system-orange);
 }
 
 .app-header .status.connecting::before {
@@ -152,9 +152,9 @@
 .left-sidebar-group {
   display: flex;
   flex-direction: column;
-  width: 280px;
-  min-width: 200px;
-  max-width: 400px;
+  width: var(--space-28);
+  min-width: var(--space-20);
+  max-width: var(--space-32);
   height: 100%;
   border-right: var(--panel-border-default);
   resize: horizontal;
@@ -168,7 +168,7 @@
 }
 
 .app-sidebar {
-  width: 250px;
+  width: var(--app-sidebar-width);
   background: var(--panel-bg-base);
   border-right: var(--panel-border-default);
   overflow-y: auto;
@@ -191,7 +191,7 @@
   color: var(--text-secondary);
   text-decoration: none;
   transition: var(--transition-all);
-  border-left: 3px solid transparent;
+  border-left: var(--space-0-5) solid transparent;
   font-size: var(--text-sm);
 }
 
@@ -214,7 +214,7 @@
   font-weight: var(--font-semibold);
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--tracking-wide);
 }
 
 .chain-selector {
@@ -251,7 +251,7 @@
   border-color: var(--color-accent);
   color: var(--app-bg-base);
   font-weight: var(--font-semibold);
-  box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
+  box-shadow: 0 0 var(--space-2) rgba(10, 132, 255, 0.3);
 }
 
 .app-main {
@@ -379,7 +379,7 @@ select:not(:disabled):focus-visible,
 
 /* Vim Navigation Focus */
 [data-vim-target].vim-focused {
-  outline: 2px solid #4caf50 !important;
+  outline: var(--focus-ring-width) solid var(--system-green) !important;
   outline-offset: 2px;
   box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
 }

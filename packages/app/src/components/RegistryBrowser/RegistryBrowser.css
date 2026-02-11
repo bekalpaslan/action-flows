@@ -63,7 +63,7 @@
   background: var(--color-accent);
   color: white;
   border-color: var(--color-accent);
-  box-shadow: 0 0 8px rgba(0, 122, 255, 0.3);
+  box-shadow: 0 0 8px rgba(10, 132, 255, 0.25);
 }
 
 /* Toolbar Section */
@@ -87,8 +87,8 @@
 }
 
 .add-custom-prompt-button:hover {
-  background: #0056b3;
-  box-shadow: var(--btn-glow-hover), 0 0 12px rgba(0, 122, 255, 0.3);
+  background: var(--semantic-info);
+  box-shadow: var(--btn-glow-hover), 0 0 12px rgba(10, 132, 255, 0.25);
   transform: translateY(-1px);
 }
 
@@ -118,7 +118,7 @@
 .search-input:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1), var(--panel-glow-hover);
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.08), var(--panel-glow-hover);
 }
 
 .registry-filters select {
@@ -136,7 +136,7 @@
 .registry-filters select:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1), var(--panel-glow-hover);
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.08), var(--panel-glow-hover);
 }
 
 /* Content Area */
@@ -196,23 +196,23 @@
 }
 
 .category-badge.badge-pattern {
-  background: #f3e8ff;
-  color: #7c3aed;
+  background: var(--light-bg-inset);
+  color: var(--system-purple);
 }
 
 .category-badge.badge-workflow {
-  background: #d1fae5;
-  color: #059669;
+  background: var(--light-status-success-bg);
+  color: var(--light-status-success-text);
 }
 
 .category-badge.badge-shortcut {
-  background: #fef3c7;
-  color: #d97706;
+  background: var(--light-status-warning-bg);
+  color: var(--system-orange);
 }
 
 .category-badge.badge-custom-prompt {
-  background: #e0f2fe;
-  color: #0369a1;
+  background: var(--light-status-info-bg);
+  color: var(--light-status-info-text);
 }
 
 .category-count {
@@ -252,7 +252,7 @@
 
 .entry-card:hover {
   border-color: var(--color-accent);
-  box-shadow: var(--panel-glow-hover), 0 4px 12px rgba(0, 122, 255, 0.15);
+  box-shadow: var(--panel-glow-hover), 0 4px 12px rgba(10, 132, 255, 0.12);
   transform: translateY(-2px);
 }
 
@@ -289,33 +289,33 @@
 }
 
 .entry-type.type-pattern {
-  background: #f3e8ff;
-  color: #7c3aed;
+  background: var(--light-bg-inset);
+  color: var(--system-purple);
 }
 
 .entry-type.type-workflow {
-  background: #d1fae5;
-  color: #059669;
+  background: var(--light-status-success-bg);
+  color: var(--light-status-success-text);
 }
 
 .entry-type.type-shortcut {
-  background: #fef3c7;
-  color: #d97706;
+  background: var(--light-status-warning-bg);
+  color: var(--system-orange);
 }
 
 .entry-type.type-modifier {
-  background: #fed7aa;
-  color: #92400e;
+  background: rgba(255, 159, 10, 0.15);
+  color: rgba(217, 119, 6, 1);
 }
 
 .entry-type.type-pack {
   background: #dbeafe;
-  color: #0284c7;
+  color: var(--system-blue);
 }
 
 .entry-type.type-custom-prompt {
-  background: #e0f2fe;
-  color: #0369a1;
+  background: var(--light-status-info-bg);
+  color: var(--light-status-info-text);
 }
 
 /* Delete Button */
@@ -347,9 +347,9 @@
 }
 
 .entry-delete-button:hover {
-  background: var(--error-color-dark, #c53030);
+  background: var(--error-color-dark, var(--system-red));
   transform: scale(1.1);
-  box-shadow: var(--shadow-md), 0 0 8px rgba(244, 67, 54, 0.3);
+  box-shadow: var(--shadow-md), 0 0 8px rgba(255, 69, 58, 0.25);
 }
 
 .entry-delete-button:active {
@@ -385,9 +385,9 @@
 .custom-prompt-details .always-show-badge {
   display: inline-block;
   padding: var(--space-1) var(--space-2);
-  background: rgba(0, 122, 255, 0.1);
+  background: rgba(10, 132, 255, 0.08);
   color: var(--color-accent);
-  border: 1px solid rgba(0, 122, 255, 0.2);
+  border: 1px solid rgba(10, 132, 255, 0.15);
   border-radius: var(--panel-radius-sm);
   font-size: var(--text-xs);
   font-weight: var(--font-semibold);
@@ -408,21 +408,21 @@
 }
 
 .source-badge.source-core {
-  background: #e0f2fe;
-  color: #0369a1;
-  border: 1px solid #7dd3fc;
+  background: var(--light-status-info-bg);
+  color: var(--light-status-info-text);
+  border: 1px solid var(--system-teal);
 }
 
 .source-badge.source-pack {
-  background: #fce7f3;
-  color: #be185d;
-  border: 1px solid #f9a8d4;
+  background: var(--light-status-error-bg);
+  color: var(--system-pink);
+  border: 1px solid var(--system-pink);
 }
 
 .source-badge.source-project {
-  background: #dcfce7;
-  color: #15803d;
-  border: 1px solid #86efac;
+  background: var(--light-status-success-bg);
+  color: var(--light-status-success-text);
+  border: 1px solid var(--system-green);
 }
 
 .entry-status {
@@ -530,8 +530,8 @@
   position: absolute;
   width: 16px;
   height: 16px;
-  left: 1px;
-  top: 1px;
+  left: var(--space-px);
+  top: var(--space-px);
   background: white;
   border-radius: 50%;
   transition: var(--transition-all);
@@ -541,7 +541,7 @@
 .toggle-switch input:checked + .toggle-slider {
   background: var(--success-color);
   border-color: var(--success-color);
-  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 8px rgba(50, 215, 75, 0.25);
 }
 
 .toggle-switch input:checked + .toggle-slider::before {
@@ -549,7 +549,7 @@
 }
 
 .toggle-switch input:focus + .toggle-slider {
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2), var(--panel-glow-hover);
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.15), var(--panel-glow-hover);
 }
 
 .toggle-label {
@@ -588,7 +588,7 @@
 
 .pack-card:hover {
   border-color: var(--color-accent);
-  box-shadow: var(--panel-glow-hover), 0 4px 12px rgba(0, 122, 255, 0.15);
+  box-shadow: var(--panel-glow-hover), 0 4px 12px rgba(10, 132, 255, 0.12);
   transform: translateY(-2px);
 }
 
@@ -669,9 +669,9 @@
 .tag {
   display: inline-block;
   padding: var(--space-1) var(--space-2);
-  background: rgba(0, 122, 255, 0.1);
+  background: rgba(10, 132, 255, 0.08);
   color: var(--color-accent);
-  border: 1px solid rgba(0, 122, 255, 0.2);
+  border: 1px solid rgba(10, 132, 255, 0.15);
   border-radius: var(--panel-radius-sm);
   font-size: var(--text-xs);
   font-weight: var(--font-medium);
@@ -717,7 +717,7 @@
   background: var(--success-color-dark);
   border-color: var(--success-color-dark);
   transform: translateY(-1px);
-  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(76, 175, 80, 0.3);
+  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(50, 215, 75, 0.25);
 }
 
 .uninstall-btn {
@@ -730,7 +730,7 @@
   background: var(--error-color);
   color: white;
   transform: translateY(-1px);
-  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(244, 67, 54, 0.3);
+  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(255, 69, 58, 0.25);
 }
 
 .confirm-uninstall-btn {
@@ -742,7 +742,7 @@
 .confirm-uninstall-btn:hover {
   background: var(--error-color-dark);
   border-color: var(--error-color-dark);
-  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(244, 67, 54, 0.3);
+  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(255, 69, 58, 0.25);
 }
 
 .cancel-uninstall-btn {

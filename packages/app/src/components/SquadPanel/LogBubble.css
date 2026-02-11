@@ -8,8 +8,8 @@
 .log-bubble {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  padding: 8px 10px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2-5);
   border-radius: 6px;
   font-size: var(--text-xs);
   line-height: var(--leading-normal);
@@ -31,14 +31,14 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: var(--space-0-5);
   min-width: 0;
 }
 
 .log-bubble-header {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1-5);
 }
 
 .log-bubble-icon {
@@ -60,7 +60,7 @@
 .log-bubble-timestamp {
   font-size: var(--text-xs);
   opacity: 0.6;
-  margin-left: 20px;
+  margin-left: var(--space-5);
 }
 
 /* Info bubbles: neutral gray (default) */

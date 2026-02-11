@@ -3,28 +3,28 @@
 .session-tree {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem 0;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
 }
 
 /* Toggle Button */
 .session-tree-toggle {
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: var(--space-2) var(--space-3);
   background: transparent;
   border: none;
   color: #808080;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   transition: all 0.2s ease;
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   text-align: left;
   user-select: none;
   border-left: 2px solid transparent;
-  margin-left: 0.5rem;
+  margin-left: var(--space-2);
 }
 
 .session-tree-toggle:hover {
@@ -62,7 +62,7 @@
   max-height: 600px;
   overflow-y: auto;
   border-left: 1px solid #303030;
-  margin-left: 0.75rem;
+  margin-left: var(--space-3);
 }
 
 .session-list {
@@ -71,7 +71,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--space-1);
 }
 
 .session-item {
@@ -82,7 +82,7 @@
 /* Session Button */
 .session-button {
   width: 100%;
-  padding: 0.5rem 0.6rem;
+  padding: var(--space-2) 0.6rem;
   background: transparent;
   border: none;
   color: #909090;
@@ -126,7 +126,7 @@
 .session-id-wrapper {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--space-1);
   flex-shrink: 0;
 }
 
@@ -228,7 +228,7 @@
 
 /* Empty State */
 .session-tree-empty {
-  padding: 1rem 0.75rem;
+  padding: var(--space-4) var(--space-3);
   color: #606060;
   font-size: var(--text-sm);
   text-align: center;
@@ -255,7 +255,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .session-button {
-    padding: 0.4rem 0.5rem;
+    padding: 0.4rem var(--space-2);
     font-size: var(--text-sm);
   }
 
@@ -282,7 +282,7 @@
 }
 
 .user-sidebar.collapsed .session-tree-toggle {
-  padding: 0.25rem 0.25rem;
+  padding: var(--space-1) var(--space-1);
   margin-left: 0;
   justify-content: center;
 }

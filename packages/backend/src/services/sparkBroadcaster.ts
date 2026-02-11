@@ -117,6 +117,7 @@ export class SparkBroadcaster extends EventEmitter {
   /**
    * Complete spark animation (reached destination).
    * Broadcasts final position at 100% progress then cleans up.
+   * Records bridge traversal for strength calculation.
    *
    * @param chainId - Chain identifier
    */
@@ -124,6 +125,15 @@ export class SparkBroadcaster extends EventEmitter {
     const spark = this.activeSparks.get(chainId);
     if (!spark) {
       return;
+    }
+
+    // Record bridge traversal for strength calculation
+    try {
+      const { getBridgeStrengthService } = require('./bridgeStrengthService.js');
+      const bridgeStrengthService = getBridgeStrengthService();
+      bridgeStrengthService.recordTraversal(spark.fromRegion, spark.toRegion);
+    } catch (err) {
+      console.warn('[SparkBroadcaster] Failed to record bridge traversal:', err);
     }
 
     // Final broadcast at 100% progress
@@ -153,11 +163,12 @@ export class SparkBroadcaster extends EventEmitter {
 
   /**
    * Update spark progress and broadcast if threshold met.
+   * Triggers gate validation when spark reaches 50% (bridge midpoint).
    *
    * @param chainId - Chain identifier
    * @private
    */
-  private updateSparkProgress(chainId: ChainId): void {
+  private async updateSparkProgress(chainId: ChainId): Promise<void> {
     const spark = this.activeSparks.get(chainId);
     if (!spark) {
       return;
@@ -166,6 +177,14 @@ export class SparkBroadcaster extends EventEmitter {
     const elapsed = Date.now() - spark.startTime;
     const newProgress = Math.min(elapsed / spark.estimatedDuration, 0.95); // Cap at 95%
 
+    // Gate validation at bridge midpoint (50%)
+    // Fire-and-forget pattern - doesn't block spark progress
+    if (newProgress >= 0.5 && spark.progress < 0.5) {
+      this.validateGateCheckpoint(chainId, spark.fromRegion, spark.toRegion).catch((err) => {
+        console.error('[SparkBroadcaster] Gate validation error:', err);
+      });
+    }
+
     // 5% throttling - only broadcast if progress increased by at least 5%
     if (newProgress - spark.lastBroadcastProgress < this.PROGRESS_THRESHOLD) {
       return;
@@ -173,6 +192,29 @@ export class SparkBroadcaster extends EventEmitter {
 
     spark.progress = newProgress;
     this.broadcastSpark(spark);
+  }
+
+  /**
+   * Validate gate checkpoint when spark passes through (non-blocking).
+   *
+   * @param chainId - Chain identifier
+   * @param fromRegion - Source region
+   * @param toRegion - Target region
+   * @private
+   */
+  private async validateGateCheckpoint(
+    chainId: ChainId,
+    fromRegion: RegionId,
+    toRegion: RegionId
+  ): Promise<void> {
+    try {
+      const { getGateValidator } = await import('./gateValidator.js');
+      const gateValidator = getGateValidator();
+      await gateValidator.validateGate(chainId, fromRegion, toRegion);
+    } catch (err) {
+      // Log but don't throw - gate validation failures shouldn't break spark animation
+      console.warn('[SparkBroadcaster] Gate validation failed:', err);
+    }
   }
 
   /**

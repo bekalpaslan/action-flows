@@ -89,7 +89,7 @@
   pointer-events: none;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .region-star__name {
@@ -297,6 +297,98 @@
   @keyframes fog-lift-reduced {
     from {
       opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+}
+
+/* ========================================
+   PHASE 4: REGION GLOW STATES
+   ======================================== */
+
+/* Idle state (default, steady subtle glow) */
+.region-star.glow-idle .region-star__core {
+  animation: none;
+  filter: brightness(1);
+}
+
+/* Active state (pulsing ring animation, step executing) */
+.region-star.glow-active .region-star__core {
+  animation: region-glow-pulse 1.5s ease-in-out infinite;
+  /* GPU optimization */
+  will-change: transform, filter;
+}
+
+@keyframes region-glow-pulse {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 8px var(--cosmic-star-glow));
+    transform: scale(1);
+  }
+  50% {
+    filter: brightness(1.3) drop-shadow(0 0 16px var(--cosmic-star-glow));
+    transform: scale(1.05);
+  }
+}
+
+/* Waiting state (gentle breathing animation, chain waiting) */
+.region-star.glow-waiting .region-star__core {
+  animation: region-glow-breath 3s ease-in-out infinite;
+}
+
+@keyframes region-glow-breath {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Completion burst effect */
+.region-star__burst {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--cosmic-star-glow) 0%,
+    transparent 70%
+  );
+  animation: burst-expand 1s ease-out forwards;
+  pointer-events: none;
+  z-index: 5;
+  /* GPU optimization */
+  will-change: transform, opacity;
+}
+
+@keyframes burst-expand {
+  from {
+    opacity: 0.8;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+/* Reduced motion: Disable glow state animations */
+@media (prefers-reduced-motion: reduce) {
+  .region-star.glow-active .region-star__core,
+  .region-star.glow-waiting .region-star__core {
+    animation: none;
+  }
+
+  /* Burst effect uses quick fade instead of expansion */
+  .region-star__burst {
+    animation: burst-fade 300ms ease-out forwards;
+  }
+
+  @keyframes burst-fade {
+    from {
+      opacity: 0.8;
     }
     to {
       opacity: 0;

@@ -23,11 +23,11 @@
   height: 12px;
   background: linear-gradient(
     135deg,
-    var(--system-purple, #bf5af2) 0%,
+    var(--system-purple) 0%,
     var(--system-blue, var(--system-blue)) 100%
   );
   border-radius: var(--radius-full, 9999px);
-  border: 2px solid var(--app-bg-primary, #1c1c1e);
+  border: 2px solid var(--app-bg-primary, #c1c1e);
   animation: orchestrator-pulse 2s ease-in-out infinite;
   box-shadow: 0 0 8px rgba(191, 90, 242, 0.4),
               0 0 4px rgba(10, 132, 255, 0.3);

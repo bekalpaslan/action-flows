@@ -2,19 +2,19 @@
 .inline-buttons-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
 }
 
 /* Individual inline button item */
 .inline-button-item {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: #0e639c;
+  gap: var(--space-1-5);
+  padding: var(--space-1-5) var(--space-3);
+  background: var(--semantic-info);
   color: var(--text-primary);
-  border: 1px solid #1177bb;
+  border: 1px solid var(--light-btn-bg-primary);
   border-radius: 4px;
   font-size: var(--text-xs);
   font-weight: var(--font-medium);
@@ -24,8 +24,8 @@
 }
 
 .inline-button-item:hover:not(:disabled) {
-  background: #1177bb;
-  border-color: #1890e0;
+  background: var(--semantic-info);
+  border-color: var(--light-btn-hover-primary);
   transform: translateY(-1px);
 }
 
@@ -41,39 +41,39 @@
 /* Loading state - gray with spinner animation */
 .inline-button-item.inline-button-loading {
   background: var(--app-bg-tertiary);
-  border-color: #4c4c4c;
+  border-color: var(--text-secondary);
   color: var(--text-tertiary);
 }
 
 .inline-button-item.inline-button-loading:hover:not(:disabled) {
   background: var(--app-bg-tertiary);
-  border-color: #4c4c4c;
+  border-color: var(--text-secondary);
   transform: none;
 }
 
 /* Success state - green */
 .inline-button-item.inline-button-success {
-  background: #0d8659;
-  border-color: #0fa570;
+  background: var(--semantic-success);
+  border-color: var(--system-green);
   color: var(--text-primary);
 }
 
 .inline-button-item.inline-button-success:hover:not(:disabled) {
-  background: #0d8659;
-  border-color: #0fa570;
+  background: var(--semantic-success);
+  border-color: var(--system-green);
   transform: none;
 }
 
 /* Error state - red */
 .inline-button-item.inline-button-error {
-  background: #941713;
-  border-color: #c8302e;
+  background: rgba(148, 23, 19, 0.85);
+  border-color: var(--system-red);
   color: var(--text-primary);
 }
 
 .inline-button-item.inline-button-error:hover:not(:disabled) {
-  background: #941713;
-  border-color: #c8302e;
+  background: rgba(148, 23, 19, 0.85);
+  border-color: var(--system-red);
   transform: none;
 }
 
@@ -123,11 +123,11 @@
 /* Responsive: stack on very small screens */
 @media (max-width: 480px) {
   .inline-buttons-container {
-    gap: 6px;
+    gap: var(--space-1-5);
   }
 
   .inline-button-item {
-    padding: 5px 10px;
+    padding: 5px var(--space-2-5);
     font-size: var(--text-xs);
   }
 }

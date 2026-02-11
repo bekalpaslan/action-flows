@@ -56,7 +56,7 @@
 /* Shadow fade-in animation (layered effect) */
 @keyframes sidebar-shadow-in {
   0% {
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    box-shadow: none;
   }
   100% {
     box-shadow: var(--sidebar-shadow-expanded);
@@ -69,7 +69,7 @@
     box-shadow: var(--sidebar-shadow-expanded);
   }
   100% {
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    box-shadow: none;
   }
 }
 

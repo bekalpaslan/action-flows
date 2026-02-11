@@ -38,9 +38,9 @@
 /* Skip button */
 .big-bang-animation__skip {
   position: absolute;
-  bottom: 24px;
-  right: 24px;
-  padding: 10px 20px;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  padding: var(--space-2-5) var(--space-5);
   background: var(--panel-bg-base);
   border: 1px solid var(--panel-border-default);
   border-radius: var(--radius-md);
@@ -99,9 +99,9 @@
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .big-bang-animation__skip {
-    bottom: 16px;
-    right: 16px;
-    padding: 8px 16px;
+    bottom: var(--space-4);
+    right: var(--space-4);
+    padding: var(--space-2) var(--space-4);
     font-size: var(--text-xs);
   }
 }
@@ -109,7 +109,7 @@
 /* Tablet adjustments */
 @media (min-width: 769px) and (max-width: 1024px) {
   .big-bang-animation__skip {
-    bottom: 20px;
-    right: 20px;
+    bottom: var(--space-5);
+    right: var(--space-5);
   }
 }

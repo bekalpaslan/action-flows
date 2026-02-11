@@ -15,6 +15,7 @@ import {
   revealAllRegionsSchema,
 } from '../schemas/api.js';
 import { getDiscoveryService } from '../services/discoveryService.js';
+import { getBridgeStrengthService } from '../services/bridgeStrengthService.js';
 import * as universeEvents from '../ws/universeEvents.js';
 
 const router = Router();
@@ -698,6 +699,70 @@ router.post('/discovery/reveal-all', writeLimiter, validateBody(revealAllRegions
     console.error('[API] Error revealing all regions:', error);
     res.status(500).json({
       error: 'Failed to reveal all regions',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+// ============================================================================
+// Bridge Strength Endpoints (Phase 4 - Batch F)
+// ============================================================================
+
+/**
+ * GET /api/universe/bridge-strength/:from/:to
+ * Get bridge strength for visualization (0.3 to 1.0)
+ */
+router.get('/bridge-strength/:from/:to', readLimiter, async (req, res) => {
+  try {
+    const fromRegion = req.params.from as RegionId;
+    const toRegion = req.params.to as RegionId;
+
+    const bridgeStrengthService = getBridgeStrengthService();
+    const strength = bridgeStrengthService.getStrength(fromRegion, toRegion);
+    const traversalCount = bridgeStrengthService.getTraversalCount(fromRegion, toRegion);
+
+    res.json({
+      fromRegion,
+      toRegion,
+      strength,
+      traversalCount,
+    });
+  } catch (error) {
+    console.error('[API] Error fetching bridge strength:', error);
+    res.status(500).json({
+      error: 'Failed to fetch bridge strength',
+      message: sanitizeError(error),
+    });
+  }
+});
+
+/**
+ * GET /api/universe/bridge-strengths
+ * Get all bridge strengths for full universe visualization
+ */
+router.get('/bridge-strengths', readLimiter, async (req, res) => {
+  try {
+    const bridgeStrengthService = getBridgeStrengthService();
+    const allStrengths = bridgeStrengthService.getAllStrengths();
+
+    // Convert Map to array for JSON serialization
+    const strengths = Array.from(allStrengths.entries()).map(([key, data]) => ({
+      key,
+      fromRegion: data.fromRegion,
+      toRegion: data.toRegion,
+      strength: data.strength,
+      traversalCount: data.traversalCount,
+      lastTraversal: data.lastTraversal,
+    }));
+
+    res.json({
+      count: strengths.length,
+      strengths,
+    });
+  } catch (error) {
+    console.error('[API] Error fetching all bridge strengths:', error);
+    res.status(500).json({
+      error: 'Failed to fetch bridge strengths',
       message: sanitizeError(error),
     });
   }

@@ -181,7 +181,7 @@
 /* Light theme adjustments */
 @media (prefers-color-scheme: light) {
   .session-sidebar {
-    background-color: rgba(245, 245, 247, 0.95);
+    background-color: var(--panel-bg-elevated);
     border-right-color: var(--glass-bg-dark);
   }
 

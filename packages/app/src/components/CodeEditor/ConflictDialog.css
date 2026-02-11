@@ -22,7 +22,7 @@
   max-height: 80vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-elevation-9);
 }
 
 .conflict-dialog-header {
@@ -34,7 +34,7 @@
   margin: 0;
   font-size: var(--text-lg);
   font-weight: var(--font-semibold);
-  color: #ff9800;
+  color: var(--system-orange);
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -82,7 +82,7 @@
   margin: 0 0 var(--space-2) 0;
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
-  color: #569cd6;
+  color: rgba(86, 156, 214, 1);
 }
 
 .version-card p {
@@ -97,7 +97,7 @@
   background: transparent;
   border: 1px solid var(--app-bg-tertiary);
   border-radius: 4px;
-  color: #569cd6;
+  color: rgba(86, 156, 214, 1);
   font-size: var(--text-xs);
   cursor: pointer;
   transition: all 0.2s;
@@ -105,7 +105,7 @@
 
 .show-details-btn:hover {
   background: #2d2d2d;
-  border-color: #569cd6;
+  border-color: rgba(86, 156, 214, 1);
 }
 
 .conflict-instructions {
@@ -136,12 +136,12 @@
 }
 
 .btn-primary {
-  background: #0e639c;
+  background: var(--semantic-info);
   color: var(--text-primary);
 }
 
 .btn-primary:hover {
-  background: #1177bb;
+  background: var(--semantic-info);
 }
 
 .btn-secondary {
@@ -156,7 +156,7 @@
 .btn-tertiary {
   background: transparent;
   border: 1px solid #569cd6;
-  color: #569cd6;
+  color: rgba(86, 156, 214, 1);
 }
 
 .btn-tertiary:hover {

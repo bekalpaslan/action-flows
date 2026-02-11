@@ -15,7 +15,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: var(--space-5);
 }
 
 /* Dialog container */
@@ -28,7 +28,7 @@
   max-height: 80vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-elevation-5);
 }
 
 /* Header */
@@ -36,7 +36,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: var(--space-4) var(--space-5);
   border-bottom: 1px solid var(--text-secondary);
 }
 
@@ -65,7 +65,7 @@
 
 .discuss-dialog__close-btn:hover {
   background: var(--text-secondary);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .discuss-dialog__close-btn:disabled {
@@ -77,25 +77,25 @@
 .discuss-dialog__body {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: var(--space-5);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .discuss-dialog__label {
   display: block;
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
-  color: #c0c0c0;
-  margin-bottom: 6px;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-1-5);
 }
 
 .discuss-dialog__message {
   width: 100%;
-  padding: 10px 12px;
-  background: #2a2a2a;
-  border: 1px solid #444;
+  padding: var(--space-2-5) var(--space-3);
+  background: var(--app-bg-tertiary);
+  border: 1px solid var(--text-tertiary);
   border-radius: 4px;
   color: var(--panel-border-color-subtle);
   font-size: var(--text-sm);
@@ -106,7 +106,7 @@
 }
 
 .discuss-dialog__message:focus {
-  border-color: #5865f2;
+  border-color: var(--light-btn-bg-primary);
 }
 
 .discuss-dialog__message:disabled {
@@ -116,17 +116,17 @@
 
 /* Context section (native details/summary) */
 .discuss-dialog__context {
-  margin-top: 8px;
-  border: 1px solid #444;
+  margin-top: var(--space-2);
+  border: 1px solid var(--text-tertiary);
   border-radius: 4px;
-  background: #2a2a2a;
+  background: var(--app-bg-tertiary);
 }
 
 .discuss-dialog__context-summary {
-  padding: 10px 12px;
+  padding: var(--space-2-5) var(--space-3);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
-  color: #c0c0c0;
+  color: var(--text-secondary);
   cursor: pointer;
   list-style: none;
   user-select: none;
@@ -140,7 +140,7 @@
 .discuss-dialog__context-summary::before {
   content: '▶';
   display: inline-block;
-  margin-right: 8px;
+  margin-right: var(--space-2);
   transition: transform 0.2s ease;
 }
 
@@ -153,12 +153,12 @@
 }
 
 .discuss-dialog__context-content {
-  padding: 12px;
+  padding: var(--space-3);
   margin: 0;
   font-size: var(--text-xs);
-  color: #b0b0b0;
-  background: #252525;
-  border-top: 1px solid #444;
+  color: rgba(176, 176, 176, 1);
+  background: var(--app-bg-tertiary);
+  border-top: 1px solid var(--text-tertiary);
   overflow-x: auto;
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -167,14 +167,14 @@
 /* Actions */
 .discuss-dialog__actions {
   display: flex;
-  gap: 12px;
-  padding: 16px 20px;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
   border-top: 1px solid var(--text-secondary);
   justify-content: flex-end;
 }
 
 .discuss-dialog__btn {
-  padding: 8px 16px;
+  padding: var(--space-2) var(--space-4);
   border: none;
   border-radius: 4px;
   font-size: var(--text-sm);

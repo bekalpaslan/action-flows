@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--text-tertiary, #636366);
+  color: var(--text-tertiary);
   width: var(--space-5);
   height: var(--space-5);
 }
@@ -27,12 +27,12 @@
   outline: none;
   font-size: var(--text-lg);
   font-family: inherit;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   padding: 0;
 }
 
 .command-palette-input__field::placeholder {
-  color: var(--text-tertiary, #636366);
+  color: var(--text-tertiary);
 }
 
 .command-palette-input__field:focus {
@@ -50,14 +50,14 @@
   background: transparent;
   border: none;
   border-radius: var(--radius-4px);
-  color: var(--text-tertiary, #636366);
+  color: var(--text-tertiary);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .command-palette-input__clear:hover {
   background: var(--fill-quaternary, rgba(118, 118, 128, 0.18));
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
 }
 
 .command-palette-input__clear:active {

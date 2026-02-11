@@ -226,7 +226,7 @@
 }
 
 .widget-code-health__score--medium .widget-code-health__score-value {
-  color: #FF9500;
+  color: var(--system-orange);
 }
 
 .widget-code-health__score--poor .widget-code-health__score-value {
@@ -416,7 +416,7 @@
 .widget-unknown__type {
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
-  color: #FF9500;
+  color: var(--system-orange);
 }
 
 .widget-unknown__data {

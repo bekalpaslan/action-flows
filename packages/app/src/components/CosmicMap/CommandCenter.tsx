@@ -47,6 +47,14 @@ export function CommandCenter({
   const { discoveryProgress } = useDiscoveryContext();
 
   /**
+   * Calculate active chains across all sessions
+   * A chain is "active" if it has status "in_progress" or "pending"
+   */
+  const activeChains = sessions
+    .flatMap((s) => s.chains)
+    .filter((chain) => chain.status === 'in_progress' || chain.status === 'pending');
+
+  /**
    * Get active session object
    */
   const activeSession = sessions.find((s) => s.id === activeSessionId);
@@ -214,6 +222,18 @@ export function CommandCenter({
 
   return (
     <div className="command-center" role="region" aria-label="Command Center">
+      {/* Running chain indicator (appears above command input when chains are executing) */}
+      {activeChains.length > 0 && (
+        <div className="command-center__running-chains">
+          <div className="running-chain-indicator">
+            <span className="running-chain-spinner" />
+            <span className="running-chain-text">
+              {activeChains.length} chain{activeChains.length > 1 ? 's' : ''} running
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Discovery Hint (appears above command input when region is 90%+ ready) */}
       {activeHint && (
         <DiscoveryHint

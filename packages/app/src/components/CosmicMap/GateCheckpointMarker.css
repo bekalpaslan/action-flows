@@ -1,0 +1,105 @@
+/**
+ * GateCheckpointMarker Styles
+ * Visual styling for Harmony validation checkpoints on light bridges
+ */
+
+/* ============================================================================
+   Base Styles
+   ============================================================================ */
+
+.gate-checkpoint {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.gate-checkpoint:hover {
+  opacity: 0.8;
+}
+
+/* ============================================================================
+   Gate Circle
+   ============================================================================ */
+
+.gate-checkpoint__circle {
+  transition: fill 0.3s ease, stroke 0.3s ease;
+}
+
+/* Status-specific styling (set via inline fill prop) */
+.gate-checkpoint--pending .gate-checkpoint__circle {
+  opacity: 0.6;
+}
+
+.gate-checkpoint--pass .gate-checkpoint__circle {
+  filter: drop-shadow(0 0 4px var(--cosmic-gate-pass, #4ade80));
+}
+
+.gate-checkpoint--fail .gate-checkpoint__circle {
+  filter: drop-shadow(0 0 4px var(--cosmic-gate-fail, #f87171));
+}
+
+/* ============================================================================
+   Pulse Animation
+   ============================================================================ */
+
+.gate-checkpoint__pulse {
+  animation: gate-pulse 0.6s ease-out;
+  pointer-events: none;
+}
+
+@keyframes gate-pulse {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.5);
+  }
+}
+
+/* ============================================================================
+   Reduced Motion Support
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .gate-checkpoint {
+    transition: none;
+  }
+
+  .gate-checkpoint__circle {
+    transition: none;
+  }
+
+  .gate-checkpoint__pulse {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* ============================================================================
+   Dark Mode Support (optional)
+   ============================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  .gate-checkpoint--pending .gate-checkpoint__circle {
+    opacity: 0.5;
+  }
+}
+
+/* ============================================================================
+   High Contrast Mode Support
+   ============================================================================ */
+
+@media (prefers-contrast: high) {
+  .gate-checkpoint__circle {
+    stroke-width: 3;
+  }
+
+  .gate-checkpoint--pass .gate-checkpoint__circle {
+    stroke: #22c55e;
+  }
+
+  .gate-checkpoint--fail .gate-checkpoint__circle {
+    stroke: #ef4444;
+  }
+}

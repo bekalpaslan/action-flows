@@ -44,6 +44,8 @@ import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDe
 import { lifecycleManager } from './services/lifecycleManager.js';
 import { initDiscoveryService } from './services/discoveryService.js';
 import { initSparkBroadcaster, getSparkBroadcaster } from './services/sparkBroadcaster.js';
+import { initGateValidator, getGateValidator } from './services/gateValidator.js';
+import { initBridgeStrengthService } from './services/bridgeStrengthService.js';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -438,6 +440,32 @@ if (isMainModule) {
       console.log('[SparkBroadcaster] ✅ Service initialized successfully for Living Universe Phase 4');
     } catch (error) {
       console.error('[SparkBroadcaster] ❌ Failed to initialize SparkBroadcaster:', error);
+    }
+
+    // Initialize gate validator (Phase 4 - Batch E: Gate Checkpoint Validation)
+    try {
+      const gateValidator = initGateValidator();
+
+      // Wire gate validation events to WebSocket broadcast
+      gateValidator.on('gate:updated', (event: any) => {
+        wss.clients.forEach((client) => {
+          if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(event));
+          }
+        });
+      });
+
+      console.log('[GateValidator] ✅ Service initialized successfully for Living Universe Phase 4 Batch E');
+    } catch (error) {
+      console.error('[GateValidator] ❌ Failed to initialize GateValidator:', error);
+    }
+
+    // Initialize bridge strength tracker (Phase 4 - Batch F: Bridge Strength + Background Indicators)
+    try {
+      initBridgeStrengthService();
+      console.log('[BridgeStrengthService] ✅ Service initialized successfully for Living Universe Phase 4 Batch F');
+    } catch (error) {
+      console.error('[BridgeStrengthService] ❌ Failed to initialize BridgeStrengthService:', error);
     }
 
     // Start cleanup service

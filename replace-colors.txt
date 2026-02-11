@@ -1,0 +1,13 @@
+# This file lists all replacements to be made
+# Format: old_string|||new_string
+
+--glow-info-color: #3b82f6|||--glow-info-color: var(--semantic-info)
+--glow-error-color: #ef4444|||--glow-error-color: var(--semantic-error)
+--glow-info-shadow: rgba(59, 130, 246, 0.6)|||--glow-info-shadow: rgba(59, 130, 246, 0.6)
+background: var(--app-bg-secondary, #2c2c2e)|||background: var(--app-bg-secondary)
+background: var(--app-bg-primary, #1c1c1e)|||background: var(--app-bg-primary)
+background-color: var(--app-bg-secondary, #2c2c2e)|||background-color: var(--app-bg-secondary)
+background-color: var(--app-bg-primary, #1c1c1e)|||background-color: var(--app-bg-primary)
+color: var(--text-primary, #ffffff)|||color: var(--text-primary)
+border: 2px solid var(--app-bg-primary, #1c1c1e)|||border: 2px solid var(--app-bg-primary)
+

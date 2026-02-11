@@ -6,10 +6,11 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import type { RegionId, WorkbenchId, ColorShift, HealthMetrics } from '@afw/shared';
-import { FogState } from '@afw/shared';
+import type { RegionId, WorkbenchId, ColorShift, HealthMetrics, StepStartedEvent, StepCompletedEvent } from '@afw/shared';
+import { FogState, mapActionToRegion } from '@afw/shared';
 import { Handle, Position, type NodeProps } from 'reactflow';
 import { useUniverseContext } from '../../contexts/UniverseContext';
+import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import '../../styles/cosmic-tokens.css';
 import './RegionStar.css';
 
@@ -27,8 +28,12 @@ export interface RegionStarData {
 
 export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected }) => {
   const { navigateToRegion, isRegionAccessible } = useUniverseContext();
+  const ws = useWebSocketContext();
   const [isRevealing, setIsRevealing] = useState(false);
+  const [glowState, setGlowState] = useState<'idle' | 'active' | 'waiting'>('idle');
+  const [showBurst, setShowBurst] = useState(false);
   const prevFogStateRef = useRef<FogState>(data.fogState);
+  const autoRevertTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Watch for fog state changes (HIDDEN → REVEALED)
   useEffect(() => {
@@ -50,6 +55,67 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
     prevFogStateRef.current = data.fogState;
   }, [data.fogState]);
 
+  // Subscribe to step execution events for region glow states
+  useEffect(() => {
+    if (!ws.onEvent) return;
+
+    const handleEvent = (event: any) => {
+      // Handle step:started - activate region glow
+      if (event.type === 'step:started') {
+        const stepEvent = event as StepStartedEvent;
+        if (stepEvent.action) {
+          const targetRegion = mapActionToRegion(stepEvent.action);
+          if (targetRegion === data.regionId) {
+            setGlowState('active');
+
+            // Clear any existing auto-revert timer
+            if (autoRevertTimerRef.current) {
+              clearTimeout(autoRevertTimerRef.current);
+            }
+
+            // Auto-revert to idle after 3 seconds
+            autoRevertTimerRef.current = setTimeout(() => {
+              setGlowState('idle');
+            }, 3000);
+          }
+        }
+      }
+
+      // Handle step:completed - show burst and revert
+      if (event.type === 'step:completed') {
+        const stepEvent = event as StepCompletedEvent;
+        if (stepEvent.action) {
+          const targetRegion = mapActionToRegion(stepEvent.action);
+          if (targetRegion === data.regionId) {
+            // Show completion burst
+            setShowBurst(true);
+            setGlowState('active');
+
+            // Clear any existing auto-revert timer
+            if (autoRevertTimerRef.current) {
+              clearTimeout(autoRevertTimerRef.current);
+            }
+
+            // Hide burst after 1 second, then revert to idle
+            setTimeout(() => {
+              setShowBurst(false);
+              setGlowState('idle');
+            }, 1000);
+          }
+        }
+      }
+    };
+
+    const unsubscribe = ws.onEvent(handleEvent);
+    return () => {
+      unsubscribe();
+      // Clean up auto-revert timer on unmount
+      if (autoRevertTimerRef.current) {
+        clearTimeout(autoRevertTimerRef.current);
+      }
+    };
+  }, [ws, data.regionId]);
+
   const handleClick = () => {
     if (isRegionAccessible(data.regionId)) {
       navigateToRegion(data.regionId);
@@ -60,8 +126,10 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
   const fogClass = `fog-${data.fogState}`;
   const statusClass = `status-${data.status}`;
   const layerClass = `layer-${data.layer}`;
+  const glowClass = `glow-${glowState}`;
   const selectedClass = selected ? 'selected' : '';
   const revealingClass = isRevealing ? 'revealing' : '';
+  const burstClass = showBurst ? 'showing-burst' : '';
 
   // Calculate opacity based on fog state
   const opacity = data.fogState === FogState.HIDDEN
@@ -78,7 +146,7 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
 
   return (
     <div
-      className={`region-star ${fogClass} ${statusClass} ${layerClass} ${selectedClass} ${revealingClass}`}
+      className={`region-star ${fogClass} ${statusClass} ${layerClass} ${glowClass} ${selectedClass} ${revealingClass} ${burstClass}`}
       onClick={isClickable ? handleClick : undefined}
       role={isClickable ? 'button' : 'presentation'}
       tabIndex={isClickable ? 0 : -1}
@@ -90,7 +158,7 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
       title={`${data.label} (${data.layer})`}
       style={{
         opacity,
-        filter: data.status === 'active' ? glowFilter : undefined,
+        filter: glowState === 'active' ? glowFilter : undefined,
         cursor: isClickable ? 'pointer' : 'not-allowed',
       }}
     >
@@ -116,6 +184,11 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
         {/* Star center */}
         <div className="region-star__center" />
       </div>
+
+      {/* Completion burst effect */}
+      {showBurst && (
+        <div className="region-star__burst" />
+      )}
 
       {/* Label */}
       <div className="region-star__label">

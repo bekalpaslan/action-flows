@@ -36,7 +36,7 @@
 
 .respect-workbench__action-btn {
   padding: var(--space-2) var(--space-4);
-  background-color: #0288d1;
+  background-color: var(--semantic-info);
   color: #fff;
   border: none;
   border-radius: var(--space-1);
@@ -47,11 +47,11 @@
 }
 
 .respect-workbench__action-btn:hover {
-  background-color: #0277bd;
+  background-color: #1d4ed8;
 }
 
 .respect-workbench__action-btn:active {
-  background-color: #01579b;
+  background-color: #1e3a8a;
 }
 
 /* ============================================================================
@@ -89,7 +89,7 @@
 }
 
 .respect-controls__run-btn:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: var(--semantic-info-dark);
 }
 
 .respect-controls__run-btn:disabled {
@@ -146,11 +146,11 @@
 }
 
 .respect-controls__chip--warning {
-  background: rgba(255, 152, 0, 0.15);
+  background: rgba(245, 158, 11, 0.15);
 }
 
 .respect-controls__chip--warning .respect-controls__chip-label {
-  color: #ff9800;
+  color: var(--system-yellow);
 }
 
 .respect-controls__chip--danger {
@@ -258,7 +258,7 @@
 }
 
 .respect-category__status-dot--warn {
-  background: #ff9800;
+  background: var(--system-yellow);
 }
 
 .respect-category__status-dot--fail {
@@ -301,8 +301,8 @@
 }
 
 .respect-component--warn {
-  border-left-color: #ff9800;
-  background: rgba(255, 152, 0, 0.08);
+  border-left-color: var(--system-yellow);
+  background: rgba(245, 158, 11, 0.08);
 }
 
 .respect-component--fail {
@@ -326,7 +326,7 @@
 }
 
 .respect-component--warn .respect-component__status-icon {
-  color: #ff9800;
+  color: var(--system-yellow);
 }
 
 .respect-component--fail .respect-component__status-icon {
@@ -385,12 +385,12 @@
 }
 
 .respect-violation__badge--medium {
-  background: #ff9800;
+  background: var(--system-yellow);
   color: var(--text-primary);
 }
 
 .respect-violation__badge--low {
-  background: #757575;
+  background: var(--text-secondary);
   color: var(--text-primary);
 }
 

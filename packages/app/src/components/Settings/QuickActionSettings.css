@@ -19,7 +19,7 @@
   background: var(--background-primary);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-elevation-7);
   display: flex;
   flex-direction: column;
   animation: slideUp 0.3s ease;
@@ -29,7 +29,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: var(--space-4) var(--space-5);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -63,14 +63,14 @@
 .settings-content {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: var(--space-5);
 }
 
 .settings-actions-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .settings-action-item {
@@ -85,7 +85,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .action-info {
@@ -95,8 +95,8 @@
 .action-label-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1-5);
 }
 
 .action-icon-preview {
@@ -120,7 +120,7 @@
 .action-details {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   font-size: var(--text-xs);
 }
 
@@ -130,7 +130,7 @@
 
 .action-badge {
   display: inline-block;
-  padding: 2px 6px;
+  padding: var(--space-0-5) var(--space-1-5);
   background: var(--accent-primary);
   color: white;
   border-radius: 3px;
@@ -140,11 +140,11 @@
 
 .action-buttons {
   display: flex;
-  gap: 6px;
+  gap: var(--space-1-5);
 }
 
 .action-btn {
-  padding: 6px 12px;
+  padding: var(--space-1-5) var(--space-3);
   border: 1px solid var(--border-color);
   border-radius: 6px;
   background: transparent;
@@ -162,8 +162,8 @@
 }
 
 .delete-btn:hover {
-  background: #ef4444;
-  border-color: #ef4444;
+  background: var(--semantic-error);
+  border-color: var(--semantic-error);
   color: white;
 }
 
@@ -171,13 +171,13 @@
 .action-edit-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .form-row {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-1-5);
 }
 
 .form-row label {
@@ -188,7 +188,7 @@
 
 .form-row input[type="text"],
 .form-row select {
-  padding: 8px 10px;
+  padding: var(--space-2) var(--space-2-5);
   background: var(--background-primary);
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -207,7 +207,7 @@
 .checkbox-row label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   cursor: pointer;
 }
 
@@ -219,13 +219,13 @@
 
 .form-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 8px;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
 }
 
 .form-btn {
   flex: 1;
-  padding: 8px 14px;
+  padding: var(--space-2) 14px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: var(--text-xs);
@@ -258,7 +258,7 @@
 /* Add action button */
 .add-action-btn {
   width: 100%;
-  padding: 10px 16px;
+  padding: var(--space-2-5) var(--space-4);
   background: transparent;
   border: 2px dashed var(--border-color);
   border-radius: 8px;
@@ -279,13 +279,13 @@
 .settings-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  padding: 16px 20px;
+  gap: var(--space-2-5);
+  padding: var(--space-4) var(--space-5);
   border-top: 1px solid var(--border-color);
 }
 
 .footer-btn {
-  padding: 8px 20px;
+  padding: var(--space-2) var(--space-5);
   border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: var(--text-sm);

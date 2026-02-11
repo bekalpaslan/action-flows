@@ -14,10 +14,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 16px 12px;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-3);
   background: var(--app-bg-primary);
-  border: 2px solid var(--app-bg-tertiary);
+  border: var(--space-0-5) solid var(--app-bg-tertiary);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -26,22 +26,22 @@
 }
 
 .agent-character-card:focus-visible {
-  outline: 2px solid var(--system-blue);
-  outline-offset: 2px;
+  outline: var(--space-0-5) solid var(--system-blue);
+  outline-offset: var(--space-0-5);
 }
 
 /* ===== SIZE VARIANTS ===== */
 
 .agent-character-card.size-orchestrator {
   width: 200px;
-  gap: 16px;
-  padding: 20px 14px;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-3-5);
 }
 
 .agent-character-card.size-subagent {
   width: 140px;
-  gap: 10px;
-  padding: 12px 10px;
+  gap: var(--space-2-5);
+  padding: var(--space-3) var(--space-2-5);
 }
 
 /* ===== HOVER STATE ===== */
@@ -51,14 +51,14 @@
   transform: scale(1.05);
   border-color: currentColor;
   background: var(--app-bg-secondary);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-elevation-4);
   transition: all 0.3s var(--ease-natural);
 }
 
 .agent-character-card.size-orchestrator:hover,
 .agent-character-card.size-orchestrator.is-hovered {
   transform: scale(1.08);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-spaced-dark);
 }
 
 /* Status-based border colors on hover */
@@ -128,7 +128,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: var(--space-0-5);
   width: 100%;
   text-align: center;
   overflow: hidden;
@@ -145,7 +145,7 @@
 
 .agent-character-card.size-orchestrator .card-name {
   font-size: var(--text-base);
-  margin-bottom: 2px;
+  margin-bottom: var(--space-0-5);
 }
 
 .agent-character-card.size-subagent .card-name {
@@ -171,7 +171,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1-5);
   width: 100%;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -188,10 +188,10 @@
 .status-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
+  gap: var(--space-1-5);
+  padding: var(--space-1-5) var(--space-2-5);
   background: rgba(60, 60, 60, 0.6);
-  border: 1px solid;
+  border: var(--space-px) solid;
   border-radius: 6px;
   width: 100%;
   justify-content: center;
@@ -215,8 +215,8 @@
 /* Status indicator dot */
 .status-indicator {
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: var(--space-1-5);
+  height: var(--space-1-5);
   border-radius: 50%;
   flex-shrink: 0;
   animation: statusPulse 2s ease-in-out infinite;
@@ -268,16 +268,16 @@
 .progress-container {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
   width: 100%;
-  padding: 4px 0;
+  padding: var(--space-1) 0;
 }
 
 .progress-label {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2px;
+  padding: 0 var(--space-0-5);
   font-size: var(--text-xs);
   color: var(--text-tertiary);
 }
@@ -294,11 +294,11 @@
 
 .progress-bar {
   position: relative;
-  height: 4px;
+  height: var(--space-1);
   background: rgba(60, 60, 60, 0.8);
-  border-radius: 2px;
+  border-radius: var(--space-0-5);
   overflow: hidden;
-  border: 1px solid var(--app-bg-tertiary);
+  border: var(--space-px) solid var(--app-bg-tertiary);
 }
 
 .progress-fill {
@@ -309,9 +309,9 @@
     rgba(255, 255, 255, 0.2)
   );
   width: var(--progress-amount);
-  border-radius: 2px;
+  border-radius: var(--space-0-5);
   transition: width 0.4s var(--ease-natural);
-  box-shadow: 0 0 8px var(--progress-color);
+  box-shadow: 0 0 var(--space-2) var(--progress-color);
   animation: progress-fill 0.6s var(--ease-ghibli);
 }
 
@@ -332,8 +332,8 @@
 
 .card-expand-indicator {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
+  bottom: var(--space-2);
+  right: var(--space-2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -365,12 +365,12 @@
 
 .card-hint {
   position: absolute;
-  top: -28px;
+  top: calc(-28px - var(--space-2));
   left: 50%;
   transform: translateX(-50%);
-  padding: 4px 8px;
+  padding: var(--space-1) var(--space-2);
   background: var(--panel-bg-base);
-  border: 1px solid var(--app-bg-tertiary);
+  border: var(--space-px) solid var(--app-bg-tertiary);
   border-radius: 4px;
   font-size: var(--text-xs);
   color: var(--text-tertiary);
@@ -384,7 +384,7 @@
 @keyframes hintFadeIn {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(-4px);
+    transform: translateX(-50%) translateY(var(--space-1));
   }
   to {
     opacity: 1;
@@ -404,8 +404,8 @@
 /* ===== KEYBOARD INTERACTION ===== */
 
 .agent-character-card:focus-visible {
-  outline: 2px solid var(--system-blue);
-  outline-offset: 2px;
+  outline: var(--space-0-5) solid var(--system-blue);
+  outline-offset: var(--space-0-5);
 }
 
 .agent-character-card:focus-visible:not(:focus-visible) {
@@ -437,13 +437,13 @@
 @media (min-width: 1200px) {
   .agent-character-card.size-orchestrator {
     width: 220px;
-    gap: 18px;
-    padding: 24px 16px;
+    gap: var(--space-4-5);
+    padding: var(--space-6) var(--space-4);
   }
 
   .agent-character-card.size-subagent {
     width: 160px;
-    gap: 12px;
+    gap: var(--space-3);
   }
 }
 
@@ -451,12 +451,12 @@
 @media (min-width: 768px) and (max-width: 1199px) {
   .agent-character-card.size-orchestrator {
     width: 200px;
-    gap: 16px;
+    gap: var(--space-4);
   }
 
   .agent-character-card.size-subagent {
     width: 150px;
-    gap: 10px;
+    gap: var(--space-2-5);
   }
 }
 
@@ -465,13 +465,13 @@
   .agent-character-card.size-orchestrator,
   .agent-character-card.size-subagent {
     width: 140px;
-    gap: 10px;
-    padding: 12px 10px;
+    gap: var(--space-2-5);
+    padding: var(--space-3) var(--space-2-5);
   }
 
   .card-hint {
     font-size: var(--text-xs);
-    top: -26px;
+    top: calc(-26px - var(--space-1-5));
   }
 
   .card-name {
@@ -488,8 +488,8 @@
   .agent-character-card.size-orchestrator,
   .agent-character-card.size-subagent {
     width: 120px;
-    gap: 8px;
-    padding: 10px 8px;
+    gap: var(--space-2);
+    padding: var(--space-2-5) var(--space-2);
   }
 
   .card-name {

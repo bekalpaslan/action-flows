@@ -695,6 +695,17 @@ export interface SparkTravelingEvent extends BaseEvent {
   chainTitle?: string | null;
 }
 
+export interface GateUpdatedEvent extends BaseEvent {
+  type: 'chain:gate_updated';
+
+  // Automatic fields
+  fromRegion: RegionId;
+  toRegion: RegionId;
+  status: 'pending' | 'pass' | 'fail';
+  passCount: number;
+  failCount: number;
+}
+
 /**
  * Union type for all events
  */
@@ -740,7 +751,8 @@ export type WorkspaceEvent =
   | UniverseInitializedEvent
   | RegionDiscoveredEvent
   | EvolutionTickEvent
-  | SparkTravelingEvent;
+  | SparkTravelingEvent
+  | GateUpdatedEvent;
 
 /**
  * Type guard functions for discriminating event types
@@ -824,4 +836,6 @@ export const eventGuards = {
     event.type === 'universe:evolution_tick',
   isSparkTraveling: (event: WorkspaceEvent): event is SparkTravelingEvent =>
     event.type === 'chain:spark_traveling',
+  isGateUpdated: (event: WorkspaceEvent): event is GateUpdatedEvent =>
+    event.type === 'chain:gate_updated',
 };

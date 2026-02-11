@@ -46,6 +46,168 @@
   --fill-quaternary: rgba(118, 118, 128, 0.18);
 
   /* ==========================================================================
+     Light Theme Tokens
+     ========================================================================== */
+
+  /* Light Theme Backgrounds */
+  --light-bg-base: #ffffff;
+  --light-bg-primary: #f9fafb;
+  --light-bg-secondary: var(--light-bg-secondary);
+  --light-bg-tertiary: #e5e7eb;
+  --light-bg-quaternary: #d1d5db;
+  --light-bg-panel: #fafafa;
+  --light-bg-elevated: #ffffff;
+  --light-bg-inset: #f3f4f6;
+
+  /* Light Theme Text Colors */
+  --light-text-primary: #111827;
+  --light-text-secondary: #6b7280;
+  --light-text-tertiary: #9ca3af;
+  --light-text-quaternary: #d1d5db;
+  --light-text-inverted: #ffffff;
+
+  /* Light Theme Borders */
+  --light-border-default: #e5e7eb;
+  --light-border-subtle: #f3f4f6;
+  --light-border-strong: #d1d5db;
+  --light-border-accent: #3b82f6;
+  --light-separator: rgba(0, 0, 0, 0.08);
+
+  /* Light Theme Status Colors */
+  --light-status-success-bg: #d1fae5;
+  --light-status-success-text: #065f46;
+  --light-status-success-border: #6ee7b7;
+  --light-status-warning-bg: #fef3c7;
+  --light-status-warning-text: #92400e;
+  --light-status-warning-border: #fbbf24;
+  --light-status-error-bg: #fee2e2;
+  --light-status-error-text: #991b1b;
+  --light-status-error-border: #fca5a5;
+  --light-status-info-bg: #dbeafe;
+  --light-status-info-text: #1e40af;
+  --light-status-info-border: #93c5fd;
+
+  /* Light Theme Buttons */
+  --light-btn-bg-primary: #3b82f6;
+  --light-btn-bg-secondary: #e5e7eb;
+  --light-btn-hover-primary: #2563eb;
+  --light-btn-hover-secondary: #d1d5db;
+
+  /* Light Theme Input */
+  --light-input-bg: #ffffff;
+  --light-input-border: #d1d5db;
+  --light-input-focus-border: #3b82f6;
+  --light-input-hover-border: #9ca3af;
+
+  /* Light Theme Panel */
+  --light-panel-bg: #fafafa;
+  --light-panel-border: #e5e7eb;
+  --light-panel-header-bg: #ffffff;
+  --light-panel-hover-bg: var(--light-bg-secondary);
+  --light-panel-bg-base: rgba(255, 255, 255, 0.98);
+  --light-panel-bg-elevated: rgba(250, 250, 250, 0.95);
+  --light-panel-bg-raised: rgba(245, 245, 245, 0.95);
+  --light-panel-bg-inset: rgba(243, 244, 246, 0.9);
+  --light-panel-border-default: 1px solid rgba(0, 0, 0, 0.08);
+  --light-panel-border-subtle: 1px solid rgba(0, 0, 0, 0.05);
+  --light-panel-border-strong: 1px solid rgba(0, 0, 0, 0.12);
+  --light-panel-border-accent: 1px solid rgba(59, 130, 246, 0.6);
+  --light-panel-border-color-default: rgba(0, 0, 0, 0.08);
+  --light-panel-border-color-subtle: rgba(0, 0, 0, 0.05);
+  --light-panel-border-color-strong: rgba(0, 0, 0, 0.12);
+  --light-panel-border-color-accent: rgba(59, 130, 246, 0.6);
+  --light-panel-header-bg: #f9fafb;
+  --light-panel-header-border: 1px solid rgba(0, 0, 0, 0.06);
+  --light-panel-header-text-color: var(--light-text-primary);
+  --light-panel-header-secondary-color: var(--light-text-secondary);
+  --light-panel-glow-default: 0 0 8px rgba(59, 130, 246, 0.08), 0 0 2px rgba(59, 130, 246, 0.12);
+  --light-panel-glow-accent: 0 0 12px rgba(59, 130, 246, 0.15), 0 0 3px rgba(59, 130, 246, 0.25);
+  --light-panel-glow-hover: 0 0 14px rgba(59, 130, 246, 0.12), 0 0 3px rgba(59, 130, 246, 0.18);
+  --light-panel-glow-focus: 0 0 18px rgba(59, 130, 246, 0.18), 0 0 4px rgba(59, 130, 246, 0.28);
+  --light-btn-bg-primary: #3b82f6;
+  --light-btn-bg-secondary: #e5e7eb;
+  --light-btn-bg-tertiary: rgba(255, 255, 255, 0.8);
+  --light-btn-bg-danger: #ef4444;
+  --light-btn-hover-primary: #2563eb;
+  --light-btn-hover-secondary: #d1d5db;
+  --light-btn-hover-tertiary: rgba(0, 0, 0, 0.05);
+  --light-btn-hover-danger: #dc2626;
+  --light-btn-active-primary: #1d4ed8;
+  --light-btn-active-secondary: #bfdbfe;
+  --light-btn-active-tertiary: rgba(0, 0, 0, 0.08);
+  --light-btn-active-danger: #991b1b;
+  --light-btn-border-default: 1px solid rgba(0, 0, 0, 0.12);
+  --light-btn-border-focus: 1px solid rgba(59, 130, 246, 0.8);
+  --light-btn-border-none: none;
+  --light-btn-border-color-default: rgba(0, 0, 0, 0.12);
+  --light-btn-border-color-focus: rgba(59, 130, 246, 0.8);
+  --light-btn-radius-sm: 6px;
+  --light-btn-radius-md: 8px;
+  --light-btn-radius-lg: 10px;
+  --light-btn-radius-pill: 999px;
+  --light-btn-glow-default: 0 0 6px rgba(59, 130, 246, 0.08), 0 0 2px rgba(59, 130, 246, 0.12);
+  --light-btn-glow-hover: 0 0 12px rgba(59, 130, 246, 0.15), 0 0 3px rgba(59, 130, 246, 0.25);
+  --light-btn-glow-focus: 0 0 16px rgba(59, 130, 246, 0.22), 0 0 4px rgba(59, 130, 246, 0.35);
+  --light-btn-text-primary: #ffffff;
+  --light-btn-text-secondary: var(--light-text-primary);
+  --light-btn-text-tertiary: var(--light-text-primary);
+  --light-btn-text-disabled: var(--light-text-quaternary);
+  --light-input-bg-default: #ffffff;
+  --light-input-bg-hover: #f9fafb;
+  --light-input-bg-focus: #ffffff;
+  --light-input-bg-disabled: #f3f4f6;
+  --light-input-border-default: 1px solid #d1d5db;
+  --light-input-border-hover: 1px solid #9ca3af;
+  --light-input-border-focus: 1px solid #3b82f6;
+  --light-input-border-error: 1px solid #ef4444;
+  --light-input-border-color-default: #d1d5db;
+  --light-input-border-color-hover: #9ca3af;
+  --light-input-border-color-focus: #3b82f6;
+  --light-input-border-color-error: #ef4444;
+  --light-input-radius-sm: 6px;
+  --light-input-radius-md: 8px;
+  --light-input-radius-lg: 10px;
+  --light-input-glow-default: 0 0 6px rgba(59, 130, 246, 0.05), 0 0 2px rgba(59, 130, 246, 0.08);
+  --light-input-glow-focus: 0 0 14px rgba(59, 130, 246, 0.15), 0 0 3px rgba(59, 130, 246, 0.25);
+  --light-input-glow-error: 0 0 10px rgba(239, 68, 68, 0.12), 0 0 3px rgba(239, 68, 68, 0.18);
+  --light-input-text-color: var(--light-text-primary);
+  --light-input-placeholder-color: var(--light-text-tertiary);
+  --light-header-bg-default: #ffffff;
+  --light-header-bg-translucent: rgba(255, 255, 255, 0.95);
+  --light-header-bg-glass: rgba(255, 255, 255, 0.9);
+  --light-header-border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  --light-header-border-color: rgba(0, 0, 0, 0.06);
+  --light-header-text-primary: var(--light-text-primary);
+  --light-header-text-secondary: var(--light-text-secondary);
+  --light-nav-item-bg-default: transparent;
+  --light-nav-item-bg-hover: rgba(0, 0, 0, 0.05);
+  --light-nav-item-bg-active: rgba(59, 130, 246, 0.1);
+  --light-nav-item-text-default: var(--light-text-secondary);
+  --light-nav-item-text-hover: var(--light-text-primary);
+  --light-nav-item-text-active: #3b82f6;
+  --light-status-success-bg: #d1fae5;
+  --light-status-success-text: #065f46;
+  --light-status-success-border: #6ee7b7;
+  --light-status-warning-bg: #fef3c7;
+  --light-status-warning-text: #92400e;
+  --light-status-warning-border: #fbbf24;
+  --light-status-error-bg: #fee2e2;
+  --light-status-error-text: #991b1b;
+  --light-status-error-border: #fca5a5;
+  --light-status-info-bg: #dbeafe;
+  --light-status-info-text: #1e40af;
+  --light-status-info-border: #93c5fd;
+  --light-glass-bg-light: rgba(255, 255, 255, 0.95);
+  --light-glass-bg-medium: rgba(255, 255, 255, 0.9);
+  --light-glass-bg-dark: rgba(0, 0, 0, 0.05);
+  --light-glass-border-default: 1px solid rgba(0, 0, 0, 0.08);
+  --light-glass-border-subtle: 1px solid rgba(0, 0, 0, 0.05);
+  --light-glass-border-strong: 1px solid rgba(0, 0, 0, 0.12);
+  --light-glass-border-color-default: rgba(0, 0, 0, 0.08);
+  --light-glass-border-color-subtle: rgba(0, 0, 0, 0.05);
+  --light-glass-border-color-strong: rgba(0, 0, 0, 0.12);
+
+  /* ==========================================================================
      Panel Token System
      ========================================================================== */
 
@@ -417,6 +579,26 @@
   /* Inner Shadows */
   --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
   --shadow-inner-lg: inset 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+
+  /* Component-Specific Shadows */
+  --shadow-elevation-1: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-elevation-2: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-elevation-3: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-elevation-4: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-elevation-5: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-elevation-6: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-elevation-7: 0 10px 40px rgba(0, 0, 0, 0.3);
+  --shadow-elevation-8: 0 20px 60px rgba(0, 0, 0, 0.3);
+  --shadow-elevation-9: 0 4px 20px rgba(0, 0, 0, 0.5);
+  --shadow-small-light: 0 var(--space-px) 3px rgba(0, 0, 0, 0.05);
+  --shadow-small-medium: 0 var(--space-px) 3px rgba(0, 0, 0, 0.2);
+  --shadow-small-dark: 0 var(--space-px) 3px rgba(0, 0, 0, 0.3);
+  --shadow-spaced-light: 0 var(--space-2) var(--space-6) rgba(0, 0, 0, 0.2);
+  --shadow-spaced-medium: 0 var(--space-2) var(--space-8) rgba(0, 0, 0, 0.4);
+  --shadow-spaced-dark: 0 var(--space-3) var(--space-8) rgba(0, 0, 0, 0.5);
+  --shadow-minimal: 0 var(--space-px) var(--space-0-5) rgba(0, 0, 0, 0.05);
+  --shadow-minimal-dark: 0 var(--space-px) var(--space-0-5) rgba(0, 0, 0, 0.3);
+  --shadow-minimal-medium: 0 var(--space-0-5) var(--space-2) rgba(0, 0, 0, 0.4);
 
   /* ==========================================================================
      Z-Index Scale

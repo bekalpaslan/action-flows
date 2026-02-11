@@ -124,7 +124,7 @@
 
 .sliding-chat-window__tab--active {
   color: var(--color-text-primary);
-  border-bottom-color: var(--system-purple, #bf5af2);
+  border-bottom-color: var(--system-purple);
 }
 
 .sliding-chat-window__tab:hover {

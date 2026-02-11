@@ -15,7 +15,7 @@
 
 /* Modal container */
 .command-palette-modal {
-  background-color: var(--app-bg-secondary, #2c2c2e);
+  background-color: var(--app-bg-secondary, #c1c1e);
   border: var(--panel-border-default);
   border-radius: var(--radius-12px);
   box-shadow: var(--panel-glow-default);

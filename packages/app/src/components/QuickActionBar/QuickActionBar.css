@@ -1,8 +1,8 @@
 .quick-action-bar {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
+  gap: var(--space-3);
+  padding: var(--space-2-5) var(--space-3);
   background: var(--background-secondary);
   border-top: 1px solid var(--border-color);
   border-radius: 0 0 8px 8px;
@@ -22,7 +22,7 @@
 .quick-actions-buttons {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   flex-wrap: nowrap;
   overflow-x: auto;
   flex-shrink: 0;
@@ -41,8 +41,8 @@
 .quick-action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: var(--space-1-5);
+  padding: var(--space-1-5) var(--space-3);
   background: var(--background-hover);
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -101,14 +101,14 @@
 .manual-input-form {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-1-5);
   flex: 1;
   min-width: 200px;
 }
 
 .manual-input-field {
   flex: 1;
-  padding: 6px 10px;
+  padding: var(--space-1-5) var(--space-2-5);
   background: var(--background-primary);
   border: 1px solid var(--border-color);
   border-radius: 6px;

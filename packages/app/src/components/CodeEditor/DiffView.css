@@ -38,7 +38,7 @@
   margin: 0;
   font-size: var(--text-base);
   font-weight: var(--font-semibold);
-  color: #cccccc;
+  color: var(--light-text-tertiary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -47,7 +47,7 @@
 .diff-close-btn {
   background: none;
   border: none;
-  color: #cccccc;
+  color: var(--light-text-tertiary);
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -79,7 +79,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #cccccc;
+  color: var(--light-text-tertiary);
   padding: var(--space-5);
 }
 

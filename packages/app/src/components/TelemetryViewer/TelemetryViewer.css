@@ -8,15 +8,15 @@
   flex-direction: column;
   height: 100%;
   background: var(--background-primary);
-  padding: 16px;
-  gap: 16px;
+  padding: var(--space-4);
+  gap: var(--space-4);
 }
 
 .telemetry-viewer__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .telemetry-viewer__title {
@@ -27,18 +27,18 @@
 
 .telemetry-viewer__filters {
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: center;
 }
 
 .telemetry-viewer__filter-label {
   font-size: var(--text-sm);
   color: var(--text-secondary);
-  margin-right: 8px;
+  margin-right: var(--space-2);
 }
 
 .telemetry-viewer__filter-select {
-  padding: 6px 12px;
+  padding: var(--space-1-5) var(--space-3);
   border-radius: 4px;
   border: 1px solid var(--border-primary);
   background: var(--background-secondary);
@@ -71,7 +71,7 @@
 }
 
 .telemetry-viewer__table-header-cell {
-  padding: 12px;
+  padding: var(--space-3);
   text-align: left;
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
@@ -105,7 +105,7 @@
 }
 
 .telemetry-viewer__table-cell {
-  padding: 12px;
+  padding: var(--space-3);
   font-size: var(--text-sm);
   color: var(--text-primary);
 }
@@ -153,8 +153,8 @@
 
 .telemetry-viewer__stats {
   display: flex;
-  gap: 24px;
-  padding: 12px;
+  gap: var(--space-6);
+  padding: var(--space-3);
   background: var(--background-secondary);
   border-radius: 4px;
 }
@@ -162,7 +162,7 @@
 .telemetry-viewer__stat {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .telemetry-viewer__stat-label {

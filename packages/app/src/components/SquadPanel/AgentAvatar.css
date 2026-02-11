@@ -43,13 +43,13 @@
 
 .avatar-aura {
   position: absolute;
-  inset: -8px;
+  inset: var(--space-2);
   border-radius: 50%;
-  border: 2px solid var(--glow-color);
+  border: var(--space-0-5) solid var(--glow-color);
   opacity: 0.6;
   transition: opacity 0.3s ease, box-shadow 0.3s ease;
   pointer-events: none;
-  box-shadow: 0 0 12px var(--glow-color);
+  box-shadow: 0 0 var(--space-3) var(--glow-color);
 }
 
 /* Idle aura - slow, dim pulse */
@@ -202,7 +202,7 @@
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(var(--space-1));
   }
 }
 
@@ -221,7 +221,7 @@
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(var(--space-1-5));
   }
 }
 
@@ -231,10 +231,10 @@
 
 @keyframes floatWorking {
   0%, 100% {
-    transform: translateY(-2px);
+    transform: translateY(var(--space-0-5));
   }
   50% {
-    transform: translateY(2px);
+    transform: translateY(var(--space-0-5));
   }
 }
 
@@ -247,13 +247,13 @@
     transform: translateY(0px) translateX(0px);
   }
   25% {
-    transform: translateY(-4px) translateX(-3px);
+    transform: translateY(var(--space-1)) translateX(var(--space-0-5));
   }
   50% {
-    transform: translateY(4px) translateX(3px);
+    transform: translateY(var(--space-1)) translateX(var(--space-0-5));
   }
   75% {
-    transform: translateY(-2px) translateX(-2px);
+    transform: translateY(var(--space-0-5)) translateX(var(--space-0-5));
   }
 }
 
@@ -327,8 +327,8 @@
 
 .avatar-status-dot {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
+  bottom: var(--space-1);
+  right: var(--space-1);
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -339,8 +339,8 @@
 .agent-avatar.is-hovered .avatar-status-dot {
   width: 12px;
   height: 12px;
-  bottom: 2px;
-  right: 2px;
+  bottom: var(--space-0-5);
+  right: var(--space-0-5);
 }
 
 /* ===== BLINK ANIMATION ===== */

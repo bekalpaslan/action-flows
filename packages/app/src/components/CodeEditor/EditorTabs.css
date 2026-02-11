@@ -3,7 +3,7 @@
 .editor-tabs {
   display: flex;
   align-items: center;
-  background-color: #252526;
+  background-color: rgba(37, 37, 38, 1);
   border-bottom: 1px solid var(--app-bg-tertiary);
   height: 35px;
   overflow: hidden;
@@ -16,7 +16,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
-  scrollbar-color: #424242 #252526;
+  scrollbar-color: rgba(66, 66, 66, 1) rgba(37, 37, 38, 1);
 }
 
 .editor-tabs-container::-webkit-scrollbar {
@@ -24,25 +24,25 @@
 }
 
 .editor-tabs-container::-webkit-scrollbar-track {
-  background: #252526;
+  background: var(--app-bg-tertiary);
 }
 
 .editor-tabs-container::-webkit-scrollbar-thumb {
-  background: #424242;
+  background: rgba(66, 66, 66, 1);
   border-radius: 3px;
 }
 
 .editor-tabs-container::-webkit-scrollbar-thumb:hover {
-  background: #4e4e4e;
+  background: rgba(78, 78, 78, 1);
 }
 
 .editor-tab {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 12px;
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
   height: 35px;
-  background-color: #2d2d30;
+  background-color: rgba(45, 45, 48, 1);
   border-right: 1px solid var(--app-bg-tertiary);
   cursor: pointer;
   white-space: nowrap;
@@ -53,18 +53,18 @@
 }
 
 .editor-tab:hover {
-  background-color: #323233;
+  background-color: rgba(50, 50, 51, 1);
 }
 
 .editor-tab.active {
   background-color: var(--app-bg-secondary);
-  border-bottom: 2px solid #007acc;
+  border-bottom: 2px solid var(--system-blue);
 }
 
 .tab-name {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   font-size: var(--text-sm);
   color: var(--panel-border-color-default);
   overflow: hidden;
@@ -72,7 +72,7 @@
 }
 
 .dirty-indicator {
-  color: #007acc;
+  color: var(--system-blue);
   font-size: var(--text-lg);
   line-height: var(--leading-tight);
 }
@@ -101,11 +101,11 @@
 }
 
 .tab-scroll-btn {
-  background-color: #2d2d30;
+  background-color: rgba(45, 45, 48, 1);
   border: none;
   color: var(--panel-border-color-default);
   cursor: pointer;
-  padding: 0 8px;
+  padding: 0 var(--space-2);
   height: 35px;
   font-size: var(--text-xl);
   line-height: var(--leading-tight);
@@ -115,7 +115,7 @@
 }
 
 .tab-scroll-btn:hover {
-  background-color: #323233;
+  background-color: rgba(50, 50, 51, 1);
 }
 
 .tab-scroll-left {

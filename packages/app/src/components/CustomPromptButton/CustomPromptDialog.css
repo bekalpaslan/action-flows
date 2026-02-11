@@ -233,7 +233,7 @@ form {
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #0056b3;
+  background: var(--semantic-info);
   box-shadow: var(--btn-glow-hover), 0 0 12px rgba(0, 122, 255, 0.3);
   transform: translateY(-1px);
 }

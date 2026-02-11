@@ -2,7 +2,7 @@
   max-height: var(--space-20);
   overflow-y: auto;
   overflow-x: hidden;
-  background: var(--app-bg-primary, #1c1c1e);
+  background: var(--app-bg-primary, #c1c1e);
   border-top: 1px solid var(--panel-border-color-subtle, var(--panel-border-color-subtle));
 }
 
@@ -11,7 +11,7 @@
 }
 
 .command-palette-results::-webkit-scrollbar-track {
-  background: var(--app-bg-primary, #1c1c1e);
+  background: var(--app-bg-primary, #c1c1e);
 }
 
 .command-palette-results::-webkit-scrollbar-thumb {
@@ -36,8 +36,8 @@
   font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--text-tertiary, #636366);
-  background: var(--app-bg-primary, #1c1c1e);
+  color: var(--text-tertiary);
+  background: var(--app-bg-primary, #c1c1e);
   border-bottom: 1px solid var(--panel-border-color-subtle, var(--panel-border-color-subtle));
 }
 
@@ -95,7 +95,7 @@
 .command-palette-item-title {
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -103,7 +103,7 @@
 
 .command-palette-item-description {
   font-size: var(--text-xs);
-  color: var(--text-secondary, #98989d);
+  color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -113,7 +113,7 @@
   padding: var(--space-1) var(--space-2);
   font-size: var(--text-xs);
   font-family: 'Segoe UI', system-ui, sans-serif;
-  color: var(--text-secondary, #98989d);
+  color: var(--text-secondary);
   background: var(--fill-tertiary, var(--input-bg-default));
   border: 1px solid var(--panel-border-color-subtle, var(--panel-border-color-subtle));
   border-radius: var(--radius-4px);
@@ -129,6 +129,6 @@
 .command-palette-empty {
   padding: var(--space-6) var(--space-3);
   text-align: center;
-  color: var(--text-tertiary, #636366);
+  color: var(--text-tertiary);
   font-size: var(--text-sm);
 }

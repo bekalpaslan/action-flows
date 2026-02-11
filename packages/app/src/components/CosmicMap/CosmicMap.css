@@ -26,7 +26,7 @@
 .cosmic-map__controls {
   position: absolute;
   bottom: 80px; /* Moved up to make room for CommandCenter */
-  left: 20px;
+  left: var(--space-5);
   background: var(--panel-bg-base);
   border: var(--panel-border-default);
   border-radius: var(--panel-radius-md);
@@ -49,7 +49,7 @@
 .cosmic-map__minimap {
   position: absolute;
   bottom: 80px; /* Moved up to make room for CommandCenter */
-  right: 20px;
+  right: var(--space-5);
   background: var(--panel-bg-base);
   border: var(--panel-border-default);
   border-radius: var(--panel-radius-md);
@@ -60,10 +60,10 @@
 /* God view button */
 .cosmic-map__god-view-button {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: var(--space-5);
+  right: var(--space-5);
   z-index: 10;
-  padding: 8px 16px;
+  padding: var(--space-2) var(--space-4);
   background: var(--panel-bg-base);
   border: var(--panel-border-default);
   border-radius: var(--radius-md);
@@ -101,7 +101,7 @@
 .cosmic-map__spinner {
   width: 40px;
   height: 40px;
-  margin: 0 auto 16px;
+  margin: 0 auto var(--space-4);
   border: 3px solid var(--panel-border-default);
   border-top-color: var(--system-blue);
   border-radius: 50%;
@@ -127,7 +127,7 @@
 }
 
 .cosmic-map__error-detail {
-  margin-top: 8px;
+  margin-top: var(--space-2);
   font-size: var(--text-xs);
   color: var(--text-secondary);
 }

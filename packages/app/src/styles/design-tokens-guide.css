@@ -568,10 +568,10 @@
   OLD: border-radius: 8px;
   NEW: border-radius: var(--panel-radius-md);
 
-  OLD: box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  OLD: box-shadow: var(--shadow-elevation-1);
   NEW: box-shadow: var(--panel-glow-default);
 
-  OLD: padding: 16px;
+  OLD: padding: var(--space-4);
   NEW: padding: var(--space-4);
 
   OLD: font-size: var(--text-sm);

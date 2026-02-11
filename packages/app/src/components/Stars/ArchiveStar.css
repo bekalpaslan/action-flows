@@ -113,8 +113,8 @@
 
 .archive-filter-input:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--light-border-accent);
+  box-shadow: 0 0 0 3px rgba(94, 92, 230, 0.08);
 }
 
 .archive-filter-input::placeholder {
@@ -144,8 +144,8 @@
 
 .archive-filter-select:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: var(--light-border-accent);
+  box-shadow: 0 0 0 3px rgba(94, 92, 230, 0.08);
 }
 
 .archive-filter-clear-btn {
@@ -162,7 +162,7 @@
 
 .archive-filter-clear-btn:hover {
   background-color: var(--light-bg-tertiary);
-  border-color: #9ca3af;
+  border-color: var(--light-text-tertiary);
 }
 
 /* Bulk Actions Bar */
@@ -199,7 +199,7 @@
 .bulk-restore-btn {
   background-color: var(--light-btn-bg-primary);
   border: var(--space-px) solid var(--light-btn-bg-primary);
-  color: #ffffff;
+  color: var(--light-text-primary);
 }
 
 .bulk-restore-btn:hover {
@@ -210,7 +210,7 @@
 .bulk-delete-btn {
   background-color: var(--light-status-error-text);
   border: var(--space-px) solid var(--light-status-error-text);
-  color: #ffffff;
+  color: var(--light-text-primary);
 }
 
 .bulk-delete-btn:hover {
@@ -268,10 +268,10 @@
 
 .archive-clear-filters-btn {
   padding: var(--space-2) var(--space-4);
-  background-color: #6366f1;
+  background-color: var(--light-border-accent);
   border: none;
   border-radius: var(--space-1-5);
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   cursor: pointer;
@@ -279,7 +279,7 @@
 }
 
 .archive-clear-filters-btn:hover {
-  background-color: #4f46e5;
+  background-color: var(--system-indigo);
 }
 
 /* Table Header */
@@ -296,13 +296,13 @@
 .archive-table-header .archive-table-cell {
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
-  color: #4b5563;
+  color: var(--light-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.025em;
 }
 
 .archive-table-header .archive-table-cell.sorted {
-  color: #4f46e5;
+  color: var(--light-border-accent);
 }
 
 .archive-table-header .archive-table-cell:not(.archive-cell-select):not(.archive-cell-actions) {
@@ -466,7 +466,7 @@
 .archive-action-btn.restore-btn {
   background-color: var(--light-btn-bg-primary);
   border: var(--space-px) solid var(--light-btn-bg-primary);
-  color: #ffffff;
+  color: var(--light-text-primary);
 }
 
 .archive-action-btn.restore-btn:hover {
@@ -621,17 +621,17 @@
 }
 
 [data-theme="dark"] .archive-count-badge {
-  background-color: rgba(251, 191, 36, 0.2);
-  color: #fbbf24;
+  background-color: rgba(255, 214, 10, 0.15);
+  color: var(--system-yellow);
 }
 
 [data-theme="dark"] .archive-workbench__clear-all-btn {
-  border-color: rgba(248, 113, 113, 0.5);
+  border-color: rgba(255, 69, 58, 0.40);
   color: var(--semantic-error);
 }
 
 [data-theme="dark"] .archive-workbench__clear-all-btn:hover {
-  background-color: rgba(239, 68, 68, 0.1);
+  background-color: rgba(255, 69, 58, 0.08);
   border-color: var(--light-border-strong);
 }
 
@@ -651,8 +651,8 @@
 }
 
 [data-theme="dark"] .archive-filter-input:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  border-color: var(--light-border-accent);
+  box-shadow: 0 0 0 3px rgba(94, 92, 230, 0.15);
 }
 
 [data-theme="dark"] .archive-filter-input::placeholder {
@@ -667,8 +667,8 @@
 }
 
 [data-theme="dark"] .archive-filter-select:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  border-color: var(--light-border-accent);
+  box-shadow: 0 0 0 3px rgba(94, 92, 230, 0.15);
 }
 
 [data-theme="dark"] .archive-filter-clear-btn {
@@ -679,33 +679,33 @@
 
 [data-theme="dark"] .archive-filter-clear-btn:hover {
   background-color: var(--glass-bg-light);
-  border-color: var(--color-text-muted);
+  border-color: var(--text-secondary);
 }
 
 [data-theme="dark"] .archive-workbench__bulk-actions {
   background-color: rgba(99, 102, 241, 0.15);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: rgba(94, 92, 230, 0.25);
 }
 
 [data-theme="dark"] .bulk-actions-count {
-  color: #a5b4fc;
+  color: var(--text-primary);
 }
 
 [data-theme="dark"] .bulk-restore-btn:hover {
-  background-color: #4f46e5;
+  background-color: var(--system-indigo);
 }
 
 [data-theme="dark"] .bulk-delete-btn:hover {
-  background-color: #dc2626;
+  background-color: var(--system-red);
 }
 
 [data-theme="dark"] .bulk-deselect-btn {
-  border-color: rgba(99, 102, 241, 0.4);
-  color: #a5b4fc;
+  border-color: rgba(94, 92, 230, 0.35);
+  color: var(--text-primary);
 }
 
 [data-theme="dark"] .bulk-deselect-btn:hover {
-  background-color: rgba(99, 102, 241, 0.2);
+  background-color: rgba(94, 92, 230, 0.15);
 }
 
 [data-theme="dark"] .archive-workbench__empty h2 {
@@ -717,7 +717,7 @@
 }
 
 [data-theme="dark"] .archive-clear-filters-btn:hover {
-  background-color: #4f46e5;
+  background-color: var(--system-indigo);
 }
 
 [data-theme="dark"] .archive-table-header {
@@ -730,7 +730,7 @@
 }
 
 [data-theme="dark"] .archive-table-header .archive-table-cell.sorted {
-  color: #818cf8;
+  color: var(--light-border-accent);
 }
 
 [data-theme="dark"] .archive-table-header .archive-table-cell:hover:not(.archive-cell-select):not(.archive-cell-actions) {
@@ -747,15 +747,15 @@
 }
 
 [data-theme="dark"] .archive-table-row:hover {
-  background-color: var(--glass-bg-medium);
+  background-color: var(--panel-bg-secondary);
 }
 
 [data-theme="dark"] .archive-table-row.selected {
-  background-color: rgba(99, 102, 241, 0.15);
+  background-color: var(--light-bg-inset);
 }
 
 [data-theme="dark"] .archive-table-row.selected:hover {
-  background-color: rgba(99, 102, 241, 0.2);
+  background-color: var(--light-bg-inset);
 }
 
 [data-theme="dark"] .archive-table-cell {
@@ -776,19 +776,19 @@
 }
 
 [data-theme="dark"] .status-badge.status-completed {
-  background-color: rgba(16, 185, 129, 0.2);
-  color: #34d399;
+  background-color: rgba(50, 215, 75, 0.15);
+  color: var(--system-green);
 }
 
 [data-theme="dark"] .status-badge.status-cancelled,
 [data-theme="dark"] .status-badge.status-failed {
-  background-color: rgba(239, 68, 68, 0.2);
-  color: #f87171;
+  background-color: rgba(255, 69, 58, 0.15);
+  color: var(--system-red);
 }
 
 [data-theme="dark"] .status-badge.status-paused {
-  background-color: rgba(251, 191, 36, 0.2);
-  color: #fbbf24;
+  background-color: rgba(255, 214, 10, 0.15);
+  color: var(--system-yellow);
 }
 
 [data-theme="dark"] .archive-cell-duration,
@@ -797,7 +797,7 @@
 }
 
 [data-theme="dark"] .archive-action-btn.restore-btn:hover {
-  background-color: #4f46e5;
+  background-color: var(--light-btn-hover-primary);
 }
 
 [data-theme="dark"] .archive-action-btn.delete-btn {
@@ -806,7 +806,7 @@
 }
 
 [data-theme="dark"] .archive-action-btn.delete-btn:hover {
-  background-color: rgba(239, 68, 68, 0.1);
+  background-color: rgba(255, 69, 58, 0.08);
   border-color: var(--light-border-strong);
   color: var(--semantic-error);
 }

@@ -7,13 +7,13 @@
 
 /* CSS Variables for glow colors */
 :root {
-  --glow-info-color: #3b82f6;
+  --glow-info-color: var(--semantic-info);
   --glow-info-shadow: rgba(59, 130, 246, 0.6);
   --glow-success-color: #10b981;
   --glow-success-shadow: rgba(16, 185, 129, 0.6);
   --glow-warning-color: #f59e0b;
   --glow-warning-shadow: rgba(245, 158, 11, 0.6);
-  --glow-error-color: #ef4444;
+  --glow-error-color: var(--semantic-error);
   --glow-error-shadow: rgba(239, 68, 68, 0.6);
 }
 

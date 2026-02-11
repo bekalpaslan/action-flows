@@ -8,7 +8,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #f9fafb;
+  background-color: var(--light-bg-primary);
   overflow: hidden;
 }
 
@@ -18,8 +18,8 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-4) var(--space-6);
-  background-color: var(--text-primary);
-  border-bottom: var(--space-px) solid #e5e7eb;
+  background-color: var(--light-bg-base);
+  border-bottom: var(--space-px) solid var(--light-border-default);
   flex-shrink: 0;
   box-shadow: var(--shadow-small-light);
 }
@@ -33,7 +33,7 @@
 .maintenance-workbench__title {
   font-size: var(--text-2xl);
   font-weight: var(--font-semibold);
-  color: #111827;
+  color: var(--light-text-primary);
   margin: 0;
 }
 
@@ -48,18 +48,18 @@
 }
 
 .maintenance-workbench__status-badge--healthy {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: var(--light-status-success-bg);
+  color: var(--light-status-success-text);
 }
 
 .maintenance-workbench__status-badge--degraded {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: var(--light-status-warning-bg);
+  color: var(--light-status-warning-text);
 }
 
 .maintenance-workbench__status-badge--error {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: var(--light-status-error-bg);
+  color: var(--light-status-error-text);
 }
 
 .maintenance-workbench__status-badge .status-dot {
@@ -80,7 +80,7 @@
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-sm);
-  color: #6b7280;
+  color: var(--light-text-secondary);
   cursor: pointer;
 }
 
@@ -90,7 +90,7 @@
 
 .maintenance-workbench__refresh-btn {
   padding: var(--space-2) var(--space-4);
-  background-color: #3730a3;
+  background-color: var(--light-border-accent);
   color: var(--text-primary);
   border: none;
   border-radius: var(--space-1-5);
@@ -101,11 +101,11 @@
 }
 
 .maintenance-workbench__refresh-btn:hover:not(:disabled) {
-  background-color: #4338ca;
+  background-color: var(--system-indigo);
 }
 
 .maintenance-workbench__refresh-btn:disabled {
-  background-color: #9ca3af;
+  background-color: var(--text-secondary);
   cursor: not-allowed;
 }
 
@@ -127,8 +127,8 @@
 
 /* Metric Card */
 .metric-card {
-  background-color: var(--text-primary);
-  border: var(--space-px) solid #e5e7eb;
+  background-color: var(--light-bg-base);
+  border: var(--space-px) solid var(--light-border-default);
   border-radius: var(--space-2);
   padding: var(--space-4);
   box-shadow: var(--shadow-minimal);
@@ -148,7 +148,7 @@
 .metric-card__title {
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
-  color: #6b7280;
+  color: var(--light-text-secondary);
   margin: 0;
 }
 
@@ -169,29 +169,29 @@
 }
 
 .metric-card__status--connected {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: var(--light-status-success-bg);
+  color: var(--light-status-success-text);
 }
 
 .metric-card__status--connecting {
-  background-color: #e0e7ff;
-  color: #3730a3;
+  background-color: rgba(59, 130, 246, 0.15);
+  color: var(--light-border-accent);
 }
 
 .metric-card__status--disconnected {
-  background-color: #f3f4f6;
-  color: #6b7280;
+  background-color: var(--light-bg-inset);
+  color: var(--light-text-secondary);
 }
 
 .metric-card__status--error {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: var(--light-status-error-bg);
+  color: var(--light-status-error-text);
 }
 
 .metric-card__value {
   font-size: var(--text-3xl);
   font-weight: var(--font-bold);
-  color: #111827;
+  color: var(--light-text-primary);
   line-height: var(--leading-tight);
 }
 
@@ -203,22 +203,22 @@
 }
 
 .metric-card__detail .detail-label {
-  color: #6b7280;
+  color: var(--light-text-secondary);
 }
 
 .metric-card__detail .detail-value {
-  color: #111827;
+  color: var(--light-text-primary);
   font-weight: var(--font-medium);
 }
 
 .metric-card__detail .detail-secondary {
-  color: #9ca3af;
+  color: var(--light-text-tertiary);
 }
 
 .metric-card__error {
   font-size: var(--text-sm);
-  color: #dc2626;
-  background-color: #fef2f2;
+  color: var(--system-red);
+  background-color: var(--light-status-error-bg);
   padding: var(--space-1) var(--space-2);
   border-radius: var(--space-1);
   word-break: break-word;
@@ -226,8 +226,8 @@
 
 /* Errors Section */
 .maintenance-workbench__errors-section {
-  background-color: var(--text-primary);
-  border: var(--space-px) solid #e5e7eb;
+  background-color: var(--light-bg-base);
+  border: var(--space-px) solid var(--light-border-default);
   border-radius: var(--space-2);
   padding: var(--space-4);
   box-shadow: var(--shadow-minimal);
@@ -239,21 +239,21 @@
   justify-content: space-between;
   margin-bottom: var(--space-4);
   padding-bottom: var(--space-3);
-  border-bottom: var(--space-px) solid #e5e7eb;
+  border-bottom: var(--space-px) solid var(--light-border-default);
 }
 
 .errors-section__title {
   font-size: var(--text-base);
   font-weight: var(--font-semibold);
-  color: #111827;
+  color: var(--light-text-primary);
   margin: 0;
 }
 
 .errors-section__clear-btn {
   padding: var(--space-1) var(--space-3);
   background-color: transparent;
-  color: #6b7280;
-  border: var(--space-px) solid #d1d5db;
+  color: var(--light-text-secondary);
+  border: var(--space-px) solid var(--light-border-default);
   border-radius: var(--space-1);
   font-size: var(--text-sm);
   cursor: pointer;
@@ -261,8 +261,8 @@
 }
 
 .errors-section__clear-btn:hover {
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: var(--light-bg-inset);
+  color: var(--light-text-primary);
 }
 
 .errors-section__list {
@@ -279,7 +279,7 @@
   justify-content: center;
   gap: var(--space-2);
   padding: var(--space-8);
-  color: #059669;
+  color: var(--system-green);
 }
 
 .errors-section__empty .empty-icon {
@@ -297,14 +297,14 @@
   align-items: flex-start;
   gap: var(--space-3);
   padding: var(--space-2);
-  background-color: #fef2f2;
+  background-color: var(--light-status-error-bg);
   border-radius: var(--space-1);
-  border-left: 3px solid #dc2626;
+  border-left: 3px solid var(--system-red);
 }
 
 .error-item__timestamp {
   font-size: var(--text-sm);
-  color: #6b7280;
+  color: var(--light-text-secondary);
   font-family: monospace;
   flex-shrink: 0;
 }
@@ -319,23 +319,23 @@
 }
 
 .error-item__source--websocket {
-  background-color: #ede9fe;
-  color: #5b21b6;
+  background-color: rgba(168, 85, 247, 0.15);
+  color: var(--system-purple);
 }
 
 .error-item__source--api {
-  background-color: #dbeafe;
-  color: #1e40af;
+  background-color: rgba(59, 130, 246, 0.15);
+  color: var(--light-border-accent);
 }
 
 .error-item__source--session {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--system-yellow);
 }
 
 .error-item__message {
   font-size: var(--text-sm);
-  color: #991b1b;
+  color: var(--light-status-error-text);
   word-break: break-word;
   flex: 1;
 }
@@ -402,17 +402,17 @@
 
 [data-theme="dark"] .maintenance-workbench__status-badge--healthy {
   background-color: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
+  color: rgba(110, 231, 183, 1);
 }
 
 [data-theme="dark"] .maintenance-workbench__status-badge--degraded {
   background-color: rgba(251, 191, 36, 0.2);
-  color: #fcd34d;
+  color: rgba(252, 211, 77, 1);
 }
 
 [data-theme="dark"] .maintenance-workbench__status-badge--error {
   background-color: rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
+  color: rgba(252, 165, 165, 1);
 }
 
 [data-theme="dark"] .maintenance-workbench__auto-refresh {
@@ -443,12 +443,12 @@
 
 [data-theme="dark"] .metric-card__status--connected {
   background-color: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
+  color: rgba(110, 231, 183, 1);
 }
 
 [data-theme="dark"] .metric-card__status--connecting {
   background-color: rgba(99, 102, 241, 0.2);
-  color: #a5b4fc;
+  color: rgba(165, 180, 252, 1);
 }
 
 [data-theme="dark"] .metric-card__status--disconnected {
@@ -458,7 +458,7 @@
 
 [data-theme="dark"] .metric-card__status--error {
   background-color: rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
+  color: rgba(252, 165, 165, 1);
 }
 
 [data-theme="dark"] .metric-card__value {
@@ -478,7 +478,7 @@
 }
 
 [data-theme="dark"] .metric-card__error {
-  color: #fca5a5;
+  color: rgba(252, 165, 165, 1);
   background-color: rgba(239, 68, 68, 0.15);
 }
 
@@ -507,7 +507,7 @@
 }
 
 [data-theme="dark"] .errors-section__empty {
-  color: #6ee7b7;
+  color: rgba(110, 231, 183, 1);
 }
 
 [data-theme="dark"] .error-item {
@@ -531,9 +531,9 @@
 
 [data-theme="dark"] .error-item__source--session {
   background-color: rgba(251, 191, 36, 0.2);
-  color: #fcd34d;
+  color: rgba(252, 211, 77, 1);
 }
 
 [data-theme="dark"] .error-item__message {
-  color: #fca5a5;
+  color: rgba(252, 165, 165, 1);
 }

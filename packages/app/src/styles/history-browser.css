@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 16px;
+  padding: var(--space-4);
   background-color: #f9fafb;
 }
 
@@ -10,8 +10,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
   border-bottom: 1px solid #e5e7eb;
 }
 
@@ -25,14 +25,14 @@
 .retention-note {
   font-size: var(--text-xs);
   color: #6b7280;
-  padding: 4px 8px;
+  padding: var(--space-1) var(--space-2);
   background-color: #f3f4f6;
   border-radius: 4px;
 }
 
 .error-message {
-  padding: 12px;
-  margin-bottom: 16px;
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
   background-color: #fef2f2;
   color: #991b1b;
   border-radius: 6px;
@@ -42,7 +42,7 @@
 .history-content {
   display: grid;
   grid-template-columns: 200px 250px 1fr;
-  gap: 16px;
+  gap: var(--space-4);
   flex: 1;
   overflow: hidden;
 }
@@ -52,7 +52,7 @@
 .session-details {
   background-color: white;
   border-radius: 8px;
-  padding: 16px;
+  padding: var(--space-4);
   box-shadow: 0 1px 3px var(--glass-bg-dark);
   overflow-y: auto;
 }
@@ -60,7 +60,7 @@
 .date-list h3,
 .session-list h3,
 .session-details h3 {
-  margin: 0 0 12px 0;
+  margin: 0 0 var(--space-3) 0;
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
   color: #374151;
@@ -77,8 +77,8 @@
 
 .date-list li,
 .session-list li {
-  padding: 10px 12px;
-  margin-bottom: 4px;
+  padding: var(--space-2-5) var(--space-3);
+  margin-bottom: var(--space-1);
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.15s;
@@ -107,14 +107,14 @@
 }
 
 .loading {
-  padding: 24px;
+  padding: var(--space-6);
   text-align: center;
   color: #6b7280;
   font-size: var(--text-sm);
 }
 
 .empty-state {
-  padding: 24px;
+  padding: var(--space-6);
   text-align: center;
   color: #9ca3af;
   font-size: var(--text-sm);
@@ -123,8 +123,8 @@
 .details-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .detail-item {
@@ -134,7 +134,7 @@
 
 .detail-item strong {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: var(--space-1);
   font-size: var(--text-xs);
   color: #6b7280;
   font-weight: var(--font-semibold);
@@ -143,7 +143,7 @@
 }
 
 .session-summary {
-  padding-top: 16px;
+  padding-top: var(--space-4);
   border-top: 1px solid #e5e7eb;
   font-size: var(--text-sm);
   color: #374151;
@@ -151,7 +151,7 @@
 
 .session-summary strong {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
   font-size: var(--text-xs);
   color: #6b7280;
   font-weight: var(--font-semibold);

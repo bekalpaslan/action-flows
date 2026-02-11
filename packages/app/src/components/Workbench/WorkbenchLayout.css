@@ -15,10 +15,10 @@
 /* Return to Universe button */
 .workbench-layout__return-to-universe {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: var(--space-5);
+  right: var(--space-5);
   z-index: 100;
-  padding: 8px 16px;
+  padding: var(--space-2) var(--space-4);
   background: var(--panel-bg-base);
   border: var(--panel-border-default);
   border-radius: var(--radius-md);
@@ -33,8 +33,8 @@
 .workbench-layout__return-to-universe:hover {
   background: var(--panel-bg-hover);
   border-color: var(--system-blue);
-  box-shadow: 0 0 12px var(--glow-color-accent);
-  transform: translateY(-1px);
+  box-shadow: 0 0 var(--space-3) var(--glow-color-accent);
+  transform: translateY(-var(--space-px));
 }
 
 .workbench-layout__return-to-universe:active {
@@ -142,7 +142,7 @@
   min-height: 120px;
   background: var(--panel-bg-elevated);
   border-top: var(--panel-border-default);
-  box-shadow: 0 -2px 4px var(--glass-bg-dark), var(--panel-glow-default);
+  box-shadow: 0 -var(--space-0-5) var(--space-1) var(--glass-bg-dark), var(--panel-glow-default);
   overflow: visible;
   display: flex;
   flex-direction: column;
