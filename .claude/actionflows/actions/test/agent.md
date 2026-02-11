@@ -21,6 +21,49 @@ Execute the specified tests and produce a clear results report with pass/fail co
 
 ---
 
+## Input Contract
+
+**Inputs received from orchestrator spawn prompt:**
+
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| scope | string | ✅ | What to test: file paths, test directory, module name, or "all" |
+| type | string | ✅ | Test type: `unit`, `integration`, `smoke` |
+| coverage | boolean | ⬜ | Report coverage metrics (default: false) |
+| context | string | ⬜ | What was changed (helps identify relevant test failures) |
+
+**Configuration injected:**
+- Project config from `project.config.md` (stack, paths, ports)
+
+---
+
+## Output Contract
+
+**Primary deliverable:** `test-results.md` in log folder
+
+**Contract-defined outputs:**
+- None
+
+**Free-form outputs:**
+- `test-results.md` — Test execution report with structure: Summary (pass/fail/skip counts, coverage %), Failures (test name, file:line, assertion, error, suggested fix), Coverage Gaps (if requested)
+
+---
+
+## Trace Contract
+
+**Log folder:** `.claude/actionflows/logs/test/{description}_{datetime}/`
+**Default log level:** DEBUG
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `agent-reasoning` — Test command selection and failure analysis
+- `tool-usage` — Test execution commands (pnpm test)
+
+**Trace depth:**
+- **INFO:** test-results.md only
+- **DEBUG:** + test command + raw test output
+- **TRACE:** + all test files discovered + test selection logic
+
+---
+
 ## Steps to Complete This Action
 
 ### 1. Create Log Folder
@@ -29,15 +72,9 @@ Execute the specified tests and produce a clear results report with pass/fail co
 
 Create folder: `.claude/actionflows/logs/test/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Parse Inputs
+### 2. Execute Core Work
 
-Read inputs from the orchestrator's prompt:
-- `scope` — What to test: file paths, test directory, module name, or "all"
-- `type` — Test type: `unit`, `integration`, `smoke`
-- `coverage` (optional) — Report coverage metrics (true/false, default: false)
-- `context` (optional) — What was changed (helps identify relevant test failures)
-
-### 3. Execute Core Work
+See Input Contract above for input parameters.
 
 1. Identify the correct test command based on type:
    - **unit/integration:** `pnpm -F @afw/backend test` (Vitest)
@@ -49,9 +86,9 @@ Read inputs from the orchestrator's prompt:
 5. If coverage requested: include coverage percentage and uncovered areas
 6. Suggest fixes for obvious failures (import errors, missing mocks, stale snapshots)
 
-### 4. Generate Output
+### 3. Generate Output
 
-Write results to `.claude/actionflows/logs/test/{description}_{datetime}/test-results.md`
+See Output Contract above. Write results to `.claude/actionflows/logs/test/{description}_{datetime}/test-results.md`
 
 Format:
 ```markdown

@@ -56,3 +56,17 @@ Use `mkdir -p` to create. Write all outputs into this folder.
 - Non-descriptive names (like "temp", "log", "output") — impossible to identify what executed
 
 **Correct pattern:** Derive description from task name. For task "Fix auth bug in login endpoint", use `fix-auth-login-bug`.
+
+---
+
+## Contract Contributions
+
+This abstract extends all agent contracts with:
+
+**Output Contract additions:**
+- Primary output location: `.claude/actionflows/logs/{action-type}/{description}_{datetime}/`
+- Folder naming: `{description}` = kebab-case summary, `{datetime}` = YYYY-MM-DD-HH-MM-SS
+
+**Trace Contract additions:**
+- All trace files written within the agent's log folder
+- Log file format: JSON Lines (see `LOGGING_STANDARDS_CATALOG.md` § Part 6)

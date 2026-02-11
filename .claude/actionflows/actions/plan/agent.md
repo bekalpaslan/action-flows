@@ -21,6 +21,49 @@ Create a detailed implementation plan with ordered steps, file predictions, depe
 
 ---
 
+## Input Contract
+
+**Inputs received from orchestrator spawn prompt:**
+
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| requirements | string | ✅ | What needs to be planned (feature description, problem statement) |
+| context | string | ✅ | Constraints, existing patterns, related code areas |
+| depth | enum | ⬜ | `high-level` or `detailed` (default: detailed) |
+
+**Configuration injected:**
+- Project config from `project.config.md` (stack, paths, ports)
+
+---
+
+## Output Contract
+
+**Primary deliverable:** `plan.md` in log folder
+
+**Contract-defined outputs:**
+- None — plan.md is free-form documentation
+
+**Free-form outputs:**
+- `plan.md` — Implementation plan with recommended structure: Overview, Steps, Dependencies, Risks, Verification
+
+---
+
+## Trace Contract
+
+**Log folder:** `.claude/actionflows/logs/plan/{description}_{datetime}/`
+**Default log level:** DEBUG
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `agent-reasoning` — Design decisions and approach rationale
+- `tool-usage` — File reads, greps, pattern exploration
+- `data-flow` — Dependency tracing across packages
+
+**Trace depth:**
+- **INFO:** plan.md only
+- **DEBUG:** + tool calls + design decisions + risk analysis
+- **TRACE:** + all alternatives considered + pattern exploration + dead ends
+
+---
+
 ## Steps to Complete This Action
 
 ### 1. Create Log Folder
@@ -29,17 +72,11 @@ Create a detailed implementation plan with ordered steps, file predictions, depe
 
 Create folder: `.claude/actionflows/logs/plan/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Parse Inputs
+### 2. Execute Core Work
 
-Read inputs from the orchestrator's prompt:
-- `requirements` — What needs to be planned (feature description, problem statement)
-- `context` — Constraints, existing patterns, related code areas
-- `depth` (optional) — `high-level` or `detailed` (default: detailed)
+See Input Contract above for input parameters.
 
-### 3. Execute Core Work
-
-1. Read requirements and context
-2. Explore the codebase for existing patterns and similar implementations:
+1. Explore the codebase for existing patterns and similar implementations:
    - Use Grep to find related code across all packages
    - Use Glob to map file structure in relevant areas
    - Read key files to understand current architecture
@@ -59,44 +96,9 @@ Read inputs from the orchestrator's prompt:
    - Migration needs for storage
 6. Produce a step-by-step plan with numbered steps, file paths, change descriptions, and dependencies
 
-### 4. Generate Output
+2. Generate Output
 
-Write results to `.claude/actionflows/logs/plan/{description}_{datetime}/plan.md`
-
-Format:
-```markdown
-# Implementation Plan: {title}
-
-## Overview
-{2-3 sentence summary of the approach}
-
-## Steps
-
-### Step 1: {title}
-- **Package:** {package name}
-- **Files:** {file paths to create/modify}
-- **Changes:** {what to change and why}
-- **Depends on:** {nothing or previous step}
-
-### Step 2: {title}
-...
-
-## Dependency Graph
-```
-Step 1 (shared types) → Step 2 (backend) → Step 3 (frontend)
-                                          → Step 4 (tests) [parallel with Step 3]
-```
-
-## Risks
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| {risk} | {impact} | {how to mitigate} |
-
-## Verification
-- [ ] Type check passes across all packages
-- [ ] Existing tests pass
-- [ ] New functionality verified
-```
+See Output Contract above. Write plan.md to log folder with recommended structure: Overview, Steps (with package/files/changes/dependencies), Dependency Graph, Risks table, and Verification checklist.
 
 ---
 

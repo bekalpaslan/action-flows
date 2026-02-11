@@ -684,6 +684,53 @@ This will:
 
 ---
 
+## Gate Contracts
+
+Each orchestrator gate has an Input/Output/Trace contract. Full specifications in `GATE_STRUCTURE.md`.
+
+### Request Reception (Gates 1-3)
+
+**Gate 1: Parse & Understand** — Input: human message. Output: parsed intent + scope. Trace: none (internal reasoning).
+
+**Gate 2: Route to Context** — Input: parsed intent + CONTEXTS.md. Output: selected context. Trace: `routing-decision` log (see GATE_STRUCTURE.md § Gate 2). Status: 🔴 NOT LOGGED.
+
+**Gate 3: Detect Special Work** — Input: context + request type. Output: work type classification. Trace: `work-type-detection` log. Status: 🔴 NOT LOGGED.
+
+### Chain Compilation (Gates 4-6)
+
+**Gate 4: Compile Chain** — Input: context + FLOWS.md + ACTIONS.md. Output: chain table. Trace: `chain-compilation` log. Status: 🟡 PARTIAL.
+
+**Gate 5: Present Chain** — Input: compiled chain. Output: formatted chain for human. Trace: `chain-approval-request` log. Status: 🟡 IMPLICIT.
+
+**Gate 6: Human Approval** — Input: human response. Output: approved/rejected/modified. Trace: `human-approval` log. Status: 🔴 NOT LOGGED.
+
+### Chain Execution (Gates 7-10)
+
+**Gate 7: Execute Step** — Input: step spec + agent.md. Output: agent deliverables. Trace: agent log folder (see agent Trace Contracts). Status: 🟢 FULLY LOGGED.
+
+**Gate 8: Step Completion** — Input: agent output. Output: step completion announcement. Trace: `step-completion` log. Status: 🟡 PARTIAL.
+
+**Gate 9: Mid-Chain Evaluation** — Input: step output + 6 triggers. Output: continue/recompile/halt. Trace: `mid-chain-evaluation` log. Status: 🔴 NOT LOGGED.
+
+**Gate 10: Auto-Trigger Detection** — Input: step output + trigger rules. Output: inserted steps. Trace: `auto-trigger-detection` log. Status: 🟡 PARTIAL.
+
+### Completion (Gates 11-12)
+
+**Gate 11: Chain Completion** — Input: all step results. Output: completion summary. Trace: `chain-completion` log. Status: 🟡 PARTIAL.
+
+**Gate 12: Archive & Index** — Input: completion data. Output: INDEX.md entry. Trace: index entry itself. Status: 🟢 MOSTLY DONE.
+
+### Post-Execution (Gates 13-14)
+
+**Gate 13: Learning Surface** — Input: agent learnings. Output: LEARNINGS.md entry. Trace: learning entry itself. Status: 🟢 FULLY LOGGED.
+
+**Gate 14: Flow Candidate Detection** — Input: ad-hoc chain. Output: flow suggestion. Trace: `flow-candidate-detection` log. Status: 🟡 PARTIAL.
+
+**Full gate specifications:** See `GATE_STRUCTURE.md`
+**Logging standards:** See `LOGGING_STANDARDS_CATALOG.md`
+
+---
+
 ## Abstract Actions (Instructed Behaviors)
 
 When you spawn an action, check its `instructions.md` for the **"Extends"** section:

@@ -29,6 +29,48 @@ Use progressive disclosure: show examples, explain concepts, quiz understanding,
 
 ---
 
+## Input Contract
+
+**Inputs received from orchestrator spawn prompt:**
+
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| (none) | - | - | Onboarding agent loads content from framework module files |
+
+**Configuration injected:**
+- Project config from `project.config.md` (stack, paths, ports)
+
+---
+
+## Output Contract
+
+**Primary deliverable:** Multiple files in log folder (see below)
+
+**Contract-defined outputs:**
+- None
+
+**Free-form outputs:**
+- `quick-reference.md` — Generated after Beginner level (Module 5) using template
+- `completion-certificate.md` — Generated after full completion (Module 10) using template
+- `session-log.md` — Interactive session transcript with module progression, quiz responses, navigation choices, summary
+
+---
+
+## Trace Contract
+
+**Log folder:** `.claude/actionflows/logs/onboarding/completion_{datetime}/`
+**Default log level:** INFO
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `agent-reasoning` — Module progression strategy (minimal - interactive teaching session)
+- `tool-usage` — Module file reads, template fills
+
+**Trace depth:**
+- **INFO:** session-log.md + quick-reference.md + completion-certificate.md only
+- **DEBUG:** + module content loading + quiz validation logic
+- **TRACE:** + all navigation decisions + teaching strategy adjustments
+
+---
+
 ## Steps to Complete This Action
 
 ### 1. Create Log Folder
@@ -40,6 +82,8 @@ Create folder: `.claude/actionflows/logs/onboarding/completion_{YYYY-MM-DD-HH-MM
 ---
 
 ### 2. Load Module Content
+
+See Input Contract above - no explicit inputs, loads from module files.
 
 Read all module files:
 - `.claude/actionflows/flows/framework/onboarding/modules/01-welcome.md`
@@ -91,6 +135,8 @@ Each module contains:
 
 ### 4. Generate Outputs
 
+See Output Contract above.
+
 **After Beginner level:**
 Create: `.claude/actionflows/logs/onboarding/completion_{datetime}/quick-reference.md`
 
@@ -117,7 +163,7 @@ Fill in placeholders:
 **Session log:**
 Create: `.claude/actionflows/logs/onboarding/completion_{datetime}/session-log.md`
 
-Contains:
+Contains (structure reference):
 ```markdown
 # Onboarding Session Log
 

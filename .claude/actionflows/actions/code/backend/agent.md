@@ -21,6 +21,47 @@ Implement backend code changes following Express Router patterns, Zod validation
 
 ---
 
+## Input Contract
+
+**Inputs received from orchestrator spawn prompt:**
+
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| task | string | ✅ | What to implement in the backend |
+| context | string | ✅ | Relevant backend files, routes, or services |
+
+**Configuration injected:**
+- Project config from `project.config.md` (backend stack, paths, ports)
+
+---
+
+## Output Contract
+
+**Primary deliverable:** `changes.md` in log folder
+
+**Contract-defined outputs:**
+- None — changes.md is free-form documentation
+
+**Free-form outputs:**
+- `changes.md` — Backend implementation summary with verification status
+
+---
+
+## Trace Contract
+
+**Log folder:** `.claude/actionflows/logs/code/{description}_{datetime}/`
+**Default log level:** DEBUG
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `agent-reasoning` — Backend pattern decisions (routes, middleware, storage)
+- `tool-usage` — File reads, edits, writes, backend type-check commands
+
+**Trace depth:**
+- **INFO:** changes.md only
+- **DEBUG:** + tool calls + Express Router decisions
+- **TRACE:** + all alternatives + middleware chain exploration
+
+---
+
 ## Steps to Complete This Action
 
 ### 1. Create Log Folder
@@ -29,13 +70,9 @@ Implement backend code changes following Express Router patterns, Zod validation
 
 Create folder: `.claude/actionflows/logs/code/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Parse Inputs
+### 2. Execute Core Work
 
-Read inputs from the orchestrator's prompt:
-- `task` — What to implement in the backend
-- `context` — Relevant backend files, routes, or services
-
-### 3. Execute Core Work
+See Input Contract above for input parameters.
 
 1. Use Grep to find backend files related to the task in `packages/backend/src/`
 2. Read found files to understand existing route/service/storage patterns
@@ -48,11 +85,10 @@ Read inputs from the orchestrator's prompt:
    - **Types:** Import from `@afw/shared` for branded IDs and event types
    - **Middleware:** Use existing middleware in `packages/backend/src/middleware/`
 5. Run `pnpm -F @afw/backend type-check` to verify TypeScript correctness
-6. Write change summary to log folder
 
-### 4. Generate Output
+3. Generate Output
 
-Write results to `.claude/actionflows/logs/code/{description}_{datetime}/changes.md`
+See Output Contract above. Write changes.md to log folder.
 
 ---
 

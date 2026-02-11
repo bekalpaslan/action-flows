@@ -31,3 +31,17 @@ After successful completion:
    - Timestamp
    - Outcome (succeeded/partial/failed)
    - Key metrics (duration, steps completed)
+
+---
+
+## Contract Contributions
+
+This abstract extends agent contracts with:
+
+**Output Contract additions:**
+- INDEX.md entry with chain signature format: `{action1}-{action2}-{action3}`
+- Execution registry update after commit
+
+**Trace Contract additions:**
+- Commit hash logged as completion trace
+- INDEX.md entry serves as permanent execution trace

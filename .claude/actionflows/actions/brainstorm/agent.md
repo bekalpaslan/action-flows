@@ -21,17 +21,46 @@ Facilitate interactive brainstorming sessions through conversational exploration
 
 ---
 
-## Output Format (Recommended)
+## Input Contract
 
-**Your transcript should follow the structure defined in:**
-`.claude/actionflows/CONTRACT.md` § Format 5.3: Brainstorm Session Transcript
+**Inputs received from orchestrator spawn prompt:**
 
-**Note:** This format is **recommended but not enforced**. Dashboard displays brainstorm transcripts as read-only markdown.
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| idea | string | ✅ | The idea to brainstorm |
+| classification | string | ✅ | Type of idea: `Technical`, `Functional`, or `Framework` |
+| context | string | ✅ | Project context inventory from analyze/ action |
 
-**Recommended Sections:**
-- Idea, Classification, Initial Context, Transcript, Key Insights, Issues & Risks, Next Steps, Open Questions, Metadata
+**Configuration injected:**
+- Project config from `project.config.md` (stack, paths, ports)
 
-**See CONTRACT.md for complete specification.**
+---
+
+## Output Contract
+
+**Primary deliverable:** `session-transcript.md` in log folder
+
+**Contract-defined outputs:**
+- **Format 5.3** — Brainstorm Session Transcript (see `CONTRACT.md` § Format 5.3)
+  - **Note:** Format is recommended but not enforced. Dashboard displays transcripts as read-only markdown.
+
+**Free-form outputs:**
+- `session-transcript.md` — Interactive session log with recommended structure: Idea, Classification, Initial Context, Transcript (Q&A), Key Insights, Issues & Risks, Next Steps, Open Questions, Metadata
+
+---
+
+## Trace Contract
+
+**Log folder:** `.claude/actionflows/logs/brainstorm/{description}_{datetime}/`
+**Default log level:** INFO
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `agent-reasoning` — Question formulation strategy (minimal - interactive session)
+- `tool-usage` — None (conversational only)
+
+**Trace depth:**
+- **INFO:** session-transcript.md only (brainstorm is interactive, minimal tracing)
+- **DEBUG:** + question strategy notes
+- **TRACE:** + all alternatives considered for questions
 
 ---
 
@@ -45,16 +74,9 @@ Create folder: `.claude/actionflows/logs/brainstorm/{description}_{YYYY-MM-DD-HH
 
 ---
 
-### 2. Parse Inputs
+### 2. Execute Interactive Session
 
-Read inputs from the orchestrator's prompt:
-- `idea` — The idea to brainstorm (string)
-- `classification` — Type of idea: `Technical`, `Functional`, or `Framework`
-- `context` — Project context inventory from analyze/ action
-
----
-
-### 3. Execute Interactive Session
+See Input Contract above for input parameters.
 
 1. **Summarize** — Present the idea and relevant context to the human. Acknowledge the classification and review what context is available.
 
@@ -87,9 +109,9 @@ Read inputs from the orchestrator's prompt:
 
 ---
 
-### 4. Generate Output
+### 3. Generate Output
 
-Write session transcript and analysis to `.claude/actionflows/logs/brainstorm/{description}_{datetime}/session-transcript.md`
+See Output Contract above. Write session transcript and analysis to `.claude/actionflows/logs/brainstorm/{description}_{datetime}/session-transcript.md`
 
 Format:
 ```markdown

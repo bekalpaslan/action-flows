@@ -21,6 +21,47 @@ Implement frontend code changes following React hooks patterns, component conven
 
 ---
 
+## Input Contract
+
+**Inputs received from orchestrator spawn prompt:**
+
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| task | string | ✅ | What to implement in the frontend |
+| context | string | ✅ | Relevant frontend files, components, or hooks |
+
+**Configuration injected:**
+- Project config from `project.config.md` (frontend stack, paths, ports)
+
+---
+
+## Output Contract
+
+**Primary deliverable:** `changes.md` in log folder
+
+**Contract-defined outputs:**
+- None — changes.md is free-form documentation
+
+**Free-form outputs:**
+- `changes.md` — Frontend implementation summary with verification status
+
+---
+
+## Trace Contract
+
+**Log folder:** `.claude/actionflows/logs/code/{description}_{datetime}/`
+**Default log level:** DEBUG
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `agent-reasoning` — React component/hook design decisions
+- `tool-usage` — File reads, edits, writes, frontend type-check commands
+
+**Trace depth:**
+- **INFO:** changes.md only
+- **DEBUG:** + tool calls + React pattern decisions
+- **TRACE:** + all alternatives + hook dependency exploration
+
+---
+
 ## Steps to Complete This Action
 
 ### 1. Create Log Folder
@@ -29,13 +70,9 @@ Implement frontend code changes following React hooks patterns, component conven
 
 Create folder: `.claude/actionflows/logs/code/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Parse Inputs
+### 2. Execute Core Work
 
-Read inputs from the orchestrator's prompt:
-- `task` — What to implement in the frontend
-- `context` — Relevant frontend files, components, or hooks
-
-### 3. Execute Core Work
+See Input Contract above for input parameters.
 
 1. Use Grep to find frontend files related to the task in `packages/app/src/`
 2. Read found files to understand existing component/hook/context patterns
@@ -54,11 +91,10 @@ Read inputs from the orchestrator's prompt:
    - **Terminal:** xterm.js for embedded terminal
    - **Types:** Import from `@afw/shared` for domain types
 5. Run `pnpm -F @afw/app type-check` to verify TypeScript correctness (if tsconfig allows)
-6. Write change summary to log folder
 
-### 4. Generate Output
+3. Generate Output
 
-Write results to `.claude/actionflows/logs/code/{description}_{datetime}/changes.md`
+See Output Contract above. Write changes.md to log folder.
 
 ---
 

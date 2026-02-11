@@ -16,3 +16,13 @@ Format:
 **Agent:** {action type}
 **Notes:** {brief note}
 ```
+
+---
+
+## Contract Contributions
+
+This abstract extends agent contracts with:
+
+**Trace Contract additions:**
+- Queue status transitions logged: PENDING → IN_PROGRESS → IMPLEMENTED → REVIEW_READY → APPROVED/NEEDS_CHANGES
+- Status updates written to queue.md files in log folder

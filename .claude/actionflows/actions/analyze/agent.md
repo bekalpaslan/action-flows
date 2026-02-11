@@ -21,22 +21,49 @@ Perform quantitative analysis of the specified scope, producing structured repor
 
 ---
 
-## Output Format (CRITICAL)
+## Input Contract
 
-**Your analysis report MUST follow the structure defined in:**
-`.claude/actionflows/CONTRACT.md` § Format 5.2: Analysis Report Structure
+**Inputs received from orchestrator spawn prompt:**
 
-The dashboard parses your output using this specification. Missing or incorrectly formatted fields cause harmony violations.
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| aspect | enum | ✅ | Analysis type: `coverage`, `dependencies`, `structure`, `drift`, `inventory`, `impact` |
+| scope | string | ✅ | What to analyze: directories, file patterns, or "all" |
+| context | string | ⬜ | Additional context about what to look for |
+| mode | enum | ⬜ | `analyze-only` (default) or `analyze-and-correct` |
 
-**Required Sections:**
-- **Title:** `# {Analysis Title}` (markdown H1)
-- **Metadata:** Aspect, Scope, Date, Agent
-- **Analysis Body:** Numbered sections (1., 2., 3., etc.)
-- **Recommendations:** Actionable next steps
+**Configuration injected:**
+- Project config from `project.config.md` (stack, paths, ports)
 
-**Validation:** Run `pnpm run harmony:check` to validate output format
+---
 
-**See CONTRACT.md for complete specification.**
+## Output Contract
+
+**Primary deliverable:** `report.md` in log folder
+
+**Contract-defined outputs:**
+- **Format 5.2** — Analysis Report Structure (see `CONTRACT.md` § Format 5.2)
+  - Parser: `parseAnalysisReport` in `packages/shared/src/contract/parsers/`
+  - Consumer: Dashboard analysis viewer (conceptual)
+
+**Free-form outputs:**
+- None — all output is contract-defined
+
+---
+
+## Trace Contract
+
+**Log folder:** `.claude/actionflows/logs/analyze/{description}_{datetime}/`
+**Default log level:** DEBUG
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `agent-reasoning` — Analysis approach and pattern detection logic
+- `tool-usage` — File reads, greps, globs
+- `data-flow` — Metrics collection and transformation steps
+
+**Trace depth:**
+- **INFO:** Final report only
+- **DEBUG:** + tool calls + reasoning steps + metric calculations
+- **TRACE:** + all alternatives considered + dead ends + data samples
 
 ---
 
@@ -48,18 +75,11 @@ The dashboard parses your output using this specification. Missing or incorrectl
 
 Create folder: `.claude/actionflows/logs/analyze/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Parse Inputs
+### 2. Execute Core Work
 
-Read inputs from the orchestrator's prompt:
-- `aspect` — Analysis type: `coverage`, `dependencies`, `structure`, `drift`, `inventory`, `impact`
-- `scope` — What to analyze: directories, file patterns, or "all"
-- `context` (optional) — Additional context about what to look for
-- `mode` (optional) — `analyze-only` (default) or `analyze-and-correct`
+See Input Contract above for input parameters.
 
-### 3. Execute Core Work
-
-1. Read aspect and scope
-2. Collect quantitative data based on aspect:
+1. Collect quantitative data based on aspect (see Input Contract for aspect types):
 
    **coverage:** Count test files vs source files per package, identify untested modules
    - Glob `packages/backend/src/**/*.ts` vs `packages/backend/src/__tests__/**/*.test.ts`
@@ -92,7 +112,7 @@ Read inputs from the orchestrator's prompt:
 4. Produce structured report with metrics in tables
 5. Provide actionable recommendations
 
-### 4. Apply Corrections (if mode = analyze-and-correct)
+2. Apply Corrections (if mode = analyze-and-correct)
 
 If the orchestrator provided `mode: analyze-and-correct`:
 1. Fix drift and stale data directly
@@ -101,9 +121,9 @@ If the orchestrator provided `mode: analyze-and-correct`:
 
 If `mode` not provided or is `analyze-only`, skip this step.
 
-### 5. Generate Output
+3. Generate Output
 
-Write results to `.claude/actionflows/logs/analyze/{description}_{datetime}/report.md`
+See Output Contract above. Write contract-compliant report to log folder.
 
 ---
 

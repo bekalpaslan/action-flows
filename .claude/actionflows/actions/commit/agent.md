@@ -20,16 +20,53 @@ Stage specified files, create a well-formatted conventional commit, and optional
 
 ---
 
+## Input Contract
+
+**Inputs received from orchestrator spawn prompt:**
+
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| summary | string | ✅ | What was done (used to generate commit message) |
+| files | string[] | ✅ | List of changed files to stage |
+| push | boolean | ⬜ | Whether to push after commit (default: true) |
+
+**Configuration injected:**
+- Project config from `project.config.md` (stack, paths, ports)
+
+---
+
+## Output Contract
+
+**Primary deliverable:** Git commit hash (reported in completion message)
+
+**Contract-defined outputs:**
+- None
+
+**Free-form outputs:**
+- Git commit hash and push status reported directly to orchestrator
+- No log folder created (special case - does NOT extend create-log-folder)
+
+---
+
+## Trace Contract
+
+**Log folder:** None (commit agent does not create log folders)
+**Default log level:** INFO
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `tool-usage` — Git operations (status, add, commit, push)
+
+**Trace depth:**
+- **INFO:** Commit hash + push status only
+- **DEBUG:** + git status + staged files
+- **TRACE:** + commit message construction + all git output
+
+---
+
 ## Steps to Complete This Action
 
-### 1. Parse Inputs
+### 1. Execute Core Work
 
-Read inputs from the orchestrator's prompt:
-- `summary` — What was done (used to generate commit message)
-- `files` — List of changed files to stage
-- `push` (optional) — Whether to push after commit (default: true)
-
-### 2. Execute Core Work
+See Input Contract above for input parameters.
 
 1. Run `git status` to verify expected changes exist
 2. Run `git log --oneline -5` to check recent commit message style
@@ -54,9 +91,9 @@ Read inputs from the orchestrator's prompt:
 6. If push requested: Run `git push`
 7. Capture and report commit hash
 
-### 3. Generate Output
+### 2. Generate Output
 
-Report to orchestrator:
+See Output Contract above. Report to orchestrator:
 - Commit hash
 - Files committed
 - Push status (pushed / not pushed / push failed)

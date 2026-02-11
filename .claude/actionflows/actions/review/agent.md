@@ -21,26 +21,49 @@ Review the specified changes for correctness, security, performance, and pattern
 
 ---
 
-## Output Format (CRITICAL)
+## Input Contract
 
-**Your review report MUST follow the structure defined in:**
-`.claude/actionflows/CONTRACT.md` § Format 5.1: Review Report Structure
+**Inputs received from orchestrator spawn prompt:**
 
-The dashboard parses your output using this specification. Missing or incorrectly formatted fields cause harmony violations.
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| scope | string | ✅ | What to review: file paths, git diff output, or change description |
+| type | string | ✅ | Review type: `code-review`, `doc-review`, `migration-review`, `proposal-review` |
+| checklist | string | ⬜ | Specific checklist file from `checklists/` to validate against |
+| mode | enum | ⬜ | `review-only` (default) or `review-and-fix` |
 
-**Required Sections:**
-- **Verdict:** `APPROVED` or `NEEDS_CHANGES` (exact enum values)
-- **Score:** Integer 0-100 (quality percentage)
-- **Summary:** 2-3 sentence overview of findings
-- **Findings:** Markdown table with columns: #, File, Line, Severity, Description, Suggestion
-- **Fixes Applied:** (if mode = review-and-fix) Table of files and fixes
-- **Flags for Human:** Issues requiring human judgment
+**Configuration injected:**
+- Project config from `project.config.md` (stack, paths, ports)
 
-**Severity Levels:** `critical`, `high`, `medium`, `low` (exact lowercase values)
+---
 
-**Validation:** Run `pnpm run harmony:check` to validate output format
+## Output Contract
 
-**See CONTRACT.md for complete specification.**
+**Primary deliverable:** `review-report.md` in log folder
+
+**Contract-defined outputs:**
+- **Format 5.1** — Review Report Structure (see `CONTRACT.md` § Format 5.1)
+  - Parser: `parseReviewReport` in `packages/shared/src/contract/parsers/`
+  - Consumer: ReviewReportViewer (conceptual dashboard component)
+
+**Free-form outputs:**
+- None — all output is contract-defined
+
+---
+
+## Trace Contract
+
+**Log folder:** `.claude/actionflows/logs/review/{description}_{datetime}/`
+**Default log level:** DEBUG
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `agent-reasoning` — Review criteria and severity assessments
+- `tool-usage` — File reads, checklist validation, fix applications
+- `data-flow` — Finding aggregation and scoring calculation
+
+**Trace depth:**
+- **INFO:** review-report.md only
+- **DEBUG:** + tool calls + reasoning steps + severity decisions
+- **TRACE:** + all files examined + alternatives considered + scoring logic
 
 ---
 
@@ -52,15 +75,9 @@ The dashboard parses your output using this specification. Missing or incorrectl
 
 Create folder: `.claude/actionflows/logs/review/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Parse Inputs
+### 2. Execute Core Work
 
-Read inputs from the orchestrator's prompt:
-- `scope` — What to review: file paths, git diff output, or change description
-- `type` — Review type: `code-review`, `doc-review`, `migration-review`, `proposal-review`
-- `checklist` (optional) — Specific checklist file from `checklists/` to validate against
-- `mode` (optional) — `review-only` (default) or `review-and-fix`
-
-### 3. Execute Core Work
+See Input Contract above for input parameters.
 
 1. Read all files/changes in scope using Read tool
 2. If checklist provided, read it from `.claude/actionflows/checklists/` directory
@@ -76,7 +93,7 @@ Read inputs from the orchestrator's prompt:
 5. List findings with: file path, line number, severity (critical/high/medium/low), description, fix suggestion
 6. Calculate quality score: (files without issues / total files) * 100
 
-### 4. Apply Fixes (if mode = review-and-fix)
+2. Apply Fixes (if mode = review-and-fix)
 
 If the orchestrator provided `mode: review-and-fix`:
 1. For each issue found, apply fix directly using Edit/Write tools
@@ -88,25 +105,9 @@ If the orchestrator provided `mode: review-and-fix`:
 
 If `mode` not provided or is `review-only`, skip this step.
 
-### 5. Generate Output
+3. Generate Output
 
-**CRITICAL: This output is contract-defined (Format 5.1).**
-
-Your review report MUST follow the exact structure defined in `.claude/actionflows/CONTRACT.md` (Review Report Structure). The dashboard parses this output using contract-defined parsers. Deviating from specification causes harmony violations (graceful degradation).
-
-**Required fields:**
-- Verdict: APPROVED | NEEDS_CHANGES
-- Score: X%
-- Summary (2-3 sentences)
-- Findings table (columns: #, File, Line, Severity, Description, Suggestion)
-- Fixes Applied table (if mode=review-and-fix)
-- Flags for Human table
-
-Missing fields break parsing. Follow format exactly.
-
-Write results to `.claude/actionflows/logs/review/{description}_{datetime}/review-report.md`
-
-Format:
+See Output Contract above. Write contract-compliant review-report.md to log folder with format:
 ```markdown
 # Review Report: {scope}
 

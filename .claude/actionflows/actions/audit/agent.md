@@ -21,6 +21,49 @@ Perform a comprehensive audit of the specified scope, categorizing all findings 
 
 ---
 
+## Input Contract
+
+**Inputs received from orchestrator spawn prompt:**
+
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| type | string | ✅ | Audit type: `security`, `architecture`, `performance`, `dependency` |
+| scope | string | ✅ | What to audit: directory paths, module names, or "all" |
+| focus | string | ⬜ | Narrow focus within scope |
+| mode | enum | ⬜ | `audit-only` (default) or `audit-and-remediate` |
+
+**Configuration injected:**
+- Project config from `project.config.md` (stack, paths, ports)
+
+---
+
+## Output Contract
+
+**Primary deliverable:** `audit-report.md` in log folder
+
+**Contract-defined outputs:**
+- None
+
+**Free-form outputs:**
+- `audit-report.md` — Comprehensive audit findings with structure: Score, Severity Distribution, Findings (by severity level with file:line, description, impact, remediation, status)
+
+---
+
+## Trace Contract
+
+**Log folder:** `.claude/actionflows/logs/audit/{description}_{datetime}/`
+**Default log level:** DEBUG
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `agent-reasoning` — Audit decisions and severity classifications
+- `tool-usage` — File scans, reads, and any remediation edits
+
+**Trace depth:**
+- **INFO:** audit-report.md only
+- **DEBUG:** + file scan list + severity decision rationale
+- **TRACE:** + all files examined + all checks performed + false positives considered
+
+---
+
 ## Steps to Complete This Action
 
 ### 1. Create Log Folder
@@ -29,15 +72,9 @@ Perform a comprehensive audit of the specified scope, categorizing all findings 
 
 Create folder: `.claude/actionflows/logs/audit/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Parse Inputs
+### 2. Execute Core Work
 
-Read inputs from the orchestrator's prompt:
-- `type` — Audit type: `security`, `architecture`, `performance`, `dependency`
-- `scope` — What to audit: directory paths, module names, or "all"
-- `focus` (optional) — Narrow focus within scope
-- `mode` (optional) — `audit-only` (default) or `audit-and-remediate`
-
-### 3. Execute Core Work
+See Input Contract above for input parameters.
 
 1. Read audit type and scope
 2. Systematically scan ALL files in scope (no sampling — comprehensive):
@@ -84,7 +121,7 @@ Read inputs from the orchestrator's prompt:
 5. For each finding: exact file path, line number, description, impact, remediation steps
 6. Calculate overall score (0-100)
 
-### 4. Apply Remediations (if mode = audit-and-remediate)
+### 3. Apply Remediations (if mode = audit-and-remediate)
 
 If the orchestrator provided `mode: audit-and-remediate`:
 1. Fix all CRITICAL findings directly using Edit/Write tools
@@ -94,9 +131,9 @@ If the orchestrator provided `mode: audit-and-remediate`:
 
 If `mode` not provided or is `audit-only`, skip this step.
 
-### 5. Generate Output
+### 4. Generate Output
 
-Write results to `.claude/actionflows/logs/audit/{description}_{datetime}/audit-report.md`
+See Output Contract above. Write results to `.claude/actionflows/logs/audit/{description}_{datetime}/audit-report.md`
 
 Format:
 ```markdown

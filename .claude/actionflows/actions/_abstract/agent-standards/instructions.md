@@ -156,3 +156,18 @@ Before completing execution:
 2. Verify you did NOT write any files to repository root
 3. Remove any .tmp, .backup, or work-in-progress files you created
 4. List all files created in your output summary
+
+---
+
+## Contract Contributions
+
+This abstract extends all agent contracts with:
+
+**Output Contract additions:**
+- All agents MUST produce `## Learnings` section if discoveries found (see Standard #3)
+- Learnings format: Issue, Root Cause, Suggestion (see Learnings Output Format above)
+
+**Trace Contract additions:**
+- All agents MUST validate output exists before completing (Standard #10)
+- All agents MUST surface partial completions as learnings, not next-steps (Standard #13)
+- All agents MUST produce `agent-reasoning` log type at DEBUG level

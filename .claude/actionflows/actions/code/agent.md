@@ -28,6 +28,48 @@ Follow harmony evolution rules: increment CONTRACT_VERSION if breaking, support 
 
 ---
 
+## Input Contract
+
+**Inputs received from orchestrator spawn prompt:**
+
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| task | string | ✅ | What to implement (feature description, bug to fix, refactor goal) |
+| context | string | ✅ | Relevant files, modules, or areas of the codebase |
+| component | string | ⬜ | Specific area: backend, frontend, shared, mcp-server |
+
+**Configuration injected:**
+- Project config from `project.config.md` (stack, paths, ports)
+
+---
+
+## Output Contract
+
+**Primary deliverable:** `changes.md` in log folder
+
+**Contract-defined outputs:**
+- None — changes.md is free-form documentation
+
+**Free-form outputs:**
+- `changes.md` — Implementation summary with files modified/created and verification status
+
+---
+
+## Trace Contract
+
+**Log folder:** `.claude/actionflows/logs/code/{description}_{datetime}/`
+**Default log level:** DEBUG
+**Log types produced:** (see `LOGGING_STANDARDS_CATALOG.md` § Part 2)
+- `agent-reasoning` — Implementation approach and pattern decisions
+- `tool-usage` — File reads, edits, writes, shell commands (type-check)
+
+**Trace depth:**
+- **INFO:** changes.md only
+- **DEBUG:** + tool calls + implementation decisions
+- **TRACE:** + all alternatives considered + pattern exploration
+
+---
+
 ## Steps to Complete This Action
 
 ### 1. Create Log Folder
@@ -36,14 +78,9 @@ Follow harmony evolution rules: increment CONTRACT_VERSION if breaking, support 
 
 Create folder: `.claude/actionflows/logs/code/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Parse Inputs
+### 2. Execute Core Work
 
-Read inputs from the orchestrator's prompt:
-- `task` — What to implement (feature description, bug to fix, refactor goal)
-- `context` — Relevant files, modules, or areas of the codebase
-- `component` (optional) — Specific area: backend, frontend, shared, mcp-server
-
-### 3. Execute Core Work
+See Input Contract above for input parameters.
 
 1. Use Grep to find files related to the task context across the monorepo
 2. Read found files to understand existing patterns and conventions
@@ -58,30 +95,10 @@ Read inputs from the orchestrator's prompt:
    - Follow branded string types for shared types
    - Use Zod for validation in backend
 6. Run `pnpm type-check` to verify TypeScript correctness
-7. Write a change summary to the log folder listing all modified/created files
 
-### 4. Generate Output
+3. Generate Output
 
-Write results to `.claude/actionflows/logs/code/{description}_{datetime}/changes.md`
-
-Format:
-```markdown
-# Code Changes: {description}
-
-## Files Modified
-| File | Change |
-|------|--------|
-| {path} | {what changed} |
-
-## Files Created
-| File | Purpose |
-|------|---------|
-| {path} | {why created} |
-
-## Verification
-- Type check: {PASS/FAIL}
-- Notes: {any issues}
-```
+See Output Contract above. Write changes.md to log folder.
 
 ## Output File Rules
 
