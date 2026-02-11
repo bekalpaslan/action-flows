@@ -24,6 +24,7 @@ import { useUniverseContext } from '../../contexts/UniverseContext';
 import { CosmicBackground } from './CosmicBackground';
 import { RegionStar, type RegionStarData } from './RegionStar';
 import { LightBridgeEdge, type LightBridgeData } from './LightBridgeEdge';
+import { CommandCenter } from './CommandCenter';
 import '../../styles/cosmic-tokens.css';
 import './CosmicMap.css';
 
@@ -137,6 +138,13 @@ function CosmicMapInner() {
     fitView({ padding: 0.2, duration: 800 });
   }, [fitView]);
 
+  // Handle command from CommandCenter
+  const handleCommand = useCallback((command: string) => {
+    console.log('[CosmicMap] Command received:', command);
+    // TODO: Integrate with orchestrator backend
+    // For now, just log the command
+  }, []);
+
   if (isLoading) {
     return (
       <div className="cosmic-map cosmic-map--loading">
@@ -226,6 +234,12 @@ function CosmicMapInner() {
       >
         🌌 God View
       </button>
+
+      {/* Command Center bottom bar */}
+      <CommandCenter
+        onCommand={handleCommand}
+        showHealthStatus={true}
+      />
     </div>
   );
 }

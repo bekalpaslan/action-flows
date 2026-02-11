@@ -1,0 +1,354 @@
+/**
+ * CommandCenter - Living Universe command center bottom bar styles
+ *
+ * Cosmic-themed bottom bar with three main sections:
+ * - Left: Command input field with submit button
+ * - Middle: Session dropdown selector
+ * - Right: Health status indicator
+ *
+ * Uses cosmic design tokens for visual consistency with CosmicMap.
+ */
+
+.command-center {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--panel-bg-elevated);
+  border-top: var(--panel-border-default);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.3), var(--panel-glow-default);
+  backdrop-filter: blur(20px);
+}
+
+/* ============================================================================
+   Input Section (Left)
+   ============================================================================ */
+
+.command-center__input-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  background: var(--input-bg-default);
+  border: var(--input-border-default);
+  border-radius: var(--btn-radius-md);
+  transition: all 0.2s ease;
+}
+
+.command-center__input-section:hover {
+  background: var(--input-bg-hover);
+  border-color: var(--panel-border-color-strong);
+  box-shadow: var(--btn-glow-default);
+}
+
+.command-center__input-section:focus-within {
+  background: var(--input-bg-focus);
+  border-color: var(--input-border-focus);
+  box-shadow: var(--panel-glow-focus);
+}
+
+.command-center__input-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cosmic-star-idle);
+  transition: color 0.2s ease;
+}
+
+.command-center__input-section:focus-within .command-center__input-icon {
+  color: var(--system-blue);
+}
+
+.command-center__input {
+  flex: 1;
+  padding: 8px 0;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  outline: none;
+}
+
+.command-center__input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.command-center__submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: var(--btn-radius-sm);
+  transition: all 0.2s ease;
+}
+
+.command-center__submit-btn:hover:not(:disabled) {
+  background: var(--btn-bg-tertiary);
+  color: var(--system-blue);
+}
+
+.command-center__submit-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.command-center__submit-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
+   Session Section (Middle)
+   ============================================================================ */
+
+.command-center__session-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.command-center__session-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--panel-bg-raised);
+  border: var(--panel-border-default);
+  border-radius: var(--btn-radius-md);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.command-center__session-trigger:hover {
+  background: var(--panel-bg-hover);
+  border-color: var(--panel-border-color-strong);
+  box-shadow: var(--btn-glow-default);
+}
+
+.command-center__session-trigger:active {
+  transform: scale(0.98);
+}
+
+.command-center__session-icon {
+  color: var(--cosmic-star-idle);
+  flex-shrink: 0;
+}
+
+.command-center__session-label {
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.command-center__session-caret {
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.command-center__session-caret.open {
+  transform: rotate(180deg);
+}
+
+/* Session Dropdown */
+.command-center__session-dropdown {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  min-width: 280px;
+  max-height: 320px;
+  overflow-y: auto;
+  background: var(--panel-bg-elevated);
+  border: var(--panel-border-default);
+  border-radius: var(--panel-radius-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), var(--panel-glow-accent);
+  padding: 4px;
+  z-index: 100;
+  animation: slideUpFadeIn 0.2s ease;
+}
+
+@keyframes slideUpFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.command-center__session-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.command-center__session-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.command-center__session-dropdown::-webkit-scrollbar-thumb {
+  background: var(--fill-tertiary);
+  border-radius: 4px;
+}
+
+.command-center__session-dropdown::-webkit-scrollbar-thumb:hover {
+  background: var(--fill-secondary);
+}
+
+.command-center__session-empty {
+  padding: 12px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.command-center__session-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-radius: var(--btn-radius-sm);
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.command-center__session-option:hover {
+  background: var(--btn-bg-tertiary);
+}
+
+.command-center__session-option.selected {
+  background: rgba(10, 132, 255, 0.15);
+  color: var(--system-blue);
+}
+
+.command-center__session-option-label {
+  flex: 1;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.command-center__session-status {
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 4px;
+  background: var(--fill-tertiary);
+  color: var(--text-secondary);
+}
+
+.command-center__session-status--in_progress,
+.command-center__session-status--active {
+  background: rgba(50, 215, 75, 0.2);
+  color: var(--system-green);
+}
+
+.command-center__session-status--completed {
+  background: var(--fill-tertiary);
+  color: var(--text-tertiary);
+}
+
+.command-center__session-status--failed,
+.command-center__session-status--error {
+  background: rgba(255, 69, 58, 0.2);
+  color: var(--system-red);
+}
+
+.command-center__session-checkmark {
+  flex-shrink: 0;
+  color: var(--system-blue);
+}
+
+/* ============================================================================
+   Health Section (Right)
+   ============================================================================ */
+
+.command-center__health-section {
+  display: flex;
+  align-items: center;
+}
+
+.command-center__health-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--panel-bg-raised);
+  border: var(--panel-border-default);
+  border-radius: var(--btn-radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: help;
+  transition: all 0.2s ease;
+}
+
+.command-center__health-indicator:hover {
+  box-shadow: var(--panel-glow-default);
+  transform: translateY(-1px);
+}
+
+.command-center__health-icon {
+  flex-shrink: 0;
+}
+
+.command-center__health-value {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Health color states */
+.command-center__health-indicator--high {
+  color: var(--cosmic-health-high);
+  border-color: var(--cosmic-health-high);
+}
+
+.command-center__health-indicator--medium {
+  color: var(--cosmic-health-medium);
+  border-color: var(--cosmic-health-medium);
+}
+
+.command-center__health-indicator--low {
+  color: var(--cosmic-health-low);
+  border-color: var(--cosmic-health-low);
+}
+
+/* ============================================================================
+   Responsive Adjustments
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .command-center {
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .command-center__input-section {
+    flex: 1 1 100%;
+  }
+
+  .command-center__session-section {
+    flex: 1;
+  }
+
+  .command-center__health-section {
+    flex: 0 0 auto;
+  }
+}

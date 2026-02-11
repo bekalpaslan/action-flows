@@ -25,7 +25,7 @@
 /* Controls styling */
 .cosmic-map__controls {
   position: absolute;
-  bottom: 20px;
+  bottom: 80px; /* Moved up to make room for CommandCenter */
   left: 20px;
   background: var(--panel-bg-base);
   border: var(--panel-border-default);
@@ -48,7 +48,7 @@
 /* MiniMap styling */
 .cosmic-map__minimap {
   position: absolute;
-  bottom: 20px;
+  bottom: 80px; /* Moved up to make room for CommandCenter */
   right: 20px;
   background: var(--panel-bg-base);
   border: var(--panel-border-default);
