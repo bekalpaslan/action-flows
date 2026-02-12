@@ -62,13 +62,17 @@ vi.mock('../../components/AppSidebar/SidebarNavGroup', () => ({
   ),
 }));
 
+// ARIA Label Alignment (Wave 8 Batch B):
+// Updated mock to match actual SidebarNavItem component (packages/app/src/components/AppSidebar/SidebarNavItem.tsx:84)
+// Real component includes notificationCount in aria-label: "${config.label} workbench${notificationCount ? ` (${notificationCount} notifications)` : ''}"
+// This improved mock now includes the notificationCount parameter for better test fidelity
 vi.mock('../../components/AppSidebar/SidebarNavItem', () => ({
-  SidebarNavItem: ({ workbenchId, config, isActive, onClick }: any) => (
+  SidebarNavItem: ({ workbenchId, config, isActive, onClick, notificationCount }: any) => (
     <button
       data-testid={`sidebar-nav-item-${workbenchId}`}
       className={isActive ? 'active' : ''}
       onClick={onClick}
-      aria-label={`${config.label} workbench`}
+      aria-label={`${config.label} workbench${notificationCount ? ` (${notificationCount} notifications)` : ''}`}
       aria-current={isActive ? 'page' : undefined}
     >
       {config.label}
