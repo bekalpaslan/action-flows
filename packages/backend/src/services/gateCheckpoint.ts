@@ -25,20 +25,32 @@
  * - **Validation:** Extract context name, validate against enum
  * - **Trace depth:** INFO=context only, DEBUG=+alternatives scored, TRACE=+keyword extraction
  *
+ * ### Gate 3: Detect Special Work
+ * - **Trigger:** Request parsed, checking for special work types
+ * - **Logs:** orchestrator-decision, gate-passage
+ * - **Validation:** Detect format-work, harmony-work, flow-work, registry-edit
+ * - **Trace depth:** INFO=work type, DEBUG=+triggers matched, TRACE=+routing logic
+ *
  * ### Gate 4: Compile Chain
  * - **Trigger:** Orchestrator outputs Format 1.1 (Chain Compilation Table)
  * - **Logs:** orchestrator-decision, chain-compilation, gate-passage, configuration
  * - **Validation:** Parse Format 1.1, validate required fields, check step counts
  * - **Trace depth:** INFO=chain steps, DEBUG=+rationale/alternatives, TRACE=+parallelization analysis
  *
- * ### Gate 6: Step Boundary Evaluation
+ * ### Gate 6: Human Approval
+ * - **Trigger:** Human responds to chain presentation
+ * - **Logs:** orchestrator-decision, gate-passage
+ * - **Validation:** Parse approval (yes/no/modify), capture suppressions
+ * - **Trace depth:** INFO=decision only, DEBUG=+modifications, TRACE=+full response
+ *
+ * ### Gate 9: Mid-Chain Evaluation
  * - **Trigger:** Orchestrator outputs Format 2.1 (Step Completion)
  * - **Logs:** orchestrator-decision, gate-passage, agent-reasoning
  * - **Validation:** Parse Format 2.1, check 6-trigger signals
  * - **6-triggers:** [SIGNAL], [PATTERN], [DEPENDENCY], [QUALITY], [REDESIGN], [REUSE]
  * - **Trace depth:** INFO=decision only, DEBUG=+triggers fired, TRACE=+trigger matching logic
  *
- * ### Gate 9: Agent Output Validation
+ * ### Agent Output Validation (T3)
  * - **Trigger:** Agent completes, output file written to log folder
  * - **Logs:** agent-reasoning, tool-usage, data-flow
  * - **Validation:** Delegate to AgentValidator, validate format by action type
@@ -50,8 +62,19 @@
  * - **Validation:** Validate Issue/Root Cause/Suggestion fields
  * - **Trace depth:** INFO=learning recorded, DEBUG=+full text, TRACE=+categorization
  *
+ * ## Trust Levels
+ *
+ * | Level | Boundary | This Service Handles |
+ * |-------|----------|---------------------|
+ * | T0 | User → Backend | No (Zod validation) |
+ * | T1 | Orchestrator → Backend | **Yes** (gate checkpoints) |
+ * | T2 | Backend → Frontend | No (event schemas) |
+ * | T3 | Agent → Orchestrator | No (AgentValidator) |
+ *
+ * This service is the T1 validation layer.
+ *
  * ## GateTrace Fields (all gates)
- * @see packages/shared/src/types/gateTrace.ts for interface definition
+ * @see packages/shared/src/gateTrace.ts for interface definition
  */
 
 import { EventEmitter } from 'events';

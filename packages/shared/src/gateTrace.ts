@@ -1,8 +1,42 @@
 /**
- * Gate Checkpoint Tracing System
+ * Gate Trace Types
  *
- * Tracks orchestrator output validation at decision boundaries (gates).
- * Backend parses orchestrator outputs and creates traces for auditability.
+ * Types for recording orchestrator output validation at gate checkpoints.
+ *
+ * ## Storage Pattern
+ *
+ * Gate traces are stored in Redis with automatic expiration:
+ * - **Key format:** `gate:{gateId}:{chainId}:{timestamp}`
+ * - **TTL:** 7 days (configurable via GATE_TRACE_TTL_DAYS)
+ * - **Retrieval:** By session, by gate, by time range
+ *
+ * ## Trace Levels
+ *
+ * | Level | When Used | Content |
+ * |-------|-----------|---------|
+ * | INFO | Production | Validation result only |
+ * | DEBUG | Investigation | + reasoning, alternatives |
+ * | TRACE | Deep analysis | + full parsing details |
+ *
+ * ## Usage
+ *
+ * ```typescript
+ * const trace: GateTrace = {
+ *   gateId: 'gate-04',
+ *   gateName: 'Compile Chain',
+ *   timestamp: new Date().toISOString(),
+ *   chainId: chainId,
+ *   traceLevel: 'INFO',
+ *   selected: '3 steps',
+ *   rationale: 'code-and-review flow matched',
+ *   confidence: 'high',
+ *   validationResult: { passed: true, violations: [], harmonyScore: 100 }
+ * };
+ * ```
+ *
+ * @see packages/backend/src/services/gateCheckpoint.ts - checkpoint service
+ * @see ORCHESTRATOR_OBSERVABILITY.md - architecture overview
+ * @module
  */
 
 import type { ChainId, StepId, Timestamp } from './types.js';
