@@ -26,6 +26,26 @@ export const SELECTORS = {
   dashboardHeading: 'h1:has-text("Work Dashboard")',
   sessionInfoBar: '.chat-panel__info-bar', // Contains session ID and metadata
   sessionIdInInfoBar: '.chat-panel__info-bar', // Session ID displayed in info bar
+
+  // Cosmic Map Navigation
+  cosmicMap: '.cosmic-map',
+  cosmicMapContainer: '.cosmic-map-container',
+  regionStar: '.region-star',
+  regionStarButton: '.region-star-button',
+  bigBangAnimation: '.big-bang-animation',
+  onboardingTooltip: '.onboarding-tooltip',
+  onboardingSkipBtn: 'button:has-text("Skip")',
+  onboardingNextBtn: 'button:has-text("Next")',
+  onboardingDoneBtn: 'button:has-text("Done")',
+  godViewButton: 'button:has-text("God View")',
+  workbenchPanel: '.workbench-panel',
+  regionFocusView: '.region-focus-view',
+
+  // Accessibility
+  liveRegion: '[role="status"]',
+  mainContent: '[role="main"]',
+  navigationRegion: '[role="navigation"]',
+  tooltipRegion: '[role="tooltip"]',
 } as const;
 
 /**
