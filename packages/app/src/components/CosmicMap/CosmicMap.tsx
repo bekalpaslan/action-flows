@@ -347,7 +347,12 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
   ].filter(Boolean).join(' ');
 
   return (
-    <div className={cosmicMapClass} data-testid="cosmic-map">
+    <div
+      className={cosmicMapClass}
+      data-testid="cosmic-map"
+      role="region"
+      aria-label="Living universe map"
+    >
       {/* Cosmic background */}
       <CosmicBackground
         width={window.innerWidth}
@@ -377,7 +382,12 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
         aria-label="Living Universe cosmic map - navigable visualization of workbench regions"
         role="application"
       >
-        <Controls className="cosmic-map__controls" data-testid="zoom-controls" />
+        <Controls
+          className="cosmic-map__controls"
+          data-testid="zoom-controls"
+          aria-label="Map zoom controls"
+          title="Zoom in, zoom out, and fit view controls"
+        />
         <MiniMap
           className="cosmic-map__minimap"
           nodeColor={(node) => {

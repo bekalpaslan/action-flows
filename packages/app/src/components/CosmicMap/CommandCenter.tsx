@@ -246,7 +246,7 @@ export function CommandCenter({
       )}
 
       {/* Control Row */}
-      <div className="command-center__controls">
+      <div className="command-center__controls" role="toolbar" aria-label="Universe command controls">
         {/* Left: Command Input */}
         <div className="command-center__input-section">
         <div className="command-center__input-icon">
@@ -299,7 +299,7 @@ export function CommandCenter({
           className="command-center__session-trigger"
           data-testid="mode-selector"
           onClick={toggleSessionDropdown}
-          aria-label="Select session"
+          aria-label="Select mode - Switch between active sessions"
           aria-haspopup="listbox"
           aria-expanded={isSessionDropdownOpen}
         >
@@ -334,7 +334,7 @@ export function CommandCenter({
             className="command-center__session-dropdown"
             data-testid="quick-actions"
             role="listbox"
-            aria-label="Available sessions"
+            aria-label="Quick actions menu - Available sessions"
           >
             {sessions.length === 0 ? (
               <div className="command-center__session-empty">
