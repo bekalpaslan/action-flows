@@ -323,9 +323,9 @@ wscat -c ws://localhost:3001
 **What:** Complete E2E testing framework for ActionFlows Dashboard Phase 2
 
 **Where:**
-- Main guide: `/E2E_TEST_GUIDE.md`
+- Main guide: [E2E_TEST_GUIDE.md](E2E_TEST_GUIDE.md)
 - Tests: `/test/` directory
-- Summary: `/TEST_FILES_SUMMARY.md`
+- Summary: [test-files-summary.md](test-files-summary.md)
 
 **How:**
 1. Read E2E_TEST_GUIDE.md

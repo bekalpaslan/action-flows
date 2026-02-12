@@ -6,7 +6,7 @@
 ## Files Created
 
 ### 1. `E2E_TEST_GUIDE.md` (413 lines)
-**Location:** `D:/ActionFlowsDashboard/E2E_TEST_GUIDE.md`
+**Location:** `docs/testing/E2E_TEST_GUIDE.md`
 
 Comprehensive guide covering:
 - Prerequisites (Node 20+, pnpm, Redis optional)
