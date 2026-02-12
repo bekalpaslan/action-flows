@@ -10,10 +10,11 @@
  * - Accessibility attributes
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ChatPanel } from '../../components/SessionPanel/ChatPanel';
 import type { SessionId } from '@afw/shared';
+import { useCommonTestSetup, createMockChatMessages, createMockPromptButtons } from '../../__tests__/utils';
 
 // Mock contexts
 vi.mock('../../contexts/WebSocketContext', () => ({
@@ -40,20 +41,7 @@ vi.mock('../../contexts/ChatWindowContext', () => ({
 
 vi.mock('../../hooks/useChatMessages', () => ({
   useChatMessages: (sessionId: SessionId) => ({
-    messages: [
-      {
-        id: 'msg-1',
-        type: 'user' as const,
-        content: 'Hello',
-        timestamp: Date.now(),
-      },
-      {
-        id: 'msg-2',
-        type: 'assistant' as const,
-        content: 'Hi there!',
-        timestamp: Date.now() - 5000,
-      },
-    ],
+    messages: createMockChatMessages(2),
     addMessage: vi.fn(),
     isLoading: false,
   }),
@@ -61,10 +49,7 @@ vi.mock('../../hooks/useChatMessages', () => ({
 
 vi.mock('../../hooks/usePromptButtons', () => ({
   usePromptButtons: () => ({
-    prompts: [
-      { id: 'prompt-1', text: 'Explain this' },
-      { id: 'prompt-2', text: 'Refactor this' },
-    ],
+    prompts: createMockPromptButtons(2),
   }),
 }));
 
@@ -121,9 +106,7 @@ vi.mock('react-markdown', () => ({
 describe('ChatPanel', () => {
   const sessionId = 'session-123' as SessionId;
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  useCommonTestSetup();
 
   it('renders without crashing with required sessionId prop', () => {
     const { container } = render(<ChatPanel sessionId={sessionId} />);

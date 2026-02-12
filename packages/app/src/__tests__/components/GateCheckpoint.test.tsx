@@ -10,23 +10,17 @@
  * - Label display
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { render } from '@testing-library/react';
 import { GateCheckpointComponent } from '../../components/CosmicMap/GateCheckpoint';
 import type { GateCheckpoint } from '@afw/shared';
+import { useCommonTestSetup, createMockGate, createMockPosition } from '../../__tests__/utils';
 
 describe('GateCheckpoint', () => {
-  const mockGate: GateCheckpoint = {
-    id: 'gate-1',
-    harmonyRule: 'contract:validation',
-    status: 'pending',
-  };
+  const mockGate: GateCheckpoint = createMockGate();
+  const mockPosition = createMockPosition();
 
-  const mockPosition = { x: 100, y: 200 };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  useCommonTestSetup();
 
   it('renders without crashing with required props', () => {
     const { container } = render(

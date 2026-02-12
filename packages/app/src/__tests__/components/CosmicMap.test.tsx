@@ -9,10 +9,10 @@
  * - Error boundary handling
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import { CosmicMap } from '../../components/CosmicMap/CosmicMap';
-import * as ReactFlow from 'reactflow';
+import { useCommonTestSetup } from '../../__tests__/utils';
 
 // Mock ReactFlow provider
 vi.mock('reactflow', async () => {
@@ -65,9 +65,7 @@ vi.mock('../../utils/performance', () => ({
 }));
 
 describe('CosmicMap', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  useCommonTestSetup();
 
   it('renders without crashing with default props', () => {
     const { container } = render(<CosmicMap />);

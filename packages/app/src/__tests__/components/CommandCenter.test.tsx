@@ -10,25 +10,20 @@
  * - Accessibility attributes
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { CommandCenter } from '../../components/CosmicMap/CommandCenter';
 import type { SessionId, Session } from '@afw/shared';
+import { useCommonTestSetup, createMockSession, createMockChain } from '../../__tests__/utils';
 
 // Mock contexts
 vi.mock('../../contexts/SessionContext', () => ({
   useSessionContext: () => ({
     sessions: [
-      {
+      createMockSession({
         id: 'session-123' as SessionId,
-        title: 'Session 1',
-        chains: [
-          {
-            id: 'chain-1',
-            status: 'in_progress' as const,
-          },
-        ],
-      },
+        chains: [createMockChain({ id: 'chain-1' })],
+      }),
     ] as Session[],
     activeSessionId: 'session-123' as SessionId,
     setActiveSession: vi.fn(),
@@ -70,9 +65,7 @@ vi.mock('../CommandCenter/discoveryConfig', () => ({
 }));
 
 describe('CommandCenter', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  useCommonTestSetup();
 
   it('renders without crashing with no props', () => {
     const { container } = render(<CommandCenter />);

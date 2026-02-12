@@ -13,6 +13,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { WorkbenchLayout } from '../../components/Workbench';
+import { useCommonTestSetup, setupWindowMocks } from '../../__tests__/utils';
 
 // Mock contexts and dependencies
 vi.mock('../../contexts/WorkbenchContext', () => ({
@@ -54,22 +55,10 @@ vi.mock('../../components/CosmicMap/CosmicMap', () => ({
 }));
 
 describe('WorkbenchLayout', () => {
+  useCommonTestSetup();
+
   beforeEach(() => {
-    vi.clearAllMocks();
-    // Mock window.matchMedia for resize detection
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: vi.fn().mockImplementation((query) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      })),
-    });
+    setupWindowMocks();
   });
 
   it('renders without crashing with no required props', () => {
@@ -121,7 +110,7 @@ describe('WorkbenchLayout', () => {
   });
 
   it('hides cosmic map when viewing workbench content', async () => {
-    const { rerender } = render(<WorkbenchLayout />);
+    render(<WorkbenchLayout />);
 
     // In workbench view, cosmic map should be hidden
     const cosmicMap = screen.getByTestId('cosmic-map');

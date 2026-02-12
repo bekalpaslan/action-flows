@@ -10,10 +10,11 @@
  * - Accessibility attributes
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { AppSidebar } from '../../components/AppSidebar/AppSidebar';
 import type { WorkbenchId } from '@afw/shared';
+import { useCommonTestSetup } from '../../__tests__/utils';
 
 // Mock contexts
 vi.mock('../../contexts/WorkbenchContext', () => ({
@@ -81,10 +82,7 @@ vi.mock('../../components/AppSidebar/SidebarUserProfile', () => ({
 }));
 
 describe('AppSidebar', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    localStorage.clear();
-  });
+  useCommonTestSetup();
 
   it('renders without crashing with no required props', () => {
     const { container } = render(<AppSidebar />);

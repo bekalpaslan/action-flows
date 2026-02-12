@@ -10,11 +10,11 @@
  * - Health metrics rendering
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render } from '@testing-library/react';
 import { RegionStar, type RegionStarData } from '../../components/CosmicMap/RegionStar';
 import type { NodeProps } from 'reactflow';
-import { FogState, type RegionId, type WorkbenchId, type ColorShift, type HealthMetrics } from '@afw/shared';
+import { useCommonTestSetup, createMockRegionStarData, createMockRegionStarNodeProps } from '../../__tests__/utils';
 
 // Mock contexts
 vi.mock('../../contexts/UniverseContext', () => ({
@@ -43,43 +43,10 @@ vi.mock('reactflow', () => ({
 }));
 
 describe('RegionStar', () => {
-  const mockData: RegionStarData = {
-    regionId: 'region-work' as RegionId,
-    workbenchId: 'work' as WorkbenchId,
-    label: 'Work',
-    layer: 'experience',
-    fogState: FogState.REVEALED,
-    glowIntensity: 0.5,
-    status: 'idle',
-    colorShift: {
-      hue: 0,
-      saturation: 1,
-      lightness: 0.5,
-    },
-    health: {
-      error: 0,
-      warning: 0,
-      success: 1,
-      total: 1,
-    },
-  };
+  const mockData: RegionStarData = createMockRegionStarData();
+  const mockNodeProps: NodeProps<RegionStarData> = createMockRegionStarNodeProps();
 
-  const mockNodeProps: NodeProps<RegionStarData> = {
-    id: 'node-work',
-    data: mockData,
-    selected: false,
-    isConnecting: false,
-    xNode: 100,
-    yNode: 100,
-    type: 'regionStar',
-    xPos: 100,
-    yPos: 100,
-    dragging: false,
-  };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  useCommonTestSetup();
 
   it('renders without crashing with required props', () => {
     const { container } = render(<RegionStar {...mockNodeProps} />);

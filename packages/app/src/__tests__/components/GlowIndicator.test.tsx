@@ -10,9 +10,10 @@
  * - Accessibility attributes
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { render } from '@testing-library/react';
 import { GlowIndicator, type GlowIndicatorProps } from '../../components/common/GlowIndicator';
+import { useCommonTestSetup } from '../../__tests__/utils';
 
 describe('GlowIndicator', () => {
   const requiredProps: GlowIndicatorProps = {
@@ -21,9 +22,7 @@ describe('GlowIndicator', () => {
     children: <span>Test</span>,
   };
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  useCommonTestSetup();
 
   it('renders without crashing with required props', () => {
     const { container } = render(<GlowIndicator {...requiredProps} />);
