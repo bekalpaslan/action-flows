@@ -12,7 +12,8 @@ import type {
   Timestamp,
   WorkspaceEvent,
   HarmonyCheck,
-  HarmonyMetrics
+  HarmonyMetrics,
+  GateTrace
 } from '@afw/shared';
 import type { GateId } from '@afw/shared';
 import type { Storage } from '../storage/index.js';
@@ -146,18 +147,15 @@ export class HealingRecommendationEngine extends EventEmitter {
     target: SessionId | ProjectId,
     targetType: 'session' | 'project' = 'session'
   ): Promise<HealingRecommendation[]> {
-    // Get recent violations
-    const checks = await this.storage.getHarmonyChecks(target, {
-      result: 'violation',
-      limit: 100,
-    });
+    // Get gate traces from Redis
+    const traces = await this.getGateTraces();
 
-    if (checks.length === 0) {
+    if (traces.length === 0) {
       return [];
     }
 
-    // Detect drift patterns
-    const patterns = this.detectDriftPatterns(checks);
+    // Detect drift patterns from traces
+    const patterns = this.detectDriftPatterns(traces);
 
     // Generate recommendations
     const recommendations: HealingRecommendation[] = [];
@@ -261,36 +259,91 @@ export class HealingRecommendationEngine extends EventEmitter {
   // --- Private helper methods ---
 
   /**
-   * Detect drift patterns from harmony checks
+   * Get all gate traces from Redis storage
+   * Copied pattern from healthScoreCalculator.ts
    */
-  private detectDriftPatterns(checks: HarmonyCheck[]): DriftPattern[] {
+  private async getGateTraces(): Promise<GateTrace[]> {
+    try {
+      const pattern = `harmony:gate:*`;
+
+      let keys: string[] = [];
+      if ('keys' in this.storage && typeof (this.storage as any).keys === 'function') {
+        keys = await (this.storage as any).keys(pattern);
+      } else {
+        console.debug('[HealingRecommendations] Storage does not support keys() method');
+        return [];
+      }
+
+      const traces: GateTrace[] = [];
+
+      for (const key of keys) {
+        try {
+          let data: string | null = null;
+          if ('get' in this.storage && typeof (this.storage as any).get === 'function') {
+            data = await (this.storage as any).get(key);
+          }
+
+          if (data) {
+            traces.push(JSON.parse(data));
+          }
+        } catch (parseError) {
+          console.warn(`[HealingRecommendations] Failed to parse trace from key ${key}:`, parseError);
+        }
+      }
+
+      return traces;
+    } catch (error) {
+      console.error('[HealingRecommendations] Error retrieving gate traces:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Detect drift patterns from gate traces
+   * Extracts violations from GateTrace.validationResult.violations[]
+   */
+  private detectDriftPatterns(traces: GateTrace[]): DriftPattern[] {
     const patternMap = new Map<string, DriftPattern>();
 
-    for (const check of checks) {
-      const pattern = this.identifyPattern(check);
-      const gateId = this.inferGateFromContext(check);
-
-      if (!patternMap.has(pattern)) {
-        patternMap.set(pattern, {
-          pattern,
-          gates: [],
-          frequency: 0,
-          firstSeen: check.timestamp,
-          lastSeen: check.timestamp,
-          affectedSessions: [],
-        });
+    for (const trace of traces) {
+      // Only process traces with violations
+      if (!trace.validationResult || trace.validationResult.passed) {
+        continue;
       }
 
-      const drift = patternMap.get(pattern)!;
-      drift.frequency++;
-      drift.lastSeen = check.timestamp;
+      const violations = trace.validationResult.violations || [];
 
-      if (gateId && !drift.gates.includes(gateId)) {
-        drift.gates.push(gateId);
-      }
+      for (const violationMsg of violations) {
+        // Extract pattern from violation message
+        const pattern = this.extractPatternFromViolation(violationMsg);
 
-      if (!drift.affectedSessions.includes(check.sessionId)) {
-        drift.affectedSessions.push(check.sessionId);
+        if (!patternMap.has(pattern)) {
+          patternMap.set(pattern, {
+            pattern,
+            gates: [],
+            frequency: 0,
+            firstSeen: trace.timestamp,
+            lastSeen: trace.timestamp,
+            affectedSessions: [],
+          });
+        }
+
+        const drift = patternMap.get(pattern)!;
+        drift.frequency++;
+        drift.lastSeen = trace.timestamp;
+
+        // Add gate if not already present
+        if (!drift.gates.includes(trace.gateId)) {
+          drift.gates.push(trace.gateId);
+        }
+
+        // Add session if chainId exists and not already tracked
+        if (trace.chainId) {
+          const sessionId = trace.chainId.split('-')[0] as SessionId;
+          if (sessionId && !drift.affectedSessions.includes(sessionId)) {
+            drift.affectedSessions.push(sessionId);
+          }
+        }
       }
     }
 
@@ -298,54 +351,54 @@ export class HealingRecommendationEngine extends EventEmitter {
   }
 
   /**
-   * Identify pattern type from harmony check
+   * Extract pattern key from violation message
+   * Maps violation strings to PATTERN_FLOW_MAP keys using case-insensitive substring matching
    */
-  private identifyPattern(check: HarmonyCheck): string {
-    if (!check.parsedFormat || check.parsedFormat === 'Unknown') {
-      return 'unknown-format';
-    }
+  private extractPatternFromViolation(violation: string): string {
+    const lowerViolation = violation.toLowerCase();
 
-    if (check.result === 'violation') {
-      return 'parse-failed';
-    }
-
-    if (check.result === 'degraded' && check.missingFields) {
-      // Check for specific missing fields
-      if (check.missingFields.includes('status')) {
-        return 'missing-status-column';
-      }
+    // Missing field patterns
+    if ((lowerViolation.includes('missing') && lowerViolation.includes('step table')) ||
+        (lowerViolation.includes('missing') && lowerViolation.includes('field'))) {
       return 'missing-field';
     }
 
+    // Missing status/column patterns
+    if ((lowerViolation.includes('missing') && lowerViolation.includes('status')) ||
+        (lowerViolation.includes('missing') && lowerViolation.includes('column'))) {
+      return 'missing-status-column';
+    }
+
+    // Unknown format patterns
+    if ((lowerViolation.includes('format') && lowerViolation.includes('not detected')) ||
+        lowerViolation.includes('unknown format')) {
+      return 'unknown-format';
+    }
+
+    // Parse failure patterns
+    if (lowerViolation.includes('parse') && lowerViolation.includes('fail')) {
+      return 'parse-failed';
+    }
+
+    // Type error patterns
+    if (lowerViolation.includes('type') && lowerViolation.includes('error')) {
+      return 'type-error';
+    }
+
+    // WebSocket mismatch patterns
+    if (lowerViolation.includes('websocket')) {
+      return 'websocket-mismatch';
+    }
+
+    // Degraded parse patterns
+    if (lowerViolation.includes('degraded')) {
+      return 'degraded-parse';
+    }
+
+    // Default fallback
     return 'format-mismatch';
   }
 
-  /**
-   * Infer gate ID from check context
-   */
-  private inferGateFromContext(check: HarmonyCheck): GateId | null {
-    // Try to infer from context
-    const context = check.context as any;
-
-    if (context?.actionType?.includes('compile')) {
-      return 'gate-04';
-    }
-
-    if (context?.actionType?.includes('execution')) {
-      return 'gate-06';
-    }
-
-    if (check.parsedFormat?.includes('Chain')) {
-      return 'gate-04';
-    }
-
-    if (check.parsedFormat?.includes('Step')) {
-      return 'gate-06';
-    }
-
-    // Default to gate-09 (agent output validation)
-    return 'gate-09';
-  }
 
   /**
    * Classify severity based on pattern frequency and impact
