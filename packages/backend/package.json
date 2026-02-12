@@ -11,7 +11,8 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "harmony:enforce": "npx tsx src/cli/harmony-enforce.ts"
+    "harmony:enforce": "npx tsx src/cli/harmony-enforce.ts",
+    "contracts:validate": "npx tsx src/cli/validate-contracts.ts"
   },
   "dependencies": {
     "@afw/shared": "workspace:*",

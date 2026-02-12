@@ -26,7 +26,8 @@
     "ci:contracts": "tsx scripts/health-check-ci.ts",
     "setup:hooks": "bash scripts/setup-hooks.sh",
     "generate:tests": "tsx scripts/generate-test-scaffolds.ts",
-    "build:desktop": "pnpm -F @afw/shared build && pnpm -F @afw/backend build && pnpm -F @afw/app electron-build:win"
+    "build:desktop": "pnpm -F @afw/shared build && pnpm -F @afw/backend build && pnpm -F @afw/app electron-build:win",
+    "contracts:validate": "tsx packages/backend/src/cli/validate-contracts.ts"
   },
   "workspaces": [
     "packages/*"
