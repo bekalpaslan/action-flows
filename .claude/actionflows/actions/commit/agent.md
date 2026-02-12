@@ -60,6 +60,17 @@ Stage specified files, create a well-formatted conventional commit, and optional
 - **DEBUG:** + git status + staged files
 - **TRACE:** + commit message construction + all git output
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| tool-usage | Yes | Git operations (status, add, commit, push) |
+
+**Commit-specific trace depth:**
+- INFO: Commit hash + push status only
+- DEBUG: + git status + staged files
+- TRACE: + commit message construction + all git output
+
 ---
 
 ## Steps to Complete This Action

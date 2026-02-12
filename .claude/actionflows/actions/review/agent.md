@@ -65,6 +65,19 @@ Review the specified changes for correctness, security, performance, and pattern
 - **DEBUG:** + tool calls + reasoning steps + severity decisions
 - **TRACE:** + all files examined + alternatives considered + scoring logic
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| agent-reasoning | Yes | Review criteria and severity assessments |
+| tool-usage | Yes | File reads, checklist validation |
+| data-flow | Yes | Finding aggregation and scoring calculation |
+
+**Review-specific trace depth:**
+- INFO: review-report.md only
+- DEBUG: + tool calls, reasoning steps, severity decisions
+- TRACE: + all files examined, alternatives considered, scoring logic
+
 ---
 
 ## Steps to Complete This Action

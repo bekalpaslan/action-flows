@@ -62,6 +62,19 @@ Create a detailed implementation plan with ordered steps, file predictions, depe
 - **DEBUG:** + tool calls + design decisions + risk analysis
 - **TRACE:** + all alternatives considered + pattern exploration + dead ends
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| agent-reasoning | Yes | Design decisions and approach rationale |
+| tool-usage | Yes | File reads, greps, pattern exploration |
+| data-flow | Yes | Dependency tracing across packages |
+
+**Plan-specific trace depth:**
+- INFO: plan.md only
+- DEBUG: + tool calls + design decisions + risk analysis
+- TRACE: + all alternatives considered + pattern exploration + dead ends
+
 ---
 
 ## Steps to Complete This Action

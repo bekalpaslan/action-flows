@@ -65,6 +65,19 @@ Perform quantitative analysis of the specified scope, producing structured repor
 - **DEBUG:** + tool calls + reasoning steps + metric calculations
 - **TRACE:** + all alternatives considered + dead ends + data samples
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| agent-reasoning | Yes | Analysis approach and pattern detection logic |
+| tool-usage | Yes | File reads (Read, Glob, Grep) |
+| data-flow | Yes | Metrics collection and transformation |
+
+**Analysis-specific trace depth:**
+- INFO: Analysis report only, no internal reasoning
+- DEBUG: + reasoning steps, tool usage, data flow
+- TRACE: + all alternatives considered, scoring details, dead ends explored
+
 ---
 
 ## Steps to Complete This Action

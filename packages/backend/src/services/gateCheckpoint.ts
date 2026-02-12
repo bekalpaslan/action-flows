@@ -4,11 +4,54 @@
  * Backend service that validates orchestrator outputs at decision boundaries.
  * Creates gate traces by parsing existing orchestrator formats — NO extra orchestrator burden.
  *
- * Architecture:
- * - Orchestrator outputs naturally according to CONTRACT.md
- * - Backend parses outputs at gate boundaries
- * - Harmony stores traces in Redis/Memory (7-day TTL)
- * - WebSocket broadcasts real-time gate passages
+ * ## Architecture
+ * ```
+ * Orchestrator outputs Format X.Y (e.g., Chain Compilation)
+ *           ↓
+ * Backend parses at gate checkpoint (e.g., Gate 4)
+ *           ↓
+ * Validation passes/fails
+ *           ↓
+ * Gate trace stored in Harmony (Redis, 7d TTL)
+ *           ↓
+ * Frontend displays via GateTraceViewer component
+ * ```
+ *
+ * ## Gate Checkpoints
+ *
+ * ### Gate 2: Route to Context
+ * - **Trigger:** Orchestrator outputs context routing decision
+ * - **Logs:** orchestrator-decision, gate-passage
+ * - **Validation:** Extract context name, validate against enum
+ * - **Trace depth:** INFO=context only, DEBUG=+alternatives scored, TRACE=+keyword extraction
+ *
+ * ### Gate 4: Compile Chain
+ * - **Trigger:** Orchestrator outputs Format 1.1 (Chain Compilation Table)
+ * - **Logs:** orchestrator-decision, chain-compilation, gate-passage, configuration
+ * - **Validation:** Parse Format 1.1, validate required fields, check step counts
+ * - **Trace depth:** INFO=chain steps, DEBUG=+rationale/alternatives, TRACE=+parallelization analysis
+ *
+ * ### Gate 6: Step Boundary Evaluation
+ * - **Trigger:** Orchestrator outputs Format 2.1 (Step Completion)
+ * - **Logs:** orchestrator-decision, gate-passage, agent-reasoning
+ * - **Validation:** Parse Format 2.1, check 6-trigger signals
+ * - **6-triggers:** [SIGNAL], [PATTERN], [DEPENDENCY], [QUALITY], [REDESIGN], [REUSE]
+ * - **Trace depth:** INFO=decision only, DEBUG=+triggers fired, TRACE=+trigger matching logic
+ *
+ * ### Gate 9: Agent Output Validation
+ * - **Trigger:** Agent completes, output file written to log folder
+ * - **Logs:** agent-reasoning, tool-usage, data-flow
+ * - **Validation:** Delegate to AgentValidator, validate format by action type
+ * - **Trace depth:** INFO=pass/fail+harmony, DEBUG=+violations, TRACE=+parsing details
+ *
+ * ### Gate 13: Learning Surface
+ * - **Trigger:** Orchestrator outputs Format 3.2 (Learning Surface)
+ * - **Logs:** orchestrator-decision, gate-passage
+ * - **Validation:** Validate Issue/Root Cause/Suggestion fields
+ * - **Trace depth:** INFO=learning recorded, DEBUG=+full text, TRACE=+categorization
+ *
+ * ## GateTrace Fields (all gates)
+ * @see packages/shared/src/types/gateTrace.ts for interface definition
  */
 
 import { EventEmitter } from 'events';

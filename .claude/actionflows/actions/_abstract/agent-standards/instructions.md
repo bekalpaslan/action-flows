@@ -191,3 +191,77 @@ This abstract extends all agent contracts with:
 - All agents MUST validate output exists before completing (Standard #10)
 - All agents MUST surface partial completions as learnings, not next-steps (Standard #13)
 - All agents MUST produce `agent-reasoning` log type at DEBUG level
+
+---
+
+## Trace Standards
+
+### Log Levels
+
+All agents operate at one of five log levels:
+
+| Level | Value | Use |
+|-------|-------|-----|
+| TRACE | 10 | Maximum verbosity, every decision point |
+| DEBUG | 20 | Reasoning steps, decision alternatives (default for most agents) |
+| INFO | 30 | Key decisions, state changes, milestones |
+| WARN | 40 | Warnings, deferred work, incomplete states |
+| ERROR | 50 | Failures, unrecoverable errors |
+
+**Level Selection:**
+- Standard chains: INFO
+- Debugging failing chains: DEBUG
+- Deep investigation: TRACE
+- High-stakes work: DEBUG
+
+### Log Type: tool-usage
+
+Every tool call MUST be logged:
+
+```yaml
+timestamp: ISO 8601
+tool: [Bash|Read|Glob|Grep|Edit|Write|Task|etc]
+operation: [command for Bash, file_path for Read, pattern for Glob, etc]
+caller: [orchestrator|analyze|code|review|etc]
+purpose: [why was this tool used?]
+status: [started|completed|error]
+result_summary: [brief outcome]
+duration_ms: [execution time]
+```
+
+### Log Type: agent-reasoning
+
+Agents MUST log internal reasoning at DEBUG+ level:
+
+```yaml
+timestamp: ISO 8601
+agent: [action-type/subtype]
+task: [assigned task]
+phase: [startup|analysis|reasoning|decision|execution|completion]
+reasoning: [what is agent thinking?]
+alternatives: [options considered]
+chosen_approach: [which approach selected]
+confidence: [high|medium|low]
+next_step: [what will happen next]
+```
+
+### Log Type: data-flow
+
+Data processing operations MUST be logged:
+
+```yaml
+timestamp: ISO 8601
+operation: [read|transform|write|parse|validate]
+source: [file path or origin]
+destination: [file path or destination]
+data_type: [json|markdown|typescript|yaml|csv|etc]
+record_count: [number of records/lines processed]
+validation_status: [valid|partial|invalid]
+```
+
+### Trace Depth Convention
+
+All agents follow this trace depth pattern:
+- **INFO:** Final output only (report.md, changes.md)
+- **DEBUG:** + tool calls + reasoning steps + decisions
+- **TRACE:** + all alternatives considered + dead ends + data samples

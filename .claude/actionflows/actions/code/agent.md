@@ -68,6 +68,18 @@ Follow harmony evolution rules: increment CONTRACT_VERSION if breaking, support 
 - **DEBUG:** + tool calls + implementation decisions
 - **TRACE:** + all alternatives considered + pattern exploration
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| agent-reasoning | Yes | Implementation approach and pattern decisions |
+| tool-usage | Yes | File operations (Read, Edit, Write, Bash for type-check) |
+
+**Code-specific trace depth:**
+- INFO: Changes summary, validation results
+- DEBUG: + reasoning, tool calls, file modifications detailed
+- TRACE: + all considered approaches, refactored code versions
+
 ---
 
 ## Steps to Complete This Action

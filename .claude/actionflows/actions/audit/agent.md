@@ -62,6 +62,18 @@ Perform a comprehensive audit of the specified scope, categorizing all findings 
 - **DEBUG:** + file scan list + severity decision rationale
 - **TRACE:** + all files examined + all checks performed + false positives considered
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| agent-reasoning | Yes | Audit decisions and severity classifications |
+| tool-usage | Yes | File scans, reads, and remediation edits |
+
+**Audit-specific trace depth:**
+- INFO: audit-report.md only
+- DEBUG: + file scan list + severity decision rationale
+- TRACE: + all files examined + all checks performed + false positives considered
+
 ---
 
 ## Steps to Complete This Action
