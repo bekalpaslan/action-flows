@@ -26,7 +26,11 @@ vi.mock('../../contexts/SessionContext', () => ({
       }),
     ] as Session[],
     activeSessionId: 'session-123' as SessionId,
+    isLoading: false,
+    createSession: vi.fn(),
+    deleteSession: vi.fn(),
     setActiveSession: vi.fn(),
+    getSession: vi.fn(),
   }),
 }));
 
@@ -45,7 +49,19 @@ vi.mock('../../contexts/UniverseContext', () => ({
       bridges: [],
       gates: [],
     },
+    isLoading: false,
+    error: null,
     navigateToRegion: vi.fn(),
+    zoomToRegion: vi.fn(),
+    returnToGodView: vi.fn(),
+    getRegion: vi.fn(),
+    getRegionByWorkbench: vi.fn(),
+    getBridge: vi.fn(),
+    isRegionAccessible: vi.fn(() => false),
+    refreshUniverse: vi.fn(),
+    zoomTargetRegionId: null,
+    targetWorkbenchId: null,
+    clearZoomTarget: vi.fn(),
   }),
 }));
 

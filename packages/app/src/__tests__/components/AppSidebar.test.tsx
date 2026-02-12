@@ -31,14 +31,28 @@ vi.mock('../../contexts/WorkbenchContext', () => ({
   useWorkbenchContext: () => ({
     activeWorkbench: 'work' as WorkbenchId,
     setActiveWorkbench: mockSetActiveWorkbench,
+    workbenchConfigs: new Map(),
     workbenchNotifications: mockWorkbenchNotifications,
+    addNotification: vi.fn(),
+    clearNotifications: vi.fn(),
+    previousWorkbench: null,
+    goBack: vi.fn(),
+    routingFilter: null,
+    setRoutingFilter: vi.fn(),
+    filterSessionsByContext: vi.fn((sessions: any) => sessions),
+    activeTool: null,
+    setActiveTool: vi.fn(),
   }),
 }));
 
 vi.mock('../../contexts/WebSocketContext', () => ({
   useWebSocketContext: () => ({
     status: 'connected',
+    error: null,
     send: vi.fn(),
+    subscribe: vi.fn(),
+    unsubscribe: vi.fn(),
+    onEvent: vi.fn(() => vi.fn()),
   }),
 }));
 

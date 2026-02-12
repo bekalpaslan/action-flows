@@ -20,16 +20,31 @@ import { useCommonTestSetup, createMockRegionStarData, createMockRegionStarNodeP
 // Mock contexts
 vi.mock('../../contexts/UniverseContext', () => ({
   useUniverseContext: () => ({
+    universe: null,
+    isLoading: false,
+    error: null,
     navigateToRegion: vi.fn(),
+    zoomToRegion: vi.fn(),
+    returnToGodView: vi.fn(),
+    getRegion: vi.fn(),
+    getRegionByWorkbench: vi.fn(),
+    getBridge: vi.fn(),
     isRegionAccessible: vi.fn((regionId) => true),
+    refreshUniverse: vi.fn(),
+    zoomTargetRegionId: null,
+    targetWorkbenchId: null,
+    clearZoomTarget: vi.fn(),
   }),
 }));
 
 vi.mock('../../contexts/WebSocketContext', () => ({
   useWebSocketContext: () => ({
-    onEvent: null,
     status: 'connected',
+    error: null,
     send: vi.fn(),
+    subscribe: vi.fn(),
+    unsubscribe: vi.fn(),
+    onEvent: vi.fn(() => vi.fn()),
   }),
 }));
 

@@ -20,28 +20,49 @@ import { useCommonTestSetup, createMockChatMessages, createMockPromptButtons } f
 vi.mock('../../contexts/WebSocketContext', () => ({
   useWebSocketContext: () => ({
     status: 'connected',
+    error: null,
     send: vi.fn(),
-    onEvent: null,
+    subscribe: vi.fn(),
+    unsubscribe: vi.fn(),
+    onEvent: vi.fn(() => vi.fn()),
   }),
 }));
 
 vi.mock('../../contexts/DiscussContext', () => ({
   useDiscussContext: () => ({
-    sessionId: 'session-test' as SessionId,
-    model: 'claude-3-sonnet',
     registerChatInput: vi.fn(),
     unregisterChatInput: vi.fn(),
+    prefillChatInput: vi.fn(),
+    registerDiscussionMessage: vi.fn(),
+    getDiscussionMessage: vi.fn(() => null),
+    clearDiscussionMessage: vi.fn(),
   }),
 }));
 
 vi.mock('../../contexts/ChatWindowContext', () => ({
   useChatWindowContext: () => ({
-    selectedModel: 'claude-3-sonnet',
+    isOpen: true,
+    sessionId: 'session-test' as SessionId,
+    source: 'test-source',
+    chatWidth: 40,
+    selectedModel: 'sonnet-4.5',
+    isMinimized: false,
+    unreadCount: 0,
+    openChat: vi.fn(),
+    closeChat: vi.fn(),
+    toggleChat: vi.fn(),
+    setChatWidth: vi.fn(),
+    setSessionId: vi.fn(),
     setSelectedModel: vi.fn(),
+    minimizeChat: vi.fn(),
+    restoreChat: vi.fn(),
+    incrementUnreadCount: vi.fn(),
+    resetUnreadCount: vi.fn(),
   }),
   AVAILABLE_MODELS: [
-    { id: 'claude-3-sonnet', label: 'Claude 3 Sonnet' },
-    { id: 'claude-3-opus', label: 'Claude 3 Opus' },
+    { id: 'opus-4.6', label: 'Opus 4.6' },
+    { id: 'sonnet-4.5', label: 'Sonnet 4.5' },
+    { id: 'haiku-4.5', label: 'Haiku 4.5' },
   ],
 }));
 

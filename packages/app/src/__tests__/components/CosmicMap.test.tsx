@@ -76,11 +76,17 @@ vi.mock('../../contexts/UniverseContext', () => ({
     },
     isLoading: false,
     error: null,
-    zoomTargetRegionId: null,
-    clearZoomTarget: vi.fn(),
     navigateToRegion: vi.fn(),
+    zoomToRegion: vi.fn(),
+    returnToGodView: vi.fn(),
+    getRegion: vi.fn(),
+    getRegionByWorkbench: vi.fn(),
+    getBridge: vi.fn(),
     isRegionAccessible: vi.fn(() => true),
     refreshUniverse: vi.fn(),
+    zoomTargetRegionId: null,
+    targetWorkbenchId: null,
+    clearZoomTarget: vi.fn(),
   })),
   UniverseProvider: ({ children }: any) => children,
 }));
@@ -88,8 +94,11 @@ vi.mock('../../contexts/UniverseContext', () => ({
 vi.mock('../../contexts/WebSocketContext', () => ({
   useWebSocketContext: () => ({
     status: 'connected',
-    onEvent: null,
+    error: null,
     send: vi.fn(),
+    subscribe: vi.fn(),
+    unsubscribe: vi.fn(),
+    onEvent: vi.fn(() => vi.fn()),
   }),
 }));
 
@@ -97,9 +106,11 @@ vi.mock('../../contexts/SessionContext', () => ({
   useSessionContext: () => ({
     sessions: [],
     activeSessionId: null,
-    setActiveSession: vi.fn(),
+    isLoading: false,
     createSession: vi.fn(),
     deleteSession: vi.fn(),
+    setActiveSession: vi.fn(),
+    getSession: vi.fn(),
   }),
 }));
 

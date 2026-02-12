@@ -26,7 +26,17 @@ vi.mock('../../contexts/WorkbenchContext', () => ({
   useWorkbenchContext: () => ({
     activeWorkbench: 'work',
     setActiveWorkbench: vi.fn(),
-    workbenchNotifications: {},
+    workbenchConfigs: new Map(),
+    workbenchNotifications: new Map(),
+    addNotification: vi.fn(),
+    clearNotifications: vi.fn(),
+    previousWorkbench: null,
+    goBack: vi.fn(),
+    routingFilter: null,
+    setRoutingFilter: vi.fn(),
+    filterSessionsByContext: vi.fn((sessions: any) => sessions),
+    activeTool: null,
+    setActiveTool: vi.fn(),
   }),
 }));
 
@@ -39,23 +49,51 @@ vi.mock('../../contexts/UniverseContext', () => ({
     },
     isLoading: false,
     error: null,
+    navigateToRegion: vi.fn(),
+    zoomToRegion: vi.fn(),
+    returnToGodView: vi.fn(),
+    getRegion: vi.fn(),
+    getRegionByWorkbench: vi.fn(),
+    getBridge: vi.fn(),
+    isRegionAccessible: vi.fn(() => false),
+    refreshUniverse: vi.fn(),
+    zoomTargetRegionId: null,
     targetWorkbenchId: null,
+    clearZoomTarget: vi.fn(),
   }),
 }));
 
 vi.mock('../../contexts/SessionContext', () => ({
   useSessionContext: () => ({
-    getSession: vi.fn().mockReturnValue(null),
     sessions: [],
     activeSessionId: null,
+    isLoading: false,
+    createSession: vi.fn(),
+    deleteSession: vi.fn(),
+    setActiveSession: vi.fn(),
+    getSession: vi.fn().mockReturnValue(undefined),
   }),
 }));
 
 vi.mock('../../contexts/ChatWindowContext', () => ({
   useChatWindowContext: () => ({
+    isOpen: false,
     sessionId: null,
-    closeChat: vi.fn(),
+    source: null,
+    chatWidth: 40,
+    selectedModel: 'sonnet-4.5',
+    isMinimized: false,
+    unreadCount: 0,
     openChat: vi.fn(),
+    closeChat: vi.fn(),
+    toggleChat: vi.fn(),
+    setChatWidth: vi.fn(),
+    setSessionId: vi.fn(),
+    setSelectedModel: vi.fn(),
+    minimizeChat: vi.fn(),
+    restoreChat: vi.fn(),
+    incrementUnreadCount: vi.fn(),
+    resetUnreadCount: vi.fn(),
   }),
 }));
 
