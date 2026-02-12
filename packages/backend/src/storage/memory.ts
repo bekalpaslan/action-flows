@@ -1,6 +1,6 @@
 import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
-import { brandedTypes, calculateFreshnessGrade, duration, sessionSchema, chainSchema, workspaceEventSchema, validateStorageData } from '@afw/shared';
+import { brandedTypes, calculateFreshnessGrade, duration, sessionSchema, chainSchema, workspaceEventSchema, validateStorageData, chatMessageSchema, reminderInstanceSchema, telemetryEntrySchema, sessionWindowConfigSchema, errorInstanceSchema } from '@afw/shared';
 import { lifecycleManager } from './lifecycleHooks.js';
 
 /**
@@ -194,9 +194,13 @@ export const storage: MemoryStorage = {
     if (!session) return undefined;
     // Validate session on retrieval for data integrity
     const validated = validateStorageData(session, sessionSchema, `getSession(${sessionId})`);
-    return validated as Session | undefined || session;
+    return (validated || session) as Session;
   },
   setSession(session: Session) {
+    // Validate session data integrity (Critical - corrupt sessions break entire app)
+    const validated = validateStorageData(session, sessionSchema, `setSession(${session.id})`);
+    if (!validated) return; // Drop invalid session
+
     // If at capacity and this is a new session, evict oldest completed
     if (!this.sessions.has(session.id) && this.sessions.size >= MAX_SESSIONS) {
       this._evictOldestCompletedSession();
@@ -260,7 +264,7 @@ export const storage: MemoryStorage = {
   // Events
   events: new Map(),
   addEvent(sessionId: SessionId, event: WorkspaceEvent) {
-    // Validate event on ingestion for data integrity
+    // Validate event on ingestion for data integrity (High - 10K+ events, prevents type violations)
     const validated = validateStorageData(event, workspaceEventSchema, `addEvent(${sessionId})`);
     if (!validated) {
       console.warn(`[Storage] Dropping invalid event for session ${sessionId}:`, event);
@@ -268,7 +272,7 @@ export const storage: MemoryStorage = {
     }
 
     const events = this.events.get(sessionId) || [];
-    events.push(validated as WorkspaceEvent);
+    events.push(event);
     // Evict oldest if over limit (FIFO)
     if (events.length > MAX_EVENTS_PER_SESSION) {
       events.splice(0, events.length - MAX_EVENTS_PER_SESSION);
@@ -295,6 +299,10 @@ export const storage: MemoryStorage = {
   // Chains
   chains: new Map(),
   addChain(sessionId: SessionId, chain: Chain) {
+    // Validate chain data integrity (Critical - state machine integrity)
+    const validated = validateStorageData(chain, chainSchema, `addChain(${sessionId})`);
+    if (!validated) return; // Drop invalid chain
+
     const chains = this.chains.get(sessionId) || [];
     chains.push(chain);
     // Evict oldest if over limit (FIFO)
@@ -315,7 +323,7 @@ export const storage: MemoryStorage = {
       if (chain) {
         // Validate chain on retrieval for data integrity
         const validated = validateStorageData(chain, chainSchema, `getChain(${chainId})`);
-        return validated as Chain | undefined || chain;
+        return (validated || chain) as Chain;
       }
     }
     return undefined;
@@ -398,7 +406,11 @@ export const storage: MemoryStorage = {
     return Array.from(this.followedSessions);
   },
   setSessionWindowConfig(sessionId: SessionId, config: SessionWindowConfig) {
-    this.sessionWindowConfigs.set(sessionId, config);
+    // Validate session window config data integrity (Medium - UI config integrity)
+    const validated = validateStorageData(config, sessionWindowConfigSchema, `setSessionWindowConfig(${sessionId})`);
+    if (!validated) return; // Drop invalid config
+
+    this.sessionWindowConfigs.set(sessionId, validated as SessionWindowConfig);
   },
   getSessionWindowConfig(sessionId: SessionId) {
     return this.sessionWindowConfigs.get(sessionId);
@@ -628,6 +640,10 @@ export const storage: MemoryStorage = {
   },
 
   addChatMessage(sessionId: SessionId, message: ChatMessage) {
+    // Validate chat message data integrity (High - prevents XSS/injection)
+    const validated = validateStorageData(message, chatMessageSchema, `addChatMessage(${sessionId})`);
+    if (!validated) return; // Drop invalid message
+
     const messages = this.chatHistory.get(sessionId) || [];
     messages.push(message);
     // Evict oldest if over limit (FIFO)
@@ -831,6 +847,10 @@ export const storage: MemoryStorage = {
   // Telemetry storage
   telemetryEntries: [],
   addTelemetryEntry(entry: TelemetryEntry) {
+    // Validate telemetry entry data integrity (Low - observability quality)
+    const validated = validateStorageData(entry, telemetryEntrySchema, 'addTelemetryEntry');
+    if (!validated) return; // Drop invalid entry
+
     this.telemetryEntries.push(entry);
     // FIFO eviction at MAX_TELEMETRY_ENTRIES
     if (this.telemetryEntries.length > MAX_TELEMETRY_ENTRIES) {
@@ -922,6 +942,10 @@ export const storage: MemoryStorage = {
   },
 
   addReminderInstance(instance: ReminderInstance): void {
+    // Validate reminder instance data integrity (Medium - prevents orphaned reminders)
+    const validated = validateStorageData(instance, reminderInstanceSchema, `addReminderInstance(${instance.id})`);
+    if (!validated) return; // Drop invalid instance
+
     // FIFO eviction at MAX_REMINDER_INSTANCES
     if (!this.reminderInstances.has(instance.id) && this.reminderInstances.size >= MAX_REMINDER_INSTANCES) {
       // Evict oldest instance
@@ -930,7 +954,7 @@ export const storage: MemoryStorage = {
         this.reminderInstances.delete(oldestId);
       }
     }
-    this.reminderInstances.set(instance.id, instance);
+    this.reminderInstances.set(instance.id, validated as ReminderInstance);
   },
 
   markReminderAddressed(instanceId: string): boolean {
@@ -967,6 +991,10 @@ export const storage: MemoryStorage = {
   errors: new Map<SessionId, ErrorInstance[]>(),
 
   addError(error: ErrorInstance): void {
+    // Validate error instance data integrity (Medium - error tracking fidelity)
+    const validated = validateStorageData(error, errorInstanceSchema, `addError(${error.sessionId})`);
+    if (!validated) return; // Drop invalid error
+
     if (!this.errors.has(error.sessionId)) {
       this.errors.set(error.sessionId, []);
     }
@@ -978,7 +1006,7 @@ export const storage: MemoryStorage = {
       sessionErrors.shift();
     }
 
-    sessionErrors.push(error);
+    sessionErrors.push(validated as ErrorInstance);
   },
 
   getErrors(sessionId: SessionId, filter?: { chainId?: ChainId; dismissedOnly?: boolean }): ErrorInstance[] {

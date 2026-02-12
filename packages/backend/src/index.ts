@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import path from 'path';
+import fs from 'fs';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import type { IncomingMessage } from 'http';
@@ -550,8 +551,11 @@ if (isMainModule) {
 
     // Initialize ConversationWatcher (Gate validation for Claude Code sessions)
     try {
-      // Resolve monorepo root (2 levels up from packages/backend/)
-      const monorepoRoot = path.resolve(process.cwd(), '..', '..');
+      // Resolve monorepo root: use cwd if it has packages/, otherwise try up from __dirname
+      const cwd = process.cwd();
+      const monorepoRoot = fs.existsSync(path.join(cwd, 'packages'))
+        ? cwd
+        : path.resolve(new URL('.', import.meta.url).pathname, '..', '..', '..');
       initConversationWatcher(storage, monorepoRoot);
       console.log('[ConversationWatcher] ✅ Service initialized successfully for JSONL log monitoring');
     } catch (error) {

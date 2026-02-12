@@ -2,6 +2,17 @@ import { Redis } from 'ioredis';
 import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
+import {
+  validateStorageData,
+  sessionSchema,
+  workspaceEventSchema,
+  chainSchema,
+  chatMessageSchema,
+  errorInstanceSchema,
+  reminderInstanceSchema,
+  telemetryEntrySchema,
+  sessionWindowConfigSchema,
+} from '@afw/shared/schemas/storage';
 
 /**
  * Redis storage adapter for sessions, chains, events, commands, and input
@@ -174,12 +185,16 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async setSession(session: Session) {
       try {
+        // Validate session data before persisting (prevents corrupt sessions)
+        const validated = validateStorageData(session, sessionSchema, `setSession(${session.id})`);
+        if (!validated) return;
+
         const key = `${keyPrefix}sessions:${session.id}`;
-        await redis.setex(key, SESSION_TTL, JSON.stringify(session));
+        await redis.setex(key, SESSION_TTL, JSON.stringify(validated));
         // Update freshness
         const freshnessKey = `${keyPrefix}freshness:session`;
         const now = Date.now();
-        await redis.zadd(freshnessKey, now, session.id);
+        await redis.zadd(freshnessKey, now, validated.id);
         await redis.expire(freshnessKey, SESSION_TTL);
       } catch (error) {
         console.error(`[Redis] Error setting session ${session.id}:`, error);
@@ -207,8 +222,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     // === Events ===
     async addEvent(sessionId: SessionId, event: WorkspaceEvent) {
       try {
+        // Validate event data (prevents type violations in 10K+ event streams)
+        const validated = validateStorageData(event, workspaceEventSchema, `addEvent(${sessionId})`);
+        if (!validated) return;
+
         const key = `${keyPrefix}events:${sessionId}`;
-        const eventData = JSON.stringify(event);
+        const eventData = JSON.stringify(validated);
 
         // Push to Redis list
         await redis.rpush(key, eventData);
@@ -223,7 +242,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         // Publish to Pub/Sub channel for multi-instance broadcasting
         await pubClient.publish(`${keyPrefix}events`, JSON.stringify({
           sessionId,
-          event,
+          event: validated,
           timestamp: new Date().toISOString(),
         }));
       } catch (error) {
@@ -265,18 +284,22 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     // === Chains ===
     async addChain(sessionId: SessionId, chain: Chain) {
       try {
+        // Validate chain data (ensures state machine integrity)
+        const validated = validateStorageData(chain, chainSchema, `addChain(${sessionId})`);
+        if (!validated) return;
+
         const key = `${keyPrefix}chains:${sessionId}`;
-        await redis.rpush(key, JSON.stringify(chain));
+        await redis.rpush(key, JSON.stringify(validated));
         await redis.expire(key, EVENT_TTL);
 
         // Also store chain by ID for fast lookup
-        const chainKey = `${keyPrefix}chain:${chain.id}`;
-        await redis.setex(chainKey, EVENT_TTL, JSON.stringify(chain));
+        const chainKey = `${keyPrefix}chain:${validated.id}`;
+        await redis.setex(chainKey, EVENT_TTL, JSON.stringify(validated));
 
         // Update freshness for both chain and session
         const now = Date.now();
         const chainFreshnessKey = `${keyPrefix}freshness:chain`;
-        await redis.zadd(chainFreshnessKey, now, chain.id);
+        await redis.zadd(chainFreshnessKey, now, validated.id);
         await redis.expire(chainFreshnessKey, EVENT_TTL);
 
         const sessionFreshnessKey = `${keyPrefix}freshness:session`;
@@ -431,8 +454,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async setSessionWindowConfig(sessionId: SessionId, config: SessionWindowConfig) {
       try {
+        // Validate session window config (ensures UI config integrity)
+        const validated = validateStorageData(config, sessionWindowConfigSchema, `setSessionWindowConfig(${sessionId})`);
+        if (!validated) return;
+
         const key = `${keyPrefix}sw-config:${sessionId}`;
-        await redis.setex(key, SESSION_TTL, JSON.stringify(config));
+        await redis.setex(key, SESSION_TTL, JSON.stringify(validated));
       } catch (error) {
         console.error(`[Redis] Error setting session window config for ${sessionId}:`, error);
       }
@@ -509,11 +536,13 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
         // Use pipelining for batch mget
         let keys: string[] = [];
-        for await (const key of stream) {
-          keys.push(key);
+        for await (const batch of stream) {
+          // scanStream emits arrays of keys per batch
+          const batchKeys = Array.isArray(batch) ? batch : [batch];
+          keys.push(...batchKeys);
 
           // Batch fetch every 100 keys
-          if (keys.length === 100) {
+          if (keys.length >= 100) {
             const values = await redis.mget(keys);
             for (const data of values) {
               if (data) {
@@ -947,8 +976,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async addChatMessage(sessionId: SessionId, message: ChatMessage) {
       try {
+        // Validate chat message (prevents XSS/injection attacks)
+        const validated = validateStorageData(message, chatMessageSchema, `addChatMessage(${sessionId})`);
+        if (!validated) return;
+
         const key = `${keyPrefix}chat:${sessionId}`;
-        await redis.rpush(key, JSON.stringify(message));
+        await redis.rpush(key, JSON.stringify(validated));
         // Keep only last 1000 messages per session
         await redis.ltrim(key, -1000, -1);
         // Set TTL (24 hours, same as sessions)
@@ -1020,10 +1053,14 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     // === Telemetry Storage ===
     async addTelemetryEntry(entry: TelemetryEntry) {
       try {
+        // Validate telemetry entry (ensures observability quality)
+        const validated = validateStorageData(entry, telemetryEntrySchema, 'addTelemetryEntry');
+        if (!validated) return;
+
         const key = `${keyPrefix}telemetry`;
-        const entryJson = JSON.stringify(entry);
+        const entryJson = JSON.stringify(validated);
         // Use sorted set with timestamp as score for efficient time-based queries
-        const timestamp = new Date(entry.timestamp).getTime();
+        const timestamp = new Date(validated.timestamp).getTime();
         await redis.zadd(key, timestamp, entryJson);
 
         // Set 7-day TTL on the telemetry key
@@ -1147,11 +1184,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           count: 100,
         });
 
-        for await (const key of stream) {
-          keys.push(key);
+        for await (const batch of stream) {
+          const batchKeys = Array.isArray(batch) ? batch : [batch];
+          keys.push(...batchKeys);
 
           // Batch fetch every 100 keys
-          if (keys.length === 100) {
+          if (keys.length >= 100) {
             const values = await redis.mget(keys);
             for (const json of values) {
               if (json) {
@@ -1187,8 +1225,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async addReminderInstance(instance: ReminderInstance): Promise<void> {
       try {
-        const key = `${keyPrefix}reminder:instance:${instance.sessionId}:${instance.id}`;
-        await redis.set(key, JSON.stringify(instance));
+        // Validate reminder instance (prevents orphaned reminders)
+        const validated = validateStorageData(instance, reminderInstanceSchema, `addReminderInstance(${instance.sessionId})`);
+        if (!validated) return;
+
+        const key = `${keyPrefix}reminder:instance:${validated.sessionId}:${validated.id}`;
+        await redis.set(key, JSON.stringify(validated));
         await redis.expire(key, 604800); // 7 days TTL
       } catch (error) {
         console.error('[Redis] Error adding reminder instance:', error);
@@ -1204,19 +1246,22 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           count: 10,
         });
 
-        for await (const key of stream) {
-          const json = await redis.get(key);
-          if (!json) continue;
+        for await (const batch of stream) {
+          const batchKeys = Array.isArray(batch) ? batch : [batch];
+          for (const key of batchKeys) {
+            const json = await redis.get(key);
+            if (!json) continue;
 
-          const instance: ReminderInstance = JSON.parse(json);
-          instance.addressed = true;
-          instance.metadata = {
-            ...instance.metadata,
-            addressedAt: new Date().toISOString(),
-          };
+            const instance: ReminderInstance = JSON.parse(json);
+            instance.addressed = true;
+            instance.metadata = {
+              ...instance.metadata,
+              addressedAt: new Date().toISOString(),
+            };
 
-          await redis.set(key, JSON.stringify(instance));
-          return true;
+            await redis.set(key, JSON.stringify(instance));
+            return true;
+          }
         }
 
         return false;
@@ -1237,28 +1282,31 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           count: 100,
         });
 
-        for await (const key of stream) {
-          const json = await redis.get(key);
-          if (!json) continue;
+        for await (const batch of stream) {
+          const batchKeys = Array.isArray(batch) ? batch : [batch];
+          for (const key of batchKeys) {
+            const json = await redis.get(key);
+            if (!json) continue;
 
-          const instance: ReminderInstance = JSON.parse(json);
-          if (instance.chainId === chainId && !instance.addressed) {
-            instance.addressed = true;
-            instance.metadata = {
-              ...instance.metadata,
-              addressedAt: new Date().toISOString(),
-            };
-            updates.push([key, JSON.stringify(instance)]);
-            count++;
+            const instance: ReminderInstance = JSON.parse(json);
+            if (instance.chainId === chainId && !instance.addressed) {
+              instance.addressed = true;
+              instance.metadata = {
+                ...instance.metadata,
+                addressedAt: new Date().toISOString(),
+              };
+              updates.push([key, JSON.stringify(instance)]);
+              count++;
 
-            // Batch update every 50 items
-            if (updates.length === 50) {
-              const pipeline = redis.pipeline();
-              for (const [k, v] of updates) {
-                pipeline.set(k, v);
+              // Batch update every 50 items
+              if (updates.length === 50) {
+                const pipeline = redis.pipeline();
+                for (const [k, v] of updates) {
+                  pipeline.set(k, v);
+                }
+                await pipeline.exec();
+                updates.length = 0;
               }
-              await pipeline.exec();
-              updates.length = 0;
             }
           }
         }
@@ -1287,9 +1335,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           count: 10,
         });
 
-        for await (const key of stream) {
-          await redis.del(key);
-          return true;
+        for await (const batch of stream) {
+          const batchKeys = Array.isArray(batch) ? batch : [batch];
+          for (const key of batchKeys) {
+            await redis.del(key);
+            return true;
+          }
         }
 
         return false;
@@ -1302,8 +1353,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     // === Error Storage ===
     async addError(error: ErrorInstance) {
       try {
-        const key = `${keyPrefix}errors:${error.sessionId}`;
-        const errorData = JSON.stringify(error);
+        // Validate error data (ensures error tracking fidelity)
+        const validated = validateStorageData(error, errorInstanceSchema, `addError(${error.sessionId})`);
+        if (!validated) return;
+
+        const key = `${keyPrefix}errors:${validated.sessionId}`;
+        const errorData = JSON.stringify(validated);
 
         // Push to Redis list
         await redis.rpush(key, errorData);
@@ -1312,7 +1367,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         // Update freshness
         const freshnessKey = `${keyPrefix}freshness:errors`;
         const now = Date.now();
-        await redis.zadd(freshnessKey, now, error.sessionId);
+        await redis.zadd(freshnessKey, now, validated.sessionId);
         await redis.expire(freshnessKey, 86400);
       } catch (error) {
         console.error('[Redis] Error adding error instance:', error);
@@ -1345,14 +1400,17 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           count: 50,
         });
 
-        for await (const key of stream) {
-          const errors = await redis.lrange(key, 0, -1);
-          for (let i = 0; i < errors.length; i++) {
-            const error = JSON.parse(errors[i]) as ErrorInstance;
-            if (error.id === errorId) {
-              error.dismissed = dismissed;
-              await redis.lset(key, i, JSON.stringify(error));
-              return true;
+        for await (const batch of stream) {
+          const batchKeys = Array.isArray(batch) ? batch : [batch];
+          for (const key of batchKeys) {
+            const errors = await redis.lrange(key, 0, -1);
+            for (let i = 0; i < errors.length; i++) {
+              const error = JSON.parse(errors[i]!) as ErrorInstance;
+              if (error.id === errorId) {
+                error.dismissed = dismissed;
+                await redis.lset(key, i, JSON.stringify(error));
+                return true;
+              }
             }
           }
         }
@@ -1371,20 +1429,23 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           count: 50,
         });
 
-        for await (const key of stream) {
-          const errors = await redis.lrange(key, 0, -1);
-          const filtered = errors.map((e: string) => JSON.parse(e) as ErrorInstance)
-            .filter(e => e.id !== errorId)
-            .map(e => JSON.stringify(e));
+        for await (const batch of stream) {
+          const batchKeys = Array.isArray(batch) ? batch : [batch];
+          for (const key of batchKeys) {
+            const errors = await redis.lrange(key, 0, -1);
+            const filtered = errors.map((e: string) => JSON.parse(e) as ErrorInstance)
+              .filter(e => e.id !== errorId)
+              .map(e => JSON.stringify(e));
 
-          // Replace list if error was found
-          if (filtered.length < errors.length) {
-            await redis.del(key);
-            if (filtered.length > 0) {
-              await redis.rpush(key, ...filtered);
-              await redis.expire(key, 86400);
+            // Replace list if error was found
+            if (filtered.length < errors.length) {
+              await redis.del(key);
+              if (filtered.length > 0) {
+                await redis.rpush(key, ...filtered);
+                await redis.expire(key, 86400);
+              }
+              return true;
             }
-            return true;
           }
         }
         return false;
@@ -1406,23 +1467,26 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           count: 50,
         });
 
-        for await (const key of stream) {
-          const errors = await redis.lrange(key, 0, -1);
-          const filtered = errors.map((e: string) => JSON.parse(e) as ErrorInstance)
-            .filter(e => e.chainId !== chainId)
-            .map(e => JSON.stringify(e));
+        for await (const batch of stream) {
+          const batchKeys = Array.isArray(batch) ? batch : [batch];
+          for (const key of batchKeys) {
+            const errors = await redis.lrange(key, 0, -1);
+            const filtered = errors.map((e: string) => JSON.parse(e) as ErrorInstance)
+              .filter(e => e.chainId !== chainId)
+              .map(e => JSON.stringify(e));
 
-          const beforeLength = errors.length;
-          count += beforeLength - filtered.length;
+            const beforeLength = errors.length;
+            count += beforeLength - filtered.length;
 
-          // Track updates
-          deletes.push(key);
-          if (filtered.length > 0) {
-            updates.push([key, filtered]);
+            // Track updates
+            deletes.push(key);
+            if (filtered.length > 0) {
+              updates.push([key, filtered]);
+            }
           }
 
           // Batch updates every 50 keys
-          if (deletes.length === 50) {
+          if (deletes.length >= 50) {
             const pipeline = redis.pipeline();
             for (const k of deletes) {
               pipeline.del(k);

@@ -33,13 +33,17 @@ export const sessionSchema = z.object({
   user: userIdSchema.optional(),
   cwd: z.string().min(1),
   hostname: z.string().optional(),
-  platform: z.enum(['win32', 'darwin', 'linux', 'aix', 'freebsd', 'openbsd', 'sunos']).optional(),
+  platform: z.string().optional(),
+  chains: z.array(z.lazy(() => chainSchema)),
+  currentChain: z.lazy(() => chainSchema).optional(),
   status: z.enum(['pending', 'in_progress', 'completed', 'failed', 'skipped']),
-  summary: z.string().max(5000).optional(),
-  endReason: z.string().max(1000).optional(),
+  conversationState: z.enum(['idle', 'awaiting_input', 'receiving_input', 'active']).optional(),
+  lastPrompt: z.object({
+    text: z.string(),
+    type: z.string().optional(),
+  }).optional(),
   createdAt: timestampSchema,
   updatedAt: timestampSchema,
-  chains: chainIdSchema.array(),
   projectId: projectIdSchema.optional(),
 });
 
@@ -50,15 +54,19 @@ export type ValidatedSession = z.infer<typeof sessionSchema>;
 // ============================================================================
 
 export const chainStepSchema = z.object({
-  id: stepIdSchema,
-  number: z.number().int().min(1),
+  stepNumber: z.number().int().min(1),
   action: z.string().max(500),
   model: z.string().max(100),
+  inputs: z.record(z.unknown()),
+  waitsFor: z.array(z.number().int().min(1)),
   status: z.enum(['pending', 'running', 'completed', 'failed', 'skipped']),
+  description: z.string().max(2000).optional(),
   startedAt: timestampSchema.optional(),
   completedAt: timestampSchema.optional(),
+  duration: z.number().int().min(0).optional(),
   result: z.unknown().optional(),
   error: z.string().max(2000).optional(),
+  learning: z.string().max(5000).optional(),
 });
 
 export type ValidatedChainStep = z.infer<typeof chainStepSchema>;
@@ -66,13 +74,16 @@ export type ValidatedChainStep = z.infer<typeof chainStepSchema>;
 export const chainSchema = z.object({
   id: chainIdSchema,
   sessionId: sessionIdSchema,
+  userId: userIdSchema.optional(),
+  title: z.string().min(1).max(500),
   steps: chainStepSchema.array(),
-  status: z.enum(['compiled', 'running', 'completed', 'failed']),
-  description: z.string().max(1000).optional(),
-  createdAt: timestampSchema,
+  source: z.string().max(100),
+  ref: z.string().max(500).optional(),
+  status: z.enum(['pending', 'compiled', 'running', 'completed', 'failed', 'skipped']),
+  compiledAt: timestampSchema,
   startedAt: timestampSchema.optional(),
   completedAt: timestampSchema.optional(),
-  source: z.enum(['user', 'system', 'orchestrator']).optional(),
+  duration: z.number().int().min(0).optional(),
 });
 
 export type ValidatedChain = z.infer<typeof chainSchema>;
@@ -306,13 +317,12 @@ export type ValidatedTelemetryEntry = z.infer<typeof telemetryEntrySchema>;
 
 export const reminderInstanceSchema = z.object({
   id: z.string().min(1).max(200),
+  reminderId: z.string().min(1).max(200),
   sessionId: sessionIdSchema,
-  chainId: chainIdSchema,
-  type: z.string().max(100),
-  message: z.string().max(2000),
-  addressed: z.boolean(),
+  chainId: chainIdSchema.nullable(),
+  reminderText: z.string().min(1).max(5000),
   createdAt: timestampSchema,
-  addressedAt: timestampSchema.optional(),
+  addressed: z.boolean(),
   metadata: z.record(z.unknown()).optional(),
 });
 
@@ -324,16 +334,19 @@ export type ValidatedReminderInstance = z.infer<typeof reminderInstanceSchema>;
 
 export const errorInstanceSchema = z.object({
   id: z.string().min(1).max(200),
-  sessionId: sessionIdSchema,
-  chainId: chainIdSchema.optional(),
-  stepId: stepIdSchema.optional(),
+  title: z.string().min(1).max(500),
+  message: z.string().max(5000),
+  context: z.string().max(5000),
+  stackTrace: z.string().max(10000).nullable().optional(),
   severity: z.enum(['low', 'medium', 'high', 'critical']),
-  message: z.string().max(2000),
-  stack: z.string().max(10000).optional(),
-  context: z.record(z.unknown()).optional(),
-  dismissed: z.boolean(),
+  stepNumber: z.number().int().min(1).nullable().optional(),
+  action: z.string().max(200).nullable().optional(),
+  sessionId: sessionIdSchema,
+  chainId: chainIdSchema.nullable().optional(),
   createdAt: timestampSchema,
-  dismissedAt: timestampSchema.optional(),
+  recoveryOptions: z.array(z.enum(['retry', 'skip', 'cancel'])),
+  dismissed: z.boolean(),
+  metadata: z.record(z.unknown()).optional(),
 });
 
 export type ValidatedErrorInstance = z.infer<typeof errorInstanceSchema>;
