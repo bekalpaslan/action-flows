@@ -248,7 +248,7 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
     const { colorDeltas, traceDeltas, regionsActive, bridgesTraversed } = event.details || {};
 
     // Import color evolution utilities dynamically
-    import('../../systems/ColorEvolution').then(({ applyColorShift, calculateGlowIntensity }) => {
+    import('../systems/ColorEvolution').then(({ applyColorShift, calculateGlowIntensity }) => {
       // Apply color deltas to regions
       const updatedRegions = universe.regions.map((region) => {
         const delta = colorDeltas?.[region.id];
