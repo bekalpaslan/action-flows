@@ -60,10 +60,11 @@ Read your definition in .claude/actionflows/actions/code/agent.md
 
 Input:
 - task: Create flow instructions.md per approved design at .claude/actionflows/flows/{context}/{flow-name}/instructions.md
+- template: .claude/actionflows/templates/TEMPLATE.instructions.md
 - context: .claude/actionflows/flows/ for existing flow patterns, approved plan from Step 1
 ```
 
-**Gate:** Flow instructions.md created following template structure.
+**Gate:** Flow instructions.md created following TEMPLATE.instructions.md structure.
 
 ---
 

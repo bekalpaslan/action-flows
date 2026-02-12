@@ -59,10 +59,11 @@ Read your definition in .claude/actionflows/actions/code/agent.md
 
 Input:
 - task: Create agent.md + instructions.md per approved design at .claude/actionflows/actions/{action-name}/
+- templates: .claude/actionflows/templates/TEMPLATE.agent.md, .claude/actionflows/templates/TEMPLATE.instructions.md
 - context: .claude/actionflows/actions/ for existing action patterns, approved plan from Step 1
 ```
 
-**Gate:** Both agent.md and instructions.md created following template structure.
+**Gate:** Both agent.md and instructions.md created following TEMPLATE.agent.md and TEMPLATE.instructions.md structure.
 
 ---
 

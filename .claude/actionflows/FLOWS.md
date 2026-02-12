@@ -48,6 +48,7 @@
 | flow-creation/ | Create a new flow | plan → human gate → code → review |
 | action-creation/ | Create a new action | plan → human gate → code → review → second-opinion/ |
 | action-deletion/ | Remove action safely | analyze → code → review |
+| template-creation/ | Create canonical framework templates | analyze → code/framework → review → second-opinion/ → commit |
 | framework-health/ | Validate structure | analyze |
 | contract-drift-fix/ | Update CONTRACT.md when formats evolve | analyze/contract-code-drift → code/update-contract → review/contract-update → commit |
 

@@ -16,6 +16,7 @@
 
 | Date | Description | Pattern | Outcome |
 |------|-------------|---------|---------|
+| 2026-02-12 | Template Extraction Phase 1 — Orchestrator + Git format templates | analyze → code/framework → review → second-opinion → triage → commit | Success — 9 files (7 orchestrator + 2 git templates), NEEDS_CHANGES 72% → triage fixed (6 filenames, status enums), README.md updated, Phase 1 of 3 template standardization (638698c) |
 | 2026-02-12 | Contract Drift Synchronization — spec-type-schema alignment (12/16 issues fixed, 4 additional issues discovered) | analyze → code/backend → review → second-opinion → commit | Success — 7 files, CONTRACT.md + 5 implementation files (schemas, types, parsers, patterns), 84%→93% alignment, APPROVED 96% (first review), APPROVED with recommendations (second opinion found 4 MEDIUM issues in Format 1.x: missing timestamp/metrics fields, agent pattern), human chose to commit 12 fixes and defer 4 (940f141) |
 | 2026-02-12 | Framework Health Check + Documentation Drift Fix — CONTEXTS.md context-to-directory mapping correction | analyze → commit | Success — 98% alignment (2 documentation drift issues: DRIFT-001 maintenance→maintenance/, DRIFT-002 settings→settings/), documentation updated to match filesystem reality (416189c) |
 | 2026-02-12 | Swagger API Documentation Integration — swagger-jsdoc + swagger-ui-express, /api-docs endpoint, 6 routes annotated | analyze → code/backend → review → second-opinion → commit | Success — 21 files, swagger.ts created, UI at /api-docs, NEEDS_CHANGES 75% (coverage gap: 6/19 routes), ec050c1 |

@@ -6,14 +6,20 @@ This directory contains canonical template files for creating new actions and fl
 
 ```
 templates/
-├── orchestrator/         # Orchestrator output format templates (7 formats)
+├── orchestrator/         # Orchestrator output format templates (8 formats)
 │   ├── TEMPLATE.format-1.1-chain-compilation.md
 │   ├── TEMPLATE.format-1.2-execution-start.md
 │   ├── TEMPLATE.format-1.3-chain-status.md
 │   ├── TEMPLATE.format-1.4-execution-complete.md
 │   ├── TEMPLATE.format-2.1-step-completion.md
+│   ├── TEMPLATE.format-2.2-dual-output.md
 │   ├── TEMPLATE.format-3.2-learning-surface.md
 │   └── TEMPLATE.format-4.1-registry-update.md
+├── agent/                # Agent output templates (4 formats)
+│   ├── TEMPLATE.report.md
+│   ├── TEMPLATE.review-report.md
+│   ├── TEMPLATE.changes.md
+│   └── TEMPLATE.test-report.md
 ├── git/                  # Git convention templates (2 formats)
 │   ├── TEMPLATE.commit-message.md
 │   └── TEMPLATE.pr-description.md
@@ -44,10 +50,41 @@ Each template includes:
 3. **TEMPLATE.format-1.3-chain-status.md** — Mid-execution chain status update
 4. **TEMPLATE.format-1.4-execution-complete.md** — Final chain completion summary
 5. **TEMPLATE.format-2.1-step-completion.md** — Single step completion announcement
-6. **TEMPLATE.format-3.2-learning-surface.md** — Surface agent learnings to orchestrator
-7. **TEMPLATE.format-4.1-registry-update.md** — Registry file modification announcement
+6. **TEMPLATE.format-2.2-dual-output.md** — Dual output (review + second-opinion)
+7. **TEMPLATE.format-3.2-learning-surface.md** — Surface agent learnings to orchestrator
+8. **TEMPLATE.format-4.1-registry-update.md** — Registry file modification announcement
 
-**Source:** CONTRACT.md § Formats 1.x, 2.x, 3.x, 4.x (Phase 1 subset)
+**Source:** CONTRACT.md § Formats 1.x, 2.x, 3.x, 4.x
+
+---
+
+### Agent Output Templates
+
+**Templates in `agent/` directory provide standard formats for agent output documentation.**
+
+Each template includes:
+- Agent type and purpose
+- Contract reference (if applicable)
+- Parser reference (if applicable)
+- Required vs Optional section markers
+- Template structure with `{placeholder}` syntax
+- Complete working examples
+- Cross-references to agent.md definitions
+
+**Output Templates:**
+
+1. **TEMPLATE.report.md** — Analysis/audit/plan output (from analyze/ and plan/ agents)
+2. **TEMPLATE.review-report.md** — Review output (from review/ agents) — CONTRACT.md Format 5.1
+3. **TEMPLATE.changes.md** — Code implementation output (from code/ agents)
+4. **TEMPLATE.test-report.md** — Test execution output (from test/ agents)
+
+**Contract Status:**
+- `TEMPLATE.review-report.md` — Fully contract-defined (Format 5.1), parsed, validated
+- `TEMPLATE.report.md` — Contract-defined (Format 5.2), parser exists
+- `TEMPLATE.changes.md` — Free-form documentation (no parser)
+- `TEMPLATE.test-report.md` — Free-form documentation (no parser)
+
+**Source:** Analysis of agent outputs, CONTRACT.md § Format 5.x
 
 ---
 
@@ -151,6 +188,41 @@ Each template includes:
    - Write 2-5 bullet summary
    - Provide actionable test plan checklist
    - Include attribution footer
+
+---
+
+### Using Agent Output Templates
+
+**When implementing agent output:**
+
+1. **Identify output type:**
+   - Analysis/audit/plan → Use `agent/TEMPLATE.report.md`
+   - Review → Use `agent/TEMPLATE.review-report.md` (MUST follow CONTRACT.md Format 5.1)
+   - Code implementation → Use `agent/TEMPLATE.changes.md`
+   - Test execution → Use `agent/TEMPLATE.test-report.md`
+
+2. **Follow template structure:**
+   - Replace all `{placeholder}` values
+   - Include all required sections
+   - Omit optional sections if not applicable
+   - Follow validation rules (for contract-defined formats)
+
+3. **Contract compliance (review/ agents only):**
+   - Verdict must be exact enum: APPROVED | NEEDS_CHANGES | REJECTED
+   - Score must be integer 0-100 with `%` symbol
+   - Findings table must have exactly 6 columns in order
+   - Severity must be lowercase: critical | high | medium | low
+
+4. **Save to log folder:**
+   - Analysis: `.claude/actionflows/logs/analyze/{description}_{datetime}/report.md`
+   - Review: `.claude/actionflows/logs/review/{description}_{datetime}/review-report.md`
+   - Code: `.claude/actionflows/logs/code/{description}_{datetime}/changes.md`
+   - Test: `.claude/actionflows/logs/test/{description}_{datetime}/test-results.md`
+
+**Cross-reference:**
+- Templates → agent.md (agent definition)
+- Templates → CONTRACT.md (format specification)
+- Templates → Dashboard (UI rendering)
 
 ---
 
