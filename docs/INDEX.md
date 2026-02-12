@@ -85,9 +85,13 @@ Complete guide to ActionFlows Dashboard documentation.
 ## Testing
 
 - [Testing Index](testing/INDEX.md) — Test suite overview and organization
+- [Test Execution Guide](TEST_EXECUTION_GUIDE.md) — Visual workflows and decision trees for test execution
+- [Testing Guide](TESTING_GUIDE.md) — Comprehensive testing strategies and patterns
 - [E2E Test Guide](testing/E2E_TEST_GUIDE.md) — End-to-end testing guide
 - [Integration Test Summary](testing/integration-summary.md) — Integration test results
 - [Test Files Summary](testing/test-files-summary.md) — Test file organization
+- [Performance Baseline](PERFORMANCE_BASELINE.md) — Benchmark results and performance targets
+- [Contract Compliance Roadmap](CONTRACT_COMPLIANCE_ROADMAP.md) — Contract validation status and roadmap
 
 ---
 
