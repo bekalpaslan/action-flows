@@ -56,6 +56,9 @@ export class SecondOpinionRunner {
       // Try each model in the fallback chain — handles both "not installed" and "timeout"
       for (let i = 0; i < allModels.length; i++) {
         const candidateModel = allModels[i];
+        if (!candidateModel) {
+          continue;
+        }
         const isLast = i === allModels.length - 1;
 
         const hasModel = await this.client.hasModel(candidateModel);
@@ -169,7 +172,7 @@ export class SecondOpinionRunner {
     try {
       // Extract confidence score
       const confidenceMatch = rawResponse.match(/confidence.*?:\s*(HIGH|MEDIUM|LOW)/i);
-      if (confidenceMatch) {
+      if (confidenceMatch?.[1]) {
         critique.confidenceScore = confidenceMatch[1].toUpperCase() as 'HIGH' | 'MEDIUM' | 'LOW';
       }
 
@@ -177,7 +180,7 @@ export class SecondOpinionRunner {
       const confidenceReasonMatch = rawResponse.match(
         /confidence.*?:\s*(?:HIGH|MEDIUM|LOW)\s*\n(.+?)(?:\n#|$)/is
       );
-      if (confidenceReasonMatch) {
+      if (confidenceReasonMatch?.[1]) {
         critique.confidenceReason = confidenceReasonMatch[1].trim();
       }
 
@@ -215,7 +218,7 @@ export class SecondOpinionRunner {
   private extractSection(text: string, sectionName: string): string | null {
     const regex = new RegExp(`###\\s*${sectionName}\\s*\\n([\\s\\S]*?)(?=\\n###|$)`, 'i');
     const match = text.match(regex);
-    return match ? match[1].trim() : null;
+    return match?.[1]?.trim() ?? null;
   }
 
   private parseMissedIssues(section: string): StructuredCritique['missedIssues'] {
@@ -224,10 +227,10 @@ export class SecondOpinionRunner {
 
     for (const line of lines) {
       const severityMatch = line.match(/\[severity:\s*(HIGH|MEDIUM|LOW)\]/i);
-      const severity = severityMatch ? (severityMatch[1].toUpperCase() as 'HIGH' | 'MEDIUM' | 'LOW') : 'MEDIUM';
+      const severity = (severityMatch?.[1]?.toUpperCase() ?? 'MEDIUM') as 'HIGH' | 'MEDIUM' | 'LOW';
 
       const locationMatch = line.match(/\(([^)]+:\d+)\)/);
-      const location = locationMatch ? locationMatch[1] : undefined;
+      const location = locationMatch?.[1] ?? undefined;
 
       const description = line
         .replace(/\[severity:\s*(?:HIGH|MEDIUM|LOW)\]/i, '')
@@ -249,7 +252,7 @@ export class SecondOpinionRunner {
 
     for (const line of lines) {
       const findingMatch = line.match(/\[finding:\s*"([^"]+)"\]/i);
-      const originalFinding = findingMatch ? findingMatch[1] : '';
+      const originalFinding = findingMatch?.[1] ?? '';
 
       const reason = line
         .replace(/\[finding:\s*"[^"]+"\]/i, '')
@@ -270,7 +273,7 @@ export class SecondOpinionRunner {
 
     for (const line of lines) {
       const findingMatch = line.match(/\[finding:\s*"([^"]+)"\]/i);
-      const originalFinding = findingMatch ? findingMatch[1] : '';
+      const originalFinding = findingMatch?.[1] ?? '';
 
       const additionalEvidence = line
         .replace(/\[finding:\s*"[^"]+"\]/i, '')
