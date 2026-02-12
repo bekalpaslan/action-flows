@@ -744,6 +744,93 @@ Each orchestrator gate has an Input/Output/Trace contract. Full specifications i
 **Full gate specifications:** See `GATE_STRUCTURE.md`
 **Logging standards:** See `LOGGING_STANDARDS_CATALOG.md`
 
+## Gate Crossing Guide
+
+Gate Contracts above define WHAT (I/O/Trace). This guide defines HOW to cross each gate.
+
+### Request Reception (Gates 1-3)
+
+**Gate 1: Parse & Understand**
+- Read human message completely
+- Extract intent, scope, and constraints
+- Note any ambiguity for Gate 2 resolution
+
+**Gate 2: Route to Context**
+- Consult CONTEXTS.md routing table
+- Match keywords to context triggers
+- Select highest-confidence context
+- Log: context selected + confidence level
+
+**Gate 3: Detect Special Work**
+- Check for special work triggers: format-work, harmony-work, flow-work, registry-edit
+- If Quick Triage qualifies (1-3 files, mechanical, single package) → proceed directly
+- Otherwise → proceed to Gate 4
+
+### Chain Compilation (Gates 4-6)
+
+**Gate 4: Compile Chain**
+- Read FLOWS.md for matching flow
+- If no flow → compose from ACTIONS.md
+- Build chain table: #, Action, Model, Inputs, Waits For, Status
+- Evaluate: Is this a flow candidate? If yes, note for Gate 14
+
+**Gate 5: Present Chain**
+- Output Format 1.1 (Chain Compilation Table)
+- Include all steps with dependencies marked
+- Wait for human response
+
+**Gate 6: Human Approval**
+- Parse human response: yes/no/modify
+- If "yes" → proceed to Gate 7
+- If "modify" → return to Gate 4 with modifications
+- If "no" → halt and surface reason
+
+### Chain Execution (Gates 7-10)
+
+**Gate 7: Execute Step**
+- Read agent.md for step action
+- Spawn agent with: task, scope, context (from spawn template)
+- Agent creates log folder, executes, returns deliverables
+
+**Gate 8: Step Completion**
+- Receive agent output
+- Output Format 2.1 (Step Completion)
+- Continue to Gate 9
+
+**Gate 9: Mid-Chain Evaluation**
+- Check 6 triggers: [SIGNAL], [PATTERN], [DEPENDENCY], [QUALITY], [REDESIGN], [REUSE]
+- If any trigger fires → recompile remaining steps (return to Gate 4)
+- Otherwise → continue to next step or Gate 10
+
+**Gate 10: Auto-Trigger Detection**
+- Check for auto-triggers: second-opinion after review/, triage after failures
+- If triggered → insert steps into chain
+- Continue execution
+
+### Completion (Gates 11-12)
+
+**Gate 11: Chain Completion**
+- All steps complete
+- Output Format 1.4 (Execution Complete) with final table
+- Aggregate learnings for Gate 13
+
+**Gate 12: Archive & Index**
+- Write chain folder to logs/
+- Add INDEX.md entry with datetime, action, summary
+- Archive completion
+
+### Post-Execution (Gates 13-14)
+
+**Gate 13: Learning Surface**
+- If agents surfaced learnings → output Format 3.2 (Learning Surface)
+- Add to LEARNINGS.md if pattern warrants persistence
+- Prompt user: "Persist this learning? [Y/n]"
+
+**Gate 14: Flow Candidate Detection**
+- If ad-hoc chain was composed → evaluate reuse potential
+- Criteria: clean compose, autonomous execution, likely to recur
+- If candidate → suggest flow registration to user
+
 ---
 
 ## Abstract Actions (Instructed Behaviors)
