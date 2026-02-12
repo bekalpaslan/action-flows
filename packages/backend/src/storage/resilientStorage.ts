@@ -510,6 +510,27 @@ export class ResilientStorage implements Storage {
     return this.executeWithFallback((storage) => storage.deleteSessionRegion(sessionId));
   }
 
+  // Generic key-value operations (for gate traces, health scores, etc.)
+  async set(key: string, value: string, ttlSeconds?: number): Promise<void> {
+    if (this.primaryStorage.set) {
+      return this.executeWithFallback((storage) => storage.set?.(key, value, ttlSeconds));
+    }
+  }
+
+  async get(key: string): Promise<string | null> {
+    if (this.primaryStorage.get) {
+      return this.executeWithFallback((storage) => storage.get?.(key) ?? null);
+    }
+    return null;
+  }
+
+  async keys(pattern: string): Promise<string[]> {
+    if (this.primaryStorage.keys) {
+      return this.executeWithFallback((storage) => storage.keys?.(pattern) ?? []);
+    }
+    return [];
+  }
+
   /**
    * Get circuit breaker stats for monitoring
    */
