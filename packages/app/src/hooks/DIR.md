@@ -1,0 +1,49 @@
+# hooks/
+
+- index.ts
+- useActiveChain.ts — exports: UseActiveChainResult, useActiveChain
+- useAllSessions.ts — exports: UseAllSessionsReturn, useAllSessions
+- useAttachedSessions.ts — exports: UseAttachedSessionsReturn, useAttachedSessions
+- useButtonActions.ts — exports: UseButtonActionsResult, useButtonActions
+- useChainEvents.ts — exports: ChainEventSummary, useChainEventSummary, useChainEvents
+- useChainState.ts — exports: UseChainStateReturn, useChainState
+- useChapters.ts — exports: useChapters
+- useChatKeyboardShortcuts.ts — exports: useChatKeyboardShortcuts
+- useChatMessages.ts — exports: ChatMessage, useChatMessages
+- useClaudeCliControl.ts — exports: UseClaudeCliControlReturn, useClaudeCliControl
+- useClaudeCliSessions.ts — exports: UseClaudeCliSessionsReturn, useClaudeCliSessions
+- useCommandPalette.ts — exports: UseCommandPaletteResult, useCommandPalette
+- useCoverageMetrics.ts — exports: ContractDetail, CoverageMetrics, useCoverageMetrics
+- useCustomPromptButtons.ts — exports: UseCustomPromptButtonsResult, useCustomPromptButtons
+- useDiscoveredSessions.ts — exports: useDiscoveredSessions
+- useDiscussButton.ts — exports: UseDiscussButtonParams, UseDiscussButtonReturn, useDiscussButton
+- useDossiers.ts — exports: UseDossiersResult, useDossiers
+- useEditorFiles.ts — exports: FileContent, WriteFileResult, useEditorFiles
+- useErrorAnnouncements.ts — exports: useErrorAnnouncements
+- useEvents.ts — exports: EventStats, useEventStats, useEvents, useFilteredEvents, useLatestEvent
+- useFeatureFlag.ts — exports: FEATURE_FLAGS, useFeatureFlag, useFeatureFlagSimple
+- useFileSyncManager.ts — exports: EditorFile, FileConflict, FileSyncCallbacks, UseFileSyncManagerReturn, useFileSyncManager
+- useFileTree.ts — exports: useFileTree
+- useFlowAnimations.ts — exports: AnimationQueueItem, FlowAnimationCallbacks, useFlowAnimations
+- useFreshness.ts — exports: useFreshness
+- useGateTraces.ts — exports: GateTrace, GateTraceStats, UseGateTracesOptions, useGateTraces
+- useHarmonyMetrics.ts — exports: useHarmonyMetrics, useHarmonyStatus
+- useKeyboardShortcuts.ts — exports: KeyboardShortcut, useKeyboardShortcuts, useSessionWindowKeyboardShortcuts
+- useNotificationGlow.ts — exports: GlowState, NotificationGlowContext, NotificationGlowProvider, NotificationInput, UseNotificationGlowReturn, default, registerSessionWorkbench, unregisterSessionWorkbench, useNotificationGlow, useNotificationGlowContext
+- useNotifications.ts — exports: NotificationOptions, NotificationUrgency, useNotifications
+- useProjects.ts — exports: UseProjectsReturn, useProjects
+- usePromptButtons.ts — exports: UsePromptButtonsOptions, UsePromptButtonsReturn, usePromptButtons
+- useReducedMotion.ts — exports: useReducedMotion
+- useReminderButtons.ts — exports: UseReminderButtonsResult, useReminderButtons
+- useServiceWorker.ts — exports: ServiceWorkerStatus, default, useClearCache, useServiceWorker, useServiceWorkerUpdate
+- useSessionArchive.ts — exports: ArchivedSession, useSessionArchive
+- useSessionControls.ts — exports: UseSessionControlsReturn, useSessionControls
+- useSessionInput.ts — exports: useSessionInput
+- useSessionSidebar.ts — exports: UseSessionSidebarResult, useSessionSidebar
+- useStreamJsonEnrichment.ts — exports: StreamEnrichedSession, useStreamJsonEnrichment
+- useTerminalEvents.ts — exports: useTerminalEvents
+- useUsers.ts — exports: UseUsersReturn, User, useUsers
+- useUserSessions.ts — exports: UseUserSessionsReturn, useUserSessions
+- useVimNavigation.ts — exports: useVimNavigation
+- useWebSocket.ts — exports: ConnectionStatus, UseWebSocketOptions, UseWebSocketReturn, useWebSocket
+- useWebVitals.ts — exports: WebVitals, useWebVitals

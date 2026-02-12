@@ -1,0 +1,30 @@
+# routes/
+
+- agentValidator.ts — exports: default
+- claudeCli.ts — exports: default
+- commands.ts — exports: default
+- contracts.ts — exports: default
+- discovery.ts — exports: default
+- dossiers.ts — exports: default, setBroadcastDossierFunction
+- errors.ts — exports: default
+- events.ts — exports: default
+- files.ts — exports: default
+- harmony.ts — exports: default
+- harmonyHealth.ts — exports: default
+- healingRecommendations.ts — exports: default
+- history.ts — exports: default
+- lifecycle.ts — exports: default
+- patterns.ts — exports: default
+- projects.ts — exports: default
+- registry.ts — exports: default
+- reminders.ts — exports: default
+- routing.ts — exports: default
+- sessions.ts — exports: default
+- sessionWindows.ts — exports: default
+- story.ts — exports: default
+- suggestions.ts — exports: default
+- telemetry.ts — exports: default
+- terminal.ts — exports: default, setBroadcastTerminalFunction
+- toolbar.ts — exports: default
+- universe.ts — exports: default
+- users.ts — exports: default

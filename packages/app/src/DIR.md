@@ -1,0 +1,21 @@
+# app/src/
+
+- components/ → see components/DIR.md
+- config/ → see config/DIR.md
+- contexts/ → see contexts/DIR.md
+- data/ → see data/DIR.md
+- hooks/ → see hooks/DIR.md
+- services/ → see services/DIR.md
+- store/ → see store/DIR.md
+- styles/ → see styles/DIR.md
+- systems/ → see systems/DIR.md
+- types/ → see types/DIR.md
+- utils/ → see utils/DIR.md
+- App.tsx — exports: default
+- LazyCodeEditor.tsx — exports: LazyCodeEditor, default
+- LazyCosmicMap.tsx — exports: LazyCosmicMap, default
+- LazyFlowVisualization.tsx — exports: LazyFlowVisualization, default
+- LazyTerminal.tsx — exports: LazyTerminal, default
+- main.tsx
+- monaco-config.ts — exports: configureMonaco, preloadCommonLanguageWorkers
+- vite-env.d.ts — exports: default

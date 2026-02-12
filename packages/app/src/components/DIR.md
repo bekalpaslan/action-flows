@@ -1,0 +1,71 @@
+# components/
+
+- AppSidebar/ → see AppSidebar/DIR.md
+- ChainBadge/ → see ChainBadge/DIR.md
+- ChainDAG/ → see ChainDAG/DIR.md
+- ChainViz/ → see ChainViz/DIR.md
+- ChangePreview/ → see ChangePreview/DIR.md
+- ClaudeCliTerminal/ → see ClaudeCliTerminal/DIR.md
+- CodeEditor/ → see CodeEditor/DIR.md
+- CommandCenter/ → see CommandCenter/DIR.md
+- CommandPalette/ → see CommandPalette/DIR.md
+- common/ → see common/DIR.md
+- ControlButtons/ → see ControlButtons/DIR.md
+- ConversationPanel/ → see ConversationPanel/DIR.md
+- CosmicMap/ → see CosmicMap/DIR.md
+- CustomPromptButton/ → see CustomPromptButton/DIR.md
+- Dashboard/ → see Dashboard/DIR.md
+- DisambiguationModal/ → see DisambiguationModal/DIR.md
+- DiscussButton/ → see DiscussButton/DIR.md
+- ErrorModal/ → see ErrorModal/DIR.md
+- FileExplorer/ → see FileExplorer/DIR.md
+- FlowVisualization/ → see FlowVisualization/DIR.md
+- Harmony/ → see Harmony/DIR.md
+- HarmonyBadge/ → see HarmonyBadge/DIR.md
+- HarmonyIndicator/ → see HarmonyIndicator/DIR.md
+- HarmonyPanel/ → see HarmonyPanel/DIR.md
+- InlineButtons/ → see InlineButtons/DIR.md
+- Inspector/ → see Inspector/DIR.md
+- IntelDossier/ → see IntelDossier/DIR.md
+- ModifierCard/ → see ModifierCard/DIR.md
+- Notifications/ → see Notifications/DIR.md
+- Onboarding/ → see Onboarding/DIR.md
+- OrchestratorButton/ → see OrchestratorButton/DIR.md
+- PersistentToolbar/ → see PersistentToolbar/DIR.md
+- QuickActionBar/ → see QuickActionBar/DIR.md
+- QuickActionButton/ → see QuickActionButton/DIR.md
+- RegionFocus/ → see RegionFocus/DIR.md
+- RegistryBrowser/ → see RegistryBrowser/DIR.md
+- SessionArchive/ → see SessionArchive/DIR.md
+- SessionPane/ → see SessionPane/DIR.md
+- SessionPanel/ → see SessionPanel/DIR.md
+- SessionSidebar/ → see SessionSidebar/DIR.md
+- SessionTile/ → see SessionTile/DIR.md
+- SessionTree/ → see SessionTree/DIR.md
+- Settings/ → see Settings/DIR.md
+- Sidebar/ → see Sidebar/DIR.md
+- SlidingChatWindow/ → see SlidingChatWindow/DIR.md
+- SquadPanel/ → see SquadPanel/DIR.md
+- StarBookmark/ → see StarBookmark/DIR.md
+- Stars/ → see Stars/DIR.md
+- StepInspector/ → see StepInspector/DIR.md
+- TelemetryViewer/ → see TelemetryViewer/DIR.md
+- Terminal/ → see Terminal/DIR.md
+- ThemeToggle/ → see ThemeToggle/DIR.md
+- TimelineView/ → see TimelineView/DIR.md
+- Toast/ → see Toast/DIR.md
+- Tools/ → see Tools/DIR.md
+- VimModeIndicator/ → see VimModeIndicator/DIR.md
+- VirtualScrolling/ → see VirtualScrolling/DIR.md
+- Workbench/ → see Workbench/DIR.md
+- AppContent.tsx — exports: default
+- ChainDemo.tsx — exports: ChainDemo
+- ChainLiveMonitor.tsx — exports: ChainLiveMonitor
+- GateTraceViewer.tsx — exports: GateTrace, GateTraceViewer, GateTraceViewerProps
+- HarmonyHealthDashboard.tsx — exports: HarmonyHealthDashboard
+- HistoryBrowser.tsx — exports: HistoryBrowser
+- LazyCodeEditor.tsx — exports: LazyCodeEditor, default
+- LazyCosmicMap.tsx — exports: LazyCosmicMap, default
+- LazyFlowVisualization.tsx — exports: LazyFlowVisualization, default
+- LazyTerminal.tsx — exports: LazyTerminal, default
+- WebSocketTest.tsx — exports: WebSocketTest

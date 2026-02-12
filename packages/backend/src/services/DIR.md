@@ -1,0 +1,35 @@
+# services/
+
+- checkpoints/ → see checkpoints/DIR.md
+- activityTracker.ts — exports: ActivityType, activityTracker
+- agentValidator.ts — exports: AgentValidationResult, AgentValidationViolation, AgentValidator, agentValidator, initializeAgentValidator
+- bridgeStrengthService.ts — exports: BridgeStrengthService, getBridgeStrengthService, initBridgeStrengthService
+- claudeCliManager.ts — exports: claudeCliManager
+- claudeCliMessageAggregator.ts — exports: ClaudeCliMessageAggregator, MessageCallback
+- claudeCliSession.ts — exports: ClaudeCliSessionProcess, StreamJsonMessage
+- claudeSessionDiscovery.ts — exports: claudeSessionDiscovery
+- cleanup.ts — exports: CleanupService, cleanupService
+- confidenceScorer.ts — exports: CONFIDENCE_THRESHOLDS, DEFAULT_WEIGHTS, RECENCY_CONFIG, calculateConfidence, calculateConsistency, meetsAutoApplyThreshold, meetsProposalThreshold
+- connectionInference.ts — exports: BridgeSuggestion, CoOccurrenceMatrix, ConnectionInferenceService, getConnectionInferenceService, initConnectionInferenceService
+- conversationWatcher.ts — exports: ConversationWatcher, GateDetector, GateIntegration, LogDiscovery, LogTailer, getConversationWatcher, initConversationWatcher
+- discoveryService.ts — exports: DiscoveryResult, DiscoveryService, getDiscoveryService, initDiscoveryService
+- evolutionService.ts — exports: ColorShiftDelta, EvolutionService, EvolutionSpeed, InteractionContext, TraceIncrement, getEvolutionService, initEvolutionService
+- fileWatcher.ts — exports: clearActiveStep, setActiveStep, setBroadcastFunction
+- forceDirectedLayout.ts — exports: ForceDirectedLayoutService, LayoutConstraints, Position, getForceDirectedLayoutService, initForceDirectedLayoutService
+- frequencyTracker.ts — exports: FREQUENCY_CONFIG, FrequencyTracker
+- gateCheckpoint.ts — exports: GateCheckpoint, getGateCheckpoint, initGateCheckpoint
+- gateValidator.ts — exports: GateStatus, GateUpdatedEvent, GateValidator, getGateValidator, initGateValidator
+- harmonyDetector.ts — exports: HarmonyCheckContext, HarmonyCheckResult, HarmonyDetector, harmonyDetector, initializeHarmonyDetector
+- healingRecommendations.ts — exports: DriftPattern, HealingRecommendation, HealingRecommendationEngine, getHealingRecommendationEngine, initHealingRecommendationEngine
+- healthScoreCalculator.ts — exports: HealthScoreCalculator, getHealthScoreCalculator, initHealthScoreCalculator
+- layerResolver.ts — exports: ConflictSeverity, LayerResolver, RegistryConflictWithSeverity, createLayerResolver, layerResolver
+- lifecycleManager.ts — exports: LifecycleManager, lifecycleManager
+- patternAnalyzer.ts — exports: ANALYSIS_CONFIG, PatternAnalysisResult, PatternAnalyzer, ProposedAction
+- projectDetector.ts — exports: ProjectDetector
+- projectStorage.ts — exports: ProjectStorage, projectStorage
+- registryStorage.ts — exports: RegistryStorage, registryStorage
+- snapshotService.ts — exports: SnapshotService
+- sparkBroadcaster.ts — exports: SparkBroadcaster, SparkTravelingEvent, getSparkBroadcaster, initSparkBroadcaster
+- storyService.ts — exports: StoryService, storyService
+- telemetry.ts — exports: TelemetryStats, telemetry
+- terminalBuffer.ts — exports: terminalBuffer

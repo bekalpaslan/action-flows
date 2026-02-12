@@ -97,6 +97,26 @@ When your action produces or modifies contract-defined formats (parsers, types, 
 
 **Critical:** Partial completions (< 100%) MUST be surfaced as **learnings** (escalation to orchestrator), NOT as "next steps" (optional suggestions). This triggers automatic follow-up chain compilation.
 
+### 14. DIR.md Convention
+
+Every code directory must contain a lightweight `DIR.md` file that serves as a manifest for agents to understand directory contents without reading individual files.
+
+**Format:**
+```markdown
+# {directory-name}/
+
+- subdirA/ → see subdirA/DIR.md
+- fileA.ts — exports: exportA, exportB, exportC
+- fileB.ts — exports: exportD
+```
+
+**Rules:**
+- **When navigating code:** Read the target directory's `DIR.md` BEFORE reading individual files. This allows you to understand structure and identify what you actually need.
+- **When modifying code:** After adding, removing, or renaming files or exports, update the directory's `DIR.md` immediately. Stale manifests break agent navigation.
+- **Scope:** All directories under `packages/backend/src/`, `packages/app/src/`, `packages/shared/src/` must have DIR.md files (excluding `__tests__/`, `__mocks__/`, and `contracts/` directories).
+
+**Why this matters:** Agents can scan DIR.md (100 bytes) instead of reading and parsing multiple 500-line TypeScript files. This dramatically reduces token consumption and accelerates code navigation.
+
 ---
 
 ## Learnings Output Format

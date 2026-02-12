@@ -1,0 +1,3 @@
+# Sidebar/
+
+(empty directory)
