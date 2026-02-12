@@ -623,7 +623,7 @@ export function ChatPanel({
     ].filter(Boolean).join(' ');
 
     return (
-      <div key={msg.id || idx} className={bubbleClasses}>
+      <div key={msg.id || idx} className={bubbleClasses} data-testid={`message-msg-${idx + 1}`} data-message-id={msg.id}>
         {/* Role label (not for system messages) */}
         {!isSystem && (
           <span className="chat-bubble__role">
@@ -690,6 +690,7 @@ export function ChatPanel({
       className={`chat-panel ${isCollapsed ? 'collapsed' : ''}`.trim()}
       role="region"
       aria-label="Chat"
+      data-testid="chat-panel"
     >
       {/* Header — includes session info bar */}
       <div className="chat-panel-header" onClick={collapsible ? toggleCollapse : undefined}>
@@ -756,12 +757,13 @@ export function ChatPanel({
 
       {/* Session Info Bar — compact metadata row (non-scrolling, always visible) */}
       {!isCollapsed && session && (
-        <div className="chat-panel__info-bar">
+        <div className="chat-panel__info-bar" data-testid="session-info-header">
           <button
             className="chat-panel__info-session-id"
             onClick={(e) => { e.stopPropagation(); handleCopyId(); }}
             title={copyTooltip}
             aria-label="Copy session ID"
+            data-testid="session-id-display"
           >
             <span className="chat-panel__info-session-id-text">
               {truncateSessionId(sessionId)}
@@ -777,7 +779,7 @@ export function ChatPanel({
             </span>
           )}
           {sessionDuration && (
-            <span className="chat-panel__info-chip">{sessionDuration}</span>
+            <span className="chat-panel__info-chip" data-testid="session-duration">{sessionDuration}</span>
           )}
           <span className="chat-panel__info-chip">
             {chainCount} chain{chainCount !== 1 ? 's' : ''}
@@ -801,6 +803,7 @@ export function ChatPanel({
             aria-label="Chat messages"
             aria-live="polite"
             aria-atomic="false"
+            data-testid="message-list"
           >
             {messages.length === 0 && (
               <div className="chat-panel__empty">
@@ -815,7 +818,7 @@ export function ChatPanel({
 
             {/* Typing indicator */}
             {isTyping && (
-              <div className="chat-panel__typing">
+              <div className="chat-panel__typing" data-testid="typing-indicator">
                 <div className="chat-panel__typing-dots">
                   <span className="chat-panel__typing-dot" />
                   <span className="chat-panel__typing-dot" />
@@ -840,14 +843,15 @@ export function ChatPanel({
 
           {/* Prompt Buttons */}
           {buttons && buttons.length > 0 && (
-            <div className="chat-panel__prompt-buttons">
-              {buttons.map(button => (
+            <div className="chat-panel__prompt-buttons" data-testid="prompt-buttons-container">
+              {buttons.map((button, idx) => (
                 <button
                   key={button.id}
                   className={`chat-panel__prompt-btn chat-panel__prompt-btn--${button.category}`}
                   onClick={() => handlePromptButtonClick(button)}
                   disabled={isSending}
                   title={button.promptText || button.label}
+                  data-testid={`prompt-button-${idx}`}
                 >
                   {button.label}
                 </button>
@@ -869,6 +873,7 @@ export function ChatPanel({
                 disabled={isSending}
                 rows={1}
                 aria-label="Chat message input"
+                data-testid="chat-input"
               />
             </div>
 
@@ -943,6 +948,7 @@ export function ChatPanel({
                   onClick={() => handleSendMessage(input)}
                   disabled={!input.trim() || isSending}
                   aria-label="Send message"
+                  data-testid="send-button"
                 >
                   {isSending ? (
                     <svg
