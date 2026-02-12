@@ -212,6 +212,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
         className={sidebarClasses}
         role="navigation"
         aria-label="Main navigation"
+        data-testid="app-sidebar"
       >
         {/* Header */}
         <div className="app-sidebar__header">
