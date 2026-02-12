@@ -13,6 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "contract:compliance": "tsx src/contracts/check-compliance.ts",
+    "analyze": "vite build --mode analyze && open dist/index.html",
+    "analyze:report": "vite build --mode analyze",
+    "perf:check": "lighthouse --chrome-flags='--headless=new' http://localhost:5173",
     "electron-dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && electron .\"",
     "electron-build": "vite build && electron-builder --publish never",
     "electron-build:win": "vite build && electron-builder --win --x64 --publish never",
@@ -31,6 +34,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^10.1.0",
+    "react-window": "^1.8.10",
     "reactflow": "^11.10.0",
     "rehype-raw": "^7.0.0",
     "web-vitals": "^5.1.0",
@@ -45,6 +49,7 @@
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@types/react-window": "^1.8.8",
     "@vitejs/plugin-react": "^4.2.0",
     "@vitest/coverage-v8": "^4.0.18",
     "concurrently": "^9.2.1",
@@ -58,7 +63,11 @@
     "vite": "^6.2.0",
     "vite-plugin-electron": "^0.29.0",
     "vitest": "^4.0.0",
-    "wait-on": "^9.0.3"
+    "wait-on": "^9.0.3",
+    "vite-bundle-visualizer": "^1.2.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "lighthouse": "^12.0.0",
+    "@lhci/cli": "^0.12.0"
   },
   "build": {
     "appId": "com.actionflows.workspace",

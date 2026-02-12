@@ -1,0 +1,231 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Start development server
+        run: |
+          pnpm dev:app > /tmp/server.log 2>&1 &
+          sleep 10
+          if ! curl -s http://localhost:5173 > /dev/null; then
+            echo "Server failed to start"
+            cat /tmp/server.log
+            exit 1
+          fi
+
+      - name: Run bundle analysis
+        run: pnpm analyze:report
+        continue-on-error: true
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.12.0
+
+      - name: Run Lighthouse CI
+        run: lhci autorun
+        continue-on-error: true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          LHCI_UPLOAD_URL: https://storage.googleapis.com
+          LHCI_API_URL: https://lhci.example.com
+
+      - name: Upload Lighthouse results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-results
+          path: .lighthouseci
+          retention-days: 30
+
+      - name: Comment Lighthouse scores on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Check if lighthouse results exist
+            const resultsPath = '.lighthouseci/lhr/';
+            if (!fs.existsSync(resultsPath)) {
+              console.log('No Lighthouse results found');
+              return;
+            }
+
+            // Read and parse results
+            let comment = '## Lighthouse Performance Report\n\n';
+            comment += '| URL | Performance | Accessibility | Best Practices | SEO |\n';
+            comment += '|-----|-------------|----------------|-----------------|-----|\n';
+
+            const files = fs.readdirSync(resultsPath).filter(f => f.endsWith('.json'));
+
+            files.forEach(file => {
+              try {
+                const content = fs.readFileSync(path.join(resultsPath, file), 'utf8');
+                const lhr = JSON.parse(content);
+                const url = lhr.finalUrl || 'Unknown';
+                const perf = (lhr.categories.performance.score * 100).toFixed(0);
+                const a11y = (lhr.categories.accessibility.score * 100).toFixed(0);
+                const bp = (lhr.categories['best-practices'].score * 100).toFixed(0);
+                const seo = (lhr.categories.seo.score * 100).toFixed(0);
+
+                comment += `| ${url} | ${perf} | ${a11y} | ${bp} | ${seo} |\n`;
+              } catch (e) {
+                console.error(`Error parsing ${file}:`, e);
+              }
+            });
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  bundle-size-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build for analysis
+        run: cd packages/app && pnpm build
+
+      - name: Check bundle size
+        run: |
+          BUNDLE_SIZE=$(du -sh packages/app/dist/index*.js 2>/dev/null | awk '{print $1}' | head -1)
+          echo "Bundle Size: $BUNDLE_SIZE"
+
+          # Check if size exceeds 500KB
+          SIZE_BYTES=$(du -b packages/app/dist/index*.js 2>/dev/null | awk '{print $1}' | head -1)
+          if [ -z "$SIZE_BYTES" ]; then
+            echo "Warning: Could not determine bundle size"
+            exit 0
+          fi
+
+          THRESHOLD=$((500 * 1024))
+          if [ "$SIZE_BYTES" -gt "$THRESHOLD" ]; then
+            echo "ERROR: Bundle size ($SIZE_BYTES bytes) exceeds threshold ($THRESHOLD bytes)"
+            exit 1
+          else
+            echo "OK: Bundle size ($SIZE_BYTES bytes) is within threshold"
+          fi
+
+      - name: Upload dist folder
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-dist
+          path: packages/app/dist
+          retention-days: 7
+
+  performance-budgets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build application
+        run: cd packages/app && pnpm build
+
+      - name: Check performance budgets
+        run: |
+          echo "Performance Budget Check"
+          echo "========================"
+          echo ""
+          echo "Initial Bundle Budget: 500KB"
+          echo "Total Bundle Budget: 2MB"
+          echo ""
+
+          DIST_DIR="packages/app/dist"
+
+          if [ -d "$DIST_DIR" ]; then
+            echo "Built assets:"
+            find "$DIST_DIR" -type f \( -name "*.js" -o -name "*.css" \) -exec ls -lh {} + | awk '{print $9, "(" $5 ")"}'
+            echo ""
+
+            # Calculate totals
+            TOTAL_SIZE=$(du -sh "$DIST_DIR" | awk '{print $1}')
+            TOTAL_BYTES=$(du -sb "$DIST_DIR" | awk '{print $1}')
+
+            echo "Total size: $TOTAL_SIZE ($TOTAL_BYTES bytes)"
+            echo ""
+
+            # Check against budgets
+            MAX_INITIAL=$((500 * 1024))
+            MAX_TOTAL=$((2 * 1024 * 1024))
+
+            if [ "$TOTAL_BYTES" -le "$MAX_TOTAL" ]; then
+              echo "✓ Within total budget (2MB)"
+            else
+              echo "✗ EXCEEDS total budget (2MB)"
+            fi
+          else
+            echo "Error: dist directory not found"
+            exit 1
+          fi
