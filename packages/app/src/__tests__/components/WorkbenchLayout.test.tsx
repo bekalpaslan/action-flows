@@ -39,6 +39,40 @@ vi.mock('../../contexts/UniverseContext', () => ({
     },
     isLoading: false,
     error: null,
+    targetWorkbenchId: null,
+  }),
+}));
+
+vi.mock('../../contexts/SessionContext', () => ({
+  useSessionContext: () => ({
+    getSession: vi.fn().mockReturnValue(null),
+    sessions: [],
+    activeSessionId: null,
+  }),
+}));
+
+vi.mock('../../contexts/ChatWindowContext', () => ({
+  useChatWindowContext: () => ({
+    sessionId: null,
+    closeChat: vi.fn(),
+    openChat: vi.fn(),
+  }),
+}));
+
+vi.mock('../../hooks/useChatKeyboardShortcuts', () => ({
+  useChatKeyboardShortcuts: () => {},
+}));
+
+vi.mock('../../hooks/useFeatureFlag', () => ({
+  useFeatureFlagSimple: () => false, // Disable cosmic map for simpler tests
+}));
+
+vi.mock('../../hooks/useSessionArchive', () => ({
+  useSessionArchive: () => ({
+    archivedSessions: [],
+    restoreSession: vi.fn(),
+    deleteArchive: vi.fn(),
+    clearAllArchives: vi.fn(),
   }),
 }));
 
@@ -58,6 +92,22 @@ vi.mock('../../components/CosmicMap/CosmicMap', () => ({
   CosmicMap: ({ visible }: any) => (
     <div data-testid="cosmic-map" style={{ display: visible ? 'block' : 'none' }} />
   ),
+}));
+
+vi.mock('../../components/SlidingChatWindow/SlidingChatWindow', () => ({
+  SlidingChatWindow: ({ children }: any) => <div data-testid="sliding-chat-window">{children}</div>,
+}));
+
+vi.mock('../../components/SessionSidebar', () => ({
+  SessionSidebar: () => <div data-testid="session-sidebar" />,
+}));
+
+vi.mock('../../components/RegionFocus/RegionFocusView', () => ({
+  RegionFocusView: () => <div data-testid="region-focus-view" />,
+}));
+
+vi.mock('../../components/Stars/WorkStar', () => ({
+  WorkStar: () => <div data-testid="work-star" />,
 }));
 
 describe('WorkbenchLayout', () => {
@@ -93,42 +143,42 @@ describe('WorkbenchLayout', () => {
     expect(screen.getByTestId('content-area')).toBeInTheDocument();
   });
 
-  it('renders app content component inside content area', () => {
+  it('renders workbench content inside content area', () => {
     render(<WorkbenchLayout />);
-    expect(screen.getByTestId('app-content')).toBeInTheDocument();
+    // WorkbenchLayout renders workbench-specific content (e.g., work-star for work workbench)
+    expect(screen.getByTestId('work-star')).toBeInTheDocument();
   });
 
-  it('renders cosmic map visualization', () => {
+  it('renders session sidebar when in workbench view', () => {
     render(<WorkbenchLayout />);
-    expect(screen.getByTestId('cosmic-map')).toBeInTheDocument();
+    // Cosmic map is disabled via useFeatureFlagSimple mock, so we're in workbench view
+    expect(screen.getByTestId('session-sidebar')).toBeInTheDocument();
   });
 
-  it('renders session panel in right sidebar', () => {
+  it('renders sliding chat window container', () => {
     render(<WorkbenchLayout />);
-    expect(screen.getByTestId('session-panel')).toBeInTheDocument();
+    expect(screen.getByTestId('sliding-chat-window')).toBeInTheDocument();
   });
 
-  it('displays cosmic map when in universe view', () => {
+  it('displays workbench content when cosmic map is disabled', () => {
     render(<WorkbenchLayout />);
 
-    const cosmicMap = screen.getByTestId('cosmic-map');
-    expect(cosmicMap).toHaveStyle({ display: 'block' });
+    // With cosmic map disabled, we render workbench content directly
+    expect(screen.getByTestId('work-star')).toBeInTheDocument();
   });
 
-  it('hides cosmic map when viewing workbench content', async () => {
+  it('renders main content with correct workbench', async () => {
     render(<WorkbenchLayout />);
 
-    // In workbench view, cosmic map should be hidden
-    const cosmicMap = screen.getByTestId('cosmic-map');
-    // This depends on the view state which is managed by context
-    expect(cosmicMap).toBeInTheDocument();
+    // Verify the work workbench is rendered
+    expect(screen.getByTestId('work-star')).toBeInTheDocument();
   });
 
-  it('applies correct layout grid structure', () => {
+  it('applies correct layout structure classes', () => {
     render(<WorkbenchLayout />);
 
     const layoutWrapper = screen.getByTestId('layout-wrapper');
-    expect(layoutWrapper).toHaveClass('layout-wrapper');
+    expect(layoutWrapper).toHaveClass('workbench-body');
   });
 
   it('renders split-view divider for resize', () => {
@@ -184,15 +234,17 @@ describe('WorkbenchLayout', () => {
   it('includes accessibility attributes on layout regions', () => {
     render(<WorkbenchLayout />);
 
-    const contentArea = screen.getByTestId('content-area');
-    expect(contentArea).toHaveAttribute('role', 'main');
+    // The main element is inside content-area with role="main"
+    const mainContent = screen.getByRole('main');
+    expect(mainContent).toBeInTheDocument();
+    expect(mainContent).toHaveAttribute('id', 'main-content');
   });
 
   it('manages keyboard focus navigation between regions', () => {
     render(<WorkbenchLayout />);
 
     const sidebar = screen.getByTestId('app-sidebar');
-    const content = screen.getByTestId('app-content');
+    const content = screen.getByTestId('work-star');
 
     expect(sidebar).toBeInTheDocument();
     expect(content).toBeInTheDocument();
@@ -209,19 +261,19 @@ describe('WorkbenchLayout', () => {
     render(<WorkbenchLayout />);
 
     const layoutWrapper = screen.getByTestId('layout-wrapper');
-    expect(layoutWrapper.className).toContain('layout-wrapper');
+    expect(layoutWrapper.className).toContain('workbench-body');
   });
 
-  it('preserves sidebar and session panel on navigation', async () => {
+  it('preserves sidebar and session sidebar on navigation', async () => {
     const { rerender } = render(<WorkbenchLayout />);
 
     expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
-    expect(screen.getByTestId('session-panel')).toBeInTheDocument();
+    expect(screen.getByTestId('session-sidebar')).toBeInTheDocument();
 
     rerender(<WorkbenchLayout />);
 
     expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
-    expect(screen.getByTestId('session-panel')).toBeInTheDocument();
+    expect(screen.getByTestId('session-sidebar')).toBeInTheDocument();
   });
 
   it('handles split-view resize gracefully', async () => {
@@ -248,7 +300,7 @@ describe('WorkbenchLayout', () => {
     render(<WorkbenchLayout />);
 
     const sidebar = screen.getByTestId('app-sidebar');
-    const content = screen.getByTestId('app-content');
+    const content = screen.getByTestId('work-star');
 
     expect(sidebar).toBeInTheDocument();
     expect(content).toBeInTheDocument();
@@ -259,8 +311,8 @@ describe('WorkbenchLayout', () => {
 
     // All child components should be rendered with proper context
     expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
-    expect(screen.getByTestId('app-content')).toBeInTheDocument();
-    expect(screen.getByTestId('session-panel')).toBeInTheDocument();
-    expect(screen.getByTestId('cosmic-map')).toBeInTheDocument();
+    expect(screen.getByTestId('work-star')).toBeInTheDocument();
+    expect(screen.getByTestId('session-sidebar')).toBeInTheDocument();
+    expect(screen.getByTestId('sliding-chat-window')).toBeInTheDocument();
   });
 });

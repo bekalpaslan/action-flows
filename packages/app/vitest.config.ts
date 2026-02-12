@@ -30,6 +30,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      // Mock monaco-config for tests - must be absolute path from src root
+      './monaco-config': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-config.ts'),
+      '../monaco-config': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-config.ts'),
+      '../../monaco-config': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-config.ts'),
+      '../../../monaco-config': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-config.ts'),
       // Mock monaco-editor and workers for tests to avoid import resolution errors
       'monaco-editor': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-editor.ts'),
       'monaco-editor/esm/vs/editor/editor.worker?worker': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-worker.ts'),
