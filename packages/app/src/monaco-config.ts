@@ -11,9 +11,6 @@
 import { loader } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
 
-// Import core worker - always needed
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-
 // Lazy load language workers on demand
 const workerCache = new Map<string, Worker>();
 
@@ -61,15 +58,22 @@ async function getLanguageWorker(label: string): Promise<Worker> {
         worker = new module.default();
         break;
       }
-      default:
-        worker = new editorWorker();
+      default: {
+        const module = await import(
+          'monaco-editor/esm/vs/editor/editor.worker?worker'
+        );
+        worker = new module.default();
+      }
     }
 
     // Cache the worker
     workerCache.set(label, worker);
   } catch (error) {
     console.warn(`Failed to load worker for ${label}, using editor worker:`, error);
-    worker = new editorWorker();
+    const module = await import(
+      'monaco-editor/esm/vs/editor/editor.worker?worker'
+    );
+    worker = new module.default();
   }
 
   return worker;
