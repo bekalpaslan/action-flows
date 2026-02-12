@@ -95,8 +95,7 @@ describe('LogDiscovery', () => {
       });
 
       const logDiscovery = new LogDiscovery('D:\\ActionFlowsDashboard');
-      // @ts-ignore - accessing private method for testing
-      const escaped = logDiscovery.escapeProjectPath();
+      const escaped = (logDiscovery as any).escapeProjectPath() as string;
       expect(escaped).toBe('D--ActionFlowsDashboard');
     });
 
@@ -109,8 +108,7 @@ describe('LogDiscovery', () => {
       });
 
       const logDiscovery = new LogDiscovery('D:\\Users\\alice\\Projects\\MyApp');
-      // @ts-ignore
-      const escaped = logDiscovery.escapeProjectPath();
+      const escaped = (logDiscovery as any).escapeProjectPath() as string;
       expect(escaped).toBe('D--Users-alice-Projects-MyApp');
     });
 
@@ -123,8 +121,7 @@ describe('LogDiscovery', () => {
       });
 
       const logDiscovery = new LogDiscovery('/home/user/project');
-      // @ts-ignore
-      const escaped = logDiscovery.escapeProjectPath();
+      const escaped = (logDiscovery as any).escapeProjectPath() as string;
       expect(escaped).toBe('-home-user-project');
     });
 
@@ -137,8 +134,7 @@ describe('LogDiscovery', () => {
       });
 
       const logDiscovery = new LogDiscovery('C:\\Program Files\\MyApp');
-      // @ts-ignore
-      const escaped = logDiscovery.escapeProjectPath();
+      const escaped = (logDiscovery as any).escapeProjectPath() as string;
       expect(escaped).toBe('C--Program Files-MyApp');
     });
 
@@ -151,8 +147,7 @@ describe('LogDiscovery', () => {
       });
 
       const logDiscovery = new LogDiscovery('/Users/bob/Documents/code/my-project');
-      // @ts-ignore
-      const escaped = logDiscovery.escapeProjectPath();
+      const escaped = (logDiscovery as any).escapeProjectPath() as string;
       expect(escaped).toBe('-Users-bob-Documents-code-my-project');
     });
 
@@ -165,8 +160,7 @@ describe('LogDiscovery', () => {
       });
 
       const logDiscovery = new LogDiscovery('E:\\MyProject');
-      // @ts-ignore
-      const escaped = logDiscovery.escapeProjectPath();
+      const escaped = (logDiscovery as any).escapeProjectPath() as string;
       expect(escaped).toBe('E--MyProject');
     });
 
@@ -179,8 +173,7 @@ describe('LogDiscovery', () => {
       });
 
       const logDiscovery = new LogDiscovery('/project');
-      // @ts-ignore
-      const escaped = logDiscovery.escapeProjectPath();
+      const escaped = (logDiscovery as any).escapeProjectPath() as string;
       expect(escaped).toBe('-project');
     });
   });
@@ -349,8 +342,7 @@ describe('GateIntegration', () => {
       const sessionId = 'abc12345-6789-def0-1234-567890abcdef';
       const timestamp = '2026-02-11T23:00:00.000Z';
 
-      // @ts-ignore - accessing private method for testing
-      const chainId = gateIntegration.generateChainId(sessionId, timestamp);
+      const chainId = (gateIntegration as any).generateChainId(sessionId, timestamp) as string;
 
       expect(chainId).toContain('chain-');
       expect(chainId).toContain('abc12345'); // First 8 chars
@@ -362,10 +354,8 @@ describe('GateIntegration', () => {
       const timestamp1 = '2026-02-11T23:00:00.000Z';
       const timestamp2 = '2026-02-11T23:01:00.000Z';
 
-      // @ts-ignore
-      const chainId1 = gateIntegration.generateChainId(sessionId, timestamp1);
-      // @ts-ignore
-      const chainId2 = gateIntegration.generateChainId(sessionId, timestamp2);
+      const chainId1 = (gateIntegration as any).generateChainId(sessionId, timestamp1) as string;
+      const chainId2 = (gateIntegration as any).generateChainId(sessionId, timestamp2) as string;
 
       expect(chainId1).not.toBe(chainId2);
     });
@@ -375,10 +365,8 @@ describe('GateIntegration', () => {
       const sessionId2 = 'xyz98765-4321-fed0-4321-098765fedcba';
       const timestamp = '2026-02-11T23:00:00.000Z';
 
-      // @ts-ignore
-      const chainId1 = gateIntegration.generateChainId(sessionId1, timestamp);
-      // @ts-ignore
-      const chainId2 = gateIntegration.generateChainId(sessionId2, timestamp);
+      const chainId1 = (gateIntegration as any).generateChainId(sessionId1, timestamp) as string;
+      const chainId2 = (gateIntegration as any).generateChainId(sessionId2, timestamp) as string;
 
       expect(chainId1).not.toBe(chainId2);
       expect(chainId1).toContain('abc12345');

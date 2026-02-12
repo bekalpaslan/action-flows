@@ -48,8 +48,7 @@ describe('ClaudeCliSessionProcess', () => {
     };
 
     // Setup mock spawn
-    mockSpawn = vi.fn().mockReturnValue(mockChildProcess);
-    // @ts-ignore - Mock doesn't need to match full ChildProcess type
+    mockSpawn = vi.fn().mockReturnValue(mockChildProcess) satisfies typeof childProcessModule.spawn;
     (childProcessModule.spawn as any) = mockSpawn;
   });
 
@@ -89,13 +88,12 @@ describe('ClaudeCliSessionProcess', () => {
       const session = new ClaudeCliSessionProcess(sessionId, cwd, args);
 
       // Trigger spawn event
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       await session.start();
 
@@ -112,13 +110,12 @@ describe('ClaudeCliSessionProcess', () => {
     it('should transition status from starting to running on spawn', async () => {
       const session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
 
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       expect(session.getInfo().status).toBe('starting');
 
@@ -147,13 +144,12 @@ describe('ClaudeCliSessionProcess', () => {
     it('should reject double start attempts', async () => {
       const session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
 
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       await session.start();
 
@@ -163,13 +159,12 @@ describe('ClaudeCliSessionProcess', () => {
     it('should report isRunning as true when process is active', async () => {
       const session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
 
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       expect(session.isRunning()).toBe(false);
 
@@ -233,13 +228,12 @@ describe('ClaudeCliSessionProcess', () => {
     beforeEach(async () => {
       session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
 
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       await session.start();
     });
@@ -392,13 +386,12 @@ describe('ClaudeCliSessionProcess', () => {
     beforeEach(async () => {
       session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
 
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       await session.start();
     });
@@ -477,13 +470,12 @@ describe('ClaudeCliSessionProcess', () => {
     beforeEach(async () => {
       session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
 
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn((event, handler) => {
         if (event === 'data') stdoutHandler = handler;

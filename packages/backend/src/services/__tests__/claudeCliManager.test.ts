@@ -66,17 +66,15 @@ describe('ClaudeCliManager', () => {
     };
 
     // Setup mock spawn
-    mockSpawn = vi.fn().mockReturnValue(mockChildProcess);
-    // @ts-ignore - Mock doesn't need to match full ChildProcess type
+    mockSpawn = vi.fn().mockReturnValue(mockChildProcess) satisfies typeof childProcessModule.spawn;
     (childProcessModule.spawn as any) = mockSpawn;
 
     // Setup fs.realpath mock
     (fs.realpath as any).mockImplementation((path: string) => Promise.resolve(path));
 
     // Setup broadcast spy
-    broadcastSpy = vi.fn();
-    // @ts-ignore - Mock function signature is compatible at runtime
-    claudeCliManager.setBroadcastFunction(broadcastSpy);
+    broadcastSpy = vi.fn() satisfies ReturnType<typeof vi.fn>;
+    claudeCliManager.setBroadcastFunction(broadcastSpy as any);
 
     // Clear any existing sessions from singleton
     claudeCliManager.stopAllSessions();
@@ -97,13 +95,12 @@ describe('ClaudeCliManager', () => {
 
   describe('startSession', () => {
     beforeEach(() => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn().mockReturnValue(mockChildProcess.stdout);
       mockChildProcess.stderr.on = vi.fn().mockReturnValue(mockChildProcess.stderr);
@@ -308,13 +305,12 @@ describe('ClaudeCliManager', () => {
 
   describe('Security Validation - validateCwd', () => {
     beforeEach(() => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn().mockReturnValue(mockChildProcess.stdout);
       mockChildProcess.stderr.on = vi.fn().mockReturnValue(mockChildProcess.stderr);
@@ -389,13 +385,12 @@ describe('ClaudeCliManager', () => {
 
   describe('Security Validation - validateFlags', () => {
     beforeEach(() => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn().mockReturnValue(mockChildProcess.stdout);
       mockChildProcess.stderr.on = vi.fn().mockReturnValue(mockChildProcess.stderr);
@@ -488,8 +483,7 @@ describe('ClaudeCliManager', () => {
     let exitHandler: (code: number | null, signal: string | null) => void;
 
     beforeEach(async () => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         } else if (event === 'exit') {
@@ -581,8 +575,7 @@ describe('ClaudeCliManager', () => {
     let exitHandler: (code: number | null, signal: string | null) => void;
 
     beforeEach(async () => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         } else if (event === 'exit') {
@@ -680,13 +673,12 @@ describe('ClaudeCliManager', () => {
 
   describe('getSession', () => {
     beforeEach(() => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn().mockReturnValue(mockChildProcess.stdout);
       mockChildProcess.stderr.on = vi.fn().mockReturnValue(mockChildProcess.stderr);
@@ -712,13 +704,12 @@ describe('ClaudeCliManager', () => {
 
   describe('stopSession', () => {
     beforeEach(async () => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn().mockReturnValue(mockChildProcess.stdout);
       mockChildProcess.stderr.on = vi.fn().mockReturnValue(mockChildProcess.stderr);
@@ -760,13 +751,12 @@ describe('ClaudeCliManager', () => {
 
   describe('listSessions', () => {
     beforeEach(() => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn().mockReturnValue(mockChildProcess.stdout);
       mockChildProcess.stderr.on = vi.fn().mockReturnValue(mockChildProcess.stderr);
@@ -795,13 +785,12 @@ describe('ClaudeCliManager', () => {
 
   describe('stopAllSessions', () => {
     beforeEach(async () => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn().mockReturnValue(mockChildProcess.stdout);
       mockChildProcess.stderr.on = vi.fn().mockReturnValue(mockChildProcess.stderr);
@@ -842,13 +831,12 @@ describe('ClaudeCliManager', () => {
 
   describe('getSessionCount', () => {
     beforeEach(() => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn().mockReturnValue(mockChildProcess.stdout);
       mockChildProcess.stderr.on = vi.fn().mockReturnValue(mockChildProcess.stderr);
@@ -872,8 +860,7 @@ describe('ClaudeCliManager', () => {
     it('should decrement after session exits', async () => {
       let exitHandler: (code: number | null, signal: string | null) => void;
 
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         } else if (event === 'exit') {
@@ -893,13 +880,12 @@ describe('ClaudeCliManager', () => {
 
   describe('Session Limits', () => {
     beforeEach(() => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn().mockReturnValue(mockChildProcess.stdout);
       mockChildProcess.stderr.on = vi.fn().mockReturnValue(mockChildProcess.stderr);
@@ -923,8 +909,7 @@ describe('ClaudeCliManager', () => {
     it('should allow new session after one exits', async () => {
       let exitHandler: (code: number | null, signal: string | null) => void;
 
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         } else if (event === 'exit') {
@@ -961,21 +946,19 @@ describe('ClaudeCliManager', () => {
 
   describe('Error Handling', () => {
     beforeEach(() => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         }
         return mockChildProcess;
-      });
+      })) as any;
 
       mockChildProcess.stdout.on = vi.fn().mockReturnValue(mockChildProcess.stdout);
       mockChildProcess.stderr.on = vi.fn().mockReturnValue(mockChildProcess.stderr);
     });
 
     it('should clean up session on spawn error', async () => {
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'error') {
           setTimeout(() => handler(new Error('Spawn error')), 0);
         }
@@ -992,8 +975,7 @@ describe('ClaudeCliManager', () => {
     it('should remove session from map on error event', async () => {
       let errorHandler: (error: Error) => void;
 
-      // @ts-ignore - Mock event handler
-      mockChildProcess.on = vi.fn((event, handler) => {
+      mockChildProcess.on = (vi.fn((event, handler) => {
         if (event === 'spawn') {
           setTimeout(() => handler(), 0);
         } else if (event === 'error') {

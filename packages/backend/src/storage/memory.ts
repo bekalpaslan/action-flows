@@ -1,6 +1,6 @@
 import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
-import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
+import { brandedTypes, calculateFreshnessGrade, duration, sessionSchema, chainSchema, workspaceEventSchema, validateStorageData } from '@afw/shared';
 import { lifecycleManager } from './lifecycleHooks.js';
 
 /**
@@ -190,7 +190,11 @@ export const storage: MemoryStorage = {
   // Sessions
   sessions: new Map(),
   getSession(sessionId: SessionId) {
-    return this.sessions.get(sessionId);
+    const session = this.sessions.get(sessionId);
+    if (!session) return undefined;
+    // Validate session on retrieval for data integrity
+    const validated = validateStorageData(session, sessionSchema, `getSession(${sessionId})`);
+    return validated as Session | undefined || session;
   },
   setSession(session: Session) {
     // If at capacity and this is a new session, evict oldest completed
@@ -256,8 +260,15 @@ export const storage: MemoryStorage = {
   // Events
   events: new Map(),
   addEvent(sessionId: SessionId, event: WorkspaceEvent) {
+    // Validate event on ingestion for data integrity
+    const validated = validateStorageData(event, workspaceEventSchema, `addEvent(${sessionId})`);
+    if (!validated) {
+      console.warn(`[Storage] Dropping invalid event for session ${sessionId}:`, event);
+      return;
+    }
+
     const events = this.events.get(sessionId) || [];
-    events.push(event);
+    events.push(validated as WorkspaceEvent);
     // Evict oldest if over limit (FIFO)
     if (events.length > MAX_EVENTS_PER_SESSION) {
       events.splice(0, events.length - MAX_EVENTS_PER_SESSION);
@@ -301,7 +312,11 @@ export const storage: MemoryStorage = {
   getChain(chainId: ChainId) {
     for (const chainArray of this.chains.values()) {
       const chain = chainArray.find((c) => c.id === chainId);
-      if (chain) return chain;
+      if (chain) {
+        // Validate chain on retrieval for data integrity
+        const validated = validateStorageData(chain, chainSchema, `getChain(${chainId})`);
+        return validated as Chain | undefined || chain;
+      }
     }
     return undefined;
   },

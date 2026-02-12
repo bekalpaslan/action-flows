@@ -9,6 +9,19 @@ import { useState, useEffect } from 'react';
 import { onCLS, onFID, onLCP, onTTFB, type Metric } from 'web-vitals';
 
 /**
+ * Augment Performance interface to include Chrome-specific memory API
+ */
+declare global {
+  interface Performance {
+    memory?: {
+      jsHeapSizeLimit: number;
+      totalJSHeapSize: number;
+      usedJSHeapSize: number;
+    };
+  }
+}
+
+/**
  * Web Vitals metrics captured by the dashboard
  */
 export interface WebVitalsMetrics {
@@ -123,9 +136,7 @@ export function useRenderTiming(componentName: string): void {
  * @returns Memory usage in MB or undefined if not available
  */
 export function getMemoryUsage(): number | undefined {
-  // @ts-expect-error - performance.memory is Chrome-specific
   if (performance.memory && performance.memory.usedJSHeapSize) {
-    // @ts-expect-error - performance.memory is Chrome-specific
     return performance.memory.usedJSHeapSize / (1024 * 1024);
   }
   return undefined;
