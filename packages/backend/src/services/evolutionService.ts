@@ -16,6 +16,7 @@ import type {
   Timestamp,
 } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
+import { broadcastEvolutionTick, broadcastMapExpanded } from '../ws/universeEvents.js';
 
 /**
  * Interaction context for evolution computation
@@ -194,8 +195,6 @@ export class EvolutionService {
    */
   private broadcastTick(tick: EvolutionTick): void {
     try {
-      // Dynamic import to avoid circular dependency
-      const { broadcastEvolutionTick } = require('../ws/universeEvents.js');
       broadcastEvolutionTick(
         tick.sessionId,
         tick.id,
@@ -265,7 +264,6 @@ export class EvolutionService {
     await storage.updateUniverse(universe);
 
     // Broadcast map expansion
-    const { broadcastMapExpanded } = require('../ws/universeEvents.js');
     broadcastMapExpanded(sessionId, newRegion.id, []);
 
     console.log(`[EvolutionService] New region created for workbench: ${workbench.name}`);
@@ -326,7 +324,6 @@ export class EvolutionService {
 
         // Broadcast map expansion if new bridges created
         if (result.newBridgeIds.length > 0) {
-          const { broadcastMapExpanded } = require('../ws/universeEvents.js');
           broadcastMapExpanded(sessionId, null, result.newBridgeIds);
         }
 
