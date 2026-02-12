@@ -5,13 +5,14 @@
  * gate passages and trigger gate validation. Enables automatic gate trace recording
  * during live Claude Code sessions without any orchestrator burden.
  *
- * Phase 1: Gate 4 (chain compilation) detection
+ * Detects gates: G2 (context routing), G4 (chain compilation), G6 (step boundary),
+ * G8 (execution complete), G9 (agent spawn), G11 (registry update)
  *
  * Architecture:
  * - LogDiscovery: Find Claude Code session JSONL file
  * - LogTailer: Watch file for new entries using chokidar
- * - ChainDetector: Pattern match chain compilation format
- * - GateIntegration: Call existing validateChainCompilation()
+ * - GateDetector: Pattern match all major gate events
+ * - GateIntegration: Call gate validators
  */
 
 import chokidar, { type FSWatcher } from 'chokidar';
@@ -20,8 +21,12 @@ import * as path from 'path';
 import * as os from 'os';
 import * as readline from 'readline';
 import { validateChainCompilation } from './checkpoints/gate04-chain-compilation.js';
+import { validateContextRouting } from './checkpoints/gate02-context-routing.js';
+import { validateStepBoundary } from './checkpoints/gate06-step-boundary.js';
+import { validateExecutionComplete } from './checkpoints/gate08-execution-complete.js';
+import { validateRegistryUpdate } from './checkpoints/gate11-registry-update.js';
 import { getGateCheckpoint, type GateCheckpoint } from './gateCheckpoint.js';
-import type { ChainId } from '@afw/shared';
+import type { ChainId, StepId } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import type { Storage } from '../storage/index.js';
 
@@ -250,45 +255,134 @@ export class LogTailer {
 }
 
 // ============================================================================
-// ChainDetector Component
+// GateDetector Component
 // ============================================================================
 
 /**
- * Pattern matching for chain compilation format (Gate 4)
+ * Detected gate event
  */
-export class ChainDetector {
+interface GateEvent {
+  gateId: 'gate-02' | 'gate-04' | 'gate-06' | 'gate-08' | 'gate-09' | 'gate-11';
+  content: string;
+  metadata?: Record<string, any>;
+}
+
+/**
+ * Pattern matching for all major gate events
+ */
+export class GateDetector {
   private static readonly PATTERNS = {
-    // 1. Header: "## Chain: {name}"
-    header: /^##\s+Chain:\s+.+$/m,
+    // Gate 2: Context Routing
+    contextRouting: /(?:Routing to|Context:)\s+(\w+)/i,
 
-    // 2. Table header: "| # | Action | Model |"
-    tableHeader: /^\|\s*#\s*\|\s*Action\s*\|\s*Model\s*\|/m,
+    // Gate 4: Chain Compilation
+    chainHeader: /^##\s+Chain:\s+.+$/m,
+    chainTableHeader: /^\|\s*#\s*\|\s*Action\s*\|\s*Model\s*\|/m,
+    chainTableRow: /^\|\s*\d+\s*\|\s*[\w/]+\s*\|\s*\w+\s*\|/m,
 
-    // 3. Table row: "| 1 | analyze/ | sonnet | ..."
-    tableRow: /^\|\s*\d+\s*\|\s*[\w/]+\s*\|\s*\w+\s*\|/m,
+    // Gate 6: Step Boundary
+    stepComplete: />>+\s*Step\s+\d+\s+complete:\s*/i,
+    sixTriggers: /\[(?:SIGNAL|PATTERN|DEPENDENCY|QUALITY|REDESIGN|REUSE)\]/i,
+
+    // Gate 8: Execution Complete
+    executionComplete: /(?:COMPLETE|Execution Complete)/i,
+
+    // Gate 11: Registry Update
+    registryFile: /(?:INDEX|LEARNINGS|FLOWS|ACTIONS|CONTEXTS)\.md/i,
+    updateConfirmation: /(?:Registry updated|Done\.|successfully|added|removed)/i,
   };
 
   /**
-   * Check if text contains chain compilation table
-   * Uses same patterns as CONTRACT.md validation
+   * Detect all gate events in text content
+   * Returns array of detected gate events
    */
-  isChainCompilation(text: string): boolean {
+  detectGates(text: string): GateEvent[] {
+    const events: GateEvent[] = [];
+
+    // G2: Context Routing
+    if (GateDetector.PATTERNS.contextRouting.test(text)) {
+      events.push({
+        gateId: 'gate-02',
+        content: text,
+      });
+    }
+
+    // G4: Chain Compilation
+    if (this.isChainCompilation(text)) {
+      const chainMarkdown = this.extractChainCompilation(text);
+      if (chainMarkdown) {
+        events.push({
+          gateId: 'gate-04',
+          content: chainMarkdown,
+        });
+      }
+    }
+
+    // G6: Step Boundary
+    if (GateDetector.PATTERNS.stepComplete.test(text)) {
+      events.push({
+        gateId: 'gate-06',
+        content: text,
+      });
+    }
+
+    // G8: Execution Complete
+    if (this.isExecutionComplete(text)) {
+      events.push({
+        gateId: 'gate-08',
+        content: text,
+      });
+    }
+
+    // G11: Registry Update
+    if (this.isRegistryUpdate(text)) {
+      events.push({
+        gateId: 'gate-11',
+        content: text,
+      });
+    }
+
+    return events;
+  }
+
+  /**
+   * Detect agent spawn tool_use blocks
+   * Returns G9 event if Task tool detected
+   */
+  detectAgentSpawn(toolUse: { type: 'tool_use'; id: string; name: string; input: any }): GateEvent | null {
+    if (toolUse.name === 'Task') {
+      return {
+        gateId: 'gate-09',
+        content: JSON.stringify(toolUse.input, null, 2),
+        metadata: {
+          toolId: toolUse.id,
+          subagentType: toolUse.input.subagent_type,
+          model: toolUse.input.model,
+          prompt: toolUse.input.prompt?.substring(0, 500),
+        },
+      };
+    }
+    return null;
+  }
+
+  /**
+   * Check if text contains chain compilation table
+   */
+  private isChainCompilation(text: string): boolean {
     return (
-      ChainDetector.PATTERNS.header.test(text) &&
-      ChainDetector.PATTERNS.tableHeader.test(text) &&
-      ChainDetector.PATTERNS.tableRow.test(text)
+      GateDetector.PATTERNS.chainHeader.test(text) &&
+      GateDetector.PATTERNS.chainTableHeader.test(text) &&
+      GateDetector.PATTERNS.chainTableRow.test(text)
     );
   }
 
   /**
    * Extract clean chain compilation markdown
-   * Returns: Markdown string starting from "## Chain:" header
    */
-  extractChainCompilation(text: string): string | null {
+  private extractChainCompilation(text: string): string | null {
     if (!this.isChainCompilation(text)) return null;
 
-    // Find "## Chain:" header
-    const headerMatch = text.match(ChainDetector.PATTERNS.header);
+    const headerMatch = text.match(GateDetector.PATTERNS.chainHeader);
     if (!headerMatch) return null;
 
     const startIndex = headerMatch.index!;
@@ -302,11 +396,29 @@ export class ChainDetector {
       if (line.match(/^\|\s*#\s*\|/)) {
         inTable = true;
       } else if (inTable && line.trim() === '') {
-        break; // End of table (blank line)
+        break;
       }
     }
 
     return chainLines.join('\n').trim();
+  }
+
+  /**
+   * Check if text is execution complete table
+   */
+  private isExecutionComplete(text: string): boolean {
+    const hasCompleteMarker = GateDetector.PATTERNS.executionComplete.test(text);
+    const hasTable = GateDetector.PATTERNS.chainTableHeader.test(text);
+    return hasCompleteMarker && hasTable;
+  }
+
+  /**
+   * Check if text is registry update
+   */
+  private isRegistryUpdate(text: string): boolean {
+    const hasRegistryFile = GateDetector.PATTERNS.registryFile.test(text);
+    const hasConfirmation = GateDetector.PATTERNS.updateConfirmation.test(text);
+    return hasRegistryFile && hasConfirmation;
   }
 }
 
@@ -315,46 +427,103 @@ export class ChainDetector {
 // ============================================================================
 
 /**
- * Bridge between ChainDetector and GateCheckpoint service
+ * Bridge between GateDetector and GateCheckpoint service
  */
 export class GateIntegration {
   private gateCheckpoint: GateCheckpoint;
+  private currentStepCounter: number = 0;
 
   constructor(gateCheckpoint: GateCheckpoint) {
     this.gateCheckpoint = gateCheckpoint;
   }
 
   /**
-   * Process detected chain compilation
-   * Calls validateChainCompilation() from gate04-chain-compilation.ts
+   * Process detected gate event
+   * Routes to appropriate validator based on gateId
    */
-  async processChainCompilation(
+  async processGateEvent(
     entry: AssistantMessage,
-    chainMarkdown: string
+    event: GateEvent
   ): Promise<void> {
     try {
-      // Generate ChainId from sessionId + timestamp
       const chainId = this.generateChainId(entry.sessionId, entry.timestamp);
 
-      // Call existing gate validator (fire-and-forget)
-      await validateChainCompilation(chainMarkdown, chainId);
+      switch (event.gateId) {
+        case 'gate-02':
+          await validateContextRouting(event.content, chainId);
+          console.log(`[ConversationWatcher] Gate 2 (Context Routing) detected for chain ${chainId}`);
+          break;
 
-      console.log(`[ConversationWatcher] Gate 4 validated for chain ${chainId}`);
+        case 'gate-04':
+          await validateChainCompilation(event.content, chainId);
+          console.log(`[ConversationWatcher] Gate 4 (Chain Compilation) detected for chain ${chainId}`);
+          break;
+
+        case 'gate-06':
+          const stepId = this.generateStepId(chainId);
+          await validateStepBoundary(event.content, chainId, stepId);
+          console.log(`[ConversationWatcher] Gate 6 (Step Boundary) detected for chain ${chainId}`);
+          break;
+
+        case 'gate-08':
+          await validateExecutionComplete(event.content, chainId);
+          console.log(`[ConversationWatcher] Gate 8 (Execution Complete) detected for chain ${chainId}`);
+          break;
+
+        case 'gate-09':
+          // G9 is detected from tool_use blocks, not text
+          // This case handled separately in processAgentSpawn
+          break;
+
+        case 'gate-11':
+          await validateRegistryUpdate(event.content, chainId);
+          console.log(`[ConversationWatcher] Gate 11 (Registry Update) detected for chain ${chainId}`);
+          break;
+      }
     } catch (error) {
-      console.error('[ConversationWatcher] Error validating chain compilation:', error);
+      console.error(`[ConversationWatcher] Error validating ${event.gateId}:`, error);
       // Don't throw - validation errors are logged by GateCheckpoint
     }
   }
 
   /**
+   * Process agent spawn event (Gate 9)
+   * Special handling for tool_use blocks
+   */
+  async processAgentSpawn(
+    entry: AssistantMessage,
+    event: GateEvent
+  ): Promise<void> {
+    try {
+      const chainId = this.generateChainId(entry.sessionId, entry.timestamp);
+
+      // Gate 9 validator expects actionType and outputPath
+      // For now, we'll skip full validation since we don't have the output path yet
+      // The validator will be called when the agent completes
+      console.log(`[ConversationWatcher] Gate 9 (Agent Spawn) detected for chain ${chainId}`);
+
+      // Note: Full G9 validation happens after agent completes and writes output
+      // This is just spawn detection
+    } catch (error) {
+      console.error('[ConversationWatcher] Error processing agent spawn:', error);
+    }
+  }
+
+  /**
    * Generate ChainId from sessionId + timestamp
-   * Internal helper
    */
   private generateChainId(sessionId: string, timestamp: string): ChainId {
-    // Format: chain-{first-8-chars}-{unix-timestamp}
     const sessionPrefix = sessionId.substring(0, 8);
     const unixTime = new Date(timestamp).getTime();
     return brandedTypes.chainId(`chain-${sessionPrefix}-${unixTime}`);
+  }
+
+  /**
+   * Generate StepId for step boundary validation
+   */
+  private generateStepId(chainId: ChainId): StepId {
+    this.currentStepCounter++;
+    return brandedTypes.stepId(`${chainId}-step-${this.currentStepCounter}`);
   }
 }
 
@@ -371,7 +540,7 @@ export class ConversationWatcher {
   private gateCheckpoint: GateCheckpoint;
   private logDiscovery: LogDiscovery;
   private logTailer: LogTailer | null = null;
-  private chainDetector: ChainDetector;
+  private gateDetector: GateDetector;
   private gateIntegration: GateIntegration;
   private currentLogPath: string | null = null;
 
@@ -379,7 +548,7 @@ export class ConversationWatcher {
     this.storage = storage;
     this.gateCheckpoint = gateCheckpoint;
     this.logDiscovery = new LogDiscovery(projectPath);
-    this.chainDetector = new ChainDetector();
+    this.gateDetector = new GateDetector();
     this.gateIntegration = new GateIntegration(gateCheckpoint);
   }
 
@@ -448,23 +617,31 @@ export class ConversationWatcher {
 
   /**
    * Handle assistant message
-   * Internal - extracts text blocks and runs chain detection
+   * Internal - extracts content blocks and runs gate detection
    */
   private async processAssistantMessage(entry: AssistantMessage): Promise<void> {
-    // Extract text content blocks
+    // Process text blocks for text-based gates (G2, G4, G6, G8, G11)
     const textBlocks = entry.message.content
       .filter(block => block.type === 'text')
       .map(block => (block as { type: 'text'; text: string }).text);
 
-    // Check each text block for chain compilation
     for (const text of textBlocks) {
-      if (this.chainDetector.isChainCompilation(text)) {
-        const chainMarkdown = this.chainDetector.extractChainCompilation(text);
+      const gateEvents = this.gateDetector.detectGates(text);
 
-        if (chainMarkdown) {
-          console.log('[ConversationWatcher] Chain compilation detected');
-          await this.gateIntegration.processChainCompilation(entry, chainMarkdown);
-        }
+      for (const event of gateEvents) {
+        await this.gateIntegration.processGateEvent(entry, event);
+      }
+    }
+
+    // Process tool_use blocks for agent spawn detection (G9)
+    const toolUseBlocks = entry.message.content
+      .filter(block => block.type === 'tool_use')
+      .map(block => block as { type: 'tool_use'; id: string; name: string; input: any });
+
+    for (const toolUse of toolUseBlocks) {
+      const spawnEvent = this.gateDetector.detectAgentSpawn(toolUse);
+      if (spawnEvent) {
+        await this.gateIntegration.processAgentSpawn(entry, spawnEvent);
       }
     }
   }

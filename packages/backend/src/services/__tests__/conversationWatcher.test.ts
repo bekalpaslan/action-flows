@@ -2,7 +2,7 @@
  * ConversationWatcher Service Tests
  *
  * Focused unit tests for core components:
- * - ChainDetector: Pattern matching for chain compilation format (100% coverage)
+ * - GateDetector: Pattern matching for all gate events (G2, G4, G6, G8, G11)
  * - GateIntegration: ChainId generation logic
  * - ConversationWatcher: Message filtering logic
  *
@@ -11,7 +11,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ChainDetector, GateIntegration, LogDiscovery } from '../conversationWatcher.js';
+import { GateDetector, GateIntegration, LogDiscovery } from '../conversationWatcher.js';
 import type { GateCheckpoint } from '../gateCheckpoint.js';
 
 // ============================================================================
@@ -187,37 +187,47 @@ describe('LogDiscovery', () => {
 });
 
 // ============================================================================
-// ChainDetector Tests (Complete Coverage)
+// GateDetector Tests (Complete Coverage)
 // ============================================================================
 
-describe('ChainDetector', () => {
-  let chainDetector: ChainDetector;
+describe('GateDetector', () => {
+  let gateDetector: GateDetector;
 
   beforeEach(() => {
-    chainDetector = new ChainDetector();
+    gateDetector = new GateDetector();
   });
 
-  describe('isChainCompilation', () => {
+  describe('detectGates - Chain Compilation (G4)', () => {
     it('should detect valid chain compilation (all 3 patterns)', () => {
-      expect(chainDetector.isChainCompilation(SAMPLE_CHAIN_COMPILATION)).toBe(true);
+      const events = gateDetector.detectGates(SAMPLE_CHAIN_COMPILATION);
+      expect(events).toHaveLength(1);
+      expect(events[0].gateId).toBe('gate-04');
     });
 
     it('should reject status update table (wrong columns)', () => {
-      expect(chainDetector.isChainCompilation(SAMPLE_STATUS_TABLE)).toBe(false);
+      const events = gateDetector.detectGates(SAMPLE_STATUS_TABLE);
+      const g4Events = events.filter(e => e.gateId === 'gate-04');
+      expect(g4Events).toHaveLength(0);
     });
 
     it('should reject execution log (no ## Chain: header)', () => {
-      expect(chainDetector.isChainCompilation(SAMPLE_EXECUTION_LOG)).toBe(false);
+      const events = gateDetector.detectGates(SAMPLE_EXECUTION_LOG);
+      const g4Events = events.filter(e => e.gateId === 'gate-04');
+      expect(g4Events).toHaveLength(0);
     });
 
     it('should reject plain text without table', () => {
       const plainText = `## Chain: Test\n\nThis is just text without a table.`;
-      expect(chainDetector.isChainCompilation(plainText)).toBe(false);
+      const events = gateDetector.detectGates(plainText);
+      const g4Events = events.filter(e => e.gateId === 'gate-04');
+      expect(g4Events).toHaveLength(0);
     });
 
     it('should reject text with header but no table', () => {
       const noTable = `## Chain: Missing Table\n\nSome explanation text.`;
-      expect(chainDetector.isChainCompilation(noTable)).toBe(false);
+      const events = gateDetector.detectGates(noTable);
+      const g4Events = events.filter(e => e.gateId === 'gate-04');
+      expect(g4Events).toHaveLength(0);
     });
 
     it('should reject text with table but no header', () => {
@@ -226,40 +236,45 @@ describe('ChainDetector', () => {
 |---|--------|-------|--------|
 | 1 | test/ | sonnet | ⏳ Pending |
 `;
-      expect(chainDetector.isChainCompilation(noHeader)).toBe(false);
+      const events = gateDetector.detectGates(noHeader);
+      const g4Events = events.filter(e => e.gateId === 'gate-04');
+      expect(g4Events).toHaveLength(0);
     });
 
     it('should detect chain compilation with extra text before', () => {
       const withPreamble = `Here's the plan:\n\n${SAMPLE_CHAIN_COMPILATION}`;
-      expect(chainDetector.isChainCompilation(withPreamble)).toBe(true);
+      const events = gateDetector.detectGates(withPreamble);
+      const g4Events = events.filter(e => e.gateId === 'gate-04');
+      expect(g4Events).toHaveLength(1);
     });
 
     it('should detect chain compilation with extra text after', () => {
       const withPostamble = `${SAMPLE_CHAIN_COMPILATION}\n\nLet me know if this looks good!`;
-      expect(chainDetector.isChainCompilation(withPostamble)).toBe(true);
+      const events = gateDetector.detectGates(withPostamble);
+      const g4Events = events.filter(e => e.gateId === 'gate-04');
+      expect(g4Events).toHaveLength(1);
     });
   });
 
-  describe('extractChainCompilation', () => {
+  describe('extractChainCompilation - G4 content', () => {
     it('should extract correct markdown boundaries', () => {
-      const extracted = chainDetector.extractChainCompilation(SAMPLE_CHAIN_COMPILATION);
+      const events = gateDetector.detectGates(SAMPLE_CHAIN_COMPILATION);
+      const g4Event = events.find(e => e.gateId === 'gate-04');
 
-      expect(extracted).toBeTruthy();
-      expect(extracted).toContain('## Chain: Test Implementation');
-      expect(extracted).toContain('| # | Action | Model |');
-      expect(extracted).toContain('| 1 | analyze/inventory | sonnet |');
-      expect(extracted).toContain('| 2 | code/implementation | opus |');
-      expect(extracted).toContain('| 3 | review/code | sonnet |');
+      expect(g4Event).toBeTruthy();
+      expect(g4Event!.content).toContain('## Chain: Test Implementation');
+      expect(g4Event!.content).toContain('| # | Action | Model |');
+      expect(g4Event!.content).toContain('| 1 | analyze/inventory | sonnet |');
+      expect(g4Event!.content).toContain('| 2 | code/implementation | opus |');
+      expect(g4Event!.content).toContain('| 3 | review/code | sonnet |');
     });
 
     it('should stop at blank line after table', () => {
-      const extracted = chainDetector.extractChainCompilation(SAMPLE_CHAIN_COMPILATION);
-      expect(extracted).toBeTruthy();
+      const events = gateDetector.detectGates(SAMPLE_CHAIN_COMPILATION);
+      const g4Event = events.find(e => e.gateId === 'gate-04');
+      expect(g4Event).toBeTruthy();
 
-      // Should not include the "**Execution:** Sequential" line (it's after blank line)
-      // Actually, the table ends before that, so this might be included
-      // Let's check that it stops at the right place
-      const lines = extracted!.split('\n');
+      const lines = g4Event!.content.split('\n');
       const lastLine = lines[lines.length - 1];
 
       // Last line should be the last table row
@@ -279,15 +294,24 @@ Some text in between.
 | 1 | test/ | sonnet | - | - | ⏳ Pending |
 `;
 
-      const extracted = chainDetector.extractChainCompilation(multiChain);
-      expect(extracted).toContain('Test Implementation');
-      expect(extracted).not.toContain('Second Chain');
+      const events = gateDetector.detectGates(multiChain);
+      const g4Event = events.find(e => e.gateId === 'gate-04');
+      expect(g4Event!.content).toContain('Test Implementation');
+      expect(g4Event!.content).not.toContain('Second Chain');
     });
 
-    it('should return null for non-chain text', () => {
-      expect(chainDetector.extractChainCompilation(SAMPLE_STATUS_TABLE)).toBeNull();
-      expect(chainDetector.extractChainCompilation(SAMPLE_EXECUTION_LOG)).toBeNull();
-      expect(chainDetector.extractChainCompilation('random text')).toBeNull();
+    it('should return empty for non-chain text', () => {
+      const events1 = gateDetector.detectGates(SAMPLE_STATUS_TABLE);
+      const g4Events1 = events1.filter(e => e.gateId === 'gate-04');
+      expect(g4Events1).toHaveLength(0);
+
+      const events2 = gateDetector.detectGates(SAMPLE_EXECUTION_LOG);
+      const g4Events2 = events2.filter(e => e.gateId === 'gate-04');
+      expect(g4Events2).toHaveLength(0);
+
+      const events3 = gateDetector.detectGates('random text');
+      const g4Events3 = events3.filter(e => e.gateId === 'gate-04');
+      expect(g4Events3).toHaveLength(0);
     });
 
     it('should handle chain with minimal table', () => {
@@ -298,10 +322,11 @@ Some text in between.
 | 1 | test/ | sonnet | ⏳ Pending |
 `;
 
-      const extracted = chainDetector.extractChainCompilation(minimalChain);
-      expect(extracted).toBeTruthy();
-      expect(extracted).toContain('## Chain: Minimal');
-      expect(extracted).toContain('| 1 | test/ | sonnet |');
+      const events = gateDetector.detectGates(minimalChain);
+      const g4Event = events.find(e => e.gateId === 'gate-04');
+      expect(g4Event).toBeTruthy();
+      expect(g4Event!.content).toContain('## Chain: Minimal');
+      expect(g4Event!.content).toContain('| 1 | test/ | sonnet |');
     });
   });
 });
@@ -364,19 +389,24 @@ describe('GateIntegration', () => {
     });
   });
 
-  describe('processChainCompilation', () => {
+  describe('processGateEvent', () => {
     it('should log errors without throwing', async () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       // This will fail because getGateCheckpoint() is not initialized in test env
       // But it should log the error and continue
-      await gateIntegration.processChainCompilation(
+      const gateEvent = {
+        gateId: 'gate-04' as const,
+        content: SAMPLE_CHAIN_COMPILATION,
+      };
+
+      await gateIntegration.processGateEvent(
         SAMPLE_ASSISTANT_MESSAGE,
-        SAMPLE_CHAIN_COMPILATION
+        gateEvent
       );
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        expect.stringContaining('[ConversationWatcher] Error validating chain compilation'),
+        expect.stringContaining('[ConversationWatcher] Error validating gate-04'),
         expect.any(Error)
       );
 
