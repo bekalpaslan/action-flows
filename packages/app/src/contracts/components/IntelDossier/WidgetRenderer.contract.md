@@ -42,6 +42,36 @@ None — computed from props only. Layout type and widget list are derived from 
 
 ---
 
+## Interactions
+
+### Parent Communication
+- **Mechanism:** none
+- **Description:** Stateless layout component renders widgets without callbacks
+- **Example:** Parent passes `layoutDescriptor` → WidgetRenderer maps widgets to components
+
+### Child Communication
+- **Child:** Any registered widget component (StatCard, InsightCard, etc.) or UnknownWidget
+- **Mechanism:** props
+- **Data Flow:** Passes `data` and `span` props to each widget component
+
+### Sibling Communication
+- **Sibling:** none
+- **Mechanism:** none
+- **Description:** Widgets are siblings within grid layout, communicate via parent
+
+### Context Interaction
+- **Context:** none
+- **Role:** none
+- **Operations:** none
+
+---
+
+## Side Effects
+
+None — pure presentation component with no side effects.
+
+---
+
 ## Behavior
 
 - Maps widget types to registered components via `WIDGET_REGISTRY`

@@ -47,6 +47,38 @@ None — props only. This is a stateless presentational component. All state is 
 | onSelectProject | (project: Project \| null) => void | ✅ | Selection callback |
 | onAddNewProject | () => void | ✅ | Add new callback |
 
+---
+
+## Interactions
+
+### Parent Communication
+- **Mechanism:** prop-callback
+- **Description:** Calls `onSelectProject(project)` when user selects from dropdown; calls `onAddNewProject()` when special "Add New Project" option selected
+- **Example:** User selects project → `onSelectProject(project)` → Parent updates cwd, defaultPrompt, flags
+
+### Child Communication
+- **Child:** none
+- **Mechanism:** none
+- **Description:** Pure render component with no child components
+
+### Sibling Communication
+- **Sibling:** DiscoveredSessionsList (via parent)
+- **Mechanism:** parent-mediated
+- **Description:** Project selection may update parent state affecting visibility of other components
+
+### Context Interaction
+- **Context:** none
+- **Role:** none
+- **Operations:** none
+
+---
+
+## Side Effects
+
+None — pure presentation component with no side effects.
+
+---
+
 ## Test Hooks
 **CSS Selectors:** `select`, `option[value="__add_new__"]`
 

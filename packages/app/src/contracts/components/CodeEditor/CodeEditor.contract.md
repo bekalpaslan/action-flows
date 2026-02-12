@@ -1,8 +1,8 @@
-# Component Contract: EditorWorkbench (CodeEditor)
+# Component Contract: EditorTool (CodeEditor)
 
-**File:** `packages/app/src/components/Workbench/EditorWorkbench.tsx`
+**File:** `packages/app/src/components/Tools/EditorTool/EditorTool.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Tools
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** EditorWorkbench (serves as the primary CodeEditor implementation)
+- **Component Name:** EditorTool (serves as the primary CodeEditor implementation)
 - **Introduced:** 2024-Q4 (estimated)
 - **Description:** Full-screen Monaco-based code editor with multi-file tabs, file sync, conflict resolution, and keyboard shortcuts. Supports 20+ programming languages with syntax highlighting.
 

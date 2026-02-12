@@ -1,8 +1,8 @@
-# Component Contract: ReviewWorkbench
+# Component Contract: ReviewStar
 
-**File:** `packages/app/src/components/Workbench/ReviewWorkbench.tsx`
+**File:** `packages/app/src/components/Stars/ReviewStar.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Stars
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** ReviewWorkbench
+- **Component Name:** ReviewStar
 - **Introduced:** 2026-01-22
 - **Description:** PR/Diff viewer workbench for code reviews. Features Monaco-powered diff viewer, approve/reject/comment actions, and filtering by PR status.
 

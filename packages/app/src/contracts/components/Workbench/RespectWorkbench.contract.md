@@ -1,8 +1,8 @@
-# Component Contract: RespectWorkbench
+# Component Contract: RespectStar
 
-**File:** `packages/app/src/components/Workbench/RespectWorkbench/RespectWorkbench.tsx`
+**File:** `packages/app/src/components/Stars/RespectStar/RespectStar.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Stars
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** RespectWorkbench
+- **Component Name:** RespectStar
 - **Introduced:** 2026-02-05
 - **Description:** Live spatial health monitoring panel for UI components. Real-time boundary checks with categorized results, violation details, and auto-run on mount.
 

@@ -76,6 +76,42 @@ None — uses custom hooks only
 
 ---
 
+## Interactions
+
+### Parent Communication
+- **Mechanism:** prop-callback
+- **Description:** Calls `onClose()` when user cancels; calls `onSessionStarted(sessionId)` when session successfully starts
+- **Example:** User clicks "Start" → API creates session → `onSessionStarted(id)` → Parent updates session list
+
+### Child Communication
+- **Child:** ProjectSelector, ProjectForm, DiscoveredSessionsList
+- **Mechanism:** props and callbacks
+- **Data Flow:** Passes projects, discovered sessions, and handlers to children; receives selection updates
+
+### Sibling Communication
+- **Sibling:** Other Terminal components
+- **Mechanism:** parent-mediated
+- **Description:** Session creation updates parent state which may refresh other terminal panels
+
+### Context Interaction
+- **Context:** none
+- **Role:** none
+- **Operations:** none
+
+---
+
+## Side Effects
+
+### API Calls
+- POST /api/sessions/claude-cli - Creates new Claude CLI session with project + prompt + flags
+- GET /api/projects - Loads available projects (via useProjects hook)
+- GET /api/sessions/discovered - Polls for discovered sessions (via useDiscoveredSessions hook)
+
+### Timers
+- Discovery polling timer (useDiscoveredSessions sets interval)
+
+---
+
 ## Test Hooks
 **CSS Selectors:** `.claude-cli-start-dialog`, ProjectSelector, Start button
 

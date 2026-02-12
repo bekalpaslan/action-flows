@@ -30,17 +30,17 @@ export function parseStepCompletion(text: string): StepCompletionParsed | null {
   }
 
   // 2. Extract
-  const stepNumber = parseInt(match[1], 10);
-  const action = match[2];
-  const result = match[3];
-  const nextStepRaw = match[4];
+  const stepNumber = parseInt(match[1] ?? '0', 10);
+  const action = match[2] ?? '';
+  const result = match[3] ?? '';
+  const nextStepRaw = match[4] ?? '';
   const nextStep = nextStepRaw === 'Done' ? 'Done' : parseInt(nextStepRaw, 10);
 
   // 3. Build
   const parsed: StepCompletionParsed = {
     stepNumber,
-    action,
-    result,
+    action: action ?? null,
+    result: result ?? null,
     nextStep,
     raw: text,
     contractVersion: CONTRACT_VERSION,
@@ -108,17 +108,17 @@ export function parseDualOutput(text: string): DualOutputParsed | null {
 
   // 3. Build
   const parsed: DualOutputParsed = {
-    stepNumber: stepCompleteMatch ? parseInt(stepCompleteMatch[1], 10) : null,
+    stepNumber: stepCompleteMatch ? parseInt(stepCompleteMatch[1] ?? '0', 10) : null,
     action: headingMatch?.[1] || null,
     originalResult,
     secondOpinionModel: secondOpinionLabelMatch?.[1] || null,
     secondOpinionSummary,
-    missedIssues: missedIssuesMatch ? parseInt(missedIssuesMatch[1], 10) : null,
-    disagreements: disagreementsMatch ? parseInt(disagreementsMatch[1], 10) : null,
+    missedIssues: missedIssuesMatch ? parseInt(missedIssuesMatch[1] ?? '0', 10) : null,
+    disagreements: disagreementsMatch ? parseInt(disagreementsMatch[1] ?? '0', 10) : null,
     notable: notableMatch?.[1] || null,
     originalLogPath: originalReportMatch?.[1] || null,
     critiqueLogPath: critiqueReportMatch?.[1] || null,
-    nextStep: continuingMatch ? parseInt(continuingMatch[1], 10) : null,
+    nextStep: continuingMatch ? parseInt(continuingMatch[1] ?? '0', 10) : null,
     raw: text,
     contractVersion: CONTRACT_VERSION,
   };
@@ -149,12 +149,12 @@ export function parseSecondOpinionSkip(text: string): SecondOpinionSkipParsed | 
 
   // 3. Build
   const parsed: SecondOpinionSkipParsed = {
-    stepNumber: stepCompleteMatch ? parseInt(stepCompleteMatch[1], 10) : null,
+    stepNumber: stepCompleteMatch ? parseInt(stepCompleteMatch[1] ?? '0', 10) : null,
     action: stepCompleteMatch?.[2] || null,
-    result: stepCompleteMatch?.[3] || null,
-    secondOpinionStep: parseInt(skippedMatch[1], 10),
-    skipReason: skippedMatch[2],
-    nextStep: continuingMatch ? parseInt(continuingMatch[1], 10) : null,
+    result: stepCompleteMatch?.[3] ?? null,
+    secondOpinionStep: parseInt(skippedMatch[1] ?? '0', 10),
+    skipReason: skippedMatch[2] ?? '',
+    nextStep: continuingMatch ? parseInt(continuingMatch[1] ?? '0', 10) : null,
     raw: text,
     contractVersion: CONTRACT_VERSION,
   };

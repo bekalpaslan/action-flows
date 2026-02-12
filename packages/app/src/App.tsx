@@ -16,9 +16,13 @@ import AppContent from './components/AppContent'
 import { CommandPalette } from './components/CommandPalette'
 import { VimModeIndicator } from './components/VimModeIndicator'
 import { useVimNavigation } from './hooks'
+import { useServiceWorker } from './hooks/useServiceWorker'
 
 function AppWithVim() {
   useVimNavigation()
+
+  // Register service worker for offline caching
+  useServiceWorker()
 
   return (
     <>

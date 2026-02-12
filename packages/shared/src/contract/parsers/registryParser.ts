@@ -73,13 +73,13 @@ export function parseIndexEntry(text: string): IndexEntryParsed | null {
 
   // 3. Build
   const parsed: IndexEntryParsed = {
-    date,
-    description,
-    pattern,
-    outcome: `${status} — ${metrics} (${commitHash})`,
+    date: date ?? '',
+    description: description ?? '',
+    pattern: pattern ?? '',
+    outcome: `${status ?? ''} — ${metrics ?? ''} (${commitHash ?? ''})`,
     success: status === 'Success',
-    metrics,
-    commitHash,
+    metrics: metrics ?? null,
+    commitHash: commitHash ?? null,
     raw: text,
     contractVersion: CONTRACT_VERSION,
   };

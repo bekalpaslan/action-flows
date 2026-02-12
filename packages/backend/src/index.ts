@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import compression from 'compression';
 import path from 'path';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
@@ -87,8 +88,8 @@ const ALLOWED_ORIGINS = (process.env.AFW_CORS_ORIGINS || 'http://localhost:5173,
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (Electron, server-to-server, curl)
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+    // Allow requests with no origin (Electron, server-to-server, curl, file://)
+    if (!origin || origin === 'null' || ALLOWED_ORIGINS.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('CORS: Origin not allowed'));
@@ -99,6 +100,21 @@ app.use(cors({
 
 // Body size limit (Agent A fix)
 app.use(express.json({ limit: '1mb' }));
+
+// Enable gzip/brotli compression for responses > 1KB
+// Compression threshold: 1KB, level: 6 (balanced), brotli enabled
+app.use(compression({
+  level: 6, // Balanced compression (0-11, default 6)
+  threshold: 1024, // Only compress responses > 1KB
+  filter: (req, res) => {
+    // Don't compress if client doesn't accept compression
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    // Default filter
+    return compression.filter(req, res);
+  },
+}));
 
 // Apply authentication middleware (Agent A)
 app.use(authMiddleware);
@@ -175,6 +191,7 @@ const wss = new WebSocketServer({ noServer: true, maxPayload: 1024 * 1024 });
 // Server-side heartbeat interval to keep connections alive
 let heartbeatInterval: NodeJS.Timeout | null = null;
 const HEARTBEAT_INTERVAL_MS = 20000; // 20 seconds
+const IDLE_THRESHOLD_MS = 10000; // Only send heartbeat to clients idle > 10s
 
 function startServerHeartbeat() {
   if (heartbeatInterval) {
@@ -184,15 +201,28 @@ function startServerHeartbeat() {
   heartbeatInterval = setInterval(() => {
     const heartbeatMessage = JSON.stringify({ type: 'pong' });
     const clients = clientRegistry.getAllClients();
+    const now = Date.now();
 
+    // Only send heartbeat to idle clients (optimization: reduce bandwidth)
+    // Active clients already receive frequent messages from the app
     clients.forEach((client) => {
       if (client.readyState === 1) { // WebSocket.OPEN
-        client.send(heartbeatMessage);
+        const clientInfo = clientRegistry.getClientInfo(client);
+        if (clientInfo) {
+          const timeSinceLastMessage = now - clientInfo.lastMessageAt;
+          // Only send to clients idle for more than threshold
+          if (timeSinceLastMessage > IDLE_THRESHOLD_MS) {
+            client.send(heartbeatMessage);
+          }
+        } else {
+          // Fallback: send heartbeat if no tracking info
+          client.send(heartbeatMessage);
+        }
       }
     });
   }, HEARTBEAT_INTERVAL_MS);
 
-  console.log('[WS] Server heartbeat started (20s interval)');
+  console.log('[WS] Server heartbeat started (20s interval, only to idle clients)');
 }
 
 function stopServerHeartbeat() {

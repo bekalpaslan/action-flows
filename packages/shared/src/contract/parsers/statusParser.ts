@@ -48,7 +48,7 @@ export function parseErrorAnnouncement(text: string): ErrorAnnouncementParsed | 
   // 3. Build
   const parsed: ErrorAnnouncementParsed = {
     title: titleMatch?.[1] || null,
-    stepNumber: stepMatch ? parseInt(stepMatch[1], 10) : null,
+    stepNumber: stepMatch ? parseInt(stepMatch[1] ?? '0', 10) : null,
     action: stepMatch?.[2] || null,
     message: messageMatch?.[1] || null,
     context: contextMatch?.[1] || null,

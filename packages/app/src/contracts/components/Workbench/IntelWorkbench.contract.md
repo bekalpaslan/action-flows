@@ -1,8 +1,8 @@
-# Component Contract: IntelWorkbench
+# Component Contract: IntelStar
 
-**File:** `packages/app/src/components/Workbench/IntelWorkbench.tsx`
+**File:** `packages/app/src/components/Stars/IntelStar.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Stars
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** IntelWorkbench
+- **Component Name:** IntelStar
 - **Introduced:** 2026-02-03
 - **Description:** Dossier-based intelligence monitoring and analysis workbench. Features dossier list, creation dialog, and widget-based dossier view.
 

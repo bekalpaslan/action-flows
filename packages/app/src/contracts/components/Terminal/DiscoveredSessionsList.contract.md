@@ -46,6 +46,38 @@ None — props only. This is a stateless presentational component that receives 
 | isLoading | boolean | ✅ | Loading state |
 | onStartHere | (cwd: string) => void | ✅ | Start callback |
 
+---
+
+## Interactions
+
+### Parent Communication
+- **Mechanism:** prop-callback
+- **Description:** Calls `onStartHere(cwd)` when user clicks "Start Here" button on a discovered session
+- **Example:** User sees running Claude Code session, clicks "Start Here" → `onStartHere(cwd)` → Parent updates prompt+cwd
+
+### Child Communication
+- **Child:** none
+- **Mechanism:** none
+- **Description:** Pure render component with no child components
+
+### Sibling Communication
+- **Sibling:** ProjectSelector, ProjectForm
+- **Mechanism:** parent-mediated
+- **Description:** Selecting a discovered session updates parent state which may affect sibling visibility
+
+### Context Interaction
+- **Context:** none
+- **Role:** none
+- **Operations:** none
+
+---
+
+## Side Effects
+
+None — pure presentation component with no side effects.
+
+---
+
 ## Test Hooks
 **CSS Selectors:** Session items, alive indicator dot, Start Here button
 

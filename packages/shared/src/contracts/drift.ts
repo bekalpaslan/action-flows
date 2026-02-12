@@ -193,7 +193,7 @@ export async function detectDrift(
       if (!matchedAny && actualFiles.length > 0) {
         pathMismatches.push({
           contract: contractPath,
-          expected: actualFiles[0], // Report first match
+          expected: actualFiles[0] ?? '', // Report first match
           actual: contractPath,
         });
       }

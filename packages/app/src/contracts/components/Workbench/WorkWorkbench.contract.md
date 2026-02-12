@@ -1,8 +1,8 @@
-# Component Contract: WorkWorkbench
+# Component Contract: WorkStar
 
-**File:** `packages/app/src/components/Workbench/WorkWorkbench.tsx`
+**File:** `packages/app/src/components/Stars/WorkStar.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Stars
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** WorkWorkbench
+- **Component Name:** WorkStar
 - **Introduced:** 2026-01-15
 - **Description:** Primary workbench for active development sessions. Displays the active session using SessionPanelLayout with 25/75 split panel architecture.
 

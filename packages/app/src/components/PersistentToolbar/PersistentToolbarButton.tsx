@@ -93,6 +93,7 @@ export function PersistentToolbarButton({
           onContextMenu={handleContextMenu}
           disabled={!button.enabled || isLoading}
           title={`${button.label}${button.shortcut ? ` (${button.shortcut})` : ''}`}
+          aria-label={`${button.label}${button.shortcut ? ` (${button.shortcut})` : ''}${isPinned ? ' - pinned' : ''}`}
         >
           <span className="button-icon">
             {isLoading ? (

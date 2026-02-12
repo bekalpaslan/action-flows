@@ -198,9 +198,9 @@ describe('Parser Edge Cases - Phase A, Step 3', () => {
       ];
 
       const pattern = /^- (Retry|Skip|Cancel)(?: (.+))?$/mi;
-      expect(options[0].match(pattern)?.[1]).toBe('Retry');
-      expect(options[1].match(pattern)?.[1]).toBe('Skip');
-      expect(options[2].match(pattern)?.[1]).toBe('Cancel');
+      expect(options[0]?.match(pattern)?.[1]).toBe('Retry');
+      expect(options[1]?.match(pattern)?.[1]).toBe('Skip');
+      expect(options[2]?.match(pattern)?.[1]).toBe('Cancel');
     });
   });
 

@@ -1,8 +1,8 @@
-# Component Contract: EditorWorkbench
+# Component Contract: EditorTool
 
-**File:** `packages/app/src/components/Workbench/EditorWorkbench.tsx`
+**File:** `packages/app/src/components/Tools/EditorTool/EditorTool.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Tools
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** EditorWorkbench
+- **Component Name:** EditorTool
 - **Introduced:** 2026-02-02
 - **Description:** Full-screen code editor with multi-file tabs, Monaco integration, file save (Cmd/Ctrl+S), unsaved changes tracking, and file sync via WebSocket.
 

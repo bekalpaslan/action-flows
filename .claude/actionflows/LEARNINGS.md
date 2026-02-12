@@ -142,3 +142,12 @@
 - **Benefits:** (1) Global rollout control - backend can disable feature for everyone, (2) User override - individual users can opt-out via localStorage, (3) Graceful degradation - feature respects both signals, (4) Future-proof - ready for backend-driven flags when needed.
 - **Recommendation:** Document this as a standard pattern for future feature development. Can be extracted into a custom hook: `useCompositeFlag(featureFlag: keyof FeatureFlags, localToggle: boolean): boolean`
 - **Status:** Closed (pattern identified and documented, available for reuse)
+
+### L018: ResilientStorage Wrapper Eats New Optional Interface Methods
+- **Date:** 2026-02-12
+- **From:** E2E verification during gate trace persistence fix chain
+- **Issue:** Added `set()/get()/keys()` to Storage interface + Redis adapter, but `ResilientStorage` wrapper (circuit breaker layer) didn't proxy them. Services check `'keys' in this.storage` — fails on ResilientStorage because it doesn't have the property, even though the underlying Redis adapter does.
+- **Root Cause:** ResilientStorage implements Storage interface explicitly (every method listed). New optional methods aren't automatically proxied. The `in` operator checks the wrapper, not the wrapped object.
+- **Fix:** Add proxy methods to ResilientStorage that check `this.primaryStorage.method` existence and delegate via `executeWithFallback`.
+- **Prevention:** When adding new optional methods to Storage interface, always update: (1) Storage interface, (2) Redis adapter, (3) Memory adapter (if applicable), (4) **ResilientStorage proxy**. Checklist: interface → implementations → wrapper.
+- **Status:** Closed (c8a059b)

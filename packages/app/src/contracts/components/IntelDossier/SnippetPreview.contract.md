@@ -48,6 +48,36 @@ None — this widget renders from props only. Code, file path, line range, and a
 
 ---
 
+## Interactions
+
+### Parent Communication
+- **Mechanism:** none
+- **Description:** Stateless widget renders code snippet without callbacks
+- **Example:** Parent passes `data.code`, `data.file` → Widget renders snippet card
+
+### Child Communication
+- **Child:** none
+- **Mechanism:** none
+- **Description:** Pure render component with no child components
+
+### Sibling Communication
+- **Sibling:** Other widgets in DossierView grid
+- **Mechanism:** parent-mediated
+- **Description:** Grid layout positioning via `span` prop coordinates widget placement
+
+### Context Interaction
+- **Context:** none
+- **Role:** none
+- **Operations:** none
+
+---
+
+## Side Effects
+
+None — pure presentation component with no side effects.
+
+---
+
 ## Test Hooks
 
 **CSS Classes:**

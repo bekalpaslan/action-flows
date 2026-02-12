@@ -33,5 +33,5 @@ export function isSupportedVersion(version: string): boolean {
  */
 export function getLatestVersion(): string {
   const versions = Object.keys(CONTRACT_VERSIONS);
-  return versions[versions.length - 1];
+  return versions[versions.length - 1] ?? '';
 }

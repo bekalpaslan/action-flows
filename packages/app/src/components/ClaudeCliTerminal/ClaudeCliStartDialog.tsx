@@ -158,7 +158,7 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'var(--overlay-dark-50)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -170,8 +170,8 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
         aria-modal="true"
         aria-labelledby="claude-cli-start-dialog-title"
         style={{
-          backgroundColor: '#1e1e1e',
-          border: '1px solid #3e3e3e',
+          backgroundColor: 'var(--app-bg-primary)',
+          border: '1px solid var(--app-bg-tertiary)',
           borderRadius: '8px',
           padding: '24px',
           maxWidth: '600px',
@@ -180,16 +180,16 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
           overflow: 'auto',
         }}
       >
-        <h2 id="claude-cli-start-dialog-title" style={{ margin: '0 0 16px 0', color: '#d4d4d4' }}>Start Claude CLI Session</h2>
+        <h2 id="claude-cli-start-dialog-title" style={{ margin: '0 0 16px 0', color: 'var(--text-primary)' }}>Start Claude CLI Session</h2>
 
         {(error || projectsError) && (
           <div style={{
             padding: '12px',
-            backgroundColor: '#5a1d1d',
-            border: '1px solid #c93c37',
+            backgroundColor: 'var(--status-error-bg)',
+            border: '1px solid var(--status-error-border)',
             borderRadius: '4px',
             marginBottom: '16px',
-            color: '#f48771',
+            color: 'var(--status-error-text)',
             fontSize: '14px',
           }}>
             {error?.message || projectsError?.message}
@@ -220,8 +220,8 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
               onClick={handleEditProject}
               style={{
                 padding: '6px 12px',
-                backgroundColor: '#3c3c3c',
-                color: '#d4d4d4',
+                backgroundColor: 'var(--app-bg-tertiary)',
+                color: 'var(--text-primary)',
                 border: 'none',
                 borderRadius: '4px',
                 cursor: 'pointer',
@@ -235,7 +235,7 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
 
         {/* Working Directory (read-only if project selected, editable otherwise) */}
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', color: '#d4d4d4', fontSize: '14px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', color: 'var(--text-primary)', fontSize: '14px' }}>
             Working Directory *
           </label>
           <input
@@ -247,24 +247,24 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
             style={{
               width: '100%',
               padding: '8px',
-              backgroundColor: selectedProject ? '#1e1e1e' : '#2d2d2d',
-              border: '1px solid #3e3e3e',
+              backgroundColor: selectedProject ? 'var(--app-bg-primary)' : 'var(--app-bg-secondary)',
+              border: '1px solid var(--app-bg-tertiary)',
               borderRadius: '4px',
-              color: selectedProject ? '#858585' : '#d4d4d4',
+              color: selectedProject ? 'var(--text-secondary)' : 'var(--text-primary)',
               fontSize: '14px',
               fontFamily: 'Consolas, monospace',
               cursor: selectedProject ? 'not-allowed' : 'text',
             }}
           />
           {!selectedProject && (
-            <small style={{ color: '#858585', fontSize: '12px' }}>
+            <small style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>
               Absolute path to the directory where Claude CLI will run
             </small>
           )}
         </div>
 
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', color: '#d4d4d4', fontSize: '14px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', color: 'var(--text-primary)', fontSize: '14px' }}>
             Initial Prompt (optional)
           </label>
           <textarea
@@ -275,10 +275,10 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
             style={{
               width: '100%',
               padding: '8px',
-              backgroundColor: '#2d2d2d',
-              border: '1px solid #3e3e3e',
+              backgroundColor: 'var(--app-bg-secondary)',
+              border: '1px solid var(--app-bg-tertiary)',
               borderRadius: '4px',
-              color: '#d4d4d4',
+              color: 'var(--text-primary)',
               fontSize: '14px',
               resize: 'vertical',
             }}
@@ -286,7 +286,7 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
         </div>
 
         <div style={{ marginBottom: '24px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', color: '#d4d4d4', fontSize: '14px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-primary)', fontSize: '14px' }}>
             Flags (optional)
           </label>
           {availableFlags.map(flag => (
@@ -299,8 +299,8 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
                   style={{ marginTop: '2px', marginRight: '8px' }}
                 />
                 <div>
-                  <div style={{ color: '#d4d4d4', fontSize: '14px' }}>{flag.label}</div>
-                  <div style={{ color: '#858585', fontSize: '12px' }}>{flag.description}</div>
+                  <div style={{ color: 'var(--text-primary)', fontSize: '14px' }}>{flag.label}</div>
+                  <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{flag.description}</div>
                 </div>
               </label>
             </div>
@@ -313,8 +313,8 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
             disabled={isLoading}
             style={{
               padding: '8px 16px',
-              backgroundColor: '#3c3c3c',
-              color: '#d4d4d4',
+              backgroundColor: 'var(--app-bg-tertiary)',
+              color: 'var(--text-primary)',
               border: 'none',
               borderRadius: '4px',
               cursor: isLoading ? 'not-allowed' : 'pointer',
@@ -328,8 +328,8 @@ export function ClaudeCliStartDialog({ onClose, onSessionStarted }: ClaudeCliSta
             disabled={isLoading || !cwd.trim()}
             style={{
               padding: '8px 16px',
-              backgroundColor: isLoading || !cwd.trim() ? '#3c3c3c' : '#0e639c',
-              color: isLoading || !cwd.trim() ? '#858585' : 'white',
+              backgroundColor: isLoading || !cwd.trim() ? 'var(--app-bg-tertiary)' : 'var(--system-blue)',
+              color: isLoading || !cwd.trim() ? 'var(--text-secondary)' : 'var(--text-primary)',
               border: 'none',
               borderRadius: '4px',
               cursor: isLoading || !cwd.trim() ? 'not-allowed' : 'pointer',

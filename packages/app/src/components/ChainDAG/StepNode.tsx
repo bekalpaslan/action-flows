@@ -29,6 +29,15 @@ export const StepNode: React.FC<StepNodeProps> = ({ data }) => {
       ? 'fade-in'
       : '';
 
+  // Determine status label for accessibility
+  const statusLabel = {
+    'completed': 'Completed',
+    'failed': 'Failed',
+    'in_progress': 'In Progress',
+    'skipped': 'Skipped',
+    'pending': 'Pending'
+  }[step.status] || step.status;
+
   const handleClick = () => {
     onSelect(Number(step.stepNumber));
   };
@@ -46,6 +55,7 @@ export const StepNode: React.FC<StepNodeProps> = ({ data }) => {
           handleClick();
         }
       }}
+      aria-label={`Step ${step.stepNumber}: ${step.action} - ${statusLabel}${parallelGroupSize > 1 ? ` (parallel, ${parallelGroupSize} total)` : ''}`}
     >
       {/* Input handles for dependencies */}
       {step.waitsFor.length > 0 && (

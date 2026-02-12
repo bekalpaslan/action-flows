@@ -1,6 +1,6 @@
-# Component Contract: LeftPanelStack
+# Component Contract: ChatPanel (Left Panel Consolidation)
 
-**File:** `packages/app/src/components/SessionPanel/LeftPanelStack.tsx`
+**File:** `packages/app/src/components/SessionPanel/ChatPanel.tsx`
 **Type:** utility
 **Parent Group:** SessionPanel/
 **Contract Version:** 1.0.0
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** LeftPanelStack
+- **Component Name:** ChatPanel (consolidated from LeftPanelStack)
 - **Introduced:** 2026-01-20
 - **Description:** Simplified container for the left panel area, now rendering a single ChatPanel component that fills the entire space with integrated session info.
 

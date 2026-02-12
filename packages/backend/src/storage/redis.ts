@@ -497,17 +497,40 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async getTopActions(projectId: ProjectId, limit: number) {
       try {
-        // Get all frequency keys for this project
-        // TODO: Consider using SCAN instead of KEYS for large datasets
-        // KEYS is O(N) and can block Redis; SCAN is cursor-based and non-blocking
+        // Use SCAN instead of KEYS for large datasets (non-blocking)
         const pattern = `${keyPrefix}freq:${projectId}:*`;
-        const keys = await redis.keys(pattern);
-
         const results: FrequencyRecord[] = [];
-        for (const key of keys) {
-          const data = await redis.get(key);
-          if (data) {
-            results.push(JSON.parse(data) as FrequencyRecord);
+
+        // scanStream yields keys in batches
+        const stream = redis.scanStream({
+          match: pattern,
+          count: 100, // Fetch 100 keys per batch
+        });
+
+        // Use pipelining for batch mget
+        let keys: string[] = [];
+        for await (const key of stream) {
+          keys.push(key);
+
+          // Batch fetch every 100 keys
+          if (keys.length === 100) {
+            const values = await redis.mget(keys);
+            for (const data of values) {
+              if (data) {
+                results.push(JSON.parse(data) as FrequencyRecord);
+              }
+            }
+            keys = [];
+          }
+        }
+
+        // Process remaining keys
+        if (keys.length > 0) {
+          const values = await redis.mget(keys);
+          for (const data of values) {
+            if (data) {
+              results.push(JSON.parse(data) as FrequencyRecord);
+            }
           }
         }
 
@@ -1115,16 +1138,47 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     async getReminderInstances(sessionId: SessionId, chainId?: ChainId): Promise<ReminderInstance[]> {
       try {
         const pattern = `${keyPrefix}reminder:instance:${sessionId}:*`;
-        const keys = await redis.keys(pattern);
-        const instances = await Promise.all(
-          keys.map(async (key) => {
-            const json = await redis.get(key);
-            return json ? JSON.parse(json) as ReminderInstance : null;
-          })
-        );
-        return instances
-          .filter((i): i is ReminderInstance => i !== null)
-          .filter(i => !chainId || i.chainId === chainId);
+        const instances: ReminderInstance[] = [];
+        const keys: string[] = [];
+
+        // Use scanStream for non-blocking iteration
+        const stream = redis.scanStream({
+          match: pattern,
+          count: 100,
+        });
+
+        for await (const key of stream) {
+          keys.push(key);
+
+          // Batch fetch every 100 keys
+          if (keys.length === 100) {
+            const values = await redis.mget(keys);
+            for (const json of values) {
+              if (json) {
+                const instance = JSON.parse(json) as ReminderInstance;
+                if (!chainId || instance.chainId === chainId) {
+                  instances.push(instance);
+                }
+              }
+            }
+            keys.length = 0;
+          }
+        }
+
+        // Process remaining keys
+        if (keys.length > 0) {
+          const values = await redis.mget(keys);
+          for (const json of values) {
+            if (json) {
+              const instance = JSON.parse(json) as ReminderInstance;
+              if (!chainId || instance.chainId === chainId) {
+                instances.push(instance);
+              }
+            }
+          }
+        }
+
+        return instances;
       } catch (error) {
         console.error('[Redis] Error getting reminder instances:', error);
         return [];
@@ -1144,21 +1198,28 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async markReminderAddressed(instanceId: string): Promise<boolean> {
       try {
-        const keys = await redis.keys(`${keyPrefix}reminder:instance:*:${instanceId}`);
-        if (keys.length === 0) return false;
+        const pattern = `${keyPrefix}reminder:instance:*:${instanceId}`;
+        const stream = redis.scanStream({
+          match: pattern,
+          count: 10,
+        });
 
-        const json = await redis.get(keys[0]);
-        if (!json) return false;
+        for await (const key of stream) {
+          const json = await redis.get(key);
+          if (!json) continue;
 
-        const instance: ReminderInstance = JSON.parse(json);
-        instance.addressed = true;
-        instance.metadata = {
-          ...instance.metadata,
-          addressedAt: new Date().toISOString(),
-        };
+          const instance: ReminderInstance = JSON.parse(json);
+          instance.addressed = true;
+          instance.metadata = {
+            ...instance.metadata,
+            addressedAt: new Date().toISOString(),
+          };
 
-        await redis.set(keys[0], JSON.stringify(instance));
-        return true;
+          await redis.set(key, JSON.stringify(instance));
+          return true;
+        }
+
+        return false;
       } catch (error) {
         console.error('[Redis] Error marking reminder addressed:', error);
         return false;
@@ -1167,10 +1228,16 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async markChainRemindersAddressed(chainId: ChainId): Promise<number> {
       try {
-        const keys = await redis.keys(`${keyPrefix}reminder:instance:*:*`);
+        const pattern = `${keyPrefix}reminder:instance:*:*`;
         let count = 0;
+        const updates: Array<[string, string]> = [];
 
-        for (const key of keys) {
+        const stream = redis.scanStream({
+          match: pattern,
+          count: 100,
+        });
+
+        for await (const key of stream) {
           const json = await redis.get(key);
           if (!json) continue;
 
@@ -1181,9 +1248,28 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
               ...instance.metadata,
               addressedAt: new Date().toISOString(),
             };
-            await redis.set(key, JSON.stringify(instance));
+            updates.push([key, JSON.stringify(instance)]);
             count++;
+
+            // Batch update every 50 items
+            if (updates.length === 50) {
+              const pipeline = redis.pipeline();
+              for (const [k, v] of updates) {
+                pipeline.set(k, v);
+              }
+              await pipeline.exec();
+              updates.length = 0;
+            }
           }
+        }
+
+        // Process remaining updates
+        if (updates.length > 0) {
+          const pipeline = redis.pipeline();
+          for (const [k, v] of updates) {
+            pipeline.set(k, v);
+          }
+          await pipeline.exec();
         }
 
         return count;
@@ -1195,10 +1281,18 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async deleteReminderInstance(instanceId: string): Promise<boolean> {
       try {
-        const keys = await redis.keys(`${keyPrefix}reminder:instance:*:${instanceId}`);
-        if (keys.length === 0) return false;
-        await redis.del(keys[0]);
-        return true;
+        const pattern = `${keyPrefix}reminder:instance:*:${instanceId}`;
+        const stream = redis.scanStream({
+          match: pattern,
+          count: 10,
+        });
+
+        for await (const key of stream) {
+          await redis.del(key);
+          return true;
+        }
+
+        return false;
       } catch (error) {
         console.error('[Redis] Error deleting reminder instance:', error);
         return false;
@@ -1244,9 +1338,14 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async dismissError(errorId: string, dismissed: boolean): Promise<boolean> {
       try {
-        // Scan all error lists to find and update the error
-        const keys = await redis.keys(`${keyPrefix}errors:*`);
-        for (const key of keys) {
+        // Use SCAN to iterate error lists non-blocking
+        const pattern = `${keyPrefix}errors:*`;
+        const stream = redis.scanStream({
+          match: pattern,
+          count: 50,
+        });
+
+        for await (const key of stream) {
           const errors = await redis.lrange(key, 0, -1);
           for (let i = 0; i < errors.length; i++) {
             const error = JSON.parse(errors[i]) as ErrorInstance;
@@ -1266,8 +1365,13 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
     async deleteError(errorId: string): Promise<boolean> {
       try {
-        const keys = await redis.keys(`${keyPrefix}errors:*`);
-        for (const key of keys) {
+        const pattern = `${keyPrefix}errors:*`;
+        const stream = redis.scanStream({
+          match: pattern,
+          count: 50,
+        });
+
+        for await (const key of stream) {
           const errors = await redis.lrange(key, 0, -1);
           const filtered = errors.map((e: string) => JSON.parse(e) as ErrorInstance)
             .filter(e => e.id !== errorId)
@@ -1293,8 +1397,16 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     async deleteChainErrors(chainId: ChainId): Promise<number> {
       try {
         let count = 0;
-        const keys = await redis.keys(`${keyPrefix}errors:*`);
-        for (const key of keys) {
+        const pattern = `${keyPrefix}errors:*`;
+        const updates: Array<[string, string[]]> = [];
+        const deletes: string[] = [];
+
+        const stream = redis.scanStream({
+          match: pattern,
+          count: 50,
+        });
+
+        for await (const key of stream) {
           const errors = await redis.lrange(key, 0, -1);
           const filtered = errors.map((e: string) => JSON.parse(e) as ErrorInstance)
             .filter(e => e.chainId !== chainId)
@@ -1303,13 +1415,41 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           const beforeLength = errors.length;
           count += beforeLength - filtered.length;
 
-          // Replace list
-          await redis.del(key);
+          // Track updates
+          deletes.push(key);
           if (filtered.length > 0) {
-            await redis.rpush(key, ...filtered);
-            await redis.expire(key, 86400);
+            updates.push([key, filtered]);
+          }
+
+          // Batch updates every 50 keys
+          if (deletes.length === 50) {
+            const pipeline = redis.pipeline();
+            for (const k of deletes) {
+              pipeline.del(k);
+            }
+            for (const [k, vals] of updates) {
+              pipeline.rpush(k, ...vals);
+              pipeline.expire(k, 86400);
+            }
+            await pipeline.exec();
+            deletes.length = 0;
+            updates.length = 0;
           }
         }
+
+        // Process remaining updates
+        if (deletes.length > 0) {
+          const pipeline = redis.pipeline();
+          for (const k of deletes) {
+            pipeline.del(k);
+          }
+          for (const [k, vals] of updates) {
+            pipeline.rpush(k, ...vals);
+            pipeline.expire(k, 86400);
+          }
+          await pipeline.exec();
+        }
+
         return count;
       } catch (error) {
         console.error('[Redis] Error deleting chain errors:', error);
@@ -1482,9 +1622,20 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     async keys(pattern: string): Promise<string[]> {
       try {
         const fullPattern = `${keyPrefix}${pattern}`;
-        const keys = await redis.keys(fullPattern);
-        // Strip prefix from returned keys
-        return keys.map(key => key.substring(keyPrefix.length));
+        const result: string[] = [];
+
+        // Use SCAN for non-blocking iteration
+        const stream = redis.scanStream({
+          match: fullPattern,
+          count: 100,
+        });
+
+        for await (const key of stream) {
+          // Strip prefix from returned keys
+          result.push(key.substring(keyPrefix.length));
+        }
+
+        return result;
       } catch (error) {
         console.error(`[Redis] Error getting keys for pattern ${pattern}:`, error);
         return [];

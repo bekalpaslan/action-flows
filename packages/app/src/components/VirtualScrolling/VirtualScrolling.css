@@ -1,0 +1,127 @@
+/**
+ * Virtual Scrolling Styles
+ * Minimal CSS for virtualized list components
+ */
+
+.virtual-session-list {
+  position: relative;
+  overflow: hidden;
+}
+
+.virtual-session-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0;
+  margin: 0;
+}
+
+/* Virtual File Tree Styles */
+.virtual-tree-row {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  height: 24px;
+  user-select: none;
+  border: 1px solid transparent;
+}
+
+.virtual-tree-row--selected {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.virtual-tree-row__content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 100%;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+  padding: 0 0.5rem;
+}
+
+.virtual-tree-row__content:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.virtual-tree-row__toggle {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  transform: rotate(-90deg);
+  transition: transform 0.15s ease-out;
+  cursor: pointer;
+}
+
+.virtual-tree-row__toggle--open {
+  transform: rotate(0);
+}
+
+.virtual-tree-row__icon {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+}
+
+.virtual-tree-row__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+/* Virtual Chat History Styles */
+.virtual-chat-history {
+  position: relative;
+  overflow: hidden;
+}
+
+.virtual-chat-row {
+  padding: 0;
+  margin: 0;
+  border: none;
+  overflow: visible;
+}
+
+/* Scrollbar styling */
+.virtual-session-list::-webkit-scrollbar,
+.virtual-tree-root::-webkit-scrollbar,
+.virtual-chat-history::-webkit-scrollbar {
+  width: 8px;
+}
+
+.virtual-session-list::-webkit-scrollbar-track,
+.virtual-tree-root::-webkit-scrollbar-track,
+.virtual-chat-history::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.virtual-session-list::-webkit-scrollbar-thumb,
+.virtual-tree-root::-webkit-scrollbar-thumb,
+.virtual-chat-history::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.virtual-session-list::-webkit-scrollbar-thumb:hover,
+.virtual-tree-root::-webkit-scrollbar-thumb:hover,
+.virtual-chat-history::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Firefox scrollbar */
+.virtual-session-list,
+.virtual-tree-root,
+.virtual-chat-history {
+  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+  scrollbar-width: thin;
+}

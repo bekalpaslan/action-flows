@@ -33,6 +33,15 @@ export const AnimatedStepNode: React.FC<AnimatedStepNodeProps> = ({ data }) => {
   // Determine status class
   const statusClass = `status-${step.status}`;
 
+  // Determine status label for accessibility
+  const statusLabel = {
+    'completed': 'Completed',
+    'failed': 'Failed',
+    'in_progress': 'In Progress',
+    'skipped': 'Skipped',
+    'pending': 'Pending'
+  }[step.status] || step.status;
+
   return (
     <div
       className={`animated-step-node ${statusClass} ${animationClass}`}
@@ -45,6 +54,7 @@ export const AnimatedStepNode: React.FC<AnimatedStepNodeProps> = ({ data }) => {
         }
       }}
       title={step.description || step.action}
+      aria-label={`Step ${step.stepNumber}: ${step.action} - ${statusLabel}`}
     >
       {/* Input handle */}
       {step.waitsFor.length > 0 && (

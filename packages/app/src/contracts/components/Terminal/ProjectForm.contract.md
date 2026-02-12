@@ -77,6 +77,44 @@ None — all state is primitive
 | onDetect | (cwd: string) => Promise<Result> | ❌ | Auto-detect |
 | isLoading | boolean | ✅ | Loading state |
 
+---
+
+## Interactions
+
+### Parent Communication
+- **Mechanism:** prop-callback
+- **Description:** Calls `onSave(data)` when user submits form; calls `onCancel()` when user clicks Cancel
+- **Example:** User fills form and clicks Save → `onSave(projectData)` → Parent updates projects list
+
+### Child Communication
+- **Child:** none
+- **Mechanism:** none
+- **Description:** Form contains only input elements, no child components
+
+### Sibling Communication
+- **Sibling:** ProjectSelector (via parent)
+- **Mechanism:** parent-mediated
+- **Description:** After saving project, parent updates ProjectSelector's project list
+
+### Context Interaction
+- **Context:** none
+- **Role:** none
+- **Operations:** none
+
+---
+
+## Side Effects
+
+### API Calls
+- POST /api/projects (if mode === 'create') - Creates new project
+- PUT /api/projects/:id (if mode === 'edit') - Updates existing project
+- POST /api/projects/detect (if onDetect called) - Auto-detects project settings from directory
+
+### Timers
+None
+
+---
+
 ## Test Hooks
 **CSS Selectors:** Modal backdrop, cwd input, Detect button, Submit button
 

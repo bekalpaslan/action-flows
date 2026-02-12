@@ -1,8 +1,8 @@
-# Component Contract: HarmonyWorkbench
+# Component Contract: HarmonySpaceWorkbench
 
-**File:** `packages/app/src/components/Workbench/HarmonyWorkbench.tsx`
+**File:** `packages/app/src/components/Harmony/HarmonySpaceWorkbench.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Harmony
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** HarmonyWorkbench
+- **Component Name:** HarmonySpaceWorkbench
 - **Introduced:** 2026-01-30
 - **Description:** Dashboard for monitoring contract compliance and harmony detection. Features HarmonyPanel, manual harmony checks, drift detection, and contract status display.
 

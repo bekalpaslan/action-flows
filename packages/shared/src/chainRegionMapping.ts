@@ -126,7 +126,10 @@ export function mapActionToRegion(action: string): RegionId {
 
   for (const key of sortedKeys) {
     if (normalized.startsWith(key)) {
-      return ACTION_TO_REGION_MAP[key];
+      const region = ACTION_TO_REGION_MAP[key];
+      if (region) {
+        return region;
+      }
     }
   }
 
@@ -169,6 +172,9 @@ export function mapChainToBridges(actions: string[]): Array<[RegionId, RegionId]
   for (let i = 0; i < regions.length - 1; i++) {
     const from = regions[i];
     const to = regions[i + 1];
+
+    // TypeScript safety: regions are guaranteed non-null from mapActionToRegion
+    if (!from || !to) continue;
 
     // Skip self-loops (same region consecutively)
     if (from !== to) {

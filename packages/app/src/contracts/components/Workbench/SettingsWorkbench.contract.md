@@ -1,8 +1,8 @@
-# Component Contract: SettingsWorkbench
+# Component Contract: SettingsStar
 
-**File:** `packages/app/src/components/Workbench/SettingsWorkbench.tsx`
+**File:** `packages/app/src/components/Stars/SettingsStar.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Stars
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** SettingsWorkbench
+- **Component Name:** SettingsStar
 - **Introduced:** 2026-01-25
 - **Description:** Configuration UI for ActionFlows Dashboard settings. Organized into sections: General, Appearance, Keyboard, Advanced. Auto-saves to localStorage.
 

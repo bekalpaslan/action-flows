@@ -1,8 +1,8 @@
-# Component Contract: CanvasWorkbench
+# Component Contract: CanvasTool
 
-**File:** `packages/app/src/components/Workbench/CanvasWorkbench.tsx`
+**File:** `packages/app/src/components/Tools/CanvasTool/CanvasTool.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Tools
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** CanvasWorkbench
+- **Component Name:** CanvasTool
 - **Introduced:** 2026-02-01
 - **Description:** Live HTML/CSS preview workbench. Monaco Editor for HTML input with sandboxed iframe for real-time preview. Persists to localStorage.
 

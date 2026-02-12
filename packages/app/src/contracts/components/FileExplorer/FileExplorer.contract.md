@@ -1,8 +1,8 @@
-# Component Contract: ExploreWorkbench (FileExplorer)
+# Component Contract: ExploreStar (FileExplorer)
 
-**File:** `packages/app/src/components/Workbench/ExploreWorkbench.tsx`
+**File:** `packages/app/src/components/Stars/ExploreStar.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Stars
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** ExploreWorkbench (serves as the primary FileExplorer implementation)
+- **Component Name:** ExploreStar (serves as the primary FileExplorer implementation)
 - **Introduced:** 2024-Q4 (estimated)
 - **Description:** Full-featured file browser workbench with search, keyboard navigation, and recursive directory tree rendering. Supports filtering, hidden file toggle, and real-time file tree updates.
 

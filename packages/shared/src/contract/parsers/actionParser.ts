@@ -60,7 +60,7 @@ export function parseReviewReport(text: string): ReviewReportParsed | null {
   const parsed: ReviewReportParsed = {
     scope: headingMatch?.[1] || null,
     verdict: (verdictMatch?.[1] as 'APPROVED' | 'NEEDS_CHANGES') || null,
-    score: scoreMatch ? parseInt(scoreMatch[1], 10) : null,
+    score: scoreMatch ? parseInt(scoreMatch[1] ?? '0', 10) : null,
     summary,
     findings,
     fixesApplied: fixes,
@@ -87,12 +87,12 @@ function parseReviewFindings(text: string): ReviewFinding[] | null {
     const match = line.match(ActionPatterns.reviewReport.findingRow);
     if (match) {
       findings.push({
-        number: parseInt(match[1], 10),
-        file: match[2],
+        number: parseInt(match[1] ?? '0', 10),
+        file: match[2] ?? '',
         line: match[3] ? parseInt(match[3], 10) : null,
-        severity: match[4] as 'critical' | 'high' | 'medium' | 'low',
-        description: match[5],
-        suggestion: match[6],
+        severity: (match[4] ?? 'medium') as 'critical' | 'high' | 'medium' | 'low',
+        description: match[5] ?? '',
+        suggestion: match[6] ?? '',
       });
     }
   }
@@ -108,8 +108,8 @@ function parseReviewFixes(text: string): ReviewFix[] | null {
     const match = line.match(ActionPatterns.reviewReport.fixRow);
     if (match) {
       fixes.push({
-        file: match[1],
-        fix: match[2],
+        file: match[1] ?? '',
+        fix: match[2] ?? '',
       });
     }
   }
@@ -125,8 +125,8 @@ function parseReviewFlags(text: string): ReviewFlag[] | null {
     const match = line.match(ActionPatterns.reviewReport.flagRow);
     if (match) {
       flags.push({
-        issue: match[1],
-        reason: match[2],
+        issue: match[1] ?? '',
+        reason: match[2] ?? '',
       });
     }
   }
@@ -193,8 +193,8 @@ function parseAnalysisSections(text: string): AnalysisSection[] | null {
       }
       // Start new section
       currentSection = {
-        number: parseInt(match[1], 10),
-        title: match[2],
+        number: parseInt(match[1] ?? '0', 10),
+        title: match[2] ?? '',
         content: '',
       };
     } else if (currentSection && line.trim() && !line.startsWith('## Recommendations')) {
@@ -222,7 +222,7 @@ function parseRecommendations(text: string): string[] | null {
   for (const line of lines) {
     const match = line.match(ActionPatterns.analysisReport.recommendation);
     if (match) {
-      recommendations.push(match[1]);
+      recommendations.push(match[1] ?? '');
     }
   }
 
@@ -294,14 +294,14 @@ function parseBrainstormQuestions(text: string): BrainstormQuestion[] | null {
         questions.push(currentQuestion);
       }
       currentQuestion = {
-        number: parseInt(questionMatch[1], 10),
-        question: questionMatch[2],
+        number: parseInt(questionMatch[1] ?? '0', 10),
+        question: questionMatch[2] ?? '',
         response: '',
       };
     } else {
       const responseMatch = line.match(ActionPatterns.brainstormTranscript.humanResponse);
       if (responseMatch && currentQuestion) {
-        currentQuestion.response = responseMatch[1];
+        currentQuestion.response = responseMatch[1] ?? '';
       }
     }
   }

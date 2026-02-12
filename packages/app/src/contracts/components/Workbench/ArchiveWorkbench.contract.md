@@ -1,8 +1,8 @@
-# Component Contract: ArchiveWorkbench
+# Component Contract: ArchiveStar
 
-**File:** `packages/app/src/components/Workbench/ArchiveWorkbench.tsx`
+**File:** `packages/app/src/components/Stars/ArchiveStar.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Stars
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** ArchiveWorkbench
+- **Component Name:** ArchiveStar
 - **Introduced:** 2026-01-25
 - **Description:** Session archive browser with search, filtering, sorting, and bulk actions. Displays archived/completed sessions in a table with restore and delete operations.
 

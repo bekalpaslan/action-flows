@@ -31,7 +31,7 @@ export function parseHumanGate(text: string): HumanGateParsed | null {
   }
 
   // 2. Extract
-  const stepNumber = parseInt(headingMatch[1], 10);
+  const stepNumber = parseInt(headingMatch[1] ?? '0', 10);
 
   // Extract content between heading and prompt
   const headingIndex = text.indexOf(headingMatch[0]);
@@ -123,9 +123,9 @@ export function parseSessionStartProtocol(text: string): SessionStartProtocolPar
   // 3. Build
   const parsed: SessionStartProtocolParsed = {
     projectName: projectMatch?.[1] || null,
-    flowCount: flowsMatch ? parseInt(flowsMatch[1], 10) : null,
-    actionCount: actionsMatch ? parseInt(actionsMatch[1], 10) : null,
-    pastExecutionCount: pastExecutionsMatch ? parseInt(pastExecutionsMatch[1], 10) : null,
+    flowCount: flowsMatch ? parseInt(flowsMatch[1] ?? '0', 10) : null,
+    actionCount: actionsMatch ? parseInt(actionsMatch[1] ?? '0', 10) : null,
+    pastExecutionCount: pastExecutionsMatch ? parseInt(pastExecutionsMatch[1] ?? '0', 10) : null,
     raw: text,
     contractVersion: CONTRACT_VERSION,
   };

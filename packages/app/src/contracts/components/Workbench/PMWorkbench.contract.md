@@ -1,8 +1,8 @@
-# Component Contract: PMWorkbench
+# Component Contract: PMStar
 
-**File:** `packages/app/src/components/Workbench/PMWorkbench.tsx`
+**File:** `packages/app/src/components/Stars/PMStar.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Stars
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** PMWorkbench
+- **Component Name:** PMStar
 - **Introduced:** 2026-01-28
 - **Description:** Project Management workbench for tasks and documentation. Features task list with status (todo, in-progress, done), project documentation links, and milestone timeline.
 

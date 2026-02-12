@@ -102,6 +102,7 @@ export function InlineButtonItem({
       onClick={handleClick}
       disabled={state !== 'idle'}
       title={`${button.label}${button.shortcut ? ` (${button.shortcut})` : ''}`}
+      aria-label={`${button.label}${button.shortcut ? ` (${button.shortcut})` : ''}`}
     >
       {state === 'loading' && (
         <svg

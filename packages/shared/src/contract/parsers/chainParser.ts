@@ -78,12 +78,12 @@ function parseChainTableRows(text: string): ChainStepParsed[] | null {
     const match = line.match(ChainPatterns.chainCompilation.tableRow);
     if (match) {
       rows.push({
-        stepNumber: parseInt(match[1], 10),
-        action: match[2],
-        model: match[3] as ModelString,
-        keyInputs: match[4],
-        waitsFor: match[5],
-        status: match[6] as StatusString,
+        stepNumber: parseInt(match[1] ?? '0', 10),
+        action: match[2] ?? '',
+        model: (match[3] ?? 'sonnet') as ModelString,
+        keyInputs: match[4] ?? null,
+        waitsFor: match[5] ?? null,
+        status: (match[6] ?? 'pending') as StatusString,
       });
     }
   }
@@ -99,9 +99,9 @@ function parseStepDescriptions(text: string): StepDescription[] | null {
     const match = line.match(ChainPatterns.chainCompilation.stepDescription);
     if (match) {
       descriptions.push({
-        stepNumber: parseInt(match[1], 10),
-        action: match[2],
-        description: match[3],
+        stepNumber: parseInt(match[1] ?? '0', 10),
+        action: match[2] ?? '',
+        description: match[3] ?? '',
       });
     }
   }
@@ -126,7 +126,7 @@ export function parseChainExecutionStart(text: string): ChainExecutionStartParse
   // 3. Build
   const parsed: ChainExecutionStartParsed = {
     title: titleMatch?.[1] || null,
-    stepNumber: spawningMatch ? parseInt(spawningMatch[1], 10) : null,
+    stepNumber: spawningMatch ? parseInt(spawningMatch[1] ?? '0', 10) : null,
     action: spawningMatch?.[2] || null,
     model: (spawningMatch?.[3] as ModelString) || null,
     raw: text,
@@ -218,10 +218,10 @@ function parseCompletedSteps(text: string): CompletedStepSummary[] | null {
     const match = line.match(ChainPatterns.executionComplete.tableRow);
     if (match) {
       steps.push({
-        stepNumber: parseInt(match[1], 10),
-        action: match[2],
-        status: match[3] as StatusString,
-        result: match[4],
+        stepNumber: parseInt(match[1] ?? '0', 10),
+        action: match[2] ?? '',
+        status: (match[3] ?? 'pending') as StatusString,
+        result: match[4] ?? null,
       });
     }
   }

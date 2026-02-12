@@ -1,8 +1,8 @@
-# Component Contract: MaintenanceWorkbench
+# Component Contract: MaintenanceStar
 
-**File:** `packages/app/src/components/Workbench/MaintenanceWorkbench.tsx`
+**File:** `packages/app/src/components/Stars/MaintenanceStar.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Stars
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** MaintenanceWorkbench
+- **Component Name:** MaintenanceStar
 - **Introduced:** 2026-01-20
 - **Description:** System health dashboard for monitoring WebSocket connection, backend health, active sessions count, and recent errors. Provides manual and auto-refresh capabilities.
 

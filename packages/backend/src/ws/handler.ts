@@ -3,6 +3,7 @@ import type { WorkspaceEvent, SessionId, ChatMessageEvent, ChatHistoryEvent, Tim
 import type { Storage } from '../storage/index.js';
 import { clientRegistry } from './clientRegistry.js';
 import { wsMessageSchema, type ValidatedWSMessage } from '../schemas/ws.js';
+import { workspaceEventSchema, validateStorageData } from '@afw/shared';
 import { claudeCliManager } from '../services/claudeCliManager.js';
 import { activityTracker } from '../services/activityTracker.js';
 
@@ -223,16 +224,29 @@ export function handleWebSocket(
 
 /**
  * Broadcast event to all connected clients (for a specific session or all)
+ * Validates event structure before broadcasting to prevent malformed data
  */
 export function broadcastEvent(
   clients: WebSocket[],
   event: WorkspaceEvent,
   sessionId?: string
 ): void {
+  // Validate event structure before broadcasting
+  const validatedEvent = validateStorageData(
+    event,
+    workspaceEventSchema,
+    `broadcast event type=${(event as any).type}`
+  );
+
+  if (!validatedEvent) {
+    console.error('[WS] Failed to validate event for broadcast, skipping');
+    return;
+  }
+
   const broadcast: WSBroadcast = {
     type: 'event',
     sessionId,
-    payload: event,
+    payload: validatedEvent,
   };
 
   const message = JSON.stringify(broadcast);

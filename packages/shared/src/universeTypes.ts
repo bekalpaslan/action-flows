@@ -3,18 +3,11 @@
  * Defines the cosmic map data structures for the Living Universe visualization
  */
 
-import type { SessionId, ChainId, Timestamp, DurationMs } from './types.js';
+import type { SessionId, ChainId, Timestamp, DurationMs, RegionId, EdgeId } from './types.js';
 import type { StarId } from './workbenchTypes.js';
 
-// ============================================================================
-// Branded IDs
-// ============================================================================
-
-/** Unique identifier for a region (star) on the cosmic map */
-export type RegionId = string & { readonly __brand: 'RegionId' };
-
-/** Unique identifier for a light bridge (edge) connecting regions */
-export type EdgeId = string & { readonly __brand: 'EdgeId' };
+// Re-export RegionId and EdgeId from types.ts for backward compatibility
+export type { RegionId, EdgeId };
 
 // ============================================================================
 // Fog of War

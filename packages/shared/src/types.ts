@@ -6,91 +6,189 @@
 /**
  * Branded string types for type-safe identifiers
  * These prevent accidental mixing of different ID types
+ * Uses nominal typing with unique symbols for compile-time safety
  */
 
+/** @internal Unique symbol for SessionId branding */
+declare const SessionIdSymbol: unique symbol;
 /** Unique identifier for a session */
-export type SessionId = string & { readonly __brand: 'SessionId' };
+export type SessionId = string & { readonly [SessionIdSymbol]: true };
 
+/** @internal Unique symbol for ChainId branding */
+declare const ChainIdSymbol: unique symbol;
 /** Unique identifier for a chain */
-export type ChainId = string & { readonly __brand: 'ChainId' };
+export type ChainId = string & { readonly [ChainIdSymbol]: true };
 
+/** @internal Unique symbol for StepId branding */
+declare const StepIdSymbol: unique symbol;
 /** Unique identifier for a step (composite: chainId + stepNumber) */
-export type StepId = string & { readonly __brand: 'StepId' };
+export type StepId = string & { readonly [StepIdSymbol]: true };
 
+/** @internal Unique symbol for StepNumber branding */
+declare const StepNumberSymbol: unique symbol;
 /** Step number within a chain (1-indexed) */
-export type StepNumber = number & { readonly __brand: 'StepNumber' };
+export type StepNumber = number & { readonly [StepNumberSymbol]: true };
 
+/** @internal Unique symbol for UserId branding */
+declare const UserIdSymbol: unique symbol;
 /** Unique identifier for a user/operator */
-export type UserId = string & { readonly __brand: 'UserId' };
+export type UserId = string & { readonly [UserIdSymbol]: true };
 
+/** @internal Unique symbol for Timestamp branding */
+declare const TimestampSymbol: unique symbol;
 /** ISO 8601 timestamp string */
-export type Timestamp = string & { readonly __brand: 'Timestamp' };
+export type Timestamp = string & { readonly [TimestampSymbol]: true };
 
+/** @internal Unique symbol for RegionId branding */
+declare const RegionIdSymbol: unique symbol;
 /** Unique identifier for a region (star on the cosmic map) */
-export type RegionId = string & { readonly __brand: 'RegionId' };
+export type RegionId = string & { readonly [RegionIdSymbol]: true };
 
+/** @internal Unique symbol for EdgeId branding */
+declare const EdgeIdSymbol: unique symbol;
 /** Unique identifier for a light bridge (edge connecting regions) */
-export type EdgeId = string & { readonly __brand: 'EdgeId' };
+export type EdgeId = string & { readonly [EdgeIdSymbol]: true };
 
 /**
- * Factory functions for creating branded types
+ * Type guard and assertion functions for branded types
+ * These provide runtime validation with proper nominal typing
+ */
+
+/** Assert a string is a valid SessionId */
+export function assertSessionId(value: string): asserts value is SessionId {
+  if (!value || value.trim().length === 0) {
+    throw new Error('SessionId cannot be empty');
+  }
+}
+
+/** Convert string to SessionId with validation */
+export function toSessionId(value: string): SessionId {
+  assertSessionId(value);
+  return value as SessionId;
+}
+
+/** Assert a string is a valid ChainId */
+export function assertChainId(value: string): asserts value is ChainId {
+  if (!value || value.trim().length === 0) {
+    throw new Error('ChainId cannot be empty');
+  }
+}
+
+/** Convert string to ChainId with validation */
+export function toChainId(value: string): ChainId {
+  assertChainId(value);
+  return value as ChainId;
+}
+
+/** Assert a string is a valid StepId */
+export function assertStepId(value: string): asserts value is StepId {
+  if (!value || value.trim().length === 0) {
+    throw new Error('StepId cannot be empty');
+  }
+}
+
+/** Convert string to StepId with validation */
+export function toStepId(value: string): StepId {
+  assertStepId(value);
+  return value as StepId;
+}
+
+/** Assert a number is a valid StepNumber */
+export function assertStepNumber(value: number): asserts value is StepNumber {
+  if (!Number.isFinite(value) || value < 1) {
+    throw new Error('StepNumber must be a positive integer >= 1');
+  }
+}
+
+/** Convert number to StepNumber with validation */
+export function toStepNumber(value: number): StepNumber {
+  assertStepNumber(value);
+  return value as StepNumber;
+}
+
+/** Assert a string is a valid UserId */
+export function assertUserId(value: string): asserts value is UserId {
+  if (!value || value.trim().length === 0) {
+    throw new Error('UserId cannot be empty');
+  }
+}
+
+/** Convert string to UserId with validation */
+export function toUserId(value: string): UserId {
+  assertUserId(value);
+  return value as UserId;
+}
+
+/** Assert a value is a valid Timestamp */
+export function assertTimestamp(value: string | Date): asserts value is Timestamp | Date {
+  if (value instanceof Date) {
+    if (isNaN(value.getTime())) {
+      throw new Error('Timestamp: invalid Date');
+    }
+  } else if (!value || value.trim().length === 0) {
+    throw new Error('Timestamp cannot be empty');
+  }
+}
+
+/** Convert string or Date to Timestamp with validation */
+export function toTimestamp(value: string | Date): Timestamp {
+  if (value instanceof Date) {
+    if (isNaN(value.getTime())) {
+      throw new Error('Timestamp: invalid Date');
+    }
+    return value.toISOString() as Timestamp;
+  }
+  if (!value || value.trim().length === 0) {
+    throw new Error('Timestamp cannot be empty');
+  }
+  return value as Timestamp;
+}
+
+/** Get current timestamp as Timestamp */
+export function currentTimestamp(): Timestamp {
+  return new Date().toISOString() as Timestamp;
+}
+
+/** Assert a string is a valid RegionId */
+export function assertRegionId(value: string): asserts value is RegionId {
+  if (!value || value.trim().length === 0) {
+    throw new Error('RegionId cannot be empty');
+  }
+}
+
+/** Convert string to RegionId with validation */
+export function toRegionId(value: string): RegionId {
+  assertRegionId(value);
+  return value as RegionId;
+}
+
+/** Assert a string is a valid EdgeId */
+export function assertEdgeId(value: string): asserts value is EdgeId {
+  if (!value || value.trim().length === 0) {
+    throw new Error('EdgeId cannot be empty');
+  }
+}
+
+/** Convert string to EdgeId with validation */
+export function toEdgeId(value: string): EdgeId {
+  assertEdgeId(value);
+  return value as EdgeId;
+}
+
+/**
+ * @deprecated Use individual toXxx functions instead (e.g., toSessionId, toChainId)
+ * Legacy factory object for backward compatibility during migration
  */
 export const brandedTypes = {
-  sessionId: (value: string): SessionId => {
-    if (!value || value.trim().length === 0) {
-      throw new Error('SessionId cannot be empty');
-    }
-    return value as SessionId;
-  },
-  chainId: (value: string): ChainId => {
-    if (!value || value.trim().length === 0) {
-      throw new Error('ChainId cannot be empty');
-    }
-    return value as ChainId;
-  },
-  stepId: (value: string): StepId => {
-    if (!value || value.trim().length === 0) {
-      throw new Error('StepId cannot be empty');
-    }
-    return value as StepId;
-  },
-  stepNumber: (value: number): StepNumber => {
-    if (!Number.isFinite(value) || value < 1) {
-      throw new Error('StepNumber must be a positive integer >= 1');
-    }
-    return value as StepNumber;
-  },
-  userId: (value: string): UserId => {
-    if (!value || value.trim().length === 0) {
-      throw new Error('UserId cannot be empty');
-    }
-    return value as UserId;
-  },
-  timestamp: (value: string | Date): Timestamp => {
-    if (value instanceof Date) {
-      if (isNaN(value.getTime())) {
-        throw new Error('Timestamp: invalid Date');
-      }
-      return value.toISOString() as Timestamp;
-    }
-    if (!value || value.trim().length === 0) {
-      throw new Error('Timestamp cannot be empty');
-    }
-    return value as Timestamp;
-  },
-  currentTimestamp: (): Timestamp => new Date().toISOString() as Timestamp,
-  regionId: (value: string): RegionId => {
-    if (!value || value.trim().length === 0) {
-      throw new Error('RegionId cannot be empty');
-    }
-    return value as RegionId;
-  },
-  edgeId: (value: string): EdgeId => {
-    if (!value || value.trim().length === 0) {
-      throw new Error('EdgeId cannot be empty');
-    }
-    return value as EdgeId;
-  },
+  sessionId: toSessionId,
+  chainId: toChainId,
+  stepId: toStepId,
+  stepNumber: toStepNumber,
+  userId: toUserId,
+  timestamp: toTimestamp,
+  currentTimestamp: currentTimestamp,
+  regionId: toRegionId,
+  edgeId: toEdgeId,
 };
 
 /**
@@ -131,12 +229,33 @@ export type ChainSourceString = keyof typeof ChainSource | 'flow' | 'composed' |
 /**
  * Duration in milliseconds
  */
-export type DurationMs = number & { readonly __brand: 'DurationMs' };
+/** @internal Unique symbol for DurationMs branding */
+declare const DurationMsSymbol: unique symbol;
+export type DurationMs = number & { readonly [DurationMsSymbol]: true };
 
+/** Convert number to DurationMs */
+export function toDurationMs(value: number): DurationMs {
+  return value as DurationMs;
+}
+
+/** Convert seconds to DurationMs */
+export function secondsToDurationMs(seconds: number): DurationMs {
+  return (seconds * 1000) as DurationMs;
+}
+
+/** Convert minutes to DurationMs */
+export function minutesToDurationMs(minutes: number): DurationMs {
+  return (minutes * 60 * 1000) as DurationMs;
+}
+
+/**
+ * @deprecated Use toDurationMs, secondsToDurationMs, or minutesToDurationMs instead
+ * Legacy duration object for backward compatibility during migration
+ */
 export const duration = {
-  ms: (value: number): DurationMs => value as DurationMs,
-  fromSeconds: (seconds: number): DurationMs => (seconds * 1000) as DurationMs,
-  fromMinutes: (minutes: number): DurationMs => (minutes * 60 * 1000) as DurationMs,
+  ms: toDurationMs,
+  fromSeconds: secondsToDurationMs,
+  fromMinutes: minutesToDurationMs,
 };
 
 /**

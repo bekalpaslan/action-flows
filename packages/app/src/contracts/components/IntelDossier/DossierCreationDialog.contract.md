@@ -50,6 +50,36 @@ Uses React hooks: `useState` for form state (name, targets, context) and `useCal
 
 ---
 
+## Interactions
+
+### Parent Communication
+- **Mechanism:** prop-callback
+- **Description:** Calls `onSubmit(name, targets, context)` when form is submitted; calls `onClose()` when dialog closes
+- **Example:** User enters name and targets, clicks submit → `onSubmit(name, targets[], context)` → Parent creates dossier
+
+### Child Communication
+- **Child:** none
+- **Mechanism:** none
+- **Description:** Dialog contains only form inputs, no child components
+
+### Sibling Communication
+- **Sibling:** DossierList, DossierView
+- **Mechanism:** parent-mediated
+- **Description:** After submission, parent updates dossier list which updates siblings
+
+### Context Interaction
+- **Context:** none
+- **Role:** none
+- **Operations:** none
+
+---
+
+## Side Effects
+
+None — form is controlled entirely via props and local state.
+
+---
+
 ## Test Hooks
 
 **CSS Classes:**

@@ -108,15 +108,15 @@ export function ProjectForm({
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'var(--overlay-dark-50)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 1001,
     }}>
       <div style={{
-        backgroundColor: '#1e1e1e',
-        border: '1px solid #3e3e3e',
+        backgroundColor: 'var(--app-bg-primary)',
+        border: '1px solid var(--app-bg-tertiary)',
         borderRadius: '8px',
         padding: '24px',
         maxWidth: '700px',
@@ -124,13 +124,13 @@ export function ProjectForm({
         maxHeight: '80vh',
         overflow: 'auto',
       }}>
-        <h2 style={{ margin: '0 0 16px 0', color: '#d4d4d4' }}>
+        <h2 style={{ margin: '0 0 16px 0', color: 'var(--text-primary)' }}>
           {mode === 'create' ? 'Add New Project' : 'Edit Project'}
         </h2>
 
         {/* Working Directory */}
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', color: '#d4d4d4', fontSize: '14px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', color: 'var(--text-primary)', fontSize: '14px' }}>
             Working Directory *
           </label>
           <div style={{ display: 'flex', gap: '8px' }}>
@@ -142,10 +142,10 @@ export function ProjectForm({
               style={{
                 flex: 1,
                 padding: '8px',
-                backgroundColor: '#2d2d2d',
-                border: '1px solid #3e3e3e',
+                backgroundColor: 'var(--app-bg-secondary)',
+                border: '1px solid var(--app-bg-tertiary)',
                 borderRadius: '4px',
-                color: '#d4d4d4',
+                color: 'var(--text-primary)',
                 fontSize: '14px',
                 fontFamily: 'Consolas, monospace',
               }}
@@ -179,17 +179,17 @@ export function ProjectForm({
             border: '1px solid #3e3e3e',
             borderRadius: '4px',
             fontSize: '12px',
-            color: '#d4d4d4',
+            color: 'var(--text-primary)',
           }}>
             Detected: <strong>{detectionResult.projectType || 'unknown'}</strong>
             {detectionResult.actionflowsDetected && (
               <span style={{
                 marginLeft: '8px',
                 padding: '2px 6px',
-                backgroundColor: '#0e639c',
+                backgroundColor: 'var(--system-blue)',
                 borderRadius: '3px',
                 fontSize: '10px',
-                color: 'white',
+                color: 'var(--text-primary)',
               }}>
                 ActionFlows
               </span>
@@ -199,7 +199,7 @@ export function ProjectForm({
 
         {/* Project Name */}
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', color: '#d4d4d4', fontSize: '14px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', color: 'var(--text-primary)', fontSize: '14px' }}>
             Project Name *
           </label>
           <input
@@ -213,7 +213,7 @@ export function ProjectForm({
               backgroundColor: '#2d2d2d',
               border: '1px solid #3e3e3e',
               borderRadius: '4px',
-              color: '#d4d4d4',
+              color: 'var(--text-primary)',
               fontSize: '14px',
             }}
           />
@@ -221,7 +221,7 @@ export function ProjectForm({
 
         {/* Description */}
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', color: '#d4d4d4', fontSize: '14px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', color: 'var(--text-primary)', fontSize: '14px' }}>
             Description (optional)
           </label>
           <textarea
@@ -235,7 +235,7 @@ export function ProjectForm({
               backgroundColor: '#2d2d2d',
               border: '1px solid #3e3e3e',
               borderRadius: '4px',
-              color: '#d4d4d4',
+              color: 'var(--text-primary)',
               fontSize: '14px',
               resize: 'vertical',
             }}
@@ -244,7 +244,7 @@ export function ProjectForm({
 
         {/* Default Prompt Template */}
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', color: '#d4d4d4', fontSize: '14px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', color: 'var(--text-primary)', fontSize: '14px' }}>
             Default Prompt Template (optional)
           </label>
           <textarea
@@ -258,7 +258,7 @@ export function ProjectForm({
               backgroundColor: '#2d2d2d',
               border: '1px solid #3e3e3e',
               borderRadius: '4px',
-              color: '#d4d4d4',
+              color: 'var(--text-primary)',
               fontSize: '14px',
               resize: 'vertical',
             }}
@@ -267,7 +267,7 @@ export function ProjectForm({
 
         {/* MCP Config Path */}
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', color: '#d4d4d4', fontSize: '14px' }}>
+          <label style={{ display: 'block', marginBottom: '4px', color: 'var(--text-primary)', fontSize: '14px' }}>
             MCP Config Path (optional)
           </label>
           <input
@@ -281,7 +281,7 @@ export function ProjectForm({
               backgroundColor: '#2d2d2d',
               border: '1px solid #3e3e3e',
               borderRadius: '4px',
-              color: '#d4d4d4',
+              color: 'var(--text-primary)',
               fontSize: '14px',
               fontFamily: 'Consolas, monospace',
             }}
@@ -290,7 +290,7 @@ export function ProjectForm({
 
         {/* CLI Flags */}
         <div style={{ marginBottom: '24px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', color: '#d4d4d4', fontSize: '14px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-primary)', fontSize: '14px' }}>
             Default CLI Flags (optional)
           </label>
           {availableFlags.map(flag => (
@@ -303,8 +303,8 @@ export function ProjectForm({
                   style={{ marginTop: '2px', marginRight: '8px' }}
                 />
                 <div>
-                  <div style={{ color: '#d4d4d4', fontSize: '14px' }}>{flag.label}</div>
-                  <div style={{ color: '#858585', fontSize: '12px' }}>{flag.description}</div>
+                  <div style={{ color: 'var(--text-primary)', fontSize: '14px' }}>{flag.label}</div>
+                  <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{flag.description}</div>
                 </div>
               </label>
             </div>
@@ -318,8 +318,8 @@ export function ProjectForm({
             disabled={isLoading}
             style={{
               padding: '8px 16px',
-              backgroundColor: '#3c3c3c',
-              color: '#d4d4d4',
+              backgroundColor: 'var(--app-bg-tertiary)',
+              color: 'var(--text-primary)',
               border: 'none',
               borderRadius: '4px',
               cursor: isLoading ? 'not-allowed' : 'pointer',

@@ -45,6 +45,36 @@ None — this widget renders from props only. Text, confidence, and category are
 
 ---
 
+## Interactions
+
+### Parent Communication
+- **Mechanism:** none
+- **Description:** Stateless widget renders insight data without callbacks
+- **Example:** Parent passes `data.text` and `data.confidence` → Widget renders card
+
+### Child Communication
+- **Child:** none
+- **Mechanism:** none
+- **Description:** Pure render component with no child components
+
+### Sibling Communication
+- **Sibling:** Other widgets in DossierView grid
+- **Mechanism:** parent-mediated
+- **Description:** Grid layout positioning via `span` prop coordinates widget placement
+
+### Context Interaction
+- **Context:** none
+- **Role:** none
+- **Operations:** none
+
+---
+
+## Side Effects
+
+None — pure presentation component with no side effects.
+
+---
+
 ## Test Hooks
 
 **CSS Classes:**

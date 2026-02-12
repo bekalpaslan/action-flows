@@ -97,6 +97,7 @@ export function QuickActionButton({
       onClick={handleClick}
       disabled={disabled || isLoading}
       title={`${label} - Sends: ${value}`}
+      aria-label={`${label} - Sends: ${value}`}
     >
       <span className="quick-action-icon">
         {isLoading ? (

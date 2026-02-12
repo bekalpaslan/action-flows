@@ -1,8 +1,8 @@
-# Component Contract: ExploreWorkbench
+# Component Contract: ExploreStar
 
-**File:** `packages/app/src/components/Workbench/ExploreWorkbench.tsx`
+**File:** `packages/app/src/components/Stars/ExploreStar.tsx`
 **Type:** page
-**Parent Group:** Workbench
+**Parent Group:** Stars
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** ExploreWorkbench
+- **Component Name:** ExploreStar
 - **Introduced:** 2026-01-20
 - **Description:** File explorer workbench with search, keyboard navigation (arrow keys, Home, End), and file tree view with expand/collapse. Supports filtering by hidden files.
 

@@ -97,6 +97,13 @@ export function AgentCharacterCard({
     onClick();
   }, [onClick]);
 
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick();
+    }
+  }, [onClick]);
+
   const sizeClass = size === 'orchestrator' ? 'size-orchestrator' : 'size-subagent';
   const statusClass = `status-${agent.status}`;
   const expandedClass = isExpanded ? 'is-expanded' : '';
@@ -109,6 +116,7 @@ export function AgentCharacterCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
       aria-label={`${agentName} agent - ${agent.status} status`}

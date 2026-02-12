@@ -1,6 +1,6 @@
-# Component Contract: SessionPanelLayout
+# Component Contract: SessionInfoPanel (Consolidated Layout)
 
-**File:** `packages/app/src/components/SessionPanel/SessionPanelLayout.tsx`
+**File:** `packages/app/src/components/SessionPanel/SessionInfoPanel.tsx`
 **Type:** feature
 **Parent Group:** SessionPanel/
 **Contract Version:** 1.0.0
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** SessionPanelLayout
+- **Component Name:** SessionInfoPanel (consolidated from SessionPanelLayout architecture)
 - **Introduced:** 2026-01-15
 - **Description:** Top-level 25/75 horizontal split container for session panel system with resizable left panels and visualization area, localStorage persistence per session.
 

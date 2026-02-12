@@ -1,8 +1,8 @@
-# Component Contract: RightVisualizationArea
+# Component Contract: HybridFlowViz (Right Visualization Consolidation)
 
-**File:** `packages/app/src/components/SessionPanel/RightVisualizationArea.tsx`
+**File:** `packages/app/src/components/SessionTile/HybridFlowViz.tsx`
 **Type:** utility
-**Parent Group:** SessionPanel/
+**Parent Group:** SessionTile/
 **Contract Version:** 1.0.0
 **Last Reviewed:** 2026-02-10
 
@@ -10,7 +10,7 @@
 
 ## Identity
 
-- **Component Name:** RightVisualizationArea
+- **Component Name:** HybridFlowViz (consolidated from RightVisualizationArea)
 - **Introduced:** 2026-01-20
 - **Description:** Container for HybridFlowViz, isolating visualization from left panel concerns, with empty/loading/error states.
 

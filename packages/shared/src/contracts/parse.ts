@@ -89,7 +89,7 @@ function extractKeyValues(text: string): Record<string, string> {
 
   for (const line of lines) {
     const match = line.match(/^\*\*([^*]+)\*\*:\s*(.+)$/);
-    if (match) {
+    if (match && match[1] && match[2]) {
       const key = match[1].trim();
       let value = match[2].trim();
       // Remove backticks if present
@@ -118,14 +118,17 @@ function parseTable(tableText: string): Record<string, string>[] {
 
   // Parse header
   const header = lines[0]
-    .split('|')
+    ?.split('|')
     .map(cell => cell.trim())
-    .filter(cell => cell.length > 0);
+    .filter(cell => cell.length > 0) ?? [];
 
   // Parse rows (skip divider at line 1)
   const rows: Record<string, string>[] = [];
   for (let i = 2; i < lines.length; i++) {
-    const cells = lines[i]
+    const line = lines[i];
+    if (!line) continue;
+
+    const cells = line
       .split('|')
       .map(cell => cell.trim())
       .filter(cell => cell.length > 0);
@@ -133,7 +136,11 @@ function parseTable(tableText: string): Record<string, string>[] {
     if (cells.length === header.length) {
       const row: Record<string, string> = {};
       for (let j = 0; j < header.length; j++) {
-        row[header[j]] = cells[j];
+        const headerKey = header[j];
+        const cellValue = cells[j];
+        if (headerKey && cellValue) {
+          row[headerKey] = cellValue;
+        }
       }
       // Skip rows that are entirely N/A
       if (!Object.values(row).every(v => v === 'N/A')) {
@@ -154,7 +161,7 @@ function parseListItems(text: string): string[] {
 
   for (const line of lines) {
     const match = line.match(/^[\s]*[-*]\s+(.+)$/);
-    if (match) {
+    if (match && match[1]) {
       items.push(match[1].trim());
     }
   }
@@ -250,7 +257,7 @@ function parseRenderLocation(text: string): RenderLocation {
   const conditions: RenderCondition[] = conditionLines.map(line => {
     // Format: 1. {Condition description} (`{code expression}`)
     const match = line.match(/^\d+\.\s+(.+?)\s*\(\`([^`]+)\`\)/);
-    if (match) {
+    if (match && match[1] && match[2]) {
       return {
         type: 'prop',
         description: match[1].trim(),
@@ -261,7 +268,7 @@ function parseRenderLocation(text: string): RenderLocation {
   });
 
   const validPositions = ['relative', 'absolute', 'fixed', 'sticky'] as const;
-  const rawPosition = keyValues['Positioning']?.toLowerCase();
+  const rawPosition = keyValues['Positioning']?.toLowerCase() ?? '';
   const position: typeof validPositions[number] | null = rawPosition && validPositions.includes(rawPosition as any)
     ? (rawPosition as typeof validPositions[number])
     : null;
