@@ -134,7 +134,7 @@ Use the Lifecycle section to understand:
 
 ## Related Documents
 
-- [CONTRACT_MANIFEST.md](../../CONTRACT_MANIFEST.md) — Complete file listing with descriptions
+- [CONTRACT_MANIFEST.md](../../../../docs/status/contract-manifest.md) — Complete file listing with descriptions
 - [CONTRACT_VALIDATION.txt](../../CONTRACT_VALIDATION.txt) — Creation report and validation
 - [SYSTEM.md](../.claude/actionflows/docs/living/SYSTEM.md) — 7-layer architecture
 - [CLAUDE.md](../.claude/CLAUDE.md) — Project instructions

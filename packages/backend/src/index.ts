@@ -7,6 +7,8 @@ import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import type { IncomingMessage } from 'http';
 import type { Socket } from 'net';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './swagger.js';
 
 import { storage as baseStorage, isAsyncStorage } from './storage/index.js';
 import { ResilientStorage } from './storage/resilientStorage.js';
@@ -131,6 +133,25 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
   });
 });
+
+// Swagger API Documentation
+// Serve OpenAPI spec as JSON
+app.get('/api-docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+// Serve Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  customSiteTitle: 'ActionFlows Dashboard API',
+  customCss: '.swagger-ui .topbar { display: none }',
+  swaggerOptions: {
+    persistAuthorization: true,
+    displayRequestDuration: true,
+    filter: true,
+    tryItOutEnabled: true,
+  },
+}));
 
 // API Routes
 app.use('/api/events', eventsRouter);

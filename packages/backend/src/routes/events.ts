@@ -68,8 +68,34 @@ function buildChainFromEvent(event: ChainCompiledEvent): Chain {
 }
 
 /**
- * POST /api/events
- * Receive events from hooks/systems, store and broadcast
+ * @swagger
+ * /api/events:
+ *   post:
+ *     summary: Submit a workspace event
+ *     description: Receive events from hooks/systems, store and broadcast to WebSocket clients
+ *     tags: [events]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/WorkspaceEvent'
+ *     responses:
+ *       201:
+ *         description: Event stored successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 eventId:
+ *                   type: string
+ *                 sessionId:
+ *                   type: string
+ *       500:
+ *         description: Internal server error
  */
 router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res) => {
   try {
@@ -256,8 +282,42 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
 });
 
 /**
- * GET /api/events/:sessionId
- * Retrieve all events for a session
+ * @swagger
+ * /api/events/{sessionId}:
+ *   get:
+ *     summary: Retrieve all events for a session
+ *     tags: [events]
+ *     parameters:
+ *       - in: path
+ *         name: sessionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Session ID
+ *       - in: query
+ *         name: since
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: Filter events since this timestamp
+ *     responses:
+ *       200:
+ *         description: List of events
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 sessionId:
+ *                   type: string
+ *                 count:
+ *                   type: integer
+ *                 events:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/WorkspaceEvent'
+ *       500:
+ *         description: Internal server error
  */
 router.get('/:sessionId', async (req, res) => {
   try {

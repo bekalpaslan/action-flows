@@ -108,7 +108,7 @@ ERR-010: Sidebar handles empty session list
 
 ---
 
-#### `E2E_EXPANSION_SUMMARY.md`
+#### `e2e-expansion-summary.md`
 - **Purpose:** Implementation summary with metrics and roadmap
 - **Lines:** 450+
 - **Content:**

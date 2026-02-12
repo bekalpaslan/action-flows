@@ -9,12 +9,44 @@ import { claudeSessionDiscovery } from '../services/claudeSessionDiscovery.js';
 const router = Router();
 
 /**
- * GET /api/discovery/sessions
- * Discover running Claude Code sessions (IDE lock files)
- *
- * Query params:
- *   enrich   - "true" to include JSONL enrichment (default: false)
- *   aliveOnly - "true" to only return sessions with alive PIDs (default: true)
+ * @swagger
+ * /api/discovery/sessions:
+ *   get:
+ *     summary: Discover running Claude Code sessions
+ *     description: Find active Claude Code sessions by scanning IDE lock files
+ *     tags: [discovery]
+ *     parameters:
+ *       - in: query
+ *         name: enrich
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *         description: Include JSONL enrichment data
+ *       - in: query
+ *         name: aliveOnly
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *         description: Only return sessions with alive PIDs (default true)
+ *     responses:
+ *       200:
+ *         description: List of discovered sessions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 count:
+ *                   type: integer
+ *                 sessions:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 discoveredAt:
+ *                   type: string
+ *                   format: date-time
+ *       500:
+ *         description: Internal server error
  */
 router.get('/sessions', async (req: Request, res: Response) => {
   try {

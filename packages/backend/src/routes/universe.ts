@@ -21,8 +21,30 @@ import * as universeEvents from '../ws/universeEvents.js';
 const router = Router();
 
 /**
- * GET /api/universe
- * Get the full universe graph
+ * @swagger
+ * /api/universe:
+ *   get:
+ *     summary: Get the full universe graph
+ *     description: Retrieve the complete living universe graph with regions, bridges, and fog states
+ *     tags: [universe]
+ *     responses:
+ *       200:
+ *         description: Universe graph retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 regions:
+ *                   type: array
+ *                   description: All regions in the universe
+ *                 bridges:
+ *                   type: array
+ *                   description: Light bridges connecting regions
+ *       404:
+ *         description: Universe graph not initialized
+ *       500:
+ *         description: Internal server error
  */
 router.get('/', readLimiter, async (req, res) => {
   try {

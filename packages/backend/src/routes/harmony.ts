@@ -98,8 +98,57 @@ router.get('/stats', async (req, res) => {
 });
 
 /**
- * GET /api/harmony/:sessionId
- * Get harmony metrics for a specific session
+ * @swagger
+ * /api/harmony/{sessionId}:
+ *   get:
+ *     summary: Get harmony metrics for a session
+ *     description: Retrieve contract compliance metrics and validation results
+ *     tags: [harmony]
+ *     parameters:
+ *       - in: path
+ *         name: sessionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Session ID
+ *       - in: query
+ *         name: result
+ *         schema:
+ *           type: string
+ *           enum: [valid, degraded, violation]
+ *         description: Filter by validation result
+ *       - in: query
+ *         name: formatType
+ *         schema:
+ *           type: string
+ *         description: Filter by format type
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *         description: Limit number of recent checks
+ *     responses:
+ *       200:
+ *         description: Harmony metrics and recent checks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 sessionId:
+ *                   type: string
+ *                 metrics:
+ *                   $ref: '#/components/schemas/HarmonyMetrics'
+ *                 recentChecks:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *       400:
+ *         description: Invalid query parameters
+ *       500:
+ *         description: Internal server error
  */
 router.get('/:sessionId', async (req, res) => {
   try {

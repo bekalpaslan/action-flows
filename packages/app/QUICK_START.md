@@ -198,7 +198,7 @@ A: Clear with `useClearCache()` or update CACHE_VERSION in sw.js.
 ## Resources
 
 - Full guide: See `BUNDLE_OPTIMIZATION.md`
-- Integration steps: See `BUNDLE_OPTIMIZATION_SUMMARY.md`
+- Integration steps: See `../../docs/status/deliveries/bundle-optimization-summary.md`
 - Testing checklist: See `OPTIMIZATION_CHECKLIST.md`
 - React docs: https://react.dev/reference/react/lazy
 - react-window: https://react-window.vercel.app/

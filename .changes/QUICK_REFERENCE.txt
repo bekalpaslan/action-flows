@@ -133,8 +133,8 @@ DOCUMENTATION
 ===============================================================================
 
 See detailed documentation in:
-  • .changes/SECURITY_FIXES_LOG.md (comprehensive details)
-  • .changes/IMPLEMENTATION_DETAILS.md (code-level details)
+  • docs/testing/security/security-fixes-log.md (comprehensive details)
+  • docs/testing/security/implementation-details.md (code-level details)
   • .changes/QUICK_REFERENCE.txt (this file)
 
 ===============================================================================

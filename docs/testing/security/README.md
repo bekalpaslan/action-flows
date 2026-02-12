@@ -25,9 +25,9 @@ Total changes:
 
 | File | Purpose |
 |------|---------|
-| SECURITY_FIXES_LOG.md | Comprehensive security fix details |
-| IMPLEMENTATION_DETAILS.md | Code-level implementation specifics |
-| CODE_SNIPPETS.md | Key code snippets for each fix |
+| security-fixes-log.md | Comprehensive security fix details |
+| implementation-details.md | Code-level implementation specifics |
+| code-snippets.md | Key code snippets for each fix |
 | QUICK_REFERENCE.txt | Quick reference guide |
 | README.md | This file |
 

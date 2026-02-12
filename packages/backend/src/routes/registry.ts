@@ -64,8 +64,47 @@ function currentTimestamp(): Timestamp {
 // ============================================================================
 
 /**
- * GET /entries - List all entries with optional filtering
- * Query params: type?, source?, enabled?, packId?, projectId?
+ * @swagger
+ * /api/registry/entries:
+ *   get:
+ *     summary: List all registry entries
+ *     description: List action registry entries with optional filtering by type, source, enabled state, or pack
+ *     tags: [registry]
+ *     parameters:
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *         description: Filter by entry type
+ *       - in: query
+ *         name: source
+ *         schema:
+ *           type: string
+ *         description: Filter by source (builtin, user, pack)
+ *       - in: query
+ *         name: enabled
+ *         schema:
+ *           type: string
+ *           enum: [true, false]
+ *         description: Filter by enabled state
+ *       - in: query
+ *         name: packId
+ *         schema:
+ *           type: string
+ *         description: Filter by behavior pack ID
+ *     responses:
+ *       200:
+ *         description: List of registry entries
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       400:
+ *         description: Invalid query parameters
+ *       500:
+ *         description: Internal server error
  */
 router.get('/entries', async (req, res) => {
   try {

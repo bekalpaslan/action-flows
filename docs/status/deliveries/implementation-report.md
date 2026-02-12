@@ -325,7 +325,7 @@ pnpm build    # Verify bundle reduction
 ## References
 
 - See `BUNDLE_OPTIMIZATION.md` for detailed implementation guide
-- See `BUNDLE_OPTIMIZATION_SUMMARY.md` for integration instructions
+- See `bundle-optimization-summary.md` for integration instructions
 - See `OPTIMIZATION_CHECKLIST.md` for testing procedures
 - See source files for TypeScript interfaces and examples
 

@@ -83,17 +83,17 @@ TOTAL CODE: ~300 lines of security-critical code
                         DOCUMENTATION PROVIDED
 ================================================================================
 
-1. SECURITY_FIXES_LOG.md (9.9 KB)
+1. ../docs/testing/security/security-fixes-log.md (9.9 KB)
    - Comprehensive details for all 6 fixes
    - Implementation specifics
    - Security impact summary
 
-2. IMPLEMENTATION_DETAILS.md (14 KB)
+2. ../docs/testing/security/implementation-details.md (14 KB)
    - Code-level implementation details
    - File-by-file changes
    - Integration examples
 
-3. CODE_SNIPPETS.md (14 KB)
+3. ../docs/testing/security/code-snippets.md (14 KB)
    - Key code snippets for each fix
    - Usage examples
    - Integration patterns
@@ -103,12 +103,12 @@ TOTAL CODE: ~300 lines of security-critical code
    - Testing recommendations
    - Deployment checklist
 
-5. README.md (8.5 KB)
+5. ../docs/testing/security/README.md (8.5 KB)
    - Complete overview
    - Architecture information
    - Deployment steps
 
-6. VERIFICATION.md (6.4 KB)
+6. ../docs/testing/security/verification.md (6.4 KB)
    - Verification report
    - Testing coverage matrix
    - Deployment readiness assessment
@@ -313,18 +313,18 @@ Quality Assessment: Production ready
 
 For questions about these security fixes:
 
-1. Review documentation in .changes/ directory
+1. Review documentation in docs/testing/security/ directory
 2. Check code comments in modified files
-3. Reference CODE_SNIPPETS.md for examples
+3. Reference code-snippets.md for examples
 4. Contact security team for policy questions
 
-Documentation Location: D:/ActionFlowsDashboard/.changes/
+Documentation Location: D:/ActionFlowsDashboard/docs/testing/security/
 
 Files:
   - README.md - Start here
-  - SECURITY_FIXES_LOG.md - Detailed information
-  - CODE_SNIPPETS.md - Code examples
-  - VERIFICATION.md - Testing and deployment info
+  - security-fixes-log.md - Detailed information
+  - code-snippets.md - Code examples
+  - verification.md - Testing and deployment info
 
 ================================================================================
                         FINAL STATUS

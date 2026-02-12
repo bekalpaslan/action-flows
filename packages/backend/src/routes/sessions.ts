@@ -71,8 +71,47 @@ function isPathDenied(filePath: string): boolean {
 }
 
 /**
- * POST /api/sessions
- * Create a new session
+ * @swagger
+ * /api/sessions:
+ *   post:
+ *     summary: Create a new orchestration session
+ *     tags: [sessions]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [cwd, hostname, platform]
+ *             properties:
+ *               cwd:
+ *                 type: string
+ *                 description: Current working directory for the session
+ *                 example: /home/user/project
+ *               hostname:
+ *                 type: string
+ *                 description: Hostname of the machine
+ *                 example: laptop-dev
+ *               platform:
+ *                 type: string
+ *                 description: Operating system platform
+ *                 example: linux
+ *               userId:
+ *                 type: string
+ *                 description: Optional user identifier
+ *     responses:
+ *       201:
+ *         description: Session created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Session'
+ *       400:
+ *         description: Invalid request (directory doesn't exist or invalid path)
+ *       403:
+ *         description: Access denied (system directory protection)
+ *       500:
+ *         description: Internal server error
  */
 router.post('/', sessionCreateLimiter, validateBody(createSessionSchema), async (req, res) => {
   try {
@@ -150,8 +189,28 @@ router.post('/', sessionCreateLimiter, validateBody(createSessionSchema), async 
 });
 
 /**
- * GET /api/sessions
- * List all active sessions
+ * @swagger
+ * /api/sessions:
+ *   get:
+ *     summary: List all active sessions
+ *     tags: [sessions]
+ *     responses:
+ *       200:
+ *         description: List of active sessions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 count:
+ *                   type: integer
+ *                   description: Number of active sessions
+ *                 sessions:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Session'
+ *       500:
+ *         description: Internal server error
  */
 router.get('/', (req, res) => {
   try {
@@ -185,8 +244,29 @@ router.get('/', (req, res) => {
 });
 
 /**
- * GET /api/sessions/:id
- * Get session details with chains and steps
+ * @swagger
+ * /api/sessions/{id}:
+ *   get:
+ *     summary: Get session details with chains and steps
+ *     tags: [sessions]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Session ID
+ *     responses:
+ *       200:
+ *         description: Session details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Session'
+ *       404:
+ *         description: Session not found
+ *       500:
+ *         description: Internal server error
  */
 router.get('/:id', async (req, res) => {
   try {

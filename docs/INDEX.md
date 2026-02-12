@@ -56,6 +56,7 @@ Complete guide to ActionFlows Dashboard documentation.
 
 - [Frontend Implementation Status](status/FRONTEND_IMPLEMENTATION_STATUS.md) — Frontend features and screens status
 - [Implementation Status](status/IMPLEMENTATION_STATUS.md) — Backend and API implementation status
+- [Contract Manifest](status/contract-manifest.md) — Contract manifest
 
 ### Checklists
 
@@ -92,6 +93,8 @@ Complete guide to ActionFlows Dashboard documentation.
 - [Test Files Summary](testing/test-files-summary.md) — Test file organization
 - [Performance Baseline](PERFORMANCE_BASELINE.md) — Benchmark results and performance targets
 - [Contract Compliance Roadmap](CONTRACT_COMPLIANCE_ROADMAP.md) — Contract validation status and roadmap
+- [Test Deliverables](testing/deliverables/INDEX.md) — Test delivery reports
+- [Security Documentation](testing/security/INDEX.md) — Security fix documentation
 
 ---
 

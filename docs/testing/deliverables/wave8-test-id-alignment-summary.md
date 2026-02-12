@@ -283,7 +283,7 @@ Three detailed documents created:
    - Before/after comparison
    - Verification commands
 
-2. **TEST_ID_MAPPING_REFERENCE.md** - Complete technical reference
+2. **../test-id-mapping-reference.md** - Complete technical reference
    - Line-by-line mapping of all changes
    - Component source file references
    - Test conditions and overrides

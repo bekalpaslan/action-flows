@@ -149,7 +149,7 @@ Total should be ~2MB (before gzip), down from ~11.6MB.
 ## Documentation
 
 - [ ] Review BUNDLE_OPTIMIZATION.md for completeness
-- [ ] Review BUNDLE_OPTIMIZATION_SUMMARY.md
+- [ ] Review ../../docs/status/deliveries/bundle-optimization-summary.md
 - [ ] Update team with optimization details
 - [ ] Document any custom implementation decisions
 - [ ] Create runbook for monitoring metrics
