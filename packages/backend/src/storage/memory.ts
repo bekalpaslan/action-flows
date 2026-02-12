@@ -410,7 +410,7 @@ export const storage: MemoryStorage = {
     const validated = validateStorageData(config, sessionWindowConfigSchema, `setSessionWindowConfig(${sessionId})`);
     if (!validated) return; // Drop invalid config
 
-    this.sessionWindowConfigs.set(sessionId, validated as SessionWindowConfig);
+    this.sessionWindowConfigs.set(sessionId, config);
   },
   getSessionWindowConfig(sessionId: SessionId) {
     return this.sessionWindowConfigs.get(sessionId);
@@ -954,7 +954,7 @@ export const storage: MemoryStorage = {
         this.reminderInstances.delete(oldestId);
       }
     }
-    this.reminderInstances.set(instance.id, validated as ReminderInstance);
+    this.reminderInstances.set(instance.id, instance);
   },
 
   markReminderAddressed(instanceId: string): boolean {
@@ -1006,7 +1006,7 @@ export const storage: MemoryStorage = {
       sessionErrors.shift();
     }
 
-    sessionErrors.push(validated as ErrorInstance);
+    sessionErrors.push(error);
   },
 
   getErrors(sessionId: SessionId, filter?: { chainId?: ChainId; dismissedOnly?: boolean }): ErrorInstance[] {

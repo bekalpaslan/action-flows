@@ -20,14 +20,14 @@ vi.mock('../../contexts/WorkbenchContext', () => ({
   useWorkbenchContext: () => ({
     activeWorkbench: 'work' as WorkbenchId,
     setActiveWorkbench: vi.fn(),
-    workbenchNotifications: {
-      work: 0,
-      maintenance: 0,
-      explore: 0,
-      review: 0,
-      pm: 0,
-      archive: 0,
-    },
+    workbenchNotifications: new Map([
+      ['work', 0],
+      ['maintenance', 0],
+      ['explore', 0],
+      ['review', 0],
+      ['pm', 0],
+      ['archive', 0],
+    ]),
   }),
 }));
 

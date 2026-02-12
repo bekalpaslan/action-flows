@@ -84,6 +84,10 @@ vi.mock('../../hooks/useDiscussButton', () => ({
 vi.mock('../../hooks/useErrorAnnouncements', () => ({
   useErrorAnnouncements: () => ({
     announceError: vi.fn(),
+    unreadErrors: [],
+    dismissError: vi.fn(),
+    handleRecoveryAction: vi.fn(),
+    displayedErrorIdx: 0,
   }),
 }));
 
