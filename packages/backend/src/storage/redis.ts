@@ -130,6 +130,11 @@ export interface RedisStorage {
   subscribe(channel: string, callback: (message: string) => void): Promise<void>;
   publish(channel: string, message: string): Promise<void>;
   disconnect(): Promise<void>;
+
+  // Generic key-value operations (for gate traces, health scores, etc.)
+  set(key: string, value: string, ttlSeconds?: number): Promise<void>;
+  get(key: string): Promise<string | null>;
+  keys(pattern: string): Promise<string[]>;
 }
 
 /**
@@ -1448,6 +1453,42 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
     },
     async deleteSessionRegion() {
       // Stub: Session-region mappings not persisted to Redis in Phase 0
+    },
+
+    // === Generic Key-Value Operations ===
+    async set(key: string, value: string, ttlSeconds?: number): Promise<void> {
+      try {
+        const fullKey = `${keyPrefix}${key}`;
+        if (ttlSeconds) {
+          await redis.setex(fullKey, ttlSeconds, value);
+        } else {
+          await redis.set(fullKey, value);
+        }
+      } catch (error) {
+        console.error(`[Redis] Error setting key ${key}:`, error);
+      }
+    },
+
+    async get(key: string): Promise<string | null> {
+      try {
+        const fullKey = `${keyPrefix}${key}`;
+        return await redis.get(fullKey);
+      } catch (error) {
+        console.error(`[Redis] Error getting key ${key}:`, error);
+        return null;
+      }
+    },
+
+    async keys(pattern: string): Promise<string[]> {
+      try {
+        const fullPattern = `${keyPrefix}${pattern}`;
+        const keys = await redis.keys(fullPattern);
+        // Strip prefix from returned keys
+        return keys.map(key => key.substring(keyPrefix.length));
+      } catch (error) {
+        console.error(`[Redis] Error getting keys for pattern ${pattern}:`, error);
+        return [];
+      }
     },
   };
 

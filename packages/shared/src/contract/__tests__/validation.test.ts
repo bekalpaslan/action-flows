@@ -16,6 +16,7 @@ import {
   CommitHashSchema,
   DateSchema,
   ActionPathSchema,
+  StatusStringSchema,
   validateParsedFormat,
 } from '../validation/schemas.js';
 
@@ -67,6 +68,27 @@ describe('Zod Validation Schemas', () => {
       expect(ContextEnumSchema.safeParse('harmony').success).toBe(true);
       expect(ContextEnumSchema.safeParse('editor').success).toBe(true);
       expect(ContextEnumSchema.safeParse('invalid').success).toBe(false);
+    });
+
+    it('validates status enum with case normalization', () => {
+      // Lowercase (standard format)
+      expect(StatusStringSchema.safeParse('pending').success).toBe(true);
+      expect(StatusStringSchema.safeParse('running').success).toBe(true);
+      expect(StatusStringSchema.safeParse('completed').success).toBe(true);
+      expect(StatusStringSchema.safeParse('failed').success).toBe(true);
+      expect(StatusStringSchema.safeParse('skipped').success).toBe(true);
+
+      // Capitalized (orchestrator output format) - should normalize to lowercase
+      expect(StatusStringSchema.safeParse('Pending').success).toBe(true);
+      expect(StatusStringSchema.safeParse('Running').success).toBe(true);
+      expect(StatusStringSchema.safeParse('Completed').success).toBe(true);
+      expect(StatusStringSchema.safeParse('Failed').success).toBe(true);
+      expect(StatusStringSchema.safeParse('Skipped').success).toBe(true);
+
+      // Invalid values
+      expect(StatusStringSchema.safeParse('PENDING').success).toBe(true); // also normalizes
+      expect(StatusStringSchema.safeParse('invalid').success).toBe(false);
+      expect(StatusStringSchema.safeParse('').success).toBe(false);
     });
   });
 

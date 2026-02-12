@@ -140,9 +140,9 @@ app.use('/api/universe', universeRouter);
 // IMPORTANT: Must come AFTER specific /api/* routes since it has /:projectId catch-all
 app.use('/api', patternsRouter);
 app.use('/api/registry', registryRouter);
-app.use('/api/harmony', harmonyRouter);
-app.use('/api/harmony/recommendations', healingRecommendationsRouter);
 app.use('/api/harmony', createHarmonyHealthRouter(healthScoreCalculator));
+app.use('/api/harmony/recommendations', healingRecommendationsRouter);
+app.use('/api/harmony', harmonyRouter);
 app.use('/api/routing', routingRouter);
 app.use('/api/contracts', contractsRouter);
 app.use('/api/agent-validator', agentValidatorRouter);

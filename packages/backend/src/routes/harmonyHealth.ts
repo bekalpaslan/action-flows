@@ -6,8 +6,10 @@
 
 import { Router } from 'express';
 import { z } from 'zod';
-import type { GateId } from '@afw/shared';
+import type { GateId, ChainId } from '@afw/shared';
+import { brandedTypes } from '@afw/shared';
 import type { HealthScoreCalculator } from '../services/healthScoreCalculator.js';
+import { validateChainCompilation } from '../services/checkpoints/gate04-chain-compilation.js';
 import { sanitizeError } from '../middleware/errorHandler.js';
 
 /**
@@ -88,6 +90,47 @@ export default function createHarmonyHealthRouter(
       console.error('[API] Error fetching gate health score:', error);
       res.status(500).json({
         error: 'Failed to fetch gate health score',
+        message: sanitizeError(error),
+      });
+    }
+  });
+
+  /**
+   * POST /api/harmony/validate/manual
+   * Manually trigger Gate 4 validation (bypass ConversationWatcher)
+   *
+   * Body: { orchestratorOutput: string, sessionId?: string }
+   *
+   * Use this endpoint to test gate validation when ConversationWatcher
+   * discovery isn't working. Directly calls validateChainCompilation().
+   */
+  router.post('/validate/manual', async (req, res) => {
+    try {
+      const { orchestratorOutput, sessionId } = req.body;
+
+      if (!orchestratorOutput || typeof orchestratorOutput !== 'string') {
+        return res.status(400).json({
+          error: 'Missing or invalid orchestratorOutput in request body',
+        });
+      }
+
+      // Generate ChainId from sessionId or use test ID
+      const chainPrefix = sessionId || 'manual-test';
+      const chainId = brandedTypes.chainId(`chain-${chainPrefix}-${Date.now()}`);
+
+      // Trigger Gate 4 validation
+      await validateChainCompilation(orchestratorOutput, chainId);
+
+      res.json({
+        success: true,
+        message: 'Gate 4 validation triggered',
+        chainId,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error('[API] Error in manual validation:', error);
+      res.status(500).json({
+        error: 'Failed to validate chain compilation',
         message: sanitizeError(error),
       });
     }

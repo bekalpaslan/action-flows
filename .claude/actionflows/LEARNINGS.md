@@ -133,3 +133,12 @@
 - **Root Cause:** Review and second opinion use slightly different criteria for severity classification. Review categorized it as low-severity based on component lifecycle (WorkbenchLayout rarely unmounts), second opinion focused on potential memory leak pattern regardless of frequency.
 - **Fix:** For future reviews, clarify severity levels (CRITICAL/HIGH/MEDIUM/LOW) upfront in spawn prompts so second opinion uses consistent thresholds. Consider defining severity criteria in review/agent.md: CRITICAL=blocks production, HIGH=significant quality impact, MEDIUM=should fix, LOW=nice to have.
 - **Status:** Open (pattern documented, severity criteria definition pending)
+
+### L017: Composite Feature Flag Pattern for Global + Local Control
+- **Date:** 2026-02-12
+- **From:** second-opinion/ (haiku) during Phase 7 review
+- **Pattern Discovery:** The DiscoveryContext implementation revealed a powerful pattern for combining global feature flags with local user toggles.
+- **Implementation:** `const isDiscoveryActive = fogOfWarEnabled && discoveryEnabled;` where `fogOfWarEnabled` is a global feature flag (backend-controlled) and `discoveryEnabled` is a local user toggle (localStorage).
+- **Benefits:** (1) Global rollout control - backend can disable feature for everyone, (2) User override - individual users can opt-out via localStorage, (3) Graceful degradation - feature respects both signals, (4) Future-proof - ready for backend-driven flags when needed.
+- **Recommendation:** Document this as a standard pattern for future feature development. Can be extracted into a custom hook: `useCompositeFlag(featureFlag: keyof FeatureFlags, localToggle: boolean): boolean`
+- **Status:** Closed (pattern identified and documented, available for reuse)

@@ -32,7 +32,10 @@ export type ModelString = z.infer<typeof ModelStringSchema>;
 /**
  * Status enum - execution status of a step
  */
-export const StatusStringSchema = z.enum(['pending', 'running', 'completed', 'failed', 'skipped']);
+export const StatusStringSchema = z.preprocess(
+  (val) => typeof val === 'string' ? val.toLowerCase() : val,
+  z.enum(['pending', 'running', 'completed', 'failed', 'skipped'])
+);
 export type StatusString = z.infer<typeof StatusStringSchema>;
 
 /**

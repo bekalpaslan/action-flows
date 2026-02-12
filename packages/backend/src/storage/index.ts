@@ -179,6 +179,11 @@ export interface Storage {
   getSessionRegion(sessionId: SessionId): RegionId | undefined | Promise<RegionId | undefined>;
   setSessionRegion(sessionId: SessionId, regionId: RegionId): void | Promise<void>;
   deleteSessionRegion(sessionId: SessionId): void | Promise<void>;
+
+  // Generic key-value operations (for gate traces, health scores, etc.)
+  set?(key: string, value: string, ttlSeconds?: number): Promise<void> | void;
+  get?(key: string): Promise<string | null> | string | null;
+  keys?(pattern: string): Promise<string[]> | string[];
 }
 
 /**
