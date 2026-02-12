@@ -24,3 +24,9 @@
 | Flow | Purpose | Chain |
 |------|---------|-------|
 | audit-and-fix/ | Audit and remediate | audit → review |
+
+## Maintenance
+
+| Flow | Purpose | Chain |
+|------|---------|-------|
+| harmony-heal/ | Layer-aware healing for harmony violations | analyze (+ layer classify) → code (branched) → verify → review → commit |

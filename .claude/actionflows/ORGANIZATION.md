@@ -25,6 +25,11 @@ Request → Which department? → Which flow? → No flow? Compose from actions 
 **Key Flows:** audit-and-fix/
 **Triggers:** "audit", "security scan", "quality check", "performance review"
 
+### Maintenance
+**Owns:** Healing, self-repair, harmony violation resolution
+**Key Flows:** harmony-heal/
+**Triggers:** "fix harmony violations", "heal", "gate failures", "parser rejects output", "hook not firing"
+
 ## Routing Guide
 
 | Human Says | Department | Flow/Action |
@@ -40,3 +45,7 @@ Request → Which department? → Which flow? → No flow? Compose from actions 
 | "create a new action" | Framework | action-creation/ |
 | "check framework health" | Framework | framework-health/ |
 | "plan X" | — | plan/ (direct action) |
+| "fix harmony violations" / "heal" | Maintenance | harmony-heal/ |
+| "gate failures" / "parser rejects" | Maintenance | harmony-heal/ |
+| "hook not firing" / "hook broken" | Maintenance | harmony-heal/ |
+| "verify fix" | — | verify/ (direct action) |

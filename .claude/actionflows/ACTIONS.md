@@ -23,6 +23,7 @@ These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 | review/ | Review anything | YES | scope, type | sonnet |
 | audit/ | Comprehensive audits | YES | type, scope | opus |
 | test/ | Execute tests | YES | scope, type | haiku |
+| verify/ | Layer-aware fix verification | YES | layer, scope, issue | haiku |
 | analyze/ | Codebase analysis | YES | aspect, scope | sonnet |
 | plan/ | Implementation planning | YES | requirements, context | sonnet |
 | commit/ | Git commit + push | YES | summary, files | haiku |
@@ -35,6 +36,7 @@ These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 |--------|-------|-----------------|-------|
 | `code/backend/` | Express 4.18 + TypeScript + Zod | task, context | haiku |
 | `code/frontend/` | React 18.2 + Vite 5 + Electron 28 | task, context | haiku |
+| `code/hooks/` | Claude Code lifecycle hooks (TypeScript) | task, context | haiku |
 
 ## Action Modes
 
