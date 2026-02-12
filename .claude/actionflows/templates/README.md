@@ -2,7 +2,65 @@
 
 This directory contains canonical template files for creating new actions and flows in the ActionFlows Dashboard framework.
 
+## Directory Structure
+
+```
+templates/
+├── orchestrator/         # Orchestrator output format templates (7 formats)
+│   ├── TEMPLATE.format-1.1-chain-compilation.md
+│   ├── TEMPLATE.format-1.2-execution-start.md
+│   ├── TEMPLATE.format-1.3-chain-status.md
+│   ├── TEMPLATE.format-1.4-execution-complete.md
+│   ├── TEMPLATE.format-2.1-step-completion.md
+│   ├── TEMPLATE.format-3.2-learning-surface.md
+│   └── TEMPLATE.format-4.1-registry-update.md
+├── git/                  # Git convention templates (2 formats)
+│   ├── TEMPLATE.commit-message.md
+│   └── TEMPLATE.pr-description.md
+├── TEMPLATE.agent.md     # Action agent definition template
+└── TEMPLATE.instructions.md  # Flow orchestration template
+```
+
+---
+
 ## Files
+
+### Orchestrator Output Templates
+
+**Templates in `orchestrator/` directory provide standard formats for orchestrator output consumed by the dashboard.**
+
+Each template includes:
+- Format ID and purpose from CONTRACT.md
+- Required and optional fields with type annotations
+- Validation rules and constraints
+- Template structure with `{placeholder}` syntax
+- Complete working examples
+- Cross-references to parsers and TypeScript types
+
+**Format Templates:**
+
+1. **TEMPLATE.format-1.1-chain-compilation.md** — Chain compilation table for human approval
+2. **TEMPLATE.format-1.2-execution-start.md** — Announce start of chain execution
+3. **TEMPLATE.format-1.3-chain-status.md** — Mid-execution chain status update
+4. **TEMPLATE.format-1.4-execution-complete.md** — Final chain completion summary
+5. **TEMPLATE.format-2.1-step-completion.md** — Single step completion announcement
+6. **TEMPLATE.format-3.2-learning-surface.md** — Surface agent learnings to orchestrator
+7. **TEMPLATE.format-4.1-registry-update.md** — Registry file modification announcement
+
+**Source:** CONTRACT.md § Formats 1.x, 2.x, 3.x, 4.x (Phase 1 subset)
+
+---
+
+### Git Convention Templates
+
+**Templates in `git/` directory provide standard formats for git operations.**
+
+1. **TEMPLATE.commit-message.md** — Conventional commit format with co-author attribution
+2. **TEMPLATE.pr-description.md** — Pull request description with summary, test plan, and attribution
+
+**Source:** CLAUDE.md, ORCHESTRATOR.md § Git Conventions
+
+---
 
 ### TEMPLATE.agent.md
 **Use this template when creating a new action agent definition.**
@@ -62,6 +120,39 @@ This directory contains canonical template files for creating new actions and fl
 ---
 
 ## Usage Instructions
+
+### Using Orchestrator Format Templates
+
+**When implementing orchestrator output:**
+
+1. **Read the format template** for the format you're implementing
+2. **Use the template structure** as the canonical reference for required/optional fields
+3. **Follow validation rules** to ensure contract compliance
+4. **Test against examples** provided in the template
+5. **Run harmony check:** `pnpm run harmony:check` to validate output
+
+**Cross-reference:**
+- Templates → CONTRACT.md (format specification)
+- Templates → `packages/shared/src/contract/parsers.ts` (parser implementation)
+- Templates → Dashboard components (UI rendering)
+
+---
+
+### Using Git Convention Templates
+
+**When creating commits or PRs:**
+
+1. **Commit messages:** Follow `git/TEMPLATE.commit-message.md`
+   - Use conventional commit types (feat, fix, docs, etc.)
+   - Always include co-author line
+   - Keep description concise (<72 chars)
+
+2. **Pull requests:** Follow `git/TEMPLATE.pr-description.md`
+   - Write 2-5 bullet summary
+   - Provide actionable test plan checklist
+   - Include attribution footer
+
+---
 
 ### Creating a New Action
 
