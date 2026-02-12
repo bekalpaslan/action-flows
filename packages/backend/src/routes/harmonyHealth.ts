@@ -9,6 +9,8 @@ import { z } from 'zod';
 import type { GateId, ChainId } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import type { HealthScoreCalculator } from '../services/healthScoreCalculator.js';
+import type { HealingRecommendationEngine } from '../services/healingRecommendations.js';
+import { getHealingRecommendationEngine } from '../services/healingRecommendations.js';
 import { validateChainCompilation } from '../services/checkpoints/gate04-chain-compilation.js';
 import { sanitizeError } from '../middleware/errorHandler.js';
 
@@ -23,7 +25,8 @@ const healthQuerySchema = z.object({
  * Create router with health calculator dependency injection
  */
 export default function createHarmonyHealthRouter(
-  healthCalculator: HealthScoreCalculator
+  healthCalculator: HealthScoreCalculator,
+  healingEngine?: HealingRecommendationEngine | null
 ): Router {
   const router = Router();
 
@@ -43,7 +46,35 @@ export default function createHarmonyHealthRouter(
         query.gateId as GateId | undefined
       );
 
-      res.json(healthScore);
+      // Enhance with structured healing recommendations
+      const engine = healingEngine || getHealingRecommendationEngine();
+      let healingRecommendations: any[] = [];
+
+      if (engine) {
+        try {
+          // Get recommendations for default project
+          const projectId = 'default-project' as any;  // ProjectId
+          const recommendations = await engine.analyzeAndRecommend(projectId, 'project');
+
+          // Map to simplified format for API response
+          healingRecommendations = recommendations.map(rec => ({
+            pattern: rec.pattern,
+            suggestedFlow: rec.suggestedFlow,
+            severity: rec.severity,
+            violationCount: rec.violationCount,
+            reason: rec.reason,
+            estimatedEffort: rec.estimatedEffort,
+          }));
+        } catch (recError) {
+          console.error('[API] Error generating healing recommendations:', recError);
+          // Continue without recommendations rather than failing the whole request
+        }
+      }
+
+      res.json({
+        ...healthScore,
+        healingRecommendations,
+      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({

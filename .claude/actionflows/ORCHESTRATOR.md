@@ -66,6 +66,12 @@ ActionFlows is **open source software**. The entire codebase, framework, and orc
 1. **Read** `.claude/actionflows/CONTEXTS.md` — Understand context routing
 2. **Read** `.claude/actionflows/FLOWS.md` — Know what flows exist
 3. **Read** `.claude/actionflows/logs/INDEX.md` — Check for similar past executions
+4. **Check system health** — `GET http://localhost:3001/api/harmony/health`
+   - If backend is unreachable → skip (non-blocking)
+   - If `overall >= 80` → proceed normally
+   - If `overall < 80` → surface to human: "{N} gate violations detected. Suggested healing: {suggestedFlow}. Run now?"
+   - If `healingRecommendations` array is non-empty → show top recommendation with severity + suggested flow
+   - Human decides: heal first, or proceed with original request
 
 This forces you into **routing mode** instead of **help mode**.
 

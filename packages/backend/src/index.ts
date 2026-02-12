@@ -43,6 +43,7 @@ import remindersRouter from './routes/reminders.js';
 import errorsRouter from './routes/errors.js';
 import universeRouter from './routes/universe.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
+import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
 import { initializeAgentValidator } from './services/agentValidator.js';
 import { lifecycleManager } from './services/lifecycleManager.js';
@@ -528,8 +529,9 @@ if (isMainModule) {
     }
 
     // Initialize healing recommendation engine (Component 7 - Healing Recommendation Engine)
+    let healingEngine: ReturnType<typeof initHealingRecommendationEngine> | null = null;
     try {
-      const healingEngine = initHealingRecommendationEngine(storage);
+      healingEngine = initHealingRecommendationEngine(storage);
 
       // Wire healing recommendation events to WebSocket broadcast
       healingEngine.on('harmony:recommendation_ready', (data: any) => {
@@ -590,6 +592,15 @@ if (isMainModule) {
             client.send(message);
           }
         });
+
+        // Trigger healing recommendation analysis when threshold exceeded
+        if (healingEngine) {
+          // Use 'project' as target type for system-wide violations
+          const projectId = 'default-project' as any;  // ProjectId
+          healingEngine.analyzeAndRecommend(projectId, 'project').catch((error: any) => {
+            console.error('[HealingRecommendations] ❌ Failed to analyze threshold violations:', error);
+          });
+        }
       });
 
       console.log('[HealthScore] ✅ Event broadcasting wired successfully for Auditable Verification System Component 6');
