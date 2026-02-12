@@ -28,7 +28,7 @@ import type { NodeProps } from 'reactflow';
 export const createMockSession = (overrides?: Partial<Session>): Session => ({
   id: 'session-123' as SessionId,
   user: 'test-user' as UserId,
-  status: 'idle',
+  status: 'in_progress' as const,
   chains: [],
   startedAt: '2024-01-01T00:00:00Z' as Timestamp,
   cwd: '/test/dir',
@@ -132,7 +132,7 @@ export const createMockRegionStarData = (
   layer: 'experience',
   fogState: FogState.REVEALED,
   glowIntensity: 0.5,
-  status: 'idle',
+  status: 'active',
   colorShift: createMockColorShift(),
   health: createMockHealthMetrics(),
   ...overrides,
@@ -161,9 +161,11 @@ export const createMockChatMessage = (
   overrides?: Partial<ChatMessage>
 ): ChatMessage => ({
   id: 'msg-1',
-  type: 'user' as const,
+  sessionId: 'session-123' as SessionId,
+  role: 'user',
   content: 'Test message',
   timestamp: '2024-01-01T00:00:00Z' as Timestamp,
+  messageType: 'text',
   ...overrides,
 });
 
@@ -172,7 +174,7 @@ export const createMockChatMessages = (count: number = 2): ChatMessage[] => {
     const timestamp = new Date(Date.now() - i * 5000).toISOString() as Timestamp;
     return createMockChatMessage({
       id: `msg-${i + 1}`,
-      type: i % 2 === 0 ? ('user' as const) : ('assistant' as const),
+      role: i % 2 === 0 ? ('user' as const) : ('assistant' as const),
       content: i % 2 === 0 ? `User message ${i + 1}` : `Assistant response ${i + 1}`,
       timestamp,
     });
