@@ -152,7 +152,18 @@ export class LogDiscovery {
    * Unix: /home/user/project → -home-user-project
    */
   private escapeProjectPath(): string {
-    return this.projectPath.replace(/[:\\\/]/g, '-');
+    // Match Claude Code's actual directory naming:
+    // Windows: D:\ActionFlowsDashboard → D--ActionFlowsDashboard
+    // Unix: /home/user/project → -home-user-project
+    if (process.platform === 'win32') {
+      // Windows: Drive colon becomes double dash, path separators become single dash
+      return this.projectPath
+        .replace(/^([A-Z]):\\/, '$1--')  // D:\ → D--
+        .replace(/\\/g, '-');             // Other \ → -
+    } else {
+      // Unix: All slashes become dashes
+      return this.projectPath.replace(/\//g, '-');
+    }
   }
 }
 

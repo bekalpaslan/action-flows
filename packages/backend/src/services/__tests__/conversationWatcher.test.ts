@@ -11,12 +11,15 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ChainDetector, GateIntegration } from '../conversationWatcher.js';
+import { ChainDetector, GateIntegration, LogDiscovery } from '../conversationWatcher.js';
 import type { GateCheckpoint } from '../gateCheckpoint.js';
 
 // ============================================================================
 // Mock Data
 // ============================================================================
+
+// Mock process.platform for testing path escaping
+const originalPlatform = process.platform;
 
 const SAMPLE_CHAIN_COMPILATION = `## Chain: Test Implementation
 
@@ -67,6 +70,121 @@ const SAMPLE_ASSISTANT_MESSAGE = {
   requestId: 'req-xyz',
   userType: 'external' as const,
 };
+
+// ============================================================================
+// LogDiscovery Tests
+// ============================================================================
+
+describe('LogDiscovery', () => {
+  describe('escapeProjectPath', () => {
+    afterEach(() => {
+      // Restore original platform
+      Object.defineProperty(process, 'platform', {
+        value: originalPlatform,
+        writable: true,
+        configurable: true,
+      });
+    });
+
+    it('should escape Windows path correctly (D:\\ → D--)', () => {
+      // Mock Windows platform
+      Object.defineProperty(process, 'platform', {
+        value: 'win32',
+        writable: true,
+        configurable: true,
+      });
+
+      const logDiscovery = new LogDiscovery('D:\\ActionFlowsDashboard');
+      // @ts-ignore - accessing private method for testing
+      const escaped = logDiscovery.escapeProjectPath();
+      expect(escaped).toBe('D--ActionFlowsDashboard');
+    });
+
+    it('should escape Windows path with subdirectories correctly', () => {
+      // Mock Windows platform
+      Object.defineProperty(process, 'platform', {
+        value: 'win32',
+        writable: true,
+        configurable: true,
+      });
+
+      const logDiscovery = new LogDiscovery('D:\\Users\\alice\\Projects\\MyApp');
+      // @ts-ignore
+      const escaped = logDiscovery.escapeProjectPath();
+      expect(escaped).toBe('D--Users-alice-Projects-MyApp');
+    });
+
+    it('should escape Unix path correctly (/home → -home)', () => {
+      // Mock Unix platform
+      Object.defineProperty(process, 'platform', {
+        value: 'linux',
+        writable: true,
+        configurable: true,
+      });
+
+      const logDiscovery = new LogDiscovery('/home/user/project');
+      // @ts-ignore
+      const escaped = logDiscovery.escapeProjectPath();
+      expect(escaped).toBe('-home-user-project');
+    });
+
+    it('should handle Windows path with different drive letter', () => {
+      // Mock Windows platform
+      Object.defineProperty(process, 'platform', {
+        value: 'win32',
+        writable: true,
+        configurable: true,
+      });
+
+      const logDiscovery = new LogDiscovery('C:\\Program Files\\MyApp');
+      // @ts-ignore
+      const escaped = logDiscovery.escapeProjectPath();
+      expect(escaped).toBe('C--Program Files-MyApp');
+    });
+
+    it('should handle Unix path with multiple levels', () => {
+      // Mock Unix platform
+      Object.defineProperty(process, 'platform', {
+        value: 'darwin',
+        writable: true,
+        configurable: true,
+      });
+
+      const logDiscovery = new LogDiscovery('/Users/bob/Documents/code/my-project');
+      // @ts-ignore
+      const escaped = logDiscovery.escapeProjectPath();
+      expect(escaped).toBe('-Users-bob-Documents-code-my-project');
+    });
+
+    it('should handle single directory on Windows', () => {
+      // Mock Windows platform
+      Object.defineProperty(process, 'platform', {
+        value: 'win32',
+        writable: true,
+        configurable: true,
+      });
+
+      const logDiscovery = new LogDiscovery('E:\\MyProject');
+      // @ts-ignore
+      const escaped = logDiscovery.escapeProjectPath();
+      expect(escaped).toBe('E--MyProject');
+    });
+
+    it('should handle single directory on Unix', () => {
+      // Mock Unix platform
+      Object.defineProperty(process, 'platform', {
+        value: 'linux',
+        writable: true,
+        configurable: true,
+      });
+
+      const logDiscovery = new LogDiscovery('/project');
+      // @ts-ignore
+      const escaped = logDiscovery.escapeProjectPath();
+      expect(escaped).toBe('-project');
+    });
+  });
+});
 
 // ============================================================================
 // ChainDetector Tests (Complete Coverage)
