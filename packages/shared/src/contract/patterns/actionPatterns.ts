@@ -8,7 +8,7 @@
  */
 export const ReviewReportPatterns = {
   heading: /^# Review Report: (.+)$/m,
-  verdict: /^## Verdict: (APPROVED|NEEDS_CHANGES)$/m,
+  verdict: /^## Verdict: (APPROVED|NEEDS_CHANGES)(?:\s*\([^)]+\))?$/m,
   score: /^## Score: (\d+)%$/m,
   summaryHeading: /^## Summary$/m,
   summary: /^(.+)$/m,
@@ -46,6 +46,7 @@ export const BrainstormTranscriptPatterns = {
   idea: /^(.+)$/m,
   classificationHeading: /^## Classification$/m,
   classification: /^(Technical|Functional|Framework)$/m,
+  date: /^\*\*Date:\*\* (\d{4}-\d{2}-\d{2})$/m,
   initialContextHeading: /^## Initial Context$/m,
   initialContext: /^(.+)$/m,
   transcriptHeading: /^## Session Transcript$/m,

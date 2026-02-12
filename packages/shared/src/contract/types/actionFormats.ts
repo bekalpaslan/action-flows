@@ -72,6 +72,9 @@ export interface AnalysisReportParsed {
   /** Report date (YYYY-MM-DD) */
   date: string | null;
 
+  /** Agent that produced the report (e.g., "analyze/") */
+  agent: string | null;
+
   /** Numbered sections */
   sections: AnalysisSection[] | null;
 
@@ -101,6 +104,9 @@ export interface BrainstormTranscriptParsed {
 
   /** Classification (Technical | Functional | Framework) */
   classification: 'Technical' | 'Functional' | 'Framework' | null;
+
+  /** Session date (YYYY-MM-DD) */
+  date: string | null;
 
   /** Initial context summary */
   initialContext: string | null;

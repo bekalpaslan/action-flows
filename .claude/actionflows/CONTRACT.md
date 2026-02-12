@@ -85,6 +85,7 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 - Request (one-line string)
 - Source (enum: flow name | "Composed from: ..." | "Meta-task")
 - Table columns: #, Action, Model, Key Inputs, Waits For, Status
+  - Status enum: "pending", "running", "completed", "failed", "skipped"
 - Execution (enum: Sequential | Parallel: [...] | Single step)
 - Numbered list: "What each step does"
 
@@ -99,7 +100,8 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 **Required Fields:**
 - Step number (integer)
 - Action path (string, e.g., "code/backend/auth")
-- Model (string, e.g., "opus", "sonnet")
+- Model (string, enum: "opus", "sonnet", "haiku")
+- Timestamp (optional, number)
 
 ---
 
@@ -111,7 +113,8 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 
 **Required Fields:**
 - Brief Title (string)
-- Changes (description string)
+- Changes (description string, free-form text explaining what changed)
+- Steps (array of step objects with fields: stepNumber, action, model, keyInputs, waitsFor, status)
 - Updated table with columns: #, Action, Model, Key Inputs, Waits For, Status
 
 ---
@@ -124,9 +127,11 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 
 **Required Fields:**
 - Brief Title (string)
+- Steps (array of completed step summaries with fields: stepNumber, action, status, result)
 - Table columns: #, Action, Status, Result
 - Logs (path to log folder)
-- Learnings (summary string)
+- Learnings (summary string, free-form text with key discoveries)
+- Optional metrics: totalSteps, completedSteps, failedSteps (integers)
 
 ---
 
@@ -332,7 +337,7 @@ These formats are produced by agents. Full specifications included because agent
 ```
 
 **Field Descriptions:**
-- **Verdict:** Enum (`APPROVED` | `NEEDS_CHANGES`) — Must be exact string
+- **Verdict:** Enum (`APPROVED` | `NEEDS_CHANGES`) — May include optional qualifiers in parentheses (e.g., "APPROVED (with recommendations)")
 - **Score:** Integer 0-100 — Quality percentage
 - **Summary:** 2-3 sentences — High-level overview of findings
 - **Findings:** Table with 6 columns (can be empty if no findings)

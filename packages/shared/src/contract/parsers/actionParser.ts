@@ -149,6 +149,7 @@ export function parseAnalysisReport(text: string): AnalysisReportParsed | null {
   const aspectMatch = text.match(ActionPatterns.analysisReport.aspect);
   const scopeMatch = text.match(ActionPatterns.analysisReport.scope);
   const dateMatch = text.match(ActionPatterns.analysisReport.date);
+  const agentMatch = text.match(ActionPatterns.analysisReport.agent);
 
   // Extract sections
   const sections = parseAnalysisSections(text);
@@ -162,6 +163,7 @@ export function parseAnalysisReport(text: string): AnalysisReportParsed | null {
     aspect: aspectMatch?.[1] || null,
     scope: scopeMatch?.[1] || null,
     date: dateMatch?.[1] || null,
+    agent: agentMatch ? 'analyze/' : null,
     sections,
     recommendations,
     raw: text,
@@ -242,6 +244,7 @@ export function parseBrainstormTranscript(text: string): BrainstormTranscriptPar
   // 2. Extract
   const headingMatch = text.match(ActionPatterns.brainstormTranscript.heading);
   const classificationMatch = text.match(ActionPatterns.brainstormTranscript.classification);
+  const dateMatch = text.match(ActionPatterns.brainstormTranscript.date);
   const durationMatch = text.match(ActionPatterns.brainstormTranscript.duration);
   const depthMatch = text.match(ActionPatterns.brainstormTranscript.depth);
   const consensusMatch = text.match(ActionPatterns.brainstormTranscript.consensus);
@@ -258,6 +261,7 @@ export function parseBrainstormTranscript(text: string): BrainstormTranscriptPar
   const parsed: BrainstormTranscriptParsed = {
     idea: headingMatch?.[1] || null,
     classification: (classificationMatch?.[1] as 'Technical' | 'Functional' | 'Framework') || null,
+    date: dateMatch?.[1] || null,
     initialContext,
     questions,
     keyInsights,

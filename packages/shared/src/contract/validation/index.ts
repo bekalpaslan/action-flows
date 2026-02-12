@@ -29,7 +29,6 @@ export {
   StepDescriptionSchema,
   ChainCompilationSchema,
   ChainExecutionStartSchema,
-  ChainStatusChangeSchema,
   ChainStatusUpdateSchema,
   ExecutionCompleteSchema,
 

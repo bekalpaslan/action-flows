@@ -145,6 +145,7 @@ export const ChainExecutionStartSchema = BaseParsedSchema.extend({
   title: z.string().nullable(),
   stepNumber: StepNumberSchema.nullable(),
   action: z.string().nullable(),
+  model: ModelStringSchema.nullable(),
   timestamp: z.number().nullable(),
 });
 
@@ -153,15 +154,10 @@ export type ChainExecutionStartValidated = z.infer<typeof ChainExecutionStartSch
 /**
  * Format 1.3: Chain Status Update
  */
-export const ChainStatusChangeSchema = z.object({
-  stepNumber: StepNumberSchema,
-  oldStatus: StatusStringSchema,
-  newStatus: StatusStringSchema,
-});
-
 export const ChainStatusUpdateSchema = BaseParsedSchema.extend({
   title: z.string().nullable(),
-  changes: z.array(ChainStatusChangeSchema).nullable(),
+  changes: z.string().nullable(),
+  steps: z.array(ChainStepParsedSchema).nullable(),
 });
 
 export type ChainStatusUpdateValidated = z.infer<typeof ChainStatusUpdateSchema>;
@@ -172,10 +168,11 @@ export type ChainStatusUpdateValidated = z.infer<typeof ChainStatusUpdateSchema>
 export const ExecutionCompleteSchema = BaseParsedSchema.extend({
   title: z.string().nullable(),
   logsPath: z.string().nullable(),
+  learnings: z.string().nullable(),
   totalSteps: z.number().int().positive().nullable(),
   completedSteps: z.number().int().min(0).nullable(),
   failedSteps: z.number().int().min(0).nullable(),
-  summaries: z.array(z.object({
+  steps: z.array(z.object({
     stepNumber: StepNumberSchema,
     action: z.string(),
     status: StatusStringSchema,
@@ -359,6 +356,7 @@ export const AnalysisReportSchema = BaseParsedSchema.extend({
   aspect: z.string().nullable(), // Accept any string, not just enum
   scope: z.string().nullable(),
   date: DateSchema.nullable(),
+  agent: z.string().nullable(),
   sections: z.array(AnalysisSectionSchema).nullable(),
   recommendations: z.array(z.string()).nullable(),
 });
@@ -377,6 +375,7 @@ export const BrainstormQuestionSchema = z.object({
 export const BrainstormTranscriptSchema = BaseParsedSchema.extend({
   idea: z.string().nullable(),
   classification: ClassificationSchema.nullable(),
+  date: DateSchema.nullable(),
   initialContext: z.string().nullable(),
   questions: z.array(BrainstormQuestionSchema).nullable(),
   keyInsights: z.array(z.string()).nullable(),
