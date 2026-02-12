@@ -5,6 +5,9 @@ export default defineConfig({
   test: {
     environment: 'node',
     globals: true,
+    include: [
+      '**/*.{test,spec}.?(c|m)[jt]s?(x)',
+    ],
     exclude: [
       '**/node_modules/**',
       '**/dist/**',
@@ -19,6 +22,15 @@ export default defineConfig({
     },
     testTimeout: 10000,
     hookTimeout: 10000,
+  },
+  benchmark: {
+    include: [
+      '**/*.bench.?(c|m)[jt]s?(x)',
+    ],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+    ],
   },
   resolve: {
     alias: {
