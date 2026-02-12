@@ -29,13 +29,17 @@ export const GateCheckpointComponent: React.FC<GateCheckpointProps> = ({ gate, p
         transform: 'translate(-50%, -50%)',
       }}
       role="status"
-      aria-label={`Gate checkpoint: ${gate.harmonyRule} - ${gate.status}`}
+      aria-label={`Gate checkpoint ${gate.id}`}
       data-gate-id={gate.id}
       data-harmony-rule={gate.harmonyRule}
       title={`Gate: ${gate.harmonyRule} (${gate.status})`}
     >
       <div className="gate-checkpoint__diamond">
-        <div className="gate-checkpoint__inner" />
+        <div
+          className="gate-checkpoint__inner"
+          aria-live="polite"
+          data-testid={`gate-checkpoint-status-${gate.id}`}
+        />
       </div>
     </div>
   );

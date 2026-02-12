@@ -146,13 +146,21 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
   // Determine if clickable
   const isClickable = data.fogState === FogState.REVEALED;
 
+  // Determine active state (button is "pressed" when glow is active or status is active)
+  const isActive = glowState === 'active' || data.status === 'active';
+
+  // Determine if locked (faint fog state indicates locked)
+  const isLocked = data.fogState === FogState.FAINT;
+
   return (
     <div
       className={`region-star ${fogClass} ${statusClass} ${layerClass} ${regionClass} ${glowClass} ${selectedClass} ${revealingClass} ${burstClass}`}
       data-testid={`region-star-${data.regionId}`}
       onClick={isClickable ? handleClick : undefined}
       role={isClickable ? 'button' : 'presentation'}
-      aria-label={isClickable ? `${data.label} region - ${data.status} - fog state: ${data.fogState}` : undefined}
+      aria-label={isClickable ? `Navigate to ${data.label} workbench` : undefined}
+      aria-pressed={isClickable ? isActive : undefined}
+      aria-disabled={isClickable ? isLocked : undefined}
       aria-describedby={isClickable ? `region-${data.regionId}-description` : undefined}
       tabIndex={isClickable ? 0 : -1}
       onKeyDown={isClickable ? (e) => {
