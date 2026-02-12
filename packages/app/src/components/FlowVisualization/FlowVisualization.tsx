@@ -172,7 +172,7 @@ export const FlowVisualization: React.FC<FlowVisualizationProps> = ({
   }, [chain.id, fitView]);
 
   return (
-    <div className="flow-visualization">
+    <div className="flow-visualization" data-testid="flow-visualization">
       <ReactFlow
         nodes={flowNodes}
         edges={flowEdges}
