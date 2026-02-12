@@ -216,3 +216,278 @@ pnpm test CommandCenter.test.tsx GateCheckpoint.test.tsx
 2. Monitor for any accessibility testing tools verification
 3. Consider similar audit for other components with aria-labels
 4. Document harmony rule naming conventions for future reference
+
+---
+
+# Wave 8 Batch C: Context Provider Error Fixes
+
+**Date**: 2026-02-12
+**Agent**: code/frontend/
+**Task**: Fix missing context provider errors in component tests
+
+---
+
+## Executive Summary
+
+Fixed context provider errors in test files where components using React contexts were tested without the required provider wrappers.
+
+### Errors Fixed
+1. **cosmic-map.a11y.test.tsx**: Missing FeatureFlagsProvider
+2. **WebSocketContext.test.tsx**: Hoisting error with vi.mock factory
+
+### Test Pass Rate
+- **Before**:
+  - cosmic-map.a11y.test.tsx: 0/2 passed (100% failure)
+  - WebSocketContext.test.tsx: 0 tests ran (suite failed to load)
+
+- **After**:
+  - cosmic-map.a11y.test.tsx: 2/2 passed (100% success)
+  - WebSocketContext.test.tsx: All tests passing (fix applied)
+
+---
+
+## Error 1: cosmic-map.a11y.test.tsx - Missing FeatureFlagsProvider
+
+### Error Stack Trace
+```
+Error: useFeatureFlags must be used within FeatureFlagsProvider
+  at useFeatureFlags src/contexts/FeatureFlagsContext.tsx:74:11
+  at useFeatureFlagSimple src/hooks/useFeatureFlag.ts:72:25
+  at DiscoveryProvider src/contexts/DiscoveryContext.tsx:83:27
+```
+
+### Root Cause
+The `TestProviders` wrapper included:
+- WebSocketProvider
+- SessionProvider
+- UniverseProvider
+- DiscoveryProvider
+
+However, DiscoveryProvider internally calls `useFeatureFlagSimple('FOG_OF_WAR_ENABLED')` which requires FeatureFlagsProvider to be present in the tree.
+
+### Fix Applied
+Added FeatureFlagsProvider to the TestProviders wrapper:
+
+**File**: `packages/app/src/__tests__/accessibility/cosmic-map.a11y.test.tsx`
+
+```typescript
+// BEFORE
+import { UniverseProvider } from '../../contexts/UniverseContext';
+import { DiscoveryProvider } from '../../contexts/DiscoveryContext';
+import { SessionProvider } from '../../contexts/SessionContext';
+import { WebSocketProvider } from '../../contexts/WebSocketContext';
+
+function TestProviders({ children }: { children: React.ReactNode }) {
+  return (
+    <WebSocketProvider>
+      <SessionProvider>
+        <UniverseProvider>
+          <DiscoveryProvider>
+            {children}
+          </DiscoveryProvider>
+        </UniverseProvider>
+      </SessionProvider>
+    </WebSocketProvider>
+  );
+}
+
+// AFTER
+import { FeatureFlagsProvider } from '../../contexts/FeatureFlagsContext';
+import { UniverseProvider } from '../../contexts/UniverseContext';
+import { DiscoveryProvider } from '../../contexts/DiscoveryContext';
+import { SessionProvider } from '../../contexts/SessionContext';
+import { WebSocketProvider } from '../../contexts/WebSocketContext';
+
+function TestProviders({ children }: { children: React.ReactNode }) {
+  return (
+    <FeatureFlagsProvider>
+      <WebSocketProvider>
+        <SessionProvider>
+          <UniverseProvider>
+            <DiscoveryProvider>
+              {children}
+            </DiscoveryProvider>
+          </UniverseProvider>
+        </SessionProvider>
+      </WebSocketProvider>
+    </FeatureFlagsProvider>
+  );
+}
+```
+
+---
+
+## Error 2: WebSocketContext.test.tsx - vi.mock Hoisting Error
+
+### Error Stack Trace
+```
+Error: [vitest] There was an error when mocking a module. If you are using "vi.mock" factory,
+make sure there are no top level variables inside, since this call is hoisted to top of the file.
+
+Caused by: ReferenceError: Cannot access 'mockUseWebSocket' before initialization
+  at src/contexts/__tests__/WebSocketContext.test.tsx:20:17
+```
+
+### Root Cause
+The vi.mock factory function was referencing `mockUseWebSocket` variable before initialization due to hoisting. In Vitest, `vi.mock()` calls are hoisted to the top of the file, so any variables referenced in the factory must be defined inline.
+
+### Fix Applied
+Created mock function inside the factory and imported module reference separately:
+
+**File**: `packages/app/src/contexts/__tests__/WebSocketContext.test.tsx`
+
+```typescript
+// BEFORE (BROKEN)
+const mockUseWebSocket = vi.fn(() => ({
+  status: 'connected',
+  error: null,
+  send: vi.fn(),
+  subscribe: vi.fn(),
+  unsubscribe: vi.fn(),
+}));
+
+vi.mock('../../hooks/useWebSocket', () => ({
+  useWebSocket: mockUseWebSocket,  // ReferenceError!
+}));
+
+// AFTER (FIXED)
+// Mock factory must not reference external variables
+vi.mock('../../hooks/useWebSocket', () => {
+  const mockFn = vi.fn();
+  return {
+    useWebSocket: mockFn,
+  };
+});
+
+// Import the mocked module to get reference
+import * as useWebSocketModule from '../../hooks/useWebSocket';
+const mockUseWebSocket = useWebSocketModule.useWebSocket as ReturnType<typeof vi.fn>;
+
+// Configure mock in beforeEach
+describe('WebSocketContext', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockUseWebSocket.mockReturnValue({
+      status: 'connected',
+      error: null,
+      send: vi.fn(),
+      subscribe: vi.fn(),
+      unsubscribe: vi.fn(),
+    });
+  });
+  // ... tests
+});
+```
+
+---
+
+## Context Providers Documented
+
+### FeatureFlagsProvider
+- **Location**: `packages/app/src/contexts/FeatureFlagsContext.tsx`
+- **Purpose**: Provides feature flag state management
+- **Required by**: Components using `useFeatureFlag()` or `useFeatureFlagSimple()`
+- **Common flags**: FOG_OF_WAR_ENABLED, LIVING_UNIVERSE_ENABLED
+
+---
+
+## Files Modified
+
+### 1. packages/app/src/__tests__/accessibility/cosmic-map.a11y.test.tsx
+- **Lines 4-8**: Added FeatureFlagsProvider import
+- **Lines 22-34**: Wrapped TestProviders with FeatureFlagsProvider
+
+### 2. packages/app/src/contexts/__tests__/WebSocketContext.test.tsx
+- **Lines 6-17**: Rewrote vi.mock pattern to avoid hoisting issues
+- **Lines 18-27**: Added mockReturnValue configuration in beforeEach
+
+---
+
+## Test Results
+
+### cosmic-map.a11y.test.tsx
+```
+✓ src/__tests__/accessibility/cosmic-map.a11y.test.tsx (2 tests) 50ms
+  ✓ should render live region for screen reader announcements
+  ✓ should have screen-reader-only class on live region
+
+Test Files: 1 passed (1)
+Tests: 2 passed (2)
+Duration: 2.40s
+```
+
+### WebSocketContext.test.tsx
+```
+✓ src/contexts/__tests__/WebSocketContext.test.tsx (14 tests) 39ms
+  ✓ should provide WebSocket context
+  ✓ should throw error when used outside provider
+  ✓ should forward status from useWebSocket hook
+  ✓ should forward send function
+  ✓ should forward subscribe and unsubscribe functions
+  ✓ should allow registering multiple event callbacks
+  ✓ should broadcast events to all registered callbacks
+  ✓ should allow unregistering event callbacks
+  ✓ should use custom URL if provided
+  ✓ should use default URL if not provided
+  ✓ should pass reconnect and heartbeat intervals to useWebSocket
+  ✓ should maintain separate event callback sets per provider instance
+  ✓ should handle error state from useWebSocket
+  ✓ should handle polling status
+
+Test Files: 1 passed (1)
+Tests: 14 passed (14)
+Duration: 1.95s
+```
+
+---
+
+## Test Improvements Quantified
+
+| Test File | Before | After | Change |
+|-----------|--------|-------|--------|
+| cosmic-map.a11y.test.tsx | 0/2 passed (0%) | 2/2 passed (100%) | +2 tests |
+| WebSocketContext.test.tsx | Suite failed to load | 14/14 passed (100%) | +14 tests |
+| **Total** | **0 tests** | **16 tests** | **+16 tests** |
+
+---
+
+## Verification Commands
+
+```bash
+# Test cosmic-map accessibility
+cd packages/app
+pnpm vitest run src/__tests__/accessibility/cosmic-map.a11y.test.tsx
+
+# Test WebSocketContext
+pnpm vitest run src/contexts/__tests__/WebSocketContext.test.tsx
+
+# Run all context tests
+pnpm vitest run src/contexts/__tests__/
+
+# Run all accessibility tests
+pnpm vitest run src/__tests__/accessibility/
+```
+
+---
+
+## Pattern Documentation
+
+### Provider Dependency Tree
+```
+FeatureFlagsProvider (no dependencies)
+  └─ WebSocketProvider (no dependencies)
+      └─ SessionProvider (no dependencies)
+          └─ UniverseProvider (depends on SessionContext)
+              └─ DiscoveryProvider (depends on FeatureFlagsContext + UniverseContext)
+                  └─ WorkbenchProvider (depends on SessionContext)
+```
+
+### vi.mock Best Practices for Vitest
+1. **Never reference external variables in factory**: Factory is hoisted, variables are not
+2. **Create mocks inside factory**: Use `vi.fn()` directly in the factory
+3. **Import mocked module**: Get reference to mock after `vi.mock()` call
+4. **Configure in beforeEach**: Set up mock behavior in test hooks, not globally
+5. **Type the mock**: Cast to `ReturnType<typeof vi.fn>` for TypeScript
+
+---
+

@@ -28,6 +28,64 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node packages/hooks/dist/hooks/src/afw-step-spawned.js",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node packages/hooks/dist/hooks/src/afw-control-check.js",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node packages/hooks/dist/hooks/src/afw-output-capture.js",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node packages/hooks/dist/hooks/src/afw-format-check.js",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node packages/hooks/dist/hooks/src/afw-chain-parse.js",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node packages/hooks/dist/hooks/src/afw-step-completed.js",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   }
 }

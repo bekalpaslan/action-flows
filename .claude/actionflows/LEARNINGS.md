@@ -151,3 +151,26 @@
 - **Fix:** Add proxy methods to ResilientStorage that check `this.primaryStorage.method` existence and delegate via `executeWithFallback`.
 - **Prevention:** When adding new optional methods to Storage interface, always update: (1) Storage interface, (2) Redis adapter, (3) Memory adapter (if applicable), (4) **ResilientStorage proxy**. Checklist: interface → implementations → wrapper.
 - **Status:** Closed (c8a059b)
+
+### L019: "Implement" ≠ "Wire" — Hook Scripts Created But Never Registered
+- **Date:** 2026-02-12
+- **From:** Root cause analysis of 7 unregistered hooks
+- **Issue:** 7 of 9 hook scripts in `packages/hooks/src/` were implemented across Phases 3, 6, 11, 12 but never registered in `.claude/settings.json`. Code existed on disk but never ran.
+- **Root Cause (5 factors):**
+  1. No phase plan ever included a "register hook in settings.json" task — tasks stopped at "write the file"
+  2. Phase 6 docs showed correct settings.json config as a "deployment guide" but no task executed it
+  3. Phase 12 designed a bootstrap script (`bootstrap-hooks.ts`) that was never built
+  4. The Session Redesign commit (`e5b7f41`) wired only the 2 hooks it needed (SessionStart/End), not all available hooks
+  5. ActionFlows framework (ORCHESTRATOR.md, FLOWS.md, ACTIONS.md, all 14 agent.md files) has zero concept of "hook wiring" — no flow, no action, no checklist step
+- **Fix (Rule):** When any chain creates a hook script, the chain MUST include a final step: "Register hook in `.claude/settings.json` with correct event type, matcher, and command path." This is NOT optional — code that isn't registered doesn't exist.
+- **Prevention Checklist:** Hook implementation = (1) Write `.ts` source, (2) Build to `dist/`, (3) Register in `.claude/settings.json`, (4) Verify hook fires. All 4 or it's not done.
+- **Status:** Closed (all 7 hooks wired)
+
+### L020: afw-input-inject Hook Requires Active Dashboard Session
+- **Date:** 2026-02-12
+- **From:** Live testing after wiring all hooks
+- **Issue:** `afw-input-inject` (Stop hook) POSTs to `/sessions/:id/awaiting` using Claude Code's internal session ID, which doesn't exist in the backend unless the dashboard created the session first. Returns 404, spams stderr, and triggers a `UV_HANDLE_CLOSING` assertion crash on Windows (Node.js/libuv issue with rapid process exit after failed fetch).
+- **Root Cause:** Hook assumes dashboard is actively managing sessions. Without a matching ActionFlows session in the backend, the endpoint 404s. The 30s long-poll also blocks Claude after every response.
+- **Fix:** Unwired `afw-input-inject` from `.claude/settings.json`. Re-enable when dashboard is actively creating and managing sessions (i.e., user starts sessions from the dashboard UI, not just CLI).
+- **Re-enable:** Add back to `Stop` hooks array in `.claude/settings.json` with `"timeout": 35`
+- **Status:** Open (hook exists, just not wired — waiting for dashboard session management)

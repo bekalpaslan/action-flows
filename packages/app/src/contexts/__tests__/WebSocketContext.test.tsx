@@ -3,26 +3,30 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { WebSocketProvider, useWebSocketContext } from '../WebSocketContext';
 import type { WorkspaceEvent, SessionId } from '@afw/shared';
 
-// Mock useWebSocket hook
-let mockWebSocketCallbacks: {
-  onEvent?: (event: WorkspaceEvent) => void;
-} = {};
+// Mock useWebSocket hook - factory must not reference external variables due to hoisting
+vi.mock('../../hooks/useWebSocket', () => {
+  // Create mock function inside factory to avoid hoisting issues
+  const mockFn = vi.fn();
+  return {
+    useWebSocket: mockFn,
+  };
+});
 
-const mockUseWebSocket = vi.fn(() => ({
-  status: 'connected',
-  error: null,
-  send: vi.fn(),
-  subscribe: vi.fn(),
-  unsubscribe: vi.fn(),
-}));
-
-vi.mock('../../hooks/useWebSocket', () => ({
-  useWebSocket: mockUseWebSocket,
-}));
+// Import the mocked module to get reference to the mock
+import * as useWebSocketModule from '../../hooks/useWebSocket';
+const mockUseWebSocket = useWebSocketModule.useWebSocket as ReturnType<typeof vi.fn>;
 
 describe('WebSocketContext', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Configure default mock implementation
+    mockUseWebSocket.mockReturnValue({
+      status: 'connected',
+      error: null,
+      send: vi.fn(),
+      subscribe: vi.fn(),
+      unsubscribe: vi.fn(),
+    });
   });
 
   afterEach(() => {

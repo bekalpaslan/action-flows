@@ -13,6 +13,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { LiveRegion } from '../../components/CosmicMap/LiveRegion';
+import { FeatureFlagsProvider } from '../../contexts/FeatureFlagsContext';
 import { UniverseProvider } from '../../contexts/UniverseContext';
 import { DiscoveryProvider } from '../../contexts/DiscoveryContext';
 import { SessionProvider } from '../../contexts/SessionContext';
@@ -21,15 +22,17 @@ import { WebSocketProvider } from '../../contexts/WebSocketContext';
 // Mock providers for testing
 function TestProviders({ children }: { children: React.ReactNode }) {
   return (
-    <WebSocketProvider>
-      <SessionProvider>
-        <UniverseProvider>
-          <DiscoveryProvider>
-            {children}
-          </DiscoveryProvider>
-        </UniverseProvider>
-      </SessionProvider>
-    </WebSocketProvider>
+    <FeatureFlagsProvider>
+      <WebSocketProvider>
+        <SessionProvider>
+          <UniverseProvider>
+            <DiscoveryProvider>
+              {children}
+            </DiscoveryProvider>
+          </UniverseProvider>
+        </SessionProvider>
+      </WebSocketProvider>
+    </FeatureFlagsProvider>
   );
 }
 
