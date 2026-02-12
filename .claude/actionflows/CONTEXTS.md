@@ -114,10 +114,10 @@ These contexts receive content automatically — not routed by user intent.
 | Context | Flow Directories | Rationale |
 |---------|-----------------|-----------|
 | work | project/ | Feature dev and new code |
-| maintenance | project/ | Bug fixes and refactoring |
+| maintenance | maintenance/ | Bug fixes, refactoring, healing flows |
 | explore | framework/ | Research, ideation, doc reorganization |
 | review | project/, framework/ | QA flows (project/) + harmony audit (framework/) |
-| settings | framework/ | Config and meta-framework |
+| settings | settings/ | Framework configuration and flow/action creation |
 | pm | framework/ | Planning and coordination |
 | intel | project/ | Code intelligence and dossiers |
 
