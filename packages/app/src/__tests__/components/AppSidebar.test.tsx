@@ -10,25 +10,28 @@
  * - Accessibility attributes
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { AppSidebar } from '../../components/AppSidebar/AppSidebar';
 import type { WorkbenchId } from '@afw/shared';
 import { useCommonTestSetup } from '../../__tests__/utils';
 
-// Mock contexts
+// Mock contexts with stable references
+const mockSetActiveWorkbench = vi.fn();
+const mockWorkbenchNotifications = new Map([
+  ['work', 0],
+  ['maintenance', 0],
+  ['explore', 0],
+  ['review', 0],
+  ['pm', 0],
+  ['archive', 0],
+]);
+
 vi.mock('../../contexts/WorkbenchContext', () => ({
   useWorkbenchContext: () => ({
     activeWorkbench: 'work' as WorkbenchId,
-    setActiveWorkbench: vi.fn(),
-    workbenchNotifications: new Map([
-      ['work', 0],
-      ['maintenance', 0],
-      ['explore', 0],
-      ['review', 0],
-      ['pm', 0],
-      ['archive', 0],
-    ]),
+    setActiveWorkbench: mockSetActiveWorkbench,
+    workbenchNotifications: mockWorkbenchNotifications,
   }),
 }));
 
@@ -44,35 +47,44 @@ vi.mock('../../components/ThemeToggle', () => ({
 }));
 
 vi.mock('../../components/AppSidebar/SidebarNavGroup', () => ({
-  SidebarNavGroup: ({ groupId, label, children, expanded, onToggle }: any) => (
-    <div data-testid={`sidebar-nav-group-${groupId}`} className={expanded ? 'expanded' : ''}>
-      <button onClick={() => onToggle(groupId)} data-testid={`group-toggle-${groupId}`}>
+  SidebarNavGroup: ({ groupId, label, children, isExpanded, onToggle }: any) => (
+    <div data-testid={`sidebar-nav-group-${groupId}`} className={isExpanded ? 'expanded' : ''}>
+      <button
+        onClick={() => onToggle(groupId)}
+        data-testid={`group-toggle-${groupId}`}
+        aria-label={`${label} group`}
+        aria-expanded={isExpanded}
+      >
         {label}
       </button>
-      {expanded && <div>{children}</div>}
+      {isExpanded && <div>{children}</div>}
     </div>
   ),
 }));
 
 vi.mock('../../components/AppSidebar/SidebarNavItem', () => ({
-  SidebarNavItem: ({ workbenchId, label, active, onClick }: any) => (
+  SidebarNavItem: ({ workbenchId, config, isActive, onClick }: any) => (
     <button
       data-testid={`sidebar-nav-item-${workbenchId}`}
-      className={active ? 'active' : ''}
+      className={isActive ? 'active' : ''}
       onClick={onClick}
+      aria-label={`${config.label} workbench`}
+      aria-current={isActive ? 'page' : undefined}
     >
-      {label}
+      {config.label}
     </button>
   ),
 }));
 
 vi.mock('../../components/AppSidebar/SidebarSearch', () => ({
-  SidebarSearch: ({ onSearch }: any) => (
+  SidebarSearch: ({ value, onChange }: any) => (
     <input
       data-testid="sidebar-search"
       type="text"
       placeholder="Search..."
-      onChange={(e) => onSearch(e.target.value)}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      aria-label="Search workbenches"
     />
   ),
 }));
@@ -83,6 +95,12 @@ vi.mock('../../components/AppSidebar/SidebarUserProfile', () => ({
 
 describe('AppSidebar', () => {
   useCommonTestSetup();
+
+  beforeEach(() => {
+    // Clear localStorage before each test to ensure clean state
+    localStorage.clear();
+    mockSetActiveWorkbench.mockClear();
+  });
 
   it('renders without crashing with no required props', () => {
     const { container } = render(<AppSidebar />);
@@ -160,11 +178,7 @@ describe('AppSidebar', () => {
   it('renders workbench navigation items in groups', () => {
     render(<AppSidebar />);
 
-    // Expand project group first
-    const projectToggle = screen.getByTestId('group-toggle-project');
-    fireEvent.click(projectToggle);
-
-    // Check that project workbenches are rendered
+    // Project group is expanded by default, so workbenches should be visible
     expect(screen.getByTestId('sidebar-nav-item-work')).toBeInTheDocument();
   });
 
@@ -176,16 +190,6 @@ describe('AppSidebar', () => {
   });
 
   it('calls setActiveWorkbench when workbench clicked', async () => {
-    const mockSetActiveWorkbench = vi.fn();
-    vi.resetModules();
-    vi.doMock('../../contexts/WorkbenchContext', () => ({
-      useWorkbenchContext: () => ({
-        activeWorkbench: 'work' as WorkbenchId,
-        setActiveWorkbench: mockSetActiveWorkbench,
-        workbenchNotifications: {},
-      }),
-    }));
-
     render(<AppSidebar />);
 
     const workbenchItem = screen.getByTestId('sidebar-nav-item-maintenance');
