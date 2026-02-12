@@ -65,7 +65,7 @@ All 8 phases of the Living Universe transformation are **complete and integrated
 - Healing recommendations engine (pattern matching + severity)
 - HarmonyHealthDashboard component with "Fix Now" button
 - 3 healing flows registered
-- HEALING_PROTOCOL.md (1,079 lines)
+- docs/living/HEALING.md (dissolved from 1,079-line protocol)
 - Session-start health gate (non-blocking)
 
 **Auditable Verification** ✅ — Commit: `47d1597`
@@ -209,7 +209,7 @@ All 8 phases of the Living Universe transformation are **complete and integrated
 
 **Architecture:** Frontend-Backend-Boundary.md, Component-Hierarchy.md, State-Management.md, Service-Layer.md
 
-**Specs:** living-universe-roadmap_2026-02-10/ROADMAP.md, COSMIC_MODEL.md, HEALING_PROTOCOL.md
+**Specs:** living-universe-roadmap_2026-02-10/ROADMAP.md, COSMIC_MODEL.md, docs/living/HEALING.md
 
 **Git:** Phase 0: adc0c57 | Phase 1: 25d89f6 | Phase 2: 4a7f9d9 | Phase 3: 7a804d6 | Phase 4: 1aaddd7 | Phase 5: 032d939 | Phase 6: 006415f | Phase 7: 750c48a
 

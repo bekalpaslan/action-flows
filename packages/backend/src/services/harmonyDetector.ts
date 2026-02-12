@@ -1,6 +1,48 @@
 /**
  * Harmony Detector Service
- * Monitors orchestrator output compliance with CONTRACT.md specification
+ *
+ * Monitors orchestrator output compliance with CONTRACT.md specification.
+ * Part of the healing protocol's detection layer.
+ *
+ * ## Detection Role
+ * - Runs on every orchestrator output at gate checkpoints
+ * - Validates format against CONTRACT.md specifications
+ * - Tracks patterns (3+ violations in 24h = "critical")
+ * - Groups similar violations for pattern analysis
+ * - Broadcasts HarmonyViolationEvent via WebSocket
+ *
+ * ## Trust Boundary
+ * - T0 input rejection (user → backend) is NOT a healing issue
+ * - Healing only applies to T1+ (orchestrator → backend contract violations)
+ * - This service handles T1: Orchestrator-to-Backend validation
+ *
+ * ## Notification vs Healing
+ * - Backend CAN auto-notify (HarmonyViolationEvent broadcast)
+ * - Backend NEVER auto-heals without human will
+ * - Notification is informational; healing is human-initiated
+ *
+ * ## Validation Flow
+ * 1. Parse orchestrator output using master parser
+ * 2. Determine result: valid | degraded | violation
+ * 3. Record check with context (gate, chain, step)
+ * 4. If violation or significant change, broadcast event
+ * 5. Update health metrics
+ *
+ * ## Violation Types
+ * - Format unknown: result = 'violation' (critical)
+ * - Missing fields: result = 'degraded' (warning)
+ * - All fields present: result = 'valid' (healthy)
+ *
+ * ## Pattern Detection
+ * When violations exceed threshold (3 in 24h), system:
+ * - Flags as "critical"
+ * - Groups similar violations
+ * - Includes pattern analysis in broadcast
+ * - Suggests healing flow
+ *
+ * @see docs/living/HEALING.md for protocol overview
+ * @see CONTRACT.md for format specifications
+ * @see test/e2e/harmony/ for scenario tests
  */
 
 import type { SessionId, ProjectId, Timestamp, WorkspaceEvent } from '@afw/shared';

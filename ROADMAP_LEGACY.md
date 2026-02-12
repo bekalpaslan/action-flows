@@ -190,7 +190,7 @@ Feb 12 ----[████████████████████] Unifie
   - Healing recommendations engine (pattern matching + severity)
   - HarmonyHealthDashboard component (UI for health monitoring)
   - 3 healing flows registered (harmony-audit-and-fix, contract-drift-fix, parser-update)
-  - HEALING_PROTOCOL.md (1,079 lines: 6-phase healing triangle, sovereignty principles)
+  - docs/living/HEALING.md (dissolved from 1,079-line protocol)
   - Session-start health gate in ORCHESTRATOR.md (non-blocking graceful degradation)
 
 **Auditable Verification Infrastructure** ✅
@@ -489,7 +489,7 @@ All phases complete. No blockers. System fully integrated.
 **Dashboard Health Check:**
 - Run `pnpm run harmony:enforce` before each commit
 - Review `/api/harmony/health` for drift patterns
-- Address violations before they compound (see HEALING_PROTOCOL.md)
+- Address violations before they compound (see docs/living/HEALING.md)
 
 **Framework Health:**
 - Check `.claude/actionflows/logs/INDEX.md` for execution patterns
@@ -531,7 +531,7 @@ All phases complete. No blockers. System fully integrated.
 ### Specifications
 - **Living Universe Roadmap (Detailed):** `.claude/actionflows/logs/plan/living-universe-roadmap_2026-02-10/ROADMAP.md`
 - **Cosmic Model Design:** `docs/COSMIC_MODEL.md`
-- **Healing Protocol:** `docs/HEALING_PROTOCOL.md`
+- **Healing Protocol:** `docs/living/HEALING.md`
 
 ### Git History
 - **All commits:** `git log --since="2026-02-08" --format="%h %s"`
