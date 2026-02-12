@@ -149,6 +149,7 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
   return (
     <div
       className={`region-star ${fogClass} ${statusClass} ${layerClass} ${regionClass} ${glowClass} ${selectedClass} ${revealingClass} ${burstClass}`}
+      data-testid={`region-star-${data.regionId}`}
       onClick={isClickable ? handleClick : undefined}
       role={isClickable ? 'button' : 'presentation'}
       aria-label={isClickable ? `${data.label} region - ${data.status} - fog state: ${data.fogState}` : undefined}
@@ -173,14 +174,15 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
 
       {/* Fog overlay (for revelation animation) */}
       {data.fogState === FogState.HIDDEN && (
-        <div className="region-star__fog" />
+        <div className="region-star__fog" data-testid="discovery-overlay" />
       )}
 
       {/* Star core */}
-      <div className="region-star__core">
+      <div className="region-star__core" data-testid="region-badge">
         {/* Glow effect layers */}
         <div
           className="region-star__glow"
+          data-testid="region-glow"
           style={{
             opacity: data.glowIntensity,
           }}
@@ -196,16 +198,16 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
       )}
 
       {/* Label */}
-      <div className="region-star__label">
+      <div className="region-star__label" data-testid="region-label">
         <span className="region-star__name">{data.label}</span>
         {data.fogState === FogState.FAINT && (
-          <span className="region-star__locked">🔒</span>
+          <span className="region-star__locked" data-testid="locked-indicator">🔒</span>
         )}
       </div>
 
       {/* Status indicator */}
       {data.status !== 'idle' && (
-        <div className={`region-star__status-indicator ${statusClass}`}>
+        <div className={`region-star__status-indicator ${statusClass}`} data-testid="unlocked-indicator">
           {data.status === 'active' && '⚡'}
           {data.status === 'waiting' && '⏳'}
           {data.status === 'undiscovered' && '?'}

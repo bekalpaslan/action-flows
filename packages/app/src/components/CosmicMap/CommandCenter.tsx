@@ -221,7 +221,7 @@ export function CommandCenter({
   }, []);
 
   return (
-    <div className="command-center" role="region" aria-label="Command Center">
+    <div className="command-center" data-testid="command-center" role="region" aria-label="Command Center">
       {/* Running chain indicator (appears above command input when chains are executing) */}
       {activeChains.length > 0 && (
         <div className="command-center__running-chains">
@@ -268,6 +268,7 @@ export function CommandCenter({
           ref={inputRef}
           type="text"
           className="command-center__input"
+          data-testid="action-panel"
           value={commandInput}
           onChange={(e) => setCommandInput(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -296,6 +297,7 @@ export function CommandCenter({
       <div className="command-center__session-section" ref={dropdownRef}>
         <button
           className="command-center__session-trigger"
+          data-testid="mode-selector"
           onClick={toggleSessionDropdown}
           aria-label="Select session"
           aria-haspopup="listbox"
@@ -330,6 +332,7 @@ export function CommandCenter({
         {isSessionDropdownOpen && (
           <div
             className="command-center__session-dropdown"
+            data-testid="quick-actions"
             role="listbox"
             aria-label="Available sessions"
           >
@@ -378,11 +381,12 @@ export function CommandCenter({
 
         {/* Right: Health Status */}
         {showHealthStatus && (
-          <div className="command-center__health-section">
+          <div className="command-center__health-section" data-testid="status-indicator">
             <div
               className={`command-center__health-indicator command-center__health-indicator--${getHealthColorClass(
                 universeHealth
               )}`}
+              data-testid="health-display"
               title={`Universe health: ${universeHealth}%`}
               aria-label={`Universe health: ${universeHealth}%`}
             >
