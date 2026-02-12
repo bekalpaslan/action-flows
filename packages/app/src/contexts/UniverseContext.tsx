@@ -17,6 +17,7 @@ import type {
 } from '@afw/shared';
 import { FogState } from '@afw/shared';
 import { useWebSocketContext } from './WebSocketContext';
+import { applyColorShift, calculateGlowIntensity } from '../systems/ColorEvolution';
 
 /**
  * UniverseContext Type Definition
@@ -247,32 +248,30 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
 
     const { colorDeltas, traceDeltas, regionsActive, bridgesTraversed } = event.details || {};
 
-    // Import color evolution utilities dynamically
-    import('../systems/ColorEvolution').then(({ applyColorShift, calculateGlowIntensity }) => {
-      // Apply color deltas to regions
-      const updatedRegions = universe.regions.map((region) => {
-        const delta = colorDeltas?.[region.id];
-        if (!delta) return region;
+    // Apply color deltas to regions
+    const updatedRegions = universe.regions.map((region) => {
+      const delta = colorDeltas?.[region.id];
+      if (!delta) return region;
 
-        // Apply color shift
-        const newColor = applyColorShift(region.colorShift.currentColor, delta);
+      // Apply color shift
+      const newColor = applyColorShift(region.colorShift.currentColor, delta);
 
-        return {
-          ...region,
-          colorShift: {
-            ...region.colorShift,
-            currentColor: newColor,
-            saturation: Math.min(1.0, region.colorShift.saturation + delta.saturationDelta),
-            temperature: Math.min(1.0, region.colorShift.temperature + delta.temperatureDelta),
-          },
-          glowIntensity: calculateGlowIntensity(
-            Math.min(1.0, region.colorShift.temperature + delta.temperatureDelta)
-          ),
-        };
-      });
+      return {
+        ...region,
+        colorShift: {
+          ...region.colorShift,
+          currentColor: newColor,
+          saturation: Math.min(1.0, region.colorShift.saturation + delta.saturationDelta),
+          temperature: Math.min(1.0, region.colorShift.temperature + delta.temperatureDelta),
+        },
+        glowIntensity: calculateGlowIntensity(
+          Math.min(1.0, region.colorShift.temperature + delta.temperatureDelta)
+        ),
+      };
+    });
 
-      // Apply trace deltas to bridges
-      const updatedBridges = universe.bridges.map((bridge) => {
+    // Apply trace deltas to bridges
+    const updatedBridges = universe.bridges.map((bridge) => {
         const delta = traceDeltas?.[bridge.id];
         if (!delta) return bridge;
 
@@ -304,19 +303,16 @@ export function UniverseProvider({ children }: UniverseProviderProps) {
         };
       });
 
-      // Update universe state
-      setUniverse({
-        ...universe,
-        regions: updatedRegions,
-        bridges: updatedBridges,
-      });
-
-      console.log(
-        `[UniverseContext] Applied evolution tick: ${regionsActive?.length || 0} regions, ${bridgesTraversed?.length || 0} bridges`
-      );
-    }).catch((err) => {
-      console.error('[UniverseContext] Failed to apply evolution tick:', err);
+    // Update universe state
+    setUniverse({
+      ...universe,
+      regions: updatedRegions,
+      bridges: updatedBridges,
     });
+
+    console.log(
+      `[UniverseContext] Applied evolution tick: ${regionsActive?.length || 0} regions, ${bridgesTraversed?.length || 0} bridges`
+    );
   }, [universe]);
 
   /**

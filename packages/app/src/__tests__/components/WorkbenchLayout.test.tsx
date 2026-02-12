@@ -15,6 +15,12 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { WorkbenchLayout } from '../../components/Workbench';
 import { useCommonTestSetup, setupWindowMocks } from '../../__tests__/utils';
 
+// Mock monaco-config to avoid worker import issues
+vi.mock('../../monaco-config', () => ({
+  configureMonaco: vi.fn(),
+  preloadCommonLanguageWorkers: vi.fn(),
+}));
+
 // Mock contexts and dependencies
 vi.mock('../../contexts/WorkbenchContext', () => ({
   useWorkbenchContext: () => ({

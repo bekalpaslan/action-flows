@@ -14,6 +14,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { RegionStar, type RegionStarData } from '../../components/CosmicMap/RegionStar';
 import type { NodeProps } from 'reactflow';
+import { FogState } from '@afw/shared';
 import { useCommonTestSetup, createMockRegionStarData, createMockRegionStarNodeProps } from '../../__tests__/utils';
 
 // Mock contexts
