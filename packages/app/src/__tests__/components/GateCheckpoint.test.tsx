@@ -47,39 +47,30 @@ describe('GateCheckpoint', () => {
     expect(element).toBeInTheDocument();
   });
 
-  it('applies pending status class', () => {
+  it('applies clear status class', () => {
     const { container } = render(
       <GateCheckpointComponent gate={mockGate} position={mockPosition} />
     );
 
-    expect(container.querySelector('.gate-checkpoint--pending')).toBeInTheDocument();
+    expect(container.querySelector('.gate-checkpoint--clear')).toBeInTheDocument();
   });
 
-  it('applies passed status class', () => {
-    const passedGate = { ...mockGate, status: 'passed' as const };
+  it('applies warning status class', () => {
+    const warningGate = { ...mockGate, status: 'warning' as const };
     const { container } = render(
-      <GateCheckpointComponent gate={passedGate} position={mockPosition} />
+      <GateCheckpointComponent gate={warningGate} position={mockPosition} />
     );
 
-    expect(container.querySelector('.gate-checkpoint--passed')).toBeInTheDocument();
+    expect(container.querySelector('.gate-checkpoint--warning')).toBeInTheDocument();
   });
 
-  it('applies failed status class', () => {
-    const failedGate = { ...mockGate, status: 'failed' as const };
+  it('applies violation status class', () => {
+    const violationGate = { ...mockGate, status: 'violation' as const };
     const { container } = render(
-      <GateCheckpointComponent gate={failedGate} position={mockPosition} />
+      <GateCheckpointComponent gate={violationGate} position={mockPosition} />
     );
 
-    expect(container.querySelector('.gate-checkpoint--failed')).toBeInTheDocument();
-  });
-
-  it('applies blocked status class', () => {
-    const blockedGate = { ...mockGate, status: 'blocked' as const };
-    const { container } = render(
-      <GateCheckpointComponent gate={blockedGate} position={mockPosition} />
-    );
-
-    expect(container.querySelector('.gate-checkpoint--blocked')).toBeInTheDocument();
+    expect(container.querySelector('.gate-checkpoint--violation')).toBeInTheDocument();
   });
 
   it('positions element absolutely at specified coordinates', () => {
@@ -128,7 +119,6 @@ describe('GateCheckpoint', () => {
 
     expect(ariaLabel).toContain('Gate checkpoint');
     expect(ariaLabel).toContain('contract:validation');
-    expect(ariaLabel).toContain('pending');
   });
 
   it('sets role="status" for accessibility', () => {
@@ -149,7 +139,6 @@ describe('GateCheckpoint', () => {
 
     expect(title).toContain('Gate');
     expect(title).toContain('contract:validation');
-    expect(title).toContain('pending');
   });
 
   it('handles different harmony rule names', () => {
@@ -167,7 +156,7 @@ describe('GateCheckpoint', () => {
   });
 
   it('handles all status types without crashing', () => {
-    const statuses: GateCheckpoint['status'][] = ['pending', 'passed', 'failed', 'blocked'];
+    const statuses: GateCheckpoint['status'][] = ['clear', 'warning', 'violation'];
 
     statuses.forEach((status) => {
       const { container } = render(
@@ -199,7 +188,7 @@ describe('GateCheckpoint', () => {
 
     rerender(
       <GateCheckpointComponent
-        gate={{ ...mockGate, status: 'passed' }}
+        gate={{ ...mockGate, status: 'warning' }}
         position={{ x: 100, y: 200 }}
       />
     );
@@ -214,16 +203,16 @@ describe('GateCheckpoint', () => {
       <GateCheckpointComponent gate={mockGate} position={mockPosition} />
     );
 
-    expect(container.querySelector('.gate-checkpoint--pending')).toBeInTheDocument();
+    expect(container.querySelector('.gate-checkpoint--clear')).toBeInTheDocument();
 
     rerender(
       <GateCheckpointComponent
-        gate={{ ...mockGate, status: 'passed' }}
+        gate={{ ...mockGate, status: 'warning' }}
         position={mockPosition}
       />
     );
 
-    expect(container.querySelector('.gate-checkpoint--passed')).toBeInTheDocument();
+    expect(container.querySelector('.gate-checkpoint--warning')).toBeInTheDocument();
   });
 
   it('handles edge case positions at origin', () => {

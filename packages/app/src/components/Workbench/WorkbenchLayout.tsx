@@ -656,7 +656,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   };
 
   return (
-    <div className="workbench-layout">
+    <div className="workbench-layout" data-testid="workbench-layout">
       <AppSidebar onCollapseChange={setSidebarCollapsed} />
 
       {/* SessionSidebar - Show only in workbench view */}
@@ -682,15 +682,15 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         />
       )}
 
-      <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
+      <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`} data-testid="layout-wrapper">
         {/* Cosmic Map View + Zooming In/Out states */}
         {cosmicMapEnabled && (viewMode === 'cosmic-map' || viewMode === 'zooming-in' || viewMode === 'zooming-out') ? (
-          <div className="workbench-dashboard" style={{ flex: 1 }}>
+          <div className="workbench-dashboard" style={{ flex: 1 }} data-testid="content-area">
             <CosmicMap visible={viewMode === 'cosmic-map'} zooming={viewMode === 'zooming-in' || viewMode === 'zooming-out'} />
           </div>
         ) : cosmicMapEnabled && viewMode === 'region-focus' ? (
           /* Region Focus View - Dual-panel with workbench + chat */
-          <div className="workbench-dashboard" style={{ flex: 1 }}>
+          <div className="workbench-dashboard" style={{ flex: 1 }} data-testid="content-area">
             <RegionFocusView
               workbenchContent={renderWorkbenchContent(activeWorkbench)}
               chatSessionId={chatSessionId}
@@ -700,7 +700,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
           </div>
         ) : (
           /* Workbench View (legacy mode when cosmic map disabled) */
-          <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }}>
+          <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} data-testid="content-area">
             <main id="main-content" className="workbench-main with-sidebar" role="main">
               <div className={`workbench-content ${transitionClass}`}>
                 {/* Return to Universe button (visible when cosmic map is enabled) */}

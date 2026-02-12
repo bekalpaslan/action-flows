@@ -285,7 +285,7 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
 
   if (isLoading) {
     return (
-      <div className="cosmic-map cosmic-map--loading">
+      <div className="cosmic-map cosmic-map--loading" data-testid="cosmic-map-loading">
         <div className="cosmic-map__loading-message">
           <div className="cosmic-map__spinner" />
           <p>Initializing universe...</p>
@@ -296,7 +296,7 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
 
   if (error) {
     return (
-      <div className="cosmic-map cosmic-map--error">
+      <div className="cosmic-map cosmic-map--error" data-testid="cosmic-map-error">
         <div className="cosmic-map__error-message">
           <p>Failed to load universe</p>
           <p className="cosmic-map__error-detail">{error}</p>
@@ -307,7 +307,7 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
 
   if (!universe || nodes.length === 0) {
     return (
-      <div className="cosmic-map cosmic-map--empty">
+      <div className="cosmic-map cosmic-map--empty" data-testid="cosmic-map-empty">
         <div className="cosmic-map__empty-message">
           <p>No universe data available</p>
         </div>
@@ -444,6 +444,7 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
       <div className="navigation-overlay" data-testid="navigation-overlay">
       <button
         className="cosmic-map__god-view-button"
+        data-testid="god-view-button"
         onClick={handleReturnToGodView}
         title="Return to full universe view (Esc)"
       >
