@@ -277,7 +277,7 @@ function parseRenderLocation(text: string): RenderLocation {
     mountsUnder,
     conditions,
     position,
-    zIndex: keyValues['Z-Index'] === 'N/A' ? undefined : parseInt(keyValues['Z-Index']) || undefined,
+    zIndex: keyValues['Z-Index'] === 'N/A' ? undefined : parseInt(keyValues['Z-Index'] ?? '') || undefined,
   };
 }
 
@@ -314,7 +314,7 @@ function parseKeyEffects(text: string): LifecycleEffect[] {
     // Extract dependencies from backticks
     const depsMatch = block.match(/\*\*Dependencies:\*\*\s*`([^`]+)`/);
     const dependencies = depsMatch
-      ? depsMatch[1]
+      ? (depsMatch[1] ?? '')
           .replace(/[\[\]]/g, '')
           .split(',')
           .map(d => d.trim())
@@ -326,11 +326,11 @@ function parseKeyEffects(text: string): LifecycleEffect[] {
 
     // Extract cleanup
     const cleanupMatch = block.match(/\*\*Cleanup:\*\*\s*(.+?)(?=\n\*\*|$)/);
-    const cleanup = cleanupMatch ? cleanupMatch[1].trim() : undefined;
+    const cleanup = cleanupMatch ? cleanupMatch[1]?.trim() : undefined;
 
     // Extract condition
     const conditionMatch = block.match(/\*\*Condition:\*\*\s*(.+?)(?=\n\*\*|$)/);
-    const runCondition = conditionMatch ? conditionMatch[1].trim() : undefined;
+    const runCondition = conditionMatch ? conditionMatch[1]?.trim() : undefined;
 
     effects.push({
       dependencies,
@@ -612,9 +612,9 @@ function parseTestHooks(text: string): TestHooks {
     const match = line.match(/^\d+\.\s+(.+?)\s*\(\`\.([^`]+)\`\)\s*—\s*(.+)$/);
     if (match) {
       return {
-        description: match[1].trim(),
-        cssClass: match[2].trim(),
-        uniqueFeature: match[3].trim(),
+        description: (match[1] ?? '').trim(),
+        cssClass: (match[2] ?? '').trim(),
+        uniqueFeature: (match[3] ?? '').trim(),
       };
     }
     return { description: line.trim(), cssClass: '', uniqueFeature: '' };
@@ -665,8 +665,8 @@ function parseHealthCheckBlocks(text: string): HealthCheck[] {
     const idMatch = block.match(/^([^:]+):\s*(.+?)(?=\n-|\n\*\*|$)/);
     if (!idMatch) continue;
 
-    const id = `HC-${idMatch[1].trim()}`;
-    const title = idMatch[2].trim();
+    const id = `HC-${(idMatch[1] ?? '').trim()}`;
+    const title = (idMatch[2] ?? '').trim();
 
     const rawType = extractKeyValue(block, 'Type') || 'render';
     const validHealthCheckTypes: HealthCheckType[] = [
@@ -743,7 +743,7 @@ function parseMetadata(text: string, keyValues: Record<string, string>): Metadat
  */
 function extractKeyValue(text: string, key: string): string {
   const match = text.match(new RegExp(`\\*\\*${key}:\\*\\*\\s*(.+?)(?=\\n|$)`));
-  return match ? match[1].trim() : '';
+  return match ? (match[1] ?? '').trim() : '';
 }
 
 // ============================================================================
@@ -755,10 +755,10 @@ function extractKeyValue(text: string, key: string): string {
  */
 export function parseContract(markdown: string): ComponentBehavioralContract {
   const sections = splitBySections(markdown);
-  const metadataText = markdown.split('---')[0];
+  const metadataText = markdown.split('---')[0] ?? '';
   const keyValues = extractKeyValues(metadataText);
 
-  const identity = parseIdentity(sections.get('Identity') || '', metadataText);
+  const identity = parseIdentity(sections.get('Identity') || '', metadataText ?? '');
   const renderLocation = parseRenderLocation(sections.get('Render Location') || '');
   const lifecycle = parseLifecycle(sections.get('Lifecycle') || '');
   const propsContract = parsePropsContract(sections.get('Props Contract') || '');

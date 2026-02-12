@@ -1630,9 +1630,12 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
           count: 100,
         });
 
-        for await (const key of stream) {
-          // Strip prefix from returned keys
-          result.push(key.substring(keyPrefix.length));
+        for await (const batch of stream) {
+          // scanStream emits arrays of keys per batch
+          const keys = Array.isArray(batch) ? batch : [batch];
+          for (const key of keys) {
+            result.push(key.substring(keyPrefix.length));
+          }
         }
 
         return result;

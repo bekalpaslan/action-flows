@@ -166,6 +166,18 @@
             margin-top: 10px;
         }
 
+        .chart-section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; margin-bottom: 40px; }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .chart-title { font-size: 20px; font-weight: 600; color: #e0e0ff; }
+        .chart-controls { display: flex; gap: 8px; }
+        .chart-controls button { padding: 4px 12px; font-size: 12px; border-radius: 6px; }
+        .chart-controls button.active { background: rgba(102,126,234,0.4); border-color: rgba(102,126,234,0.6); color: #e0e0ff; }
+        .chart-container { position: relative; width: 100%; height: 280px; }
+        .chart-container canvas { width: 100%; height: 100%; }
+        .chart-legend { display: flex; justify-content: center; gap: 24px; margin-top: 12px; font-size: 12px; color: #a0a0d0; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
         .gates-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -557,6 +569,25 @@
             <div class="score-label">Overall Health Score</div>
         </div>
 
+        <div class="chart-section">
+            <div class="chart-header">
+                <div class="chart-title">Health Score Timeline</div>
+                <div class="chart-controls">
+                    <button class="active" data-range="5">5m</button>
+                    <button data-range="15">15m</button>
+                    <button data-range="30">30m</button>
+                    <button data-range="60">1h</button>
+                </div>
+            </div>
+            <div class="chart-container"><canvas id="healthChart"></canvas></div>
+            <div class="chart-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#667eea;"></div>Overall</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div>Best Gate</div>
+                <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div>Worst Gate</div>
+                <div class="legend-item"><div class="legend-dot" style="background:rgba(251,191,36,0.4);"></div>Violations</div>
+            </div>
+        </div>
+
         <div class="gates-grid" id="gatesGrid"></div>
 
         <div class="section">
@@ -596,6 +627,8 @@
 
     <script>
         const API_URL = 'http://localhost:3001/api/harmony/health';
+        const chartHistory = [];
+        let chartRangeMinutes = 5;
         const GATE_NAMES = {
             'gate-02': 'Context Routing',
             'gate-04': 'Chain Compilation',
@@ -823,6 +856,99 @@
             elements.eventLog.innerHTML = html;
         }
 
+        function recordChartPoint(data) {
+            const gs = Object.values(data.byGate || {}).map(g => g.score);
+            chartHistory.push({ t: Date.now(), overall: data.overall, best: gs.length ? Math.max(...gs) : null, worst: gs.length ? Math.min(...gs) : null, v: data.violations24h || 0 });
+            if (chartHistory.length > 7200) chartHistory.splice(0, chartHistory.length - 7200);
+        }
+
+        function drawChart() {
+            const canvas = document.getElementById('healthChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            const W = rect.width, H = rect.height;
+            const pad = { top: 20, right: 20, bottom: 36, left: 48 };
+            const pW = W - pad.left - pad.right, pH = H - pad.top - pad.bottom;
+            ctx.clearRect(0, 0, W, H);
+            const now = Date.now(), rangeMs = chartRangeMinutes * 60000, cutoff = now - rangeMs;
+            const pts = chartHistory.filter(p => p.t >= cutoff);
+
+            // Grid
+            ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+            for (let v = 0; v <= 100; v += 25) { const y = pad.top + pH - (v/100)*pH; ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(pad.left+pW,y); ctx.stroke(); }
+            ctx.setLineDash([]);
+
+            // Y labels
+            ctx.fillStyle = '#7070a0'; ctx.font = '11px -apple-system,sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+            for (let v = 0; v <= 100; v += 25) { ctx.fillText(v+'', pad.left-8, pad.top+pH-(v/100)*pH); }
+
+            // X labels
+            ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            const lc = Math.min(6, Math.max(3, Math.floor(pW/100)));
+            for (let i = 0; i <= lc; i++) { const x = pad.left+(pW*i/lc); ctx.fillText(new Date(cutoff+(rangeMs*i/lc)).toTimeString().substring(0,5), x, pad.top+pH+8); }
+
+            // Threshold zones
+            const gg = ctx.createLinearGradient(0,pad.top,0,pad.top+pH*0.2); gg.addColorStop(0,'rgba(16,185,129,0.06)'); gg.addColorStop(1,'rgba(16,185,129,0.02)');
+            ctx.fillStyle = gg; ctx.fillRect(pad.left,pad.top,pW,pH*0.2);
+            const rg = ctx.createLinearGradient(0,pad.top+pH*0.51,0,pad.top+pH); rg.addColorStop(0,'rgba(239,68,68,0.02)'); rg.addColorStop(1,'rgba(239,68,68,0.06)');
+            ctx.fillStyle = rg; ctx.fillRect(pad.left,pad.top+pH*0.51,pW,pH*0.49);
+
+            // Threshold lines
+            ctx.setLineDash([6,4]); ctx.lineWidth = 1;
+            ctx.strokeStyle = 'rgba(16,185,129,0.3)'; ctx.beginPath(); ctx.moveTo(pad.left,pad.top+pH*0.2); ctx.lineTo(pad.left+pW,pad.top+pH*0.2); ctx.stroke();
+            ctx.strokeStyle = 'rgba(239,68,68,0.3)'; ctx.beginPath(); ctx.moveTo(pad.left,pad.top+pH*0.5); ctx.lineTo(pad.left+pW,pad.top+pH*0.5); ctx.stroke();
+            ctx.setLineDash([]);
+
+            if (pts.length < 2) { ctx.fillStyle='#7070a0'; ctx.font='14px -apple-system,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('Collecting data...',W/2,H/2); return; }
+
+            function toX(ts) { return pad.left+((ts-cutoff)/rangeMs)*pW; }
+            function toY(val) { return pad.top+pH-(val/100)*pH; }
+
+            // Violation bars
+            const maxV = Math.max(1,...pts.map(p=>p.v));
+            pts.forEach(p => { if(p.v>0){ ctx.fillStyle='rgba(251,191,36,0.15)'; ctx.fillRect(toX(p.t)-2,pad.top+pH-(p.v/maxV)*pH*0.3,4,(p.v/maxV)*pH*0.3); }});
+
+            // Area fill
+            ctx.beginPath();
+            pts.forEach((p,i) => { i===0 ? ctx.moveTo(toX(p.t),toY(p.overall)) : ctx.lineTo(toX(p.t),toY(p.overall)); });
+            ctx.lineTo(toX(pts[pts.length-1].t),pad.top+pH); ctx.lineTo(toX(pts[0].t),pad.top+pH); ctx.closePath();
+            const ag = ctx.createLinearGradient(0,pad.top,0,pad.top+pH); ag.addColorStop(0,'rgba(102,126,234,0.15)'); ag.addColorStop(1,'rgba(102,126,234,0.01)');
+            ctx.fillStyle = ag; ctx.fill();
+
+            // Lines helper
+            function drawLine(fn, color, lw, dash) {
+                const vp = pts.filter(p=>fn(p)!==null);
+                if(vp.length<2)return;
+                ctx.strokeStyle=color; ctx.lineWidth=lw; ctx.setLineDash(dash||[]); ctx.lineJoin='round'; ctx.lineCap='round';
+                ctx.beginPath(); vp.forEach((p,i)=>{ i===0?ctx.moveTo(toX(p.t),toY(fn(p))):ctx.lineTo(toX(p.t),toY(fn(p))); }); ctx.stroke(); ctx.setLineDash([]);
+            }
+
+            drawLine(p=>p.best, 'rgba(16,185,129,0.5)', 1.5, [4,4]);
+            drawLine(p=>p.worst, 'rgba(239,68,68,0.5)', 1.5, [4,4]);
+            drawLine(p=>p.overall, '#667eea', 2.5);
+
+            // Last point dot + label
+            const last = pts[pts.length-1]; const lx = toX(last.t);
+            ctx.beginPath(); ctx.arc(lx,toY(last.overall),5,0,Math.PI*2); ctx.fillStyle='#667eea'; ctx.fill();
+            ctx.strokeStyle='rgba(255,255,255,0.8)'; ctx.lineWidth=2; ctx.stroke();
+            ctx.fillStyle='#e0e0ff'; ctx.font='bold 12px -apple-system,sans-serif'; ctx.textAlign='left'; ctx.textBaseline='bottom';
+            ctx.fillText(last.overall, lx+8, toY(last.overall)-4);
+        }
+
+        document.querySelectorAll('.chart-controls button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.chart-controls button').forEach(b=>b.classList.remove('active'));
+                btn.classList.add('active');
+                chartRangeMinutes = parseInt(btn.dataset.range);
+                drawChart();
+            });
+        });
+        window.addEventListener('resize', drawChart);
+
         async function fetchHealth() {
             try {
                 const response = await fetch(API_URL);
@@ -836,6 +962,8 @@
 
                 elements.statusIndicator.classList.add('connected');
 
+                recordChartPoint(data);
+                drawChart();
                 updateOverallScore(data.overall);
                 renderGateCards(data.byGate);
                 renderDriftPatterns(data.driftPatterns);
