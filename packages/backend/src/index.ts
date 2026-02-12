@@ -519,7 +519,9 @@ if (isMainModule) {
 
     // Initialize ConversationWatcher (Gate validation for Claude Code sessions)
     try {
-      initConversationWatcher(storage, process.cwd());
+      // Resolve monorepo root (2 levels up from packages/backend/)
+      const monorepoRoot = path.resolve(process.cwd(), '..', '..');
+      initConversationWatcher(storage, monorepoRoot);
       console.log('[ConversationWatcher] ✅ Service initialized successfully for JSONL log monitoring');
     } catch (error) {
       console.error('[ConversationWatcher] ❌ Failed to initialize ConversationWatcher:', error);
