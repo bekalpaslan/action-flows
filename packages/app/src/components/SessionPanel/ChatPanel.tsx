@@ -268,7 +268,7 @@ export function ChatPanel({
    * Auto-scroll to bottom when new messages arrive
    */
   useEffect(() => {
-    if (messagesEndRef.current) {
+    if (messagesEndRef.current && messagesEndRef.current.scrollIntoView) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
@@ -839,7 +839,7 @@ export function ChatPanel({
           )}
 
           {/* Prompt Buttons */}
-          {buttons.length > 0 && (
+          {buttons && buttons.length > 0 && (
             <div className="chat-panel__prompt-buttons">
               {buttons.map(button => (
                 <button

@@ -29,19 +29,26 @@ vi.mock('../../contexts/DiscussContext', () => ({
   useDiscussContext: () => ({
     sessionId: 'session-test' as SessionId,
     model: 'claude-3-sonnet',
+    registerChatInput: vi.fn(),
+    unregisterChatInput: vi.fn(),
   }),
 }));
 
 vi.mock('../../contexts/ChatWindowContext', () => ({
   useChatWindowContext: () => ({
-    model: 'claude-3-sonnet',
+    selectedModel: 'claude-3-sonnet',
+    setSelectedModel: vi.fn(),
   }),
-  AVAILABLE_MODELS: ['claude-3-sonnet', 'claude-3-opus'],
+  AVAILABLE_MODELS: [
+    { id: 'claude-3-sonnet', label: 'Claude 3 Sonnet' },
+    { id: 'claude-3-opus', label: 'Claude 3 Opus' },
+  ],
 }));
 
 vi.mock('../../hooks/useChatMessages', () => ({
   useChatMessages: (sessionId: SessionId) => ({
     messages: createMockChatMessages(2),
+    addUserMessage: vi.fn(),
     addMessage: vi.fn(),
     isLoading: false,
   }),
@@ -49,20 +56,23 @@ vi.mock('../../hooks/useChatMessages', () => ({
 
 vi.mock('../../hooks/usePromptButtons', () => ({
   usePromptButtons: () => ({
-    prompts: createMockPromptButtons(2),
+    buttons: createMockPromptButtons(2),
+    getButtonPromptText: vi.fn(),
   }),
 }));
 
 vi.mock('../../hooks/useReminderButtons', () => ({
   useReminderButtons: () => ({
-    reminders: [],
+    createInstance: vi.fn(),
   }),
 }));
 
 vi.mock('../../hooks/useDiscussButton', () => ({
   useDiscussButton: () => ({
-    isOpen: false,
-    toggleDialog: vi.fn(),
+    isDialogOpen: false,
+    openDialog: vi.fn(),
+    closeDialog: vi.fn(),
+    handleSend: vi.fn(),
   }),
 }));
 
