@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useChatMessages } from '../useChatMessages';
 import type { SessionId } from '@afw/shared';
 
@@ -86,7 +86,9 @@ describe('useChatMessages Hook', () => {
   it('should add user message locally', () => {
     const { result } = renderHook(() => useChatMessages(testSessionId));
 
-    result.current.addUserMessage('Test message');
+    act(() => {
+      result.current.addUserMessage('Test message');
+    });
 
     expect(result.current.messages).toHaveLength(1);
     expect(result.current.messages[0].role).toBe('user');
@@ -96,18 +98,24 @@ describe('useChatMessages Hook', () => {
   it('should clear messages', () => {
     const { result } = renderHook(() => useChatMessages(testSessionId));
 
-    result.current.addUserMessage('Test message');
+    act(() => {
+      result.current.addUserMessage('Test message');
+    });
     expect(result.current.messages).toHaveLength(1);
 
-    result.current.clearMessages();
+    act(() => {
+      result.current.clearMessages();
+    });
     expect(result.current.messages).toHaveLength(0);
   });
 
   it('should handle user messages', () => {
     const { result } = renderHook(() => useChatMessages(testSessionId));
 
-    result.current.addUserMessage('Hello');
-    result.current.addUserMessage('World');
+    act(() => {
+      result.current.addUserMessage('Hello');
+      result.current.addUserMessage('World');
+    });
 
     expect(result.current.messages).toHaveLength(2);
     expect(result.current.messages[0].content).toBe('Hello');
@@ -117,8 +125,10 @@ describe('useChatMessages Hook', () => {
   it('should generate unique message IDs', () => {
     const { result } = renderHook(() => useChatMessages(testSessionId));
 
-    result.current.addUserMessage('Message 1');
-    result.current.addUserMessage('Message 2');
+    act(() => {
+      result.current.addUserMessage('Message 1');
+      result.current.addUserMessage('Message 2');
+    });
 
     expect(result.current.messages[0].id).not.toBe(result.current.messages[1].id);
   });
@@ -127,7 +137,9 @@ describe('useChatMessages Hook', () => {
     const { result } = renderHook(() => useChatMessages(testSessionId));
 
     const beforeTimestamp = new Date().toISOString();
-    result.current.addUserMessage('Test');
+    act(() => {
+      result.current.addUserMessage('Test');
+    });
     const afterTimestamp = new Date().toISOString();
 
     const msg = result.current.messages[0];
@@ -142,11 +154,15 @@ describe('useChatMessages Hook', () => {
       { initialProps: { sessionId: testSessionId } }
     );
 
-    result.current.addUserMessage('Test');
+    act(() => {
+      result.current.addUserMessage('Test');
+    });
     expect(result.current.messages).toHaveLength(1);
 
     const newSessionId = 'new-session' as SessionId;
-    rerender({ sessionId: newSessionId });
+    act(() => {
+      rerender({ sessionId: newSessionId });
+    });
 
     expect(result.current.messages).toHaveLength(0);
   });
@@ -169,7 +185,9 @@ describe('useChatMessages Hook', () => {
     const { result } = renderHook(() => useChatMessages(testSessionId));
 
     expect(() => {
-      result.current.addUserMessage('');
+      act(() => {
+        result.current.addUserMessage('');
+      });
     }).not.toThrow();
 
     expect(result.current.messages).toHaveLength(1);
@@ -178,9 +196,11 @@ describe('useChatMessages Hook', () => {
   it('should maintain message order', () => {
     const { result } = renderHook(() => useChatMessages(testSessionId));
 
-    result.current.addUserMessage('First');
-    result.current.addUserMessage('Second');
-    result.current.addUserMessage('Third');
+    act(() => {
+      result.current.addUserMessage('First');
+      result.current.addUserMessage('Second');
+      result.current.addUserMessage('Third');
+    });
 
     expect(result.current.messages[0].content).toBe('First');
     expect(result.current.messages[1].content).toBe('Second');
@@ -190,7 +210,9 @@ describe('useChatMessages Hook', () => {
   it('should have message type properties', () => {
     const { result } = renderHook(() => useChatMessages(testSessionId));
 
-    result.current.addUserMessage('Test');
+    act(() => {
+      result.current.addUserMessage('Test');
+    });
 
     const msg = result.current.messages[0];
     expect(msg.id).toBeDefined();

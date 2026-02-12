@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { SessionProvider, useSessionContext } from '../SessionContext';
 import type { Session, SessionId } from '@afw/shared';
 
@@ -314,7 +314,9 @@ describe('SessionContext', () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    result.current.setActiveSession(mockSession.id);
+    act(() => {
+      result.current.setActiveSession(mockSession.id);
+    });
 
     expect(result.current.activeSessionId).toBe(mockSession.id);
     expect(localStorage.getItem('afw-active-session')).toBe(mockSession.id);
@@ -339,7 +341,9 @@ describe('SessionContext', () => {
       expect(result.current.activeSessionId).toBe(mockSession.id);
     });
 
-    result.current.setActiveSession(null);
+    act(() => {
+      result.current.setActiveSession(null);
+    });
 
     expect(result.current.activeSessionId).toBeNull();
     expect(localStorage.getItem('afw-active-session')).toBeNull();

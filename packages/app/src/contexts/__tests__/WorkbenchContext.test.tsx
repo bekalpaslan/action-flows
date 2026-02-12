@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { WorkbenchProvider, useWorkbenchContext, useActiveWorkbench } from '../WorkbenchContext';
 import type { WorkbenchId } from '@afw/shared';
 
@@ -52,7 +52,9 @@ describe('WorkbenchContext', () => {
 
     const { result } = renderHook(() => useWorkbenchContext(), { wrapper });
 
-    result.current.setActiveWorkbench('settings' as WorkbenchId);
+    act(() => {
+      result.current.setActiveWorkbench('settings' as WorkbenchId);
+    });
 
     expect(localStorage.getItem('afw-active-workbench')).toBe('settings');
   });
@@ -66,7 +68,9 @@ describe('WorkbenchContext', () => {
 
     expect(result.current.activeWorkbench).toBe('work');
 
-    result.current.setActiveWorkbench('pm' as WorkbenchId);
+    act(() => {
+      result.current.setActiveWorkbench('pm' as WorkbenchId);
+    });
 
     expect(result.current.activeWorkbench).toBe('pm');
   });
@@ -80,7 +84,9 @@ describe('WorkbenchContext', () => {
 
     expect(result.current.previousWorkbench).toBeNull();
 
-    result.current.setActiveWorkbench('settings' as WorkbenchId);
+    act(() => {
+      result.current.setActiveWorkbench('settings' as WorkbenchId);
+    });
 
     expect(result.current.previousWorkbench).toBe('work');
   });
@@ -92,7 +98,9 @@ describe('WorkbenchContext', () => {
 
     const { result } = renderHook(() => useWorkbenchContext(), { wrapper });
 
-    result.current.setActiveWorkbench('work' as WorkbenchId);
+    act(() => {
+      result.current.setActiveWorkbench('work' as WorkbenchId);
+    });
 
     expect(result.current.previousWorkbench).toBeNull();
   });
@@ -104,11 +112,15 @@ describe('WorkbenchContext', () => {
 
     const { result } = renderHook(() => useWorkbenchContext(), { wrapper });
 
-    result.current.setActiveWorkbench('settings' as WorkbenchId);
+    act(() => {
+      result.current.setActiveWorkbench('settings' as WorkbenchId);
+    });
     expect(result.current.activeWorkbench).toBe('settings');
     expect(result.current.previousWorkbench).toBe('work');
 
-    result.current.goBack();
+    act(() => {
+      result.current.goBack();
+    });
 
     expect(result.current.activeWorkbench).toBe('work');
     expect(result.current.previousWorkbench).toBeNull();
@@ -121,7 +133,9 @@ describe('WorkbenchContext', () => {
 
     const { result } = renderHook(() => useWorkbenchContext(), { wrapper });
 
-    result.current.goBack();
+    act(() => {
+      result.current.goBack();
+    });
 
     // Should remain at work
     expect(result.current.activeWorkbench).toBe('work');
@@ -148,8 +162,12 @@ describe('WorkbenchContext', () => {
 
     const { result } = renderHook(() => useWorkbenchContext(), { wrapper });
 
-    result.current.addNotification('work' as WorkbenchId);
-    result.current.addNotification('work' as WorkbenchId);
+    act(() => {
+      result.current.addNotification('work' as WorkbenchId);
+    });
+    act(() => {
+      result.current.addNotification('work' as WorkbenchId);
+    });
 
     const notificationCount = result.current.workbenchNotifications.get(
       'work' as WorkbenchId
@@ -165,14 +183,20 @@ describe('WorkbenchContext', () => {
 
     const { result } = renderHook(() => useWorkbenchContext(), { wrapper });
 
-    result.current.addNotification('work' as WorkbenchId);
-    result.current.addNotification('work' as WorkbenchId);
+    act(() => {
+      result.current.addNotification('work' as WorkbenchId);
+    });
+    act(() => {
+      result.current.addNotification('work' as WorkbenchId);
+    });
 
     expect(
       (result.current.workbenchNotifications.get('work' as WorkbenchId) || 0) > 0
     ).toBe(true);
 
-    result.current.clearNotifications('work' as WorkbenchId);
+    act(() => {
+      result.current.clearNotifications('work' as WorkbenchId);
+    });
 
     expect(
       result.current.workbenchNotifications.get('work' as WorkbenchId) || 0
@@ -186,9 +210,15 @@ describe('WorkbenchContext', () => {
 
     const { result } = renderHook(() => useWorkbenchContext(), { wrapper });
 
-    result.current.addNotification('work' as WorkbenchId);
-    result.current.addNotification('work' as WorkbenchId);
-    result.current.addNotification('settings' as WorkbenchId);
+    act(() => {
+      result.current.addNotification('work' as WorkbenchId);
+    });
+    act(() => {
+      result.current.addNotification('work' as WorkbenchId);
+    });
+    act(() => {
+      result.current.addNotification('settings' as WorkbenchId);
+    });
 
     const workCount = result.current.workbenchNotifications.get('work' as WorkbenchId) || 0;
     const settingsCount = result.current.workbenchNotifications.get('settings' as WorkbenchId) || 0;
@@ -206,7 +236,9 @@ describe('WorkbenchContext', () => {
 
     expect(result.current.routingFilter).toBeNull();
 
-    result.current.setRoutingFilter('work' as WorkbenchId);
+    act(() => {
+      result.current.setRoutingFilter('work' as WorkbenchId);
+    });
 
     expect(result.current.routingFilter).toBe('work');
   });
@@ -218,10 +250,14 @@ describe('WorkbenchContext', () => {
 
     const { result } = renderHook(() => useWorkbenchContext(), { wrapper });
 
-    result.current.setRoutingFilter('work' as WorkbenchId);
+    act(() => {
+      result.current.setRoutingFilter('work' as WorkbenchId);
+    });
     expect(result.current.routingFilter).toBe('work');
 
-    result.current.setRoutingFilter(null);
+    act(() => {
+      result.current.setRoutingFilter(null);
+    });
 
     expect(result.current.routingFilter).toBeNull();
   });
@@ -257,7 +293,9 @@ describe('WorkbenchContext', () => {
       },
     ];
 
-    result.current.setRoutingFilter('work' as WorkbenchId);
+    act(() => {
+      result.current.setRoutingFilter('work' as WorkbenchId);
+    });
 
     const filtered = result.current.filterSessionsByContext(sessions);
 
@@ -304,7 +342,9 @@ describe('WorkbenchContext', () => {
 
     expect(result.current.activeTool).toBeNull();
 
-    result.current.setActiveTool('tool-123' as any);
+    act(() => {
+      result.current.setActiveTool('tool-123' as any);
+    });
 
     expect(result.current.activeTool).toBe('tool-123');
   });
@@ -316,10 +356,14 @@ describe('WorkbenchContext', () => {
 
     const { result } = renderHook(() => useWorkbenchContext(), { wrapper });
 
-    result.current.setActiveTool('tool-123' as any);
+    act(() => {
+      result.current.setActiveTool('tool-123' as any);
+    });
     expect(result.current.activeTool).toBe('tool-123');
 
-    result.current.setActiveTool(null);
+    act(() => {
+      result.current.setActiveTool(null);
+    });
 
     expect(result.current.activeTool).toBeNull();
   });
@@ -356,7 +400,9 @@ describe('WorkbenchContext', () => {
     expect(contextResult.current.activeWorkbench).toBe('work');
     expect(hookResult.current.activeWorkbench).toBe('work');
 
-    contextResult.current.setActiveWorkbench('settings' as WorkbenchId);
+    act(() => {
+      contextResult.current.setActiveWorkbench('settings' as WorkbenchId);
+    });
 
     waitFor(() => {
       expect(hookResult.current.activeWorkbench).toBe('settings');
@@ -375,7 +421,9 @@ describe('WorkbenchContext', () => {
     const { result: result1 } = renderHook(() => useWorkbenchContext(), { wrapper: wrapper1 });
     const { result: result2 } = renderHook(() => useWorkbenchContext(), { wrapper: wrapper2 });
 
-    result1.current.setActiveWorkbench('settings' as WorkbenchId);
+    act(() => {
+      result1.current.setActiveWorkbench('settings' as WorkbenchId);
+    });
 
     expect(result1.current.activeWorkbench).toBe('settings');
     // result2 should still be at work because it has its own state

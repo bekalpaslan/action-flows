@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useNotificationGlow } from '../useNotificationGlow';
 import type { SessionId, WorkbenchId } from '@afw/shared';
 
@@ -49,47 +49,60 @@ describe('useNotificationGlow Hook', () => {
   it('should add notification', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    const notification = result.current.addNotification({
-      level: 'info',
-      message: 'Test notification',
-      sessionId: testSessionId,
-      source: 'step',
+    let notification: ReturnType<typeof result.current.addNotification>;
+    act(() => {
+      notification = result.current.addNotification({
+        level: 'info',
+        message: 'Test notification',
+        sessionId: testSessionId,
+        source: 'step',
+      });
     });
 
-    expect(notification).toBeDefined();
-    expect(notification.id).toBeTruthy();
-    expect(notification.message).toBe('Test notification');
+    expect(notification!).toBeDefined();
+    expect(notification!.id).toBeTruthy();
+    expect(notification!.message).toBe('Test notification');
   });
 
   it('should mark notification as read', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    const notification = result.current.addNotification({
-      level: 'info',
-      message: 'Test',
-      sessionId: testSessionId,
-      source: 'step',
+    let notification: ReturnType<typeof result.current.addNotification>;
+    act(() => {
+      notification = result.current.addNotification({
+        level: 'info',
+        message: 'Test',
+        sessionId: testSessionId,
+        source: 'step',
+      });
     });
 
-    result.current.markAsRead(notification.id);
+    act(() => {
+      result.current.markAsRead(notification!.id);
+    });
 
-    const updatedNotif = result.current.notifications.find(n => n.id === notification.id);
+    const updatedNotif = result.current.notifications.find(n => n.id === notification!.id);
     expect(updatedNotif?.read).toBe(true);
   });
 
   it('should dismiss notification', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    const notification = result.current.addNotification({
-      level: 'info',
-      message: 'Test',
-      sessionId: testSessionId,
-      source: 'step',
+    let notification: ReturnType<typeof result.current.addNotification>;
+    act(() => {
+      notification = result.current.addNotification({
+        level: 'info',
+        message: 'Test',
+        sessionId: testSessionId,
+        source: 'step',
+      });
     });
 
-    result.current.dismissNotification(notification.id);
+    act(() => {
+      result.current.dismissNotification(notification!.id);
+    });
 
-    const updatedNotif = result.current.notifications.find(n => n.id === notification.id);
+    const updatedNotif = result.current.notifications.find(n => n.id === notification!.id);
     expect(updatedNotif?.dismissed).toBe(true);
   });
 
@@ -102,11 +115,13 @@ describe('useNotificationGlow Hook', () => {
   it('should calculate glow state for session', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    result.current.addNotification({
-      level: 'error',
-      message: 'Error',
-      sessionId: testSessionId,
-      source: 'step',
+    act(() => {
+      result.current.addNotification({
+        level: 'error',
+        message: 'Error',
+        sessionId: testSessionId,
+        source: 'step',
+      });
     });
 
     const glow = result.current.getSessionGlow(testSessionId);
@@ -135,11 +150,13 @@ describe('useNotificationGlow Hook', () => {
   it('should calculate glow state for workbench', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    result.current.addNotification({
-      level: 'warning',
-      message: 'Warning',
-      workbenchId: testWorkbenchId,
-      source: 'step',
+    act(() => {
+      result.current.addNotification({
+        level: 'warning',
+        message: 'Warning',
+        workbenchId: testWorkbenchId,
+        source: 'step',
+      });
     });
 
     const glow = result.current.getWorkbenchGlow(testWorkbenchId);
@@ -157,17 +174,22 @@ describe('useNotificationGlow Hook', () => {
   it('should clear session notifications', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    const notif = result.current.addNotification({
-      level: 'info',
-      message: 'Test',
-      sessionId: testSessionId,
-      source: 'step',
+    let notif: ReturnType<typeof result.current.addNotification>;
+    act(() => {
+      notif = result.current.addNotification({
+        level: 'info',
+        message: 'Test',
+        sessionId: testSessionId,
+        source: 'step',
+      });
     });
 
     // Verify notification was added
-    const added = result.current.notifications.some(n => n.id === notif.id);
+    const added = result.current.notifications.some(n => n.id === notif!.id);
     if (added) {
-      result.current.clearSessionNotifications(testSessionId);
+      act(() => {
+        result.current.clearSessionNotifications(testSessionId);
+      });
       const glow = result.current.getSessionGlow(testSessionId);
       expect(glow.active).toBe(false);
     }
@@ -188,14 +210,17 @@ describe('useNotificationGlow Hook', () => {
   it('should get propagation path for notification', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    const notification = result.current.addNotification({
-      level: 'error',
-      message: 'Error',
-      sessionId: testSessionId,
-      source: 'step',
+    let notification: ReturnType<typeof result.current.addNotification>;
+    act(() => {
+      notification = result.current.addNotification({
+        level: 'error',
+        message: 'Error',
+        sessionId: testSessionId,
+        source: 'step',
+      });
     });
 
-    const path = result.current.getPropagationPath(notification);
+    const path = result.current.getPropagationPath(notification!);
 
     expect(path === null || path !== null).toBe(true); // May be null if workbench not registered
   });
@@ -203,75 +228,88 @@ describe('useNotificationGlow Hook', () => {
   it('should handle multiple notification levels', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    const n1 = result.current.addNotification({
-      level: 'info',
-      message: 'Info',
-      sessionId: testSessionId,
-      source: 'step',
-    });
+    let n1: ReturnType<typeof result.current.addNotification>;
+    let n2: ReturnType<typeof result.current.addNotification>;
+    let n3: ReturnType<typeof result.current.addNotification>;
+    act(() => {
+      n1 = result.current.addNotification({
+        level: 'info',
+        message: 'Info',
+        sessionId: testSessionId,
+        source: 'step',
+      });
 
-    const n2 = result.current.addNotification({
-      level: 'warning',
-      message: 'Warning',
-      sessionId: testSessionId,
-      source: 'step',
-    });
+      n2 = result.current.addNotification({
+        level: 'warning',
+        message: 'Warning',
+        sessionId: testSessionId,
+        source: 'step',
+      });
 
-    const n3 = result.current.addNotification({
-      level: 'error',
-      message: 'Error',
-      sessionId: testSessionId,
-      source: 'step',
+      n3 = result.current.addNotification({
+        level: 'error',
+        message: 'Error',
+        sessionId: testSessionId,
+        source: 'step',
+      });
     });
 
     // Check that notifications are returned correctly
-    expect(n1).toBeDefined();
-    expect(n2).toBeDefined();
-    expect(n3).toBeDefined();
+    expect(n1!).toBeDefined();
+    expect(n2!).toBeDefined();
+    expect(n3!).toBeDefined();
   });
 
   it('should handle notification metadata', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    const notification = result.current.addNotification({
-      level: 'error',
-      message: 'Test',
-      sessionId: testSessionId,
-      source: 'step',
-      chainId: 'chain-1' as any,
-      stepId: 'step-1' as any,
+    let notification: ReturnType<typeof result.current.addNotification>;
+    act(() => {
+      notification = result.current.addNotification({
+        level: 'error',
+        message: 'Test',
+        sessionId: testSessionId,
+        source: 'step',
+        chainId: 'chain-1' as any,
+        stepId: 'step-1' as any,
+      });
     });
 
-    expect(notification.chainId).toBe('chain-1');
-    expect(notification.stepId).toBe('step-1');
+    expect(notification!.chainId).toBe('chain-1');
+    expect(notification!.stepId).toBe('step-1');
   });
 
   it('should have notification state properties', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    const notif = result.current.addNotification({
-      level: 'info',
-      message: 'Test',
-      sessionId: testSessionId,
-      source: 'step',
+    let notif: ReturnType<typeof result.current.addNotification>;
+    act(() => {
+      notif = result.current.addNotification({
+        level: 'info',
+        message: 'Test',
+        sessionId: testSessionId,
+        source: 'step',
+      });
     });
 
-    expect(notif.id).toBeDefined();
-    expect(notif.level).toBeDefined();
-    expect(notif.message).toBeDefined();
-    expect(notif.timestamp).toBeDefined();
-    expect(typeof notif.read).toBe('boolean');
-    expect(typeof notif.dismissed).toBe('boolean');
+    expect(notif!.id).toBeDefined();
+    expect(notif!.level).toBeDefined();
+    expect(notif!.message).toBeDefined();
+    expect(notif!.timestamp).toBeDefined();
+    expect(typeof notif!.read).toBe('boolean');
+    expect(typeof notif!.dismissed).toBe('boolean');
   });
 
   it('should provide notificationState', () => {
     const { result } = renderHook(() => useNotificationGlow());
 
-    result.current.addNotification({
-      level: 'info',
-      message: 'Test',
-      sessionId: testSessionId,
-      source: 'step',
+    act(() => {
+      result.current.addNotification({
+        level: 'info',
+        message: 'Test',
+        sessionId: testSessionId,
+        source: 'step',
+      });
     });
 
     expect(result.current.notificationState).toBeDefined();
