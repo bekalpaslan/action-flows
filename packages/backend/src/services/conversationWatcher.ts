@@ -378,6 +378,7 @@ export class GateDetector {
 
   /**
    * Extract clean chain compilation markdown
+   * Captures header, table, and execution metadata (e.g., **Execution:** Sequential)
    */
   private extractChainCompilation(text: string): string | null {
     if (!this.isChainCompilation(text)) return null;
@@ -390,13 +391,26 @@ export class GateDetector {
     const chainLines: string[] = [];
 
     let inTable = false;
+    let tableEnded = false;
     for (const line of lines) {
+      // After table ends, check boundary BEFORE adding
+      if (tableEnded) {
+        // Stop at another section header or blank line
+        if (line.match(/^##\s+/) || line.trim() === '') {
+          break;
+        }
+        // Capture execution metadata like **Execution:** Sequential
+      }
+
       chainLines.push(line);
 
+      // Detect table start
       if (line.match(/^\|\s*#\s*\|/)) {
         inTable = true;
-      } else if (inTable && line.trim() === '') {
-        break;
+      }
+      // Table ended when we hit a blank line after being in the table
+      else if (inTable && line.trim() === '') {
+        tableEnded = true;
       }
     }
 
@@ -621,13 +635,15 @@ export class ConversationWatcher {
    */
   private async processAssistantMessage(entry: AssistantMessage): Promise<void> {
     // Process text blocks for text-based gates (G2, G4, G6, G8, G11)
-    const textBlocks = entry.message.content
+    // CRITICAL: Concatenate all text blocks before gate detection to handle
+    // chain tables that span multiple content blocks (e.g., header in block 1, rows in block 2)
+    const fullText = entry.message.content
       .filter(block => block.type === 'text')
-      .map(block => (block as { type: 'text'; text: string }).text);
+      .map(block => (block as { type: 'text'; text: string }).text)
+      .join('\n');
 
-    for (const text of textBlocks) {
-      const gateEvents = this.gateDetector.detectGates(text);
-
+    if (fullText.trim()) {
+      const gateEvents = this.gateDetector.detectGates(fullText);
       for (const event of gateEvents) {
         await this.gateIntegration.processGateEvent(entry, event);
       }

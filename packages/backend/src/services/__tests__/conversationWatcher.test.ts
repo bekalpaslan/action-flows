@@ -269,16 +269,13 @@ describe('GateDetector', () => {
       expect(g4Event!.content).toContain('| 3 | review/code | sonnet |');
     });
 
-    it('should stop at blank line after table', () => {
+    it('should capture execution metadata after table', () => {
       const events = gateDetector.detectGates(SAMPLE_CHAIN_COMPILATION);
       const g4Event = events.find(e => e.gateId === 'gate-04');
       expect(g4Event).toBeTruthy();
 
-      const lines = g4Event!.content.split('\n');
-      const lastLine = lines[lines.length - 1];
-
-      // Last line should be the last table row
-      expect(lastLine).toMatch(/^\|\s*\d+\s*\|/);
+      // Should capture execution metadata after the table
+      expect(g4Event!.content).toContain('**Execution:** Sequential');
     });
 
     it('should handle multiple chains (extracts first)', () => {
