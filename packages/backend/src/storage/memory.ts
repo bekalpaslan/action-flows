@@ -194,7 +194,9 @@ export const storage: MemoryStorage = {
     if (!session) return undefined;
     // Validate session on retrieval for data integrity
     const validated = validateStorageData(session, sessionSchema, `getSession(${sessionId})`);
-    return (validated || session) as Session;
+    // Validation passed; return original data (it was already stored, so use original reference)
+    if (!validated) return undefined;
+    return session;
   },
   setSession(session: Session) {
     // Validate session data integrity (Critical - corrupt sessions break entire app)
@@ -323,7 +325,9 @@ export const storage: MemoryStorage = {
       if (chain) {
         // Validate chain on retrieval for data integrity
         const validated = validateStorageData(chain, chainSchema, `getChain(${chainId})`);
-        return (validated || chain) as Chain;
+        // Validation passed; return original data (it was already stored, so use original reference)
+        if (!validated) return undefined;
+        return chain;
       }
     }
     return undefined;
