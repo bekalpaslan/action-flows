@@ -29,7 +29,7 @@ export const GateCheckpointComponent: React.FC<GateCheckpointProps> = ({ gate, p
         transform: 'translate(-50%, -50%)',
       }}
       role="status"
-      aria-label={`Gate checkpoint ${gate.id}`}
+      aria-label={`Gate checkpoint ${gate.harmonyRule}`}
       data-gate-id={gate.id}
       data-harmony-rule={gate.harmonyRule}
       title={`Gate: ${gate.harmonyRule} (${gate.status})`}
