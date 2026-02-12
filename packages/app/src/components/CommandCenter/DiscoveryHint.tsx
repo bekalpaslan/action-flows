@@ -68,12 +68,13 @@ export function DiscoveryHint({
       onClick={handleHintClick}
       onKeyDown={handleKeyDown}
       tabIndex={onActionClick ? 0 : -1}
+      data-testid="discovery-hints"
     >
       <div className="discovery-hint__icon" aria-hidden="true">
         💡
       </div>
 
-      <div className="discovery-hint__content">
+      <div className="discovery-hint__content" data-testid="hint-message">
         <h4 className="discovery-hint__title">
           You're close to discovering {regionName}!
         </h4>
@@ -108,6 +109,7 @@ export function DiscoveryHint({
         onKeyDown={(e) => e.stopPropagation()}
         aria-label={`Dismiss hint for ${regionName}`}
         title="Dismiss this hint"
+        data-testid="hint-close-button"
       >
         <svg
           width="14"

@@ -347,7 +347,7 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
   ].filter(Boolean).join(' ');
 
   return (
-    <div className={cosmicMapClass}>
+    <div className={cosmicMapClass} data-testid="cosmic-map">
       {/* Cosmic background */}
       <CosmicBackground
         width={window.innerWidth}
@@ -360,7 +360,8 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
       <LiveRegion />
 
       {/* ReactFlow visualization */}
-      <ReactFlow
+      <div className="universe-canvas" data-testid="universe-canvas">
+        <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -376,7 +377,7 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
         aria-label="Living Universe cosmic map - navigable visualization of workbench regions"
         role="application"
       >
-        <Controls className="cosmic-map__controls" />
+        <Controls className="cosmic-map__controls" data-testid="zoom-controls" />
         <MiniMap
           className="cosmic-map__minimap"
           nodeColor={(node) => {
@@ -427,8 +428,10 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
           </svg>
         )}
       </ReactFlow>
+      </div>
 
       {/* Return to god view button */}
+      <div className="navigation-overlay" data-testid="navigation-overlay">
       <button
         className="cosmic-map__god-view-button"
         onClick={handleReturnToGodView}
@@ -441,6 +444,7 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
       {commandCenterEnabled && (
         <CommandCenter onCommand={handleCommand} showHealthStatus={true} />
       )}
+      </div>
 
       {/* Onboarding tooltip sequence */}
       <UniverseOnboarding />
