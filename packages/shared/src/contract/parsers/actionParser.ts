@@ -163,7 +163,7 @@ export function parseAnalysisReport(text: string): AnalysisReportParsed | null {
     aspect: aspectMatch?.[1] || null,
     scope: scopeMatch?.[1] || null,
     date: dateMatch?.[1] || null,
-    agent: agentMatch ? 'analyze/' : null,
+    agent: agentMatch?.[1] ? `${agentMatch[1]}/` : null,
     sections,
     recommendations,
     raw: text,

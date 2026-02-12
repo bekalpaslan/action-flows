@@ -69,6 +69,9 @@ export interface ChainExecutionStartParsed {
   /** Model being used */
   model: ModelString | null;
 
+  /** Optional Unix timestamp when chain execution started (milliseconds since epoch) */
+  timestamp: number | null;
+
   /** Raw markdown text */
   raw: string;
 
@@ -113,6 +116,15 @@ export interface ExecutionCompleteParsed {
 
   /** Learnings from execution */
   learnings: string | null;
+
+  /** Optional: Total number of steps in the chain */
+  totalSteps: number | null;
+
+  /** Optional: Number of steps completed successfully */
+  completedSteps: number | null;
+
+  /** Optional: Number of steps that failed */
+  failedSteps: number | null;
 
   /** Raw markdown text */
   raw: string;

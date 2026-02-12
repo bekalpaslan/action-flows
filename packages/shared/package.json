@@ -18,7 +18,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "contract:validate": "tsx scripts/validate-contract.ts",
+    "contract:validate:json": "tsx scripts/validate-contract.ts --json"
   },
   "dependencies": {
     "zod": "^3.22.4"

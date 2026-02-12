@@ -31,7 +31,7 @@ export const AnalysisReportPatterns = {
   aspect: /^\*\*Aspect:\*\* (.+)$/m,
   scope: /^\*\*Scope:\*\* (.+)$/m,
   date: /^\*\*Date:\*\* (\d{4}-\d{2}-\d{2})$/m,
-  agent: /^\*\*Agent:\*\* analyze$/m,
+  agent: /^\*\*Agent:\*\* (analyze|code|review|brainstorm)\/$/m,
   sectionHeading: /^## (\d+)\. (.+)$/m,
   recommendationsHeading: /^## Recommendations$/m,
   recommendation: /^- (.+)$/m,

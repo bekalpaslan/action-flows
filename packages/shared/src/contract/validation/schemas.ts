@@ -122,7 +122,7 @@ export const ChainStepParsedSchema = z.object({
 });
 
 export const StepDescriptionSchema = z.object({
-  number: StepNumberSchema,
+  stepNumber: StepNumberSchema,
   action: z.string(),
   description: z.string(),
 });

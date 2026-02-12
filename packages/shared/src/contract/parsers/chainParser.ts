@@ -129,6 +129,7 @@ export function parseChainExecutionStart(text: string): ChainExecutionStartParse
     stepNumber: spawningMatch ? parseInt(spawningMatch[1] ?? '0', 10) : null,
     action: spawningMatch?.[2] || null,
     model: (spawningMatch?.[3] as ModelString) || null,
+    timestamp: null, // Optional: Currently not extracted from format
     raw: text,
     contractVersion: CONTRACT_VERSION,
   };
@@ -197,6 +198,9 @@ export function parseExecutionComplete(text: string): ExecutionCompleteParsed | 
     steps,
     logsPath: logsMatch?.[1] || null,
     learnings: learningsMatch?.[1] || null,
+    totalSteps: null, // Optional: Currently not extracted from format
+    completedSteps: null, // Optional: Currently not extracted from format
+    failedSteps: null, // Optional: Currently not extracted from format
     raw: text,
     contractVersion: CONTRACT_VERSION,
   };

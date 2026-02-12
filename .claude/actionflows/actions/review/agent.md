@@ -37,6 +37,67 @@ Review the specified changes for correctness, security, performance, and pattern
 
 ---
 
+## Contract Change Verification (Special Protocol)
+
+When reviewing changes to contract files (CONTRACT.md, schemas.ts, *Formats.ts, *Parser.ts, *Patterns.ts), use **field-level verification** instead of file-level verification.
+
+### 4-Layer Field Tracing
+
+For each modified field in the contract changes:
+
+1. **Specification Layer** — Verify field is documented in `.claude/actionflows/CONTRACT.md`
+   - Check field name, type, nullability, description match implementation
+
+2. **Type Layer** — Verify field exists in TypeScript type definition
+   - Check: `packages/shared/src/contract/types/chainFormats.ts`
+   - Check: `packages/shared/src/contract/types/actionFormats.ts`
+   - Ensure type matches spec (e.g., `string | null` for nullable strings)
+
+3. **Schema Layer** — Verify field exists in Zod validation schema
+   - Check: `packages/shared/src/contract/validation/schemas.ts`
+   - Ensure schema matches spec (e.g., `z.string().nullable()` for nullable strings)
+   - Verify `.nullable()` vs `.optional()` usage (use `.nullable()` for fields that can be null)
+
+4. **Parser Layer** — Verify field is extracted in parser implementation
+   - Check: `packages/shared/src/contract/parsers/chainParser.ts`
+   - Check: `packages/shared/src/contract/parsers/actionParser.ts`
+   - Ensure parser returns the field (even if null)
+
+5. **Pattern Layer (if applicable)** — Verify regex pattern exists
+   - Check: `packages/shared/src/contract/patterns/chainPatterns.ts`
+   - Check: `packages/shared/src/contract/patterns/actionPatterns.ts`
+   - Ensure pattern can extract the field from formatted output
+
+### Verification Matrix
+
+Create a verification matrix in your review report for contract changes:
+
+| Field | Spec | Type | Schema | Parser | Pattern | Status |
+|-------|------|------|--------|--------|---------|--------|
+| `timestamp` (1.2) | ✅ | ✅ | ✅ | ✅ | N/A | ALIGNED |
+| `learnings` (1.4) | ✅ | ✅ | ✅ | ✅ | N/A | ALIGNED |
+| ... | ... | ... | ... | ... | ... | ... |
+
+### Red Flags
+
+Flag these patterns as NEEDS_CHANGES:
+- ❌ Field in schema but not in type definition
+- ❌ Field in type but not extracted by parser
+- ❌ Field documented in CONTRACT.md but missing from implementation
+- ❌ Pattern exists but parser doesn't use it
+- ❌ Field name mismatch between layers (e.g., `stepNumber` vs `number`)
+
+### Automation
+
+After manual verification, recommend running the contract drift validator:
+```bash
+cd packages/shared && pnpm run contract:validate
+```
+
+This tool performs automated 4-layer verification and catches drift that manual reviews might miss.
+
+---
+
 ## Output Contract
 
 **Primary deliverable:** `review-report.md` in log folder
