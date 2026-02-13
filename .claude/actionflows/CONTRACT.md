@@ -42,6 +42,80 @@ When agents or orchestrator refer to "implementing Format X", the target is 100%
 
 ---
 
+## Alignment Verification Gate
+
+**CRITICAL:** Before committing any contract change, verify 4-layer alignment for ALL modified fields.
+
+This section implements L021 (Contract Drift Prevention) - the root cause fix that makes drift impossible to commit.
+
+### Mandatory Pre-Commit Checklist
+
+For each field you modified in any contract format:
+
+- [ ] **Layer 1 (Spec):** Field documented in this file (CONTRACT.md) with correct type/nullability
+- [ ] **Layer 2 (Type):** Field exists in TypeScript type definition (`packages/shared/src/contract/types/`)
+- [ ] **Layer 3 (Schema):** Field exists in Zod schema (`packages/shared/src/contract/validation/schemas.ts`)
+- [ ] **Layer 4 (Parser):** Field extracted by parser (`packages/shared/src/contract/parsers/`)
+- [ ] **Layer 5 (Pattern, if applicable):** Regex pattern exists (`packages/shared/src/contract/patterns/`)
+- [ ] **Automated validation:** Ran `pnpm run contract:validate` and ALL formats passed (exit code 0)
+- [ ] **Pre-commit hook:** Registered hook will block commit if drift detected
+
+### Validation Command
+
+```bash
+# Run from repository root
+pnpm run contract:validate
+
+# Or from packages/shared
+cd packages/shared
+pnpm run contract:validate
+```
+
+**Exit codes:**
+- `0` — All formats aligned, commit allowed
+- `1` — Drift detected, commit blocked
+- `2` — Validation script error
+
+### Failure Modes Prevented
+
+The 4-layer verification prevents these common drift patterns:
+
+- ❌ **Field in spec but not in type** → Caught by validation + pre-commit
+- ❌ **Field in type but parser doesn't extract it** → Caught by validation + pre-commit
+- ❌ **Field name differs between layers** → Caught by review checklist + validation
+- ❌ **Zod schema uses wrong nullability** (`.optional()` vs `.nullable()`) → Caught by validation
+- ❌ **Field added to schema but missing from type** → Caught by validation + type-check
+
+### Defense in Depth
+
+The drift prevention system has 4 enforcement layers:
+
+1. **Manual Review Checklist** (`.claude/actionflows/actions/review/agent.md`)
+   - Field-level verification matrix for contract changes
+   - Human catches architectural issues and design decisions
+
+2. **Automated Validation Script** (`packages/shared/scripts/validate-contract.ts`)
+   - Field-level tracing across spec → type → schema → parser
+   - Detects missing fields, type mismatches, nullability errors
+
+3. **Pre-Commit Hook** (`packages/hooks/src/pre-commit-contract.ts`)
+   - Blocks commits when contract files modified with drift
+   - Runs validation automatically, no manual step required
+
+4. **CI Validation** (future enhancement)
+   - Final safety net in CI pipeline
+   - Prevents drift from reaching main branch
+
+**Principle:** If human review misses it, automation catches it. If pre-commit hook bypassed, CI catches it.
+
+### See Also
+
+- **L021 Learning:** `.claude/actionflows/LEARNINGS.md` § L021 — Why field-level verification is required
+- **Evolution Process:** `docs/architecture/CONTRACT_EVOLUTION.md` — How to evolve contracts safely
+- **Review Methodology:** `.claude/actionflows/actions/review/agent.md` § Contract Change Verification
+
+---
+
 ## Gate Checkpoint References
 
 **Backend Verification Architecture:**

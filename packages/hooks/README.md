@@ -12,6 +12,127 @@ This package is documented across three files:
 
 ## Hooks
 
+### `pre-commit-contract` - Contract Drift Prevention Hook
+
+Triggered on every commit when contract files are modified. Runs `contract:validate` and blocks the commit if drift is detected between CONTRACT.md specification, TypeScript types, Zod schemas, and parser implementations.
+
+#### Trigger Condition
+
+Hook runs when ANY of these files are staged for commit:
+
+- `.claude/actionflows/CONTRACT.md`
+- `packages/shared/src/contract/types/*.ts`
+- `packages/shared/src/contract/validation/schemas.ts`
+- `packages/shared/src/contract/parsers/*.ts`
+- `packages/shared/src/contract/patterns/*.ts`
+
+If no contract files are modified, the hook skips validation (fast path for non-contract commits).
+
+#### Processing
+
+1. **Get staged files** from `git diff --cached --name-only`
+2. **Check for contract files** against pattern list
+3. **Skip if no contract files** modified (exit 0)
+4. **Run validation** via `pnpm run contract:validate`
+5. **Block commit** if validation fails (exit 1)
+6. **Allow commit** if validation passes (exit 0)
+
+#### Validation
+
+The validation script (`packages/shared/scripts/validate-contract.ts`) performs 4-layer field-level verification:
+
+1. **Spec Layer** - Field documented in CONTRACT.md
+2. **Type Layer** - Field exists in TypeScript interface
+3. **Schema Layer** - Field exists in Zod schema
+4. **Parser Layer** - Field extracted by parser function
+
+**Exit codes:**
+- `0` - All formats aligned, commit allowed
+- `1` - Drift detected, commit blocked
+- `2` - Validation script error
+
+#### Setup
+
+**Option A: Automatic (recommended)**
+
+```bash
+# Install simple-git-hooks
+pnpm add -D simple-git-hooks
+
+# Add to root package.json:
+{
+  "simple-git-hooks": {
+    "pre-commit": "node packages/hooks/dist/pre-commit-contract.js"
+  }
+}
+
+# Register hooks
+pnpm exec simple-git-hooks
+```
+
+**Option B: Manual**
+
+```bash
+# Create .git/hooks/pre-commit
+cat > .git/hooks/pre-commit << 'EOF'
+#!/bin/bash
+node packages/hooks/dist/pre-commit-contract.js
+EOF
+
+# Make executable
+chmod +x .git/hooks/pre-commit
+```
+
+#### Skip Hook (Emergency Bypass)
+
+```bash
+# Skip pre-commit hook for a single commit
+git commit --no-verify
+
+# WARNING: Only use when:
+# - Fixing the validation script itself
+# - Emergency hotfix (must fix drift in next commit)
+# - You are absolutely certain the drift is intentional
+```
+
+#### Error Messages
+
+**Drift detected:**
+```
+❌ Contract validation failed. Commit blocked.
+
+Format 2.2 (DualOutputParsed): ⚠️ DRIFT
+  🔴 [schema] Field "action" exists in TypeScript type but missing in Zod schema
+  🔴 [schema] Field "secondOpinionSummary" exists in TypeScript type but missing in Zod schema
+
+Fix the drift issues above and try again.
+
+To bypass (NOT RECOMMENDED): git commit --no-verify
+```
+
+**No contract changes:**
+```
+[pre-commit-contract] No contract files modified, skipping validation
+```
+
+#### Rationale
+
+Implements L021 (Contract Drift Prevention). Before this hook, contract changes could create drift where:
+- Field exists in spec but missing from type definition
+- Field exists in type but parser doesn't extract it
+- Field name differs between layers (`stepNumber` vs `number`)
+- Zod schema uses wrong nullability (`.optional()` vs `.nullable()`)
+
+The pre-commit hook makes drift **impossible to commit** by enforcing 4-layer alignment at the Git level.
+
+#### See Also
+
+- **Validation Script:** `packages/shared/scripts/validate-contract.ts`
+- **Alignment Gate:** `.claude/actionflows/CONTRACT.md` § Alignment Verification Gate
+- **Learning:** `.claude/actionflows/LEARNINGS.md` § L021
+
+---
+
 ### `afw-step-completed` - SubagentStop Hook
 
 Triggered when Claude Code completes a subagent step execution.

@@ -174,3 +174,12 @@
 - **Fix:** Unwired `afw-input-inject` from `.claude/settings.json`. Re-enable when dashboard is actively creating and managing sessions (i.e., user starts sessions from the dashboard UI, not just CLI).
 - **Re-enable:** Add back to `Stop` hooks array in `.claude/settings.json` with `"timeout": 35`
 - **Status:** Open (hook exists, just not wired — waiting for dashboard session management)
+
+### L021: Contract Drift Reviews Need Field-Level Tracing, Not File-Level
+- **Date:** 2026-02-12
+- **From:** second-opinion/ (opus) during contract-drift-fix/ chain re-execution
+- **Issue:** Primary review verified Zod schemas and CONTRACT.md alignment but missed 4 additional drift issues (Format 1.2 `timestamp` field, Format 1.4 `totalSteps`/`completedSteps`/`failedSteps` fields) because it only checked files listed in `changes.md` without tracing fields through all 4 layers (Spec → Type → Schema → Parser).
+- **Root Cause:** File-centric review methodology checks "were these 7 files modified correctly?" instead of "for each field touched, is it aligned across all 4 layers?" Files `chainFormats.ts` and `chainParser.ts` were never examined, leaving Format 1.x type/parser gaps undetected.
+- **Fix:** Update review/agent.md checklist: "For contract changes, use field-level verification matrix. For each modified field, verify alignment across: (1) CONTRACT.md spec, (2) TypeScript type definition, (3) Zod validation schema, (4) Parser implementation, (5) Regex pattern (if applicable)."
+- **Impact:** Claimed 100% alignment was actually ~93% (12 of 16 issues fixed, 4 missed)
+- **Status:** Open (review methodology needs enhancement)
