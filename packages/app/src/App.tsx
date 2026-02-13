@@ -4,6 +4,7 @@ import { ThemeProvider } from './contexts/ThemeContext'
 import { FeatureFlagsProvider } from './contexts/FeatureFlagsContext'
 import { WebSocketProvider } from './contexts/WebSocketContext'
 import { SessionProvider } from './contexts/SessionContext'
+import { AuthProvider } from './contexts/AuthContext'
 import { WorkbenchProvider } from './contexts/WorkbenchContext'
 import { UniverseProvider } from './contexts/UniverseContext'
 import { DiscoveryProvider } from './contexts/DiscoveryContext'
@@ -42,23 +43,25 @@ function App() {
       <FeatureFlagsProvider>
         <ToastProvider>
           <WebSocketProvider url="ws://localhost:3001/ws">
-            <SessionProvider>
-              <WorkbenchProvider>
-                <UniverseProvider>
-                  <DiscoveryProvider>
-                    <ChatWindowProvider>
-                      <DiscussProvider>
-                        <NotificationGlowProvider>
-                          <VimNavigationProvider>
-                            <AppWithVim />
-                          </VimNavigationProvider>
-                        </NotificationGlowProvider>
-                      </DiscussProvider>
-                    </ChatWindowProvider>
-                  </DiscoveryProvider>
-                </UniverseProvider>
-              </WorkbenchProvider>
-            </SessionProvider>
+            <AuthProvider>
+              <SessionProvider>
+                <WorkbenchProvider>
+                  <UniverseProvider>
+                    <DiscoveryProvider>
+                      <ChatWindowProvider>
+                        <DiscussProvider>
+                          <NotificationGlowProvider>
+                            <VimNavigationProvider>
+                              <AppWithVim />
+                            </VimNavigationProvider>
+                          </NotificationGlowProvider>
+                        </DiscussProvider>
+                      </ChatWindowProvider>
+                    </DiscoveryProvider>
+                  </UniverseProvider>
+                </WorkbenchProvider>
+              </SessionProvider>
+            </AuthProvider>
           </WebSocketProvider>
         </ToastProvider>
       </FeatureFlagsProvider>

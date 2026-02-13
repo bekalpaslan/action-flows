@@ -62,6 +62,8 @@ import { initBridgeStrengthService } from './services/bridgeStrengthService.js';
 import { initHealingRecommendationEngine, getHealingRecommendationEngine } from './services/healingRecommendations.js';
 import { initHealthScoreCalculator } from './services/healthScoreCalculator.js';
 import createHarmonyHealthRouter from './routes/harmonyHealth.js';
+import authRouter from './routes/auth.js';
+import { ensureAdminExists } from './services/userService.js';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -156,6 +158,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 }));
 
 // API Routes
+app.use('/api/auth', authRouter);
 app.use('/api/events', eventsRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/api/story', storyRouter);
@@ -462,6 +465,13 @@ const isMainModule = (() => {
 })();
 if (isMainModule) {
   server.listen(PORT, async () => {
+    // Initialize default admin user
+    try {
+      await ensureAdminExists();
+    } catch (error) {
+      console.error('[Init] Failed to initialize admin user:', error);
+    }
+
     // Initialize Redis Pub/Sub after server starts
     await initializeRedisPubSub();
 

@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId, User } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration, sessionSchema, chainSchema, workspaceEventSchema, validateStorageData, chatMessageSchema, reminderInstanceSchema, telemetryEntrySchema, sessionWindowConfigSchema, errorInstanceSchema } from '@afw/shared';
 import { lifecycleManager } from './lifecycleHooks.js';
@@ -184,9 +184,19 @@ export interface MemoryStorage {
   getSessionRegion(sessionId: SessionId): RegionId | undefined;
   setSessionRegion(sessionId: SessionId, regionId: RegionId): void;
   deleteSessionRegion(sessionId: SessionId): void;
+
+  // User management
+  users: Map<UserId, User>;
+  getUser(userId: UserId): User | undefined;
+  setUser(user: User): void;
+  deleteUser(userId: UserId): void;
+  getUsersByRole(role: string): User[];
 }
 
 export const storage: MemoryStorage = {
+  // Users
+  users: new Map(),
+
   // Sessions
   sessions: new Map(),
   getSession(sessionId: SessionId) {
@@ -1165,6 +1175,23 @@ export const storage: MemoryStorage = {
 
   deleteSessionRegion(sessionId: SessionId) {
     this.sessionRegionMappings.delete(sessionId);
+  },
+
+  // User management
+  getUser(userId: UserId) {
+    return this.users.get(userId);
+  },
+
+  setUser(user: User) {
+    this.users.set(user.userId, user);
+  },
+
+  deleteUser(userId: UserId) {
+    this.users.delete(userId);
+  },
+
+  getUsersByRole(role: string) {
+    return Array.from(this.users.values()).filter(user => user.role === role);
   },
 
   // Snapshot/Restore methods for persistence

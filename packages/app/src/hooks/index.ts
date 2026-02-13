@@ -51,3 +51,16 @@ export type { UseNotificationGlowReturn, GlowState, NotificationInput } from './
 export { useFreshness } from './useFreshness';
 
 export { useChatKeyboardShortcuts } from './useChatKeyboardShortcuts';
+
+export { useAuth, usePermission, useRole, useAuthLoading, useAuthError, useIsAuthenticated } from './useAuth';
+
+export {
+  useCanCreateSession,
+  useCanExecuteChain,
+  useCanSpawnChildChain,
+  useCanApproveStep,
+  useCanManageUsers,
+  useCanViewAnalytics,
+  useCanManageFlows,
+  useCanDeleteSession,
+} from './useRoleCheck';

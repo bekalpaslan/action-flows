@@ -39,7 +39,7 @@ export type {
   LifecyclePolicy,
 } from './types.js';
 
-export { Status, Model, ChainSource, brandedTypes, duration, FRESHNESS_THRESHOLDS, calculateFreshnessGrade } from './types.js';
+export { Status, Model, ChainSource, brandedTypes, duration, FRESHNESS_THRESHOLDS, calculateFreshnessGrade, toUserId, toTimestamp, currentTimestamp } from './types.js';
 
 // ============================================================================
 // Gate Checkpoint Tracing Types
@@ -159,6 +159,22 @@ export type {
 } from './commands.js';
 
 export { CommandType, commandGuards, CommandValidator, CommandBuilder } from './commands.js';
+
+// ============================================================================
+// Authentication & Authorization
+// ============================================================================
+export type {
+  Role,
+  Permission,
+  RolePermissions,
+  User,
+} from './auth/roles.js';
+
+export { DEFAULT_ROLE_PERMISSIONS, isValidRole, isValidPermission } from './auth/roles.js';
+
+export { RoleSchema, PermissionSchema, UserSchema, AssignRoleRequestSchema, VerifyPermissionRequestSchema } from './auth/validation.js';
+
+export type { AssignRoleRequest, VerifyPermissionRequest } from './auth/validation.js';
 
 // ============================================================================
 // Session Window System Types

@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId, User } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
 
@@ -184,6 +184,13 @@ export interface Storage {
   set?(key: string, value: string, ttlSeconds?: number): Promise<void> | void;
   get?(key: string): Promise<string | null> | string | null;
   keys?(pattern: string): Promise<string[]> | string[];
+
+  // User management
+  users?: Map<UserId, User>; // Memory only
+  getUser(userId: UserId): User | undefined | Promise<User | undefined>;
+  setUser(user: User): void | Promise<void>;
+  deleteUser(userId: UserId): void | Promise<void>;
+  getUsersByRole(role: string): User[] | Promise<User[]>;
 }
 
 /**
