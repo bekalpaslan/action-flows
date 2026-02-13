@@ -23,6 +23,10 @@ templates/
 ├── git/                  # Git convention templates (2 formats)
 │   ├── TEMPLATE.commit-message.md
 │   └── TEMPLATE.pr-description.md
+├── registry/             # Registry entry templates (3 formats)
+│   ├── TEMPLATE.action-entry.md
+│   ├── TEMPLATE.flow-entry.md
+│   └── TEMPLATE.context-entry.md
 ├── TEMPLATE.agent.md     # Action agent definition template
 └── TEMPLATE.instructions.md  # Flow orchestration template
 ```
@@ -96,6 +100,26 @@ Each template includes:
 2. **TEMPLATE.pr-description.md** — Pull request description with summary, test plan, and attribution
 
 **Source:** CLAUDE.md, ORCHESTRATOR.md § Git Conventions
+
+---
+
+### Registry Entry Templates
+
+**Templates in `registry/` directory provide standard formats for adding entries to ActionFlows registries.**
+
+Each template covers:
+- Multiple format variations for each registry file
+- Field definitions and constraints
+- Validation rules and cross-registry checks
+- Examples from actual registry files
+
+**Entry Templates:**
+
+1. **TEMPLATE.action-entry.md** — 5 ACTIONS.md table formats (abstract, generic, stack-specific code/test, code-backed)
+2. **TEMPLATE.flow-entry.md** — 2 FLOWS.md formats (table entry + detailed H3 spec) with chain syntax guide
+3. **TEMPLATE.context-entry.md** — 3 CONTEXTS.md formats (routable, auto-target, manual-only)
+
+**Source:** Analysis of ACTIONS.md, FLOWS.md, CONTEXTS.md registry structures
 
 ---
 
