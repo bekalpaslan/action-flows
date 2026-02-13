@@ -259,6 +259,62 @@ record_count: [number of records/lines processed]
 validation_status: [valid|partial|invalid]
 ```
 
+### Log Type: mid-chain-evaluation
+
+Orchestrator logs at Gate 9 (step boundary evaluation):
+
+```yaml
+timestamp: ISO 8601
+orchestrator_gate: 9
+step_completed: {step number}
+action_type: {e.g., code, analyze, review}
+evaluation_phase: {triggered|analysis|decision}
+
+# Trigger check results:
+triggers:
+  signal: {fired|not-fired} → {description if fired}
+  pattern: {fired|not-fired} → {pattern if fired}
+  dependency: {fired|not-fired} → {dependency if fired}
+  quality: {fired|not-fired} → {threshold if fired}
+  redesign: {fired|not-fired} → {scope if fired}
+  reuse: {fired|not-fired} → {opportunity if fired}
+
+any_trigger_fired: {true|false}
+
+# Decision:
+decision: {continue|recompile|halt}
+reason: {why this decision}
+recompiled_steps: [{step numbers if recompile}]
+```
+
+**Rules:**
+- Log at DEBUG+ level (this is orchestrator reasoning)
+- Use concrete descriptions for triggers, not just true/false
+- If recompile, list affected step numbers
+- If halt, explain blocker
+
+**Example:**
+```yaml
+timestamp: 2026-02-13T15:30:45Z
+orchestrator_gate: 9
+step_completed: 2
+action_type: analyze
+evaluation_phase: decision
+
+triggers:
+  signal: fired → agent output mentions Format 6.1 parser incomplete
+  pattern: not-fired
+  dependency: not-fired
+  quality: not-fired
+  redesign: fired → scope expanded beyond chain
+  reuse: not-fired
+
+any_trigger_fired: true
+
+decision: halt
+reason: Format incomplete. Requires human decision on follow-up.
+```
+
 ### Trace Depth Convention
 
 All agents follow this trace depth pattern:

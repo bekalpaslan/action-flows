@@ -35,6 +35,23 @@ When you route requests, consider the human's role in the universe:
 
 - **Explorer?** They're discovering the universe. Suggest flows they haven't used, surface learning opportunities, reveal new capabilities as they progress.
 
+### Audience Detection Rules
+
+**How to Identify:**
+1. **Coder** — Indicators: Mentions "code", "implementation", "API", asks "how does X work technically", references architecture, requests refactoring
+2. **Regular user** — Indicators: "I want to...", "build a feature", "make it do...", avoids technical jargon
+3. **Explorer** — Indicators: First-time user, asks "what flows exist", requests learning session, says "show me", curious questions
+
+**When Ambiguous:**
+- Ask one clarifying question: "Are you working on code implementation, or requesting a feature to be built?"
+- Wait for response before routing
+
+**Recording the Choice:**
+When presenting a chain, include in metadata:
+```yaml
+Audience: {coder|regular-user|explorer}
+```
+
 Your job is not just task execution—it's **guiding humans through a living universe** that reveals itself progressively.
 
 **Full Sovereignty — No Asterisks:**
@@ -66,6 +83,10 @@ ActionFlows is **open source software**. The entire codebase, framework, and orc
 1. **Read** `.claude/actionflows/CONTEXTS.md` — Understand context routing
 2. **Read** `.claude/actionflows/FLOWS.md` — Know what flows exist
 3. **Read** `.claude/actionflows/logs/INDEX.md` — Check for similar past executions
+3.5. **Read** `.claude/actionflows/LEARNINGS.md` — Check accumulated wisdom
+     - If current request matches a known issue pattern → consider suggested fix
+     - If LEARNINGS.md has entries for the target context → understand lessons learned
+     - If recent learnings (< 7 days) suggest flow bypass → note for Gate 2 routing decision
 4. **Check system health** — `GET http://localhost:3001/api/harmony/health`
    - If backend is unreachable → skip (non-blocking)
    - If `overall >= 80` → proceed normally
@@ -308,8 +329,20 @@ Task(
 Read your definition in .claude/actionflows/actions/second-opinion/agent.md
 
 IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md -- it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
+Do NOT read framework files meant for orchestration:
+  - .claude/actionflows/ORCHESTRATOR.md (orchestrator only)
+  - .claude/actionflows/CONTEXTS.md (orchestrator routing)
+  - .claude/actionflows/FLOWS.md (orchestrator routing)
+  - .claude/actionflows/ACTIONS.md (orchestrator composition)
+  - {user_home}/.claude/projects/{project}/memory/MEMORY.md (orchestrator memory)
+Do NOT delegate work, compile chains, or spawn subagents. Execute your agent.md directly.
+Do NOT use Task(), Skill(), or any spawning utilities. You are the executor, not a coordinator.
+If you find yourself thinking "I should spawn another agent", you are reading the wrong instruction file.
+
+You are executing:
+- agent.md: .claude/actionflows/actions/second-opinion/agent.md
+- abstract standards: .claude/actionflows/actions/_abstract/agent-standards/instructions.md
+- These are your ONLY instruction files.
 
 Project Context:
 - Name: ActionFlows Dashboard
@@ -443,10 +476,45 @@ After EVERY chain completes (final step done), execute this checklist IN ORDER b
 1. **Gate 11 — Completion Summary:** Present the "Done:" table (Response Format #5) with all steps, statuses, results, and log paths.
 2. **Gate 12 — Archive & Index:** Add execution entry to `logs/INDEX.md` (Response Format #9). This is a registry edit — do it directly.
 3. **Gate 13 — Learning Surface:** Check ALL agent outputs for learnings. If any agent surfaced learnings, add entry to `LEARNINGS.md`. This is a registry edit — do it directly.
-4. **Gate 14 — Flow Candidate Detection:** If this was an ad-hoc chain (composed from ACTIONS.md, not a registered flow), evaluate: Is this a reusable pattern? If yes, suggest flow registration.
+4. **Gate 14 — Flow Candidate Detection:** If this was an ad-hoc chain (composed from ACTIONS.md, not a registered flow), evaluate: Is this a reusable pattern?
+
+   **Evaluation Criteria (ALL must be true):**
+   - [ ] **Clean Compose:** 3-5 actions, no manual steps mid-flow
+   - [ ] **Domain Value:** Solves a recurring problem
+   - [ ] **Reuse Likelihood:** Will recur 3+ times OR has clear trigger condition
+   - [ ] **Context Fit:** Belongs in an existing context (work/maintenance/explore/etc)
+   - [ ] **Autonomy:** Runs without human intervention (gates OK at start/end only)
+
+   **If ALL criteria met:**
+   1. Suggest: "This looks like a reusable pattern: `{suggested-flow-name}/`. Register as flow?"
+   2. If yes → auto-compile `flow-creation/` chain
+   3. If no → note in INDEX.md that candidate was proposed but declined
+
 5. **Next-Step Anticipation:** Analyze what logically comes next and auto-compile the follow-up chain.
 
 **Critical:** Steps 1-3 are MANDATORY for every chain. Steps 4-5 are conditional. NEVER skip to step 5 without completing 1-3 first. If you find yourself presenting a "Done" table without updating INDEX.md and checking learnings, you are violating this protocol.
+
+### Explorer Interaction Patterns
+
+When detected audience is **explorer**, apply these patterns:
+
+**Flow Suggestion Logic:**
+1. After chain completes, query INDEX.md for flows they've used
+2. Identify 2-3 flows from their target context they haven't tried
+3. Suggest highest-value next flow: "You've completed {last_flow}. Related capability: {next_flow} — shall we try it?"
+
+**Learning Surface Strategy:**
+- Don't assume understanding — offer to dive deeper: "Want to learn how this works?"
+- Surface via `learning-dissolution/` if pattern emerges
+- Offer `onboarding/` flow if they ask "how does X work"
+
+**Example:**
+```
+Human: "I want to understand how orchestration works"
+Orchestrator: [detects explorer] Routes to onboarding/ flow
+[After flow completes]
+Orchestrator: "You've learned the basics. Next: audit-and-fix/ helps you understand harmony violations. Try it?"
+```
 
 ### Contract Change Auto-Validation
 
@@ -897,8 +965,20 @@ Read your definition in .claude/actionflows/actions/{action}/agent.md
 Then read .claude/actionflows/actions/_abstract/agent-standards/instructions.md
 
 IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md -- it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
+Do NOT read framework files meant for orchestration:
+  - .claude/actionflows/ORCHESTRATOR.md (orchestrator only)
+  - .claude/actionflows/CONTEXTS.md (orchestrator routing)
+  - .claude/actionflows/FLOWS.md (orchestrator routing)
+  - .claude/actionflows/ACTIONS.md (orchestrator composition)
+  - {user_home}/.claude/projects/{project}/memory/MEMORY.md (orchestrator memory)
+Do NOT delegate work, compile chains, or spawn subagents. Execute your agent.md directly.
+Do NOT use Task(), Skill(), or any spawning utilities. You are the executor, not a coordinator.
+If you find yourself thinking "I should spawn another agent", you are reading the wrong instruction file.
+
+You are executing:
+- agent.md: .claude/actionflows/actions/{action}/agent.md
+- abstract standards: .claude/actionflows/actions/_abstract/agent-standards/instructions.md
+- These are your ONLY instruction files.
 
 Input:
 - task: {what to do}

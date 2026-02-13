@@ -14,18 +14,18 @@
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
-| bug-triage/ | Structured bug fix | analyze → code → test → review |
+| bug-triage/ | Structured bug fix | analyze → code → test → review → second-opinion/ |
 | code-and-review/ | Refactor and review code | code → review → second-opinion/ → (loop if needed) |
 | cleanup/ | Human-directed repository cleanup | analyze → plan → human gate → code → review → second-opinion/ → commit |
-| harmony-audit-and-fix/ | Remediate format drift and contract violations | analyze/harmony-violation → code/fix-parser OR code/update-orchestrator OR code/update-contract → review/harmony-fix → commit |
+| harmony-audit-and-fix/ | Remediate format drift and contract violations | analyze/harmony-violation → code/fix-parser OR code/update-orchestrator OR code/update-contract → review/harmony-fix → second-opinion/ → commit |
 | health-protocol/ | 7-phase immune response for contract violations | analyze (detect) → analyze (classify) → isolate (conditional) → diagnose → human gate → healing flow → verify-healing → analyze (learn) |
-| parser-update/ | Update backend parser for evolved formats | analyze/parser-gap → code/backend/parser → test/parser → review → commit |
+| parser-update/ | Update backend parser for evolved formats | analyze/parser-gap → code/backend/parser → test/parser → review → second-opinion/ → commit |
 
 ## explore
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
-| doc-reorganization/ | Reorganize documentation | analyze → human gate → plan → human gate → code → review |
+| doc-reorganization/ | Reorganize documentation | analyze → human gate → plan → human gate → code → review → second-opinion/ |
 | ideation/ | Structured ideation sessions | classify (human gate) → analyze → brainstorm → code (summary) |
 | story-of-us/ | Poetic narrative of project journey | analyze → narrate → human gate → (narrate → human gate)× |
 
@@ -33,12 +33,12 @@
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
-| audit-and-fix/ | Audit and remediate | audit → second-opinion/ → review |
-| test-coverage/ | Analyze test coverage and address gaps | test → analyze → code (conditional) |
+| audit-and-fix/ | Audit and remediate | audit → second-opinion/ → review → second-opinion/ |
+| test-coverage/ | Analyze test coverage and address gaps | test → analyze → code (conditional) → review → second-opinion/ |
 | backwards-harmony-audit/ | Audit contract harmony from frontend backwards | analyze×3 (parallel) → audit → second-opinion/ |
-| cli-integration-test/ | Systematic CLI integration testing | analyze → code → test → review |
-| e2e-chrome-mcp/ | Chrome MCP browser E2E test creation and execution | analyze → plan → human gate → code → chrome-mcp-test → review |
-| contract-index/ | Create/update behavioral contract specifications for components | analyze → plan → human gate → code×N → review → commit |
+| cli-integration-test/ | Systematic CLI integration testing | analyze → code → test → review → second-opinion/ |
+| e2e-chrome-mcp/ | Chrome MCP browser E2E test creation and execution | analyze → plan → human gate → code → chrome-mcp-test → review → second-opinion/ |
+| contract-index/ | Create/update behavioral contract specifications for components | analyze → plan → human gate → code×N → review → second-opinion/ → commit |
 | contract-compliance-audit/ | Audit contracts for inconsistencies, drift, and create compliance tests | analyze×2 (parallel) → plan → human gate → code×2 (parallel) → review → second-opinion/ → commit |
 
 ## settings
@@ -46,25 +46,25 @@
 | Flow | Purpose | Chain |
 |------|---------|-------|
 | onboarding/ | Interactive teaching session for ActionFlows | onboarding (single step, foreground) |
-| flow-creation/ | Create a new flow | plan → human gate → code → review |
+| flow-creation/ | Create a new flow | plan → human gate → code → review → second-opinion/ |
 | action-creation/ | Create a new action | plan → human gate → code → review → second-opinion/ |
-| action-deletion/ | Remove action safely | analyze → code → review |
+| action-deletion/ | Remove action safely | analyze → code → review → second-opinion/ |
 | template-creation/ | Create canonical framework templates | analyze → code/framework → review → second-opinion/ → commit |
 | framework-health/ | Validate structure | analyze |
-| contract-drift-fix/ | Update CONTRACT.md when formats evolve | analyze/contract-code-drift → code/update-contract → review/contract-update → commit |
+| contract-drift-fix/ | Update CONTRACT.md when formats evolve | analyze/contract-code-drift → code/update-contract → review/contract-update → second-opinion/ → commit |
 
 ## intel
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
-| intel-analysis/ | Create living dossiers of code domains | analyze → plan → human gate → code → review → commit |
+| intel-analysis/ | Create living dossiers of code domains | analyze → plan → human gate → code → review → second-opinion/ → commit |
 
 ## pm
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
 | planning/ | Structured roadmap review and prioritization | analyze → plan → human gate → code → commit |
-| learning-dissolution/ | Process accumulated learnings into doc updates, agent patches, template fixes | analyze → plan → human gate → code×N (parallel) → review → commit |
+| learning-dissolution/ | Process accumulated learnings into doc updates, agent patches, template fixes | analyze → plan → human gate → code×N (parallel) → review → second-opinion/ → commit |
 
 ---
 
