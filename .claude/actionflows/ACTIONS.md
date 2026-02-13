@@ -18,21 +18,21 @@ Abstract actions are **reusable behavior patterns** that agents are explicitly i
 
 These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 
-| Action | Purpose | Requires Input? | Required Inputs | Model | Contract Output? |
-|--------|---------|-----------------|-----------------|-------|------------------|
-| analyze/ | Codebase analysis | YES | aspect, scope | sonnet | YES (5.2) |
-| audit/ | Comprehensive audits | YES | type, scope | opus | NO |
-| brainstorm/ | Interactive ideation facilitation | YES | idea, classification, context | opus | YES (5.3) |
-| code/ | Implement code changes (generic) | YES | task, context | haiku | NO |
-| commit/ | Git commit + push | YES | summary, files | haiku | NO |
-| diagnose/ | Root cause analysis for violations | YES | gateId, violationPattern, gateTraces, severityLevel | sonnet | YES (5.4) |
-| isolate/ | Quarantine management (add/remove/list) | YES | subcommand, targetType, targetId, reason | haiku | YES (5.6) |
-| narrate/ | Write poetic narrative chapters | YES | chapterNumber, analysisPath | opus | NO |
-| onboarding/ | Facilitate interactive onboarding questionnaire | NO | (none) | opus | NO |
-| plan/ | Implementation planning | YES | requirements, context | sonnet | NO |
-| review/ | Review anything | YES | scope, type | sonnet | YES (5.1) |
-| test/ | Execute tests | YES | scope, type | haiku | NO |
-| verify-healing/ | Post-healing validation | YES | healingChainId, targetGateId, expectedScore, preHealingScore | sonnet | YES (5.5) |
+| Action | Purpose | Requires Input? | Required Inputs | Model | Contract Output? | Context Affinity | Capability Tags | Routing Hints |
+|--------|---------|-----------------|-----------------|-------|------------------|------------------|-----------------|---------------|
+| analyze/ | Codebase analysis | YES | aspect, scope | sonnet | YES (5.2) | explore, review, maintenance | metrics, pattern-detection, gap-analysis, drift-detection, inventory | `{"scope_preference": "multi-file", "min_confidence": "medium", "parallel_safe": true}` |
+| audit/ | Comprehensive audits | YES | type, scope | opus | NO | review, maintenance | comprehensive-audit, security-audit, violation-detection, remediation | `{"scope_preference": "multi-package", "min_confidence": "high", "parallel_safe": false}` |
+| brainstorm/ | Interactive ideation facilitation | YES | idea, classification, context | opus | YES (5.3) | work, explore | ideation, interactive-exploration, concept-generation, possibility-mapping | `{"scope_preference": "single-input", "min_confidence": "low", "parallel_safe": true}` |
+| code/ | Implement code changes (generic) | YES | task, context | haiku | NO | work, maintenance | implementation, refactoring, bug-fixing, feature-development | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
+| commit/ | Git commit + push | YES | summary, files | haiku | NO | work, maintenance | git-commit, version-control, change-recording | `{"scope_preference": "multi-package", "min_confidence": "medium", "parallel_safe": false}` |
+| diagnose/ | Root cause analysis for violations | YES | gateId, violationPattern, gateTraces, severityLevel | sonnet | YES (5.4) | maintenance, explore | root-cause-analysis, violation-diagnosis, issue-detection | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
+| isolate/ | Quarantine management (add/remove/list) | YES | subcommand, targetType, targetId, reason | haiku | YES (5.6) | review, maintenance | quarantine-management, issue-isolation, remediation | `{"scope_preference": "single-file", "min_confidence": "high", "parallel_safe": false}` |
+| narrate/ | Write poetic narrative chapters | YES | chapterNumber, analysisPath | opus | NO | explore | narrative-generation, documentation, storytelling, chapter-writing | `{"scope_preference": "multi-file", "min_confidence": "low", "parallel_safe": true}` |
+| onboarding/ | Facilitate interactive onboarding questionnaire | NO | (none) | opus | NO | explore, settings | interactive-onboarding, questionnaire, user-education, setup-facilitation | `{"scope_preference": "input-only", "min_confidence": "low", "parallel_safe": true}` |
+| plan/ | Implementation planning | YES | requirements, context | sonnet | NO | work, explore, maintenance | implementation-planning, requirements-analysis, design, architecture, task-breakdown | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
+| review/ | Review anything | YES | scope, type | sonnet | YES (5.1) | review, work, maintenance | quality-check, bug-detection, style-validation, contract-compliance | `{"scope_preference": "multi-file", "min_confidence": "low", "parallel_safe": false}` |
+| test/ | Execute tests | YES | scope, type | haiku | NO | work, maintenance, review | test-execution, test-suite-creation, coverage-analysis, test-debugging | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
+| verify-healing/ | Post-healing validation | YES | healingChainId, targetGateId, expectedScore, preHealingScore | sonnet | YES (5.5) | review, maintenance | post-healing-validation, gate-verification, healing-assessment | `{"scope_preference": "multi-package", "min_confidence": "high", "parallel_safe": true}` |
 
 **Contract Output Column:**
 - **YES (X.X)** — Action produces structured output defined in CONTRACT.md (format number shown)
@@ -46,18 +46,18 @@ See `.claude/actionflows/CONTRACT.md` for format specifications.
 
 **Prefer these over generic `code/` when the target stack is known.**
 
-| Action | Stack | Required Inputs | Model |
-|--------|-------|-----------------|-------|
-| `code/backend/` | Express 4.18 + TypeScript + Zod | task, context | haiku |
-| `code/frontend/` | React 18.2 + Vite 5 + Electron 28 | task, context | haiku |
+| Action | Stack | Required Inputs | Model | Context Affinity | Capability Tags | Routing Hints |
+|--------|-------|-----------------|-------|------------------|-----------------|---------------|
+| `code/backend/` | Express 4.18 + TypeScript + Zod | task, context | haiku | work, maintenance | implementation, refactoring, bug-fixing, backend-architecture | `{"scope_preference": "multi-file", "min_confidence": "high", "stack_specific": "backend"}` |
+| `code/frontend/` | React 18.2 + Vite 5 + Electron 28 | task, context | haiku | work, maintenance | implementation, refactoring, bug-fixing, react-components | `{"scope_preference": "multi-file", "min_confidence": "high", "stack_specific": "frontend"}` |
 
 ## Stack-Specific Test Actions
 
 **Prefer these over generic `test/` when the test framework is known.**
 
-| Action | Stack | Required Inputs | Model |
-|--------|-------|-----------------|-------|
-| `test/playwright/` | Playwright E2E (browser tests) | target, mode, browser | sonnet |
+| Action | Stack | Required Inputs | Model | Context Affinity | Capability Tags | Routing Hints |
+|--------|-------|-----------------|-------|------------------|-----------------|---------------|
+| `test/playwright/` | Playwright E2E (browser tests) | target, mode, browser | sonnet | work, maintenance, review | browser-testing, e2e-testing, ui-testing, playwright-automation | `{"scope_preference": "multi-file", "min_confidence": "high", "stack_specific": "frontend"}` |
 
 ## Code-Backed Actions
 
@@ -67,9 +67,9 @@ See `.claude/actionflows/CONTRACT.md` for format specifications.
 - **Generic Actions:** Pure Claude instructions. Claude performs all logic and produces the output.
 - **Code-Backed Actions:** Claude spawns and orchestrates code from packages/. The heavy lifting happens in the package.
 
-| Action | Purpose | Code Package | Required Inputs | Model |
-|--------|---------|--------------|-----------------|-------|
-| second-opinion/ | Ollama critique of agent output | packages/second-opinion/ | actionType, claudeOutputPath, originalInput | haiku |
+| Action | Purpose | Code Package | Required Inputs | Model | Context Affinity | Capability Tags | Routing Hints |
+|--------|---------|--------------|-----------------|-------|------------------|-----------------|---------------|
+| second-opinion/ | Ollama critique of agent output | packages/second-opinion/ | actionType, claudeOutputPath, originalInput | haiku | review, explore | critique, quality-assessment, ollama-evaluation, alternative-perspective | `{"scope_preference": "single-input", "min_confidence": "low", "parallel_safe": true}` |
 
 ## Action Modes
 

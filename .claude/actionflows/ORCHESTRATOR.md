@@ -838,9 +838,19 @@ Gate Contracts above define WHAT (I/O/Trace). This guide defines HOW to cross ea
 
 **Gate 4: Compile Chain**
 - Read FLOWS.md for matching flow
-- If no flow → compose from ACTIONS.md
+- If no flow → consult ROUTING_RULES.md (Phase 1 enhancement):
+  1. Filter rules by context (from Gate 2 routing)
+  2. Score rules using routing algorithm: `packages/shared/src/routing/routingAlgorithm.ts`
+  3. Select highest-scoring action that meets confidence threshold
+  4. Log routing decision: rule_id, score, confidence, rationale
 - Build chain table: #, Action, Model, Inputs, Waits For, Status
 - Evaluate: Is this a flow candidate? If yes, note for Gate 14
+
+**Routing Algorithm Reference:**
+- Scoring: `(keyword_match * 0.5) + (scope_match * 0.3) + (priority / 100)`
+- Confidence thresholds: high=0.8, medium=0.5, low=0.0
+- Routing logs saved to: `.claude/actionflows/logs/routing/gate-4-decisions.log`
+- See ROUTING_RULES.md and ROUTING_METADATA.md for complete specifications
 
 **Gate 5: Present Chain**
 - Output Format 1.1 (Chain Compilation Table)
