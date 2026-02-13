@@ -2,10 +2,14 @@
  * RegionStar - Custom ReactFlow node for Living Universe regions
  *
  * Renders a glowing star representing a workbench region in the cosmic map.
- * Features layer-based coloring, fog of war states, and glow intensity.
+ * Features layer-based coloring, fog of war states, glow intensity, and
+ * dynamic color evolution via WebSocket events.
+ *
+ * GAP-3: Color Shift — Applies evolved color from universe:evolution_tick events
+ * GAP-4: Glow Intensity — Dynamic brightness with smooth transitions
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import type { RegionId, WorkbenchId, ColorShift, HealthMetrics, StepStartedEvent, StepCompletedEvent } from '@afw/shared';
 import { FogState, mapActionToRegion } from '@afw/shared';
 import { Handle, Position, type NodeProps } from 'reactflow';
@@ -14,6 +18,23 @@ import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import '../../styles/cosmic-tokens.css';
 import '../../styles/region-themes.css';
 import './RegionStar.css';
+
+/**
+ * Payload structure for universe:evolution_tick WebSocket events
+ */
+interface EvolutionTickPayload {
+  universeId: string;
+  tick: number;
+  regionUpdates: Array<{
+    regionId: string;
+    colorShift: ColorShift;
+    glowIntensity: number;
+  }>;
+  bridgeUpdates: Array<{
+    bridgeId: string;
+    strength: number;
+  }>;
+}
 
 export interface RegionStarData {
   regionId: RegionId;
@@ -35,6 +56,14 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
   const [showBurst, setShowBurst] = useState(false);
   const prevFogStateRef = useRef<FogState>(data.fogState);
   const autoRevertTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // GAP-3 & GAP-4: Dynamic state from universe:evolution_tick events
+  const [evolvedColorShift, setEvolvedColorShift] = useState<ColorShift | null>(null);
+  const [evolvedGlowIntensity, setEvolvedGlowIntensity] = useState<number | null>(null);
+
+  // Use evolved values if available, otherwise fall back to props
+  const activeColorShift = evolvedColorShift ?? data.colorShift;
+  const activeGlowIntensity = evolvedGlowIntensity ?? data.glowIntensity;
 
   // Watch for fog state changes (HIDDEN → REVEALED)
   useEffect(() => {
@@ -117,6 +146,44 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
     };
   }, [ws, data.regionId]);
 
+  // GAP-3 & GAP-4: Subscribe to universe:evolution_tick for color/glow updates
+  useEffect(() => {
+    if (!ws.onEvent) return;
+
+    const handleEvolutionTick = (event: { type: string; payload?: EvolutionTickPayload }) => {
+      if (event.type !== 'universe:evolution_tick') return;
+      if (!event.payload?.regionUpdates) return;
+
+      // Find update for this region
+      const regionUpdate = event.payload.regionUpdates.find(
+        (update) => update.regionId === data.regionId
+      );
+
+      if (regionUpdate) {
+        // GAP-3: Update color shift with validation
+        if (regionUpdate.colorShift &&
+            typeof regionUpdate.colorShift.currentColor === 'string' &&
+            typeof regionUpdate.colorShift.baseColor === 'string' &&
+            typeof regionUpdate.colorShift.saturation === 'number' &&
+            typeof regionUpdate.colorShift.temperature === 'number') {
+          setEvolvedColorShift(regionUpdate.colorShift);
+        }
+
+        // GAP-4: Update glow intensity with bounds validation
+        if (typeof regionUpdate.glowIntensity === 'number' &&
+            regionUpdate.glowIntensity >= 0 &&
+            regionUpdate.glowIntensity <= 1) {
+          setEvolvedGlowIntensity(regionUpdate.glowIntensity);
+        }
+      }
+    };
+
+    const unsubscribe = ws.onEvent(handleEvolutionTick as (event: unknown) => void);
+    return () => {
+      unsubscribe();
+    };
+  }, [ws, data.regionId]);
+
   const handleClick = () => {
     if (isRegionAccessible(data.regionId)) {
       navigateToRegion(data.regionId);
@@ -140,8 +207,19 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
       ? 0.35
       : 1.0;
 
-  // Glow intensity affects filter brightness
-  const glowFilter = `brightness(${1 + data.glowIntensity * 0.3})`;
+  // GAP-4: Glow intensity affects filter brightness with temperature modifier
+  // Temperature adds warmth (0.0 = cool/blue shift, 1.0 = warm/orange shift)
+  const temperatureModifier = activeColorShift.temperature * 0.1;
+  const glowFilter = `brightness(${1 + activeGlowIntensity * 0.3 + temperatureModifier})`;
+
+  // GAP-3: CSS custom properties for evolved color
+  const evolvedColorStyle = useMemo(() => ({
+    '--star-evolved-color': activeColorShift.currentColor,
+    '--star-base-color': activeColorShift.baseColor,
+    '--star-saturation': activeColorShift.saturation,
+    '--star-temperature': activeColorShift.temperature,
+    '--star-glow-intensity': activeGlowIntensity,
+  } as React.CSSProperties), [activeColorShift, activeGlowIntensity]);
 
   // Determine if clickable
   const isClickable = data.fogState === FogState.REVEALED;
@@ -171,6 +249,7 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
       } : undefined}
       title={`${data.label} (${data.layer})`}
       style={{
+        ...evolvedColorStyle,
         opacity,
         filter: glowState === 'active' ? glowFilter : undefined,
         cursor: isClickable ? 'pointer' : 'not-allowed',
@@ -192,7 +271,7 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
           className="region-star__glow"
           data-testid="region-glow"
           style={{
-            opacity: data.glowIntensity,
+            opacity: activeGlowIntensity,
           }}
         />
 

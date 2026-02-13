@@ -1,28 +1,76 @@
 /**
  * TraceRenderer Styles
  *
- * Styles for trace particle visualization and heat glow effects
+ * Styles for trace particle visualization and heat glow effects.
+ * Supports prefers-reduced-motion for accessibility.
  */
 
+/* Container with CSS containment for performance */
+.trace-renderer {
+  contain: layout paint;
+}
+
+/* Heat glow overlay with pulsing animation */
 .trace-heat-glow {
-  filter: blur(15px);
+  /* Base filter handled inline for dynamic blur scaling */
   animation: pulse-heat 2s ease-in-out infinite;
+  will-change: opacity;
+}
+
+/* Static heat glow for reduced motion */
+.trace-heat-glow--static {
+  animation: none;
+  filter: blur(15px);
 }
 
 @keyframes pulse-heat {
   0%, 100% {
-    opacity: 0.1;
+    opacity: 0.15;
   }
   50% {
-    opacity: 0.3;
+    opacity: 0.35;
   }
 }
 
+/* Trace particles with fade animation */
 .trace-particle {
-  filter: blur(1px);
-  animation: fade-particle 10s linear forwards;
+  filter: blur(0.5px);
+  will-change: opacity, transform;
+  /* Animation handled by useMemo for performance - static render */
+  transition: opacity 0.5s ease-out;
 }
 
+/* Activity indicator for reduced motion mode */
+.trace-activity-indicator {
+  filter: blur(2px);
+}
+
+/* Reduced motion: disable all animations */
+@media (prefers-reduced-motion: reduce) {
+  .trace-heat-glow {
+    animation: none;
+    /* Use static opacity for reduced motion */
+    opacity: 0.25 !important;
+  }
+
+  .trace-particle {
+    animation: none;
+    /* Static particles without transition */
+    transition: none;
+  }
+
+  .trace-renderer--reduced-motion .trace-heat-glow {
+    /* Ensure static state for reduced motion container */
+    filter: blur(15px);
+  }
+}
+
+/* High heat level emphasis (applied via inline styles, but base class here) */
+.trace-heat-glow[data-heat="high"] {
+  animation-duration: 1.5s;
+}
+
+/* Legacy fade animation (kept for compatibility) */
 @keyframes fade-particle {
   0% {
     opacity: 1;

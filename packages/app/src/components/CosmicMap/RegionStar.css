@@ -12,7 +12,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.3s ease, filter 0.3s ease;
+  /* GAP-3 & GAP-4: Smooth transitions for color and glow changes */
+  transition:
+    opacity 0.3s ease,
+    filter 0.2s ease,
+    --star-evolved-color 0.3s ease,
+    --star-glow-intensity 0.2s ease;
+}
+
+/* Reduced motion: disable transitions */
+@media (prefers-reduced-motion: reduce) {
+  .region-star {
+    transition: none;
+  }
 }
 
 /* Star core container */
@@ -36,9 +48,15 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--cosmic-star-glow) 0%, transparent 70%);
+  /* GAP-3: Use evolved color if available, fallback to cosmic-star-glow */
+  background: radial-gradient(
+    circle,
+    var(--star-evolved-color, var(--cosmic-star-glow)) 0%,
+    transparent 70%
+  );
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  /* GAP-4: Smooth transitions for glow changes */
+  transition: opacity 0.2s ease, background 0.3s ease;
   /* GPU optimization for animations */
   will-change: transform, opacity;
 }
@@ -50,8 +68,11 @@
   height: 16px;
   border-radius: 50%;
   background: var(--cosmic-star-core);
-  box-shadow: 0 0 8px var(--cosmic-star-glow);
+  /* GAP-3: Use evolved color for core glow */
+  box-shadow: 0 0 8px var(--star-evolved-color, var(--cosmic-star-glow));
   z-index: 1;
+  /* GAP-4: Smooth transition for glow changes */
+  transition: box-shadow 0.3s ease;
 }
 
 /* Layer-based coloring */
@@ -457,5 +478,18 @@
     to {
       opacity: 0;
     }
+  }
+
+  /* GAP-3 & GAP-4: Disable transitions for color/glow changes */
+  .region-star {
+    transition: none;
+  }
+
+  .region-star__glow {
+    transition: none;
+  }
+
+  .region-star__center {
+    transition: none;
   }
 }

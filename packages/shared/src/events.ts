@@ -681,7 +681,8 @@ export interface EvolutionTickEvent extends BaseEvent {
   // Parsed fields (nullable)
   details?: {
     colorDeltas?: Record<string, ColorShiftDelta> | null;
-    traceDeltas?: Record<string, TraceIncrement> | null;
+    traceDeltas?: Record<string, { strengthIncrement: number; heatLevel: number }> | null;
+    glowIntensities?: Record<string, number> | null;
     regionsActive?: RegionId[] | null;
     bridgesTraversed?: EdgeId[] | null;
   } | null;
