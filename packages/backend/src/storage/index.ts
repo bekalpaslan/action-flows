@@ -1,4 +1,4 @@
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId, User } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, UserId, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId, User, StepNumber, ChainStep } from '@afw/shared';
 import { storage as memoryStorage } from './memory.js';
 import { createRedisStorage } from './redis.js';
 
@@ -48,7 +48,7 @@ export interface Storage {
   addChain(sessionId: SessionId, chain: Chain): void | Promise<void>;
   getChains(sessionId: SessionId): Chain[] | Promise<Chain[]>;
   getChain(chainId: ChainId): Chain | undefined | Promise<Chain | undefined>;
-  setChainStep?(chainId: ChainId, stepNumber: any, step: any): void | Promise<void>;
+  setChainStep?(chainId: ChainId, stepNumber: StepNumber, step: ChainStep): void | Promise<void>;
 
   // Commands queue per session
   commandsQueue?: Map<SessionId, CommandPayload[]>; // Memory only
