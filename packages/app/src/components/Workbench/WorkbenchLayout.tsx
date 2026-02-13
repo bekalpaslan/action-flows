@@ -26,6 +26,7 @@ import { RespectStar } from '../Stars/RespectStar/RespectStar';
 import { StoryStar } from '../Stars/StoryStar/StoryStar';
 import { CoverageTool } from '../Tools/CoverageTool/CoverageTool';
 import { useSessionArchive } from '../../hooks/useSessionArchive';
+import { HealthWidget } from '../HealthWidget';
 import {
   type WorkbenchId,
   type SessionId,
@@ -279,14 +280,18 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   // Enable keyboard shortcuts for chat window
   useChatKeyboardShortcuts();
 
-  // Feature flag for cosmic map
+  // Feature flags for cosmic map and classic mode
   const cosmicMapEnabled = useFeatureFlagSimple('COSMIC_MAP_ENABLED');
+  const classicMode = useFeatureFlagSimple('CLASSIC_DASHBOARD_MODE');
+
+  // Update initial view mode logic to respect classic mode
+  const effectiveCosmicMapEnabled = cosmicMapEnabled && !classicMode;
 
   // View mode state: 4-state FSM for zoom transitions
   // 'cosmic-map' -> 'zooming-in' -> 'region-focus' -> 'zooming-out' -> 'cosmic-map'
   type ViewMode = 'cosmic-map' | 'zooming-in' | 'region-focus' | 'zooming-out' | 'workbench';
   const [viewMode, setViewMode] = useState<ViewMode>(
-    cosmicMapEnabled ? 'cosmic-map' : 'workbench'
+    effectiveCosmicMapEnabled ? 'cosmic-map' : 'workbench'
   );
 
   // Track AppSidebar collapse state for layout adjustment
@@ -684,11 +689,11 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
 
       <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`} data-testid="layout-wrapper">
         {/* Cosmic Map View + Zooming In/Out states */}
-        {cosmicMapEnabled && (viewMode === 'cosmic-map' || viewMode === 'zooming-in' || viewMode === 'zooming-out') ? (
+        {effectiveCosmicMapEnabled && (viewMode === 'cosmic-map' || viewMode === 'zooming-in' || viewMode === 'zooming-out') ? (
           <div className="workbench-dashboard" style={{ flex: 1 }} data-testid="content-area">
             <CosmicMap visible={viewMode === 'cosmic-map'} zooming={viewMode === 'zooming-in' || viewMode === 'zooming-out'} />
           </div>
-        ) : cosmicMapEnabled && viewMode === 'region-focus' ? (
+        ) : effectiveCosmicMapEnabled && viewMode === 'region-focus' ? (
           /* Region Focus View - Dual-panel with workbench + chat */
           <div className="workbench-dashboard" style={{ flex: 1 }} data-testid="content-area">
             <RegionFocusView
@@ -699,12 +704,12 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
             />
           </div>
         ) : (
-          /* Workbench View (legacy mode when cosmic map disabled) */
+          /* Workbench View (legacy mode when cosmic map disabled or classic mode enabled) */
           <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} data-testid="content-area">
             <main id="main-content" className="workbench-main with-sidebar" role="main">
               <div className={`workbench-content ${transitionClass}`}>
-                {/* Return to Universe button (visible when cosmic map is enabled) */}
-                {cosmicMapEnabled && (
+                {/* Return to Universe button (visible when cosmic map is enabled and not in classic mode) */}
+                {effectiveCosmicMapEnabled && (
                   <button
                     className="workbench-layout__return-to-universe"
                     onClick={handleReturnToUniverse}
@@ -732,6 +737,12 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
           )}
         </SlidingChatWindow>
       </div>
+
+      {/* Global Health Widget - visible in all views (cosmic-map, region-focus, workbench) */}
+      <HealthWidget
+        sessionId={activeSessionId ?? null}
+        position="bottom-right"
+      />
 
       {/* BottomControlPanel removed in Phase 2 - functionality moved to ConversationPanel + SmartPromptLibrary */}
     </div>

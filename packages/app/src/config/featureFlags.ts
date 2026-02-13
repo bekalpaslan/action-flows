@@ -16,6 +16,8 @@ export interface FeatureFlags {
   SPARK_ANIMATION_ENABLED: boolean;
   /** Enable evolution mechanics (region color shift, trace accumulation) (Phase 6) */
   EVOLUTION_ENABLED: boolean;
+  /** Enable Classic Dashboard Mode (traditional sidebar navigation) */
+  CLASSIC_DASHBOARD_MODE: boolean;
 }
 
 export const DEFAULT_FLAGS: FeatureFlags = {
@@ -24,6 +26,7 @@ export const DEFAULT_FLAGS: FeatureFlags = {
   FOG_OF_WAR_ENABLED: true,
   SPARK_ANIMATION_ENABLED: true,
   EVOLUTION_ENABLED: true,
+  CLASSIC_DASHBOARD_MODE: false,
 };
 
 const STORAGE_KEY = 'afw-feature-flags';

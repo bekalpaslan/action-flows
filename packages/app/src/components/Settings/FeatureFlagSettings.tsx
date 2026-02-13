@@ -16,18 +16,6 @@ export function FeatureFlagSettings() {
     updateFlag(key, !flags[key]);
   };
 
-  const handleSwitchToClassic = () => {
-    if (
-      confirm(
-        'Switch to classic mode? This will disable the cosmic map and use the traditional sidebar navigation. You can re-enable it anytime from this settings page.'
-      )
-    ) {
-      updateFlag('COSMIC_MAP_ENABLED', false);
-      // Reload to apply changes
-      window.location.reload();
-    }
-  };
-
   const handleResetFlags = () => {
     if (confirm('Reset all feature flags to defaults? This will reload the page.')) {
       resetToDefaults();
@@ -117,12 +105,29 @@ export function FeatureFlagSettings() {
             onChange={() => handleToggle('EVOLUTION_ENABLED')}
           />
         </div>
+
+        <div className="flag-item">
+          <div className="flag-info">
+            <label htmlFor="classic-dashboard-mode">Classic Dashboard Mode</label>
+            <span className="flag-description">
+              Switch to traditional sidebar navigation instead of cosmic map.
+            </span>
+          </div>
+          <input
+            id="classic-dashboard-mode"
+            type="checkbox"
+            checked={flags.CLASSIC_DASHBOARD_MODE}
+            onChange={() => {
+              const newClassicMode = !flags.CLASSIC_DASHBOARD_MODE;
+              updateFlag('CLASSIC_DASHBOARD_MODE', newClassicMode);
+              // Also toggle COSMIC_MAP_ENABLED inversely
+              updateFlag('COSMIC_MAP_ENABLED', !newClassicMode);
+            }}
+          />
+        </div>
       </section>
 
       <section className="flag-actions">
-        <button className="btn btn-danger" onClick={handleSwitchToClassic}>
-          Switch to Classic Mode
-        </button>
         <button className="btn btn-secondary" onClick={handleResetFlags}>
           Reset to Defaults
         </button>
