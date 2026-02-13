@@ -162,6 +162,7 @@ See Input Contract above for input parameters.
    - **Error handling:** Are errors caught? Are async operations properly awaited? Missing try/catch?
    - **Security:** Any injection risks? Exposed secrets? Missing auth/validation? Unsafe WebSocket handling?
    - **Performance:** Unnecessary re-renders (React)? Missing useMemo/useCallback? N+1 storage queries? Unbounded data?
+   - **Deployment paths:** Are file paths deployment-safe? Absolute paths hardcoded? Assumes specific OS? Check import paths resolve correctly across packages in monorepo.
    - **TypeScript:** Proper types used? No `any`? Branded IDs used for domain types?
 4. Produce verdict: **APPROVED** or **NEEDS_CHANGES**
 5. List findings with: file path, line number, severity (critical/high/medium/low), description, fix suggestion
@@ -178,6 +179,21 @@ If the orchestrator provided `mode: review-and-fix`:
 **Flag for human:** architecture changes, feature design, API contract changes, component restructuring
 
 If `mode` not provided or is `review-only`, skip this step.
+
+### Severity Criteria
+
+Use these criteria when assigning severity levels to findings:
+
+- **CRITICAL:** Security vulnerability exploitable by attacker, data loss risk, system crash, auth bypass
+- **HIGH:** Significant bug affecting core functionality, major performance degradation, security weakness
+- **MEDIUM:** Incorrect behavior in edge cases, minor performance issue, maintainability concern
+- **LOW:** Code style inconsistency, missing documentation, magic numbers, minor cleanup opportunities
+
+**Examples:**
+- Session IDs using sequential integers instead of UUIDs → CRITICAL (predictable security token)
+- Missing await on async function → HIGH (race condition, incorrect behavior)
+- Using array iteration instead of Map lookup → MEDIUM (performance suboptimal but functional)
+- Magic number 3600000 instead of named constant → LOW (readability, no functional impact)
 
 3. Generate Output
 

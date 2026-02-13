@@ -12,7 +12,7 @@
 - **Fix Options:**
   1. Add `mkdir -p` (or `fs.mkdir recursive`) inside the CLI before writing output
   2. Harden `create-log-folder` to verify directory exists before passing path to CLI
-- **Status:** Open
+- **Status:** Closed (dissolved) — `packages/second-opinion/src/cli.ts` has `mkdir(dirname(args.outputPath), { recursive: true })` before writeFile
 
 ### L002: Deferred Field Implementation Creates Silent Behavior Gaps
 - **Date:** 2026-02-09
@@ -20,7 +20,7 @@
 - **Issue:** Conversion logic in `useCustomPromptButtons` hardcodes `contexts: ['general']` without documenting the deferral, making the gap invisible to future developers
 - **Root Cause:** Types and backend schema were implemented for `contextPatterns`, but the hook silently hardcoded a fallback instead of gracefully handling the missing UI input
 - **Fix:** When deferring UI for optional fields, add explicit `// TODO: Implement {field} conversion when UI is added` at each hardcoded fallback site
-- **Status:** Open
+- **Status:** Closed (dissolved) — Generic pattern documented in MEMORY.md § Spawn Prompt Discipline
 
 ### L003: Bundled Commits Obscure Feature Traceability
 - **Date:** 2026-02-09
@@ -84,7 +84,7 @@
 - **Issue:** Analysis agent generated a failure manifest with contract paths that no longer matched the codebase (contracts had been reorganized into subdirectories). Batch A agent found 0 of 9 referenced contracts at the specified paths and was blocked.
 - **Root Cause:** Manifest was generated at analysis time but contract directory structure had been refactored. No validation step between manifest generation and batch dispatch.
 - **Fix:** Future: Add path validation to manifest generation (verify all referenced files exist). Or have code agents glob for contracts by name rather than relying on absolute paths.
-- **Status:** Open (pattern documented, no code fix yet)
+- **Status:** Closed (dissolved) — `actions/analyze/agent.md` § Path Validation now requires exist checks on manifest paths before finalizing
 
 ### L011: Parallel Batch Agents May Collide on Same File
 - **Date:** 2026-02-10
@@ -132,7 +132,7 @@
 - **Issue:** Second opinion flagged a "missed issue" (returnTimeout cleanup) that was actually identified by the review as Finding #2, but with different severity interpretation. Review classified it as "non-critical" (low severity), second opinion argued it should be elevated as a "best practice improvement".
 - **Root Cause:** Review and second opinion use slightly different criteria for severity classification. Review categorized it as low-severity based on component lifecycle (WorkbenchLayout rarely unmounts), second opinion focused on potential memory leak pattern regardless of frequency.
 - **Fix:** For future reviews, clarify severity levels (CRITICAL/HIGH/MEDIUM/LOW) upfront in spawn prompts so second opinion uses consistent thresholds. Consider defining severity criteria in review/agent.md: CRITICAL=blocks production, HIGH=significant quality impact, MEDIUM=should fix, LOW=nice to have.
-- **Status:** Open (pattern documented, severity criteria definition pending)
+- **Status:** Closed (dissolved) — `actions/review/agent.md` § Severity Criteria now defines CRITICAL/HIGH/MEDIUM/LOW with explicit decision framework
 
 ### L017: Composite Feature Flag Pattern for Global + Local Control
 - **Date:** 2026-02-12
@@ -173,7 +173,7 @@
 - **Root Cause:** Hook assumes dashboard is actively managing sessions. Without a matching ActionFlows session in the backend, the endpoint 404s. The 30s long-poll also blocks Claude after every response.
 - **Fix:** Unwired `afw-input-inject` from `.claude/settings.json`. Re-enable when dashboard is actively creating and managing sessions (i.e., user starts sessions from the dashboard UI, not just CLI).
 - **Re-enable:** Add back to `Stop` hooks array in `.claude/settings.json` with `"timeout": 35`
-- **Status:** Open (hook exists, just not wired — waiting for dashboard session management)
+- **Status:** Closed (dissolved) — `.claude/settings.json` now documents hook status with re-enable condition
 
 ### L021: Contract Drift Reviews Need Field-Level Tracing, Not File-Level
 - **Date:** 2026-02-12
@@ -182,7 +182,7 @@
 - **Root Cause:** File-centric review methodology checks "were these 7 files modified correctly?" instead of "for each field touched, is it aligned across all 4 layers?" Files `chainFormats.ts` and `chainParser.ts` were never examined, leaving Format 1.x type/parser gaps undetected.
 - **Fix:** Update review/agent.md checklist: "For contract changes, use field-level verification matrix. For each modified field, verify alignment across: (1) CONTRACT.md spec, (2) TypeScript type definition, (3) Zod validation schema, (4) Parser implementation, (5) Regex pattern (if applicable)."
 - **Impact:** Claimed 100% alignment was actually ~93% (12 of 16 issues fixed, 4 missed)
-- **Status:** Open (review methodology needs enhancement)
+- **Status:** Closed (dissolved) — review/agent.md § Contract Change Verification already implements field-level tracing (lines 40-98)
 
 ### L022: Review Agents Should Verify Deployment Paths Before Marking Blockers
 - **Date:** 2026-02-13
@@ -191,7 +191,7 @@
 - **Root Cause:** Review agent assumed the only deployment path was full `tsc` package build, without testing alternative execution methods (`tsx`, `ts-node`, `esbuild`). The hooks package builds all files together, but individual scripts with only stdlib imports can run independently.
 - **Fix:** Add "deployment path verification" step to review/agent.md protocol for infrastructure that creates new entry points. Before marking compilation/runtime issues as blockers, test: (1) Direct execution via `tsx`/`ts-node`, (2) Standalone build via `esbuild`, (3) Dependencies on problematic sibling files. Document verified deployment path in review report.
 - **Impact:** False blockers waste human review time and create incorrect deployment sequencing. In this case, the hook was ready to deploy immediately, not after 2 prerequisite chains.
-- **Status:** Open (review methodology needs enhancement)
+- **Status:** Closed (dissolved) — `actions/review/agent.md` § step 3 now includes "Deployment paths" verification bullet
 
 ### L023: Immune System Architecture Maps to Biological Immunity (3-Layer Model)
 - **Date:** 2026-02-13
@@ -203,7 +203,7 @@
   3. **Healing Layer** (Gates 12-14, health-protocol, learning capture) → Immunological memory — fixes violations and prevents recurrence
 - **Application:** When adding new immune system features, classify them by layer. Gate validators → Detection. Agent standards → Prevention. Learning capture → Healing.
 - **Recommendation:** Document this 3-layer model in `docs/living/IMMUNE_SYSTEM.md` as the architectural foundation.
-- **Status:** Open (documentation pending)
+- **Status:** Closed (dissolved) — `.claude/actionflows/docs/living/IMMUNE_SYSTEM.md` created with 3-layer biological model, health metrics, and anti-patterns
 
 ### L024: Output Protection ≠ Input Protection — "Rebellious Instructions" Gap
 - **Date:** 2026-02-13
@@ -220,4 +220,4 @@
   3. Behavioral signature profiles (expected tool patterns per action type)
   4. Filesystem watcher (detect mid-session agent.md modifications)
 - **Impact:** 65% alignment on Element 7 ("detects rebellious instructions") — PRIMARY gap in vision alignment.
-- **Status:** Open (architectural gap, requires implementation chain)
+- **Status:** Escalated (architectural implementation) — Requires separate chain (5-7 steps, code changes to backend + orchestrator). Queued for future session.

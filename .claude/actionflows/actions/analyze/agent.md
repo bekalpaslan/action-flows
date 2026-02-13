@@ -136,6 +136,14 @@ If `mode` not provided or is `analyze-only`, skip this step.
 
 3. Generate Output
 
+### Path Validation
+
+When generating manifests with file paths:
+1. **Verify existence:** Use Read/Glob to confirm files exist before listing them
+2. **Use absolute paths:** All paths in manifests must be absolute (D:/ActionFlowsDashboard/...)
+3. **Check permissions:** Ensure files are readable (not locked, not in .gitignore)
+4. **Document missing:** If expected file not found, note in manifest with "MISSING" flag
+
 See Output Contract above. Write contract-compliant report to log folder.
 
 ---
