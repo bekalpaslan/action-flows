@@ -39,10 +39,10 @@ export interface ChainCompilationParsed {
 export interface ChainStepParsed {
   stepNumber: number;
   action: string; // e.g., "analyze/"
-  model: ModelString | null;
+  model: ModelString;
   keyInputs: string | null;
   waitsFor: string | null; // "--" or "#1,#2"
-  status: StatusString | null;
+  status: StatusString;
 }
 
 export interface StepDescription {

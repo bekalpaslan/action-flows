@@ -464,29 +464,27 @@ export type ContextRoutingValidated = z.infer<typeof ContextRoutingSchema>;
  * If schemas drift significantly from types, TypeScript compilation will fail.
  * Zero runtime cost — these are type-level only.
  *
- * NOTE: Some guards are commented out due to known drift in contract type definitions:
- * - ModelString in types.ts includes uppercase enum keys ('HAIKU') alongside lowercase values ('haiku')
- * - StatusString in types.ts includes uppercase variants that schemas don't accept
- * - ChainStepParsed.status and model are nullable in types but required in some usages
+ * NOTE: One guard remains disabled:
+ * - ChainStepParsed.nextStep type mismatch (number | string | null vs string | null)
  *
- * These need to be fixed by updating contract/types/*.ts to use only lowercase runtime values.
- * See drift analysis report for full details.
+ * All ModelString/StatusString uppercase drift issues have been resolved.
+ * See upstream type fixes in packages/shared/src/types.ts.
  */
 
 // Format 1.x: Chain Management
-// const _check_ChainCompilation: z.infer<typeof ChainCompilationSchema> = {} as ChainCompilationParsed; // Disabled: ModelString/StatusString uppercase drift
-// const _check_ChainExecutionStart: z.infer<typeof ChainExecutionStartSchema> = {} as ChainExecutionStartParsed; // Disabled: ModelString uppercase drift
-// const _check_ChainStatusUpdate: z.infer<typeof ChainStatusUpdateSchema> = {} as ChainStatusUpdateParsed; // Disabled: StatusString uppercase drift
-// const _check_ExecutionComplete: z.infer<typeof ExecutionCompleteSchema> = {} as ExecutionCompleteParsed; // Disabled: StatusString uppercase drift
+const _check_ChainCompilation: z.infer<typeof ChainCompilationSchema> = {} as ChainCompilationParsed;
+const _check_ChainExecutionStart: z.infer<typeof ChainExecutionStartSchema> = {} as ChainExecutionStartParsed;
+const _check_ChainStatusUpdate: z.infer<typeof ChainStatusUpdateSchema> = {} as ChainStatusUpdateParsed;
+const _check_ExecutionComplete: z.infer<typeof ExecutionCompleteSchema> = {} as ExecutionCompleteParsed;
 
 // Format 2.x: Step Lifecycle
 // const _check_StepCompletion: z.infer<typeof StepCompletionSchema> = {} as StepCompletionParsed; // Disabled: nextStep type mismatch (number | string | null vs string | null)
-// const _check_DualOutput: z.infer<typeof DualOutputSchema> = {} as DualOutputParsed; // Disabled: ModelString uppercase drift
+const _check_DualOutput: z.infer<typeof DualOutputSchema> = {} as DualOutputParsed;
 const _check_SecondOpinionSkip: z.infer<typeof SecondOpinionSkipSchema> = {} as SecondOpinionSkipParsed;
 
 // Format 3.x: Human Interaction
 const _check_HumanGate: z.infer<typeof HumanGateSchema> = {} as HumanGateParsed;
-// const _check_LearningSurface: z.infer<typeof LearningSurfaceSchema> = {} as LearningSurfaceParsed; // Disabled: ModelString uppercase drift
+const _check_LearningSurface: z.infer<typeof LearningSurfaceSchema> = {} as LearningSurfaceParsed;
 const _check_SessionStartProtocol: z.infer<typeof SessionStartProtocolSchema> = {} as SessionStartProtocolParsed;
 
 // Format 4.x: Registry & Metadata

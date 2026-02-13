@@ -9,6 +9,7 @@ import type {
   DualOutputParsed,
   SecondOpinionSkipParsed,
 } from '../types/stepFormats.js';
+import type { ModelString } from '../../types.js';
 import { StepPatterns } from '../patterns/stepPatterns.js';
 import { CONTRACT_VERSION } from '../version.js';
 import {
@@ -111,7 +112,7 @@ export function parseDualOutput(text: string): DualOutputParsed | null {
     stepNumber: stepCompleteMatch ? parseInt(stepCompleteMatch[1] ?? '0', 10) : null,
     action: headingMatch?.[1] || null,
     originalResult,
-    secondOpinionModel: secondOpinionLabelMatch?.[1] || null,
+    secondOpinionModel: (secondOpinionLabelMatch?.[1] || null) as ModelString | null,
     secondOpinionSummary,
     missedIssues: missedIssuesMatch ? parseInt(missedIssuesMatch[1] ?? '0', 10) : null,
     disagreements: disagreementsMatch ? parseInt(disagreementsMatch[1] ?? '0', 10) : null,

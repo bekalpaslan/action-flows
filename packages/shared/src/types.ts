@@ -202,7 +202,7 @@ export enum Status {
   SKIPPED = 'skipped',
 }
 
-export type StatusString = keyof typeof Status | 'pending' | 'in_progress' | 'completed' | 'failed' | 'skipped' | 'mixed';
+export type StatusString = 'pending' | 'in_progress' | 'completed' | 'failed' | 'skipped';
 
 /**
  * Model identifiers
@@ -213,7 +213,7 @@ export enum Model {
   OPUS = 'opus',
 }
 
-export type ModelString = keyof typeof Model | 'haiku' | 'sonnet' | 'opus';
+export type ModelString = 'haiku' | 'sonnet' | 'opus';
 
 /**
  * Source types for chains and events
@@ -224,7 +224,7 @@ export enum ChainSource {
   META_TASK = 'meta-task',
 }
 
-export type ChainSourceString = keyof typeof ChainSource | 'flow' | 'composed' | 'meta-task';
+export type ChainSourceString = 'flow' | 'composed' | 'meta-task';
 
 /**
  * Duration in milliseconds
@@ -268,7 +268,7 @@ export enum SessionState {
   ACTIVE = 'active',
 }
 
-export type SessionStateString = keyof typeof SessionState | 'idle' | 'awaiting_input' | 'receiving_input' | 'active';
+export type SessionStateString = 'idle' | 'awaiting_input' | 'receiving_input' | 'active';
 
 /**
  * Input prompt types
@@ -279,7 +279,7 @@ export enum PromptType {
   CHAIN_APPROVAL = 'chain_approval',
 }
 
-export type PromptTypeString = keyof typeof PromptType | 'binary' | 'text' | 'chain_approval';
+export type PromptTypeString = 'binary' | 'text' | 'chain_approval';
 
 /**
  * Freshness grades for temporal data aging

@@ -3,6 +3,8 @@
  * TypeScript interfaces for step execution formats
  */
 
+import type { ModelString } from '../../types.js';
+
 /**
  * Format 2.1: Step Completion Announcement
  * When produced: After each step completes
@@ -44,7 +46,7 @@ export interface DualOutputParsed {
   originalResult: string | null;
 
   /** Second opinion model name */
-  secondOpinionModel: string | null;
+  secondOpinionModel: ModelString | null;
 
   /** Second opinion summary */
   secondOpinionSummary: string | null;
