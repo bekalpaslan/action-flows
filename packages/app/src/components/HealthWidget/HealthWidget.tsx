@@ -11,6 +11,7 @@ interface HealthWidgetProps {
 export function HealthWidget({ sessionId, position = 'bottom-right' }: HealthWidgetProps) {
   const { health, loading, error, refresh } = useHarmonyHealth(sessionId);
   const [expanded, setExpanded] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
 
   // Auto-collapse after 30s of inactivity
@@ -42,10 +43,21 @@ export function HealthWidget({ sessionId, position = 'bottom-right' }: HealthWid
 
   const overallScore = health?.overall ?? 100;
   const colorClass = getHealthColor(overallScore);
+  const isCritical = overallScore < 50;
+  const needsAttention = overallScore < 80;
 
-  const copyToClipboard = (text: string) => {
+  const copyToClipboard = (text: string, message: string) => {
     navigator.clipboard.writeText(text);
+    setToastMessage(message);
+    setTimeout(() => setToastMessage(null), 2000);
   };
+
+  // Auto-show toast effect
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timer = setTimeout(() => setToastMessage(null), 2000);
+    return () => clearTimeout(timer);
+  }, [toastMessage]);
 
   if (loading && !health) {
     return (
@@ -72,18 +84,25 @@ export function HealthWidget({ sessionId, position = 'bottom-right' }: HealthWid
     <div className={`health-widget health-widget--${position}`} ref={widgetRef}>
       {!expanded ? (
         <button
-          className={`health-widget__compact health-widget__compact--${colorClass}`}
+          className={`health-widget__compact health-widget__compact--${colorClass} ${isCritical ? 'health-widget--critical' : ''}`}
           onClick={() => setExpanded(true)}
           title="Click to expand health details"
         >
           <span className="health-widget__score">{overallScore}%</span>
         </button>
       ) : (
-        <div className={`health-widget__expanded health-widget__expanded--${colorClass}`}>
+        <div className={`health-widget__expanded health-widget__expanded--${colorClass} ${isCritical ? 'health-widget--critical' : ''}`}>
           <div className="health-widget__header">
             <h4>Harmony Health</h4>
             <button className="health-widget__close" onClick={() => setExpanded(false)}>×</button>
           </div>
+
+          {needsAttention && (
+            <div className="health-widget__urgent">
+              <span className="health-widget__urgent-icon">⚠️</span>
+              <span>System needs attention</span>
+            </div>
+          )}
 
           <div className="health-widget__overall">
             <span className={`health-widget__badge health-widget__badge--${colorClass}`}>
@@ -114,15 +133,20 @@ export function HealthWidget({ sessionId, position = 'bottom-right' }: HealthWid
             <div className="health-widget__recommendations">
               <h5>Healing Actions</h5>
               {health.healingRecommendations.slice(0, 3).map((rec, idx) => (
-                <button
-                  key={idx}
-                  className="health-widget__recommendation"
-                  onClick={() => copyToClipboard(rec.suggestedFlow)}
-                  title="Click to copy flow command"
-                >
-                  <span className="health-widget__rec-icon">•</span>
-                  <span className="health-widget__rec-text">{rec.reason}</span>
-                </button>
+                <div key={idx} className="health-widget__recommendation">
+                  <div className="health-widget__rec-header">
+                    <span className="health-widget__rec-icon">💊</span>
+                    <span className="health-widget__rec-text">{rec.reason}</span>
+                  </div>
+                  <button
+                    className="health-widget__run-flow"
+                    onClick={() => copyToClipboard(rec.suggestedFlow, `Copied: ${rec.suggestedFlow}`)}
+                    title="Click to copy flow command to clipboard"
+                  >
+                    <span className="health-widget__run-icon">▶</span>
+                    <span className="health-widget__run-text">Run: {rec.suggestedFlow}</span>
+                  </button>
+                </div>
               ))}
             </div>
           )}
@@ -137,6 +161,12 @@ export function HealthWidget({ sessionId, position = 'bottom-right' }: HealthWid
               </span>
             )}
           </div>
+        </div>
+      )}
+
+      {toastMessage && (
+        <div className="health-widget__toast">
+          {toastMessage}
         </div>
       )}
     </div>

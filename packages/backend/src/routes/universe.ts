@@ -443,7 +443,29 @@ router.post('/sessions/:sessionId/region', writeLimiter, validateBody(sessionReg
       });
     }
 
-    await Promise.resolve(storage.setSessionRegion(sessionId as SessionId, regionId as RegionId));
+    // Check if this is a new session entering this region
+    const existingMapping = await Promise.resolve(storage.getSessionRegion(sessionId as SessionId));
+    const isNewVisit = existingMapping !== regionId;
+
+    // Use try-catch with rollback for atomic operation
+    try {
+      await Promise.resolve(storage.setSessionRegion(sessionId as SessionId, regionId as RegionId));
+
+      // Increment session count if this is a new visit to this region
+      if (isNewVisit) {
+        // Re-read region to avoid race condition in read-modify-write
+        const freshRegion = await Promise.resolve(storage.getRegion(regionId as RegionId));
+        if (freshRegion) {
+          freshRegion.sessionCount = (freshRegion.sessionCount || 0) + 1;
+          await Promise.resolve(storage.setRegion(freshRegion));
+          console.log(`[API] Region ${regionId} session count incremented to ${freshRegion.sessionCount}`);
+        }
+      }
+    } catch (error) {
+      // Rollback session mapping on failure
+      await Promise.resolve(storage.deleteSessionRegion(sessionId as SessionId));
+      throw error;
+    }
 
     console.log(`[API] Session ${sessionId} mapped to region ${regionId}`);
 

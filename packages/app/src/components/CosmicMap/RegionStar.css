@@ -140,22 +140,86 @@
   opacity: 0.8;
 }
 
-/* Fog states */
+/* ========================================
+   FOG OF WAR STATES (GAP-2)
+   ======================================== */
+
+/* HIDDEN state - completely undiscovered, invisible */
 .region-star.fog-hidden {
-  pointer-events: none;
+  display: none; /* Completely hidden until discovered */
 }
 
-.region-star.fog-hidden .region-star__label {
+/* FAINT state - outline visible, not yet accessible */
+.region-star.fog-faint {
   opacity: 0.3;
+  filter: blur(2px) grayscale(50%);
+  pointer-events: none; /* Can't click until revealed */
+  cursor: not-allowed;
 }
 
 .region-star.fog-faint .region-star__label {
   opacity: 0.6;
 }
 
+/* Question mark overlay for faint regions */
+.region-star.fog-faint .region-star__core::after {
+  content: '?';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text-secondary, #888);
+  z-index: 2;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+/* REVEALED state - fully discovered and accessible */
+.region-star.fog-revealed {
+  opacity: 1;
+  filter: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
 .region-star.fog-revealed:hover .region-star__glow {
   opacity: 1 !important;
   filter: brightness(1.2);
+}
+
+/* Revelation animation (FAINT → REVEALED transition) */
+.region-star.fog-revealed.revealing {
+  animation: star-reveal 0.5s ease-out;
+}
+
+@keyframes star-reveal {
+  from {
+    opacity: 0.3;
+    filter: blur(2px) grayscale(50%);
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    transform: scale(1);
+  }
+}
+
+/* Accessibility: Reduced motion for revelation */
+@media (prefers-reduced-motion: reduce) {
+  .region-star.fog-revealed.revealing {
+    animation: star-reveal-reduced 0.2s ease-out;
+  }
+
+  @keyframes star-reveal-reduced {
+    from {
+      opacity: 0.3;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }
 
 /* Selected state */

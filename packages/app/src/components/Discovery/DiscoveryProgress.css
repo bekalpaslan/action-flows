@@ -1,0 +1,114 @@
+/**
+ * DiscoveryProgress - Universe discovery progress indicator styles
+ */
+
+.discovery-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--panel-bg-base);
+  border: var(--panel-border-default);
+  border-radius: var(--panel-radius-md);
+  box-shadow: var(--shadow-sm), var(--panel-glow-default);
+  backdrop-filter: var(--glass-blur-md);
+  min-width: 200px;
+}
+
+.discovery-progress__label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.discovery-progress__bar-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.discovery-progress__bar {
+  flex: 1;
+  height: 8px;
+  background: var(--panel-bg-inset);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.discovery-progress__fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--cosmic-layer-platform) 0%,
+    var(--cosmic-layer-template) 25%,
+    var(--cosmic-layer-philosophy) 50%,
+    var(--cosmic-layer-physics) 75%,
+    var(--cosmic-layer-experience) 100%
+  );
+  transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+  box-shadow: 0 0 8px var(--cosmic-star-glow);
+  border-radius: 4px;
+}
+
+.discovery-progress__percentage {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  min-width: 40px;
+  text-align: right;
+}
+
+.discovery-progress__count {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Hover state */
+.discovery-progress:hover {
+  background: var(--panel-bg-hover);
+  box-shadow: var(--shadow-md), var(--panel-glow-default);
+}
+
+/* Animation for progress fill growth */
+@keyframes fill-grow {
+  from {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  to {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+.discovery-progress__fill {
+  animation: fill-grow 0.5s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .discovery-progress {
+    min-width: 150px;
+  }
+
+  .discovery-progress__label {
+    font-size: var(--text-xs);
+  }
+
+  .discovery-progress__percentage {
+    font-size: var(--text-xs);
+    min-width: 32px;
+  }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .discovery-progress__fill {
+    animation: none;
+    transition: width 0.2s ease;
+  }
+}
