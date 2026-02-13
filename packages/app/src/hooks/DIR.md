@@ -31,6 +31,7 @@
 - useKeyboardShortcuts.ts — exports: KeyboardShortcut, useKeyboardShortcuts, useSessionWindowKeyboardShortcuts
 - useNotificationGlow.ts — exports: GlowState, NotificationGlowContext, NotificationGlowProvider, NotificationInput, UseNotificationGlowReturn, default, registerSessionWorkbench, unregisterSessionWorkbench, useNotificationGlow, useNotificationGlowContext
 - useNotifications.ts — exports: NotificationOptions, NotificationUrgency, useNotifications
+- usePersonalities.ts — exports: UsePersonalitiesResult, usePersonalities
 - useProjects.ts — exports: UseProjectsReturn, useProjects
 - usePromptButtons.ts — exports: UsePromptButtonsOptions, UsePromptButtonsReturn, usePromptButtons
 - useReducedMotion.ts — exports: useReducedMotion

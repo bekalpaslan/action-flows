@@ -12,6 +12,7 @@ import { ChatWindowProvider } from './contexts/ChatWindowContext'
 import { VimNavigationProvider } from './contexts/VimNavigationContext'
 import { DiscussProvider } from './contexts/DiscussContext'
 import { NotificationGlowProvider } from './hooks/useNotificationGlow'
+import { DashboardCapabilityProvider } from './capabilities/DashboardCapabilityProvider'
 import { ToastProvider } from './contexts/ToastContext'
 import AppContent from './components/AppContent'
 import { CommandPalette } from './components/CommandPalette'
@@ -43,25 +44,27 @@ function App() {
       <FeatureFlagsProvider>
         <ToastProvider>
           <WebSocketProvider url="ws://localhost:3001/ws">
-            <AuthProvider>
-              <SessionProvider>
-                <WorkbenchProvider>
-                  <UniverseProvider>
-                    <DiscoveryProvider>
-                      <ChatWindowProvider>
-                        <DiscussProvider>
-                          <NotificationGlowProvider>
-                            <VimNavigationProvider>
-                              <AppWithVim />
-                            </VimNavigationProvider>
-                          </NotificationGlowProvider>
-                        </DiscussProvider>
-                      </ChatWindowProvider>
-                    </DiscoveryProvider>
-                  </UniverseProvider>
-                </WorkbenchProvider>
-              </SessionProvider>
-            </AuthProvider>
+            <DashboardCapabilityProvider>
+              <AuthProvider>
+                <SessionProvider>
+                  <WorkbenchProvider>
+                    <UniverseProvider>
+                      <DiscoveryProvider>
+                        <ChatWindowProvider>
+                          <DiscussProvider>
+                            <NotificationGlowProvider>
+                              <VimNavigationProvider>
+                                <AppWithVim />
+                              </VimNavigationProvider>
+                            </NotificationGlowProvider>
+                          </DiscussProvider>
+                        </ChatWindowProvider>
+                      </DiscoveryProvider>
+                    </UniverseProvider>
+                  </WorkbenchProvider>
+                </SessionProvider>
+              </AuthProvider>
+            </DashboardCapabilityProvider>
           </WebSocketProvider>
         </ToastProvider>
       </FeatureFlagsProvider>

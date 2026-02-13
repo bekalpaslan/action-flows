@@ -14,6 +14,11 @@ import {
   type WorkbenchId,
   DEFAULT_WORKBENCH_CONFIGS,
   ROUTABLE_WORKBENCHES,
+  type AgentPersonality,
+  type AgentTone,
+  type AgentSpeed,
+  type AgentRisk,
+  type AgentCommunicationStyle,
 } from '@afw/shared';
 
 // ============================================================================
@@ -154,6 +159,61 @@ export function calculateMatchScore(
 // ============================================================================
 
 /**
+ * User personality preferences for context-aware agent selection
+ * Phase 2 — Agent Personalities completion (Thread 5)
+ */
+export interface UserPersonalityPreference {
+  userId: string;
+  preferredTone?: AgentTone;
+  preferredSpeed?: AgentSpeed;
+  overrides?: Record<string, Partial<AgentPersonality>>; // Per-context overrides
+  updatedAt: string;
+}
+
+/**
+ * Get effective personality for an action in a context
+ *
+ * Applies personality preferences in this order:
+ * 1. Start with agent's own personality (from personalityParser)
+ * 2. Apply user overrides for this context if any
+ * 3. Apply global user preference as fallback
+ *
+ * @param actionType The action type (e.g., "code/backend")
+ * @param contextId The context ID (e.g., "work", "maintenance")
+ * @param basePersonality The agent's base personality
+ * @param userPrefs Optional user preferences
+ * @returns Effective personality after applying overrides
+ */
+export function getEffectivePersonality(
+  actionType: string,
+  contextId: string,
+  basePersonality: AgentPersonality,
+  userPrefs?: UserPersonalityPreference
+): AgentPersonality {
+  if (!userPrefs) {
+    return basePersonality;
+  }
+
+  // Start with base personality
+  const effective = { ...basePersonality };
+
+  // Apply global user preferences
+  if (userPrefs.preferredTone) {
+    effective.tone = userPrefs.preferredTone;
+  }
+  if (userPrefs.preferredSpeed) {
+    effective.speedPreference = userPrefs.preferredSpeed;
+  }
+
+  // Apply per-context overrides
+  if (userPrefs.overrides && userPrefs.overrides[contextId]) {
+    Object.assign(effective, userPrefs.overrides[contextId]);
+  }
+
+  return effective;
+}
+
+/**
  * Route a user request to the most appropriate workbench context
  *
  * Algorithm:
@@ -199,6 +259,17 @@ export function routeRequest(request: string): RoutingResult {
   }).sort((a, b) => b.score - a.score); // Sort descending by score
 
   const topMatch = contextScores[0];
+
+  // Safety check: If no contexts available, fallback to 'work'
+  if (!topMatch) {
+    return {
+      selectedContext: 'work',
+      confidence: 0,
+      alternativeContexts: [],
+      triggerMatches: [],
+      requiresDisambiguation: false,
+    };
+  }
 
   // Step 3: Apply confidence thresholds
   const { AUTO_ROUTE, DISAMBIGUATION } = ROUTING_THRESHOLDS;

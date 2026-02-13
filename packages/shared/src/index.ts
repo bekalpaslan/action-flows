@@ -465,7 +465,7 @@ export interface WebSocketMessage {
 export interface AgentTask {
   id: string;
   name: string;
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: 'pending' | 'in_progress' | 'completed' | 'failed';
   createdAt: number;
   updatedAt: number;
   result?: unknown;
@@ -525,3 +525,49 @@ export interface StoryMetadata {
 export interface Chapter extends ChapterMeta {
   content: string;
 }
+
+// ============================================================================
+// Phase 0: Inspiration Roadmap Types
+// ============================================================================
+export type {
+  SurfaceId,
+  SurfaceConfig,
+  SurfaceCapability,
+  SurfaceMessage,
+  ConnectedSurface,
+  SurfaceConnectionEvent,
+  SurfaceInput,
+} from './surfaceTypes.js';
+export type {
+  CapabilityId,
+  Capability,
+  CapabilityProvider,
+  CapabilityResult,
+  CapabilityStatus,
+  RegisteredCapability,
+  CapabilityInvocation,
+  CapabilityRegisterMessage,
+  CapabilityUnregisterMessage,
+  CapabilityInvokeMessage,
+  CapabilityResultMessage,
+  CapabilityErrorMessage,
+  CapabilityMessage,
+} from './capabilityTypes.js';
+export { toCapabilityId } from './capabilityTypes.js';
+export type { FlowHubFlowId, FlowHubEntry, FlowSource } from './flowHubTypes.js';
+export { toFlowHubFlowId } from './flowHubTypes.js';
+export type {
+  ArtifactId,
+  ArtifactType,
+  ArtifactStatus,
+  Artifact,
+  StoredArtifact,
+  ArtifactMarkerAttrs,
+  ArtifactCreatedMessage,
+  ArtifactUpdatedMessage,
+  ArtifactArchivedMessage,
+  ArtifactMessage,
+} from './artifactTypes.js';
+export { toArtifactId, ARTIFACT_START_MARKER, ARTIFACT_END_MARKER } from './artifactTypes.js';
+export type { AgentTone, AgentSpeed, AgentRisk, AgentCommunicationStyle, AgentPersonality, AgentMetadata, UserPersonalityPreference } from './agentTypes.js';
+export { DEFAULT_PERSONALITY, PERSONALITY_COLORS, PERSONALITY_ICONS } from './agentTypes.js';

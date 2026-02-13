@@ -1,7 +1,7 @@
 # SquadPanel/
 
 - AgentAvatar.tsx — exports: AgentAvatar
-- AgentCharacterCard.tsx — exports: AgentCharacterCard
+- AgentCharacterCard.tsx — exports: AgentCharacterCard (with PersonalityBadge integration)
 - AgentLogPanel.tsx — exports: AgentLogPanel
 - AgentRow.tsx — exports: AgentRow
 - index.ts — exports: default

@@ -133,11 +133,28 @@ class ClientRegistry {
 
   /**
    * Broadcast a message to all clients subscribed to a session
+   * @param sessionId - The session to broadcast to
+   * @param message - The message to send (JSON string or object)
+   * @param options - Optional filtering options
+   * @param options.userId - If specified, only send to clients with matching userId
    */
-  broadcastToSession(sessionId: SessionId, message: string): void {
+  broadcastToSession(sessionId: SessionId, message: string | object, options?: { userId?: string }): void {
+    const messageStr = typeof message === 'string' ? message : JSON.stringify(message);
+
     for (const [ws, info] of this.clients) {
-      if (info.subscribedSessionIds.has(sessionId) && ws.readyState === 1) {
-        ws.send(message);
+      if (!info.subscribedSessionIds.has(sessionId)) {
+        continue; // Not subscribed to this session
+      }
+
+      // If userId filter specified, only send to clients with matching userId
+      if (options?.userId) {
+        if (!info.userId || info.userId !== options.userId) {
+          continue; // Skip clients that don't match the userId filter
+        }
+      }
+
+      if (ws.readyState === 1) {
+        ws.send(messageStr);
       }
     }
   }

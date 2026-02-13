@@ -43,6 +43,7 @@ import type {
   LightBridge,
   RegionId,
   EdgeId,
+  User,
 } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 
@@ -566,5 +567,34 @@ export class ResilientStorage implements Storage {
     } else {
       throw new Error('Restore not supported by fallback storage');
     }
+  }
+
+  // User management
+  async getUser(userId: UserId): Promise<User | undefined> {
+    return this.executeWithFallback(
+      (storage) => storage.getUser(userId),
+      (storage) => storage.getUser(userId)
+    );
+  }
+
+  async setUser(user: User): Promise<void> {
+    return this.executeWithFallback(
+      (storage) => storage.setUser(user),
+      (storage) => storage.setUser(user)
+    );
+  }
+
+  async deleteUser(userId: UserId): Promise<void> {
+    return this.executeWithFallback(
+      (storage) => storage.deleteUser(userId),
+      (storage) => storage.deleteUser(userId)
+    );
+  }
+
+  async getUsersByRole(role: string): Promise<User[]> {
+    return this.executeWithFallback(
+      (storage) => storage.getUsersByRole(role),
+      (storage) => storage.getUsersByRole(role)
+    );
   }
 }

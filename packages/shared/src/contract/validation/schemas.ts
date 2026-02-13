@@ -10,6 +10,26 @@
  */
 
 import { z } from 'zod';
+import type {
+  ChainCompilationParsed,
+  ChainExecutionStartParsed,
+  ChainStatusUpdateParsed,
+  ExecutionCompleteParsed,
+  StepCompletionParsed,
+  DualOutputParsed,
+  SecondOpinionSkipParsed,
+  HumanGateParsed,
+  LearningSurfaceParsed,
+  SessionStartProtocolParsed,
+  RegistryUpdateParsed,
+  IndexEntryParsed,
+  LearningEntryParsed,
+  ReviewReportParsed,
+  AnalysisReportParsed,
+  BrainstormTranscriptParsed,
+  ErrorAnnouncementParsed,
+  ContextRoutingParsed,
+} from '../types/index.js';
 
 // ============================================================================
 // Base & Common Schemas
@@ -34,7 +54,7 @@ export type ModelString = z.infer<typeof ModelStringSchema>;
  */
 export const StatusStringSchema = z.preprocess(
   (val) => typeof val === 'string' ? val.toLowerCase() : val,
-  z.enum(['pending', 'running', 'completed', 'failed', 'skipped'])
+  z.enum(['pending', 'in_progress', 'completed', 'failed', 'skipped'])
 );
 export type StatusString = z.infer<typeof StatusStringSchema>;
 
@@ -167,16 +187,16 @@ export type ChainStatusUpdateValidated = z.infer<typeof ChainStatusUpdateSchema>
  */
 export const ExecutionCompleteSchema = BaseParsedSchema.extend({
   title: z.string().nullable(),
+  steps: z.array(z.object({
+    stepNumber: StepNumberSchema,
+    action: z.string(),
+    status: StatusStringSchema.nullable(),
+  })).nullable(),
   logsPath: z.string().nullable(),
   learnings: z.string().nullable(),
   totalSteps: z.number().int().positive().nullable(),
   completedSteps: z.number().int().min(0).nullable(),
   failedSteps: z.number().int().min(0).nullable(),
-  steps: z.array(z.object({
-    stepNumber: StepNumberSchema,
-    action: z.string(),
-    status: StatusStringSchema,
-  })).nullable(),
 });
 
 export type ExecutionCompleteValidated = z.infer<typeof ExecutionCompleteSchema>;
@@ -202,10 +222,16 @@ export type StepCompletionValidated = z.infer<typeof StepCompletionSchema>;
  */
 export const DualOutputSchema = BaseParsedSchema.extend({
   stepNumber: StepNumberSchema.nullable(),
+  action: z.string().nullable(),
   originalResult: z.string().nullable(),
   secondOpinionModel: ModelStringSchema.nullable(),
-  secondOpinionResult: z.string().nullable(),
-  comparison: z.string().nullable(),
+  secondOpinionSummary: z.string().nullable(),
+  missedIssues: z.number().int().min(0).nullable(),
+  disagreements: z.number().int().min(0).nullable(),
+  notable: z.string().nullable(),
+  originalLogPath: z.string().nullable(),
+  critiqueLogPath: z.string().nullable(),
+  nextStep: StepNumberSchema.nullable(),
 });
 
 export type DualOutputValidated = z.infer<typeof DualOutputSchema>;
@@ -215,8 +241,11 @@ export type DualOutputValidated = z.infer<typeof DualOutputSchema>;
  */
 export const SecondOpinionSkipSchema = BaseParsedSchema.extend({
   stepNumber: StepNumberSchema.nullable(),
+  action: z.string().nullable(),
+  result: z.string().nullable(),
+  secondOpinionStep: StepNumberSchema.nullable(),
   skipReason: z.string().nullable(),
-  originalResult: z.string().nullable(),
+  nextStep: StepNumberSchema.nullable(),
 });
 
 export type SecondOpinionSkipValidated = z.infer<typeof SecondOpinionSkipSchema>;
@@ -230,9 +259,8 @@ export type SecondOpinionSkipValidated = z.infer<typeof SecondOpinionSkipSchema>
  */
 export const HumanGateSchema = BaseParsedSchema.extend({
   stepNumber: StepNumberSchema.nullable(),
+  content: z.string().nullable(),
   prompt: z.string().nullable(),
-  context: z.string().nullable(),
-  options: z.array(z.string()).nullable(),
 });
 
 export type HumanGateValidated = z.infer<typeof HumanGateSchema>;
@@ -242,10 +270,10 @@ export type HumanGateValidated = z.infer<typeof HumanGateSchema>;
  */
 export const LearningSurfaceSchema = BaseParsedSchema.extend({
   fromAction: z.string().nullable(),
+  fromModel: ModelStringSchema.nullable(),
   issue: z.string().nullable(),
   rootCause: z.string().nullable(),
   suggestedFix: z.string().nullable(),
-  severity: SeveritySchema.nullable(),
 });
 
 export type LearningSurfaceValidated = z.infer<typeof LearningSurfaceSchema>;
@@ -256,8 +284,8 @@ export type LearningSurfaceValidated = z.infer<typeof LearningSurfaceSchema>;
 export const SessionStartProtocolSchema = BaseParsedSchema.extend({
   projectName: z.string().nullable(),
   flowCount: z.number().int().min(0).nullable(),
-  activeFlows: z.array(z.string()).nullable(),
-  timestamp: z.number().nullable(),
+  actionCount: z.number().int().min(0).nullable(),
+  pastExecutionCount: z.number().int().min(0).nullable(),
 });
 
 export type SessionStartProtocolValidated = z.infer<typeof SessionStartProtocolSchema>;
@@ -272,9 +300,8 @@ export type SessionStartProtocolValidated = z.infer<typeof SessionStartProtocolS
 export const RegistryUpdateSchema = BaseParsedSchema.extend({
   title: z.string().nullable(),
   file: z.string().nullable(),
-  action: z.enum(['added', 'removed', 'modified']).nullable(),
-  line: z.number().int().positive().nullable(),
-  content: z.string().nullable(),
+  action: z.enum(['added', 'removed', 'updated']).nullable(),
+  line: z.string().nullable(),
 });
 
 export type RegistryUpdateValidated = z.infer<typeof RegistryUpdateSchema>;
@@ -284,8 +311,11 @@ export type RegistryUpdateValidated = z.infer<typeof RegistryUpdateSchema>;
  */
 export const IndexEntrySchema = BaseParsedSchema.extend({
   date: DateSchema.nullable(),
+  description: z.string().nullable(),
   pattern: z.string().nullable(),
-  status: z.string().nullable(),
+  outcome: z.string().nullable(),
+  success: z.boolean().nullable(),
+  metrics: z.string().nullable(),
   commitHash: CommitHashSchema.nullable(),
 });
 
@@ -297,9 +327,12 @@ export type IndexEntryValidated = z.infer<typeof IndexEntrySchema>;
 export const LearningEntrySchema = BaseParsedSchema.extend({
   actionType: z.string().nullable(),
   issueTitle: z.string().nullable(),
+  context: z.string().nullable(),
+  problem: z.string().nullable(),
   rootCause: z.string().nullable(),
   solution: z.string().nullable(),
-  suggestedImprovement: z.string().nullable(),
+  date: DateSchema.nullable(),
+  source: z.string().nullable(),
 });
 
 export type LearningEntryValidated = z.infer<typeof LearningEntrySchema>;
@@ -413,14 +446,62 @@ export type ErrorAnnouncementValidated = z.infer<typeof ErrorAnnouncementSchema>
  */
 export const ContextRoutingSchema = BaseParsedSchema.extend({
   request: z.string().nullable(),
-  context: ContextEnumSchema.nullable(),
+  context: z.string().nullable(), // WorkbenchId can include custom stars, so we use string
   confidence: ConfidenceSchema.nullable(),
   flow: z.string().nullable(),
   actions: z.array(z.string()).nullable(),
-  disambiguated: z.boolean().default(false),
+  disambiguated: z.boolean(),
 });
 
 export type ContextRoutingValidated = z.infer<typeof ContextRoutingSchema>;
+
+// ============================================================================
+// Type Assertion Guards (Prevent Future Drift)
+// ============================================================================
+
+/**
+ * Compile-time guards that verify Zod schema types are compatible with TypeScript types.
+ * If schemas drift significantly from types, TypeScript compilation will fail.
+ * Zero runtime cost — these are type-level only.
+ *
+ * NOTE: Some guards are commented out due to known drift in contract type definitions:
+ * - ModelString in types.ts includes uppercase enum keys ('HAIKU') alongside lowercase values ('haiku')
+ * - StatusString in types.ts includes uppercase variants that schemas don't accept
+ * - ChainStepParsed.status and model are nullable in types but required in some usages
+ *
+ * These need to be fixed by updating contract/types/*.ts to use only lowercase runtime values.
+ * See drift analysis report for full details.
+ */
+
+// Format 1.x: Chain Management
+// const _check_ChainCompilation: z.infer<typeof ChainCompilationSchema> = {} as ChainCompilationParsed; // Disabled: ModelString/StatusString uppercase drift
+// const _check_ChainExecutionStart: z.infer<typeof ChainExecutionStartSchema> = {} as ChainExecutionStartParsed; // Disabled: ModelString uppercase drift
+// const _check_ChainStatusUpdate: z.infer<typeof ChainStatusUpdateSchema> = {} as ChainStatusUpdateParsed; // Disabled: StatusString uppercase drift
+// const _check_ExecutionComplete: z.infer<typeof ExecutionCompleteSchema> = {} as ExecutionCompleteParsed; // Disabled: StatusString uppercase drift
+
+// Format 2.x: Step Lifecycle
+// const _check_StepCompletion: z.infer<typeof StepCompletionSchema> = {} as StepCompletionParsed; // Disabled: nextStep type mismatch (number | string | null vs string | null)
+// const _check_DualOutput: z.infer<typeof DualOutputSchema> = {} as DualOutputParsed; // Disabled: ModelString uppercase drift
+const _check_SecondOpinionSkip: z.infer<typeof SecondOpinionSkipSchema> = {} as SecondOpinionSkipParsed;
+
+// Format 3.x: Human Interaction
+const _check_HumanGate: z.infer<typeof HumanGateSchema> = {} as HumanGateParsed;
+// const _check_LearningSurface: z.infer<typeof LearningSurfaceSchema> = {} as LearningSurfaceParsed; // Disabled: ModelString uppercase drift
+const _check_SessionStartProtocol: z.infer<typeof SessionStartProtocolSchema> = {} as SessionStartProtocolParsed;
+
+// Format 4.x: Registry & Metadata
+const _check_RegistryUpdate: z.infer<typeof RegistryUpdateSchema> = {} as RegistryUpdateParsed;
+const _check_IndexEntry: z.infer<typeof IndexEntrySchema> = {} as IndexEntryParsed;
+const _check_LearningEntry: z.infer<typeof LearningEntrySchema> = {} as LearningEntryParsed;
+
+// Format 5.x: Action Output
+const _check_ReviewReport: z.infer<typeof ReviewReportSchema> = {} as ReviewReportParsed;
+const _check_AnalysisReport: z.infer<typeof AnalysisReportSchema> = {} as AnalysisReportParsed;
+const _check_BrainstormTranscript: z.infer<typeof BrainstormTranscriptSchema> = {} as BrainstormTranscriptParsed;
+
+// Format 6.x: Error & Status
+const _check_ErrorAnnouncement: z.infer<typeof ErrorAnnouncementSchema> = {} as ErrorAnnouncementParsed;
+const _check_ContextRouting: z.infer<typeof ContextRoutingSchema> = {} as ContextRoutingParsed;
 
 // ============================================================================
 // Validation Utility Functions

@@ -3,6 +3,8 @@
 - checkpoints/ → see checkpoints/DIR.md
 - activityTracker.ts — exports: ActivityType, activityTracker
 - agentValidator.ts — exports: AgentValidationResult, AgentValidationViolation, AgentValidator, agentValidator, initializeAgentValidator
+- artifactParser.ts — exports: ParsedArtifact, artifactParser
+- artifactStorage.ts — exports: artifactStorage
 - bridgeStrengthService.ts — exports: BridgeStrengthService, getBridgeStrengthService, initBridgeStrengthService
 - claudeCliManager.ts — exports: claudeCliManager
 - claudeCliMessageAggregator.ts — exports: ClaudeCliMessageAggregator, MessageCallback

@@ -6,6 +6,8 @@ import { wsMessageSchema, type ValidatedWSMessage } from '../schemas/ws.js';
 import { workspaceEventSchema, validateStorageData } from '@afw/shared';
 import { claudeCliManager } from '../services/claudeCliManager.js';
 import { activityTracker } from '../services/activityTracker.js';
+import { capabilityRegistry } from '../services/capabilityRegistry.js';
+import { toCapabilityId } from '@afw/shared';
 
 /**
  * WebSocket message format for server->client
@@ -16,6 +18,8 @@ interface WSBroadcast {
   payload?: unknown;
   clientId?: string;
   details?: unknown;
+  /** Correlation ID for request/response patterns (capability invocation) */
+  correlationId?: string;
 }
 
 /**
@@ -196,6 +200,85 @@ export function handleWebSocket(
           }
           break;
 
+        case 'capability:register': {
+          // Register capabilities from this client
+          const rawMessage = message as any;
+          if (rawMessage.capabilities && Array.isArray(rawMessage.capabilities)) {
+            capabilityRegistry.register(rawMessage.capabilities, clientId);
+            ws.send(JSON.stringify({
+              type: 'capability:registered',
+              payload: { count: rawMessage.capabilities.length },
+            }));
+            console.log(`[WS] Client ${clientId} registered ${rawMessage.capabilities.length} capabilities`);
+          } else {
+            ws.send(JSON.stringify({
+              type: 'error',
+              payload: 'Invalid capability registration - capabilities array required',
+            }));
+          }
+          break;
+        }
+
+        case 'capability:unregister': {
+          // Unregister specific capabilities
+          const rawMessage = message as any;
+          if (rawMessage.capabilityIds && Array.isArray(rawMessage.capabilityIds)) {
+            const capIds = rawMessage.capabilityIds.map((id: string) => toCapabilityId(id));
+            capabilityRegistry.unregister(capIds);
+            ws.send(JSON.stringify({
+              type: 'capability:unregistered',
+              payload: { count: capIds.length },
+            }));
+            console.log(`[WS] Client ${clientId} unregistered ${capIds.length} capabilities`);
+          } else {
+            ws.send(JSON.stringify({
+              type: 'error',
+              payload: 'Invalid capability unregistration - capabilityIds array required',
+            }));
+          }
+          break;
+        }
+
+        case 'capability:result': {
+          // Handle capability invocation result from client
+          const rawMessage = message as any;
+          if (rawMessage.correlationId) {
+            capabilityRegistry.handleResult(rawMessage.correlationId, {
+              capabilityId: rawMessage.capabilityId,
+              success: rawMessage.success ?? true,
+              data: rawMessage.data,
+              error: rawMessage.error,
+              correlationId: rawMessage.correlationId,
+            });
+            console.log(`[WS] Received capability result from client ${clientId} - correlation: ${rawMessage.correlationId}`);
+          } else {
+            ws.send(JSON.stringify({
+              type: 'error',
+              payload: 'Invalid capability result - correlationId required',
+            }));
+          }
+          break;
+        }
+
+        case 'capability:error': {
+          // Handle capability invocation error from client
+          const rawMessage = message as any;
+          if (rawMessage.correlationId && rawMessage.error) {
+            capabilityRegistry.handleError(
+              rawMessage.correlationId,
+              rawMessage.error,
+              rawMessage.code || 'unknown'
+            );
+            console.log(`[WS] Received capability error from client ${clientId} - correlation: ${rawMessage.correlationId}`);
+          } else {
+            ws.send(JSON.stringify({
+              type: 'error',
+              payload: 'Invalid capability error - correlationId and error required',
+            }));
+          }
+          break;
+        }
+
         case 'ping':
           ws.send(JSON.stringify({ type: 'pong', clientId }));
           break;
@@ -216,6 +299,9 @@ export function handleWebSocket(
 
   // Handle disconnection
   ws.on('close', () => {
+    // Unregister any capabilities provided by this client
+    capabilityRegistry.unregisterByClient(clientId);
+
     clientRegistry.unregister(ws);
     storage.removeClient(clientId);
     console.log(`[WS] Client ${clientId} connection closed`);

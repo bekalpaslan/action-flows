@@ -48,6 +48,7 @@ export interface Storage {
   addChain(sessionId: SessionId, chain: Chain): void | Promise<void>;
   getChains(sessionId: SessionId): Chain[] | Promise<Chain[]>;
   getChain(chainId: ChainId): Chain | undefined | Promise<Chain | undefined>;
+  setChainStep?(chainId: ChainId, stepNumber: any, step: any): void | Promise<void>;
 
   // Commands queue per session
   commandsQueue?: Map<SessionId, CommandPayload[]>; // Memory only

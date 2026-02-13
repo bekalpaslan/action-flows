@@ -48,6 +48,13 @@ import errorsRouter from './routes/errors.js';
 import universeRouter from './routes/universe.js';
 import flowsRouter from './routes/flows.js';
 import analyticsRouter from './routes/analytics.js';
+import capabilitiesRouter from './routes/capabilities.js';
+import createPersonalitiesRouter from './routes/personalities.js';
+import { createPersonalityParser } from './services/personalityParser.js';
+import preferencesRouter from './routes/preferences.js';
+import artifactsRouter from './routes/artifacts.js';
+import surfacesRouter from './routes/surfaces.js';
+import slackRouter from './routes/surfaces/slack.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -85,6 +92,9 @@ const snapshotService = new SnapshotService(storage, {
 
 // Initialize health score calculator
 const healthScoreCalculator = initHealthScoreCalculator(storage);
+
+// Initialize personality parser (Phase 1 - Agent Personalities)
+const personalityParser = createPersonalityParser();
 
 // Create Express app
 const app = express();
@@ -192,6 +202,15 @@ app.use('/api/contracts', contractsRouter);
 app.use('/api/agent-validator', agentValidatorRouter);
 app.use('/api/flows', flowsRouter);
 app.use('/api/analytics', analyticsRouter);
+app.use('/api/capabilities', capabilitiesRouter);
+app.use('/api/personalities', createPersonalitiesRouter(personalityParser));
+app.use('/api/preferences', preferencesRouter);
+app.use('/api/artifacts', artifactsRouter);
+app.use('/api/surfaces', surfacesRouter);
+app.use('/api/surfaces/slack', slackRouter);
+
+// Note: surfaceManager is a singleton and auto-initializes on first import
+console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');
 
 // Serve frontend static files in production (Electron desktop app)
 // Gated behind AFW_SERVE_FRONTEND=true — no effect during normal dev workflow
@@ -498,6 +517,15 @@ if (isMainModule) {
 
     // Initialize registry storage
     await registryStorage.initialize();
+
+    // Initialize personality parser (Phase 1 - Agent Personalities)
+    try {
+      await personalityParser.parseAll();
+      console.log('[PersonalityParser] ✅ Service initialized successfully for Agent Personalities Phase 1');
+    } catch (error) {
+      console.error('[PersonalityParser] ❌ Failed to initialize PersonalityParser:', error);
+      // Don't crash the server, but log the error
+    }
 
     // Initialize harmony detector
     initializeHarmonyDetector(storage);

@@ -16,6 +16,9 @@ import type { AgentCharacterCardProps } from './types';
 import { AGENT_NAMES, AGENT_ARCHETYPES, AGENT_COLORS } from './types';
 import { AgentAvatar } from './AgentAvatar';
 import { useAgentInteractions } from './useAgentInteractions';
+import { PersonalityBadge, PersonalityDetails } from '../PersonalityBadge';
+import { usePersonalities } from '../../hooks/usePersonalities';
+import { PERSONALITY_COLORS } from '@afw/shared';
 import './AgentCharacterCard.css';
 import './animations.css';
 
@@ -58,12 +61,16 @@ export function AgentCharacterCard({
   const [eyeTarget, setEyeTarget] = useState<{ x: number; y: number } | null>(null);
   const avatarRef = useRef<HTMLDivElement>(null);
   const { calculateEyeTarget } = useAgentInteractions();
+  const { getPersonality } = usePersonalities();
 
   const agentName = AGENT_NAMES[agent.role] || agent.name;
   const agentArchetype = AGENT_ARCHETYPES[agent.role];
   const colors = AGENT_COLORS[agent.role];
   const progress = formatProgress(agent);
   const statusText = getStatusText(agent);
+
+  // Get personality data if available (role maps to action type)
+  const personalityData = getPersonality(agent.role);
 
   const handleMouseEnter = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -109,6 +116,11 @@ export function AgentCharacterCard({
   const expandedClass = isExpanded ? 'is-expanded' : '';
   const hoverClass = isHovered ? 'is-hovered' : '';
 
+  // Phase 2C: Get personality color for card border accent
+  const personalityColor = personalityData?.personality
+    ? PERSONALITY_COLORS[personalityData.personality.tone]
+    : null;
+
   return (
     <div
       className={`agent-character-card ${sizeClass} ${statusClass} ${expandedClass} ${hoverClass} ${className}`}
@@ -121,6 +133,9 @@ export function AgentCharacterCard({
       tabIndex={0}
       aria-label={`${agentName} agent - ${agent.status} status`}
       aria-expanded={isExpanded}
+      style={{
+        borderLeft: personalityColor ? `3px solid ${personalityColor}40` : undefined,
+      }}
     >
       {/* Avatar section with character visual */}
       <div className="card-avatar-container" ref={avatarRef}>
@@ -136,7 +151,16 @@ export function AgentCharacterCard({
 
       {/* Name and archetype label */}
       <div className="card-info">
-        <h3 className="card-name">{agentName}</h3>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <h3 className="card-name">{agentName}</h3>
+          {personalityData?.personality && (
+            <PersonalityBadge
+              personality={personalityData.personality}
+              compact={true}
+              size="sm"
+            />
+          )}
+        </div>
         <p className="card-archetype">{agentArchetype}</p>
       </div>
 
@@ -163,6 +187,22 @@ export function AgentCharacterCard({
             >
               <div className="progress-fill" />
             </div>
+          </div>
+        )}
+
+        {/* Phase 2C: Personality details - visible when expanded */}
+        {isExpanded && personalityData?.personality && (
+          <div
+            className="card-personality-details"
+            style={{
+              marginTop: 'var(--space-2)',
+              padding: 'var(--space-2)',
+              background: `${personalityColor}10`,
+              border: `1px solid ${personalityColor}30`,
+              borderRadius: '6px',
+            }}
+          >
+            <PersonalityDetails personality={personalityData.personality} />
           </div>
         )}
       </div>

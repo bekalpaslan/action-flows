@@ -25,6 +25,34 @@ const pingMessage = z.object({
   type: z.literal('ping'),
 });
 
+// Capability protocol messages
+const capabilityRegisterMessage = z.object({
+  type: z.literal('capability:register'),
+  capabilities: z.array(z.any()), // Capability[] validated at handler level
+});
+
+const capabilityUnregisterMessage = z.object({
+  type: z.literal('capability:unregister'),
+  capabilityIds: z.array(z.string()),
+});
+
+const capabilityResultMessage = z.object({
+  type: z.literal('capability:result'),
+  correlationId: z.string(),
+  capabilityId: z.string(),
+  success: z.boolean(),
+  data: z.unknown().optional(),
+  error: z.string().optional(),
+});
+
+const capabilityErrorMessage = z.object({
+  type: z.literal('capability:error'),
+  correlationId: z.string(),
+  capabilityId: z.string(),
+  error: z.string(),
+  code: z.string(),
+});
+
 /**
  * Discriminated union of all valid WebSocket message types
  */
@@ -33,6 +61,10 @@ export const wsMessageSchema = z.discriminatedUnion('type', [
   unsubscribeMessage,
   inputMessage,
   pingMessage,
+  capabilityRegisterMessage,
+  capabilityUnregisterMessage,
+  capabilityResultMessage,
+  capabilityErrorMessage,
 ]);
 
 /**

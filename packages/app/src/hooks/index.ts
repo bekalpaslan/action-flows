@@ -64,3 +64,6 @@ export {
   useCanManageFlows,
   useCanDeleteSession,
 } from './useRoleCheck';
+
+export { usePersonalities } from './usePersonalities';
+export type { UsePersonalitiesResult } from './usePersonalities';

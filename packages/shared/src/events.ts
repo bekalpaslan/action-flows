@@ -20,6 +20,8 @@ import type { RegistryEntryId, RegistryEntry } from './registryTypes.js';
 import type { LayerSource } from './selfEvolvingTypes.js';
 import type { ChatMessage } from './models.js';
 import type { FogState } from './universeTypes.js';
+import type { SurfaceId } from './surfaceTypes.js';
+import type { ArtifactCreatedMessage, ArtifactUpdatedMessage, ArtifactArchivedMessage } from './artifactTypes.js';
 
 /**
  * Base event structure
@@ -40,6 +42,9 @@ export interface BaseEvent {
 
   /** Unique event ID for deduplication */
   eventId?: string;
+
+  /** Surface that originated this event (defaults to 'electron') */
+  surfaceId?: SurfaceId;
 }
 
 /**
@@ -784,7 +789,10 @@ export type WorkspaceEvent =
   | EvolutionTickEvent
   | SparkTravelingEvent
   | GateUpdatedEvent
-  | MapExpandedEvent;
+  | MapExpandedEvent
+  | ArtifactCreatedMessage
+  | ArtifactUpdatedMessage
+  | ArtifactArchivedMessage;
 
 /**
  * Type guard functions for discriminating event types

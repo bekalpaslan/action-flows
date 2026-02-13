@@ -11,10 +11,11 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import type { RegionId, WorkbenchId, ColorShift, HealthMetrics, StepStartedEvent, StepCompletedEvent } from '@afw/shared';
-import { FogState, mapActionToRegion } from '@afw/shared';
+import { FogState, mapActionToRegion, PERSONALITY_COLORS, PERSONALITY_ICONS } from '@afw/shared';
 import { Handle, Position, type NodeProps } from 'reactflow';
 import { useUniverseContext } from '../../contexts/UniverseContext';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
+import { useRegionPersonality } from '../../hooks/useRegionPersonality';
 import '../../styles/cosmic-tokens.css';
 import '../../styles/region-themes.css';
 import './RegionStar.css';
@@ -60,6 +61,9 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
   // GAP-3 & GAP-4: Dynamic state from universe:evolution_tick events
   const [evolvedColorShift, setEvolvedColorShift] = useState<ColorShift | null>(null);
   const [evolvedGlowIntensity, setEvolvedGlowIntensity] = useState<number | null>(null);
+
+  // Phase 2C: Personality-aware region activity
+  const { activePersonality, isActive: hasActivePersonality } = useRegionPersonality(data.regionId);
 
   // Use evolved values if available, otherwise fall back to props
   const activeColorShift = evolvedColorShift ?? data.colorShift;
@@ -275,8 +279,56 @@ export const RegionStar: React.FC<NodeProps<RegionStarData>> = ({ data, selected
           }}
         />
 
+        {/* Phase 2C: Personality aura (when agent is active) */}
+        {hasActivePersonality && activePersonality && (
+          <div
+            className="region-star__personality-aura"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '70px',
+              height: '70px',
+              borderRadius: '50%',
+              background: `radial-gradient(circle, ${PERSONALITY_COLORS[activePersonality.tone]}40 0%, transparent 60%)`,
+              pointerEvents: 'none',
+              opacity: 0.7,
+              transition: 'opacity 0.3s ease',
+              animation: 'personality-pulse 2s ease-in-out infinite',
+            }}
+          />
+        )}
+
         {/* Star center */}
         <div className="region-star__center" />
+
+        {/* Phase 2C: Personality icon indicator (when agent is active) */}
+        {hasActivePersonality && activePersonality && (
+          <div
+            className="region-star__personality-icon"
+            style={{
+              position: 'absolute',
+              top: '-8px',
+              right: '-8px',
+              width: '18px',
+              height: '18px',
+              borderRadius: '50%',
+              background: PERSONALITY_COLORS[activePersonality.tone],
+              border: '2px solid var(--cosmic-star-core)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '10px',
+              zIndex: 3,
+              boxShadow: `0 0 8px ${PERSONALITY_COLORS[activePersonality.tone]}`,
+              animation: 'personality-icon-appear 0.3s ease-out',
+            }}
+            title={`${activePersonality.tone} agent active`}
+          >
+            {PERSONALITY_ICONS[activePersonality.tone]}
+          </div>
+        )}
       </div>
 
       {/* Completion burst effect */}

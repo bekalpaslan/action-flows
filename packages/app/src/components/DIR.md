@@ -60,6 +60,7 @@
 - Workbench/ → see Workbench/DIR.md
 - AppContent.tsx — exports: default
 - ChainDemo.tsx — exports: ChainDemo
+- PersonalityBadge.tsx — exports: PersonalityBadge, PersonalityDetails
 - ChainLiveMonitor.tsx — exports: ChainLiveMonitor
 - GateTraceViewer.tsx — exports: GateTrace, GateTraceViewer, GateTraceViewerProps
 - HarmonyHealthDashboard.tsx — exports: HarmonyHealthDashboard

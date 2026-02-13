@@ -1,6 +1,7 @@
 # routes/
 
 - agentValidator.ts — exports: default
+- artifacts.ts — exports: default
 - claudeCli.ts — exports: default
 - commands.ts — exports: default
 - contracts.ts — exports: default

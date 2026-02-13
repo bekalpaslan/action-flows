@@ -1,0 +1,79 @@
+.artifact-renderer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.artifact-renderer__iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.artifact-renderer__loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.artifact-renderer__spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f0f0f0;
+  border-top-color: #0066cc;
+  border-radius: 50%;
+  animation: spinner-rotate 0.8s linear infinite;
+}
+
+@keyframes spinner-rotate {
+  to { transform: rotate(360deg); }
+}
+
+.artifact-renderer__loading-text {
+  font-size: 14px;
+  color: #666;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.artifact-renderer--error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  text-align: center;
+  gap: 12px;
+  background: #fff5f5;
+  border: 1px solid #ffcccc;
+}
+
+.artifact-renderer__error-icon {
+  font-size: 48px;
+}
+
+.artifact-renderer__error-message {
+  font-size: 16px;
+  font-weight: 600;
+  color: #cc0000;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.artifact-renderer__error-details {
+  font-size: 14px;
+  color: #666;
+  font-family: monospace;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 4px;
+  max-width: 600px;
+  word-break: break-word;
+}
