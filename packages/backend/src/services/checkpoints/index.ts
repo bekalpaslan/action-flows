@@ -11,3 +11,4 @@ export { validateExecutionComplete } from './gate08-execution-complete.js';
 export { validateAgentOutput, type AgentValidationResult } from './gate09-agent-output.js';
 export { validateAutoTriggerDetection, type AutoTriggerDetectionResult } from './gate10-auto-trigger-detection.js';
 export { validateRegistryUpdate } from './gate11-registry-update.js';
+export { validateLearningSurface } from './gate13-learning-surface.js';
