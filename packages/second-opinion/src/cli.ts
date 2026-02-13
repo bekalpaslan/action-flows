@@ -4,7 +4,8 @@
  * Supports: health checks, model listing, demo mode, and real critiques
  */
 
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import { OllamaClient } from './ollama-client.js';
 import { SecondOpinionRunner } from './second-opinion.js';
 import type { ActionType, SecondOpinionResult } from './types.js';
@@ -242,6 +243,7 @@ async function handleCritique(args: CLIArgs): Promise<void> {
   // Write to file if requested
   if (args.outputPath) {
     const output = formatResultAsMarkdown(result);
+    await mkdir(dirname(args.outputPath), { recursive: true });
     await writeFile(args.outputPath, output, 'utf-8');
     console.log(`\n💾 Written to: ${args.outputPath}`);
   }

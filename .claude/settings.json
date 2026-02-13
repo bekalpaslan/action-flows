@@ -2,7 +2,8 @@
   "workspace": {
     "enabled": true,
     "backendUrl": "http://localhost:3001",
-    "user": "alice"
+    "user": "alice",
+    "_note_afw_input_inject": "Hook exists at packages/hooks/src/afw-input-inject.ts but unwired. Re-enable when dashboard creates/manages sessions."
   },
   "hooks": {
     "SessionStart": [
