@@ -554,7 +554,16 @@ export type {
   CapabilityMessage,
 } from './capabilityTypes.js';
 export { toCapabilityId } from './capabilityTypes.js';
-export type { FlowHubFlowId, FlowHubEntry, FlowSource } from './flowHubTypes.js';
+export type {
+  FlowHubFlowId,
+  FlowHubEntry,
+  FlowSource,
+  FlowManifest,
+  FlowInstallRequest,
+  FlowInstallResult,
+  FlowPublishRequest,
+  FlowHubStats,
+} from './flowHubTypes.js';
 export { toFlowHubFlowId } from './flowHubTypes.js';
 export type {
   ArtifactId,

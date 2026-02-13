@@ -55,6 +55,7 @@ import preferencesRouter from './routes/preferences.js';
 import artifactsRouter from './routes/artifacts.js';
 import surfacesRouter from './routes/surfaces.js';
 import slackRouter from './routes/surfaces/slack.js';
+import flowHubRouter from './routes/flowHub.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -208,6 +209,7 @@ app.use('/api/preferences', preferencesRouter);
 app.use('/api/artifacts', artifactsRouter);
 app.use('/api/surfaces', surfacesRouter);
 app.use('/api/surfaces/slack', slackRouter);
+app.use('/api/flow-hub', flowHubRouter);
 
 // Note: surfaceManager is a singleton and auto-initializes on first import
 console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');
