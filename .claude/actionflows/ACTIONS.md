@@ -9,8 +9,9 @@ Abstract actions are **reusable behavior patterns** that agents are explicitly i
 | Abstract Action | Purpose | Used By |
 |-----------------|---------|---------|
 | `_abstract/agent-standards/` | Core behavioral standards for all agents | All agents |
-| `_abstract/post-completion/` | Post-implementation workflow (commit, registry update) | Orchestrator (post-completion flow) |
 | `_abstract/create-log-folder/` | Datetime folder creation | code, review, audit, analyze, test, plan |
+| `_abstract/log-ownership/` | Log path ownership principle | All agents |
+| `_abstract/post-completion/` | Post-implementation workflow (commit, registry update) | Orchestrator (post-completion flow) |
 | `_abstract/update-queue/` | Queue.md status updates | code, review |
 
 ## Generic Actions
