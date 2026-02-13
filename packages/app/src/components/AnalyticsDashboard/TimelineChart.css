@@ -1,0 +1,136 @@
+/* Timeline Chart Container */
+.timeline-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+  background: var(--glass-bg-light);
+  border-radius: var(--btn-radius-md);
+  padding: var(--space-3);
+}
+
+.timeline-chart__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* SVG chart styling */
+.timeline-chart__svg {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  min-height: 250px;
+}
+
+/* Grid lines and styling */
+.timeline-chart__grid-line {
+  stroke: var(--panel-border-default);
+  stroke-width: 0.5;
+  stroke-dasharray: 2, 2;
+}
+
+.timeline-chart__y-label {
+  font-size: 10px;
+  fill: var(--text-tertiary);
+  text-anchor: end;
+}
+
+/* Lines styling */
+.timeline-chart__line {
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+}
+
+.timeline-chart__line:hover {
+  opacity: 1;
+  stroke-width: 2;
+}
+
+/* Point styling */
+.timeline-chart__point {
+  opacity: 0.6;
+  transition: opacity var(--transition-fast), r var(--transition-fast);
+}
+
+.timeline-chart__point:hover {
+  opacity: 1;
+  r: 3;
+}
+
+/* X-axis labels */
+.timeline-chart__x-labels {
+  position: relative;
+  height: 25px;
+  display: flex;
+  align-items: flex-start;
+  padding: 0 var(--space-1);
+}
+
+.x-label {
+  position: absolute;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transform: translateX(-50%);
+  top: 0;
+}
+
+/* Legend */
+.timeline-chart__legend {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: var(--space-2);
+  border-top: var(--panel-border-default);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1-5);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.legend-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  user-select: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .timeline-chart {
+    padding: var(--space-2);
+  }
+
+  .timeline-chart__svg {
+    min-height: 200px;
+  }
+
+  .timeline-chart__y-label {
+    font-size: 8px;
+  }
+
+  .x-label {
+    font-size: var(--text-2xs);
+  }
+
+  .timeline-chart__legend {
+    gap: var(--space-1);
+  }
+
+  .legend-item {
+    font-size: var(--text-xs);
+  }
+}

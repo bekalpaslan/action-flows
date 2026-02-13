@@ -133,6 +133,11 @@ export type {
   RespectViolation,
   RespectComponentResult,
   RespectCheckResult,
+  FlowMetadata,
+  AnalyticsData,
+  FlowAnalytics,
+  AgentAnalytics,
+  SystemAnalyticsSummary,
 } from './models.js';
 
 // ============================================================================

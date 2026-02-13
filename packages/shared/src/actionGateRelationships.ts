@@ -73,7 +73,7 @@ export interface GateCheckpoint {
 /**
  * Action-specific metadata
  */
-export interface ActionMetadata {
+export interface ActionGateMetadata {
   /** Model executing this action */
   model: 'haiku' | 'sonnet' | 'opus';
   /** Contract output format ID if this action produces structured output */
@@ -99,7 +99,7 @@ export interface ActionGateMapping {
   /** Gate checkpoints this action must cross */
   gates: GateId[];
   /** Action metadata */
-  metadata: ActionMetadata;
+  metadata: ActionGateMetadata;
 }
 
 /**
@@ -687,7 +687,7 @@ export function getGateForFormat(format: string): GateId | null {
  * // { model: 'haiku', stackSpecific: true, stack: 'Express 4.18 + TypeScript + Zod' }
  * ```
  */
-export function getActionMetadata(action: string): ActionMetadata | null {
+export function getActionMetadata(action: string): ActionGateMetadata | null {
   const mapping = ACTION_GATE_RELATIONSHIPS[action];
   return mapping?.metadata ?? null;
 }

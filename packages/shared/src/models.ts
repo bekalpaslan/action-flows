@@ -249,6 +249,181 @@ export interface ExecutionPlanStep {
 }
 
 /**
+ * Flow Metadata - extended registry entry with flow-specific information
+ */
+export interface FlowMetadata {
+  /** Unique identifier for this flow */
+  id: string;
+
+  /** Human-readable name */
+  name: string;
+
+  /** Full description of what the flow does */
+  description: string;
+
+  /** Flow category (work, maintenance, explore, review, settings, pm, intel) */
+  category: 'work' | 'maintenance' | 'explore' | 'review' | 'settings' | 'pm' | 'intel';
+
+  /** Tags for discovery and filtering */
+  tags: string[];
+
+  /** Version of this flow */
+  version: string;
+
+  /** Author of this flow */
+  author?: string;
+
+  /** Number of times this flow has been executed */
+  usageCount: number;
+
+  /** Timestamp of last execution */
+  lastUsed?: Timestamp;
+
+  /** README or extended documentation */
+  readme?: string;
+
+  /** Chain blueprint if this is a registered flow */
+  chainTemplate?: string;
+
+  /** When this flow was registered */
+  registeredAt: Timestamp;
+
+  /** When this flow was last modified */
+  modifiedAt: Timestamp;
+}
+
+/**
+ * Analytics Aggregated Data - time-bucketed metrics
+ */
+export interface AnalyticsData {
+  /** Time bucket (minute, 5min, hour, day) */
+  bucket: 'minute' | '5min' | 'hour' | 'day';
+
+  /** Start timestamp of this bucket */
+  startTime: Timestamp;
+
+  /** End timestamp of this bucket */
+  endTime: Timestamp;
+
+  /** Total number of sessions created in this bucket */
+  totalSessions: number;
+
+  /** Total number of chains executed in this bucket */
+  totalChains: number;
+
+  /** Total number of steps executed in this bucket */
+  totalSteps: number;
+
+  /** Number of successful steps */
+  successfulSteps: number;
+
+  /** Number of failed steps */
+  failedSteps: number;
+
+  /** Success rate (successful / total, 0-100) */
+  successRate: number;
+
+  /** Average chain duration in milliseconds */
+  avgChainDuration: DurationMs;
+
+  /** Average step duration in milliseconds */
+  avgStepDuration: DurationMs;
+}
+
+/**
+ * Per-Flow Analytics - metrics for a specific flow
+ */
+export interface FlowAnalytics {
+  /** Flow identifier */
+  flowId: string;
+
+  /** Flow name */
+  flowName: string;
+
+  /** Total times executed */
+  usageCount: number;
+
+  /** Success rate (0-1) */
+  successRate: number;
+
+  /** Average duration in milliseconds */
+  averageDuration: DurationMs;
+
+  /** Total duration across all executions */
+  totalDuration: DurationMs;
+
+  /** Average steps per execution */
+  avgStepsPerExecution: number;
+
+  /** Last execution timestamp */
+  lastExecutedAt?: Timestamp;
+
+  /** Timestamp of first execution */
+  firstExecutedAt?: Timestamp;
+}
+
+/**
+ * Per-Agent Analytics - metrics for a specific agent/model
+ */
+export interface AgentAnalytics {
+  /** Agent ID or model identifier */
+  agentId: string;
+
+  /** Total tasks completed */
+  tasksCompleted: number;
+
+  /** Success rate (0-1) */
+  successRate: number;
+
+  /** Average duration per task in milliseconds */
+  averageDuration: DurationMs;
+
+  /** Total errors encountered */
+  errorCount: number;
+
+  /** Most recent execution timestamp */
+  lastActive?: Timestamp;
+
+  /** Timestamp of first usage */
+  firstUsedAt?: Timestamp;
+}
+
+/**
+ * System Analytics Summary - overall system health metrics
+ */
+export interface SystemAnalyticsSummary {
+  /** Total sessions ever created */
+  totalSessions: number;
+
+  /** Total chains ever executed */
+  totalChains: number;
+
+  /** Total steps ever executed */
+  totalSteps: number;
+
+  /** Overall system success rate (0-100) */
+  overallSuccessRate: number;
+
+  /** Average chain duration across all time */
+  avgChainDuration: DurationMs;
+
+  /** Most commonly used flow */
+  topFlow?: string;
+
+  /** Most commonly used agent/model */
+  topAgent?: string;
+
+  /** 24-hour session count */
+  sessionCount24h: number;
+
+  /** 7-day session count */
+  sessionCount7d: number;
+
+  /** Time of last metric update */
+  lastUpdatedAt: Timestamp;
+}
+
+/**
  * Action Registry Entry
  */
 export interface ActionRegistryEntry {

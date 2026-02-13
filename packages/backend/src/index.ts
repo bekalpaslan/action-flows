@@ -46,6 +46,8 @@ import lifecycleRouter from './routes/lifecycle.js';
 import remindersRouter from './routes/reminders.js';
 import errorsRouter from './routes/errors.js';
 import universeRouter from './routes/universe.js';
+import flowsRouter from './routes/flows.js';
+import analyticsRouter from './routes/analytics.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -185,6 +187,8 @@ app.use('/api/harmony', harmonyRouter);
 app.use('/api/routing', routingRouter);
 app.use('/api/contracts', contractsRouter);
 app.use('/api/agent-validator', agentValidatorRouter);
+app.use('/api/flows', flowsRouter);
+app.use('/api/analytics', analyticsRouter);
 
 // Serve frontend static files in production (Electron desktop app)
 // Gated behind AFW_SERVE_FRONTEND=true — no effect during normal dev workflow
