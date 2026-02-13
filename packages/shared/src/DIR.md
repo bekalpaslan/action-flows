@@ -2,6 +2,7 @@
 
 - contract/ → see contract/DIR.md
 - schemas/ → see schemas/DIR.md
+- actionGateRelationships.ts — exports: ACTION_GATE_RELATIONSHIPS, AUTO_TRIGGER_RULES, FORMAT_TO_GATE_MAP, GATE_PHASES, GATE_REGISTRY, SIX_TRIGGERS, TRUST_BOUNDARIES, ActionGateMapping, ActionMetadata, AutoTriggerRule, GateCheckpoint, GatePhase, GatePhaseDefinition, LogStatus, SixTrigger, TrustBoundary, getActionGates, getActionMetadata, getActionsForGate, getGateCheckpoint, getGateForFormat, hasAutoTrigger
 - buttonTypes.ts — exports: ButtonAction, ButtonActionType, ButtonContext, ButtonDefinition, ButtonId, ButtonState, ToolbarConfig, ToolbarSlot
 - chainRegionMapping.ts — exports: ACTION_TO_REGION_MAP, DEFAULT_REGION, getChainRegions, mapActionToRegion, mapChainToBridges, validateMapping
 - commands.ts — exports: AbortCommand, CancelCommand, ClaudeCliSendInputCommand, ClaudeCliStartCommand, ClaudeCliStopCommand, Command, CommandBuilder, CommandPayload, CommandResult, CommandType, CommandTypeString, CommandValidator, PauseCommand, ResumeCommand, RetryCommand, SkipCommand, commandGuards
