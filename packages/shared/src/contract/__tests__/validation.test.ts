@@ -73,14 +73,14 @@ describe('Zod Validation Schemas', () => {
     it('validates status enum with case normalization', () => {
       // Lowercase (standard format)
       expect(StatusStringSchema.safeParse('pending').success).toBe(true);
-      expect(StatusStringSchema.safeParse('running').success).toBe(true);
+      expect(StatusStringSchema.safeParse('in_progress').success).toBe(true);
       expect(StatusStringSchema.safeParse('completed').success).toBe(true);
       expect(StatusStringSchema.safeParse('failed').success).toBe(true);
       expect(StatusStringSchema.safeParse('skipped').success).toBe(true);
 
       // Capitalized (orchestrator output format) - should normalize to lowercase
       expect(StatusStringSchema.safeParse('Pending').success).toBe(true);
-      expect(StatusStringSchema.safeParse('Running').success).toBe(true);
+      expect(StatusStringSchema.safeParse('In_Progress').success).toBe(true);
       expect(StatusStringSchema.safeParse('Completed').success).toBe(true);
       expect(StatusStringSchema.safeParse('Failed').success).toBe(true);
       expect(StatusStringSchema.safeParse('Skipped').success).toBe(true);
@@ -254,20 +254,20 @@ describe('Zod Validation Schemas', () => {
       expect(result.success).toBe(false);
     });
 
-    it('rejects invalid context', () => {
-      const invalidRouting = {
+    it('allows custom context values (for custom stars)', () => {
+      const customRouting = {
         raw: 'test',
         contractVersion: '1.0',
         request: 'Fix bug',
-        context: 'invalid' as any,
+        context: 'intel', // Custom star
         confidence: 0.8,
         flow: null,
         actions: null,
         disambiguated: false,
       };
 
-      const result = validateParsedFormat(ContextRoutingSchema, invalidRouting);
-      expect(result.success).toBe(false);
+      const result = validateParsedFormat(ContextRoutingSchema, customRouting);
+      expect(result.success).toBe(true); // Allows custom stars
     });
   });
 

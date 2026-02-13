@@ -221,3 +221,15 @@
   4. Filesystem watcher (detect mid-session agent.md modifications)
 - **Impact:** 65% alignment on Element 7 ("detects rebellious instructions") — PRIMARY gap in vision alignment.
 - **Status:** Escalated (architectural implementation) — Requires separate chain (5-7 steps, code changes to backend + orchestrator). Queued for future session.
+
+### L025: Systemic Type-to-Schema Drift Across Contract Formats
+- **Date:** 2026-02-13
+- **From:** audit/ (opus) during backwards-harmony-audit chain
+- **Issue:** 8 of 18 contract formats have Zod validation schemas whose fields don't match their TypeScript type definitions. Core formats affected: 2.2, 2.3, 3.1, 3.2, 3.3, 4.1, 4.2, 4.3. Additionally, StatusString enum has a critical split: `'in_progress'` (core types, frontend, storage) vs `'running'` (contract Zod schema).
+- **Root Cause:** TypeScript types and Zod schemas were created or evolved independently without cross-layer verification. No automated enforcement ensures schema fields match type fields. Each layer was validated independently but never cross-checked at the field level.
+- **Fix:**
+  1. **Immediate:** Fix StatusString enum split — normalize `'running'` → `'in_progress'` in Zod schemas to match core types
+  2. **Structural:** Add build-step type assertion (`type AssertEqual<T, U> = T extends U ? U extends T ? true : false : false`) that verifies each Zod schema's `z.infer<>` type is assignable to/from the corresponding TypeScript interface
+  3. **Process:** Add type-schema alignment check to `pnpm type-check` or `pnpm harmony:enforce`
+- **Impact:** Harmony score 38/100. Drift is currently dormant (frontend receives pre-parsed data via WebSocket, never uses contract parsers directly). Becomes live issue if strict schema enforcement is enabled on the parsing pipeline.
+- **Status:** Open (remediation needed)
