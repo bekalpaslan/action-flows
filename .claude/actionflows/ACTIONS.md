@@ -19,16 +19,19 @@ These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 
 | Action | Purpose | Requires Input? | Required Inputs | Model | Contract Output? |
 |--------|---------|-----------------|-----------------|-------|------------------|
-| code/ | Implement code changes (generic) | YES | task, context | haiku | NO |
-| review/ | Review anything | YES | scope, type | sonnet | YES (5.1) |
-| audit/ | Comprehensive audits | YES | type, scope | opus | NO |
-| test/ | Execute tests | YES | scope, type | haiku | NO |
 | analyze/ | Codebase analysis | YES | aspect, scope | sonnet | YES (5.2) |
-| plan/ | Implementation planning | YES | requirements, context | sonnet | NO |
-| commit/ | Git commit + push | YES | summary, files | haiku | NO |
+| audit/ | Comprehensive audits | YES | type, scope | opus | NO |
 | brainstorm/ | Interactive ideation facilitation | YES | idea, classification, context | opus | YES (5.3) |
+| code/ | Implement code changes (generic) | YES | task, context | haiku | NO |
+| commit/ | Git commit + push | YES | summary, files | haiku | NO |
+| diagnose/ | Root cause analysis for violations | YES | gateId, violationPattern, gateTraces, severityLevel | sonnet | YES (5.4) |
+| isolate/ | Quarantine management (add/remove/list) | YES | subcommand, targetType, targetId, reason | haiku | YES (5.6) |
 | narrate/ | Write poetic narrative chapters | YES | chapterNumber, analysisPath | opus | NO |
 | onboarding/ | Facilitate interactive onboarding questionnaire | NO | (none) | opus | NO |
+| plan/ | Implementation planning | YES | requirements, context | sonnet | NO |
+| review/ | Review anything | YES | scope, type | sonnet | YES (5.1) |
+| test/ | Execute tests | YES | scope, type | haiku | NO |
+| verify-healing/ | Post-healing validation | YES | healingChainId, targetGateId, expectedScore, preHealingScore | sonnet | YES (5.5) |
 
 **Contract Output Column:**
 - **YES (X.X)** — Action produces structured output defined in CONTRACT.md (format number shown)

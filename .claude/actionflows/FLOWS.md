@@ -18,6 +18,7 @@
 | code-and-review/ | Refactor and review code | code → review → second-opinion/ → (loop if needed) |
 | cleanup/ | Human-directed repository cleanup | analyze → plan → human gate → code → review → second-opinion/ → commit |
 | harmony-audit-and-fix/ | Remediate format drift and contract violations | analyze/harmony-violation → code/fix-parser OR code/update-orchestrator OR code/update-contract → review/harmony-fix → commit |
+| health-protocol/ | 7-phase immune response for contract violations | analyze (detect) → analyze (classify) → isolate (conditional) → diagnose → human gate → healing flow → verify-healing → analyze (learn) |
 | parser-update/ | Update backend parser for evolved formats | analyze/parser-gap → code/backend/parser → test/parser → review → commit |
 
 ## explore
