@@ -183,3 +183,41 @@
 - **Fix:** Update review/agent.md checklist: "For contract changes, use field-level verification matrix. For each modified field, verify alignment across: (1) CONTRACT.md spec, (2) TypeScript type definition, (3) Zod validation schema, (4) Parser implementation, (5) Regex pattern (if applicable)."
 - **Impact:** Claimed 100% alignment was actually ~93% (12 of 16 issues fixed, 4 missed)
 - **Status:** Open (review methodology needs enhancement)
+
+### L022: Review Agents Should Verify Deployment Paths Before Marking Blockers
+- **Date:** 2026-02-13
+- **From:** second-opinion/ (opus) during contract-drift-prevention/ chain
+- **Issue:** Primary review marked "TypeScript compilation errors in hooks package" as a critical deployment blocker, but second opinion verified the hook script runs perfectly via `npx tsx` without compilation. The hook has zero dependencies on sibling files with errors. This false blocker inflated the deployment complexity estimate from 1 chain to 3 chains.
+- **Root Cause:** Review agent assumed the only deployment path was full `tsc` package build, without testing alternative execution methods (`tsx`, `ts-node`, `esbuild`). The hooks package builds all files together, but individual scripts with only stdlib imports can run independently.
+- **Fix:** Add "deployment path verification" step to review/agent.md protocol for infrastructure that creates new entry points. Before marking compilation/runtime issues as blockers, test: (1) Direct execution via `tsx`/`ts-node`, (2) Standalone build via `esbuild`, (3) Dependencies on problematic sibling files. Document verified deployment path in review report.
+- **Impact:** False blockers waste human review time and create incorrect deployment sequencing. In this case, the hook was ready to deploy immediately, not after 2 prerequisite chains.
+- **Status:** Open (review methodology needs enhancement)
+
+### L023: Immune System Architecture Maps to Biological Immunity (3-Layer Model)
+- **Date:** 2026-02-13
+- **From:** analyze/ (sonnet) during vision-alignment-audit chain
+- **Issue:** The immune system components were implemented incrementally without a unifying mental model, making it unclear which layer a new feature belongs to.
+- **Discovery:** The 14-gate checkpoint architecture naturally maps to biological immune systems:
+  1. **Prevention Layer** (Gates 1-6, agent standards) → Innate immunity — stops violations before they happen
+  2. **Detection Layer** (Gates 7-11, harmony detector, health calculator) → Adaptive immunity — identifies violations in real-time
+  3. **Healing Layer** (Gates 12-14, health-protocol, learning capture) → Immunological memory — fixes violations and prevents recurrence
+- **Application:** When adding new immune system features, classify them by layer. Gate validators → Detection. Agent standards → Prevention. Learning capture → Healing.
+- **Recommendation:** Document this 3-layer model in `docs/living/IMMUNE_SYSTEM.md` as the architectural foundation.
+- **Status:** Open (documentation pending)
+
+### L024: Output Protection ≠ Input Protection — "Rebellious Instructions" Gap
+- **Date:** 2026-02-13
+- **From:** analyze/ (sonnet) during vision-alignment-audit chain
+- **Issue:** Vision statement says "if instructions to agents are changed to be rebellious and hide that fact, immune system detects it." Reality: system only detects OUTPUT violations (wrong format), not INPUT violations (mutated instructions).
+- **Root Cause:** Architecture designed around contract validation (output), not instruction integrity (input). Agent.md files are trusted implicitly as source of truth — no checksum registry, no spawn audit trail, no behavioral monitoring.
+- **Attack Vector:** Modify agent.md mid-chain → orchestrator spawns with mutated instructions → agent executes rebelliously → NO violation detected until output fails contract.
+- **Gap Analysis:**
+  - ✅ Output protection: 100% (16 format parsers, contract validation, missing field detection)
+  - ❌ Input protection: 0% (no checksums, no audit, no behavioral signatures)
+- **Proposed 4th Layer:** Add **Input Validation Layer** with:
+  1. Agent.md checksum registry (hash at session start, verify at each spawn)
+  2. Spawn prompt audit log (compare prompt against agent.md source of truth)
+  3. Behavioral signature profiles (expected tool patterns per action type)
+  4. Filesystem watcher (detect mid-session agent.md modifications)
+- **Impact:** 65% alignment on Element 7 ("detects rebellious instructions") — PRIMARY gap in vision alignment.
+- **Status:** Open (architectural gap, requires implementation chain)
