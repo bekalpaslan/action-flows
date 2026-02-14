@@ -77,6 +77,9 @@
 | onSendMessage | `(message: string) => Promise<void> \| undefined` | ❌ | N/A | Callback when user sends a message. If provided, called instead of default WebSocket send. |
 | collapsible | `boolean \| undefined` | ❌ | `true` | Enable collapsible header with expand/collapse toggle button |
 | cwd | `string \| undefined` | ❌ | `'D:/ActionFlowsDashboard'` | Working directory for CLI session context (passed to claudeCliService) |
+| onClose | `() => void \| undefined` | ❌ | N/A | Called when user clicks close button in chat header |
+| prefillMessage | `string \| undefined` | ❌ | N/A | Pre-populate the input field (from DiscussButton context) |
+| showCloseButton | `boolean \| undefined` | ❌ | `false` | Show X button in header (default false for backward compatibility) |
 
 ### Callbacks Up (to parent)
 | Callback | Signature | Description |

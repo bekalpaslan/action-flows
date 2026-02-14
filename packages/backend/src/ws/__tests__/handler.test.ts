@@ -341,6 +341,7 @@ describe('broadcastEvent', () => {
     const sessionId = brandedTypes.sessionId('broadcast-session');
 
     const event: WorkspaceEvent = {
+      id: `evt-${Date.now()}`,
       type: 'step:spawned',
       sessionId,
       timestamp: brandedTypes.currentTimestamp(),
@@ -365,6 +366,7 @@ describe('broadcastEvent', () => {
     (mockWsClosed as any).readyState = 3; // WebSocket.CLOSED
 
     const event: WorkspaceEvent = {
+      id: `evt-${Date.now()}`,
       type: 'step:completed',
       sessionId: brandedTypes.sessionId('test'),
       timestamp: brandedTypes.currentTimestamp(),

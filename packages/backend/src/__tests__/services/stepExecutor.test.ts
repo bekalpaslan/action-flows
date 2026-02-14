@@ -15,6 +15,12 @@ vi.mock('../../services/permissionService.js', () => ({
   userHasPermission: vi.fn(),
 }));
 
+vi.mock('../../services/claudeCliManager.js', () => ({
+  claudeCliManager: {
+    spawnAgent: vi.fn(),
+  },
+}));
+
 vi.mock('../../storage/index.js', () => ({
   storage: {
     setChainStep: vi.fn(),
@@ -172,7 +178,7 @@ describe('StepExecutorService', () => {
 
     it('should allow execution with execute_chain permission', async () => {
       vi.mocked(permissionService.userHasPermission).mockResolvedValue(true);
-      vi.mocked(claudeCliManager.claudeCliManager.spawnAgent).mockResolvedValue('Success');
+      vi.mocked(claudeCliManager.claudeCliManager.spawnAgent).mockResolvedValue({ success: true, output: 'Success' } as any);
 
       const step = createStep(1);
       const chain = createChain(1);

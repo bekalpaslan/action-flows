@@ -221,7 +221,9 @@ export const storage: MemoryStorage = {
     if (!this.sessions.has(session.id) && this.sessions.size >= MAX_SESSIONS) {
       this._evictOldestCompletedSession();
     }
-    this.sessions.set(session.id, session);
+    // Sanitize session data to prevent prototype pollution
+    const sanitized = JSON.parse(JSON.stringify(session)) as Session;
+    this.sessions.set(session.id, sanitized);
     // Track session by user
     if (session.user) {
       const userSessions = this.sessionsByUser.get(session.user) || new Set();
