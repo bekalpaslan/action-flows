@@ -30,6 +30,9 @@ import { validateStepBoundary } from './checkpoints/gate06-step-boundary.js';
 import { validateExecutionComplete } from './checkpoints/gate08-execution-complete.js';
 import { validateRegistryUpdate } from './checkpoints/gate11-registry-update.js';
 import { validateArchiveIndexing } from './checkpoints/gate12-archive-indexing.js';
+import { validateExecuteStep } from './checkpoints/gate07-execute-step.js';
+import { validateAutoTriggerDetection } from './checkpoints/gate10-auto-trigger-detection.js';
+import { validateLearningSurface } from './checkpoints/gate13-learning-surface.js';
 import { getGateCheckpoint, type GateCheckpoint } from './gateCheckpoint.js';
 import type { ChainId, StepId } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
@@ -277,7 +280,7 @@ export class LogTailer {
  * Detected gate event
  */
 interface GateEvent {
-  gateId: 'gate-01' | 'gate-02' | 'gate-03' | 'gate-04' | 'gate-05' | 'gate-06' | 'gate-08' | 'gate-09' | 'gate-11' | 'gate-12' | 'gate-14';
+  gateId: 'gate-01' | 'gate-02' | 'gate-03' | 'gate-04' | 'gate-05' | 'gate-06' | 'gate-07' | 'gate-08' | 'gate-09' | 'gate-10' | 'gate-11' | 'gate-12' | 'gate-13' | 'gate-14';
   content: string;
   metadata?: Record<string, any>;
 }
@@ -314,6 +317,15 @@ export class GateDetector {
 
     // Gate 12: Archive Indexing
     archiveIndexing: /INDEX\.md.*updated|Added to INDEX|logs\/INDEX|Chain.*archived|Execution.*logged|log.*folder|## Chain Complete/i,
+
+    // Gate 7: Execute Step (agent spawn announcement)
+    executeStep: /Spawning\s+Step\s+\d+:|Executing\s+Step\s+\d+/i,
+
+    // Gate 10: Auto-Trigger Detection (second-opinion insertion)
+    autoTrigger: /second-?opinion|auto-?trigger|insert(?:ing|ed)?\s+step|after\s+(?:review|audit)/i,
+
+    // Gate 13: Learning Surface
+    learningSurface: /##\s+Agent\s+Learning|Learning\s+Surface|LEARNINGS\.md.*updated|L\d{3}/i,
 
     // Gate 14: Flow Candidate Evaluation
     flowCandidate: /flow\.candidate|reusable\.pattern|register\.as\.flow/i,
@@ -392,6 +404,30 @@ export class GateDetector {
     if (GateDetector.PATTERNS.archiveIndexing.test(text)) {
       events.push({
         gateId: 'gate-12',
+        content: text,
+      });
+    }
+
+    // G7: Execute Step
+    if (GateDetector.PATTERNS.executeStep.test(text)) {
+      events.push({
+        gateId: 'gate-07',
+        content: text,
+      });
+    }
+
+    // G10: Auto-Trigger Detection
+    if (GateDetector.PATTERNS.autoTrigger.test(text)) {
+      events.push({
+        gateId: 'gate-10',
+        content: text,
+      });
+    }
+
+    // G13: Learning Surface
+    if (GateDetector.PATTERNS.learningSurface.test(text)) {
+      events.push({
+        gateId: 'gate-13',
         content: text,
       });
     }
@@ -531,33 +567,37 @@ export class GateIntegration {
 
         case 'gate-02':
           await validateContextRouting(event.content, chainId);
-          console.log(`[ConversationWatcher] Gate 2 (Context Routing) detected for chain ${chainId}`);
+          console.log(`[ConversationWatcher][Gate 2][Context Routing] detected for chain ${chainId}`);
           break;
 
         case 'gate-03':
           await validateSpecialWork(event.content, chainId);
-          console.log(`[ConversationWatcher] Gate 3 (Special Work) detected for chain ${chainId}`);
+          console.log(`[ConversationWatcher][Gate 3][Special Work] detected for chain ${chainId}`);
           break;
 
         case 'gate-04':
           await validateChainCompilation(event.content, chainId);
-          console.log(`[ConversationWatcher] Gate 4 (Chain Compilation) detected for chain ${chainId}`);
+          console.log(`[ConversationWatcher][Gate 4][Chain Compilation] detected for chain ${chainId}`);
           break;
 
         case 'gate-05':
           await this.gateCheckpoint.validateGate5(chainId, event.content);
-          console.log(`[ConversationWatcher] Gate 5 (Present Chain) detected for chain ${chainId}`);
+          console.log(`[ConversationWatcher][Gate 5][Present Chain] detected for chain ${chainId}`);
           break;
 
         case 'gate-06':
-          const stepId = this.generateStepId(chainId);
-          await validateStepBoundary(event.content, chainId, stepId);
-          console.log(`[ConversationWatcher] Gate 6 (Step Boundary) detected for chain ${chainId}`);
+          await validateStepBoundary(event.content, chainId, this.generateStepId(chainId));
+          console.log(`[ConversationWatcher][Gate 6][Step Boundary] detected for chain ${chainId}`);
+          break;
+
+        case 'gate-07':
+          await validateExecuteStep(event.content, chainId, this.generateStepId(chainId));
+          console.log(`[ConversationWatcher][Gate 7][Execute Step] detected for chain ${chainId}`);
           break;
 
         case 'gate-08':
           await validateExecutionComplete(event.content, chainId);
-          console.log(`[ConversationWatcher] Gate 8 (Execution Complete) detected for chain ${chainId}`);
+          console.log(`[ConversationWatcher][Gate 8][Execution Complete] detected for chain ${chainId}`);
           break;
 
         case 'gate-09':
@@ -565,19 +605,29 @@ export class GateIntegration {
           // This case handled separately in processAgentSpawn
           break;
 
+        case 'gate-10':
+          await validateAutoTriggerDetection(event.content, chainId, this.generateStepId(chainId));
+          console.log(`[ConversationWatcher][Gate 10][Auto-Trigger] detected for chain ${chainId}`);
+          break;
+
         case 'gate-11':
           await validateRegistryUpdate(event.content, chainId);
-          console.log(`[ConversationWatcher] Gate 11 (Registry Update) detected for chain ${chainId}`);
+          console.log(`[ConversationWatcher][Gate 11][Registry Update] detected for chain ${chainId}`);
           break;
 
         case 'gate-12':
           await validateArchiveIndexing(event.content, chainId);
-          console.log(`[ConversationWatcher] Gate 12 (Archive Indexing) detected for chain ${chainId}`);
+          console.log(`[ConversationWatcher][Gate 12][Archive Indexing] detected for chain ${chainId}`);
+          break;
+
+        case 'gate-13':
+          await validateLearningSurface(event.content, chainId);
+          console.log(`[ConversationWatcher][Gate 13][Learning Surface] detected for chain ${chainId}`);
           break;
 
         case 'gate-14':
           await this.gateCheckpoint.validateGate14(chainId, event.content);
-          console.log(`[ConversationWatcher] Gate 14 (Flow Candidate) detected for chain ${chainId}`);
+          console.log(`[ConversationWatcher][Gate 14][Flow Candidate] detected for chain ${chainId}`);
           break;
       }
     } catch (error) {
