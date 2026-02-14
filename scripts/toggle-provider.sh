@@ -150,10 +150,10 @@ check_ollama() {
     fi
 
     # Check for available models
-    local models
-    models=$(curl -s http://localhost:11434/api/tags | jq -r '.models[].name' 2>/dev/null || echo "")
+    local model_count
+    model_count=$(curl -s http://localhost:11434/api/tags | jq -r '.models // [] | length' 2>/dev/null || echo "0")
 
-    if [ -z "$models" ]; then
+    if [ "$model_count" -eq 0 ]; then
         warning "Ollama running but no models found"
         echo ""
         echo "Pull a model first:"
@@ -163,9 +163,15 @@ check_ollama() {
         return 1
     fi
 
-    success "Ollama is running"
-    info "Available models:"
-    echo "$models" | sed 's/^/    /'
+    success "Ollama is running with $model_count model(s)"
+
+    # List available models
+    local models
+    models=$(curl -s http://localhost:11434/api/tags | jq -r '.models[]? | .name' 2>/dev/null || echo "")
+    if [ -n "$models" ]; then
+        info "Available models:"
+        echo "$models" | sed 's/^/    /'
+    fi
     echo ""
 
     return 0
