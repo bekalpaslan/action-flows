@@ -478,9 +478,9 @@ export function HarmonySpaceWorkbench({
           </>
         )}
 
-        {/* Health Tab */}
-        {tab === 'health' && target && (
-          <HarmonyHealthDashboard target={target} targetType={targetType} />
+        {/* Health Tab — system-wide, no target required */}
+        {tab === 'health' && (
+          <HarmonyHealthDashboard />
         )}
       </div>
 

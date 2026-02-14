@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { useWebSocket } from '../hooks/useWebSocket';
-import type { SessionId, ProjectId, HarmonyMetrics, WorkspaceEvent } from '@afw/shared';
+import type { SessionId, ProjectId, WorkspaceEvent } from '@afw/shared';
 import './HarmonyHealthDashboard.css';
 
 // TODO: Backend needs to implement /api/harmony/health endpoint for these types
@@ -48,11 +48,11 @@ interface HarmonyHealthScore {
 }
 
 interface HarmonyHealthDashboardProps {
-  /** Target session or project ID */
-  target: SessionId | ProjectId;
+  /** Target session or project ID (optional — uses system-wide health if omitted) */
+  target?: SessionId | ProjectId;
 
   /** Target type */
-  targetType: 'session' | 'project';
+  targetType?: 'session' | 'project';
 
   /** Optional className */
   className?: string;
@@ -84,132 +84,42 @@ export const HarmonyHealthDashboard: React.FC<HarmonyHealthDashboardProps> = ({
       setLoading(true);
       setError(null);
 
-      // TODO: Backend needs to implement /api/harmony/health endpoint
-      // For now, fetch from existing harmony endpoint and transform to health score format
-      const endpoint = targetType === 'project'
-        ? `/api/harmony/project/${target}`
-        : `/api/harmony/${target}`;
-
-      const response = await fetch(`http://localhost:3001${endpoint}`);
+      // Use system-wide health endpoint (works without a session)
+      const response = await fetch('http://localhost:3001/api/harmony/health');
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch harmony data: ${response.status}`);
+        throw new Error(`Failed to fetch harmony health: ${response.status}`);
       }
 
       const data = await response.json();
 
-      // Transform existing harmony metrics into health score format
-      const transformedHealthScore = transformMetricsToHealthScore(data.metrics);
-      setHealthScore(transformedHealthScore);
+      // Map API response to component's HarmonyHealthScore shape
+      setHealthScore({
+        overall: data.overall ?? 100,
+        timestamp: data.timestamp ?? Date.now(),
+        byGate: data.byGate ?? {},
+        violations24h: data.violations24h ?? 0,
+        violationsTotal: data.violationsTotal ?? 0,
+        driftPatterns: data.driftPatterns ?? [],
+        recommendations: data.healingRecommendations?.map((rec: any, i: number) => ({
+          id: `rec-${i}`,
+          gateId: rec.pattern ?? 'unknown',
+          gateName: rec.pattern ?? 'Unknown',
+          severity: rec.severity ?? 'low',
+          description: rec.reason ?? rec.pattern ?? '',
+          suggestedFlow: rec.suggestedFlow ?? 'harmony-audit-and-fix/',
+          affectedOutputs: rec.violationCount ?? 0,
+          estimatedImpact: rec.estimatedEffort ?? 'Unknown',
+        })) ?? data.recommendations ?? [],
+        trend: data.trend ?? 'stable',
+      });
     } catch (err) {
       console.error('[HarmonyHealthDashboard] Error fetching health score:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch health score');
     } finally {
       setLoading(false);
     }
-  }, [target, targetType]);
-
-  // Transform existing HarmonyMetrics to HarmonyHealthScore format
-  const transformMetricsToHealthScore = (metrics: HarmonyMetrics): HarmonyHealthScore => {
-    // Calculate overall health score (0-100)
-    const overall = Math.round(metrics.harmonyPercentage);
-
-    // Calculate trend based on recent violations
-    let trend: 'improving' | 'stable' | 'degrading' = 'stable';
-    if (metrics.violationCount === 0) {
-      trend = 'improving';
-    } else if (metrics.violationCount > 5) {
-      trend = 'degrading';
-    }
-
-    // Generate gate health scores from format breakdown
-    const byGate: Record<string, GateHealthScore> = {};
-    Object.entries(metrics.formatBreakdown).forEach(([formatName], index) => {
-      const gateId = `gate-${index + 1}`;
-      const violations = metrics.recentViolations.filter(
-        v => v.parsedFormat === formatName
-      ).length;
-
-      const score = violations === 0 ? 100 : Math.max(0, 100 - (violations * 10));
-      let status: 'healthy' | 'warning' | 'critical' = 'healthy';
-      if (score < 50) status = 'critical';
-      else if (score < 70) status = 'warning';
-
-      byGate[gateId] = {
-        gateId,
-        gateName: formatName || 'Unknown Format',
-        score,
-        violations,
-        lastViolation: violations > 0 ? Number(metrics.lastCheck) : null,
-        status,
-      };
-    });
-
-    // Generate drift patterns
-    const driftPatterns: DriftPattern[] = [];
-    if (metrics.recentViolations.length > 0) {
-      // Group violations by format
-      const formatViolations: Record<string, number> = {};
-      metrics.recentViolations.forEach(v => {
-        const format = v.parsedFormat || 'unknown';
-        formatViolations[format] = (formatViolations[format] || 0) + 1;
-      });
-
-      // Create drift patterns for formats with multiple violations
-      Object.entries(formatViolations).forEach(([format, count]) => {
-        if (count > 2) {
-          driftPatterns.push({
-            pattern: `Recurring ${format} violations`,
-            frequency: count,
-            affectedGates: Object.keys(byGate).filter(
-              gateId => byGate[gateId].gateName === format
-            ),
-            severity: count > 5 ? 'critical' : count > 3 ? 'high' : 'medium',
-          });
-        }
-      });
-    }
-
-    // Generate healing recommendations
-    const recommendations: HealingRecommendation[] = [];
-    Object.values(byGate).forEach(gate => {
-      if (gate.violations > 0) {
-        const severity: 'low' | 'medium' | 'high' | 'critical' =
-          gate.violations > 5 ? 'critical' :
-          gate.violations > 3 ? 'high' :
-          gate.violations > 1 ? 'medium' : 'low';
-
-        recommendations.push({
-          id: `rec-${gate.gateId}`,
-          gateId: gate.gateId,
-          gateName: gate.gateName,
-          severity,
-          description: `${gate.violations} violation(s) detected in ${gate.gateName} output format`,
-          suggestedFlow: 'harmony-audit-and-fix/',
-          affectedOutputs: gate.violations,
-          estimatedImpact: severity === 'critical' ? 'High - affects dashboard parsing' :
-                           severity === 'high' ? 'Medium - may degrade UX' : 'Low',
-        });
-      }
-    });
-
-    // Sort recommendations by severity
-    recommendations.sort((a, b) => {
-      const severityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
-      return severityOrder[a.severity] - severityOrder[b.severity];
-    });
-
-    return {
-      overall,
-      timestamp: Number(metrics.lastCheck),
-      byGate,
-      violations24h: metrics.violationCount,
-      violationsTotal: metrics.violationCount,
-      driftPatterns,
-      recommendations,
-      trend,
-    };
-  };
+  }, []);
 
   // WebSocket event handler
   const handleWebSocketEvent = useCallback((event: WorkspaceEvent) => {
@@ -232,14 +142,12 @@ export const HarmonyHealthDashboard: React.FC<HarmonyHealthDashboardProps> = ({
     onEvent: handleWebSocketEvent,
   });
 
-  // Subscribe to WebSocket updates
+  // Subscribe to WebSocket updates (use target if available)
   useEffect(() => {
-    // Subscribe to the target session/project
-    ws.subscribe(target as SessionId);
-
-    return () => {
-      ws.unsubscribe(target as SessionId);
-    };
+    if (target) {
+      ws.subscribe(target as SessionId);
+      return () => { ws.unsubscribe(target as SessionId); };
+    }
   }, [ws, target]);
 
   // Initial fetch
