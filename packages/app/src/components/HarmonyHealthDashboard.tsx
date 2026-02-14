@@ -93,11 +93,44 @@ export const HarmonyHealthDashboard: React.FC<HarmonyHealthDashboardProps> = ({
 
       const data = await response.json();
 
+      // Gate name lookup
+      const GATE_NAMES: Record<string, string> = {
+        'gate-01': 'Parse & Understand',
+        'gate-02': 'Route to Context',
+        'gate-03': 'Detect Special Work',
+        'gate-04': 'Chain Compilation',
+        'gate-05': 'Present Chain',
+        'gate-06': 'Step Boundary',
+        'gate-07': 'Agent Spawn',
+        'gate-08': 'Format Output',
+        'gate-09': 'Parse Agent Output',
+        'gate-10': 'Learning Surface',
+        'gate-11': 'Fresh Eye Discovery',
+        'gate-12': 'Archive & Indexing',
+        'gate-13': 'Post-Completion',
+        'gate-14': 'Flow Candidate',
+      };
+
+      // Map backend gate data to frontend GateHealthScore shape
+      const mappedGates: Record<string, GateHealthScore> = {};
+      for (const [gateId, gate] of Object.entries(data.byGate ?? {})) {
+        const g = gate as any;
+        const score = g.score ?? 100;
+        mappedGates[gateId] = {
+          gateId,
+          gateName: GATE_NAMES[gateId] || gateId,
+          score,
+          violations: g.violationCount ?? 0,
+          lastViolation: g.lastViolation ?? null,
+          status: score >= 90 ? 'healthy' : score >= 50 ? 'warning' : 'critical',
+        };
+      }
+
       // Map API response to component's HarmonyHealthScore shape
       setHealthScore({
         overall: data.overall ?? 100,
-        timestamp: data.timestamp ?? Date.now(),
-        byGate: data.byGate ?? {},
+        timestamp: data.timestamp ? new Date(data.timestamp).getTime() : Date.now(),
+        byGate: mappedGates,
         violations24h: data.violations24h ?? 0,
         violationsTotal: data.violationsTotal ?? 0,
         driftPatterns: data.driftPatterns ?? [],

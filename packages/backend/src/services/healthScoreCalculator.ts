@@ -25,10 +25,25 @@ export class HealthScoreCalculator extends EventEmitter {
   private readonly VIOLATION_THRESHOLD = 3;
   private readonly WINDOW_24H_MS = 24 * 60 * 60 * 1000;
   private readonly WINDOW_7D_MS = 7 * 24 * 60 * 60 * 1000;
+  /** In-memory trace buffer — works regardless of storage backend */
+  private traceBuffer: GateTrace[] = [];
+  private readonly MAX_BUFFER_SIZE = 10000;
 
   constructor(storage: Storage) {
     super();
     this.storage = storage;
+  }
+
+  /**
+   * Ingest a gate trace into the in-memory buffer.
+   * Called from index.ts when gateCheckpoint emits 'gate:checkpoint'.
+   */
+  ingestTrace(trace: GateTrace): void {
+    this.traceBuffer.push(trace);
+    // Evict oldest if buffer full
+    if (this.traceBuffer.length > this.MAX_BUFFER_SIZE) {
+      this.traceBuffer = this.traceBuffer.slice(-this.MAX_BUFFER_SIZE);
+    }
   }
 
   /**
@@ -129,39 +144,41 @@ export class HealthScoreCalculator extends EventEmitter {
    * Get all gate traces from storage
    */
   private async getGateTraces(gateId?: GateId): Promise<GateTrace[]> {
+    // Try Redis first, fall back to in-memory buffer
     try {
       const pattern = gateId ? `harmony:gate:*:${gateId}:*` : `harmony:gate:*`;
 
       let keys: string[] = [];
       if ('keys' in this.storage && typeof (this.storage as any).keys === 'function') {
         keys = await (this.storage as any).keys(pattern);
-      } else {
-        console.debug('[HealthScore] Storage does not support keys() method');
-        return [];
       }
 
-      const traces: GateTrace[] = [];
-
-      for (const key of keys) {
-        try {
-          let data: string | null = null;
-          if ('get' in this.storage && typeof (this.storage as any).get === 'function') {
-            data = await (this.storage as any).get(key);
+      if (keys.length > 0) {
+        const traces: GateTrace[] = [];
+        for (const key of keys) {
+          try {
+            let data: string | null = null;
+            if ('get' in this.storage && typeof (this.storage as any).get === 'function') {
+              data = await (this.storage as any).get(key);
+            }
+            if (data) {
+              traces.push(JSON.parse(data));
+            }
+          } catch (parseError) {
+            console.warn(`[HealthScore] Failed to parse trace from key ${key}:`, parseError);
           }
-
-          if (data) {
-            traces.push(JSON.parse(data));
-          }
-        } catch (parseError) {
-          console.warn(`[HealthScore] Failed to parse trace from key ${key}:`, parseError);
         }
+        return traces;
       }
-
-      return traces;
     } catch (error) {
-      console.error('[HealthScore] Error retrieving gate traces:', error);
-      return [];
+      console.error('[HealthScore] Error retrieving gate traces from storage:', error);
     }
+
+    // Fallback: in-memory buffer (works with MemoryStorage)
+    if (gateId) {
+      return this.traceBuffer.filter(t => t.gateId === gateId);
+    }
+    return [...this.traceBuffer];
   }
 
   /**

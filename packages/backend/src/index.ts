@@ -133,6 +133,12 @@ app.use(compression({
   },
 }));
 
+// Security headers middleware
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  next();
+});
+
 // Apply authentication middleware (Agent A)
 app.use(authMiddleware);
 
@@ -592,8 +598,11 @@ if (isMainModule) {
     try {
       const gateCheckpoint = initGateCheckpoint(storage);
 
-      // Wire gate checkpoint events to WebSocket broadcast
+      // Wire gate checkpoint events to WebSocket broadcast + health calculator
       gateCheckpoint.on('gate:checkpoint', (trace: any) => {
+        // Feed into health score calculator's in-memory buffer
+        healthScoreCalculator.ingestTrace(trace);
+
         // Broadcast to all connected clients
         const message = JSON.stringify({
           type: 'chain:gate_updated',
