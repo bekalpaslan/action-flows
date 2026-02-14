@@ -72,7 +72,7 @@ create_backup() {
 # Validate JSON file
 validate_json() {
     local file="$1"
-    if ! jq empty "$file" 2>/dev/null; then
+    if ! python -m json.tool "$file" >/dev/null 2>&1; then
         error "Invalid JSON in $file"
         return 1
     fi
@@ -86,15 +86,15 @@ get_current_provider() {
         return
     fi
 
-    if jq -e '.baseURL' "$CONFIG_FILE" &>/dev/null; then
+    if grep -q '"baseURL"' "$CONFIG_FILE" 2>/dev/null; then
         local base_url
-        base_url=$(jq -r '.baseURL' "$CONFIG_FILE")
+        base_url=$(grep -o '"baseURL"[[:space:]]*:[[:space:]]*"[^"]*"' "$CONFIG_FILE" | sed 's/.*"baseURL"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
         if [[ "$base_url" == *"localhost:11434"* ]] || [[ "$base_url" == *"127.0.0.1:11434"* ]]; then
             echo "ollama"
         else
             echo "custom"
         fi
-    elif jq -e '.primaryApiKey' "$CONFIG_FILE" &>/dev/null; then
+    elif grep -q '"primaryApiKey"' "$CONFIG_FILE" 2>/dev/null; then
         echo "anthropic"
     else
         echo "unknown"
@@ -108,7 +108,9 @@ get_current_model() {
         return
     fi
 
-    jq -r '.model // "unknown"' "$SETTINGS_FILE" 2>/dev/null || echo "unknown"
+    local model
+    model=$(grep -o '"model"[[:space:]]*:[[:space:]]*"[^"]*"' "$SETTINGS_FILE" 2>/dev/null | sed 's/.*"model"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
+    echo "${model:-unknown}"
 }
 
 # Show current status
@@ -138,7 +140,10 @@ show_status() {
 check_ollama() {
     info "Checking Ollama..."
 
-    if ! curl -s http://localhost:11434/api/tags &>/dev/null; then
+    local response
+    response=$(curl -s http://localhost:11434/api/tags 2>/dev/null)
+
+    if [ -z "$response" ]; then
         error "Ollama is not running"
         echo ""
         echo "Start Ollama with:"
@@ -149,9 +154,9 @@ check_ollama() {
         return 1
     fi
 
-    # Check for available models
+    # Check for available models (parse JSON without jq)
     local model_count
-    model_count=$(curl -s http://localhost:11434/api/tags | jq -r '.models // [] | length' 2>/dev/null || echo "0")
+    model_count=$(echo "$response" | grep -o '"name":"[^"]*"' | wc -l)
 
     if [ "$model_count" -eq 0 ]; then
         warning "Ollama running but no models found"
@@ -165,9 +170,9 @@ check_ollama() {
 
     success "Ollama is running with $model_count model(s)"
 
-    # List available models
+    # List available models (extract names without jq)
     local models
-    models=$(curl -s http://localhost:11434/api/tags | jq -r '.models[]? | .name' 2>/dev/null || echo "")
+    models=$(echo "$response" | grep -o '"name":"[^"]*"' | sed 's/"name":"//g' | sed 's/"//g')
     if [ -n "$models" ]; then
         info "Available models:"
         echo "$models" | sed 's/^/    /'
@@ -192,7 +197,7 @@ switch_to_anthropic() {
     latest_backup=$(ls -t "${CLAUDE_DIR}"/config.backup.*.json 2>/dev/null | head -1)
 
     if [ -n "$latest_backup" ] && [ -f "$latest_backup" ]; then
-        existing_key=$(jq -r '.primaryApiKey // ""' "$latest_backup" 2>/dev/null || echo "")
+        existing_key=$(grep -o '"primaryApiKey"[[:space:]]*:[[:space:]]*"[^"]*"' "$latest_backup" 2>/dev/null | sed 's/.*"primaryApiKey"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
     fi
 
     # Check template exists
@@ -204,7 +209,7 @@ switch_to_anthropic() {
 
     # Apply config template
     if [ -n "$existing_key" ] && [ "$existing_key" != "null" ] && [ "$existing_key" != "" ]; then
-        jq --arg key "$existing_key" '.primaryApiKey = $key' "$TEMPLATE_DIR/config.anthropic.json" > "${CONFIG_FILE}.tmp"
+        python -c "import json; d=json.load(open('$TEMPLATE_DIR/config.anthropic.json')); d['primaryApiKey']='$existing_key'; json.dump(d,open('${CONFIG_FILE}.tmp','w'),indent=2)"
         info "Preserved existing API key"
     else
         warning "No existing API key found"
