@@ -38,6 +38,11 @@ export function useActiveChain(sessionId: SessionId): UseActiveChainResult {
    * Fetch chains from backend
    */
   const fetchChains = useCallback(async () => {
+    if (!sessionId) {
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
