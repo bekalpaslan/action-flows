@@ -73,3 +73,19 @@ IMPLEMENTATION_DETAILS.txt
 
 # Windows-specific
 nul
+
+# Test output variants
+test-output*.log
+
+# One-time analysis artifacts in logs
+.claude/actionflows/logs/*.json
+.claude/actionflows/logs/*.py
+.claude/actionflows/logs/*.js
+.claude/actionflows/logs/*.txt
+
+# Agent-generated change logs
+changes.md
+packages/*/changes.md
+
+# Generated doc artifacts
+docs/*.html

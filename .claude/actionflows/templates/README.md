@@ -91,7 +91,6 @@ Each template includes:
 **Source:** Analysis of agent outputs, CONTRACT.md § Format 5.x
 
 ---
-
 ### Git Convention Templates
 
 **Templates in `git/` directory provide standard formats for git operations.**

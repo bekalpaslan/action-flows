@@ -5,14 +5,14 @@
   "description": "ActionFlows Backend - Express API with WebSocket",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "npx tsx watch src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "harmony:enforce": "npx tsx src/cli/harmony-enforce.ts",
-    "contracts:validate": "npx tsx src/cli/validate-contracts.ts"
+    "harmony:enforce": "tsx src/cli/harmony-enforce.ts",
+    "contracts:validate": "tsx src/cli/validate-contracts.ts"
   },
   "dependencies": {
     "@afw/shared": "workspace:*",

@@ -100,7 +100,7 @@
 - **Issue:** 4 flows (`cli-integration-test/`, `e2e-chrome-mcp/`, `contract-index/`, `contract-compliance-audit/`) were registered in FLOWS.md and CONTEXTS.md but never got `instructions.md` files created in `flows/`. The orchestrator can route to them but has no execution instructions.
 - **Root Cause:** Flow registration was treated as a registry line edit (direct action), but creating the instructions file requires a code agent. The two steps were decoupled — the registry edit happened immediately, but the instructions creation was never queued as a follow-up. No validation exists to check that a registered flow has a corresponding instructions file.
 - **Fix:** When registering a flow, ALWAYS queue a follow-up `flow-creation/` chain or quick-triage the instructions file in the same turn. Add a `framework-health/` check that validates all FLOWS.md entries have matching `instructions.md` files.
-- **Status:** Open (4 orphans being fixed now)
+- **Status:** Closed (all 4 orphans fixed in commit 64697e5). Note: template-creation/ discovered as new orphan during 2026-02-14 health protocol.
 
 ### L013: Post-Chain Completion Gates Skipped Without Enforcement Checklist
 - **Date:** 2026-02-11
@@ -220,7 +220,7 @@
   3. Behavioral signature profiles (expected tool patterns per action type)
   4. Filesystem watcher (detect mid-session agent.md modifications)
 - **Impact:** 65% alignment on Element 7 ("detects rebellious instructions") — PRIMARY gap in vision alignment.
-- **Status:** Escalated (architectural implementation) — Requires separate chain (5-7 steps, code changes to backend + orchestrator). Queued for future session.
+- **Status:** Partially addressed — agentIntegrityService.ts created (item 1: checksum registry). Items 2-4 remain open. See L026.
 
 ### L025: Systemic Type-to-Schema Drift Across Contract Formats
 - **Date:** 2026-02-13
@@ -232,4 +232,12 @@
   2. **Structural:** Add build-step type assertion (`type AssertEqual<T, U> = T extends U ? U extends T ? true : false : false`) that verifies each Zod schema's `z.infer<>` type is assignable to/from the corresponding TypeScript interface
   3. **Process:** Add type-schema alignment check to `pnpm type-check` or `pnpm harmony:enforce`
 - **Impact:** Harmony score 38/100. Drift is currently dormant (frontend receives pre-parsed data via WebSocket, never uses contract parsers directly). Becomes live issue if strict schema enforcement is enabled on the parsing pipeline.
-- **Status:** Open (remediation needed)
+- **Status:** Closed (d863952 + 87952e0) — Schemas aligned, 17/18 type guards active, 59/59 tests passing. 1 remaining: _check_StepCompletion (nextStep type mismatch)
+
+### L026: Health Protocol Reveals Infrastructure Decay + Gate Coverage Gaps
+- **Date:** 2026-02-14
+- **From:** health-protocol/ flow (Eyes agents, qwen2.5-coder:7b + qwen3:14b)
+- **Issue:** First health-protocol run surfaced 4 issues: (P1) Backend wouldn't start — pnpm 8.0.0 incompatible with Node.js 24.13.1, `npx tsx` double-resolving node_modules. (P2) L012 orphan flows all fixed, but new orphan template-creation/ discovered. (P3) 5 of 14 gates had no explicit validation methods (5, 8, 10, 11, 14). (P4) L024 — zero input protection for agent.md files (no checksum verification before spawn).
+- **Root Cause:** (P1) packageManager field pinned to old version, never updated when Node.js upgraded. (P2) Flow registration without instructions.md creates ghost entries. (P3) Gate checkpoint service was built incrementally — newer gates never got explicit validators. (P4) Trust model assumed agent.md files are immutable — no runtime verification mechanism existed.
+- **Fix:** (P1) Updated packageManager to pnpm@10.29.3, changed npx tsx → tsx in scripts. (P2) Closed L012, noted template-creation/ orphan. (P3) Added validateGate5/8/10/11/14 methods to gateCheckpoint.ts. (P4) Created agentIntegrityService.ts with SHA-256 checksums and singleton pattern.
+- **Status:** Open (healing applied, pending commit and backend restart verification)

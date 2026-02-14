@@ -159,7 +159,7 @@ No second opinion was produced. The original output stands as-is.
 
 - **CLI location:** `packages/second-opinion/src/cli.ts`
 - **Eligible actions:** review, audit (auto-trigger); analyze, plan (opt-in)
-- **Model configs:** 32B for review/audit, 7B for analyze/plan (with fallback chains)
+- **Model configs:** 14B (qwen3:14b) for review/audit, 7B (qwen2.5-coder:7b) for analyze/plan (with fallback chains)
 - **Never-throw:** The CLI and this agent both guarantee graceful degradation
 
 ---
