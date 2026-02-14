@@ -543,7 +543,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
           // Batch fetch every 100 keys
           if (keys.length >= 100) {
-            const values = await redis.mget(keys);
+            const values = await redis.mget(...keys);
             for (const data of values) {
               if (data) {
                 results.push(JSON.parse(data) as FrequencyRecord);
@@ -555,7 +555,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
         // Process remaining keys
         if (keys.length > 0) {
-          const values = await redis.mget(keys);
+          const values = await redis.mget(...keys);
           for (const data of values) {
             if (data) {
               results.push(JSON.parse(data) as FrequencyRecord);
@@ -1190,7 +1190,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
           // Batch fetch every 100 keys
           if (keys.length >= 100) {
-            const values = await redis.mget(keys);
+            const values = await redis.mget(...keys);
             for (const json of values) {
               if (json) {
                 const instance = JSON.parse(json) as ReminderInstance;
@@ -1205,7 +1205,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
 
         // Process remaining keys
         if (keys.length > 0) {
-          const values = await redis.mget(keys);
+          const values = await redis.mget(...keys);
           for (const json of values) {
             if (json) {
               const instance = JSON.parse(json) as ReminderInstance;

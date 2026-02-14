@@ -334,6 +334,12 @@ export async function cleanup(): Promise<void> {
         }
       }
 
+      // Reset universe storage state to prevent test pollution
+      storage.regions.clear();
+      storage.bridges.clear();
+      storage.sessionRegionMappings.clear();
+      storage.universeGraph = undefined;
+
       if (testServer) {
         testServer.close(() => {
           testServer = null;
