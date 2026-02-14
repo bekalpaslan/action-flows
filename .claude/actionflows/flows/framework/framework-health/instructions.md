@@ -4,6 +4,24 @@
 
 ---
 
+## Approach
+
+CONTRACT.md is the **root law** of the framework. Every framework file — every action, flow, template, and document — is derived from it. The creation hierarchy is:
+
+```
+CONTRACT.md (the law — defines what outputs must be)
+    ↓
+TEMPLATE.*.md (the blueprint — structural pattern to follow)
+    ↓
+agent.md / instructions.md (the instance — derived from above)
+```
+
+This flow doesn't just check "are files present?" or "do sections exist?" — it validates that the framework is **in accordance with the contract**. A file can have every section and still be non-conformant if it wasn't derived from CONTRACT.md. The contract is what makes an output parseable, a format sacred, and a structure load-bearing.
+
+Every analysis step in this flow traces back to this hierarchy. Registry drift means the map diverged from the territory. Cross-reference failures mean components point to laws that don't exist. Template non-conformance means an instance wasn't derived from its blueprint — which means it wasn't derived from the contract.
+
+---
+
 ## When to Use
 
 - Periodic health check (recommended: after every 5-10 chain executions)
@@ -60,7 +78,7 @@ Input:
 
 ---
 
-### Step 3: Template Conformance
+### Step 3: Contract Derivation Conformance
 
 **Action:** `.claude/actionflows/actions/analyze/`
 **Model:** sonnet
@@ -70,12 +88,12 @@ Input:
 Read your definition in .claude/actionflows/actions/analyze/agent.md
 
 Input:
-- aspect: template-conformance
+- aspect: contract-derivation
 - scope: .claude/actionflows/actions/
-- context: Validate all agent.md files against TEMPLATE.agent.md. Check: required sections present (Extends, Your Mission, Input Contract, Output Contract, Trace Contract, Steps to Complete This Action, Project Context, Constraints, Learnings Output); Extends section references valid abstracts that exist on disk in _abstract/; Input/Output/Trace Contracts are present and non-empty; Trace Contract includes logging requirements table.
+- context: CONTRACT.md is the root law. TEMPLATE.agent.md is the blueprint derived from it. Every agent.md is an instance derived from the blueprint. Validate this derivation chain. First read CONTRACT.md to understand the format specs and output standards. Then read TEMPLATE.agent.md to know the required structure. Then check every agent.md file under actions/ for: (1) required sections present (Extends, Your Mission, Input Contract, Output Contract, Trace Contract, Steps to Complete This Action, Project Context, Constraints, Learnings Output); (2) Extends section references valid abstracts that exist on disk in _abstract/; (3) Input/Output/Trace Contracts are present and non-empty; (4) Trace Contract includes logging requirements table; (5) Output Contract references a valid contract format number that exists in CONTRACT.md — the agent must know which law governs its output.
 ```
 
-**Gate:** Template conformance report delivered with pass/fail per agent.md file, highlighting missing sections and invalid abstract references.
+**Gate:** Contract derivation report delivered with pass/fail per agent.md file, tracing conformance back through the hierarchy: CONTRACT.md → TEMPLATE → instance.
 
 ---
 
@@ -88,7 +106,7 @@ Input:
 ├─────────────────────────┤
 │  Step 1: Registry Drift │
 │  Step 2: Cross-Refs     │
-│  Step 3: Template       │
+│  Step 3: Derivation     │
 └─────────────────────────┘
 ```
 
@@ -105,7 +123,8 @@ Input:
   - Missing contract format specs → add to CONTRACT.md
   - Dangling action references → update FLOWS.md or register missing actions
   - Missing routing metadata → add entries to ROUTING_METADATA.md
-- → Manual remediation for template conformance failures (Step 3):
-  - Missing sections → update agent.md files
+- → Manual remediation for contract derivation failures (Step 3):
+  - Missing sections → update agent.md files using TEMPLATE.agent.md as blueprint
   - Invalid abstract references → fix Extends sections or create missing abstracts
   - Empty contracts → populate Input/Output/Trace Contract sections
+  - Missing/invalid format number → ensure Output Contract references a valid CONTRACT.md format
