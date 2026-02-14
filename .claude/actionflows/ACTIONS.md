@@ -11,8 +11,6 @@ Abstract actions are **reusable behavior patterns** that agents are explicitly i
 | `_abstract/agent-standards/` | Core behavioral standards for all agents | All agents |
 | `_abstract/create-log-folder/` | Datetime folder creation | code, review, audit, analyze, test, plan |
 | `_abstract/log-ownership/` | Log path ownership principle | All agents |
-| `_abstract/post-completion/` | Post-implementation workflow (commit, registry update) | Orchestrator (post-completion flow) |
-| `_abstract/update-queue/` | Queue.md status updates | code, review |
 
 ## Generic Actions
 
@@ -33,6 +31,14 @@ These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 | review/ | Review anything | YES | scope, type | sonnet | YES (5.1) | review, work, maintenance | quality-check, bug-detection, style-validation, contract-compliance | `{"scope_preference": "multi-file", "min_confidence": "low", "parallel_safe": false}` |
 | test/ | Execute tests | YES | scope, type | haiku | NO | work, maintenance, review | test-execution, test-suite-creation, coverage-analysis, test-debugging | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
 | verify-healing/ | Post-healing validation | YES | healingChainId, targetGateId, expectedScore, preHealingScore | sonnet | YES (5.5) | review, maintenance | post-healing-validation, gate-verification, healing-assessment | `{"scope_preference": "multi-package", "min_confidence": "high", "parallel_safe": true}` |
+
+## Orchestrator-Executed Actions
+
+These actions are executed directly by the orchestrator using its tool access, NOT spawned as separate agents.
+
+| Action | Purpose | Execution Method | Required Inputs | Contract Output? | Context Affinity | Capability Tags | Routing Hints |
+|--------|---------|-----------------|-----------------|------------------|------------------|-----------------|---------------|
+| chrome-mcp-test | Execute browser E2E tests using Chrome DevTools MCP | Orchestrator uses Chrome DevTools MCP tools (navigate, snapshot, click, fill, wait_for, evaluate_script) | testSpec, targetUrl | NO (inline pass/fail) | review, work | browser-testing, e2e-testing, orchestrator-executed, chrome-devtools-protocol | `{"scope_preference": "single-test", "min_confidence": "high", "parallel_safe": false, "requires_chrome_mcp": true}` |
 
 **Contract Output Column:**
 - **YES (X.X)** — Action produces structured output defined in CONTRACT.md (format number shown)

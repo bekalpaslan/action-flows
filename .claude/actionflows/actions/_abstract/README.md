@@ -10,5 +10,3 @@ Abstract actions are NOT standalone agents. They are instructions that concrete 
 |----------|---------|
 | agent-standards/ | Core behavioral principles (11 rules) |
 | create-log-folder/ | Create datetime-isolated output folders |
-| update-queue/ | Track status in queue.md |
-| post-completion/ | Commit → update registry |
