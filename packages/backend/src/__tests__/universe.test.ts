@@ -471,7 +471,7 @@ describe('Universe Graph Integration Tests', () => {
       const getRes = await fetch(`${testServerUrl}/api/universe`);
       expect(getRes.status).toBe(200);
       const retrieved = await getRes.json() as any;
-      expect(retrieved.metadata.totalInteractions).toBe(0);
+      expect(retrieved.universe.metadata.totalInteractions).toBe(0);
     });
 
     it('should return 404 when universe graph not initialized', async () => {

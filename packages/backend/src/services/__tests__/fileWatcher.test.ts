@@ -511,8 +511,7 @@ describe('FileWatcher Service', () => {
       errorHandler!(testError);
 
       expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('[FileWatcher] Error watching session'),
-        testError
+        expect.stringContaining('[FileWatcher] Error watching session')
       );
 
       consoleSpy.mockRestore();

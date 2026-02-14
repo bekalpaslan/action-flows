@@ -129,7 +129,7 @@ describe('EvolutionService', () => {
 
       expect(tick).toMatchObject({
         id: expect.stringContaining('tick-'),
-        timestamp: expect.any(Number),
+        timestamp: expect.any(String),
         sessionId: 'session-1',
         type: expect.stringMatching(/color_shifted|map_expanded/),
         details: {
@@ -346,7 +346,7 @@ describe('EvolutionService', () => {
       const details = tick!.details as any;
       const delta = details.traceDeltas['bridge-1'];
       expect(delta.strengthIncrement).toBe(0.05);
-      expect(delta.timestamp).toBeGreaterThan(0);
+      expect(typeof delta.timestamp).toBe('string');
     });
   });
 

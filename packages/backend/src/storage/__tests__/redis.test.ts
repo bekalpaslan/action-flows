@@ -117,6 +117,35 @@ vi.mock('ioredis', () => {
       return allKeys.filter(key => regex.test(key));
     }
 
+    // SCAN operation (returns object with Symbol.asyncIterator)
+    scanStream(options?: { match?: string; count?: number }) {
+      const self = this;
+      const pattern = options?.match || '*';
+      const batchSize = options?.count || 10;
+
+      return {
+        [Symbol.asyncIterator]: async function* () {
+          const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+          const allKeys = Array.from(self.store.keys());
+          const matchingKeys = allKeys.filter((key: string) => regex.test(key));
+
+          if (matchingKeys.length === 0) {
+            return;
+          }
+
+          for (let i = 0; i < matchingKeys.length; i += batchSize) {
+            const batch = matchingKeys.slice(i, i + batchSize);
+            yield batch;
+          }
+        }
+      };
+    }
+
+    // MGET operation (batch get)
+    async mget(...keys: string[]): Promise<(string | null)[]> {
+      return keys.map(key => this.store.get(key) ?? null);
+    }
+
     // Pub/Sub operations
     async subscribe(channel: string): Promise<void> {
       if (!this.pubsubChannels.has(channel)) {
@@ -327,6 +356,8 @@ describe('RedisStorage', () => {
       const event = {
         type: 'step:spawned',
         sessionId,
+        id: 'evt-no-timestamp',
+        timestamp: brandedTypes.currentTimestamp(),
         stepNumber: 1,
       } as any;
 

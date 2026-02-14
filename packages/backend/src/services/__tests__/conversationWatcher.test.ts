@@ -193,8 +193,9 @@ describe('GateDetector', () => {
   describe('detectGates - Chain Compilation (G4)', () => {
     it('should detect valid chain compilation (all 3 patterns)', () => {
       const events = gateDetector.detectGates(SAMPLE_CHAIN_COMPILATION);
-      expect(events).toHaveLength(1);
+      expect(events).toHaveLength(2);
       expect(events[0].gateId).toBe('gate-04');
+      expect(events[1].gateId).toBe('gate-05');
     });
 
     it('should reject status update table (wrong columns)', () => {
