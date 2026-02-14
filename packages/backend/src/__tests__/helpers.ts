@@ -13,6 +13,7 @@ import { handleWebSocket } from '../ws/handler.js';
 import eventsRouter from '../routes/events.js';
 import sessionsRouter from '../routes/sessions.js';
 import commandsRouter from '../routes/commands.js';
+import universeRouter from '../routes/universe.js';
 import type { Server } from 'http';
 
 let testServer: Server | null = null;
@@ -54,6 +55,7 @@ export async function createTestServer(): Promise<{
   testApp.use('/api/events', eventsRouter);
   testApp.use('/api/sessions', sessionsRouter);
   testApp.use('/api/commands', commandsRouter);
+  testApp.use('/api/universe', universeRouter);
 
   // Create HTTP server
   testServer = createServer(testApp);

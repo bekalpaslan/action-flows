@@ -12,8 +12,24 @@ import type { SessionId, ChainId, RegionId, EdgeId } from '@afw/shared';
 describe('EvolutionService', () => {
   let service: EvolutionService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     service = new EvolutionService();
+    service.setThrottling(false);
+
+    // Prime the tick counter by calling processInteraction 9 times
+    // so that the next call (in the test) will be the 10th and will tick
+    // (normal speed threshold is 10)
+    const dummyContext: InteractionContext = {
+      sessionId: 'session-init' as SessionId,
+      chainId: 'chain-init' as ChainId,
+      regionsActive: [],
+      bridgesTraversed: [],
+      durationMs: 0,
+      success: true,
+    };
+    for (let i = 0; i < 9; i++) {
+      await service.processInteraction(dummyContext);
+    }
   });
 
   describe('processInteraction', () => {
@@ -76,6 +92,7 @@ describe('EvolutionService', () => {
     });
 
     it('should respect evolution speed setting - slow', async () => {
+      service.resetTracking(); // Reset counter to test the full 1-20 sequence
       service.setEvolutionSpeed('slow');
 
       const context: InteractionContext = {
