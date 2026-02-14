@@ -305,7 +305,7 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 
 **Required Fields:**
 - Brief Title (string)
-- File (enum: INDEX.md | FLOWS.md | ACTIONS.md | LEARNINGS.md)
+- File (enum: INDEX.md | FLOWS.md | ACTIONS.md | LEARNINGS.md, or any registry file path — extensible)
 - Line (operation: added/removed/updated + the line content)
 
 ---
@@ -321,6 +321,8 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 - Description (brief work title)
 - Pattern (chain signature, e.g., "code×8 → review → commit")
 - Outcome (status + metrics + commit hash)
+- Success (boolean, nullable) — Whether the chain execution succeeded. Derived from outcome text.
+- Metrics (string, nullable) — Key metrics extracted from outcome (e.g., "18 files, 92%").
 
 ---
 
@@ -368,10 +370,12 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 
 **Required Fields:**
 - Request brief (string)
-- Context (enum: work | maintenance | explore | review | settings | pm | archive | harmony | editor)
+- Context (enum: work | maintenance | explore | review | settings | pm | archive | harmony | editor, or custom workbench IDs — extensible)
 - Flow (flow name or "Composed from actions" or "No match")
 - Actions (list of actions)
 - Explanation (why this routing)
+- Confidence (number 0.0-1.0, nullable) — Routing confidence score. Higher values indicate stronger keyword match.
+- Disambiguated (boolean) — Whether human disambiguation was required. True if multiple contexts scored equally.
 
 **Note:** Currently NOT produced by orchestrator (internal routing). Legacy name "Department" will be renamed to "Context" in future contract version.
 
@@ -417,7 +421,7 @@ These formats are produced by agents. Full specifications included because agent
 - **Findings:** Table with 6 columns (can be empty if no findings)
   - **#:** Finding number (integer)
   - **File:** Relative path from project root
-  - **Line:** Line number or range (e.g., "42" or "42-45")
+  - **Line:** Line number (integer). Single line number only — ranges are not supported. (e.g., 42)
   - **Severity:** Enum (`critical` | `high` | `medium` | `low`) — Lowercase
   - **Description:** What the issue is
   - **Suggestion:** How to fix it
@@ -470,10 +474,10 @@ These formats are produced by agents. Full specifications included because agent
 
 **Field Descriptions:**
 - **Title:** Markdown H1 heading
-- **Aspect:** What aspect is being analyzed (e.g., "Contract duplication", "Security vulnerabilities")
+- **Aspect:** What aspect is being analyzed (e.g., "Contract duplication", "Security vulnerabilities") — Extensible, not a strict enum
 - **Scope:** What is being analyzed (e.g., "CONTRACT.md", "Authentication system")
 - **Date:** Analysis date (YYYY-MM-DD format)
-- **Agent:** Always "analyze/"
+- **Agent:** Action type that produced the report (e.g., "analyze/", "review/", "diagnose/", or any action/ type)
 - **Numbered Sections:** At least 1 section, numbered with ##
 - **Recommendations:** Actionable next steps section
 

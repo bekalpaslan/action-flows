@@ -212,7 +212,7 @@ export const StepCompletionSchema = BaseParsedSchema.extend({
   stepNumber: StepNumberSchema.nullable(),
   action: z.string().nullable(),
   result: z.string().nullable(),
-  nextStep: z.string().nullable(),
+  nextStep: z.union([z.number(), z.string()]).nullable(),
 });
 
 export type StepCompletionValidated = z.infer<typeof StepCompletionSchema>;
@@ -464,10 +464,7 @@ export type ContextRoutingValidated = z.infer<typeof ContextRoutingSchema>;
  * If schemas drift significantly from types, TypeScript compilation will fail.
  * Zero runtime cost — these are type-level only.
  *
- * NOTE: One guard remains disabled:
- * - ChainStepParsed.nextStep type mismatch (number | string | null vs string | null)
- *
- * All ModelString/StatusString uppercase drift issues have been resolved.
+ * All schema-type mismatches have been resolved.
  * See upstream type fixes in packages/shared/src/types.ts.
  */
 
@@ -478,7 +475,7 @@ const _check_ChainStatusUpdate: z.infer<typeof ChainStatusUpdateSchema> = {} as 
 const _check_ExecutionComplete: z.infer<typeof ExecutionCompleteSchema> = {} as ExecutionCompleteParsed;
 
 // Format 2.x: Step Lifecycle
-// const _check_StepCompletion: z.infer<typeof StepCompletionSchema> = {} as StepCompletionParsed; // Disabled: nextStep type mismatch (number | string | null vs string | null)
+const _check_StepCompletion: z.infer<typeof StepCompletionSchema> = {} as StepCompletionParsed;
 const _check_DualOutput: z.infer<typeof DualOutputSchema> = {} as DualOutputParsed;
 const _check_SecondOpinionSkip: z.infer<typeof SecondOpinionSkipSchema> = {} as SecondOpinionSkipParsed;
 
