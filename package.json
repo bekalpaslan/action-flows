@@ -29,7 +29,11 @@
     "generate:tests": "tsx scripts/generate-test-scaffolds.ts",
     "build:desktop": "pnpm -F @afw/shared build && pnpm -F @afw/backend build && pnpm -F @afw/app electron-build:win",
     "contracts:validate": "tsx packages/backend/src/cli/validate-contracts.ts",
-    "contract:validate": "pnpm -F @afw/shared contract:validate"
+    "contract:validate": "pnpm -F @afw/shared contract:validate",
+    "provider:anthropic": "bash scripts/toggle-provider.sh anthropic",
+    "provider:ollama": "bash scripts/toggle-provider.sh ollama",
+    "provider:status": "bash scripts/toggle-provider.sh status",
+    "provider:restore": "bash scripts/toggle-provider.sh restore"
   },
   "workspaces": [
     "packages/*"

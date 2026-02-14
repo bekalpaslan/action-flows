@@ -131,6 +131,72 @@ REDIS_URL=redis://localhost:6379
 HISTORY_RETENTION_DAYS=7
 ```
 
+## Switching AI Providers
+
+ActionFlows supports both **Anthropic's Claude API** (cloud) and **Ollama** (local models) for Claude Code execution.
+
+### Quick Toggle
+
+```bash
+# Switch to local Ollama models
+pnpm provider:ollama
+
+# Switch to Anthropic API
+pnpm provider:anthropic
+
+# Check current provider
+pnpm provider:status
+
+# Restore from backup
+pnpm provider:restore
+```
+
+### Prerequisites
+
+**For Anthropic (Cloud):**
+- Valid API key in `~/.claude/config.json`
+- Internet connection
+- Pay-per-use pricing
+
+**For Ollama (Local):**
+- Ollama installed and running: `http://localhost:11434`
+- Models pulled: `ollama pull qwen2.5-coder:7b`
+- ~5-20GB disk space for models
+- Sufficient RAM (8GB+ recommended)
+
+### Recommended Ollama Models
+
+| Model | Size | Speed | Best For |
+|-------|------|-------|----------|
+| `gemma3:4b` | 2.5GB | Fast (~18s) | Quick iterations |
+| `qwen2.5-coder:7b` | 4.7GB | Medium (~45s) | General development |
+| `qwen2.5-coder:32b` | 19GB | Slow (>2min) | Critical reviews |
+
+**Quick setup:**
+```bash
+# Install Ollama (if not installed)
+curl -fsSL https://ollama.com/install.sh | sh  # Linux/macOS
+# or download from https://ollama.com for Windows
+
+# Pull recommended model
+ollama pull qwen2.5-coder:7b
+
+# Verify Ollama is running
+curl http://localhost:11434/api/tags
+```
+
+### Manual Setup
+
+If automated toggle fails, see `.claude/config-templates/README.md` for manual configuration steps.
+
+### Important Notes
+
+- **Provider toggle is global:** Affects all Claude Code projects on your machine
+- **Backups created automatically:** Before each toggle
+- **Second-opinion system:** Uses Ollama independently (works with either primary provider)
+
+For detailed guide, see `docs/guides/PROVIDER_TOGGLE.md`.
+
 ## Running the Application
 
 ### Development Mode
