@@ -54,7 +54,7 @@ router.get('/', readLimiter, async (req, res) => {
       return res.status(404).json({ error: 'Universe graph not initialized' });
     }
 
-    res.json(graph);
+    res.json({ universe: graph });
   } catch (error) {
     console.error('[API] Error fetching universe graph:', error);
     res.status(500).json({

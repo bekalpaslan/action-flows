@@ -212,11 +212,10 @@ router.post('/', sessionCreateLimiter, validateBody(createSessionSchema), async 
  *       500:
  *         description: Internal server error
  */
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    // For memory storage, we can list all sessions
-    // For Redis, we'd need to scan keys - for now return empty for Redis
-    const sessions = storage.sessions ? Array.from(storage.sessions.values()) : [];
+    // Use listSessions method which works with both Memory and Redis storage
+    const sessions = storage.listSessions ? await Promise.resolve(storage.listSessions()) : [];
 
     res.json({
       count: sessions.length,

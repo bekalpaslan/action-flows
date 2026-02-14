@@ -98,6 +98,10 @@ export class ResilientStorage implements Storage {
   }
 
   // Session storage
+  async listSessions(): Promise<Session[]> {
+    return this.executeWithFallback((storage) => storage.listSessions?.() ?? []);
+  }
+
   async getSession(sessionId: SessionId): Promise<Session | undefined> {
     return this.executeWithFallback((storage) => storage.getSession(sessionId));
   }

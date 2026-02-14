@@ -724,6 +724,27 @@ if (isMainModule) {
       }
     }
 
+    // Initialize default universe graph if not exists
+    try {
+      const universeGraph = await Promise.resolve(storage.getUniverseGraph());
+      if (!universeGraph) {
+        const now = new Date().toISOString();
+        const defaultUniverseGraph = {
+          metadata: {
+            version: '1.0.0',
+            createdAt: now,
+            lastModifiedAt: now,
+          },
+          regions: [],
+          bridges: [],
+        };
+        await Promise.resolve(storage.setUniverseGraph(defaultUniverseGraph));
+        console.log('[Init] ✅ Default universe graph initialized');
+      }
+    } catch (error) {
+      console.error('[Init] ❌ Failed to initialize default universe graph:', error);
+    }
+
     console.log(`
 ╔════════════════════════════════════════════╗
 ║   ActionFlows Backend Server Running      ║

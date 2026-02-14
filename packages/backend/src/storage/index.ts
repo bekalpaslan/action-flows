@@ -28,6 +28,7 @@ export interface PatternFilter {
 export interface Storage {
   // Session storage
   sessions?: Map<SessionId, Session>; // Memory only
+  listSessions?(): Session[] | Promise<Session[]>;
   getSession(sessionId: SessionId): Session | undefined | Promise<Session | undefined>;
   setSession(session: Session): void | Promise<void>;
   deleteSession(sessionId: SessionId): void | Promise<void>;

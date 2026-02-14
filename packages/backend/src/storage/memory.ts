@@ -31,6 +31,7 @@ const MAX_EVOLUTION_TICKS = 10_000;
 export interface MemoryStorage {
   // Session storage
   sessions: Map<SessionId, Session>;
+  listSessions(): Session[];
   getSession(sessionId: SessionId): Session | undefined;
   setSession(session: Session): void;
   deleteSession(sessionId: SessionId): void;
@@ -199,6 +200,9 @@ export const storage: MemoryStorage = {
 
   // Sessions
   sessions: new Map(),
+  listSessions() {
+    return Array.from(this.sessions.values());
+  },
   getSession(sessionId: SessionId) {
     const session = this.sessions.get(sessionId);
     if (!session) return undefined;

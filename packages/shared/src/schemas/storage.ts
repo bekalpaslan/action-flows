@@ -42,8 +42,12 @@ export const sessionSchema = z.object({
     text: z.string(),
     type: z.string().optional(),
   }).optional(),
-  createdAt: timestampSchema,
-  updatedAt: timestampSchema,
+  startedAt: timestampSchema,
+  endedAt: timestampSchema.optional(),
+  lastActivityAt: timestampSchema.optional(),
+  duration: z.number().optional(),
+  metadata: z.record(z.unknown()).optional(),
+  activityTtlExtensions: z.number().optional(),
   projectId: projectIdSchema.optional(),
 });
 
