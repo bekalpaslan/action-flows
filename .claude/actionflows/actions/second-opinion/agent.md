@@ -64,6 +64,18 @@ Run the second-opinion CLI against a previous agent's output and return the stru
 - **DEBUG:** + CLI stdout/stderr + prerequisite checks
 - **TRACE:** + CLI command construction + model selection logic
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| agent-reasoning | Yes | Prerequisites check, skip decision logic (minimal - delegates to CLI) |
+| tool-usage | Yes | CLI execution command, file reads |
+
+**Second-opinion-specific trace depth:**
+- INFO: Second opinion report only (second-opinion-report.md) - delegates all critique work to CLI
+- DEBUG: + CLI stdout/stderr, prerequisite checks, output file validation
+- TRACE: + CLI command construction, model selection logic, timeout handling, skip reason determination
+
 ---
 
 ## Steps to Complete This Action

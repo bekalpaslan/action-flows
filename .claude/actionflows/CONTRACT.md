@@ -527,6 +527,422 @@ These formats are produced by agents. Full specifications included because agent
 
 ---
 
+#### Format 5.4: Diagnosis Report (P4)
+**Producer:** diagnose/ action
+**TypeScript:** `DiagnosisReportParsed`
+**Parser:** `parseDiagnosisReport(text: string)`
+**Referenced By:** agent-standards § Contract Compliance, diagnose/agent.md
+
+**Required Structure:**
+```markdown
+# Root Cause Analysis
+
+**Gate:** {gateId}
+**Pattern:** {violationPattern}
+**Severity:** {severityLevel}
+**Confidence:** {high | medium | low}
+**Auto-Triage Candidate:** {yes | no}
+
+---
+
+## Evidence
+
+### Timing Analysis
+- **Violations started:** {timestamp from gate traces}
+- **Violation frequency:** {count in 24h, 7d}
+- **Affected gates:** {list of gates from traces}
+
+### Code History
+- **CONTRACT.md last modified:** {timestamp} ({before | after} violations started)
+- **ORCHESTRATOR.md last modified:** {timestamp} ({before | after} violations started)
+- **Relevant parser last modified:** {timestamp} ({before | after} violations started)
+- **Agent {name} last modified:** {timestamp} (if agent-specific)
+
+### Pattern Analysis
+{Detailed description of what the violation looks like, with examples from gate traces}
+
+---
+
+## Root Cause
+
+**Classification:** {parser_bug | orchestrator_drift | contract_outdated | agent_drift | template_mismatch}
+
+**Explanation:**
+{2-3 sentence explanation of why this is the root cause, referencing evidence above}
+
+**Alternative Causes Considered:**
+- {Alternative 1}: {Why ruled out}
+- {Alternative 2}: {Why ruled out}
+
+---
+
+## Healing Recommendation
+
+**Flow:** {healing-flow-name}/
+**Confidence:** {high | medium | low}
+
+**Steps:**
+1. {Step 1 action} — {what it does}
+2. {Step 2 action} — {what it does}
+3. ...
+
+**Target Files:**
+- {file-path-1} — {what needs to change}
+- {file-path-2} — {what needs to change}
+
+**If Auto-Triage Candidate:**
+Trivial fix detected: {description of simple fix}
+Orchestrator can apply directly without human gate.
+
+---
+
+## Prevention Suggestion
+
+**Learning Entry:**
+```
+LXXX | {date} | {issue-title}
+     | Root cause: {brief root cause}
+     | Fix: {what was done to heal}
+     | Prevention: {pattern to avoid in future}
+```
+
+**Immediate Prevention:**
+{Specific action to prevent recurrence}
+
+**Long-Term Prevention:**
+{Systemic improvement}
+
+---
+
+**Diagnosis Complete**
+```
+
+**Field Descriptions:**
+- **Gate:** String — Gate ID that failed validation (e.g., "Gate 4", "Gate 9")
+- **Pattern:** String — Violation pattern description (e.g., "missing status column")
+- **Severity:** Enum (`critical` | `high` | `medium` | `low`) — From classification step
+- **Confidence:** Enum (`high` | `medium` | `low`) — Confidence in root cause diagnosis
+- **Auto-Triage Candidate:** Enum (`yes` | `no`) — Whether fix is trivial enough for auto-triage
+- **Timing Analysis:** Section with violation timestamps and frequency data
+- **Code History:** Section with git log timestamps for relevant files
+- **Pattern Analysis:** Free-form description of violation pattern
+- **Classification:** Enum (`parser_bug` | `orchestrator_drift` | `contract_outdated` | `agent_drift` | `template_mismatch`)
+- **Explanation:** 2-3 sentences explaining root cause
+- **Alternative Causes:** List of ruled-out alternatives
+- **Healing Recommendation:** Structured recommendation with flow name, steps, target files
+- **Prevention Suggestion:** Immediate and long-term prevention patterns
+
+**Dashboard Usage:**
+- `DiagnosisReportViewer` component displays full diagnosis
+- `HealingRecommendationPanel` component shows suggested flow and target files
+- `ConfidenceBadge` component shows diagnosis confidence level
+
+**Validation:** Harmony detector validates Classification enum, Confidence enum, Severity enum, required sections present
+
+**Implementation Status:** Spec: done | Parser: pending | Frontend: pending
+
+---
+
+#### Format 5.5: Healing Verification Report (P3)
+**Producer:** verify-healing/ action
+**TypeScript:** `HealingVerificationParsed`
+**Parser:** `parseHealingVerification(text: string)`
+**Referenced By:** agent-standards § Contract Compliance, verify-healing/agent.md
+
+**Required Structure:**
+```markdown
+# Healing Verification Report
+
+**Healing Chain:** {healingChainId}
+**Target Gate:** {targetGateId}
+**Expected Score:** {expectedScore}
+**Executed At:** {ISO timestamp}
+
+---
+
+## Health Score Comparison
+
+| Metric | Before Healing | After Healing | Delta | Status |
+|--------|----------------|---------------|-------|--------|
+| **Overall Score** | {preHealingScore} | {postHealingScore} | {delta} | {status} |
+| **Target Gate Violations** | {preViolationCount} | {postViolationCount} | {delta} | {status} |
+
+---
+
+## Detailed Gate Analysis
+
+### Target Gate: {targetGateId}
+
+**Before Healing:**
+- Violations: {count}
+- Pass Rate: {percentage}%
+- Pattern: {violation pattern description}
+
+**After Healing:**
+- Violations: {count}
+- Pass Rate: {percentage}%
+- Pattern: {violation pattern description OR "No violations detected"}
+
+**Change:** {status}
+
+---
+
+### Other Gates
+
+| Gate | Violations Before | Violations After | Change |
+|------|-------------------|------------------|--------|
+| Gate 2 | {count} | {count} | {status} |
+| ... | ... | ... | ... |
+
+**New Violations Introduced:** {yes/no — if yes, list gates}
+
+---
+
+## Verdict
+
+**Verdict:** {SUCCESS | PARTIAL | FAILED | ESCALATE}
+
+**Reasoning:**
+{2-3 sentence explanation of verdict based on thresholds and evidence}
+
+**Evidence:**
+- Health score {met | did not meet} expected threshold
+- Target gate violations {cleared | reduced | unchanged | increased}
+- Other gates {stable | improved | degraded}
+
+---
+
+## Recommendations
+
+### Immediate Action
+{Recommendation based on verdict}
+
+### Next Steps
+{Action-specific next steps}
+
+---
+
+## Remaining Violations
+
+**Total Remaining:** {count}
+
+**By Gate:**
+- {gateId}: {count} violations
+  - Pattern: {description}
+
+**Suggested Next Action:** {action}
+
+---
+
+**Verification Complete**
+
+**Status:** {SUCCESS | PARTIAL | FAILED | ESCALATE}
+**Health Delta:** {delta} points
+**Protocol Next Step:** {LEARN | RE-RUN | INVESTIGATE | ROLLBACK}
+```
+
+**Field Descriptions:**
+- **Healing Chain:** String — ChainId of healing chain that executed
+- **Target Gate:** String — Gate that was failing (e.g., "Gate 4")
+- **Expected Score:** Number — Minimum acceptable health score (default: 95)
+- **Executed At:** String — ISO timestamp
+- **Health Score Comparison:** Table with before/after metrics
+  - **Overall Score:** Before, after, delta, status
+  - **Target Gate Violations:** Before, after, delta, status
+- **Detailed Gate Analysis:** Section with target gate details
+  - **Before Healing:** Violations count, pass rate, pattern
+  - **After Healing:** Violations count, pass rate, pattern
+  - **Change:** Status indicator
+- **Other Gates:** Table showing all gates with before/after violation counts
+- **Verdict:** Enum (`SUCCESS` | `PARTIAL` | `FAILED` | `ESCALATE`)
+- **Reasoning:** 2-3 sentence explanation of verdict
+- **Evidence:** Bullet points supporting verdict
+- **Recommendations:** Immediate action and next steps
+- **Remaining Violations:** Count and breakdown by gate (if PARTIAL or FAILED)
+- **Protocol Next Step:** Enum (`LEARN` | `RE-RUN` | `INVESTIGATE` | `ROLLBACK`)
+
+**Dashboard Usage:**
+- `HealingVerificationViewer` component displays full report
+- `VerdictBanner` component shows SUCCESS/PARTIAL/FAILED/ESCALATE with color coding
+- `HealthScoreChart` component visualizes before/after comparison
+- `GateComparisonTable` component shows detailed gate-by-gate analysis
+
+**Validation:** Harmony detector validates Verdict enum, health score range (0-100), required sections present
+
+**Implementation Status:** Spec: done | Parser: pending | Frontend: pending
+
+---
+
+#### Format 5.6: Quarantine Operations Report (P4)
+**Producer:** isolate/ action
+**TypeScript:** `QuarantineOperationsReportParsed`
+**Parser:** `parseQuarantineOperations(text: string)`
+**Referenced By:** agent-standards § Contract Compliance, isolate/agent.md
+
+**Note:** This format is for the human-readable markdown report. Quarantine data is stored in Redis as JSON (not parsed from orchestrator output).
+
+**Required Structure (quarantine subcommand):**
+```markdown
+# Quarantine Record
+
+**Subcommand:** quarantine
+**Target Type:** {targetType}
+**Target ID:** {targetId}
+**Reason:** {reason}
+**Quarantined At:** {ISO timestamp}
+**Auto-Release:** {yes | no}
+**TTL:** {7 days | 24 hours}
+
+---
+
+## Redis Record
+
+**Key:** `quarantine:{targetType}:{targetId}`
+
+**Payload:**
+```json
+{
+  "targetType": "{targetType}",
+  "targetId": "{targetId}",
+  "reason": "{reason}",
+  "quarantinedAt": "{ISO timestamp}",
+  "autoRelease": {true | false},
+  "ttl": {604800 | 86400},
+  "suggestedFlow": "{flow-name}/"
+}
+```
+
+---
+
+## WebSocket Event
+
+**Type:** QuarantineEvent
+**Action:** add
+
+**Payload:**
+```json
+{
+  "type": "QuarantineEvent",
+  "action": "add",
+  "targetType": "{targetType}",
+  "targetId": "{targetId}",
+  "reason": "{reason}",
+  "timestamp": "{ISO timestamp}"
+}
+```
+
+---
+
+## Impact
+
+- **Execution Blocked:** New steps for this {targetType} will be blocked until released
+- **Dashboard Badge:** Quarantine icon displayed in frontend
+- **Suggested Action:** Run {suggestedFlow} to heal, then release quarantine
+
+---
+
+**Quarantine Active**
+
+**Status:** {status description}
+**Next Step:** {next action}
+```
+
+**Required Structure (release subcommand):**
+```markdown
+# Quarantine Release
+
+**Subcommand:** release
+**Target Type:** {targetType}
+**Target ID:** {targetId}
+**Released At:** {ISO timestamp}
+
+---
+
+## Redis Operation
+
+**Key Deleted:** `quarantine:{targetType}:{targetId}`
+
+---
+
+## WebSocket Event
+
+**Type:** QuarantineEvent
+**Action:** remove
+
+**Payload:**
+```json
+{
+  "type": "QuarantineEvent",
+  "action": "remove",
+  "targetType": "{targetType}",
+  "targetId": "{targetId}",
+  "timestamp": "{ISO timestamp}"
+}
+```
+
+---
+
+## Impact
+
+- **Execution Unblocked:** {targetType} can now execute new steps
+- **Dashboard Updated:** Quarantine icon removed from frontend
+
+---
+
+**Quarantine Released**
+
+**Status:** {status description}
+```
+
+**Required Structure (list subcommand):**
+```markdown
+# Active Quarantines
+
+**Subcommand:** list
+**Executed At:** {ISO timestamp}
+**Total Quarantines:** {count}
+
+---
+
+## Quarantine Records
+
+| Target Type | Target ID | Reason | Quarantined At | TTL Remaining | Suggested Flow |
+|-------------|-----------|--------|----------------|---------------|----------------|
+| {type} | {id} | {reason} | {timestamp} | {ttl} | {flow} |
+
+---
+
+**List Complete**
+
+**Status:** {count} active quarantines found
+```
+
+**Field Descriptions:**
+- **Subcommand:** Enum (`quarantine` | `release` | `list`) — Operation type
+- **Target Type:** Enum (`chain` | `session` | `format`) — What is quarantined
+- **Target ID:** String — ChainId, SessionId, or FormatName
+- **Reason:** String — Violation description (quarantine only)
+- **Quarantined At / Released At:** String — ISO timestamp
+- **Auto-Release:** Enum (`yes` | `no`) — Whether TTL-based auto-release enabled
+- **TTL:** String — Time-to-live description (e.g., "7 days", "24 hours")
+- **Redis Record:** Code block with Redis key and JSON payload
+- **WebSocket Event:** Code block with event structure
+- **Impact:** Bullet points describing quarantine effects
+- **Total Quarantines:** Number — Count of active quarantines (list only)
+- **Quarantine Records:** Table — All active quarantines (list only)
+
+**Dashboard Usage:**
+- `QuarantineViewer` component displays quarantine records
+- `QuarantineBadge` component shows quarantine status icon
+- `QuarantineNotification` component alerts user of new quarantines
+- `QuarantineListPanel` component displays all active quarantines
+
+**Validation:** Harmony detector validates Subcommand enum, Target Type enum, required sections present
+
+**Implementation Status:** Spec: done | Parser: pending | Frontend: pending
+
+---
+
 ## Validation
 
 Run contract validation:

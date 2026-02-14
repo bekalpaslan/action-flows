@@ -69,6 +69,19 @@ Write ONE poetic chapter about the project's journey, grounded in conversation h
 - **DEBUG:** + reasoning notes + theme choices + data references
 - **TRACE:** + all alternatives considered + rejected angles + abandoned metaphors
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| agent-reasoning | Yes | How this chapter connects to previous ones, theme selection rationale |
+| creative-decisions | Yes | Why specific metaphors/narrative choices were made |
+| tool-usage | Yes | Previous chapter reads, analysis file reads |
+
+**Narrative-specific trace depth:**
+- INFO: Chapter file only (chapter-{N}.md)
+- DEBUG: + reasoning notes, theme choices, data references, metaphor selection
+- TRACE: + all alternatives considered, rejected narrative angles, abandoned metaphors, arc exploration
+
 ---
 
 ## Steps to Complete This Action

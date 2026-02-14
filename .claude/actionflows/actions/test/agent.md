@@ -62,6 +62,18 @@ Execute the specified tests and produce a clear results report with pass/fail co
 - **DEBUG:** + test command + raw test output
 - **TRACE:** + all test files discovered + test selection logic
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| agent-reasoning | Yes | Test command selection and failure analysis |
+| tool-usage | Yes | Test execution commands (pnpm test) |
+
+**Test-specific trace depth:**
+- INFO: Test results report only, no internal execution details
+- DEBUG: + test command, raw test output, failure parsing
+- TRACE: + all test files discovered, test selection logic, coverage calculation
+
 ---
 
 ## Steps to Complete This Action

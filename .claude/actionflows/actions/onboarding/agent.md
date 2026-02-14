@@ -69,6 +69,18 @@ Use progressive disclosure: show examples, explain concepts, quiz understanding,
 - **DEBUG:** + module content loading + quiz validation logic
 - **TRACE:** + all navigation decisions + teaching strategy adjustments
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| agent-reasoning | Yes | Module progression strategy (minimal - interactive teaching session) |
+| tool-usage | Yes | Module file reads, template fills |
+
+**Onboarding-specific trace depth:**
+- INFO: Session outputs only (session-log.md, quick-reference.md, completion-certificate.md)
+- DEBUG: + module content loading, quiz validation logic, template generation
+- TRACE: + all navigation decisions, teaching strategy adjustments, alternative question formulations
+
 ---
 
 ## Steps to Complete This Action

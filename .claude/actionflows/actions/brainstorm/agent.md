@@ -71,6 +71,18 @@ Facilitate interactive brainstorming sessions through conversational exploration
 - **DEBUG:** + question strategy notes
 - **TRACE:** + all alternatives considered for questions
 
+### Logging Requirements
+
+| Log Type | Required | Notes |
+|----------|----------|-------|
+| agent-reasoning | Yes | Question formulation strategy (minimal - interactive session) |
+| tool-usage | No | None (conversational only) |
+
+**Brainstorm-specific trace depth:**
+- INFO: Session transcript only (session-transcript.md) - interactive session has minimal background tracing
+- DEBUG: + question strategy notes, follow-up formulation logic
+- TRACE: + all alternative questions considered, exploration path decisions, consensus detection logic
+
 ---
 
 ## Steps to Complete This Action
