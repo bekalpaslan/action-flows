@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { onCLS, onFID, onLCP, onTTFB, type Metric } from 'web-vitals';
+import { onCLS, onINP, onLCP, onTTFB, type Metric } from 'web-vitals';
 
 /**
  * Core Web Vitals data structure
@@ -14,8 +14,8 @@ import { onCLS, onFID, onLCP, onTTFB, type Metric } from 'web-vitals';
 export interface WebVitals {
   /** Cumulative Layout Shift (target: < 0.1) */
   CLS?: number;
-  /** First Input Delay in ms (target: < 100ms) */
-  FID?: number;
+  /** Interaction to Next Paint in ms (target: < 200ms) */
+  INP?: number;
   /** Largest Contentful Paint in ms (target: < 2500ms) */
   LCP?: number;
   /** Time to First Byte in ms (target: < 800ms) */
@@ -55,7 +55,7 @@ export function useWebVitals(): WebVitals {
     };
 
     onCLS(handleMetric);
-    onFID(handleMetric);
+    onINP(handleMetric);
     onLCP(handleMetric);
     onTTFB(handleMetric);
   }, []);

@@ -2,7 +2,7 @@
  * Performance Settings Component
  *
  * Displays real-time performance metrics for the Living Universe:
- * - Core Web Vitals (CLS, FID, LCP, TTFB)
+ * - Core Web Vitals (CLS, INP, LCP, TTFB)
  * - FPS counter for animations
  * - Memory usage guidance
  *
@@ -31,8 +31,8 @@ function getMetricStatus(metric: string, value: number | undefined): 'good' | 'f
   switch (metric) {
     case 'CLS':
       return value < 0.1 ? 'good' : value < 0.25 ? 'fair' : 'poor';
-    case 'FID':
-      return value < 100 ? 'good' : value < 300 ? 'fair' : 'poor';
+    case 'INP':
+      return value < 200 ? 'good' : value < 500 ? 'fair' : 'poor';
     case 'LCP':
       return value < 2500 ? 'good' : value < 4000 ? 'fair' : 'poor';
     case 'TTFB':
@@ -65,10 +65,10 @@ export function PerformanceSettings() {
             <span className="target">Target: &lt; 0.1</span>
           </div>
 
-          <div className={`metric ${getMetricStatus('FID', vitals.FID)}`}>
-            <label>FID (First Input Delay)</label>
-            <div className="metric-value">{formatMetric(vitals.FID, 'ms')}</div>
-            <span className="target">Target: &lt; 100ms</span>
+          <div className={`metric ${getMetricStatus('INP', vitals.INP)}`}>
+            <label>INP (Interaction to Next Paint)</label>
+            <div className="metric-value">{formatMetric(vitals.INP, 'ms')}</div>
+            <span className="target">Target: &lt; 200ms</span>
           </div>
 
           <div className={`metric ${getMetricStatus('LCP', vitals.LCP)}`}>

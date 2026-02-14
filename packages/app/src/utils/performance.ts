@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { onCLS, onFID, onLCP, onTTFB, type Metric } from 'web-vitals';
+import { onCLS, onINP, onLCP, onTTFB, type Metric } from 'web-vitals';
 
 /**
  * Augment Performance interface to include Chrome-specific memory API
@@ -26,7 +26,7 @@ declare global {
  */
 export interface WebVitalsMetrics {
   CLS?: number;
-  FID?: number;
+  INP?: number;
   LCP?: number;
   TTFB?: number;
 }
@@ -39,7 +39,7 @@ export interface WebVitalsMetrics {
 export function reportWebVitals(onPerfEntry?: (metric: Metric) => void): void {
   if (onPerfEntry && onPerfEntry instanceof Function) {
     onCLS(onPerfEntry);
-    onFID(onPerfEntry);
+    onINP(onPerfEntry);
     onLCP(onPerfEntry);
     onTTFB(onPerfEntry);
   }
