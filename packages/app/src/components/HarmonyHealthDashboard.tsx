@@ -133,17 +133,33 @@ export const HarmonyHealthDashboard: React.FC<HarmonyHealthDashboardProps> = ({
         byGate: mappedGates,
         violations24h: data.violations24h ?? 0,
         violationsTotal: data.violationsTotal ?? 0,
-        driftPatterns: data.driftPatterns ?? [],
-        recommendations: data.healingRecommendations?.map((rec: any, i: number) => ({
-          id: `rec-${i}`,
-          gateId: rec.pattern ?? 'unknown',
-          gateName: rec.pattern ?? 'Unknown',
-          severity: rec.severity ?? 'low',
-          description: rec.reason ?? rec.pattern ?? '',
-          suggestedFlow: rec.suggestedFlow ?? 'harmony-audit-and-fix/',
-          affectedOutputs: rec.violationCount ?? 0,
-          estimatedImpact: rec.estimatedEffort ?? 'Unknown',
-        })) ?? data.recommendations ?? [],
+        driftPatterns: (data.driftPatterns ?? []).map((dp: any) => ({
+          pattern: dp.pattern ?? 'unknown',
+          frequency: dp.frequency ?? 0,
+          affectedGates: dp.gates ?? dp.affectedGates ?? [],
+          severity: dp.frequency >= 5 ? 'high' : dp.frequency >= 3 ? 'medium' : 'low',
+        })),
+        recommendations: data.healingRecommendations?.length
+          ? data.healingRecommendations.map((rec: any, i: number) => ({
+              id: `rec-${i}`,
+              gateId: rec.pattern ?? 'unknown',
+              gateName: rec.pattern ?? 'Unknown',
+              severity: rec.severity ?? 'low',
+              description: rec.reason ?? rec.pattern ?? '',
+              suggestedFlow: rec.suggestedFlow ?? 'harmony-audit-and-fix/',
+              affectedOutputs: rec.violationCount ?? 0,
+              estimatedImpact: rec.estimatedEffort ?? 'Unknown',
+            }))
+          : (data.recommendations ?? []).map((msg: string, i: number) => ({
+              id: `rec-${i}`,
+              gateId: 'system',
+              gateName: 'System',
+              severity: msg.includes('🚨') ? 'high' : msg.includes('⚠️') || msg.includes('📉') ? 'medium' : 'low',
+              description: msg,
+              suggestedFlow: 'harmony-audit-and-fix/',
+              affectedOutputs: 0,
+              estimatedImpact: 'Unknown',
+            })),
         trend: data.trend ?? 'stable',
       });
     } catch (err) {
