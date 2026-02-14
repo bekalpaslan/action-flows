@@ -5,6 +5,7 @@
  * with step attribution for tracking which agent made which changes.
  */
 
+import * as crypto from 'crypto';
 import chokidar, { type FSWatcher } from 'chokidar';
 import * as path from 'path';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, StepNumber } from '@afw/shared';
@@ -287,6 +288,7 @@ function emitFileChangeEvent(
 
   if (changeType === 'created') {
     event = {
+      id: crypto.randomUUID(),
       type: 'file:created',
       sessionId,
       timestamp,
@@ -298,6 +300,7 @@ function emitFileChangeEvent(
     } as FileCreatedEvent;
   } else if (changeType === 'modified') {
     event = {
+      id: crypto.randomUUID(),
       type: 'file:modified',
       sessionId,
       timestamp,
@@ -309,6 +312,7 @@ function emitFileChangeEvent(
   } else {
     // deleted
     event = {
+      id: crypto.randomUUID(),
       type: 'file:deleted',
       sessionId,
       timestamp,
