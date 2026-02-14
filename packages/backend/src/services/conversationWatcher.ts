@@ -5,8 +5,10 @@
  * gate passages and trigger gate validation. Enables automatic gate trace recording
  * during live Claude Code sessions without any orchestrator burden.
  *
- * Detects gates: G2 (context routing), G4 (chain compilation), G6 (step boundary),
- * G8 (execution complete), G9 (agent spawn), G11 (registry update)
+ * Detects gates: G1 (user message), G2 (context routing), G3 (special work),
+ * G4 (chain compilation), G5 (present chain), G6 (step boundary),
+ * G8 (execution complete), G9 (agent spawn), G11 (registry update),
+ * G12 (archive indexing), G14 (flow candidate)
  *
  * Architecture:
  * - LogDiscovery: Find Claude Code session JSONL file
@@ -20,11 +22,14 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import * as readline from 'readline';
-import { validateChainCompilation } from './checkpoints/gate04-chain-compilation.js';
+import { validateUserMessage } from './checkpoints/gate01-user-message.js';
 import { validateContextRouting } from './checkpoints/gate02-context-routing.js';
+import { validateSpecialWork } from './checkpoints/gate03-special-work.js';
+import { validateChainCompilation } from './checkpoints/gate04-chain-compilation.js';
 import { validateStepBoundary } from './checkpoints/gate06-step-boundary.js';
 import { validateExecutionComplete } from './checkpoints/gate08-execution-complete.js';
 import { validateRegistryUpdate } from './checkpoints/gate11-registry-update.js';
+import { validateArchiveIndexing } from './checkpoints/gate12-archive-indexing.js';
 import { getGateCheckpoint, type GateCheckpoint } from './gateCheckpoint.js';
 import type { ChainId, StepId } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
@@ -262,7 +267,7 @@ export class LogTailer {
  * Detected gate event
  */
 interface GateEvent {
-  gateId: 'gate-02' | 'gate-04' | 'gate-06' | 'gate-08' | 'gate-09' | 'gate-11';
+  gateId: 'gate-01' | 'gate-02' | 'gate-03' | 'gate-04' | 'gate-05' | 'gate-06' | 'gate-08' | 'gate-09' | 'gate-11' | 'gate-12' | 'gate-14';
   content: string;
   metadata?: Record<string, any>;
 }
@@ -275,10 +280,16 @@ export class GateDetector {
     // Gate 2: Context Routing
     contextRouting: /(?:Routing to|Context:)\s+(\w+)/i,
 
+    // Gate 3: Special Work Detection
+    specialWork: /format.*work|contract.*update|harmony.*check|flow.*creation|registry.*edit|CONTRACT\.md|FLOWS\.md|INDEX\.md|LEARNINGS\.md|ACTIONS\.md/i,
+
     // Gate 4: Chain Compilation
     chainHeader: /^##\s+Chain:\s+.+$/m,
     chainTableHeader: /^\|\s*#\s*\|\s*Action\s*\|\s*Model\s*\|/m,
     chainTableRow: /^\|\s*\d+\s*\|\s*[\w/]+\s*\|\s*\w+\s*\|/m,
+
+    // Gate 5: Present Chain (same as chain compilation header)
+    chainPresentation: /^##\s+Chain:\s+.+$/m,
 
     // Gate 6: Step Boundary
     stepComplete: />>+\s*Step\s+\d+\s+complete:\s*/i,
@@ -290,6 +301,12 @@ export class GateDetector {
     // Gate 11: Registry Update
     registryFile: /(?:INDEX|LEARNINGS|FLOWS|ACTIONS|CONTEXTS)\.md/i,
     updateConfirmation: /(?:Registry updated|Done\.|successfully|added|removed)/i,
+
+    // Gate 12: Archive Indexing
+    archiveIndexing: /INDEX\.md.*updated|Added to INDEX|logs\/INDEX|Chain.*archived|Execution.*logged|log.*folder|## Chain Complete/i,
+
+    // Gate 14: Flow Candidate Evaluation
+    flowCandidate: /flow\.candidate|reusable\.pattern|register\.as\.flow/i,
   };
 
   /**
@@ -307,12 +324,31 @@ export class GateDetector {
       });
     }
 
+    // G3: Special Work Detection
+    if (GateDetector.PATTERNS.specialWork.test(text)) {
+      events.push({
+        gateId: 'gate-03',
+        content: text,
+      });
+    }
+
     // G4: Chain Compilation
     if (this.isChainCompilation(text)) {
       const chainMarkdown = this.extractChainCompilation(text);
       if (chainMarkdown) {
         events.push({
           gateId: 'gate-04',
+          content: chainMarkdown,
+        });
+      }
+    }
+
+    // G5: Present Chain (same detection as G4, but validates presentation format)
+    if (GateDetector.PATTERNS.chainPresentation.test(text) && this.isChainCompilation(text)) {
+      const chainMarkdown = this.extractChainCompilation(text);
+      if (chainMarkdown) {
+        events.push({
+          gateId: 'gate-05',
           content: chainMarkdown,
         });
       }
@@ -338,6 +374,22 @@ export class GateDetector {
     if (this.isRegistryUpdate(text)) {
       events.push({
         gateId: 'gate-11',
+        content: text,
+      });
+    }
+
+    // G12: Archive Indexing
+    if (GateDetector.PATTERNS.archiveIndexing.test(text)) {
+      events.push({
+        gateId: 'gate-12',
+        content: text,
+      });
+    }
+
+    // G14: Flow Candidate Evaluation
+    if (GateDetector.PATTERNS.flowCandidate.test(text)) {
+      events.push({
+        gateId: 'gate-14',
         content: text,
       });
     }
@@ -463,14 +515,28 @@ export class GateIntegration {
       const chainId = this.generateChainId(entry.sessionId, entry.timestamp);
 
       switch (event.gateId) {
+        case 'gate-01':
+          // G1 is detected from user messages, handled separately in processUserMessage
+          break;
+
         case 'gate-02':
           await validateContextRouting(event.content, chainId);
           console.log(`[ConversationWatcher] Gate 2 (Context Routing) detected for chain ${chainId}`);
           break;
 
+        case 'gate-03':
+          await validateSpecialWork(event.content, chainId);
+          console.log(`[ConversationWatcher] Gate 3 (Special Work) detected for chain ${chainId}`);
+          break;
+
         case 'gate-04':
           await validateChainCompilation(event.content, chainId);
           console.log(`[ConversationWatcher] Gate 4 (Chain Compilation) detected for chain ${chainId}`);
+          break;
+
+        case 'gate-05':
+          await this.gateCheckpoint.validateGate5(chainId, event.content);
+          console.log(`[ConversationWatcher] Gate 5 (Present Chain) detected for chain ${chainId}`);
           break;
 
         case 'gate-06':
@@ -492,6 +558,16 @@ export class GateIntegration {
         case 'gate-11':
           await validateRegistryUpdate(event.content, chainId);
           console.log(`[ConversationWatcher] Gate 11 (Registry Update) detected for chain ${chainId}`);
+          break;
+
+        case 'gate-12':
+          await validateArchiveIndexing(event.content, chainId);
+          console.log(`[ConversationWatcher] Gate 12 (Archive Indexing) detected for chain ${chainId}`);
+          break;
+
+        case 'gate-14':
+          await this.gateCheckpoint.validateGate14(chainId, event.content);
+          console.log(`[ConversationWatcher] Gate 14 (Flow Candidate) detected for chain ${chainId}`);
           break;
       }
     } catch (error) {
@@ -619,13 +695,38 @@ export class ConversationWatcher {
     try {
       const entry: JSONLEntry = JSON.parse(line);
 
-      // Only process assistant messages
+      // Process user messages for Gate 1
+      if (entry.type === 'user') {
+        await this.processUserMessage(entry as UserMessage);
+      }
+
+      // Process assistant messages for other gates
       if (entry.type === 'assistant') {
         await this.processAssistantMessage(entry as AssistantMessage);
       }
     } catch (error) {
       console.warn('[ConversationWatcher] Failed to parse JSONL line:', error);
       // Continue processing other lines
+    }
+  }
+
+  /**
+   * Handle user message (Gate 1)
+   * Internal - validates user message reception
+   */
+  private async processUserMessage(entry: UserMessage): Promise<void> {
+    try {
+      // Generate chain ID from session + timestamp
+      const sessionPrefix = entry.sessionId.substring(0, 8);
+      const unixTime = new Date(entry.timestamp).getTime();
+      const chainId = brandedTypes.chainId(`chain-${sessionPrefix}-${unixTime}`);
+      const userMessage = entry.message.content;
+
+      // Call Gate 1 validator
+      await validateUserMessage(userMessage, chainId);
+      console.log(`[ConversationWatcher] Gate 1 (User Message) detected for chain ${chainId}`);
+    } catch (error) {
+      console.error('[ConversationWatcher] Error processing user message:', error);
     }
   }
 

@@ -50,20 +50,20 @@ export type GateTraceLevel = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR';
  * Gate identifier (P0-P5 gates from auditable verification system)
  */
 export type GateId =
-  | 'gate-01'  // Request Reception
+  | 'gate-01'  // Request Reception (User Message)
   | 'gate-02'  // Route to Context
-  | 'gate-03'  // Find the Flow
+  | 'gate-03'  // Detect Special Work
   | 'gate-04'  // Compile Chain
   | 'gate-05'  // Present Chain
   | 'gate-06'  // Step Boundary Evaluation
   | 'gate-07'  // Triage Fix
-  | 'gate-08'  // Format Output
+  | 'gate-08'  // Format Output (Execution Complete)
   | 'gate-09'  // Agent Output Validation
   | 'gate-10'  // Learning Surface
-  | 'gate-11'  // Fresh Eye Discovery
-  | 'gate-12'  // Registry Update
+  | 'gate-11'  // Registry Update
+  | 'gate-12'  // Archive & Indexing
   | 'gate-13'  // Flow Composition
-  | 'gate-14'  // Commit Gate
+  | 'gate-14'  // Flow Candidate Evaluation
   | 'gate-15'  // Second Opinion
   | 'gate-16'  // Recompilation
   | 'gate-17'  // Autonomous Follow-Through
