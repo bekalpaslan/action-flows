@@ -642,24 +642,46 @@ export class ConversationWatcher {
     this.gateIntegration = new GateIntegration(gateCheckpoint);
   }
 
+  private retryTimer: ReturnType<typeof setInterval> | null = null;
+  private static readonly RETRY_INTERVAL_MS = 10_000;
+  private static readonly MAX_RETRIES = 30; // 5 minutes total
+
   /**
    * Start watching for Claude Code logs
-   * Non-blocking - returns immediately
+   * Non-blocking - returns immediately, retries discovery if no session found
    */
   async start(): Promise<void> {
     console.log('[ConversationWatcher] Starting...');
 
-    // Find current session log
+    const found = await this.tryConnect();
+    if (!found) {
+      console.warn('[ConversationWatcher] No active Claude Code session found. Retrying every 10s...');
+      let retries = 0;
+      this.retryTimer = setInterval(async () => {
+        retries++;
+        const connected = await this.tryConnect();
+        if (connected || retries >= ConversationWatcher.MAX_RETRIES) {
+          if (this.retryTimer) clearInterval(this.retryTimer);
+          this.retryTimer = null;
+          if (!connected) {
+            console.warn('[ConversationWatcher] Gave up after 30 retries. Backend will function normally.');
+          }
+        }
+      }, ConversationWatcher.RETRY_INTERVAL_MS);
+    }
+  }
+
+  /**
+   * Attempt to find and connect to a Claude Code session log
+   * Returns true if connected successfully
+   */
+  private async tryConnect(): Promise<boolean> {
     this.currentLogPath = this.logDiscovery.getCurrentSessionLog();
 
-    if (!this.currentLogPath) {
-      console.warn('[ConversationWatcher] No active Claude Code session found. Backend will function normally.');
-      return;
-    }
+    if (!this.currentLogPath) return false;
 
     console.log(`[ConversationWatcher] Found active session log: ${this.currentLogPath}`);
 
-    // Start tailing
     this.logTailer = new LogTailer(this.currentLogPath, (line) => {
       this.processLine(line).catch(error => {
         console.error('[ConversationWatcher] Error processing line:', error);
@@ -668,6 +690,7 @@ export class ConversationWatcher {
 
     await this.logTailer.watch();
     console.log('[ConversationWatcher] Started successfully');
+    return true;
   }
 
   /**
@@ -675,6 +698,11 @@ export class ConversationWatcher {
    */
   async stop(): Promise<void> {
     console.log('[ConversationWatcher] Stopping...');
+
+    if (this.retryTimer) {
+      clearInterval(this.retryTimer);
+      this.retryTimer = null;
+    }
 
     if (this.logTailer) {
       await this.logTailer.stop();

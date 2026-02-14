@@ -614,11 +614,13 @@ if (isMainModule) {
 
     // Initialize ConversationWatcher (Gate validation for Claude Code sessions)
     try {
-      // Resolve monorepo root: use cwd if it has packages/, otherwise try up from __dirname
-      const cwd = process.cwd();
-      const monorepoRoot = fs.existsSync(path.join(cwd, 'packages'))
-        ? cwd
-        : path.resolve(new URL('.', import.meta.url).pathname, '..', '..', '..');
+      // Resolve monorepo root: walk up from cwd until we find packages/
+      let monorepoRoot = process.cwd();
+      while (!fs.existsSync(path.join(monorepoRoot, 'packages'))) {
+        const parent = path.dirname(monorepoRoot);
+        if (parent === monorepoRoot) break; // filesystem root
+        monorepoRoot = parent;
+      }
       initConversationWatcher(storage, monorepoRoot);
       console.log('[ConversationWatcher] ✅ Service initialized successfully for JSONL log monitoring');
     } catch (error) {
