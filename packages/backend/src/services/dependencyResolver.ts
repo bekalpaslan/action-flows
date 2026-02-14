@@ -184,11 +184,13 @@ export class DependencyResolverService {
       }
     }
 
-    // Calculate in-degrees
+    // Calculate in-degrees (deduplicate dependencies first)
     for (const step of chain.steps) {
       const stepNum = step.stepNumber as number;
       const deps = step.waitsFor || [];
-      inDegree.set(stepNum, deps.length);
+      // Deduplicate dependencies before counting
+      const uniqueDeps = new Set(deps.map(d => d as number));
+      inDegree.set(stepNum, uniqueDeps.size);
     }
 
     // Kahn's algorithm

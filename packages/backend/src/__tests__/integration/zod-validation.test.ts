@@ -47,8 +47,7 @@ function createValidSession(): Session {
       text: 'Test prompt',
       type: 'text',
     },
-    createdAt: now as Timestamp,
-    updatedAt: now as Timestamp,
+    startedAt: now as Timestamp,
     projectId: 'test-project' as ProjectId,
   };
 }

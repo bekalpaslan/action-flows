@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { storage } from '../../storage/index.js';
-import type { Session, SessionId, WorkspaceEvent } from '@afw/shared';
+import type { Session, SessionId, WorkspaceEvent, Timestamp } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import * as os from 'os';
 import * as path from 'path';
@@ -40,8 +40,9 @@ describe('Storage Security & Data Integrity', () => {
         cwd: testCwd,
         hostname: 'test-machine',
         platform: 'darwin',
-        createdAt: new Date().toISOString(),
-        lastActive: new Date().toISOString(),
+        chains: [],
+        status: 'pending',
+        startedAt: new Date().toISOString() as Timestamp,
       };
 
       await Promise.resolve(storage.setSession(session));
@@ -59,8 +60,9 @@ describe('Storage Security & Data Integrity', () => {
         cwd: testCwd,
         hostname: 'machine-1',
         platform: 'darwin',
-        createdAt: new Date().toISOString(),
-        lastActive: new Date().toISOString(),
+        chains: [],
+        status: 'pending',
+        startedAt: new Date().toISOString() as Timestamp,
       };
 
       await Promise.resolve(storage.setSession(session1));
@@ -71,8 +73,9 @@ describe('Storage Security & Data Integrity', () => {
         cwd: '/tmp/different',
         hostname: 'machine-2',
         platform: 'linux',
-        createdAt: new Date(Date.now() - 1000).toISOString(),
-        lastActive: new Date().toISOString(),
+        chains: [],
+        status: 'pending',
+        startedAt: new Date(Date.now() - 1000).toISOString() as Timestamp,
       };
 
       await Promise.resolve(storage.setSession(session2));
@@ -97,8 +100,9 @@ describe('Storage Security & Data Integrity', () => {
           cwd: testCwd,
           hostname: `machine-${i}`,
           platform: 'darwin',
-          createdAt: new Date().toISOString(),
-          lastActive: new Date().toISOString(),
+          chains: [],
+          status: 'pending',
+          startedAt: new Date().toISOString() as Timestamp,
         };
 
         operations.push(Promise.resolve(storage.setSession(session)));
@@ -121,8 +125,9 @@ describe('Storage Security & Data Integrity', () => {
         cwd: testCwd,
         hostname: 'test-machine',
         platform: 'darwin',
-        createdAt: new Date().toISOString(),
-        lastActive: new Date().toISOString(),
+        chains: [],
+        status: 'pending',
+        startedAt: new Date().toISOString() as Timestamp,
       };
 
       // Add malicious properties
@@ -242,8 +247,9 @@ describe('Storage Security & Data Integrity', () => {
         cwd: testCwd,
         hostname: 'test',
         platform: 'darwin',
-        createdAt: new Date().toISOString(),
-        lastActive: new Date().toISOString(),
+        chains: [],
+        status: 'pending',
+        startedAt: new Date().toISOString() as Timestamp,
       };
 
       // Should either reject or accept (implementation-dependent)
@@ -285,8 +291,9 @@ describe('Storage Security & Data Integrity', () => {
         cwd: testCwd,
         hostname: 'test-machine',
         platform: 'darwin',
-        createdAt: new Date().toISOString(),
-        lastActive: new Date().toISOString(),
+        chains: [],
+        status: 'pending',
+        startedAt: new Date().toISOString() as Timestamp,
       };
 
       await Promise.resolve(storage.setSession(session));
@@ -316,8 +323,9 @@ describe('Storage Security & Data Integrity', () => {
           cwd: testCwd,
           hostname: `machine-${i}`,
           platform: 'darwin',
-          createdAt: new Date().toISOString(),
-          lastActive: new Date().toISOString(),
+          chains: [],
+          status: 'pending',
+          startedAt: new Date().toISOString() as Timestamp,
         };
 
         writes.push(Promise.resolve(storage.setSession(session)));
@@ -342,8 +350,9 @@ describe('Storage Security & Data Integrity', () => {
         cwd: testCwd,
         hostname: 'test-machine',
         platform: 'darwin',
-        createdAt: new Date().toISOString(),
-        lastActive: new Date().toISOString(),
+        chains: [],
+        status: 'pending',
+        startedAt: new Date().toISOString() as Timestamp,
       };
 
       await Promise.resolve(storage.setSession(session));
@@ -385,8 +394,9 @@ describe('Storage Security & Data Integrity', () => {
         cwd: testCwd1,
         hostname: 'machine-1',
         platform: 'darwin',
-        createdAt: new Date().toISOString(),
-        lastActive: new Date().toISOString(),
+        chains: [],
+        status: 'pending',
+        startedAt: new Date().toISOString() as Timestamp,
         userId: brandedTypes.userId('user-1') as any,
       };
 
@@ -395,8 +405,9 @@ describe('Storage Security & Data Integrity', () => {
         cwd: testCwd2,
         hostname: 'machine-2',
         platform: 'linux',
-        createdAt: new Date().toISOString(),
-        lastActive: new Date().toISOString(),
+        chains: [],
+        status: 'pending',
+        startedAt: new Date().toISOString() as Timestamp,
         userId: brandedTypes.userId('user-2') as any,
       };
 

@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { render } from '../../../__tests__/test-utils';
 import { TraceRenderer } from '../TraceRenderer';
 import type { LightBridge, EdgeId, RegionId } from '@afw/shared';
 

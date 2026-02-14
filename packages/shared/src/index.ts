@@ -39,7 +39,7 @@ export type {
   LifecyclePolicy,
 } from './types.js';
 
-export { Status, Model, ChainSource, brandedTypes, duration, FRESHNESS_THRESHOLDS, calculateFreshnessGrade, toUserId, toTimestamp, currentTimestamp } from './types.js';
+export { Status, Model, ChainSource, brandedTypes, duration, FRESHNESS_THRESHOLDS, calculateFreshnessGrade, toUserId, toTimestamp, currentTimestamp, toChainId, toSessionId, toStepId, toStepNumber } from './types.js';
 
 // ============================================================================
 // Gate Checkpoint Tracing Types

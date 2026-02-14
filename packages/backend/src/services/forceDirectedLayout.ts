@@ -234,12 +234,12 @@ export class ForceDirectedLayoutService {
 
   /**
    * Snap position to grid.
-   * Rounds x/y to nearest grid cell.
+   * Rounds x/y to nearest grid cell and clamps to non-negative values.
    */
   private snapToGrid(position: Position, gridSize: number): Position {
     return {
-      x: Math.round(position.x / gridSize) * gridSize,
-      y: Math.round(position.y / gridSize) * gridSize,
+      x: Math.max(0, Math.round(position.x / gridSize) * gridSize),
+      y: Math.max(0, Math.round(position.y / gridSize) * gridSize),
     };
   }
 
