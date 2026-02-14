@@ -136,23 +136,33 @@ export class LogDiscovery {
    * Returns: Full path to active session log, or null if not found
    */
   getCurrentSessionLog(): string | null {
+    const logs = this.getActiveSessionLogs();
+    return logs[0] || null;
+  }
+
+  /**
+   * Get all active .jsonl files modified within the last hour
+   * Returns: Array of full paths sorted by most recent first
+   */
+  getActiveSessionLogs(): string[] {
     const projectDir = this.findClaudeProjectDir();
-    if (!projectDir) return null;
+    if (!projectDir) return [];
 
     try {
-      const files = fs.readdirSync(projectDir)
-        .filter(f => f.endsWith('.jsonl') && !f.includes('/')) // Exclude subagent logs
+      const oneHourAgo = Date.now() - 60 * 60 * 1000;
+      return fs.readdirSync(projectDir)
+        .filter(f => f.endsWith('.jsonl') && !f.includes('/'))
         .map(f => {
           const fullPath = path.join(projectDir, f);
           const stats = fs.statSync(fullPath);
           return { path: fullPath, mtime: stats.mtime };
         })
-        .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
-
-      return files[0]?.path || null;
+        .filter(f => f.mtime.getTime() > oneHourAgo)
+        .sort((a, b) => b.mtime.getTime() - a.mtime.getTime())
+        .map(f => f.path);
     } catch (error) {
       console.error('[ConversationWatcher] Error reading session logs:', error);
-      return null;
+      return [];
     }
   }
 
@@ -629,7 +639,7 @@ export class ConversationWatcher {
   private storage: Storage;
   private gateCheckpoint: GateCheckpoint;
   private logDiscovery: LogDiscovery;
-  private logTailer: LogTailer | null = null;
+  private logTailers: Map<string, LogTailer> = new Map();
   private gateDetector: GateDetector;
   private gateIntegration: GateIntegration;
   private currentLogPath: string | null = null;
@@ -648,49 +658,49 @@ export class ConversationWatcher {
 
   /**
    * Start watching for Claude Code logs
-   * Non-blocking - returns immediately, retries discovery if no session found
+   * Non-blocking - discovers all active sessions and polls for new ones
    */
   async start(): Promise<void> {
     console.log('[ConversationWatcher] Starting...');
 
-    const found = await this.tryConnect();
-    if (!found) {
-      console.warn('[ConversationWatcher] No active Claude Code session found. Retrying every 10s...');
-      let retries = 0;
-      this.retryTimer = setInterval(async () => {
-        retries++;
-        const connected = await this.tryConnect();
-        if (connected || retries >= ConversationWatcher.MAX_RETRIES) {
-          if (this.retryTimer) clearInterval(this.retryTimer);
-          this.retryTimer = null;
-          if (!connected) {
-            console.warn('[ConversationWatcher] Gave up after 30 retries. Backend will function normally.');
-          }
-        }
-      }, ConversationWatcher.RETRY_INTERVAL_MS);
-    }
+    await this.discoverAndConnect();
+
+    // Poll for new sessions every 10s
+    this.retryTimer = setInterval(async () => {
+      await this.discoverAndConnect();
+    }, ConversationWatcher.RETRY_INTERVAL_MS);
   }
 
   /**
-   * Attempt to find and connect to a Claude Code session log
-   * Returns true if connected successfully
+   * Discover active session logs and connect to any new ones
    */
-  private async tryConnect(): Promise<boolean> {
-    this.currentLogPath = this.logDiscovery.getCurrentSessionLog();
+  private async discoverAndConnect(): Promise<void> {
+    const activeLogs = this.logDiscovery.getActiveSessionLogs();
 
-    if (!this.currentLogPath) return false;
+    if (activeLogs.length === 0 && this.logTailers.size === 0) {
+      console.warn('[ConversationWatcher] No active Claude Code sessions found.');
+      return;
+    }
 
-    console.log(`[ConversationWatcher] Found active session log: ${this.currentLogPath}`);
+    for (const logPath of activeLogs) {
+      if (this.logTailers.has(logPath)) continue; // Already watching
 
-    this.logTailer = new LogTailer(this.currentLogPath, (line) => {
-      this.processLine(line).catch(error => {
-        console.error('[ConversationWatcher] Error processing line:', error);
+      console.log(`[ConversationWatcher] Connecting to session: ${path.basename(logPath)}`);
+
+      const tailer = new LogTailer(logPath, (line) => {
+        this.processLine(line).catch(error => {
+          console.error('[ConversationWatcher] Error processing line:', error);
+        });
       });
-    });
 
-    await this.logTailer.watch();
-    console.log('[ConversationWatcher] Started successfully');
-    return true;
+      await tailer.watch();
+      this.logTailers.set(logPath, tailer);
+      this.currentLogPath = logPath; // Track most recent for backward compat
+    }
+
+    if (this.logTailers.size > 0) {
+      console.log(`[ConversationWatcher] Watching ${this.logTailers.size} active session(s)`);
+    }
   }
 
   /**
@@ -704,10 +714,10 @@ export class ConversationWatcher {
       this.retryTimer = null;
     }
 
-    if (this.logTailer) {
-      await this.logTailer.stop();
-      this.logTailer = null;
+    for (const [logPath, tailer] of this.logTailers) {
+      await tailer.stop();
     }
+    this.logTailers.clear();
 
     this.currentLogPath = null;
     console.log('[ConversationWatcher] Stopped');
