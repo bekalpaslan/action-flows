@@ -63,6 +63,14 @@
   gap: var(--space-3);
 }
 
+/* Tab Group */
+.harmony-workbench__tab-group {
+  display: flex;
+  border: var(--space-px) solid var(--light-border-default);
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
 /* View Mode Selector */
 .harmony-workbench__view-selector {
   display: flex;
@@ -544,6 +552,11 @@
 
 [data-theme="dark"] .harmony-workbench__subtitle {
   color: var(--color-text-secondary);
+}
+
+/* Tab Group */
+[data-theme="dark"] .harmony-workbench__tab-group {
+  border-color: var(--color-border);
 }
 
 /* View Mode Selector */

@@ -23,12 +23,18 @@ import { useHarmonyMetrics } from '../../hooks/useHarmonyMetrics';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { OrchestratorButton } from '../OrchestratorButton';
+import { HarmonyHealthDashboard } from '../HarmonyHealthDashboard';
 import './HarmonySpaceWorkbench.css';
 
 /**
  * View mode for the workbench
  */
 type ViewMode = 'session' | 'project' | 'global';
+
+/**
+ * Tab mode for the workbench
+ */
+type TabMode = 'metrics' | 'health';
 
 /**
  * Drift detection result type
@@ -74,6 +80,7 @@ export function HarmonySpaceWorkbench({
   const [viewMode, setViewMode] = useState<ViewMode>(
     sessionId ? 'session' : projectId ? 'project' : 'global'
   );
+  const [tab, setTab] = useState<TabMode>('metrics');
   const [manualCheckText, setManualCheckText] = useState('');
   const [isCheckingManually, setIsCheckingManually] = useState(false);
   const [manualCheckResult, setManualCheckResult] = useState<{
@@ -243,6 +250,22 @@ export function HarmonySpaceWorkbench({
         </div>
 
         <div className="harmony-workbench__header-right">
+          {/* Tab Selector */}
+          <div className="harmony-workbench__tab-group">
+            <button
+              className={`harmony-workbench__view-btn ${tab === 'metrics' ? 'harmony-workbench__view-btn--active' : ''}`}
+              onClick={() => setTab('metrics')}
+            >
+              Metrics
+            </button>
+            <button
+              className={`harmony-workbench__view-btn ${tab === 'health' ? 'harmony-workbench__view-btn--active' : ''}`}
+              onClick={() => setTab('health')}
+            >
+              Health
+            </button>
+          </div>
+
           {/* View Mode Selector */}
           <div className="harmony-workbench__view-selector">
             {sessionId && (
@@ -289,166 +312,176 @@ export function HarmonySpaceWorkbench({
 
       {/* Main Content */}
       <div className="harmony-workbench__content">
-        {/* Left Column: HarmonyPanel */}
-        <div className="harmony-workbench__panel harmony-workbench__panel--main">
-          {target ? (
-            <HarmonyPanel
-              target={target}
-              targetType={targetType}
-              className="harmony-workbench__harmony-panel"
-            />
-          ) : (
-            <div className="harmony-workbench__empty-state">
-              <h3>No Target Selected</h3>
-              <p>Select a session or project to view harmony metrics.</p>
-            </div>
-          )}
-        </div>
-
-        {/* Right Column: Drift Detection + Manual Check */}
-        <div className="harmony-workbench__sidebar">
-          {/* Manual Check Panel */}
-          {showManualCheck && (
-            <div className="harmony-workbench__panel harmony-workbench__panel--manual">
-              <h3 className="harmony-workbench__panel-title">Manual Harmony Check</h3>
-              <p className="harmony-workbench__panel-description">
-                Paste orchestrator output to check contract compliance.
-              </p>
-
-              <textarea
-                className="harmony-workbench__manual-input"
-                placeholder="Paste orchestrator output here..."
-                value={manualCheckText}
-                onChange={(e) => setManualCheckText(e.target.value)}
-                rows={6}
-              />
-
-              <div className="harmony-workbench__manual-actions">
-                <button
-                  className="harmony-workbench__action-btn harmony-workbench__action-btn--primary"
-                  onClick={handleManualCheck}
-                  disabled={!manualCheckText.trim() || isCheckingManually}
-                >
-                  {isCheckingManually ? 'Checking...' : 'Check Output'}
-                </button>
-                <button
-                  className="harmony-workbench__action-btn"
-                  onClick={() => {
-                    setManualCheckText('');
-                    setManualCheckResult(null);
-                  }}
-                >
-                  Clear
-                </button>
-              </div>
-
-              {/* Manual Check Result */}
-              {manualCheckResult && (
-                <div
-                  className={`harmony-workbench__manual-result ${getResultClass(manualCheckResult.result)}`}
-                >
-                  <div className="harmony-workbench__result-header">
-                    <span className="harmony-workbench__result-icon">
-                      {getResultIcon(manualCheckResult.result)}
-                    </span>
-                    <span className="harmony-workbench__result-label">
-                      {manualCheckResult.result.toUpperCase()}
-                    </span>
-                  </div>
-
-                  {manualCheckResult.parsedFormat && (
-                    <div className="harmony-workbench__result-format">
-                      Format: {manualCheckResult.parsedFormat}
-                    </div>
-                  )}
-
-                  {manualCheckResult.missingFields &&
-                    manualCheckResult.missingFields.length > 0 && (
-                      <div className="harmony-workbench__result-missing">
-                        Missing fields: {manualCheckResult.missingFields.join(', ')}
-                      </div>
-                    )}
+        {/* Metrics Tab */}
+        {tab === 'metrics' && (
+          <>
+            {/* Left Column: HarmonyPanel */}
+            <div className="harmony-workbench__panel harmony-workbench__panel--main">
+              {target ? (
+                <HarmonyPanel
+                  target={target}
+                  targetType={targetType}
+                  className="harmony-workbench__harmony-panel"
+                />
+              ) : (
+                <div className="harmony-workbench__empty-state">
+                  <h3>No Target Selected</h3>
+                  <p>Select a session or project to view harmony metrics.</p>
                 </div>
               )}
             </div>
-          )}
 
-          {/* Drift Detection Panel */}
-          <div className="harmony-workbench__panel harmony-workbench__panel--drift">
-            <h3 className="harmony-workbench__panel-title">Drift Detection</h3>
-            <p className="harmony-workbench__panel-description">
-              Schema changes detected between contract versions.
-            </p>
+            {/* Right Column: Drift Detection + Manual Check */}
+            <div className="harmony-workbench__sidebar">
+              {/* Manual Check Panel */}
+              {showManualCheck && (
+                <div className="harmony-workbench__panel harmony-workbench__panel--manual">
+                  <h3 className="harmony-workbench__panel-title">Manual Harmony Check</h3>
+                  <p className="harmony-workbench__panel-description">
+                    Paste orchestrator output to check contract compliance.
+                  </p>
 
-            {driftResults.length === 0 ? (
-              <div className="harmony-workbench__drift-empty">
-                <span className="harmony-workbench__drift-icon">✓</span>
-                <span>No drift detected</span>
-              </div>
-            ) : (
-              <div className="harmony-workbench__drift-list">
-                {driftResults.map((drift) => (
-                  <div
-                    key={drift.id}
-                    className={`harmony-workbench__drift-item ${getSeverityClass(drift.severity)}`}
-                  >
-                    <div className="harmony-workbench__drift-header">
-                      <span className="harmony-workbench__drift-format">
-                        {drift.formatName}
-                      </span>
-                      <span className="harmony-workbench__drift-severity">
-                        {drift.severity}
-                      </span>
-                    </div>
+                  <textarea
+                    className="harmony-workbench__manual-input"
+                    placeholder="Paste orchestrator output here..."
+                    value={manualCheckText}
+                    onChange={(e) => setManualCheckText(e.target.value)}
+                    rows={6}
+                  />
 
-                    <div className="harmony-workbench__drift-fields">
-                      <strong>Drifted:</strong>{' '}
-                      {drift.driftedFields.join(', ') || 'None'}
-                    </div>
-
-                    <div className="harmony-workbench__drift-recommendation">
-                      {drift.recommendation}
-                    </div>
-
-                    <div className="harmony-workbench__drift-timestamp">
-                      {new Date(drift.timestamp).toLocaleString()}
-                    </div>
+                  <div className="harmony-workbench__manual-actions">
+                    <button
+                      className="harmony-workbench__action-btn harmony-workbench__action-btn--primary"
+                      onClick={handleManualCheck}
+                      disabled={!manualCheckText.trim() || isCheckingManually}
+                    >
+                      {isCheckingManually ? 'Checking...' : 'Check Output'}
+                    </button>
+                    <button
+                      className="harmony-workbench__action-btn"
+                      onClick={() => {
+                        setManualCheckText('');
+                        setManualCheckResult(null);
+                      }}
+                    >
+                      Clear
+                    </button>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
 
-          {/* Contract Status */}
-          <div className="harmony-workbench__panel harmony-workbench__panel--contract">
-            <h3 className="harmony-workbench__panel-title">Contract Status</h3>
+                  {/* Manual Check Result */}
+                  {manualCheckResult && (
+                    <div
+                      className={`harmony-workbench__manual-result ${getResultClass(manualCheckResult.result)}`}
+                    >
+                      <div className="harmony-workbench__result-header">
+                        <span className="harmony-workbench__result-icon">
+                          {getResultIcon(manualCheckResult.result)}
+                        </span>
+                        <span className="harmony-workbench__result-label">
+                          {manualCheckResult.result.toUpperCase()}
+                        </span>
+                      </div>
 
-            <div className="harmony-workbench__contract-info">
-              <div className="harmony-workbench__contract-row">
-                <span className="harmony-workbench__contract-label">Version:</span>
-                <span className="harmony-workbench__contract-value">1.0.0</span>
+                      {manualCheckResult.parsedFormat && (
+                        <div className="harmony-workbench__result-format">
+                          Format: {manualCheckResult.parsedFormat}
+                        </div>
+                      )}
+
+                      {manualCheckResult.missingFields &&
+                        manualCheckResult.missingFields.length > 0 && (
+                          <div className="harmony-workbench__result-missing">
+                            Missing fields: {manualCheckResult.missingFields.join(', ')}
+                          </div>
+                        )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Drift Detection Panel */}
+              <div className="harmony-workbench__panel harmony-workbench__panel--drift">
+                <h3 className="harmony-workbench__panel-title">Drift Detection</h3>
+                <p className="harmony-workbench__panel-description">
+                  Schema changes detected between contract versions.
+                </p>
+
+                {driftResults.length === 0 ? (
+                  <div className="harmony-workbench__drift-empty">
+                    <span className="harmony-workbench__drift-icon">✓</span>
+                    <span>No drift detected</span>
+                  </div>
+                ) : (
+                  <div className="harmony-workbench__drift-list">
+                    {driftResults.map((drift) => (
+                      <div
+                        key={drift.id}
+                        className={`harmony-workbench__drift-item ${getSeverityClass(drift.severity)}`}
+                      >
+                        <div className="harmony-workbench__drift-header">
+                          <span className="harmony-workbench__drift-format">
+                            {drift.formatName}
+                          </span>
+                          <span className="harmony-workbench__drift-severity">
+                            {drift.severity}
+                          </span>
+                        </div>
+
+                        <div className="harmony-workbench__drift-fields">
+                          <strong>Drifted:</strong>{' '}
+                          {drift.driftedFields.join(', ') || 'None'}
+                        </div>
+
+                        <div className="harmony-workbench__drift-recommendation">
+                          {drift.recommendation}
+                        </div>
+
+                        <div className="harmony-workbench__drift-timestamp">
+                          {new Date(drift.timestamp).toLocaleString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <div className="harmony-workbench__contract-row">
-                <span className="harmony-workbench__contract-label">
-                  Registered Formats:
-                </span>
-                <span className="harmony-workbench__contract-value">
-                  {metrics?.formatBreakdown
-                    ? Object.keys(metrics.formatBreakdown).length
-                    : 0}
-                </span>
-              </div>
-              <div className="harmony-workbench__contract-row">
-                <span className="harmony-workbench__contract-label">Last Check:</span>
-                <span className="harmony-workbench__contract-value">
-                  {metrics?.lastCheck
-                    ? new Date(metrics.lastCheck).toLocaleString()
-                    : 'Never'}
-                </span>
+
+              {/* Contract Status */}
+              <div className="harmony-workbench__panel harmony-workbench__panel--contract">
+                <h3 className="harmony-workbench__panel-title">Contract Status</h3>
+
+                <div className="harmony-workbench__contract-info">
+                  <div className="harmony-workbench__contract-row">
+                    <span className="harmony-workbench__contract-label">Version:</span>
+                    <span className="harmony-workbench__contract-value">1.0.0</span>
+                  </div>
+                  <div className="harmony-workbench__contract-row">
+                    <span className="harmony-workbench__contract-label">
+                      Registered Formats:
+                    </span>
+                    <span className="harmony-workbench__contract-value">
+                      {metrics?.formatBreakdown
+                        ? Object.keys(metrics.formatBreakdown).length
+                        : 0}
+                    </span>
+                  </div>
+                  <div className="harmony-workbench__contract-row">
+                    <span className="harmony-workbench__contract-label">Last Check:</span>
+                    <span className="harmony-workbench__contract-value">
+                      {metrics?.lastCheck
+                        ? new Date(metrics.lastCheck).toLocaleString()
+                        : 'Never'}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
+
+        {/* Health Tab */}
+        {tab === 'health' && target && (
+          <HarmonyHealthDashboard target={target} targetType={targetType} />
+        )}
       </div>
 
       {/* Loading Overlay */}
