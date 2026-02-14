@@ -759,6 +759,12 @@ export class ConversationWatcher {
       const unixTime = new Date(entry.timestamp).getTime();
       const chainId = brandedTypes.chainId(`chain-${sessionPrefix}-${unixTime}`);
       const rawContent = entry.message.content;
+
+      // Skip tool results — they appear as type:"user" but aren't human input
+      if (Array.isArray(rawContent) && rawContent.some((b: any) => b.tool_use_id || b.type === 'tool_result')) {
+        return;
+      }
+
       const userMessage = typeof rawContent === 'string'
         ? rawContent
         : Array.isArray(rawContent)
