@@ -273,7 +273,7 @@ const initialDemoMilestones: Milestone[] = [
 
 export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
-  const { targetWorkbenchId } = useUniverseContext();
+  const { targetWorkbenchId, universe } = useUniverseContext();
   const { getSession } = useSessionContext();
   const { sessionId: chatSessionId, closeChat } = useChatWindowContext();
 
@@ -284,8 +284,8 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const cosmicMapEnabled = useFeatureFlagSimple('COSMIC_MAP_ENABLED');
   const classicMode = useFeatureFlagSimple('CLASSIC_DASHBOARD_MODE');
 
-  // Update initial view mode logic to respect classic mode
-  const effectiveCosmicMapEnabled = cosmicMapEnabled && !classicMode;
+  // Update initial view mode logic to respect classic mode and check if universe has data
+  const effectiveCosmicMapEnabled = cosmicMapEnabled && !classicMode && (universe?.regions?.length ?? 0) > 0;
 
   // View mode state: 4-state FSM for zoom transitions
   // 'cosmic-map' -> 'zooming-in' -> 'region-focus' -> 'zooming-out' -> 'cosmic-map'
