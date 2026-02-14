@@ -758,7 +758,12 @@ export class ConversationWatcher {
       const sessionPrefix = entry.sessionId.substring(0, 8);
       const unixTime = new Date(entry.timestamp).getTime();
       const chainId = brandedTypes.chainId(`chain-${sessionPrefix}-${unixTime}`);
-      const userMessage = entry.message.content;
+      const rawContent = entry.message.content;
+      const userMessage = typeof rawContent === 'string'
+        ? rawContent
+        : Array.isArray(rawContent)
+          ? rawContent.map((b: any) => b.text || b.content || '').join(' ')
+          : String(rawContent || '');
 
       // Call Gate 1 validator
       await validateUserMessage(userMessage, chainId);
