@@ -52,6 +52,7 @@
 | template-creation/ | Create canonical framework templates | analyze → code/framework → review → second-opinion/ → commit |
 | framework-health/ | Validate structure | analyze |
 | contract-drift-fix/ | Update CONTRACT.md when formats evolve | analyze/contract-code-drift → code/update-contract → review/contract-update → second-opinion/ → commit |
+| flow-drift-audit/ | Deep audit of all flow instructions vs actual actions/chains | analyze → plan → human gate → code×N → review → second-opinion/ → commit |
 
 ## intel
 

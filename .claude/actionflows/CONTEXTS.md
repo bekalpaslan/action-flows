@@ -58,13 +58,15 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 ### settings
 **Purpose:** Configuration, framework development, and onboarding
 **Icon:** ⚙️
-**Triggers:** configure, set up, change settings, create flow, create action, onboard me, framework health, setup, initialize
-**Flows:** onboarding/, flow-creation/, action-creation/, framework-health/
+**Triggers:** configure, set up, change settings, create flow, create action, onboard me, framework health, setup, initialize, audit flows, flow drift
+**Flows:** onboarding/, flow-creation/, action-creation/, framework-health/, flow-drift-audit/
 **Examples:**
 - "configure backend port"
 - "create a new testing flow"
 - "onboard me to ActionFlows"
 - "check framework health"
+- "audit flows"
+- "check flow drift"
 
 ### pm
 **Purpose:** Project management, planning, and coordination
@@ -153,3 +155,4 @@ These contexts receive content automatically — not routed by user intent.
 | "create dossier" / "intel on X" | intel | intel-analysis/ |
 | "track domain X" / "gather intel" | intel | intel-analysis/ |
 | "dissolve learnings" / "process learnings" / "learning retrospective" / "update docs from learnings" | pm | learning-dissolution/ |
+| "audit flows" / "check flow drift" / "flow health deep scan" / "flow instructions audit" | settings | flow-drift-audit/ |
