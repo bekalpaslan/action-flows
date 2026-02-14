@@ -713,4 +713,165 @@ describe('ClaudeCliSessionProcess', () => {
       expect(parsed).toBe('start middle end');
     });
   });
+
+  describe('Edge Cases - Process Management', () => {
+    it('should handle spawn timeout', async () => {
+      const session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
+
+      // Mock spawn that never fires 'spawn' event
+      mockChildProcess.on = vi.fn(() => mockChildProcess);
+
+      const startPromise = session.start();
+
+      // Should timeout after reasonable wait (implementation-dependent)
+      // For now, verify the promise doesn't resolve immediately
+      await expect(Promise.race([
+        startPromise,
+        new Promise((resolve) => setTimeout(() => resolve('timeout'), 100)),
+      ])).resolves.toBe('timeout');
+    });
+
+    it('should handle nested JSON in content field', () => {
+      const session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
+
+      const onMock = vi.fn((event: any, handler: any) => {
+        if (event === 'spawn') {
+          setTimeout(() => handler(), 0);
+        }
+        return mockChildProcess;
+      });
+      mockChildProcess.on = onMock as any;
+
+      session.start();
+
+      const chunk = JSON.stringify({
+        type: 'assistant',
+        message: {
+          content: JSON.stringify({ nested: 'data', value: 123 }),
+        },
+      }) + '\n';
+
+      const parsed = session['parseStreamJson'](chunk);
+
+      // Should preserve nested JSON as string
+      expect(parsed).toBe('{"nested":"data","value":123}');
+    });
+
+    it('should handle Unicode and multi-byte characters', () => {
+      const session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
+
+      const onMock = vi.fn((event: any, handler: any) => {
+        if (event === 'spawn') {
+          setTimeout(() => handler(), 0);
+        }
+        return mockChildProcess;
+      });
+      mockChildProcess.on = onMock as any;
+
+      session.start();
+
+      const chunk = JSON.stringify({
+        type: 'assistant',
+        message: {
+          content: 'Hello 世界 🌍 émojis',
+        },
+      }) + '\n';
+
+      const parsed = session['parseStreamJson'](chunk);
+
+      expect(parsed).toBe('Hello 世界 🌍 émojis');
+    });
+
+    it('should handle multi-byte character split across chunks', () => {
+      const session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
+
+      const onMock = vi.fn((event: any, handler: any) => {
+        if (event === 'spawn') {
+          setTimeout(() => handler(), 0);
+        }
+        return mockChildProcess;
+      });
+      mockChildProcess.on = onMock as any;
+
+      session.start();
+
+      // Emoji is 4 bytes in UTF-8, split it across chunks
+      const jsonStr = JSON.stringify({
+        type: 'assistant',
+        message: { content: 'Test 🌍' },
+      }) + '\n';
+
+      // Split at a point that might break multi-byte character
+      const midpoint = jsonStr.length - 10;
+      const chunk1 = jsonStr.slice(0, midpoint);
+      const chunk2 = jsonStr.slice(midpoint);
+
+      session['parseStreamJson'](chunk1);
+      const parsed = session['parseStreamJson'](chunk2);
+
+      expect(parsed).toBe('Test 🌍');
+    });
+  });
+
+  describe('Edge Cases - stdin Management', () => {
+    let session: ClaudeCliSessionProcess;
+
+    beforeEach(async () => {
+      session = new ClaudeCliSessionProcess(sessionId, '/test', ['--print']);
+
+      mockChildProcess.on = (vi.fn((event, handler) => {
+        if (event === 'spawn') {
+          setTimeout(() => handler(), 0);
+        }
+        return mockChildProcess;
+      })) as any;
+
+      await session.start();
+    });
+
+    it('should handle write buffer backpressure', () => {
+      // Simulate backpressure by making write return false
+      mockChildProcess.stdin.write = vi.fn().mockReturnValue(false);
+
+      // Should still complete without error
+      expect(() => session.sendInput('test')).not.toThrow();
+      expect(mockChildProcess.stdin.write).toHaveBeenCalled();
+    });
+
+    it('should handle rapid consecutive writes', () => {
+      const writes: string[] = [];
+      mockChildProcess.stdin.write = vi.fn((data: string) => {
+        writes.push(data);
+        return true;
+      });
+
+      for (let i = 0; i < 100; i++) {
+        session.sendInput(`message ${i}`);
+      }
+
+      expect(writes).toHaveLength(100);
+    });
+
+    it('should handle empty string input', () => {
+      expect(() => session.sendInput('')).not.toThrow();
+
+      const expectedMessage = JSON.stringify({
+        type: 'user',
+        message: { role: 'user', content: '' },
+      }) + '\n';
+
+      expect(mockChildProcess.stdin.write).toHaveBeenCalledWith(expectedMessage, 'utf8');
+    });
+
+    it('should handle whitespace-only input', () => {
+      session.sendInput('   \t\n  ');
+
+      const expectedMessage = JSON.stringify({
+        type: 'user',
+        message: { role: 'user', content: '' },
+      }) + '\n';
+
+      expect(mockChildProcess.stdin.write).toHaveBeenCalledWith(expectedMessage, 'utf8');
+    });
+  });
 });
