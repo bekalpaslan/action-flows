@@ -1,6 +1,6 @@
-# Template Creation Flow
+# Standards Creation Flow
 
-> Create canonical framework templates that derive from CONTRACT.md
+> Create canonical framework standards and templates that derive from CONTRACT.md
 
 ---
 

@@ -49,7 +49,7 @@
 | flow-creation/ | Create a new flow | plan → human gate → code → review → second-opinion/ |
 | action-creation/ | Create a new action | plan → human gate → code → review → second-opinion/ |
 | action-deletion/ | Remove action safely | analyze → code → review → second-opinion/ |
-| template-creation/ | Create canonical framework templates | analyze → code/framework → review → second-opinion/ → commit |
+| standards-creation/ | Create canonical framework standards and templates | analyze → code/framework → review → second-opinion/ → commit |
 | framework-health/ | Validate structure | analyze |
 | contract-drift-fix/ | Update CONTRACT.md when formats evolve | analyze/contract-code-drift → code/update-contract → review/contract-update → second-opinion/ → commit |
 | flow-drift-audit/ | Deep audit of all flow instructions vs actual actions/chains | analyze → plan → human gate → code×N → review → second-opinion/ → commit |
