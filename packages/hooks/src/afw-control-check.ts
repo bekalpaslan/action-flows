@@ -85,13 +85,15 @@ async function main() {
     if (blockingCommands.length > 0) {
       const command = blockingCommands[0];
 
-      // Block the tool call
-      console.error(`[ActionFlows Dashboard] ${command.type.toUpperCase()} command pending`);
+      if (command) {
+        // Block the tool call
+        console.error(`[ActionFlows Dashboard] ${command.type.toUpperCase()} command pending`);
 
-      if (command.type === 'pause') {
-        console.error('Chain paused by Dashboard user. Please resume or cancel from Dashboard.');
-      } else if (command.type === 'cancel') {
-        console.error('Chain cancelled by Dashboard user.');
+        if (command.type === 'pause') {
+          console.error('Chain paused by Dashboard user. Please resume or cancel from Dashboard.');
+        } else if (command.type === 'cancel') {
+          console.error('Chain cancelled by Dashboard user.');
+        }
       }
 
       // Exit with code 2 to BLOCK the tool call

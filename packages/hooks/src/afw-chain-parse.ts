@@ -43,7 +43,7 @@ function isChainCompilation(content: string): boolean {
  */
 function parseChainTitle(content: string): string | null {
   const headerMatch = content.match(/##\s*Chain:\s*(.+?)(?:\n|$)/i);
-  if (!headerMatch) return null;
+  if (!headerMatch || !headerMatch[1]) return null;
 
   return headerMatch[1].trim() || null;
 }
@@ -60,16 +60,16 @@ function parseChainMetadata(content: string): {
   const metadata: any = {};
 
   const requestMatch = content.match(/\*\*Request:\*\*\s*(.+?)(?:\n|$)/i);
-  if (requestMatch) metadata.request = requestMatch[1].trim();
+  if (requestMatch && requestMatch[1]) metadata.request = requestMatch[1].trim();
 
   const sourceMatch = content.match(/\*\*Source:\*\*\s*(.+?)(?:\n|$)/i);
-  if (sourceMatch) metadata.source = sourceMatch[1].trim();
+  if (sourceMatch && sourceMatch[1]) metadata.source = sourceMatch[1].trim();
 
   const typeMatch = content.match(/\*\*Type:\*\*\s*(.+?)(?:\n|$)/i);
-  if (typeMatch) metadata.type = typeMatch[1].trim();
+  if (typeMatch && typeMatch[1]) metadata.type = typeMatch[1].trim();
 
   const refMatch = content.match(/\*\*Ref:\*\*\s*(.+?)(?:\n|$)/i);
-  if (refMatch) metadata.ref = refMatch[1].trim();
+  if (refMatch && refMatch[1]) metadata.ref = refMatch[1].trim();
 
   return metadata;
 }
@@ -106,7 +106,7 @@ function parseChainSteps(content: string): ChainStepSnapshot[] {
 
     if (cells.length < 5) continue; // Need at least: #, Action, Model, Inputs, WaitsFor
 
-    const stepNumber = parseInt(cells[0], 10);
+    const stepNumber = parseInt(cells[0] ?? '0', 10);
     if (isNaN(stepNumber)) continue;
 
     const action = cells[1] || 'unknown';
@@ -159,7 +159,7 @@ function parseChainSteps(content: string): ChainStepSnapshot[] {
  */
 function parseExecutionMode(content: string): 'sequential' | 'parallel' | 'mixed' {
   const executionMatch = content.match(/\*\*Execution:\*\*\s*(.+)/i);
-  if (!executionMatch) return 'sequential';
+  if (!executionMatch || !executionMatch[1]) return 'sequential';
 
   const modeStr = executionMatch[1].toLowerCase();
 

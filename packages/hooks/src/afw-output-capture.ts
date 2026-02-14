@@ -42,7 +42,7 @@ function extractStepNumber(data: PostToolUseInput): number | undefined {
     const stepMatch = toolInputStr.match(/Step\s+(\d+)|#(\d+)/i);
 
     if (stepMatch) {
-      const stepNum = parseInt(stepMatch[1] || stepMatch[2], 10);
+      const stepNum = parseInt(stepMatch[1] ?? stepMatch[2] ?? '0', 10);
       if (!isNaN(stepNum)) {
         return stepNum;
       }

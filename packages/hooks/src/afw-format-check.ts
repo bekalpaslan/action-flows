@@ -54,7 +54,7 @@ function validateChainHeader(content: string): string | null {
     return 'Missing chain header. Expected: ## Chain: {Brief Title}';
   }
 
-  const title = headerMatch[1].trim();
+  const title = headerMatch[1]?.trim() ?? '';
   if (!title || title.length === 0) {
     return 'Chain header has no title. Expected: ## Chain: {Brief Title}';
   }

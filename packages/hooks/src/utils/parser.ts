@@ -60,7 +60,7 @@ function parseResult(output: string): string | null {
   // Fallback: get last line if it looks like a summary
   const lines = output.trim().split('\n');
   if (lines.length > 0) {
-    const lastLine = lines[lines.length - 1].trim();
+    const lastLine = lines[lines.length - 1]?.trim() ?? '';
     if (lastLine.length > 0 && lastLine.length < 200) {
       return lastLine;
     }
