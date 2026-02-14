@@ -271,6 +271,7 @@ describe('RedisStorage', () => {
         type: 'step:spawned',
         sessionId,
         timestamp: brandedTypes.currentTimestamp(),
+        id: 'evt-1',
         stepNumber: 1 as any,
         action: 'test',
       } as WorkspaceEvent;
@@ -298,6 +299,7 @@ describe('RedisStorage', () => {
         type: 'step:spawned',
         sessionId,
         timestamp: oldTimestamp,
+        id: 'evt-2',
         stepNumber: 1 as any,
         action: 'old',
       } as WorkspaceEvent;
@@ -306,6 +308,7 @@ describe('RedisStorage', () => {
         type: 'step:completed',
         sessionId,
         timestamp: newTimestamp,
+        id: 'evt-3',
         stepNumber: 1 as any,
         duration: 1000 as any,
         succeeded: true,
@@ -340,6 +343,7 @@ describe('RedisStorage', () => {
         type: 'step:spawned',
         sessionId,
         timestamp: brandedTypes.currentTimestamp(),
+        id: 'evt-4',
         stepNumber: 1 as any,
         action: 'pubsub-test',
       } as WorkspaceEvent;
@@ -1374,6 +1378,7 @@ describe('RedisStorage', () => {
         type: 'step:spawned',
         sessionId,
         timestamp: brandedTypes.currentTimestamp(),
+        id: 'evt-5',
         stepNumber: 1 as any,
         action: 'test',
       } as WorkspaceEvent;

@@ -279,6 +279,7 @@ describe('FileWatcher Service', () => {
           sessionId,
           path: filePath,
           extension: '.ts',
+          id: expect.any(String),
         })
       );
 
@@ -300,6 +301,7 @@ describe('FileWatcher Service', () => {
           sessionId,
           path: filePath,
           changeType: 'content',
+          id: expect.any(String),
         })
       );
 
@@ -320,6 +322,7 @@ describe('FileWatcher Service', () => {
           type: 'file:deleted',
           sessionId,
           path: filePath,
+          id: expect.any(String),
         })
       );
     });
@@ -335,6 +338,7 @@ describe('FileWatcher Service', () => {
         expect.objectContaining({
           type: 'file:created',
           path: dirPath,
+          id: expect.any(String),
         })
       );
     });
@@ -350,6 +354,7 @@ describe('FileWatcher Service', () => {
         expect.objectContaining({
           type: 'file:deleted',
           path: dirPath,
+          id: expect.any(String),
         })
       );
     });
@@ -416,6 +421,7 @@ describe('FileWatcher Service', () => {
         sessionId,
         expect.objectContaining({
           type: 'file:created',
+          id: expect.any(String),
         })
       );
     });

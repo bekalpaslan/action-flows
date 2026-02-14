@@ -7,6 +7,7 @@ import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import type { IncomingMessage } from 'http';
 import type { Socket } from 'net';
+import * as crypto from 'crypto';
 import { storage, isAsyncStorage } from '../storage/index.js';
 import { handleWebSocket } from '../ws/handler.js';
 import eventsRouter from '../routes/events.js';
@@ -171,6 +172,7 @@ export function createMockEvent<T extends WorkspaceEvent>(
     type,
     sessionId,
     timestamp: brandedTypes.timestamp(now),
+    id: crypto.randomUUID(),
     ...overrides,
   } as any;
 
