@@ -1,0 +1,245 @@
+/**
+ * CommandPalette Styles
+ * Modal command palette with fuzzy search and keyboard navigation
+ */
+
+/* Backdrop overlay */
+.command-palette-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 10000;
+  padding-top: 15vh;
+  animation: backdrop-fade-in 0.2s ease-out;
+}
+
+@keyframes backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Main palette container */
+.command-palette {
+  background: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  animation: palette-slide-in 0.2s ease-out;
+}
+
+@keyframes palette-slide-in {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Search input section */
+.command-palette-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #3c3c3c;
+}
+
+.search-icon {
+  font-size: 18px;
+  color: #888;
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.search-input::placeholder {
+  color: #666;
+}
+
+.clear-button {
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.clear-button:hover {
+  color: #fff;
+}
+
+/* Command list */
+.command-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px 0;
+}
+
+.no-results {
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Command item */
+.command-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-left: 3px solid transparent;
+}
+
+.command-item:hover {
+  background: #2d2d2d;
+}
+
+.command-item-selected {
+  background: #2d2d2d;
+  border-left-color: #569cd6;
+}
+
+.command-item-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.command-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.command-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.command-label {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.command-description {
+  color: #888;
+  font-size: 12px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.command-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.command-shortcut {
+  font-size: 11px;
+  color: #888;
+  background: #2d2d2d;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid #3c3c3c;
+  font-family: 'Courier New', monospace;
+}
+
+.command-category {
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Footer hints */
+.command-palette-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  border-top: 1px solid #3c3c3c;
+  background: #252525;
+}
+
+.footer-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #888;
+}
+
+.footer-hint kbd {
+  background: #2d2d2d;
+  color: #ccc;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid #3c3c3c;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Scrollbar styling */
+.command-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.command-list::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.command-list::-webkit-scrollbar-thumb {
+  background: #3c3c3c;
+  border-radius: 4px;
+}
+
+.command-list::-webkit-scrollbar-thumb:hover {
+  background: #4c4c4c;
+}
