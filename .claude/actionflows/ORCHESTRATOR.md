@@ -562,17 +562,16 @@ If any trigger fires and it's within original scope, recompile and announce. If 
 
 **Request:** {One-line human intent}
 **Source:** {flow-name/ | Composed from: action1 + action2 + action3 | Meta-task}
+**Execution:** {Sequential | Parallel: [1,2] -> [3] | Single step}
 
 | # | Action | Model | Key Inputs | Waits For | Status |
 |---|--------|-------|------------|-----------|--------|
 | 1 | action/ | model | input=value | -- | Pending |
 | 2 | action/ | model | input=value | #1 | Pending |
 
-**Execution:** {Sequential | Parallel: [1,2] -> [3] | Single step}
-
-What each step does:
-1. **{Action}** -- {What this agent does and produces}
-2. **{Action}** -- {What this agent does and produces}
+**What each step does:**
+1. **{Action}** — {What this agent does and produces}
+2. **{Action}** — {What this agent does and produces}
 
 Execute?
 ```
@@ -613,10 +612,11 @@ Continuing execution...
 
 | # | Action | Status | Result |
 |---|--------|--------|--------|
-| 1 | action/ | Done | {one-line outcome} |
+| 1 | action/ | completed | {one-line outcome} |
+| 2 | action/ | completed | {one-line outcome} |
 
-**Logs:** `actionflows/logs/{path}/`
-**Learnings:** {Summary or "None"}
+**Logs:** `.claude/actionflows/logs/{YYYY-MM-DD_description}/`
+**Learnings:** {Summary of key discoveries or "None"}
 ```
 
 ### 6. Learning Surface
