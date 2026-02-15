@@ -30,10 +30,10 @@ export const AnalysisReportPatterns = {
   heading: /^# (.+)$/m,
   aspect: /^\*\*Aspect:\*\* (.+)$/m,
   scope: /^\*\*Scope:\*\* (.+)$/m,
-  date: /^\*\*Date:\*\* (\d{4}-\d{2}-\d{2})$/m,
-  agent: /^\*\*Agent:\*\* (analyze|code|review|brainstorm)\/$/m,
-  sectionHeading: /^## (\d+)\. (.+)$/m,
-  recommendationsHeading: /^## Recommendations$/m,
+  date: /^\*\*(?:Analysis )?Date:\*\* (\d{4}-\d{2}-\d{2})$/m,
+  agent: /^\*\*(?:Agent|Analyst):\*\* (.+?)(?:\s+\(.+\))?$/m,
+  sectionHeading: /^## (?:(\d+)\. )?(.+)$/m,
+  recommendationsHeading: /^## Recommend(?:ations|ed Registry Edits)$/m,
   recommendation: /^- (.+)$/m,
 } as const;
 

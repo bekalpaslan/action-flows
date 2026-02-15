@@ -5,8 +5,8 @@
  * Covers rendering, validation, context patterns parsing, and callbacks.
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CustomPromptDialog } from './CustomPromptDialog';
 import type { CustomPromptDialogProps } from './CustomPromptDialog';
@@ -25,6 +25,10 @@ describe('CustomPromptDialog', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    cleanup();
   });
 
   describe('Rendering', () => {
@@ -149,8 +153,12 @@ describe('CustomPromptDialog', () => {
       await user.type(promptInput, 'Test prompt');
       await user.type(contextPatternsInput, '.*\\.tsx$');
 
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      await waitFor(() => {
+        expect((screen.getByLabelText(/alias \(required\)/i) as HTMLInputElement).value).toBeTruthy();
+      });
+
+      const submitButton = screen.getByRole('button', { name: /create button/i });
+      await user.click(submitButton);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -164,19 +172,18 @@ describe('CustomPromptDialog', () => {
     });
 
     it('should parse multiple context patterns separated by newlines', async () => {
-      const user = userEvent.setup();
       render(<CustomPromptDialog {...defaultProps} />);
 
       const labelInput = screen.getByLabelText(/alias \(required\)/i);
       const promptInput = screen.getByLabelText(/prompt \(required\)/i);
       const contextPatternsInput = screen.getByLabelText(/context patterns \(optional\)/i);
 
-      await user.type(labelInput, 'Test Label');
-      await user.type(promptInput, 'Test prompt');
-      await user.type(contextPatternsInput, '.*\\.tsx$\n.*\\.ts$\n.*auth.*');
+      fireEvent.change(labelInput, { target: { value: 'Test Label' } });
+      fireEvent.change(promptInput, { target: { value: 'Test prompt' } });
+      fireEvent.change(contextPatternsInput, { target: { value: '.*\\.tsx$\n.*\\.ts$\n.*auth.*' } });
 
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const form = screen.getByRole('button', { name: /create button/i }).closest('form')!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -190,19 +197,14 @@ describe('CustomPromptDialog', () => {
     });
 
     it('should filter out empty lines in context patterns', async () => {
-      const user = userEvent.setup();
       render(<CustomPromptDialog {...defaultProps} />);
 
-      const labelInput = screen.getByLabelText(/alias \(required\)/i);
-      const promptInput = screen.getByLabelText(/prompt \(required\)/i);
-      const contextPatternsInput = screen.getByLabelText(/context patterns \(optional\)/i);
+      fireEvent.change(screen.getByLabelText(/alias \(required\)/i), { target: { value: 'Test Label' } });
+      fireEvent.change(screen.getByLabelText(/prompt \(required\)/i), { target: { value: 'Test prompt' } });
+      fireEvent.change(screen.getByLabelText(/context patterns \(optional\)/i), { target: { value: '.*\\.tsx$\n\n.*\\.ts$\n   \n.*auth.*' } });
 
-      await user.type(labelInput, 'Test Label');
-      await user.type(promptInput, 'Test prompt');
-      await user.type(contextPatternsInput, '.*\\.tsx$\n\n.*\\.ts$\n   \n.*auth.*');
-
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const form = screen.getByRole('button', { name: /create button/i }).closest('form')!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -216,19 +218,18 @@ describe('CustomPromptDialog', () => {
     });
 
     it('should trim whitespace from context patterns', async () => {
-      const user = userEvent.setup();
       render(<CustomPromptDialog {...defaultProps} />);
 
       const labelInput = screen.getByLabelText(/alias \(required\)/i);
       const promptInput = screen.getByLabelText(/prompt \(required\)/i);
       const contextPatternsInput = screen.getByLabelText(/context patterns \(optional\)/i);
 
-      await user.type(labelInput, 'Test Label');
-      await user.type(promptInput, 'Test prompt');
-      await user.type(contextPatternsInput, '  .*\\.tsx$  \n  .*\\.ts$  ');
+      fireEvent.change(labelInput, { target: { value: 'Test Label' } });
+      fireEvent.change(promptInput, { target: { value: 'Test prompt' } });
+      fireEvent.change(contextPatternsInput, { target: { value: '  .*\\.tsx$  \n  .*\\.ts$  ' } });
 
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const form = screen.getByRole('button', { name: /create button/i }).closest('form')!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -242,17 +243,13 @@ describe('CustomPromptDialog', () => {
     });
 
     it('should pass undefined when context patterns field is empty', async () => {
-      const user = userEvent.setup();
       render(<CustomPromptDialog {...defaultProps} />);
 
-      const labelInput = screen.getByLabelText(/alias \(required\)/i);
-      const promptInput = screen.getByLabelText(/prompt \(required\)/i);
+      fireEvent.change(screen.getByLabelText(/alias \(required\)/i), { target: { value: 'Test Label' } });
+      fireEvent.change(screen.getByLabelText(/prompt \(required\)/i), { target: { value: 'Test prompt' } });
 
-      await user.type(labelInput, 'Test Label');
-      await user.type(promptInput, 'Test prompt');
-
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const form = screen.getByRole('button', { name: /create button/i }).closest('form')!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -268,17 +265,13 @@ describe('CustomPromptDialog', () => {
 
   describe('Submit Callback', () => {
     it('should call onSubmit with correct parameters', async () => {
-      const user = userEvent.setup();
       render(<CustomPromptDialog {...defaultProps} />);
 
-      const labelInput = screen.getByLabelText(/alias \(required\)/i);
-      const promptInput = screen.getByLabelText(/prompt \(required\)/i);
+      fireEvent.change(screen.getByLabelText(/alias \(required\)/i), { target: { value: 'My Custom Button' } });
+      fireEvent.change(screen.getByLabelText(/prompt \(required\)/i), { target: { value: 'This is the prompt text' } });
 
-      await user.type(labelInput, 'My Custom Button');
-      await user.type(promptInput, 'This is the prompt text');
-
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const form = screen.getByRole('button', { name: /create button/i }).closest('form')!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -292,17 +285,13 @@ describe('CustomPromptDialog', () => {
     });
 
     it('should trim label and prompt before submitting', async () => {
-      const user = userEvent.setup();
       render(<CustomPromptDialog {...defaultProps} />);
 
-      const labelInput = screen.getByLabelText(/alias \(required\)/i);
-      const promptInput = screen.getByLabelText(/prompt \(required\)/i);
+      fireEvent.change(screen.getByLabelText(/alias \(required\)/i), { target: { value: '  My Custom Button  ' } });
+      fireEvent.change(screen.getByLabelText(/prompt \(required\)/i), { target: { value: '  This is the prompt text  ' } });
 
-      await user.type(labelInput, '  My Custom Button  ');
-      await user.type(promptInput, '  This is the prompt text  ');
-
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const form = screen.getByRole('button', { name: /create button/i }).closest('form')!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -316,19 +305,14 @@ describe('CustomPromptDialog', () => {
     });
 
     it('should include icon when provided', async () => {
-      const user = userEvent.setup();
       render(<CustomPromptDialog {...defaultProps} />);
 
-      const labelInput = screen.getByLabelText(/alias \(required\)/i);
-      const promptInput = screen.getByLabelText(/prompt \(required\)/i);
-      const iconInput = screen.getByLabelText(/icon \(optional\)/i);
+      fireEvent.change(screen.getByLabelText(/alias \(required\)/i), { target: { value: 'Test Label' } });
+      fireEvent.change(screen.getByLabelText(/prompt \(required\)/i), { target: { value: 'Test prompt' } });
+      fireEvent.change(screen.getByLabelText(/icon \(optional\)/i), { target: { value: '🚀' } });
 
-      await user.type(labelInput, 'Test Label');
-      await user.type(promptInput, 'Test prompt');
-      await user.type(iconInput, '🚀');
-
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const form = screen.getByRole('button', { name: /create button/i }).closest('form')!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -342,17 +326,13 @@ describe('CustomPromptDialog', () => {
     });
 
     it('should pass undefined for icon when empty', async () => {
-      const user = userEvent.setup();
       render(<CustomPromptDialog {...defaultProps} />);
 
-      const labelInput = screen.getByLabelText(/alias \(required\)/i);
-      const promptInput = screen.getByLabelText(/prompt \(required\)/i);
+      fireEvent.change(screen.getByLabelText(/alias \(required\)/i), { target: { value: 'Test Label' } });
+      fireEvent.change(screen.getByLabelText(/prompt \(required\)/i), { target: { value: 'Test prompt' } });
 
-      await user.type(labelInput, 'Test Label');
-      await user.type(promptInput, 'Test prompt');
-
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const form = screen.getByRole('button', { name: /create button/i }).closest('form')!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -366,19 +346,14 @@ describe('CustomPromptDialog', () => {
     });
 
     it('should include alwaysShow when checkbox is checked', async () => {
-      const user = userEvent.setup();
       render(<CustomPromptDialog {...defaultProps} />);
 
-      const labelInput = screen.getByLabelText(/alias \(required\)/i);
-      const promptInput = screen.getByLabelText(/prompt \(required\)/i);
-      const alwaysShowCheckbox = screen.getByRole('checkbox');
+      fireEvent.change(screen.getByLabelText(/alias \(required\)/i), { target: { value: 'Test Label' } });
+      fireEvent.change(screen.getByLabelText(/prompt \(required\)/i), { target: { value: 'Test prompt' } });
+      fireEvent.click(screen.getByRole('checkbox'));
 
-      await user.type(labelInput, 'Test Label');
-      await user.type(promptInput, 'Test prompt');
-      await user.click(alwaysShowCheckbox);
-
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const form = screen.getByRole('button', { name: /create button/i }).closest('form')!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -392,23 +367,16 @@ describe('CustomPromptDialog', () => {
     });
 
     it('should include all parameters when all fields are filled', async () => {
-      const user = userEvent.setup();
       render(<CustomPromptDialog {...defaultProps} />);
 
-      const labelInput = screen.getByLabelText(/alias \(required\)/i);
-      const promptInput = screen.getByLabelText(/prompt \(required\)/i);
-      const iconInput = screen.getByLabelText(/icon \(optional\)/i);
-      const contextPatternsInput = screen.getByLabelText(/context patterns \(optional\)/i);
-      const alwaysShowCheckbox = screen.getByRole('checkbox');
+      fireEvent.change(screen.getByLabelText(/alias \(required\)/i), { target: { value: 'Complete Button' } });
+      fireEvent.change(screen.getByLabelText(/prompt \(required\)/i), { target: { value: 'Complete prompt' } });
+      fireEvent.change(screen.getByLabelText(/icon \(optional\)/i), { target: { value: '⚡' } });
+      fireEvent.change(screen.getByLabelText(/context patterns \(optional\)/i), { target: { value: '.*\\.tsx$\n.*auth.*' } });
+      fireEvent.click(screen.getByRole('checkbox'));
 
-      await user.type(labelInput, 'Complete Button');
-      await user.type(promptInput, 'Complete prompt');
-      await user.type(iconInput, '⚡');
-      await user.type(contextPatternsInput, '.*\\.tsx$\n.*auth.*');
-      await user.click(alwaysShowCheckbox);
-
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const form = screen.getByRole('button', { name: /create button/i }).closest('form')!;
+      fireEvent.submit(form);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -428,7 +396,7 @@ describe('CustomPromptDialog', () => {
       const labelInput = screen.getByLabelText(/alias \(required\)/i);
       await user.type(labelInput, 'Only label');
 
-      const submitButton = screen.getByRole('button', { name: /create button/i });
+      const submitButton = await screen.findByRole('button', { name: /create button/i });
       await user.click(submitButton);
 
       expect(mockHandlers.onSubmit).not.toHaveBeenCalled();
@@ -467,8 +435,12 @@ describe('CustomPromptDialog', () => {
       await user.type(labelInput, 'Test');
       await user.type(promptInput, 'Test');
 
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      await waitFor(() => {
+        expect((screen.getByLabelText(/alias \(required\)/i) as HTMLInputElement).value).toBeTruthy();
+      });
+
+      const submitButton = screen.getByRole('button', { name: /create button/i });
+      await user.click(submitButton);
 
       await waitFor(() => {
         expect(mockHandlers.onSubmit).toHaveBeenCalledWith(
@@ -574,8 +546,8 @@ describe('CustomPromptDialog', () => {
       await user.type(labelInput, 'Test');
       await user.type(promptInput, 'Test');
 
-      const form = screen.getByRole('button', { name: /create button/i }).closest('form');
-      fireEvent.submit(form!);
+      const submitButton = await screen.findByRole('button', { name: /create button/i });
+      await user.click(submitButton);
 
       expect(mockHandlers.onCancel).not.toHaveBeenCalled();
     });
@@ -603,14 +575,13 @@ describe('CustomPromptDialog', () => {
       expect(iconInput.maxLength).toBe(10);
     });
 
-    it('should show character count for prompt field', async () => {
-      const user = userEvent.setup();
+    it('should show character count for prompt field', () => {
       render(<CustomPromptDialog {...defaultProps} />);
 
       expect(screen.getByText(/\(0\/2000\)/i)).toBeInTheDocument();
 
       const promptInput = screen.getByLabelText(/prompt \(required\)/i);
-      await user.type(promptInput, 'Hello');
+      fireEvent.change(promptInput, { target: { value: 'Hello' } });
 
       expect(screen.getByText(/\(5\/2000\)/i)).toBeInTheDocument();
     });

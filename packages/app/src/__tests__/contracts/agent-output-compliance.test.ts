@@ -18,7 +18,7 @@ const MONOREPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..', '..');
 /**
  * Contract enforcement date - logs before this are legacy and may not conform
  */
-const CONTRACT_ENFORCEMENT_DATE = new Date('2026-02-15');
+const CONTRACT_ENFORCEMENT_DATE = new Date('2026-02-14');
 
 /**
  * Extract date from log directory name (format: name_YYYY-MM-DD-HH-MM-SS)

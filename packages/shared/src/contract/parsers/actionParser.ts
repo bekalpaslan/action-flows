@@ -195,7 +195,7 @@ function parseAnalysisSections(text: string): AnalysisSection[] | null {
       }
       // Start new section
       currentSection = {
-        number: parseInt(match[1] ?? '0', 10),
+        number: match[1] ? parseInt(match[1], 10) : 0,
         title: match[2] ?? '',
         content: '',
       };
@@ -213,7 +213,15 @@ function parseAnalysisSections(text: string): AnalysisSection[] | null {
 }
 
 function parseRecommendations(text: string): string[] | null {
-  const recommendationsIndex = text.indexOf('## Recommendations');
+  // Try multiple heading patterns for recommendations sections
+  let recommendationsIndex = text.indexOf('## Recommendations');
+  if (recommendationsIndex === -1) {
+    recommendationsIndex = text.indexOf('## Recommended Registry Edits');
+  }
+  if (recommendationsIndex === -1) {
+    // Fallback: look for **Recommendations:** inline
+    recommendationsIndex = text.indexOf('**Recommendations:**');
+  }
   if (recommendationsIndex === -1) {
     return null;
   }
