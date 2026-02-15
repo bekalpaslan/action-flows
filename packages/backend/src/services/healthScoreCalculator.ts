@@ -32,12 +32,20 @@ export class HealthScoreCalculator extends EventEmitter {
   private readonly MAX_BUFFER_SIZE = 10000;
   /** File path for persisting traces across restarts */
   private readonly traceFilePath: string;
+  /** Score history for trend visualization */
+  private scoreHistory: Array<{ timestamp: string; overall: number; byGate: Record<string, number> }> = [];
+  private readonly MAX_HISTORY_SIZE = 168; // 7 days at 1/hour
+  private readonly SNAPSHOT_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
+  private lastSnapshotTime = 0;
+  private readonly historyFilePath: string;
 
   constructor(storage: Storage) {
     super();
     this.storage = storage;
     this.traceFilePath = path.join(process.cwd(), 'data', 'gate-traces.jsonl');
+    this.historyFilePath = path.join(process.cwd(), 'data', 'score-history.jsonl');
     this.loadPersistedTraces();
+    this.loadScoreHistory();
   }
 
   /**
@@ -467,6 +475,68 @@ export class HealthScoreCalculator extends EventEmitter {
     }
 
     return recommendations;
+  }
+
+  /**
+   * Record a score snapshot (throttled to once per hour)
+   */
+  private recordSnapshot(overall: number, byGate: Record<GateId, GateHealthScore>): void {
+    const now = Date.now();
+    if (now - this.lastSnapshotTime < this.SNAPSHOT_INTERVAL_MS) return;
+    this.lastSnapshotTime = now;
+
+    const entry = {
+      timestamp: new Date(now).toISOString(),
+      overall,
+      byGate: Object.fromEntries(
+        Object.entries(byGate).map(([id, g]) => [id, g.score])
+      ),
+    };
+
+    this.scoreHistory.push(entry);
+    if (this.scoreHistory.length > this.MAX_HISTORY_SIZE) {
+      this.scoreHistory = this.scoreHistory.slice(-this.MAX_HISTORY_SIZE);
+    }
+
+    // Persist
+    try {
+      const dir = path.dirname(this.historyFilePath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.appendFileSync(this.historyFilePath, JSON.stringify(entry) + '\n');
+
+      // Truncate file if it's grown too large
+      if (this.scoreHistory.length >= this.MAX_HISTORY_SIZE) {
+        const lines = this.scoreHistory.map(e => JSON.stringify(e)).join('\n') + '\n';
+        fs.writeFileSync(this.historyFilePath, lines);
+      }
+    } catch (err) {
+      console.warn('[HealthScore] Could not persist score history:', err);
+    }
+  }
+
+  /**
+   * Load score history from disk on startup
+   */
+  private loadScoreHistory(): void {
+    try {
+      if (!fs.existsSync(this.historyFilePath)) return;
+      const content = fs.readFileSync(this.historyFilePath, 'utf-8');
+      const lines = content.trim().split('\n').filter(Boolean);
+      for (const line of lines) {
+        try {
+          this.scoreHistory.push(JSON.parse(line));
+        } catch { /* skip malformed */ }
+      }
+      if (this.scoreHistory.length > this.MAX_HISTORY_SIZE) {
+        this.scoreHistory = this.scoreHistory.slice(-this.MAX_HISTORY_SIZE);
+      }
+      if (this.scoreHistory.length > 0) {
+        this.lastSnapshotTime = new Date(this.scoreHistory[this.scoreHistory.length - 1].timestamp).getTime();
+      }
+      console.log(`[HealthScore] Loaded ${this.scoreHistory.length} score history entries`);
+    } catch (err) {
+      console.warn('[HealthScore] Could not load score history:', err);
+    }
   }
 
   /**
