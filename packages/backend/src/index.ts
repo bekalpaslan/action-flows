@@ -482,8 +482,10 @@ async function initializeRedisPubSub() {
 const isMainModule = (() => {
   try {
     const self = new URL(import.meta.url).pathname.toLowerCase();
-    const entry = new URL(`file:///${process.argv[1]?.replace(/\\/g, '/')}`).pathname.toLowerCase();
-    return self === entry;
+    const argv1 = process.argv[1] || '';
+    const entry = new URL(`file:///${argv1.replace(/\\/g, '/')}`).pathname.toLowerCase();
+    // Direct match, suffix match (tsx relative paths), or basename match
+    return self === entry || self.endsWith(entry) || self.endsWith('/' + argv1.split('/').pop()?.toLowerCase());
   } catch {
     return false;
   }
