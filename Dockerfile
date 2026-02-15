@@ -8,6 +8,7 @@ COPY packages/shared/package.json packages/shared/
 COPY packages/backend/package.json packages/backend/
 COPY packages/app/package.json packages/app/
 RUN pnpm install --frozen-lockfile
+ENV PATH="/app/node_modules/.bin:/app/node_modules/.pnpm/node_modules/.bin:$PATH"
 
 # Stage: backend-dev
 # Runs the backend API server with hot-reload
@@ -27,4 +28,4 @@ COPY packages/shared ./packages/shared
 COPY packages/app ./packages/app
 RUN cd packages/shared && pnpm build
 EXPOSE 5173
-CMD ["pnpm", "-F", "@afw/app", "dev", "--", "--host", "0.0.0.0"]
+CMD ["sh", "-c", "cd packages/app && pnpm vite --host 0.0.0.0"]

@@ -3,10 +3,12 @@ import react from '@vitejs/plugin-react'
 import electron from 'vite-plugin-electron'
 import path from 'path'
 
+const isDocker = process.env.DOCKER === 'true'
+
 export default defineConfig({
   plugins: [
     react(),
-    electron([
+    ...(!isDocker ? [electron([
       {
         entry: 'electron/main.ts',
         vite: {
@@ -23,7 +25,7 @@ export default defineConfig({
           options.reload()
         },
       },
-    ]),
+    ])] : []),
   ],
   server: {
     port: 5173,
