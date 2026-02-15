@@ -1,6 +1,6 @@
 /**
- * Slack Webhook Routes (Stub)
- * Handles Slack events and slash commands
+ * Slack Webhook Routes & Notification API
+ * Handles Slack events, slash commands, and notification preparation
  * Part of Phase 2A — Multi-Surface Orchestration (Thread 1)
  */
 
@@ -8,6 +8,13 @@ import { Router } from 'express';
 import crypto from 'crypto';
 import { surfaceManager } from '../../services/surfaceManager.js';
 import { SlackAdapter } from '../../surfaces/SlackAdapter.js';
+import { slackNotifier } from '../../services/slackNotifier.js';
+import type {
+  ChainCompletionNotification,
+  ReviewCompletionNotification,
+  DeploymentNotification,
+  TestFailureNotification,
+} from '@afw/shared';
 
 const router = Router();
 
@@ -182,6 +189,204 @@ router.post('/interactive', async (req, res) => {
   } catch (error) {
     console.error('[Slack Webhook] Error handling interaction:', error);
     res.status(500).json({ error: 'Failed to handle interaction' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/surfaces/slack/notifications/config:
+ *   get:
+ *     summary: Get Slack notification configuration
+ *     tags: [surfaces, slack, notifications]
+ *     responses:
+ *       200:
+ *         description: Current Slack configuration
+ *   put:
+ *     summary: Update Slack notification configuration
+ *     tags: [surfaces, slack, notifications]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               enabled:
+ *                 type: boolean
+ *               defaultChannel:
+ *                 type: string
+ *               notificationLevel:
+ *                 type: string
+ *                 enum: [all, important, critical]
+ *     responses:
+ *       200:
+ *         description: Configuration updated
+ */
+router.get('/notifications/config', (req, res) => {
+  try {
+    const config = slackNotifier.getConfig();
+    res.json(config);
+  } catch (error) {
+    console.error('[Slack API] Error getting config:', error);
+    res.status(500).json({ error: 'Failed to get configuration' });
+  }
+});
+
+router.put('/notifications/config', (req, res) => {
+  try {
+    slackNotifier.updateConfig(req.body);
+    const config = slackNotifier.getConfig();
+    res.json(config);
+  } catch (error) {
+    console.error('[Slack API] Error updating config:', error);
+    res.status(500).json({ error: 'Failed to update configuration' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/surfaces/slack/notifications/chain-completion:
+ *   post:
+ *     summary: Prepare chain completion notification
+ *     tags: [surfaces, slack, notifications]
+ *     description: Formats a chain completion notification. Orchestrator calls this, then uses MCP to post.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               chainTitle:
+ *                 type: string
+ *               steps:
+ *                 type: number
+ *               status:
+ *                 type: string
+ *                 enum: [success, partial, failed]
+ *               logPath:
+ *                 type: string
+ *               error:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Notification prepared (returns formatted message)
+ *       204:
+ *         description: Notification filtered out (not sent based on config)
+ */
+router.post('/notifications/chain-completion', async (req, res) => {
+  try {
+    const data: ChainCompletionNotification = req.body;
+    const notification = await slackNotifier.prepareChainCompletion(data);
+
+    if (!notification) {
+      res.status(204).send(); // Filtered out
+      return;
+    }
+
+    res.json(notification);
+  } catch (error) {
+    console.error('[Slack API] Error preparing chain completion notification:', error);
+    res.status(500).json({ error: 'Failed to prepare notification' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/surfaces/slack/notifications/review-completion:
+ *   post:
+ *     summary: Prepare review completion notification
+ *     tags: [surfaces, slack, notifications]
+ */
+router.post('/notifications/review-completion', async (req, res) => {
+  try {
+    const data: ReviewCompletionNotification = req.body;
+    const notification = await slackNotifier.prepareReviewCompletion(data);
+
+    if (!notification) {
+      res.status(204).send();
+      return;
+    }
+
+    res.json(notification);
+  } catch (error) {
+    console.error('[Slack API] Error preparing review completion notification:', error);
+    res.status(500).json({ error: 'Failed to prepare notification' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/surfaces/slack/notifications/deployment:
+ *   post:
+ *     summary: Prepare deployment notification
+ *     tags: [surfaces, slack, notifications]
+ */
+router.post('/notifications/deployment', async (req, res) => {
+  try {
+    const data: DeploymentNotification = req.body;
+    const notification = await slackNotifier.prepareDeployment(data);
+
+    if (!notification) {
+      res.status(204).send();
+      return;
+    }
+
+    res.json(notification);
+  } catch (error) {
+    console.error('[Slack API] Error preparing deployment notification:', error);
+    res.status(500).json({ error: 'Failed to prepare notification' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/surfaces/slack/notifications/test-failure:
+ *   post:
+ *     summary: Prepare test failure notification
+ *     tags: [surfaces, slack, notifications]
+ */
+router.post('/notifications/test-failure', async (req, res) => {
+  try {
+    const data: TestFailureNotification = req.body;
+    const notification = await slackNotifier.prepareTestFailure(data);
+
+    if (!notification) {
+      res.status(204).send();
+      return;
+    }
+
+    res.json(notification);
+  } catch (error) {
+    console.error('[Slack API] Error preparing test failure notification:', error);
+    res.status(500).json({ error: 'Failed to prepare notification' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/surfaces/slack/notifications/history:
+ *   get:
+ *     summary: Get notification history
+ *     tags: [surfaces, slack, notifications]
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 50
+ *     responses:
+ *       200:
+ *         description: Notification history
+ */
+router.get('/notifications/history', (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit as string) || 50;
+    const history = slackNotifier.getHistory(limit);
+    res.json(history);
+  } catch (error) {
+    console.error('[Slack API] Error getting notification history:', error);
+    res.status(500).json({ error: 'Failed to get notification history' });
   }
 });
 

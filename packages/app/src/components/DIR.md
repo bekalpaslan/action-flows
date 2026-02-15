@@ -18,6 +18,7 @@
 - DisambiguationModal/ → see DisambiguationModal/DIR.md
 - DiscussButton/ → see DiscussButton/DIR.md
 - ErrorModal/ → see ErrorModal/DIR.md
+- Figma/ → see Figma/DIR.md
 - FileExplorer/ → see FileExplorer/DIR.md
 - FlowVisualization/ → see FlowVisualization/DIR.md
 - Harmony/ → see Harmony/DIR.md
@@ -27,6 +28,7 @@
 - InlineButtons/ → see InlineButtons/DIR.md
 - Inspector/ → see Inspector/DIR.md
 - IntelDossier/ → see IntelDossier/DIR.md
+- Linear/ → see Linear/DIR.md
 - ModifierCard/ → see ModifierCard/DIR.md
 - Notifications/ → see Notifications/DIR.md
 - Onboarding/ → see Onboarding/DIR.md
@@ -44,6 +46,7 @@
 - SessionTree/ → see SessionTree/DIR.md
 - Settings/ → see Settings/DIR.md
 - Sidebar/ → see Sidebar/DIR.md
+- SlackSettings.tsx — exports: SlackSettings, SlackSettingsProps
 - SlidingChatWindow/ → see SlidingChatWindow/DIR.md
 - SquadPanel/ → see SquadPanel/DIR.md
 - StarBookmark/ → see StarBookmark/DIR.md

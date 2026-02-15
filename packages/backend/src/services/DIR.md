@@ -30,6 +30,7 @@
 - projectDetector.ts — exports: ProjectDetector
 - projectStorage.ts — exports: ProjectStorage, projectStorage
 - registryStorage.ts — exports: RegistryStorage, registryStorage
+- slackNotifier.ts — exports: SlackNotifier, slackNotifier, initializeSlackNotifier
 - snapshotService.ts — exports: SnapshotService
 - sparkBroadcaster.ts — exports: SparkBroadcaster, SparkTravelingEvent, getSparkBroadcaster, initSparkBroadcaster
 - storyService.ts — exports: StoryService, storyService

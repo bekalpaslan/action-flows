@@ -1,0 +1,109 @@
+/**
+ * FigmaLinkPanel Styles
+ */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: var(--bg-secondary, #f5f5f5);
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e0e0e0);
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.linkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.linkItem {
+  margin: 0;
+  padding: 0;
+}
+
+.linkButton {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 12px;
+  background: var(--bg-primary, #ffffff);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.linkButton:hover {
+  background: var(--bg-hover, #fafafa);
+  border-color: var(--accent-blue, #0066ff);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.linkButton:active {
+  transform: translateY(1px);
+}
+
+.linkTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.linkMeta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-secondary, #666666);
+}
+
+.fileKey {
+  font-family: monospace;
+  background: var(--bg-code, #f0f0f0);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.nodeId {
+  font-family: monospace;
+  color: var(--text-tertiary, #999999);
+}
+
+.loading,
+.error,
+.empty {
+  padding: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary, #666666);
+}
+
+.error {
+  color: var(--error-color, #d32f2f);
+}
+
+.loading::after {
+  content: '...';
+  animation: ellipsis 1.5s infinite;
+}
+
+@keyframes ellipsis {
+  0% { content: ''; }
+  33% { content: '.'; }
+  66% { content: '..'; }
+  100% { content: '...'; }
+}

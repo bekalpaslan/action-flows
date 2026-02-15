@@ -14,11 +14,22 @@ import '@testing-library/jest-dom';
 // expect.extend(toHaveNoViolations);
 
 // Mock the GlowIndicator context
-vi.mock('../../hooks/useNotificationGlow', () => ({
-  useNotificationGlowContext: () => ({
-    getSessionGlow: () => ({ active: false, level: 0, intensity: 0 }),
-  }),
-}));
+vi.mock('../../hooks/useNotificationGlow', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../hooks/useNotificationGlow')>();
+  return {
+    ...actual,
+    useNotificationGlowContext: () => ({
+      getSessionGlow: () => ({ active: false, level: 'info' as const, intensity: 0, color: '#000000' }),
+      getWorkbenchGlow: () => ({ active: false, level: 'info' as const, intensity: 0, color: '#000000' }),
+      notifications: [],
+      notificationState: { total: 0, unread: 0, dismissed: 0, maxSeverity: 'info' as const },
+      addNotification: () => {},
+      markAsRead: () => {},
+      dismissNotification: () => {},
+      clearNotifications: () => {},
+    }),
+  };
+});
 
 // Simplified accessible session item
 const AccessibleSessionSidebarItem: React.FC<{

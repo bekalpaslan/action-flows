@@ -41,6 +41,7 @@
 - useSessionControls.ts — exports: UseSessionControlsReturn, useSessionControls
 - useSessionInput.ts — exports: useSessionInput
 - useSessionSidebar.ts — exports: UseSessionSidebarResult, useSessionSidebar
+- useSlackConfig.tsx — exports: ConnectionStatus, UseSlackConfigReturn, useSlackConfig
 - useStreamJsonEnrichment.ts — exports: StreamEnrichedSession, useStreamJsonEnrichment
 - useTerminalEvents.ts — exports: useTerminalEvents
 - useUsers.ts — exports: UseUsersReturn, User, useUsers

@@ -13,6 +13,8 @@
  */
 
 import { EventEmitter } from 'events';
+import fs from 'fs';
+import path from 'path';
 import type { GateTrace, GateId, HarmonyHealthScore, GateHealthScore, DriftPattern, Timestamp } from '@afw/shared';
 import type { Storage } from '../storage/index.js';
 
@@ -28,10 +30,55 @@ export class HealthScoreCalculator extends EventEmitter {
   /** In-memory trace buffer — works regardless of storage backend */
   private traceBuffer: GateTrace[] = [];
   private readonly MAX_BUFFER_SIZE = 10000;
+  /** File path for persisting traces across restarts */
+  private readonly traceFilePath: string;
 
   constructor(storage: Storage) {
     super();
     this.storage = storage;
+    this.traceFilePath = path.join(process.cwd(), 'data', 'gate-traces.jsonl');
+    this.loadPersistedTraces();
+  }
+
+  /**
+   * Load traces from disk on startup
+   */
+  private loadPersistedTraces(): void {
+    try {
+      if (!fs.existsSync(this.traceFilePath)) return;
+      const content = fs.readFileSync(this.traceFilePath, 'utf-8');
+      const lines = content.trim().split('\n').filter(Boolean);
+      // Only load traces within the 7d window
+      const cutoff = Date.now() - this.WINDOW_7D_MS;
+      for (const line of lines) {
+        try {
+          const trace = JSON.parse(line) as GateTrace;
+          if (new Date(trace.timestamp).getTime() >= cutoff) {
+            this.traceBuffer.push(trace);
+          }
+        } catch { /* skip malformed lines */ }
+      }
+      // Trim to max
+      if (this.traceBuffer.length > this.MAX_BUFFER_SIZE) {
+        this.traceBuffer = this.traceBuffer.slice(-this.MAX_BUFFER_SIZE);
+      }
+      console.log(`[HealthScore] Loaded ${this.traceBuffer.length} persisted traces`);
+    } catch (err) {
+      console.warn('[HealthScore] Could not load persisted traces:', err);
+    }
+  }
+
+  /**
+   * Append a trace to the persistence file
+   */
+  private persistTrace(trace: GateTrace): void {
+    try {
+      const dir = path.dirname(this.traceFilePath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.appendFileSync(this.traceFilePath, JSON.stringify(trace) + '\n');
+    } catch (err) {
+      console.warn('[HealthScore] Could not persist trace:', err);
+    }
   }
 
   /**
@@ -40,6 +87,7 @@ export class HealthScoreCalculator extends EventEmitter {
    */
   ingestTrace(trace: GateTrace): void {
     this.traceBuffer.push(trace);
+    this.persistTrace(trace);
     // Evict oldest if buffer full
     if (this.traceBuffer.length > this.MAX_BUFFER_SIZE) {
       this.traceBuffer = this.traceBuffer.slice(-this.MAX_BUFFER_SIZE);

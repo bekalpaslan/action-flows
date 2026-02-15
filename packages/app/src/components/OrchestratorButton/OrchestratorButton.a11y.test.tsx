@@ -14,11 +14,18 @@ import '@testing-library/jest-dom';
 // expect.extend(toHaveNoViolations);
 
 // Mock ChatWindowContext
-vi.mock('../../contexts/ChatWindowContext', () => ({
-  useChatWindowContext: () => ({
-    openChat: vi.fn(),
-  }),
-}));
+vi.mock('../../contexts/ChatWindowContext', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../contexts/ChatWindowContext')>();
+  return {
+    ...actual,
+    useChatWindowContext: () => ({
+      openChat: vi.fn(),
+      closeChat: vi.fn(),
+      isOpen: false,
+      chatSource: null,
+    }),
+  };
+});
 
 // Simplified accessible orchestrator button
 const AccessibleOrchestratorButton: React.FC<{
