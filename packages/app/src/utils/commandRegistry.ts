@@ -1,498 +1,258 @@
 /**
- * Command Registry for ActionFlows Dashboard Command Palette
- *
- * Provides a centralized registry for all commands available in the command palette,
- * with support for fuzzy search, keyboard shortcuts, and recent command tracking.
+ * Command Registry
+ * Centralized registry for command palette commands with fuzzy search
+ * Supports keyboard shortcuts, categories, and async command execution
  */
 
-export type CommandCategory = 'navigation' | 'session' | 'flow' | 'system' | 'recent';
+/**
+ * Command categories for grouping related commands
+ */
+export type CommandCategory = 'export' | 'navigation' | 'file' | 'view' | 'general';
 
-export interface Command {
+/**
+ * Command definition interface
+ */
+export interface CommandDefinition {
+  /** Unique command identifier */
   id: string;
-  title: string;
-  description?: string;
+
+  /** Display label for the command */
+  label: string;
+
+  /** Command category */
   category: CommandCategory;
-  icon?: string;
+
+  /** Optional keyboard shortcut (e.g., 'Ctrl+Shift+E') */
   shortcut?: string;
-  keywords?: string[];
-  action: () => void | Promise<void>;
-  enabled?: () => boolean;
+
+  /** Optional description text */
+  description?: string;
+
+  /** Command execution handler (can be async) */
+  execute: () => void | Promise<void>;
+
+  /** Optional icon/emoji */
+  icon?: string;
 }
 
-interface FuzzyMatch {
-  command: Command;
+/**
+ * Search result with relevance score
+ */
+export interface CommandSearchResult {
+  command: CommandDefinition;
   score: number;
+  matchIndices: number[];
 }
 
-const RECENT_COMMANDS_KEY = 'actionflows:recent-commands';
-const MAX_RECENT_COMMANDS = 5;
-
+/**
+ * Command Registry class for managing and searching commands
+ */
 export class CommandRegistry {
-  private commands: Map<string, Command> = new Map();
-  private recentCommandIds: string[] = [];
-
-  constructor() {
-    this.loadRecentCommands();
-    this.registerDefaultCommands();
-  }
+  private commands: Map<string, CommandDefinition> = new Map();
+  private recentCommands: string[] = [];
+  private maxRecentCommands = 5;
 
   /**
    * Register a new command
    */
-  register(command: Command): void {
+  register(command: CommandDefinition): void {
+    if (this.commands.has(command.id)) {
+      console.warn(`Command "${command.id}" is already registered. Overwriting.`);
+    }
     this.commands.set(command.id, command);
   }
 
   /**
-   * Unregister a command
+   * Register multiple commands at once
    */
-  unregister(commandId: string): void {
-    this.commands.delete(commandId);
-    this.recentCommandIds = this.recentCommandIds.filter(id => id !== commandId);
-    this.saveRecentCommands();
+  registerAll(commands: CommandDefinition[]): void {
+    commands.forEach((cmd) => this.register(cmd));
+  }
+
+  /**
+   * Unregister a command by ID
+   */
+  unregister(commandId: string): boolean {
+    return this.commands.delete(commandId);
+  }
+
+  /**
+   * Get a command by ID
+   */
+  get(commandId: string): CommandDefinition | undefined {
+    return this.commands.get(commandId);
   }
 
   /**
    * Get all registered commands
    */
-  getAll(): Command[] {
-    return Array.from(this.commands.values()).filter(cmd => {
-      return cmd.enabled ? cmd.enabled() : true;
-    });
+  getAll(): CommandDefinition[] {
+    return Array.from(this.commands.values());
   }
 
   /**
    * Get commands by category
    */
-  getByCategory(category: CommandCategory): Command[] {
-    return this.getAll().filter(cmd => cmd.category === category);
+  getByCategory(category: CommandCategory): CommandDefinition[] {
+    return Array.from(this.commands.values()).filter((cmd) => cmd.category === category);
   }
 
   /**
-   * Fuzzy search commands
-   * Matches against title, description, and keywords
-   * Returns results sorted by match quality
+   * Search commands with fuzzy matching
+   * Returns results sorted by relevance score
    */
-  search(query: string): Command[] {
+  search(query: string): CommandSearchResult[] {
     if (!query.trim()) {
-      return this.getAll();
+      // If no query, return recent commands first, then all commands
+      const recent = this.recentCommands
+        .map((id) => this.commands.get(id))
+        .filter((cmd): cmd is CommandDefinition => cmd !== undefined)
+        .map((cmd) => ({
+          command: cmd,
+          score: 1,
+          matchIndices: [],
+        }));
+
+      const remaining = Array.from(this.commands.values())
+        .filter((cmd) => !this.recentCommands.includes(cmd.id))
+        .map((cmd) => ({
+          command: cmd,
+          score: 0,
+          matchIndices: [],
+        }));
+
+      return [...recent, ...remaining];
     }
 
-    const normalizedQuery = query.toLowerCase();
-    const matches: FuzzyMatch[] = [];
+    const results: CommandSearchResult[] = [];
+    const lowerQuery = query.toLowerCase();
 
     for (const command of this.commands.values()) {
-      // Skip disabled commands
-      if (command.enabled && !command.enabled()) {
-        continue;
-      }
-
-      const score = this.calculateMatchScore(command, normalizedQuery);
-      if (score > 0) {
-        matches.push({ command, score });
+      const result = this.fuzzyMatch(command, lowerQuery);
+      if (result.score > 0) {
+        results.push(result);
       }
     }
 
-    // Sort by score (highest first)
-    matches.sort((a, b) => b.score - a.score);
-
-    return matches.map(match => match.command);
+    // Sort by score (descending), then by label (ascending)
+    return results.sort((a, b) => {
+      if (b.score !== a.score) {
+        return b.score - a.score;
+      }
+      return a.command.label.localeCompare(b.command.label);
+    });
   }
 
   /**
    * Execute a command by ID
+   * Adds to recent commands and handles async execution
    */
   async execute(commandId: string): Promise<void> {
     const command = this.commands.get(commandId);
     if (!command) {
-      throw new Error(`Command not found: ${commandId}`);
+      console.error(`Command "${commandId}" not found`);
+      return;
     }
 
-    if (command.enabled && !command.enabled()) {
-      throw new Error(`Command is disabled: ${commandId}`);
-    }
-
-    // Track as recent command
+    // Add to recent commands
     this.addToRecent(commandId);
 
-    // Execute the command
-    await command.action();
+    // Execute command (handle both sync and async)
+    try {
+      await command.execute();
+    } catch (error) {
+      console.error(`Error executing command "${commandId}":`, error);
+      throw error;
+    }
   }
 
   /**
-   * Get recently executed commands
+   * Get recent commands
    */
-  getRecent(): Command[] {
-    const recentCommands: Command[] = [];
-
-    for (const id of this.recentCommandIds) {
-      const command = this.commands.get(id);
-      if (command && (!command.enabled || command.enabled())) {
-        recentCommands.push(command);
-      }
-    }
-
-    return recentCommands;
+  getRecent(): CommandDefinition[] {
+    return this.recentCommands
+      .map((id) => this.commands.get(id))
+      .filter((cmd): cmd is CommandDefinition => cmd !== undefined);
   }
 
   /**
-   * Calculate fuzzy match score for a command
-   * Higher score = better match
+   * Clear recent commands history
    */
-  private calculateMatchScore(command: Command, query: string): number {
-    let score = 0;
-
-    const title = command.title.toLowerCase();
-    const description = command.description?.toLowerCase() || '';
-    const keywords = command.keywords?.map(k => k.toLowerCase()) || [];
-
-    // Exact title match: highest score
-    if (title === query) {
-      score += 1000;
-    }
-    // Title starts with query: high score
-    else if (title.startsWith(query)) {
-      score += 500;
-    }
-    // Title contains query: medium score
-    else if (title.includes(query)) {
-      score += 250;
-    }
-    // Title words start with query: medium score
-    else if (this.wordStartsMatch(title, query)) {
-      score += 200;
-    }
-
-    // Description contains query: lower score
-    if (description.includes(query)) {
-      score += 100;
-    }
-
-    // Keyword exact match: medium-high score
-    for (const keyword of keywords) {
-      if (keyword === query) {
-        score += 300;
-      } else if (keyword.includes(query)) {
-        score += 50;
-      }
-    }
-
-    // Acronym match (e.g., "gs" matches "Go to Settings")
-    if (this.matchesAcronym(title, query)) {
-      score += 150;
-    }
-
-    // Fuzzy character sequence match
-    if (this.fuzzyMatch(title, query)) {
-      score += 75;
-    }
-
-    return score;
+  clearRecent(): void {
+    this.recentCommands = [];
   }
 
   /**
-   * Check if any word in the text starts with the query
-   */
-  private wordStartsMatch(text: string, query: string): boolean {
-    const words = text.split(/\s+/);
-    return words.some(word => word.startsWith(query));
-  }
-
-  /**
-   * Check if query matches the acronym of the text
-   * e.g., "gs" matches "Go to Settings"
-   */
-  private matchesAcronym(text: string, query: string): boolean {
-    const words = text.split(/\s+/);
-    const acronym = words.map(word => word[0]).join('').toLowerCase();
-    return acronym.startsWith(query);
-  }
-
-  /**
-   * Fuzzy match: check if all characters in query appear in order in text
-   */
-  private fuzzyMatch(text: string, query: string): boolean {
-    let textIndex = 0;
-    let queryIndex = 0;
-
-    while (textIndex < text.length && queryIndex < query.length) {
-      if (text[textIndex] === query[queryIndex]) {
-        queryIndex++;
-      }
-      textIndex++;
-    }
-
-    return queryIndex === query.length;
-  }
-
-  /**
-   * Add a command to recent history
+   * Add command to recent history
    */
   private addToRecent(commandId: string): void {
     // Remove if already in recent
-    this.recentCommandIds = this.recentCommandIds.filter(id => id !== commandId);
+    this.recentCommands = this.recentCommands.filter((id) => id !== commandId);
 
     // Add to front
-    this.recentCommandIds.unshift(commandId);
+    this.recentCommands.unshift(commandId);
 
-    // Keep only MAX_RECENT_COMMANDS
-    if (this.recentCommandIds.length > MAX_RECENT_COMMANDS) {
-      this.recentCommandIds = this.recentCommandIds.slice(0, MAX_RECENT_COMMANDS);
-    }
-
-    this.saveRecentCommands();
-  }
-
-  /**
-   * Save recent commands to localStorage
-   */
-  private saveRecentCommands(): void {
-    try {
-      localStorage.setItem(RECENT_COMMANDS_KEY, JSON.stringify(this.recentCommandIds));
-    } catch (error) {
-      console.warn('Failed to save recent commands:', error);
+    // Trim to max length
+    if (this.recentCommands.length > this.maxRecentCommands) {
+      this.recentCommands = this.recentCommands.slice(0, this.maxRecentCommands);
     }
   }
 
   /**
-   * Load recent commands from localStorage
+   * Fuzzy match a command against a query
+   * Returns score and match indices
    */
-  private loadRecentCommands(): void {
-    try {
-      const stored = localStorage.getItem(RECENT_COMMANDS_KEY);
-      if (stored) {
-        this.recentCommandIds = JSON.parse(stored);
+  private fuzzyMatch(command: CommandDefinition, lowerQuery: string): CommandSearchResult {
+    const searchText = `${command.label} ${command.description || ''} ${command.category}`.toLowerCase();
+
+    // Exact match gets highest score
+    if (searchText.includes(lowerQuery)) {
+      const index = searchText.indexOf(lowerQuery);
+      return {
+        command,
+        score: 100,
+        matchIndices: Array.from({ length: lowerQuery.length }, (_, i) => index + i),
+      };
+    }
+
+    // Fuzzy match: check if all query characters appear in order
+    const matchIndices: number[] = [];
+    let searchIndex = 0;
+    let queryIndex = 0;
+
+    while (searchIndex < searchText.length && queryIndex < lowerQuery.length) {
+      if (searchText[searchIndex] === lowerQuery[queryIndex]) {
+        matchIndices.push(searchIndex);
+        queryIndex++;
       }
-    } catch (error) {
-      console.warn('Failed to load recent commands:', error);
-      this.recentCommandIds = [];
+      searchIndex++;
     }
-  }
 
-  /**
-   * Register default commands
-   */
-  private registerDefaultCommands(): void {
-    // Navigation commands - all 9 workbenches
-    this.register({
-      id: 'nav.work',
-      title: 'Go to Work',
-      description: 'Navigate to the Work workbench',
-      category: 'navigation',
-      icon: '💼',
-      shortcut: 'Ctrl+1',
-      keywords: ['work', 'main', 'home'],
-      action: () => this.navigateTo('/work'),
-    });
+    // If not all characters matched, no match
+    if (queryIndex < lowerQuery.length) {
+      return {
+        command,
+        score: 0,
+        matchIndices: [],
+      };
+    }
 
-    this.register({
-      id: 'nav.squad',
-      title: 'Go to Squad',
-      description: 'Navigate to the Squad workbench',
-      category: 'navigation',
-      icon: '👥',
-      shortcut: 'Ctrl+2',
-      keywords: ['squad', 'team', 'agents'],
-      action: () => this.navigateTo('/squad'),
-    });
+    // Calculate score based on match density and position
+    // Closer characters = higher score, earlier matches = higher score
+    const matchSpread = matchIndices[matchIndices.length - 1] - matchIndices[0];
+    const densityScore = Math.max(0, 50 - matchSpread);
+    const positionScore = Math.max(0, 30 - matchIndices[0]);
+    const totalScore = densityScore + positionScore;
 
-    this.register({
-      id: 'nav.flows',
-      title: 'Go to Flows',
-      description: 'Navigate to the Flows workbench',
-      category: 'navigation',
-      icon: '🔄',
-      shortcut: 'Ctrl+3',
-      keywords: ['flows', 'workflows', 'orchestration'],
-      action: () => this.navigateTo('/flows'),
-    });
-
-    this.register({
-      id: 'nav.actions',
-      title: 'Go to Actions',
-      description: 'Navigate to the Actions workbench',
-      category: 'navigation',
-      icon: '⚡',
-      shortcut: 'Ctrl+4',
-      keywords: ['actions', 'tasks', 'steps'],
-      action: () => this.navigateTo('/actions'),
-    });
-
-    this.register({
-      id: 'nav.logs',
-      title: 'Go to Logs',
-      description: 'Navigate to the Logs workbench',
-      category: 'navigation',
-      icon: '📋',
-      shortcut: 'Ctrl+5',
-      keywords: ['logs', 'history', 'output'],
-      action: () => this.navigateTo('/logs'),
-    });
-
-    this.register({
-      id: 'nav.harmony',
-      title: 'Go to Harmony',
-      description: 'Navigate to the Harmony workbench',
-      category: 'navigation',
-      icon: '🎵',
-      shortcut: 'Ctrl+6',
-      keywords: ['harmony', 'contracts', 'compatibility'],
-      action: () => this.navigateTo('/harmony'),
-    });
-
-    this.register({
-      id: 'nav.registry',
-      title: 'Go to Registry',
-      description: 'Navigate to the Registry workbench',
-      category: 'navigation',
-      icon: '📚',
-      shortcut: 'Ctrl+7',
-      keywords: ['registry', 'catalog', 'index'],
-      action: () => this.navigateTo('/registry'),
-    });
-
-    this.register({
-      id: 'nav.settings',
-      title: 'Go to Settings',
-      description: 'Navigate to the Settings workbench',
-      category: 'navigation',
-      icon: '⚙️',
-      shortcut: 'Ctrl+8',
-      keywords: ['settings', 'config', 'preferences'],
-      action: () => this.navigateTo('/settings'),
-    });
-
-    this.register({
-      id: 'nav.help',
-      title: 'Go to Help',
-      description: 'Navigate to the Help workbench',
-      category: 'navigation',
-      icon: '❓',
-      shortcut: 'Ctrl+9',
-      keywords: ['help', 'docs', 'documentation'],
-      action: () => this.navigateTo('/help'),
-    });
-
-    // Session commands
-    this.register({
-      id: 'session.new',
-      title: 'New Session',
-      description: 'Create a new orchestration session',
-      category: 'session',
-      icon: '➕',
-      shortcut: 'Ctrl+N',
-      keywords: ['new', 'create', 'start'],
-      action: async () => {
-        // TODO: Implement session creation
-        console.log('Creating new session...');
-      },
-    });
-
-    this.register({
-      id: 'session.close',
-      title: 'Close Session',
-      description: 'Close the current session',
-      category: 'session',
-      icon: '✖️',
-      keywords: ['close', 'end', 'terminate'],
-      action: async () => {
-        // TODO: Implement session close
-        console.log('Closing session...');
-      },
-      enabled: () => {
-        // Only enabled if there's an active session
-        // TODO: Check actual session state
-        return false;
-      },
-    });
-
-    this.register({
-      id: 'session.attach',
-      title: 'Attach Session',
-      description: 'Attach to an existing session',
-      category: 'session',
-      icon: '🔗',
-      keywords: ['attach', 'connect', 'join'],
-      action: async () => {
-        // TODO: Implement session attach
-        console.log('Attaching to session...');
-      },
-    });
-
-    // Flow commands
-    this.register({
-      id: 'flow.trigger',
-      title: 'Trigger Flow',
-      description: 'Start a new flow execution',
-      category: 'flow',
-      icon: '▶️',
-      keywords: ['trigger', 'start', 'execute', 'run'],
-      action: async () => {
-        // TODO: Implement flow trigger
-        console.log('Triggering flow...');
-      },
-    });
-
-    this.register({
-      id: 'flow.view-actions',
-      title: 'View Actions',
-      description: 'View all available actions',
-      category: 'flow',
-      icon: '👁️',
-      keywords: ['view', 'actions', 'list'],
-      action: () => this.navigateTo('/actions'),
-    });
-
-    // System commands
-    this.register({
-      id: 'system.toggle-theme',
-      title: 'Toggle Theme',
-      description: 'Switch between light and dark theme',
-      category: 'system',
-      icon: '🌓',
-      shortcut: 'Ctrl+Shift+T',
-      keywords: ['theme', 'dark', 'light', 'appearance'],
-      action: () => {
-        // TODO: Implement theme toggle
-        console.log('Toggling theme...');
-      },
-    });
-
-    this.register({
-      id: 'system.settings',
-      title: 'Open Settings',
-      description: 'Open application settings',
-      category: 'system',
-      icon: '⚙️',
-      shortcut: 'Ctrl+,',
-      keywords: ['settings', 'preferences', 'config'],
-      action: () => this.navigateTo('/settings'),
-    });
-
-    this.register({
-      id: 'system.reload',
-      title: 'Reload',
-      description: 'Reload the application',
-      category: 'system',
-      icon: '🔄',
-      shortcut: 'Ctrl+R',
-      keywords: ['reload', 'refresh', 'restart'],
-      action: () => {
-        window.location.reload();
-      },
-    });
-  }
-
-  /**
-   * Navigate to a route
-   * TODO: Integrate with actual router
-   */
-  private navigateTo(path: string): void {
-    console.log(`Navigating to ${path}`);
-    // This will be implemented when integrating with the router
-    window.location.hash = path;
+    return {
+      command,
+      score: totalScore,
+      matchIndices,
+    };
   }
 }
 
-// Export singleton instance
+/**
+ * Global command registry instance
+ */
 export const commandRegistry = new CommandRegistry();

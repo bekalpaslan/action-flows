@@ -1,0 +1,59 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: actionflows-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    command: redis-server --appendonly yes
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend-dev
+    container_name: actionflows-backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./packages/backend/src:/app/packages/backend/src
+      - ./packages/shared/src:/app/packages/shared/src
+      - ./tsconfig.base.json:/app/tsconfig.base.json
+    environment:
+      - PORT=3001
+      - REDIS_URL=redis://redis:6379
+      - "REDIS_PREFIX=afw:"
+      - LOG_LEVEL=debug
+      - NODE_ENV=development
+      - SLACK_NOTIFICATIONS_ENABLED=false
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend-dev
+    container_name: actionflows-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./packages/app/src:/app/packages/app/src
+      - ./packages/app/public:/app/packages/app/public
+      - ./packages/shared/src:/app/packages/shared/src
+      - ./tsconfig.base.json:/app/tsconfig.base.json
+    environment:
+      - VITE_API_URL=http://localhost:3001
+      - DOCKER=true
+    depends_on:
+      - backend
+
+volumes:
+  redis-data:

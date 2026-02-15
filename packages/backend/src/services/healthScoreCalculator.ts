@@ -13,6 +13,8 @@
  */
 
 import { EventEmitter } from 'events';
+import fs from 'fs';
+import path from 'path';
 import type { GateTrace, GateId, HarmonyHealthScore, GateHealthScore, DriftPattern, Timestamp } from '@afw/shared';
 import type { Storage } from '../storage/index.js';
 
@@ -28,10 +30,128 @@ export class HealthScoreCalculator extends EventEmitter {
   /** In-memory trace buffer — works regardless of storage backend */
   private traceBuffer: GateTrace[] = [];
   private readonly MAX_BUFFER_SIZE = 10000;
+  /** File path for persisting traces across restarts */
+  private readonly traceFilePath: string;
+  /** Score history for trend analysis (in-memory, capped at 168 = 7 days hourly) */
+  private scoreHistory: Array<{
+    timestamp: string;
+    overall: number;
+    byGate: Record<string, number>;
+  }> = [];
+  private readonly MAX_HISTORY_SIZE = 168; // 7 days @ 1 snapshot/hour
+  /** File path for persisting score history */
+  private readonly historyFilePath: string;
 
   constructor(storage: Storage) {
     super();
     this.storage = storage;
+    this.traceFilePath = path.join(process.cwd(), 'data', 'gate-traces.jsonl');
+    this.historyFilePath = path.join(process.cwd(), 'data', 'health-score-history.jsonl');
+    this.loadPersistedTraces();
+    this.loadScoreHistory();
+  }
+
+  /**
+   * Load traces from disk on startup
+   */
+  private loadPersistedTraces(): void {
+    try {
+      if (!fs.existsSync(this.traceFilePath)) return;
+      const content = fs.readFileSync(this.traceFilePath, 'utf-8');
+      const lines = content.trim().split('\n').filter(Boolean);
+      // Only load traces within the 7d window
+      const cutoff = Date.now() - this.WINDOW_7D_MS;
+      for (const line of lines) {
+        try {
+          const trace = JSON.parse(line) as GateTrace;
+          if (new Date(trace.timestamp).getTime() >= cutoff) {
+            this.traceBuffer.push(trace);
+          }
+        } catch { /* skip malformed lines */ }
+      }
+      // Trim to max
+      if (this.traceBuffer.length > this.MAX_BUFFER_SIZE) {
+        this.traceBuffer = this.traceBuffer.slice(-this.MAX_BUFFER_SIZE);
+      }
+      console.log(`[HealthScore] Loaded ${this.traceBuffer.length} persisted traces`);
+    } catch (err) {
+      console.warn('[HealthScore] Could not load persisted traces:', err);
+    }
+  }
+
+  /**
+   * Load score history from disk on startup
+   */
+  private loadScoreHistory(): void {
+    try {
+      if (!fs.existsSync(this.historyFilePath)) return;
+      const content = fs.readFileSync(this.historyFilePath, 'utf-8');
+      const lines = content.trim().split('\n').filter(Boolean);
+      // Load all entries (already capped in file)
+      for (const line of lines) {
+        try {
+          const entry = JSON.parse(line);
+          this.scoreHistory.push(entry);
+        } catch { /* skip malformed lines */ }
+      }
+      // Trim to max
+      if (this.scoreHistory.length > this.MAX_HISTORY_SIZE) {
+        this.scoreHistory = this.scoreHistory.slice(-this.MAX_HISTORY_SIZE);
+      }
+      console.log(`[HealthScore] Loaded ${this.scoreHistory.length} historical score entries`);
+    } catch (err) {
+      console.warn('[HealthScore] Could not load score history:', err);
+    }
+  }
+
+  /**
+   * Append a trace to the persistence file
+   */
+  private persistTrace(trace: GateTrace): void {
+    try {
+      const dir = path.dirname(this.traceFilePath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.appendFileSync(this.traceFilePath, JSON.stringify(trace) + '\n');
+    } catch (err) {
+      console.warn('[HealthScore] Could not persist trace:', err);
+    }
+  }
+
+  /**
+   * Record a score snapshot to history and persist to disk
+   */
+  private recordSnapshot(overall: number, byGate: Record<GateId, GateHealthScore>): void {
+    try {
+      const snapshot = {
+        timestamp: new Date().toISOString(),
+        overall,
+        byGate: Object.fromEntries(
+          Object.entries(byGate).map(([gateId, health]) => [gateId, health.score])
+        ),
+      };
+
+      this.scoreHistory.push(snapshot);
+
+      // Evict oldest if exceeding max
+      if (this.scoreHistory.length > this.MAX_HISTORY_SIZE) {
+        this.scoreHistory = this.scoreHistory.slice(-this.MAX_HISTORY_SIZE);
+      }
+
+      // Persist to disk
+      const dir = path.dirname(this.historyFilePath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.appendFileSync(this.historyFilePath, JSON.stringify(snapshot) + '\n');
+
+      // Periodically truncate file to match in-memory buffer (prevent unbounded growth)
+      if (this.scoreHistory.length % 200 === 0) {
+        fs.writeFileSync(
+          this.historyFilePath,
+          this.scoreHistory.map(s => JSON.stringify(s)).join('\n') + '\n'
+        );
+      }
+    } catch (err) {
+      console.warn('[HealthScore] Could not record score snapshot:', err);
+    }
   }
 
   /**
@@ -40,6 +160,7 @@ export class HealthScoreCalculator extends EventEmitter {
    */
   ingestTrace(trace: GateTrace): void {
     this.traceBuffer.push(trace);
+    this.persistTrace(trace);
     // Evict oldest if buffer full
     if (this.traceBuffer.length > this.MAX_BUFFER_SIZE) {
       this.traceBuffer = this.traceBuffer.slice(-this.MAX_BUFFER_SIZE);
@@ -111,6 +232,9 @@ export class HealthScoreCalculator extends EventEmitter {
         recommendations,
       };
 
+      // Record snapshot to history
+      this.recordSnapshot(overall, byGate);
+
       // Emit event for WebSocket broadcast
       this.emit('health:updated', healthScore);
 
@@ -138,6 +262,37 @@ export class HealthScoreCalculator extends EventEmitter {
         recommendations: ['Service temporarily unavailable - check backend logs'],
       };
     }
+  }
+
+  /**
+   * Get recent violations (up to limit)
+   * Public method for API consumption
+   */
+  async getRecentViolations(limit: number = 50): Promise<GateTrace[]> {
+    const traces = await this.getGateTraces();
+    return traces
+      .filter(t => t.validationResult && !t.validationResult.passed)
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, limit);
+  }
+
+  /**
+   * Get score history (optionally filtered by time window in hours)
+   * Public method for API consumption
+   */
+  getScoreHistory(windowHours?: number): Array<{
+    timestamp: string;
+    overall: number;
+    byGate: Record<string, number>;
+  }> {
+    if (!windowHours) {
+      return [...this.scoreHistory];
+    }
+
+    const cutoff = Date.now() - (windowHours * 60 * 60 * 1000);
+    return this.scoreHistory.filter(entry => {
+      return new Date(entry.timestamp).getTime() >= cutoff;
+    });
   }
 
   /**
@@ -229,6 +384,7 @@ export class HealthScoreCalculator extends EventEmitter {
 
     // Determine trend
     let trend: 'improving' | 'stable' | 'degrading';
+    const trendValue = score24h - score7d;
     if (score24h > score7d + 5) {
       trend = 'improving';
     } else if (score24h < score7d - 5) {
@@ -249,6 +405,7 @@ export class HealthScoreCalculator extends EventEmitter {
       passCount,
       violationCount,
       trend,
+      trendValue,
       lastViolation,
     };
   }

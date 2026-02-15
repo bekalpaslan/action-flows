@@ -145,6 +145,7 @@ export interface GateHealthScore {
   passCount: number;
   violationCount: number;
   trend: 'improving' | 'stable' | 'degrading';
+  trendValue?: number;                        // score24h - score7d (positive = improving)
   lastViolation?: Timestamp;
 }
 

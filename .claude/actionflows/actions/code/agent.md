@@ -90,7 +90,52 @@ Follow harmony evolution rules: increment CONTRACT_VERSION if breaking, support 
 
 Create folder: `.claude/actionflows/logs/code/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Execute Core Work
+### 2. Pre-Implementation: Library Documentation Query (Optional)
+
+> **Follow:** `.claude/actionflows/actions/_abstract/agent-standards/instructions.md` Standard #15
+
+When implementing code that uses complex or unfamiliar library APIs, consider querying Context7 MCP for up-to-date documentation:
+
+**When to use Context7:**
+- Implementing complex/unfamiliar library features (Express middleware, React hooks, Zod schemas, ReactFlow customizations)
+- Using recently updated libraries (check package.json for major version bumps)
+- Debugging library integration issues
+
+**When to skip:**
+- Trivial library usage (basic imports, simple function calls)
+- Well-known patterns already in codebase
+- Time-sensitive quick fixes
+
+**Procedure:**
+1. **Load Context7 tools:** `ToolSearch query="context7"`
+2. **Resolve library ID:**
+   ```
+   Call: mcp__plugin_context7_context7__resolve-library-id
+   Parameters:
+   - libraryName: {library name, e.g., "express", "react", "zod", "vitest"}
+   ```
+3. **Query documentation:**
+   ```
+   Call: mcp__plugin_context7_context7__query-docs
+   Parameters:
+   - libraryId: {from step 2}
+   - query: {specific API question, e.g., "How do I create custom middleware in Express 4?"}
+   ```
+4. **Use returned documentation:** Treat as authoritative reference for implementation
+5. **Log Context7 usage** in tool-usage trace type
+
+**Example workflow:**
+```
+Task: Implement rate limiting middleware for Express
+→ Load Context7 tools
+→ Resolve "express" to library ID
+→ Query: "What's the correct pattern for implementing rate limiting middleware in Express 4?"
+→ Implement using returned documentation
+```
+
+This integration follows agent-standards rule #15 (Library Documentation Query).
+
+### 3. Execute Core Work
 
 See Input Contract above for input parameters.
 
@@ -108,7 +153,7 @@ See Input Contract above for input parameters.
    - Use Zod for validation in backend
 6. Run `pnpm type-check` to verify TypeScript correctness
 
-3. Generate Output
+4. Generate Output
 
 See Output Contract above. Write changes.md to log folder.
 

@@ -55,6 +55,7 @@ import preferencesRouter from './routes/preferences.js';
 import artifactsRouter from './routes/artifacts.js';
 import surfacesRouter from './routes/surfaces.js';
 import slackRouter from './routes/surfaces/slack.js';
+import figmaRouter from './routes/figma.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -68,6 +69,7 @@ import { initConversationWatcher, getConversationWatcher } from './services/conv
 import { initBridgeStrengthService } from './services/bridgeStrengthService.js';
 import { initHealingRecommendationEngine, getHealingRecommendationEngine } from './services/healingRecommendations.js';
 import { initHealthScoreCalculator } from './services/healthScoreCalculator.js';
+import { initializeSlackNotifier } from './services/slackNotifier.js';
 import createHarmonyHealthRouter from './routes/harmonyHealth.js';
 import authRouter from './routes/auth.js';
 import { ensureAdminExists } from './services/userService.js';
@@ -92,6 +94,9 @@ const snapshotService = new SnapshotService(storage, {
 
 // Initialize health score calculator
 const healthScoreCalculator = initHealthScoreCalculator(storage);
+
+// Initialize Slack notifier (MCP integration)
+initializeSlackNotifier();
 
 // Initialize personality parser (Phase 1 - Agent Personalities)
 const personalityParser = createPersonalityParser();
@@ -214,6 +219,7 @@ app.use('/api/preferences', preferencesRouter);
 app.use('/api/artifacts', artifactsRouter);
 app.use('/api/surfaces', surfacesRouter);
 app.use('/api/surfaces/slack', slackRouter);
+app.use('/api/figma', figmaRouter);
 
 // Note: surfaceManager is a singleton and auto-initializes on first import
 console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');
@@ -482,8 +488,10 @@ async function initializeRedisPubSub() {
 const isMainModule = (() => {
   try {
     const self = new URL(import.meta.url).pathname.toLowerCase();
-    const entry = new URL(`file:///${process.argv[1]?.replace(/\\/g, '/')}`).pathname.toLowerCase();
-    return self === entry;
+    const argv1 = process.argv[1] || '';
+    const entry = new URL(`file:///${argv1.replace(/\\/g, '/')}`).pathname.toLowerCase();
+    // Direct match, suffix match (tsx relative paths), or basename match
+    return self === entry || self.endsWith(entry) || self.endsWith('/' + argv1.split('/').pop()?.toLowerCase());
   } catch {
     return false;
   }

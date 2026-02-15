@@ -79,7 +79,20 @@ Implement backend code changes following Express Router patterns, Zod validation
 
 Create folder: `.claude/actionflows/logs/code/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Execute Core Work
+### 2. Pre-Implementation: Library Documentation Query (Optional)
+
+> **Follow:** `.claude/actionflows/actions/_abstract/agent-standards/instructions.md` Standard #15
+
+When implementing code that uses complex or unfamiliar library APIs (Express middleware chains, Zod complex schemas, ws WebSocket handlers, chokidar file watching patterns):
+
+1. **Load Context7 tools:** `ToolSearch query="context7"`
+2. **Resolve library ID:** Call `mcp__plugin_context7_context7__resolve-library-id` with library name (e.g., "express", "zod", "ioredis", "ws")
+3. **Query documentation:** Call `mcp__plugin_context7_context7__query-docs` with specific question about the API pattern needed
+4. **Use returned documentation:** Treat as authoritative reference for implementation
+
+**Skip this step for:** Trivial library usage, well-known patterns already in codebase, time-sensitive fixes.
+
+### 3. Execute Core Work
 
 See Input Contract above for input parameters.
 
@@ -95,7 +108,7 @@ See Input Contract above for input parameters.
    - **Middleware:** Use existing middleware in `packages/backend/src/middleware/`
 5. Run `pnpm -F @afw/backend type-check` to verify TypeScript correctness
 
-3. Generate Output
+### 4. Generate Output
 
 See Output Contract above. Write changes.md to log folder.
 

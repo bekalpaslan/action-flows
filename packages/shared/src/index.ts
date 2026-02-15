@@ -571,3 +571,19 @@ export type {
 export { toArtifactId, ARTIFACT_START_MARKER, ARTIFACT_END_MARKER } from './artifactTypes.js';
 export type { AgentTone, AgentSpeed, AgentRisk, AgentCommunicationStyle, AgentPersonality, AgentMetadata, UserPersonalityPreference } from './agentTypes.js';
 export { DEFAULT_PERSONALITY, PERSONALITY_COLORS, PERSONALITY_ICONS } from './agentTypes.js';
+
+// ============================================================================
+// MCP Integration Types
+// ============================================================================
+export type { FigmaLink, FigmaDesignSpec, FigmaConfig } from './figma.js';
+export type {
+  SlackConfig,
+  SlackNotificationLevel,
+  SlackChannel,
+  SlackNotification,
+  ChainCompletionNotification,
+  ReviewCompletionNotification,
+  DeploymentNotification,
+  TestFailureNotification,
+} from './slack.js';
+export { DEFAULT_SLACK_CONFIG } from './slack.js';

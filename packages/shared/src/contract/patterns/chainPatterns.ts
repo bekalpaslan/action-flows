@@ -40,7 +40,7 @@ export const ChainStatusUpdatePatterns = {
 export const ExecutionCompletePatterns = {
   heading: /^## Done: (.+)$/m,
   tableHeader: /^\| # \| Action \| Status \| Result \|$/m,
-  tableRow: /^\| (\d+) \| ([a-z\-_/]+) \| (Done|Failed|Skipped) \| (.+) \|$/m,
+  tableRow: /^\| (\d+) \| ([a-z\-_/]+) \| (pending|running|completed|failed|skipped) \| (.+) \|$/m,
   logs: /^\*\*Logs:\*\* `(.+)`$/m,
   learnings: /^\*\*Learnings:\*\* (.+)$/m,
 } as const;

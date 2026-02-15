@@ -7,7 +7,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import type { GateId, ChainId } from '@afw/shared';
-import { brandedTypes } from '@afw/shared';
+import { brandedTypes, GATE_REGISTRY } from '@afw/shared';
 import type { HealthScoreCalculator } from '../services/healthScoreCalculator.js';
 import type { HealingRecommendationEngine } from '../services/healingRecommendations.js';
 import { getHealingRecommendationEngine } from '../services/healingRecommendations.js';
@@ -46,7 +46,26 @@ export default function createHarmonyHealthRouter(
         query.gateId as GateId | undefined
       );
 
-      // Enhance with structured healing recommendations
+      // Enrich byGate with gate metadata from GATE_REGISTRY
+      const enrichedByGate = Object.fromEntries(
+        Object.entries(healthScore.byGate).map(([gateId, gateHealth]) => {
+          const gateInfo = GATE_REGISTRY[gateId as GateId];
+          return [gateId, {
+            ...gateHealth,
+            name: gateInfo?.name || 'Unknown',
+            phase: gateInfo?.phase || 'Unknown',
+            format: gateInfo?.format || null,
+          }];
+        })
+      );
+
+      // Get recent violations (limit to 50 for performance)
+      const violationDetails = await healthCalculator.getRecentViolations(50);
+
+      // Get score history
+      const scoreHistory = healthCalculator.getScoreHistory();
+
+      // Enhance with structured healing recommendations (FULL objects, not simplified)
       const engine = healingEngine || getHealingRecommendationEngine();
       let healingRecommendations: any[] = [];
 
@@ -56,14 +75,18 @@ export default function createHarmonyHealthRouter(
           const projectId = 'default-project' as any;  // ProjectId
           const recommendations = await engine.analyzeAndRecommend(projectId, 'project');
 
-          // Map to simplified format for API response
+          // Return FULL recommendation objects
           healingRecommendations = recommendations.map(rec => ({
+            id: rec.id,
             pattern: rec.pattern,
             suggestedFlow: rec.suggestedFlow,
             severity: rec.severity,
             violationCount: rec.violationCount,
             reason: rec.reason,
             estimatedEffort: rec.estimatedEffort,
+            humanReadableAction: rec.humanReadableAction,
+            status: rec.status,
+            gateId: rec.gateId,
           }));
         } catch (recError) {
           console.error('[API] Error generating healing recommendations:', recError);
@@ -73,6 +96,9 @@ export default function createHarmonyHealthRouter(
 
       res.json({
         ...healthScore,
+        byGate: enrichedByGate,
+        violationDetails,
+        scoreHistory,
         healingRecommendations,
       });
     } catch (error) {

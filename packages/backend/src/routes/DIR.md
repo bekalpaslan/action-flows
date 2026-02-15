@@ -9,12 +9,14 @@
 - dossiers.ts — exports: default, setBroadcastDossierFunction
 - errors.ts — exports: default
 - events.ts — exports: default
+- figma.ts — exports: default
 - files.ts — exports: default
 - harmony.ts — exports: default
 - harmonyHealth.ts — exports: default
 - healingRecommendations.ts — exports: default
 - history.ts — exports: default
 - lifecycle.ts — exports: default
+- linear.ts — exports: default
 - patterns.ts — exports: default
 - projects.ts — exports: default
 - registry.ts — exports: default

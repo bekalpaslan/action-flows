@@ -1,0 +1,365 @@
+/**
+ * Slack Settings Styles
+ */
+
+.slack-settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.slack-settings-panel {
+  background: var(--color-workbench-bg, #1e1e2e);
+  border: 1px solid var(--color-border, #3e3e4e);
+  border-radius: 8px;
+  width: 600px;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.slack-settings-panel .settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border, #3e3e4e);
+  gap: 12px;
+}
+
+.slack-settings-panel .settings-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary, #e0e0e0);
+  flex: 1;
+}
+
+.slack-settings-panel .settings-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary, #a0a0a0);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.slack-settings-panel .settings-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-primary, #e0e0e0);
+}
+
+.slack-settings-panel .settings-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.slack-settings-panel .setting-section {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border-subtle, #2e2e3e);
+}
+
+.slack-settings-panel .setting-section:last-child {
+  border-bottom: none;
+}
+
+.slack-settings-panel .setting-section h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary, #e0e0e0);
+}
+
+.slack-settings-panel .setting-description {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: var(--color-text-secondary, #a0a0a0);
+  line-height: 1.5;
+}
+
+/* Toggle Switch */
+.slack-settings-panel .setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.slack-settings-panel .setting-label {
+  flex: 1;
+}
+
+.slack-settings-panel .toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.slack-settings-panel .toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slack-settings-panel .toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-bg-secondary, #2e2e3e);
+  transition: 0.3s;
+  border-radius: 28px;
+  border: 1px solid var(--color-border, #3e3e4e);
+}
+
+.slack-settings-panel .toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--color-text-secondary, #a0a0a0);
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.slack-settings-panel .toggle-switch input:checked + .toggle-slider {
+  background-color: var(--color-accent-primary, #6366f1);
+  border-color: var(--color-accent-primary, #6366f1);
+}
+
+.slack-settings-panel .toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+  background-color: white;
+}
+
+/* Channel Input */
+.slack-settings-panel .channel-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--color-bg-secondary, #2e2e3e);
+  border: 1px solid var(--color-border, #3e3e4e);
+  border-radius: 6px;
+  color: var(--color-text-primary, #e0e0e0);
+  font-size: 14px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  transition: border-color 0.2s;
+}
+
+.slack-settings-panel .channel-input:focus {
+  outline: none;
+  border-color: var(--color-accent-primary, #6366f1);
+}
+
+.slack-settings-panel .channel-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Notification Level Buttons */
+.slack-settings-panel .level-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.slack-settings-panel .level-btn {
+  flex: 1;
+  min-width: 150px;
+  padding: 12px 16px;
+  background: var(--color-bg-secondary, #2e2e3e);
+  border: 2px solid var(--color-border, #3e3e4e);
+  border-radius: 8px;
+  color: var(--color-text-primary, #e0e0e0);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.slack-settings-panel .level-btn strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.slack-settings-panel .level-btn span {
+  font-size: 12px;
+  color: var(--color-text-secondary, #a0a0a0);
+}
+
+.slack-settings-panel .level-btn:hover:not(:disabled) {
+  border-color: var(--color-accent-primary, #6366f1);
+  background: var(--color-bg-tertiary, #252535);
+}
+
+.slack-settings-panel .level-btn.active {
+  border-color: var(--color-accent-primary, #6366f1);
+  background: var(--color-accent-bg, rgba(99, 102, 241, 0.1));
+}
+
+.slack-settings-panel .level-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Connection Status */
+.slack-settings-panel .connection-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.slack-settings-panel .status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--color-bg-secondary, #2e2e3e);
+  border-radius: 6px;
+  flex: 1;
+}
+
+.slack-settings-panel .status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-text-secondary, #a0a0a0);
+}
+
+.slack-settings-panel .status-indicator.connected .status-dot {
+  background: var(--color-success, #22c55e);
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+}
+
+.slack-settings-panel .status-indicator.disconnected .status-dot {
+  background: var(--color-text-secondary, #a0a0a0);
+}
+
+.slack-settings-panel .status-indicator.error .status-dot {
+  background: var(--color-error, #ef4444);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
+
+.slack-settings-panel .status-indicator.testing .status-dot {
+  background: var(--color-warning, #f59e0b);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.slack-settings-panel .status-text {
+  font-size: 14px;
+  color: var(--color-text-primary, #e0e0e0);
+}
+
+.slack-settings-panel .test-connection-btn {
+  padding: 8px 16px;
+  background: var(--color-bg-tertiary, #252535);
+  border: 1px solid var(--color-border, #3e3e4e);
+  border-radius: 6px;
+  color: var(--color-text-primary, #e0e0e0);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.slack-settings-panel .test-connection-btn:hover:not(:disabled) {
+  background: var(--color-bg-secondary, #2e2e3e);
+  border-color: var(--color-accent-primary, #6366f1);
+}
+
+.slack-settings-panel .test-connection-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Footer */
+.slack-settings-panel .settings-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--color-border, #3e3e4e);
+}
+
+.slack-settings-panel .btn-secondary,
+.slack-settings-panel .btn-primary {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.slack-settings-panel .btn-secondary {
+  background: transparent;
+  color: var(--color-text-primary, #e0e0e0);
+  border: 1px solid var(--color-border, #3e3e4e);
+}
+
+.slack-settings-panel .btn-secondary:hover:not(:disabled) {
+  background: var(--color-bg-secondary, #2e2e3e);
+}
+
+.slack-settings-panel .btn-primary {
+  background: var(--color-accent-primary, #6366f1);
+  color: white;
+}
+
+.slack-settings-panel .btn-primary:hover:not(:disabled) {
+  background: var(--color-accent-hover, #4f46e5);
+}
+
+.slack-settings-panel .btn-secondary:disabled,
+.slack-settings-panel .btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading and Error States */
+.slack-settings-panel .loading-state,
+.slack-settings-panel .error-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--color-text-secondary, #a0a0a0);
+}
+
+.slack-settings-panel .error-state {
+  color: var(--color-error, #ef4444);
+}

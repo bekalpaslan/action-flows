@@ -79,7 +79,20 @@ Implement frontend code changes following React hooks patterns, component conven
 
 Create folder: `.claude/actionflows/logs/code/{description}_{YYYY-MM-DD-HH-MM-SS}/`
 
-### 2. Execute Core Work
+### 2. Pre-Implementation: Library Documentation Query (Optional)
+
+> **Follow:** `.claude/actionflows/actions/_abstract/agent-standards/instructions.md` Standard #15
+
+When implementing code that uses complex or unfamiliar library APIs (React hooks patterns, ReactFlow custom nodes, Monaco Editor configuration, xterm.js integration, Vite plugin patterns):
+
+1. **Load Context7 tools:** `ToolSearch query="context7"`
+2. **Resolve library ID:** Call `mcp__plugin_context7_context7__resolve-library-id` with library name (e.g., "react", "reactflow", "monaco-editor", "xterm", "vite")
+3. **Query documentation:** Call `mcp__plugin_context7_context7__query-docs` with specific question about the API pattern needed
+4. **Use returned documentation:** Treat as authoritative reference for implementation
+
+**Skip this step for:** Trivial library usage, well-known patterns already in codebase, time-sensitive fixes.
+
+### 3. Execute Core Work
 
 See Input Contract above for input parameters.
 
@@ -101,7 +114,7 @@ See Input Contract above for input parameters.
    - **Types:** Import from `@afw/shared` for domain types
 5. Run `pnpm -F @afw/app type-check` to verify TypeScript correctness (if tsconfig allows)
 
-3. Generate Output
+### 4. Generate Output
 
 See Output Contract above. Write changes.md to log folder.
 
