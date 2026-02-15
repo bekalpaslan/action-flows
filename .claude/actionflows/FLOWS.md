@@ -9,6 +9,8 @@
 | code-and-review/ | Implement and review code | code → review → second-opinion/ → (loop if needed) |
 | post-completion/ | Wrap-up after work | commit → registry update |
 | contract-format-implementation/ | Implement CONTRACT.md formats end-to-end | code/contract/parser → code/frontend/component → code/frontend/integration → review → commit |
+| design-to-code/ | Convert Figma designs to React components | figma-extract (orchestrator) → plan → HUMAN GATE → code/frontend/ → figma-map (orchestrator) → review → (code/frontend/integration if mode=generate-and-integrate) |
+| design-system-sync/ | Sync Figma design tokens to frontend | figma-variables (orchestrator) → analyze → plan → HUMAN GATE → code/frontend/ → figma-rules (orchestrator) → review |
 
 ## maintenance
 
@@ -37,7 +39,8 @@
 | test-coverage/ | Analyze test coverage and address gaps | test → analyze → code (conditional) → review → second-opinion/ |
 | backwards-harmony-audit/ | Audit contract harmony from frontend backwards | analyze×3 (parallel) → audit → second-opinion/ |
 | cli-integration-test/ | Systematic CLI integration testing | analyze → code → test → review → second-opinion/ |
-| e2e-chrome-mcp/ | Chrome MCP browser E2E test creation and execution | analyze → plan → human gate → code → chrome-mcp-test → review → second-opinion/ |
+| e2e-chrome-mcp/ (LEGACY) | Chrome MCP browser E2E test creation and execution | analyze → plan → human gate → code → chrome-mcp-test → review → second-opinion/ |
+| e2e-playwright/ | Create and execute Playwright E2E tests | analyze → plan → HUMAN GATE → code → playwright-test (orchestrator) → review |
 | contract-index/ | Create/update behavioral contract specifications for components | analyze → plan → human gate → code×N → review → second-opinion/ → commit |
 | contract-compliance-audit/ | Audit contracts for inconsistencies, drift, and create compliance tests | analyze×2 (parallel) → plan → human gate → code×2 (parallel) → review → second-opinion/ → commit |
 

@@ -20,7 +20,10 @@
 
 ## Notification
 
-- **Status:** Disabled. Notifications stripped from all actions. Re-enable by adding a `notify/` action and extending agents.
+- **Status:** Enabled (Slack)
+- **Channel:** #cityzen-dev
+- **Triggers:** chain-complete
+- **Action:** `.claude/actionflows/actions/notify/agent.md`
 
 ---
 

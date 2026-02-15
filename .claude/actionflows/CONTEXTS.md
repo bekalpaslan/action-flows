@@ -48,12 +48,13 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 **Purpose:** Code reviews, audits, and quality checks
 **Icon:** 👁️
 **Triggers:** review, code review, audit, check quality, security scan, inspect, examine, validate, verify
-**Flows:** audit-and-fix/, test-coverage/
+**Flows:** audit-and-fix/, test-coverage/, e2e-playwright/
 **Examples:**
 - "review the auth implementation"
 - "audit security vulnerabilities"
 - "check code quality of backend routes"
 - "inspect the database schema"
+- "run E2E tests" / "playwright test" / "browser test"
 
 ### settings
 **Purpose:** Configuration, framework development, and onboarding
@@ -146,6 +147,7 @@ These contexts receive content automatically — not routed by user intent.
 | "audit harmony" / "check contract" / "backwards harmony" | review | backwards-harmony-audit/ |
 | "implement format" / "format X.Y" / "contract parser" / "harmony parser" | work | contract-format-implementation/ |
 | "test CLI" / "CLI integration tests" / "run CLI tests" | review | cli-integration-test/ |
+| "run E2E tests" / "playwright test" / "browser test" / "E2E" | review | e2e-playwright/ |
 | "behavioral contracts" / "component contracts" / "contract index" | review | contract-index/ |
 | "audit contracts" / "contract compliance" / "contract drift" / "check contracts" | review | contract-compliance-audit/ |
 | "I have an idea" / "brainstorm X" | explore | ideation/ |
