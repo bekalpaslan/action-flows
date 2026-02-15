@@ -117,6 +117,40 @@ Every code directory must contain a lightweight `DIR.md` file that serves as a m
 
 **Why this matters:** Agents can scan DIR.md (100 bytes) instead of reading and parsing multiple 500-line TypeScript files. This dramatically reduces token consumption and accelerates code navigation.
 
+### 15. Library Documentation Query (Context7 MCP)
+
+When implementing code that uses complex or unfamiliar external library APIs, agents SHOULD query Context7 MCP for up-to-date library documentation.
+
+**When to use:**
+- Implementing complex library features (middleware chains, React hooks patterns, Zod schemas, ReactFlow customizations)
+- Using unfamiliar library APIs or recently updated libraries
+- Debugging library integration issues
+- Verifying best practices for library usage
+
+**When to skip:**
+- Trivial library usage (basic imports, simple function calls)
+- Well-known patterns already used in the codebase
+- Time-sensitive quick fixes
+
+**Procedure:**
+1. **Load Context7 tools:** Use `ToolSearch query="context7"` to load MCP tools
+2. **Resolve library ID:** Call `mcp__plugin_context7_context7__resolve-library-id` with library name (e.g., "express", "react", "vitest", "zod", "reactflow")
+3. **Query documentation:** Call `mcp__plugin_context7_context7__query-docs` with:
+   - The library ID from step 2
+   - A specific question about the API pattern you need (e.g., "How do I create custom middleware in Express 4?", "What's the correct pattern for ReactFlow custom nodes?")
+4. **Use returned documentation:** Treat the response as authoritative reference for your implementation
+
+**Example workflow:**
+```
+Task: Implement Express middleware for rate limiting
+→ Load Context7 tools
+→ Resolve "express" to library ID
+→ Query: "What's the correct pattern for implementing custom middleware in Express 4?"
+→ Implement using returned documentation snippets
+```
+
+**Why this matters:** Library APIs evolve. Context7 provides up-to-date documentation snippets that prevent deprecated pattern usage and reduce implementation errors.
+
 ---
 
 ## Learnings Output Format

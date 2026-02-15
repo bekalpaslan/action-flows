@@ -36,7 +36,6 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
 
   // Dev mode: no auth required
   if (!apiKey) {
-    console.debug('[Auth] Dev mode - no API key configured, auth disabled');
     return next();
   }
 

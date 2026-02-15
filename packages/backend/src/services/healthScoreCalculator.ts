@@ -32,23 +32,12 @@ export class HealthScoreCalculator extends EventEmitter {
   private readonly MAX_BUFFER_SIZE = 10000;
   /** File path for persisting traces across restarts */
   private readonly traceFilePath: string;
-  /** Score history for trend analysis (in-memory, capped at 168 = 7 days hourly) */
-  private scoreHistory: Array<{
-    timestamp: string;
-    overall: number;
-    byGate: Record<string, number>;
-  }> = [];
-  private readonly MAX_HISTORY_SIZE = 168; // 7 days @ 1 snapshot/hour
-  /** File path for persisting score history */
-  private readonly historyFilePath: string;
 
   constructor(storage: Storage) {
     super();
     this.storage = storage;
     this.traceFilePath = path.join(process.cwd(), 'data', 'gate-traces.jsonl');
-    this.historyFilePath = path.join(process.cwd(), 'data', 'health-score-history.jsonl');
     this.loadPersistedTraces();
-    this.loadScoreHistory();
   }
 
   /**
@@ -80,31 +69,6 @@ export class HealthScoreCalculator extends EventEmitter {
   }
 
   /**
-   * Load score history from disk on startup
-   */
-  private loadScoreHistory(): void {
-    try {
-      if (!fs.existsSync(this.historyFilePath)) return;
-      const content = fs.readFileSync(this.historyFilePath, 'utf-8');
-      const lines = content.trim().split('\n').filter(Boolean);
-      // Load all entries (already capped in file)
-      for (const line of lines) {
-        try {
-          const entry = JSON.parse(line);
-          this.scoreHistory.push(entry);
-        } catch { /* skip malformed lines */ }
-      }
-      // Trim to max
-      if (this.scoreHistory.length > this.MAX_HISTORY_SIZE) {
-        this.scoreHistory = this.scoreHistory.slice(-this.MAX_HISTORY_SIZE);
-      }
-      console.log(`[HealthScore] Loaded ${this.scoreHistory.length} historical score entries`);
-    } catch (err) {
-      console.warn('[HealthScore] Could not load score history:', err);
-    }
-  }
-
-  /**
    * Append a trace to the persistence file
    */
   private persistTrace(trace: GateTrace): void {
@@ -114,43 +78,6 @@ export class HealthScoreCalculator extends EventEmitter {
       fs.appendFileSync(this.traceFilePath, JSON.stringify(trace) + '\n');
     } catch (err) {
       console.warn('[HealthScore] Could not persist trace:', err);
-    }
-  }
-
-  /**
-   * Record a score snapshot to history and persist to disk
-   */
-  private recordSnapshot(overall: number, byGate: Record<GateId, GateHealthScore>): void {
-    try {
-      const snapshot = {
-        timestamp: new Date().toISOString(),
-        overall,
-        byGate: Object.fromEntries(
-          Object.entries(byGate).map(([gateId, health]) => [gateId, health.score])
-        ),
-      };
-
-      this.scoreHistory.push(snapshot);
-
-      // Evict oldest if exceeding max
-      if (this.scoreHistory.length > this.MAX_HISTORY_SIZE) {
-        this.scoreHistory = this.scoreHistory.slice(-this.MAX_HISTORY_SIZE);
-      }
-
-      // Persist to disk
-      const dir = path.dirname(this.historyFilePath);
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      fs.appendFileSync(this.historyFilePath, JSON.stringify(snapshot) + '\n');
-
-      // Periodically truncate file to match in-memory buffer (prevent unbounded growth)
-      if (this.scoreHistory.length % 200 === 0) {
-        fs.writeFileSync(
-          this.historyFilePath,
-          this.scoreHistory.map(s => JSON.stringify(s)).join('\n') + '\n'
-        );
-      }
-    } catch (err) {
-      console.warn('[HealthScore] Could not record score snapshot:', err);
     }
   }
 

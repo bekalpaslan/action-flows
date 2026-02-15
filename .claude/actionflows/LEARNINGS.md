@@ -241,3 +241,12 @@
 - **Root Cause:** (P1) packageManager field pinned to old version, never updated when Node.js upgraded. (P2) Flow registration without instructions.md creates ghost entries. (P3) Gate checkpoint service was built incrementally — newer gates never got explicit validators. (P4) Trust model assumed agent.md files are immutable — no runtime verification mechanism existed.
 - **Fix:** (P1) Updated packageManager to pnpm@10.29.3, changed npx tsx → tsx in scripts. (P2) Closed L012, noted template-creation/ orphan. (P3) Added validateGate5/8/10/11/14 methods to gateCheckpoint.ts. (P4) Created agentIntegrityService.ts with SHA-256 checksums and singleton pattern.
 - **Status:** Open (healing applied, pending commit and backend restart verification)
+
+### L027: Runtime Health ≠ Design-Time Alignment — Proactive Audits Catch Invisible Drift
+- **Date:** 2026-02-14
+- **From:** analyze/ (sonnet) during harmony-audit-and-fix/ proactive audit
+- **Issue:** `/api/harmony/health` reported 100/100 with zero violations, but a proactive 4-layer audit found 22 drift findings (1 CRITICAL, 3 HIGH, 6 MEDIUM, 12 LOW) for a design-time score of 95/100.
+- **Root Cause:** Runtime health only measures "can we parse this output?" — successful parsing doesn't verify that CONTRACT.md spec, TypeScript types, Zod schemas, and parsers all agree on field definitions. A schema can accept `string` while the type allows `number|string` and both parse fine at runtime.
+- **Example:** Format 2.1 StepCompletion `nextStep` — TypeScript type defined `number | string | null`, Zod schema only accepted `string | null`. Parser returned both types. Runtime health: 100%. Actual alignment: broken (CRITICAL).
+- **Fix:** Consider adding a "contract alignment score" alongside runtime health. Runtime = parsing success rate. Alignment = spec-type-schema-parser agreement at field level. Both 100% = true harmony.
+- **Status:** Open (insight logged, no code change yet)
