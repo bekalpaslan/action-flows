@@ -1,0 +1,122 @@
+/**
+ * StatCard Component Styles
+ * SnowUI-inspired metric card with accent border and trend indicators
+ */
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--snow-bg-1);
+  border: var(--snow-border);
+  border-left: 3px solid var(--snow-accent-blue); /* Default accent, overridden via style prop */
+  border-radius: var(--snow-radius);
+  box-shadow: var(--snow-shadow);
+  transition: all var(--duration-normal) var(--ease-in-out);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.stat-card:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+/* Header section with icon and label */
+.stat-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.stat-card__icon {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  color: var(--snow-text-muted);
+}
+
+.stat-card__label {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--snow-text-muted);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+/* Content section with value and trend */
+.stat-card__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.stat-card__value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--snow-text-primary);
+  line-height: 1.2;
+}
+
+/* Trend indicator */
+.stat-card__trend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 12px;
+  font-weight: 600;
+  padding: var(--space-1) var(--space-2);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.stat-card__trend--up {
+  color: var(--snow-accent-green);
+  background-color: rgba(113, 221, 140, 0.1);
+}
+
+.stat-card__trend--down {
+  color: #ff6b6b;
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
+.stat-card__trend--neutral {
+  color: var(--snow-text-muted);
+  background-color: var(--snow-bg-2);
+}
+
+.stat-card__trend-arrow {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.stat-card__trend-change {
+  font-size: 12px;
+}
+
+/* Dark mode support */
+[data-theme='dark'] .stat-card {
+  background: var(--snow-bg-1);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: var(--snow-shadow);
+}
+
+[data-theme='dark'] .stat-card:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive sizing */
+@media (max-width: 640px) {
+  .stat-card {
+    padding: var(--space-3);
+  }
+
+  .stat-card__value {
+    font-size: 20px;
+  }
+
+  .stat-card__label {
+    font-size: 11px;
+  }
+}

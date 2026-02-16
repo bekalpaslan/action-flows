@@ -11,10 +11,12 @@ import React, { useRef, useCallback, useState } from 'react';
 import { useChatWindowContext } from '../../contexts/ChatWindowContext';
 import { useSessionContext } from '../../contexts/SessionContext';
 import { useActiveChain } from '../../hooks/useActiveChain';
+import { useActivityFeed } from '../../hooks/useActivityFeed';
 import type { SessionId } from '@afw/shared';
 import { HybridFlowViz } from '../SessionTile/HybridFlowViz';
 import { ReactFlowProvider } from 'reactflow';
 import { ChatMinimizedIndicator } from './ChatMinimizedIndicator';
+import { ActivityFeed } from '../shared/ActivityFeed';
 import './SlidingChatWindow.css';
 
 interface SlidingChatWindowProps {
@@ -27,10 +29,13 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
   const { isOpen, chatWidth, source, sessionId, closeChat, setChatWidth, setSessionId, isMinimized, unreadCount, minimizeChat, restoreChat } = useChatWindowContext();
   const { sessions } = useSessionContext();
   const panelRef = useRef<HTMLDivElement>(null);
-  const [activeTab, setActiveTab] = useState<'chat' | 'flow'>('chat');
+  const [activeTab, setActiveTab] = useState<'chat' | 'flow' | 'activity'>('chat');
 
   // Fetch active chain for flow visualization
   const { activeChain, loading: chainLoading } = useActiveChain(sessionId || ('' as SessionId));
+
+  // Fetch activity feed items
+  const { items: activityItems, isLoading: activityLoading } = useActivityFeed(sessionId || undefined);
 
   /**
    * Handle resize start - attach mouse move/up listeners and update cursor
@@ -161,13 +166,22 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
         >
           Flow
         </button>
+        <button
+          className={`sliding-chat-window__tab ${activeTab === 'activity' ? 'sliding-chat-window__tab--active' : ''}`}
+          onClick={() => setActiveTab('activity')}
+          aria-selected={activeTab === 'activity'}
+          role="tab"
+          type="button"
+        >
+          Activity
+        </button>
       </div>
 
       {/* Tab Content */}
       <div className="sliding-chat-window__body" role="tabpanel">
         {activeTab === 'chat' ? (
           children
-        ) : (
+        ) : activeTab === 'flow' ? (
           <div className="sliding-chat-window__flow-container">
             {chainLoading ? (
               <div className="sliding-chat-window__empty-state">
@@ -192,6 +206,17 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
                   Flow visualization will appear here once a chain is compiled.
                 </div>
               </div>
+            )}
+          </div>
+        ) : (
+          <div className="sliding-chat-window__activity-container">
+            {activityLoading ? (
+              <div className="sliding-chat-window__empty-state">
+                <div className="empty-state__icon">⏳</div>
+                <div className="empty-state__title">Loading Activity...</div>
+              </div>
+            ) : (
+              <ActivityFeed items={activityItems} emptyMessage="No recent activity" />
             )}
           </div>
         )}

@@ -1,0 +1,105 @@
+/**
+ * DashboardCard Component Styles
+ * SnowUI-inspired container card for dashboard sections
+ */
+
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--snow-bg-1);
+  border: var(--snow-border);
+  border-radius: var(--snow-radius);
+  box-shadow: var(--snow-shadow);
+  padding: var(--space-5);
+  transition: all var(--duration-normal) var(--ease-in-out);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-card--full-width {
+  grid-column: 1 / -1; /* Span all columns in a grid layout */
+}
+
+/* Header section */
+.dashboard-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--snow-bg-2);
+}
+
+.dashboard-card__header-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.dashboard-card__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--snow-text-primary);
+  letter-spacing: 0.2px;
+}
+
+.dashboard-card__subtitle {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--snow-text-muted);
+  line-height: 1.4;
+}
+
+.dashboard-card__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* Content section */
+.dashboard-card__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0; /* Allow flex child to shrink */
+}
+
+/* Dark mode support */
+[data-theme='dark'] .dashboard-card {
+  background: var(--snow-bg-1);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: var(--snow-shadow);
+}
+
+[data-theme='dark'] .dashboard-card:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .dashboard-card__header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Responsive sizing */
+@media (max-width: 768px) {
+  .dashboard-card {
+    padding: var(--space-4);
+  }
+
+  .dashboard-card__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .dashboard-card__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

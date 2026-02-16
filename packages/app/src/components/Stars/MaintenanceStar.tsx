@@ -17,6 +17,8 @@ import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import { useAllSessions } from '../../hooks/useAllSessions';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { StatCard, StatCardRow } from '../shared/StatCard';
+import { DashboardCard } from '../shared/DashboardCard';
 import './MaintenanceStar.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -269,114 +271,47 @@ export function MaintenanceStar(): React.ReactElement {
 
       {/* Main Content */}
       <div className="maintenance-workbench__content">
-        {/* Metrics Grid */}
-        <div className="maintenance-workbench__metrics-grid">
-          {/* WebSocket Status Card */}
-          <div className="metric-card">
-            <div className="metric-card__header">
-              <span className="metric-card__icon">🔌</span>
-              <h3 className="metric-card__title">WebSocket</h3>
-            </div>
-            <div className="metric-card__body">
-              <div className={`metric-card__status metric-card__status--${wsStatus}`}>
-                {wsStatus === 'connected' && 'Connected'}
-                {wsStatus === 'connecting' && 'Connecting...'}
-                {wsStatus === 'disconnected' && 'Disconnected'}
-                {wsStatus === 'error' && 'Error'}
-              </div>
-              {wsError && (
-                <div className="metric-card__error">{wsError.message}</div>
-              )}
-            </div>
-          </div>
+        {/* StatCards replacing old metric-card implementation */}
+        <StatCardRow>
+          <StatCard
+            label="WebSocket Status"
+            value={wsStatus === 'connected' ? 'Connected' : wsStatus === 'connecting' ? 'Connecting...' : wsStatus === 'error' ? 'Error' : 'Disconnected'}
+            trend={wsStatus === 'connected' ? 'up' : wsStatus === 'error' ? 'down' : 'neutral'}
+            accentColor="var(--snow-accent-green)"
+          />
+          <StatCard
+            label="Active Sessions"
+            value={sessionsLoading ? '...' : activeSessions.toString()}
+            accentColor="var(--snow-accent-blue)"
+          />
+          <StatCard
+            label="Backend Health"
+            value={metrics.health ? (metrics.health.status === 'ok' ? 'Healthy' : 'Unhealthy') : metrics.healthError ? 'Unreachable' : 'Checking...'}
+            accentColor="var(--snow-accent-mint)"
+          />
+          <StatCard
+            label="Recent Errors"
+            value={recentErrors.length.toString()}
+            trend={recentErrors.length > 0 ? 'down' : 'neutral'}
+            accentColor="var(--snow-accent-purple)"
+          />
+        </StatCardRow>
 
-          {/* Backend Health Card */}
-          <div className="metric-card">
-            <div className="metric-card__header">
-              <span className="metric-card__icon">🖥️</span>
-              <h3 className="metric-card__title">Backend</h3>
-            </div>
-            <div className="metric-card__body">
-              {metrics.health ? (
-                <>
-                  <div className="metric-card__status metric-card__status--connected">
-                    {metrics.health.status === 'ok' ? 'Healthy' : 'Unhealthy'}
-                  </div>
-                  <div className="metric-card__detail">
-                    <span className="detail-label">Uptime:</span>
-                    <span className="detail-value">{formatUptime(metrics.health.uptime)}</span>
-                  </div>
-                </>
-              ) : metrics.healthError ? (
-                <div className="metric-card__status metric-card__status--error">
-                  Unreachable
-                </div>
-              ) : (
-                <div className="metric-card__status metric-card__status--connecting">
-                  Checking...
-                </div>
-              )}
-              {metrics.healthError && (
-                <div className="metric-card__error">{metrics.healthError}</div>
-              )}
-            </div>
-          </div>
-
-          {/* Active Sessions Card */}
-          <div className="metric-card">
-            <div className="metric-card__header">
-              <span className="metric-card__icon">📊</span>
-              <h3 className="metric-card__title">Sessions</h3>
-            </div>
-            <div className="metric-card__body">
-              {sessionsLoading ? (
-                <div className="metric-card__status metric-card__status--connecting">
-                  Loading...
-                </div>
-              ) : (
-                <>
-                  <div className="metric-card__value">{activeSessions}</div>
-                  <div className="metric-card__detail">
-                    <span className="detail-label">Active</span>
-                    <span className="detail-secondary">/ {sessions.length} total</span>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Last Checked Card */}
-          <div className="metric-card">
-            <div className="metric-card__header">
-              <span className="metric-card__icon">🕐</span>
-              <h3 className="metric-card__title">Last Check</h3>
-            </div>
-            <div className="metric-card__body">
-              <div className="metric-card__value">
-                {metrics.lastChecked ? formatTimestamp(metrics.lastChecked) : '--:--:--'}
-              </div>
-              {autoRefresh && (
-                <div className="metric-card__detail">
-                  <span className="detail-label">Next in ~30s</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Errors Section */}
-        <div className="maintenance-workbench__errors-section">
-          <div className="errors-section__header">
-            <h2 className="errors-section__title">Recent Errors</h2>
-            {recentErrors.length > 0 && (
+        {/* Recent Errors Section wrapped in DashboardCard */}
+        <DashboardCard
+          title="Recent Errors"
+          variant={recentErrors.length > 0 ? 'error' : 'default'}
+          action={
+            recentErrors.length > 0 ? (
               <button
                 className="errors-section__clear-btn"
                 onClick={handleClearErrors}
               >
                 Clear All
               </button>
-            )}
-          </div>
+            ) : undefined
+          }
+        >
           <div className="errors-section__list">
             {recentErrors.length === 0 ? (
               <div className="errors-section__empty">
@@ -397,7 +332,7 @@ export function MaintenanceStar(): React.ReactElement {
               ))
             )}
           </div>
-        </div>
+        </DashboardCard>
       </div>
 
       <DiscussDialog

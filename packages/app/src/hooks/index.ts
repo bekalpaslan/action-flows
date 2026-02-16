@@ -67,3 +67,5 @@ export {
 
 export { usePersonalities } from './usePersonalities';
 export type { UsePersonalitiesResult } from './usePersonalities';
+
+export { useActivityFeed } from './useActivityFeed';

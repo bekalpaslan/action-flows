@@ -11,6 +11,7 @@ import { SlidingChatWindow } from '../SlidingChatWindow/SlidingChatWindow';
 import { ChatPanel } from '../SessionPanel/ChatPanel';
 import { CosmicMap } from '../CosmicMap/CosmicMap';
 import { RegionFocusView } from '../RegionFocus/RegionFocusView';
+import { BreadcrumbBar } from '../shared/BreadcrumbBar';
 import { WorkStar } from '../Stars/WorkStar';
 import { CanvasTool } from '../Tools/CanvasTool/CanvasTool';
 import { EditorTool } from '../Tools/EditorTool/EditorTool';
@@ -33,6 +34,7 @@ import {
   type Session,
   type FlowAction,
   brandedTypes,
+  STAR_CONFIGS,
 } from '@afw/shared';
 import './WorkbenchLayout.css';
 
@@ -718,6 +720,18 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
                     🌌 Universe
                   </button>
                 )}
+
+                {/* BreadcrumbBar - only in workbench view, not in cosmic-map */}
+                <BreadcrumbBar
+                  segments={[
+                    { label: 'ActionFlows', icon: '🏠', onClick: effectiveCosmicMapEnabled ? handleReturnToUniverse : undefined },
+                    { label: STAR_CONFIGS[activeWorkbench]?.label || activeWorkbench },
+                    ...(activeSessionId && getSession(activeSessionId) ? [{ label: getSession(activeSessionId)?.name || getSession(activeSessionId)?.id || 'Session' }] : [])
+                  ]}
+                  actions={[
+                    { icon: '🔍', label: 'Search', onClick: () => console.log('Search clicked') }
+                  ]}
+                />
 
                 {renderWorkbenchContent(activeWorkbench)}
                 {children}

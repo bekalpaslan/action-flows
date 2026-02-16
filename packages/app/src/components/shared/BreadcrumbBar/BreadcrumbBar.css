@@ -1,0 +1,125 @@
+/**
+ * BreadcrumbBar Component Styles
+ * SnowUI-inspired navigation breadcrumb with action buttons
+ */
+
+.breadcrumb-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: 48px;
+  padding: 0 var(--space-5);
+  background: var(--snow-bg-1);
+  border-bottom: var(--snow-border);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Navigation breadcrumbs */
+.breadcrumb-bar__navigation {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.breadcrumb-bar__navigation::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+/* Individual breadcrumb segment */
+.breadcrumb-bar__segment {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--snow-text-secondary);
+  white-space: nowrap;
+  border-radius: 4px;
+  transition: all var(--duration-fast) var(--ease-in-out);
+  user-select: none;
+}
+
+.breadcrumb-bar__segment--clickable {
+  cursor: pointer;
+}
+
+.breadcrumb-bar__segment--clickable:hover {
+  background-color: var(--snow-bg-2);
+  color: var(--snow-text-primary);
+}
+
+.breadcrumb-bar__segment--clickable:active {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.breadcrumb-bar__segment--current {
+  font-weight: 600;
+  color: var(--snow-text-primary);
+}
+
+.breadcrumb-bar__icon {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.breadcrumb-bar__label {
+  line-height: 1;
+}
+
+/* Divider between segments */
+.breadcrumb-bar__divider {
+  font-size: 13px;
+  color: var(--snow-text-muted);
+  user-select: none;
+  padding: 0 var(--space-1);
+}
+
+/* Action buttons container */
+.breadcrumb-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* Dark mode support */
+[data-theme='dark'] .breadcrumb-bar {
+  background: var(--snow-bg-1);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .breadcrumb-bar__segment--clickable:hover {
+  background-color: var(--snow-bg-2);
+}
+
+[data-theme='dark'] .breadcrumb-bar__segment--clickable:active {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Responsive sizing */
+@media (max-width: 768px) {
+  .breadcrumb-bar {
+    padding: 0 var(--space-3);
+    height: 44px;
+  }
+
+  .breadcrumb-bar__segment {
+    font-size: 12px;
+    padding: var(--space-1);
+  }
+
+  .breadcrumb-bar__divider {
+    font-size: 12px;
+  }
+
+  /* Hide icons on mobile */
+  .breadcrumb-bar__icon {
+    display: none;
+  }
+}

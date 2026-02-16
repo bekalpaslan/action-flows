@@ -52,7 +52,7 @@
   /* Light Theme Backgrounds */
   --light-bg-base: #ffffff;
   --light-bg-primary: #f9fafb;
-  --light-bg-secondary: var(--light-bg-secondary);
+  --light-bg-secondary: #f3f4f6;
   --light-bg-tertiary: #e5e7eb;
   --light-bg-quaternary: #d1d5db;
   --light-bg-panel: #fafafa;
@@ -809,4 +809,54 @@
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
   --focus-ring-glow: 0 0 8px rgba(10, 132, 255, 0.4);
+
+  /* ==========================================================================
+     SnowUI Design Tokens — Light Mode
+     ========================================================================== */
+
+  /* SnowUI Backgrounds (Light) */
+  --snow-bg-1: #ffffff;
+  --snow-bg-2: #f9f9fa;
+  --snow-bg-4: #edeefc;  /* accent/purple tint */
+  --snow-bg-5: #e6f1fd;  /* info/blue tint */
+
+  /* SnowUI Text (Light) */
+  --snow-text-primary: #000000;
+  --snow-text-secondary: rgba(0, 0, 0, 0.8);
+  --snow-text-muted: rgba(0, 0, 0, 0.4);
+  --snow-text-subtle: rgba(0, 0, 0, 0.1);
+
+  /* SnowUI Accents */
+  --snow-accent-cyan: #a0bce8;
+  --snow-accent-purple: #b899eb;
+  --snow-accent-green: #71dd8c;
+  --snow-accent-blue: #7dbbff;
+  --snow-accent-mint: #6be6d3;
+
+  /* SnowUI Spacing (reference scale) */
+  --snow-radius: 8px;
+  --snow-border: 1px solid rgba(0, 0, 0, 0.04);
+  --snow-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* ==========================================================================
+   SnowUI Design Tokens — Dark Mode
+   ========================================================================== */
+
+[data-theme='dark'] {
+  /* SnowUI Backgrounds (Dark) */
+  --snow-bg-1: #1a1a2e;
+  --snow-bg-2: #16213e;
+  --snow-bg-4: #2a2a4a;
+  --snow-bg-5: #1a2a3e;
+
+  /* SnowUI Text (Dark) */
+  --snow-text-primary: #ffffff;
+  --snow-text-secondary: rgba(255, 255, 255, 0.8);
+  --snow-text-muted: rgba(255, 255, 255, 0.4);
+  --snow-text-subtle: rgba(255, 255, 255, 0.1);
+
+  /* SnowUI Border & Shadow (Dark) */
+  --snow-border: 1px solid rgba(255, 255, 255, 0.08);
+  --snow-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
