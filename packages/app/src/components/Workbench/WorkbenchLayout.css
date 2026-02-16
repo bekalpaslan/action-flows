@@ -94,10 +94,6 @@
   contain: layout style; /* CSS containment to prevent layout escape */
 }
 
-/* Add left margin when SessionSidebar is present (in addition to AppSidebar margin on body) */
-.workbench-main.with-sidebar {
-  margin-left: var(--session-sidebar-width);
-}
 
 .workbench-main::-webkit-scrollbar {
   width: var(--scrollbar-width);
@@ -229,9 +225,6 @@
 
   /* Reduce sidebar margin on mobile */
   .workbench-main {
-    margin-left: 0;
-  }
-  .workbench-main.with-sidebar {
     margin-left: 0;
   }
 

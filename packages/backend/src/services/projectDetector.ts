@@ -25,28 +25,36 @@ export class ProjectDetector {
     };
 
     try {
-      // Validate path traversal - resolve realpath to prevent symlink escapes
+      // Windows paths (e.g. D:/...) can't be resolved inside a Linux Docker container
+      const isWindowsPathOnLinux = /^[A-Za-z]:[/\\]/.test(cwd) && process.platform !== 'win32';
+
       let realCwd: string;
-      try {
-        realCwd = await fs.realpath(cwd);
-      } catch (error) {
-        throw new Error('Directory does not exist or is not accessible');
+      if (isWindowsPathOnLinux) {
+        // Trust the path as-is — fs operations can't resolve host Windows paths in Docker
+        realCwd = cwd;
+      } else {
+        // Validate path traversal - resolve realpath to prevent symlink escapes
+        try {
+          realCwd = await fs.realpath(cwd);
+        } catch (error) {
+          throw new Error('Directory does not exist or is not accessible');
+        }
+
+        // Check if directory exists and is actually a directory
+        try {
+          const stats = await fs.stat(realCwd);
+          if (!stats.isDirectory()) {
+            throw new Error('Path is not a directory');
+          }
+        } catch (error) {
+          throw new Error('Directory does not exist or is not accessible');
+        }
       }
 
       // Validate against path traversal attempts
       const normalizedCwd = path.normalize(realCwd);
       if (normalizedCwd.includes('..')) {
         throw new Error('Path traversal detected in cwd');
-      }
-
-      // Check if directory exists and is actually a directory
-      try {
-        const stats = await fs.stat(realCwd);
-        if (!stats.isDirectory()) {
-          throw new Error('Path is not a directory');
-        }
-      } catch (error) {
-        throw new Error('Directory does not exist or is not accessible');
       }
 
       // Use realCwd for all subsequent operations

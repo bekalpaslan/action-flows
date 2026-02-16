@@ -239,7 +239,7 @@ export function ChatPanel({
   const sessionStatus = session?.status ?? 'active';
   const statusColor = getStatusColor(sessionStatus);
   const statusText = getStatusText(sessionStatus);
-  const chainCount = session?.chains.length ?? 0;
+  const chainCount = session?.chains?.length ?? 0;
   const activeChain = session?.currentChain;
   const sessionDuration = session
     ? session.duration

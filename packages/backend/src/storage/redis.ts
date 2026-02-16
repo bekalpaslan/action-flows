@@ -201,6 +201,34 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       }
     },
 
+    async listSessions(): Promise<Session[]> {
+      try {
+        const keys = await redis.keys(`${keyPrefix}sessions:*`);
+        if (keys.length === 0) return [];
+        const pipeline = redis.pipeline();
+        for (const key of keys) {
+          pipeline.get(key);
+        }
+        const results = await pipeline.exec();
+        const sessions: Session[] = [];
+        if (results) {
+          for (const [err, data] of results) {
+            if (!err && data) {
+              try {
+                sessions.push(JSON.parse(data as string));
+              } catch { /* skip corrupt entries */ }
+            }
+          }
+        }
+        return sessions.sort((a, b) =>
+          new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+        );
+      } catch (error) {
+        console.error('[Redis] Error listing sessions:', error);
+        return [];
+      }
+    },
+
     async deleteSession(sessionId: SessionId) {
       try {
         // Delete all related Redis keys for this session

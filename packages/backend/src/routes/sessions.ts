@@ -118,13 +118,17 @@ router.post('/', sessionCreateLimiter, validateBody(createSessionSchema), async 
     const { cwd, hostname, platform, userId } = req.body;
 
     // Validate that directory exists (Agent A security fix)
-    try {
-      const stat = await fs.stat(cwd);
-      if (!stat.isDirectory()) {
-        return res.status(400).json({ error: 'cwd must be a directory' });
+    // Skip check for Windows paths when running in Linux (Docker container receiving host paths)
+    const isWindowsPathOnLinux = /^[A-Za-z]:[/\\]/.test(cwd) && process.platform !== 'win32';
+    if (!isWindowsPathOnLinux) {
+      try {
+        const stat = await fs.stat(cwd);
+        if (!stat.isDirectory()) {
+          return res.status(400).json({ error: 'cwd must be a directory' });
+        }
+      } catch {
+        return res.status(400).json({ error: 'cwd directory does not exist or is not accessible' });
       }
-    } catch {
-      return res.status(400).json({ error: 'cwd directory does not exist or is not accessible' });
     }
 
     // Check if cwd is a sensitive system directory (Fix 5)
@@ -228,7 +232,8 @@ router.get('/', async (req, res) => {
         platform: s.platform,
         startedAt: s.startedAt,
         endedAt: s.endedAt,
-        chainsCount: s.chains.length,
+        chains: s.chains || [],
+        chainsCount: (s.chains || []).length,
         metadata: s.metadata,
       })),
       note: storage.sessions ? undefined : 'Full session listing not available with Redis storage',

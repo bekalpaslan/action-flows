@@ -26,7 +26,7 @@ interface SlidingChatWindowProps {
 }
 
 export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, embedded = false }) => {
-  const { isOpen, chatWidth, source, sessionId, closeChat, setChatWidth, setSessionId, isMinimized, unreadCount, minimizeChat, restoreChat } = useChatWindowContext();
+  const { isOpen, chatWidth, source, sessionId, closeChat, setChatWidth, setSessionId, isMinimized, unreadCount, minimizeChat, restoreChat, openChat } = useChatWindowContext();
   const { sessions } = useSessionContext();
   const panelRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<'chat' | 'flow' | 'activity'>('chat');
@@ -77,7 +77,7 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
    * Handle double-click to reset width to default (40%)
    */
   const handleDoubleClick = useCallback(() => {
-    setChatWidth(40);
+    setChatWidth(30);
   }, [setChatWidth]);
 
   // In embedded mode, always render at full width without sliding mechanics
@@ -116,7 +116,11 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
         <select
           className="sliding-chat-window__session-select"
           value={sessionId || ''}
-          onChange={(e) => setSessionId(e.target.value ? e.target.value as SessionId : null)}
+          onChange={(e) => {
+            const val = e.target.value ? e.target.value as SessionId : null;
+            setSessionId(val);
+            if (val && !isOpen) openChat('session-select');
+          }}
           aria-label="Select chat session"
         >
           <option value="">No session</option>

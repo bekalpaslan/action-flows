@@ -14,6 +14,7 @@
 
 import { useState, useCallback } from 'react';
 import { useDiscussContext } from '../contexts/DiscussContext';
+import { useChatWindowContext } from '../contexts/ChatWindowContext';
 
 export interface UseDiscussButtonParams {
   /** Name of the component being discussed */
@@ -41,6 +42,7 @@ export function useDiscussButton({
 }: UseDiscussButtonParams): UseDiscussButtonReturn {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { prefillChatInput, registerDiscussionMessage } = useDiscussContext();
+  const { openChat, isOpen } = useChatWindowContext();
 
   const openDialog = useCallback(() => {
     setIsDialogOpen(true);
@@ -77,10 +79,17 @@ ${JSON.stringify(context, null, 2)}
       // Register message for sliding chat window integration
       registerDiscussionMessage(formattedMessage, context);
 
-      // Also send to chat via context (legacy support)
-      prefillChatInput(formattedMessage);
+      // Open chat panel if not already open (creates session if needed)
+      if (!isOpen) {
+        openChat('discuss').then(() => {
+          // Delay prefill to let ChatPanel mount and register its input setter
+          setTimeout(() => prefillChatInput(formattedMessage), 150);
+        });
+      } else {
+        prefillChatInput(formattedMessage);
+      }
     },
-    [getContext, prefillChatInput, registerDiscussionMessage]
+    [getContext, prefillChatInput, registerDiscussionMessage, isOpen, openChat]
   );
 
   return {

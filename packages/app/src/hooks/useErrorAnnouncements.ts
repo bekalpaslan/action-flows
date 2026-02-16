@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ErrorInstance, SessionId, ErrorRecoveryAction } from '@afw/shared';
-import { useWebSocket } from './useWebSocket.js';
+import { useWebSocketContext } from '../contexts/WebSocketContext';
 
 /**
  * Hook for managing error announcements
@@ -10,7 +10,7 @@ export function useErrorAnnouncements(sessionId?: SessionId) {
   const [errors, setErrors] = useState<ErrorInstance[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const ws = useWebSocket();
+  const { onEvent, send } = useWebSocketContext();
 
   // Fetch errors for a session
   const fetchErrors = useCallback(
@@ -44,39 +44,16 @@ export function useErrorAnnouncements(sessionId?: SessionId) {
     }
   }, [sessionId, fetchErrors]);
 
-  // Listen for error:occurred events via WebSocket
+  // Listen for error:occurred events via WebSocket context
   useEffect(() => {
-    if (!ws) return;
+    if (!onEvent || !sessionId) return;
 
-    const handleErrorEvent = (event: any) => {
-      if (event.type === 'error:occurred' && sessionId && event.sessionId === sessionId) {
-        // Re-fetch errors when new error occurs
+    return onEvent((event: any) => {
+      if (event.type === 'error:occurred' && event.sessionId === sessionId) {
         fetchErrors(sessionId);
       }
-    };
-
-    ws.addEventListener('message', (e: Event) => {
-      if (!(e instanceof MessageEvent)) return;
-      try {
-        const message = JSON.parse(e.data);
-        handleErrorEvent(message);
-      } catch (err) {
-        // Ignore parse errors for non-JSON messages
-      }
     });
-
-    return () => {
-      ws.removeEventListener('message', (e: Event) => {
-        if (!(e instanceof MessageEvent)) return;
-        try {
-          const message = JSON.parse(e.data);
-          handleErrorEvent(message);
-        } catch (err) {
-          // Ignore parse errors
-        }
-      });
-    };
-  }, [ws, sessionId, fetchErrors]);
+  }, [onEvent, sessionId, fetchErrors]);
 
   // Dismiss an error
   const dismissError = useCallback(
@@ -123,22 +100,17 @@ export function useErrorAnnouncements(sessionId?: SessionId) {
         );
 
         // Notify orchestrator via WebSocket if available
-        // This allows the orchestrator to respond to recovery actions
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          ws.send(
-            JSON.stringify({
-              type: 'error:recovery',
-              errorId,
-              action,
-              timestamp: new Date().toISOString(),
-            })
-          );
-        }
+        send({
+          type: 'error:recovery',
+          errorId,
+          action,
+          timestamp: new Date().toISOString(),
+        } as any);
       } catch (err) {
         console.error('[useErrorAnnouncements] Recovery action error:', err);
       }
     },
-    [ws]
+    [send]
   );
 
   // Create a new error announcement

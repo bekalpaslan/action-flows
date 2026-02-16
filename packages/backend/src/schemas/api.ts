@@ -2,6 +2,11 @@ import { z } from 'zod';
 import * as path from 'path';
 import { STAR_IDS } from '@afw/shared';
 
+/** Cross-platform absolute path check (POSIX + Windows drive letters in Linux containers) */
+function isAbsolutePath(p: string): boolean {
+  return path.isAbsolute(p) || /^[A-Za-z]:[/\\]/.test(p);
+}
+
 /**
  * Zod Schemas for REST API Request Bodies
  *
@@ -19,7 +24,7 @@ export const createSessionSchema = z.object({
     .min(1, 'cwd is required')
     .max(500, 'cwd path too long')
     .refine(
-      (p) => path.isAbsolute(p),
+      (p) => isAbsolutePath(p),
       'cwd must be an absolute path'
     ),
   hostname: z.string().max(255, 'hostname too long').optional(),
@@ -171,7 +176,7 @@ export const claudeCliStartSchema = z.object({
     .min(1, 'cwd required')
     .max(500, 'cwd too long')
     .refine(
-      (p) => path.isAbsolute(p),
+      (p) => isAbsolutePath(p),
       'cwd must be an absolute path'
     ),
   prompt: z.string().max(10000, 'prompt too long').optional(),
@@ -207,7 +212,7 @@ export const createProjectSchema = z.object({
     .min(1, 'cwd required')
     .max(500, 'cwd too long')
     .refine(
-      (p) => path.isAbsolute(p),
+      (p) => isAbsolutePath(p),
       'cwd must be an absolute path'
     ),
   defaultCliFlags: z.array(z.string().max(200, 'flag too long')).max(50, 'too many flags').optional(),
@@ -227,7 +232,7 @@ export const updateProjectSchema = z.object({
     .min(1)
     .max(500)
     .refine(
-      (p) => path.isAbsolute(p),
+      (p) => isAbsolutePath(p),
       'cwd must be an absolute path'
     )
     .optional(),
@@ -247,7 +252,7 @@ export const autoDetectProjectSchema = z.object({
     .min(1, 'cwd required')
     .max(500, 'cwd too long')
     .refine(
-      (p) => path.isAbsolute(p),
+      (p) => isAbsolutePath(p),
       'cwd must be an absolute path'
     ),
 });

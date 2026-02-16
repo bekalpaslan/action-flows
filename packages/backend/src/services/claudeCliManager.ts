@@ -68,13 +68,21 @@ class ClaudeCliManager {
    * Validate cwd path for security
    */
   private async validateCwd(cwd: string): Promise<void> {
-    // Resolve realpath to prevent symlink escapes
+    // Windows paths (e.g. D:/...) can't be resolved inside a Linux Docker container
+    const isWindowsPathOnLinux = /^[A-Za-z]:[/\\]/.test(cwd) && process.platform !== 'win32';
+
     let realCwd: string;
-    try {
-      const fs = await import('fs/promises');
-      realCwd = await fs.realpath(cwd);
-    } catch (error) {
-      throw new Error('Directory does not exist or is not accessible');
+    if (isWindowsPathOnLinux) {
+      // Trust the path as-is — fs.realpath can't resolve host Windows paths in Docker
+      realCwd = cwd;
+    } else {
+      // Resolve realpath to prevent symlink escapes
+      try {
+        const fs = await import('fs/promises');
+        realCwd = await fs.realpath(cwd);
+      } catch (error) {
+        throw new Error('Directory does not exist or is not accessible');
+      }
     }
 
     // Check for path traversal attempts

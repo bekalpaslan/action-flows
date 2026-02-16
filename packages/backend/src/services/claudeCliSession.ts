@@ -159,6 +159,8 @@ export class ClaudeCliSessionProcess {
             ...this.spawnEnv,
             // Force non-interactive mode for subprocess
             CI: '1',
+            // Remove nested-session guard so dashboard can spawn CLI sessions
+            CLAUDECODE: '',
           },
         });
 

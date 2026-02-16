@@ -136,7 +136,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
           : undefined;
 
         const payload = {
-          cwd: cwd || (typeof process !== 'undefined' ? process.cwd?.() : undefined) || '/app',
+          cwd: cwd || import.meta.env.VITE_PROJECT_DIR || (typeof process !== 'undefined' ? process.cwd?.() : undefined) || '/app',
           hostname: typeof window !== 'undefined' ? 'browser' : 'unknown',
           ...(normalizedPlatform ? { platform: normalizedPlatform } : {}),
         };
