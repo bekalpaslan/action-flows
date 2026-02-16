@@ -128,10 +128,17 @@ export function SessionProvider({ children }: SessionProviderProps) {
   const createSession = useCallback(
     async (cwd?: string, name?: string): Promise<SessionId> => {
       try {
+        // Normalize platform to match backend enum (win32, darwin, linux)
+        const rawPlatform = typeof navigator !== 'undefined' ? navigator.platform : 'unknown';
+        const normalizedPlatform = rawPlatform.toLowerCase().startsWith('win') ? 'win32'
+          : rawPlatform.toLowerCase().startsWith('mac') ? 'darwin'
+          : rawPlatform.toLowerCase().startsWith('linux') ? 'linux'
+          : undefined;
+
         const payload = {
-          cwd: cwd || process.cwd?.() || '',
+          cwd: cwd || (typeof process !== 'undefined' ? process.cwd?.() : undefined) || '/app',
           hostname: typeof window !== 'undefined' ? 'browser' : 'unknown',
-          platform: typeof navigator !== 'undefined' ? navigator.platform : 'unknown',
+          ...(normalizedPlatform ? { platform: normalizedPlatform } : {}),
         };
 
         const response = await fetch(`${API_BASE_URL}/api/sessions`, {
