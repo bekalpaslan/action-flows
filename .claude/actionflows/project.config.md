@@ -21,9 +21,10 @@
 ## Session
 
 - **Environment:** `cli` | `dashboard`
-  - `cli` — No backend/frontend running. Skip health check (step 4). All output is human-readable terminal text. **Trade-off:** No harmony monitoring, gate traces, or health scoring. Drift is undetected until dashboard mode resumes.
-  - `dashboard` — Backend + frontend running. Health check active. Output is both human-readable and machine-parsed. Full observability.
+  - `cli` — Orchestrator skips health check (step 4). Lean and fast. Backend may or may not be running independently — if it is, it still observes via ConversationWatcher (JSONL file watching). Observability is not lost, just not queried.
+  - `dashboard` — Orchestrator queries health at session start. Full interactive loop: orchestrator asks, backend answers, human sees recommendations.
 - **Current:** `cli`
+- **Note:** The flag controls orchestrator behavior, not backend state. Running `cli` with backend up = lean orchestrator + full observability.
 
 ---
 
