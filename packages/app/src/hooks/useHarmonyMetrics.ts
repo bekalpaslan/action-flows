@@ -23,6 +23,11 @@ export function useHarmonyMetrics(
 
   // Fetch metrics
   const fetchMetrics = useCallback(async () => {
+    if (!target) {
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
