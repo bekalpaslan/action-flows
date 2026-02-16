@@ -97,7 +97,7 @@ export type ValidatedChain = z.infer<typeof chainSchema>;
 // ============================================================================
 
 const baseEventSchema = z.object({
-  id: z.string().min(1).max(200),
+  id: z.string().min(1).max(200).optional(),
   sessionId: sessionIdSchema,
   timestamp: timestampSchema,
   type: z.string().max(100),
