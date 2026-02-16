@@ -721,15 +721,12 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
                   </button>
                 )}
 
-                {/* BreadcrumbBar - only in workbench view, not in cosmic-map */}
+                {/* BreadcrumbBar */}
                 <BreadcrumbBar
                   segments={[
-                    { label: 'ActionFlows', icon: '🏠', onClick: effectiveCosmicMapEnabled ? handleReturnToUniverse : undefined },
+                    { label: 'ActionFlows', onClick: effectiveCosmicMapEnabled ? handleReturnToUniverse : undefined },
                     { label: STAR_CONFIGS[activeWorkbench]?.label || activeWorkbench },
                     ...(activeSessionId && getSession(activeSessionId) ? [{ label: getSession(activeSessionId)?.name || getSession(activeSessionId)?.id || 'Session' }] : [])
-                  ]}
-                  actions={[
-                    { icon: '🔍', label: 'Search', onClick: () => console.log('Search clicked') }
                   ]}
                 />
 
