@@ -222,9 +222,11 @@ export class LogTailer {
       this.position = 0;
     }
 
+    const isDocker = !!process.env.CLAUDE_PROJECT_DIR;
     this.watcher = chokidar.watch(this.filePath, {
       persistent: true,
-      usePolling: false,
+      usePolling: isDocker,         // Docker bind mounts need polling (no inotify)
+      interval: isDocker ? 1000 : undefined,
       awaitWriteFinish: {
         stabilityThreshold: 50,  // Wait 50ms after last write
         pollInterval: 10,
@@ -232,7 +234,12 @@ export class LogTailer {
     });
 
     this.watcher.on('change', async () => {
+      console.log(`[LogTailer] File change detected: ${path.basename(this.filePath)}`);
       await this.readNewLines();
+    });
+
+    this.watcher.on('error', (error: Error) => {
+      console.error(`[LogTailer] Watcher error: ${error.message}`);
     });
 
     console.log(`[LogTailer] Watching ${this.filePath}`);
@@ -262,9 +269,17 @@ export class LogTailer {
 
       const rl = readline.createInterface({ input: stream });
 
+      let lineCount = 0;
+      let bytesRead = 0;
       for await (const line of rl) {
-        this.position += Buffer.byteLength(line, 'utf8') + 1; // +1 for newline
+        const lineBytes = Buffer.byteLength(line, 'utf8') + 1; // +1 for newline
+        bytesRead += lineBytes;
+        lineCount++;
         this.onNewLine(line);
+      }
+      this.position += bytesRead;
+      if (lineCount > 0) {
+        console.log(`[LogTailer] Read ${lineCount} new line(s) from ${path.basename(this.filePath)}`);
       }
     } catch (error) {
       console.error('[LogTailer] Error reading new lines:', error);
