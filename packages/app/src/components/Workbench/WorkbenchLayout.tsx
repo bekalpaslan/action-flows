@@ -6,7 +6,7 @@ import { useChatWindowContext } from '../../contexts/ChatWindowContext';
 import { useChatKeyboardShortcuts } from '../../hooks/useChatKeyboardShortcuts';
 import { useFeatureFlagSimple } from '../../hooks/useFeatureFlag';
 import { AppSidebar } from '../AppSidebar';
-import { SessionSidebar } from '../SessionSidebar';
+
 import { SlidingChatWindow } from '../SlidingChatWindow/SlidingChatWindow';
 import { ChatPanel } from '../SessionPanel/ChatPanel';
 import { CosmicMap } from '../CosmicMap/CosmicMap';
@@ -137,7 +137,6 @@ const ACTIONFLOWS_ACTIONS: FlowAction[] = [
  *
  * Structure:
  * - TopBar at the top
- * - SessionSidebar on the left (auto-hide, only on session-capable workbenches)
  * - Main content area in the center
  * - BottomControlPanel at the bottom (placeholder for now)
  */
@@ -277,10 +276,19 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
   const { targetWorkbenchId, universe } = useUniverseContext();
   const { getSession } = useSessionContext();
-  const { sessionId: chatSessionId, closeChat } = useChatWindowContext();
+  const { sessionId: chatSessionId, closeChat, saveAndSwitch } = useChatWindowContext();
 
   // Enable keyboard shortcuts for chat window
   useChatKeyboardShortcuts();
+
+  // Save/restore chat state when switching workbenches
+  const prevWorkbenchForChat = useRef<WorkbenchId>(activeWorkbench);
+  useEffect(() => {
+    if (prevWorkbenchForChat.current !== activeWorkbench) {
+      saveAndSwitch(prevWorkbenchForChat.current, activeWorkbench);
+      prevWorkbenchForChat.current = activeWorkbench;
+    }
+  }, [activeWorkbench, saveAndSwitch]);
 
   // Feature flags for cosmic map and classic mode
   const cosmicMapEnabled = useFeatureFlagSimple('COSMIC_MAP_ENABLED');
@@ -666,29 +674,6 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
     <div className="workbench-layout" data-testid="workbench-layout">
       <AppSidebar onCollapseChange={setSidebarCollapsed} />
 
-      {/* SessionSidebar - Show only in workbench view */}
-      {viewMode === 'workbench' && (
-        <SessionSidebar
-          onAttachSession={handleAttachSession}
-          activeSessionId={activeSessionId}
-          onNewSession={async () => {
-            try {
-              const res = await fetch('http://localhost:3001/api/sessions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cwd: 'D:/ActionFlowsDashboard' }),
-              });
-              if (!res.ok) throw new Error(`Failed to create session: ${res.status}`);
-              const data = await res.json();
-              const newId = data.id as SessionId;
-              handleAttachSession(newId);
-            } catch (err) {
-              console.error('Failed to create new session:', err);
-            }
-          }}
-        />
-      )}
-
       <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`} data-testid="layout-wrapper">
         {/* Cosmic Map View + Zooming In/Out states */}
         {effectiveCosmicMapEnabled && (viewMode === 'cosmic-map' || viewMode === 'zooming-in' || viewMode === 'zooming-out') ? (
@@ -708,7 +693,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         ) : (
           /* Workbench View (legacy mode when cosmic map disabled or classic mode enabled) */
           <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} data-testid="content-area">
-            <main id="main-content" className="workbench-main with-sidebar" role="main">
+            <main id="main-content" className="workbench-main" role="main">
               <div className={`workbench-content ${transitionClass}`}>
                 {/* Return to Universe button (visible when cosmic map is enabled and not in classic mode) */}
                 {effectiveCosmicMapEnabled && (

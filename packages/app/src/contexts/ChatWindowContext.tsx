@@ -1,6 +1,14 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import type { SessionId } from '@afw/shared';
+import { createContext, useContext, useState, useCallback, useRef, ReactNode } from 'react';
+import type { SessionId, WorkbenchId } from '@afw/shared';
 import { useSessionContext } from './SessionContext';
+
+interface PerWorkbenchChatState {
+  isOpen: boolean;
+  sessionId: SessionId | null;
+  source: string | null;
+  isMinimized: boolean;
+  unreadCount: number;
+}
 
 interface ChatWindowContextType {
   isOpen: boolean;
@@ -20,6 +28,8 @@ interface ChatWindowContextType {
   restoreChat: () => void;
   incrementUnreadCount: () => void;
   resetUnreadCount: () => void;
+  saveAndSwitch: (fromWorkbench: WorkbenchId, toWorkbench: WorkbenchId) => void;
+  workbenchesWithChat: WorkbenchId[];
 }
 
 const ChatWindowContext = createContext<ChatWindowContextType | undefined>(undefined);
@@ -30,7 +40,7 @@ interface ChatWindowProviderProps {
 
 const CHAT_WIDTH_STORAGE_KEY = 'afw-chat-width';
 const MODEL_STORAGE_KEY = 'afw-selected-model';
-const DEFAULT_CHAT_WIDTH = 40;
+const DEFAULT_CHAT_WIDTH = 30;
 const MIN_CHAT_WIDTH = 25;
 const MAX_CHAT_WIDTH = 60;
 const DEFAULT_MODEL = 'sonnet-4.5';
@@ -70,6 +80,10 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
   const [source, setSource] = useState<string | null>(null);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
+
+  // Per-workbench chat state persistence
+  const workbenchChatMap = useRef<Map<WorkbenchId, PerWorkbenchChatState>>(new Map());
+  const [workbenchesWithChat, setWorkbenchesWithChat] = useState<WorkbenchId[]>([]);
 
   // Get session context for auto-creation
   const { createSession, activeSessionId } = useSessionContext();
@@ -155,6 +169,42 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
     localStorage.setItem(MODEL_STORAGE_KEY, model);
   }, []);
 
+  // Helper to recompute the reactive workbenchesWithChat list from the map
+  const syncWorkbenchesWithChat = useCallback(() => {
+    const ids: WorkbenchId[] = [];
+    workbenchChatMap.current.forEach((state, id) => {
+      if (state.isOpen) ids.push(id);
+    });
+    setWorkbenchesWithChat(ids);
+  }, []);
+
+  const saveAndSwitch = useCallback((fromWorkbench: WorkbenchId, toWorkbench: WorkbenchId) => {
+    // Save current chat state for the workbench we're leaving
+    workbenchChatMap.current.set(fromWorkbench, {
+      isOpen,
+      sessionId,
+      source,
+      isMinimized,
+      unreadCount,
+    });
+
+    // Restore state for the target workbench (or default to closed)
+    const saved = workbenchChatMap.current.get(toWorkbench);
+    if (saved && saved.isOpen) {
+      setIsOpen(saved.isOpen);
+      setSessionIdState(saved.sessionId);
+      setSource(saved.source);
+      setIsMinimized(saved.isMinimized);
+      setUnreadCount(saved.unreadCount);
+    } else {
+      setIsOpen(false);
+      setIsMinimized(false);
+      setUnreadCount(0);
+    }
+
+    syncWorkbenchesWithChat();
+  }, [isOpen, sessionId, source, isMinimized, unreadCount, syncWorkbenchesWithChat]);
+
   const value: ChatWindowContextType = {
     isOpen,
     sessionId,
@@ -173,6 +223,8 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
     restoreChat,
     incrementUnreadCount,
     resetUnreadCount,
+    saveAndSwitch,
+    workbenchesWithChat,
   };
 
   return (

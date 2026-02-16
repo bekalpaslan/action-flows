@@ -460,6 +460,28 @@
   display: none;
 }
 
+/* Chat active indicator dot */
+.app-sidebar__nav-item-icon {
+  position: relative;
+}
+
+.app-sidebar__chat-indicator {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--chat-glow-color, #3b82f6);
+  box-shadow: 0 0 6px 2px var(--chat-glow-color, #3b82f6);
+  animation: chat-indicator-pulse 2s ease-in-out infinite;
+}
+
+@keyframes chat-indicator-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px 2px var(--chat-glow-color, #3b82f6); }
+  50% { opacity: 0.6; box-shadow: 0 0 3px 1px var(--chat-glow-color, #3b82f6); }
+}
+
 /* Tooltip for collapsed mode */
 .app-sidebar__nav-item-tooltip {
   position: absolute;

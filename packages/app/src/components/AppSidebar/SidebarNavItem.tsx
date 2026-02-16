@@ -7,6 +7,7 @@ import React, { useMemo, useContext } from 'react';
 import type { WorkbenchConfig, WorkbenchId } from '@afw/shared';
 import { GlowIndicator, type GlowLevel } from '../common';
 import { NotificationGlowContext, type GlowState } from '../../hooks/useNotificationGlow';
+import { useChatWindowContext } from '../../contexts/ChatWindowContext';
 
 export interface SidebarNavItemProps {
   workbenchId: WorkbenchId;
@@ -32,6 +33,10 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   notificationCount,
   onClick,
 }) => {
+  // Check if this workbench has a saved chat session
+  const { workbenchesWithChat } = useChatWindowContext();
+  const hasSavedChat = !isActive && workbenchesWithChat.includes(workbenchId);
+
   // Get notification glow context
   const notificationGlowContext = useContext(NotificationGlowContext);
 
@@ -93,6 +98,13 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       >
         <span className="app-sidebar__nav-item-icon" aria-hidden="true">
           {config.icon}
+          {hasSavedChat && (
+            <span
+              className="app-sidebar__chat-indicator"
+              style={{ '--chat-glow-color': config.glowColor || '#3b82f6' } as React.CSSProperties}
+              aria-label="Chat active"
+            />
+          )}
         </span>
         {!isCollapsed && (
           <>
