@@ -18,6 +18,15 @@
 
 ---
 
+## Session
+
+- **Environment:** `cli` | `dashboard`
+  - `cli` — No backend/frontend running. Skip health check (step 4). All output is human-readable terminal text. **Trade-off:** No harmony monitoring, gate traces, or health scoring. Drift is undetected until dashboard mode resumes.
+  - `dashboard` — Backend + frontend running. Health check active. Output is both human-readable and machine-parsed. Full observability.
+- **Current:** `cli`
+
+---
+
 ## Notification
 
 - **Status:** Enabled (Slack)

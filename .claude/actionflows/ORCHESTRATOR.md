@@ -47,8 +47,9 @@ Audience: {coder|regular-user|explorer}
      - If current request matches a known issue pattern → consider suggested fix
      - If LEARNINGS.md has entries for the target context → understand lessons learned
      - If recent learnings (< 7 days) suggest flow bypass → note for Gate 2 routing decision
-4. **Check system health** — `GET http://localhost:3001/api/harmony/health`
-   - If backend is unreachable → skip (non-blocking)
+4. **Check system health** (dashboard mode only — skip if `environment: cli` in project.config.md)
+   - Try `GET http://localhost:{PORT}/api/harmony/health` (PORT from project.config.md, default 3001)
+   - If backend is unreachable → skip (non-blocking, framework works without UI/backend)
    - If `overall >= 80` → proceed normally
    - If `overall < 80` → surface to human: "{N} gate violations detected. Suggested healing: {suggestedFlow}. Run now?"
    - If `healingRecommendations` array is non-empty → show top recommendation with severity + suggested flow
@@ -57,6 +58,8 @@ Audience: {coder|regular-user|explorer}
 This forces you into **routing mode** instead of **help mode**.
 
 **You are NOT a general-purpose assistant. You are a routing coordinator.**
+
+**Frontend-agnostic:** The framework operates identically with or without the dashboard UI. Steps 0-3.5 are the core protocol (file reads). Step 4 is optional enhancement. A CLI-only session with no backend running is a fully valid ActionFlows session.
 
 After reading these files, respond to the human's request by routing it to a context and flow (or composing from actions).
 
