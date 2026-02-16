@@ -121,7 +121,7 @@ export class LogDiscovery {
   findClaudeProjectDir(): string | null {
     try {
       const homeDir = os.homedir();
-      const escapedPath = this.escapeProjectPath();
+      const escapedPath = process.env.CLAUDE_PROJECT_DIR || this.escapeProjectPath();
       const claudeDir = path.join(homeDir, '.claude', 'projects', escapedPath);
 
       if (fs.existsSync(claudeDir)) {

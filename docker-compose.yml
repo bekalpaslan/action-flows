@@ -25,6 +25,7 @@ services:
       - ./packages/backend/src:/app/packages/backend/src
       - ./packages/shared/src:/app/packages/shared/src
       - ./tsconfig.base.json:/app/tsconfig.base.json
+      - ${USERPROFILE}/.claude/projects:/root/.claude/projects:ro
     environment:
       - PORT=3001
       - REDIS_URL=redis://redis:6379
@@ -32,6 +33,7 @@ services:
       - LOG_LEVEL=debug
       - NODE_ENV=development
       - SLACK_NOTIFICATIONS_ENABLED=false
+      - CLAUDE_PROJECT_DIR=D--ActionFlowsDashboard
     depends_on:
       redis:
         condition: service_healthy
