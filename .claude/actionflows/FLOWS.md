@@ -103,126 +103,17 @@ Healing flows are **human-initiated** remediation chains triggered when system h
 
 ## Detailed Flow Specifications
 
-### harmony-audit-and-fix/
-
-**Context:** maintenance
-
-**Trigger:**
-- Human says "fix harmony violations"
-- Human says "fix Gate N violations" (where N is gate number)
-- Human clicks "Fix Now" in Harmony Health Dashboard
-
-**Description:**
+### harmony-audit-and-fix/ (maintenance)
 Remediate format drift and contract violations detected at gate checkpoints.
+- Chain: analyze/harmony-violation → code/fix-parser OR code/update-orchestrator OR code/update-contract → review/harmony-fix → commit
+- Example: "Fix Gate 4 violations" → identify missing status column → update parser → review → commit → health score rises
 
-**Chain:**
-1. `analyze/harmony-violation`
-   - Input: Gate ID, violation pattern, last 24h traces
-   - Output: Root cause analysis (parser bug? orchestrator drift? contract outdated?)
-2. `code/fix-parser` OR `code/update-orchestrator-instruction` OR `code/update-contract`
-   - Input: Root cause from step 1
-   - Output: Fix applied (parser updated, instruction clarified, or contract synced)
-3. `review/harmony-fix`
-   - Input: Changes from step 2
-   - Output: Validation that fix resolves violations
-4. `commit/`
-   - Input: All changes
-   - Output: Committed fix with harmony-fix tag
-
-**Example:**
-```
-Human: "Fix Gate 4 violations"
-Orchestrator routes to harmony-audit-and-fix/
-Chain: analyze → identify missing status column → update parser → review → commit
-Result: Gate 4 violations cleared, health score rises
-```
-
-**Notes:**
-- This flow requires human approval at chain presentation
-- Fix may involve backend (parser), orchestrator (instruction), or contract (spec)
-- Always validate fix with review/ before committing
-
----
-
-### contract-drift-fix/
-
-**Context:** settings
-
-**Trigger:**
-- Human says "sync CONTRACT.md with reality"
-- Human says "fix contract drift"
-- Recommendations suggest contract-drift-fix/
-
-**Description:**
+### contract-drift-fix/ (settings)
 Update CONTRACT.md when orchestrator/agent formats evolve beyond documented spec.
+- Chain: analyze/contract-code-drift → code/update-contract → review/contract-update → commit
+- Example: "Sync CONTRACT.md with reality" → find Format 1.1 now includes 'priority' field → update CONTRACT.md → review → commit
 
-**Chain:**
-1. `analyze/contract-code-drift`
-   - Input: Comparison of CONTRACT.md vs actual outputs
-   - Output: List of format mismatches (missing fields, new formats, deprecated sections)
-2. `code/update-contract`
-   - Input: Drift analysis from step 1
-   - Output: Updated CONTRACT.md matching current reality
-3. `review/contract-update`
-   - Input: CONTRACT.md changes
-   - Output: Validation that contract now matches code
-4. `commit/`
-   - Input: Updated CONTRACT.md
-   - Output: Committed with contract-sync tag
-
-**Example:**
-```
-Human: "Sync CONTRACT.md with reality"
-Orchestrator routes to contract-drift-fix/
-Chain: analyze → find Format 1.1 now includes 'priority' field → update CONTRACT.md → review → commit
-Result: CONTRACT.md documentation matches actual orchestrator output
-```
-
-**Notes:**
-- Use this when orchestrator naturally evolves formats
-- CONTRACT.md should document reality, not prescribe it
-- After sync, update parsers to match new contract
-
----
-
-### parser-update/
-
-**Context:** maintenance
-
-**Trigger:**
-- Human says "update parser for Gate N"
-- Recommendations suggest parser-update/
-- Gate 9 repeatedly fails on same agent output pattern
-
-**Description:**
+### parser-update/ (maintenance)
 Update backend parser to handle evolved orchestrator/agent output formats.
-
-**Chain:**
-1. `analyze/parser-gap`
-   - Input: Gate ID, failed parsing examples, expected vs actual format
-   - Output: What parser can't handle (new field? different structure? type change?)
-2. `code/backend/parser`
-   - Input: Parser gap analysis
-   - Output: Updated parseXXX() function in packages/shared/src/contract/parsers/
-3. `test/parser`
-   - Input: Updated parser, sample outputs
-   - Output: Validation that parser now handles new format
-4. `review/`
-   - Input: Parser code changes
-   - Output: Code review approval
-5. `commit/`
-   - Input: Parser changes
-   - Output: Committed with parser-update tag
-
-**Example:**
-```
-Human: "Update parser for Gate 4"
-Orchestrator routes to parser-update/
-Chain: analyze → parser can't handle optional 'status' field → update parseChainCompilation → test → review → commit
-Result: Parser handles new format variant, gate violations cleared
-```
-
-**Notes:**
-- This is the "backend catches up to orchestrator evolution" flow
-- Always add tests for new format variants
-- Graceful degradation: parser should handle both old and new formats
+- Chain: analyze/parser-gap → code/backend/parser → test/parser → review → commit
+- Example: "Update parser for Gate 4" → parser can't handle optional 'status' field → update parseChainCompilation → test → review → commit
