@@ -30,6 +30,8 @@ test/e2e/reports/
 /playwright-report/
 /blob-report/
 /.playwright/
+.playwright-mcp/
+.ai-providers/
 
 # Electron
 out/
