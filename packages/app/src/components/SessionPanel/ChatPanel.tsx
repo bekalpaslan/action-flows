@@ -196,9 +196,22 @@ export function ChatPanel({
     setCliState(state);
   }, []);
 
-  // Reset CLI state when switching sessions so startCliSession fires for the new session
+  // Check CLI state when switching sessions — restore 'running' if backend has an active CLI session
   useEffect(() => {
-    setCliStateSync('not-started');
+    let cancelled = false;
+    claudeCliService.getSessionStatus(sessionId)
+      .then((status) => {
+        if (!cancelled) {
+          setCliStateSync(status.isRunning ? 'running' : 'not-started');
+        }
+      })
+      .catch(() => {
+        // No CLI session exists on backend for this session
+        if (!cancelled) {
+          setCliStateSync('not-started');
+        }
+      });
+    return () => { cancelled = true; };
   }, [sessionId, setCliStateSync]);
 
   /**

@@ -140,9 +140,11 @@ export function selectPromptButtons(context: PromptButtonContext): PromptButton[
     );
   }
 
-  // 6. Default quick prompts (when no specific context matched or as additions)
-  if (buttons.length === 0 && context.cliRunning) {
-    buttons.push(
+  // 6. Default quick prompts (always shown when CLI is running)
+  if (context.cliRunning) {
+    // Avoid duplicating labels already present from other sections
+    const existingLabels = new Set(buttons.map(b => b.label.toLowerCase()));
+    const defaults: PromptButton[] = [
       {
         id: 'continue',
         label: 'Continue',
@@ -160,8 +162,13 @@ export function selectPromptButtons(context: PromptButtonContext): PromptButton[
         label: 'Status',
         category: 'default',
         promptText: 'what is the current status?',
+      },
+    ];
+    for (const btn of defaults) {
+      if (!existingLabels.has(btn.label.toLowerCase())) {
+        buttons.push(btn);
       }
-    );
+    }
   }
 
   return buttons;
