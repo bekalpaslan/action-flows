@@ -33,7 +33,6 @@ import {
   type SessionId,
   type Session,
   type FlowAction,
-  brandedTypes,
   STAR_CONFIGS,
 } from '@afw/shared';
 import './WorkbenchLayout.css';
@@ -275,7 +274,7 @@ const initialDemoMilestones: Milestone[] = [
 export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
   const { targetWorkbenchId, universe } = useUniverseContext();
-  const { getSession } = useSessionContext();
+  const { sessions: contextSessions, activeSessionId: contextActiveSessionId, getSession } = useSessionContext();
   const { sessionId: chatSessionId, closeChat, saveAndSwitch } = useChatWindowContext();
 
   // Enable keyboard shortcuts for chat window
@@ -310,10 +309,16 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
     return stored === 'true';
   });
 
-  // Track attached sessions for the current workbench
-  // TODO: Replace with actual session data from context/API
-  const [attachedSessions, setAttachedSessions] = useState<Session[]>([]);
+  // Sessions come from SessionContext — no local duplication needed
+  const attachedSessions = contextSessions;
   const [activeSessionId, setActiveSessionId] = useState<SessionId | undefined>();
+
+  // Sync activeSessionId from context when it changes
+  useEffect(() => {
+    if (contextActiveSessionId) {
+      setActiveSessionId(contextActiveSessionId as SessionId);
+    }
+  }, [contextActiveSessionId]);
 
   // Workbench transition state
   const [transitionClass, setTransitionClass] = useState<string>('workbench-enter-done');
@@ -410,73 +415,21 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   }, []);
 
   /**
-   * Handle session attachment to the workbench
-   */
-  const handleAttachSession = useCallback(async (sessionId: SessionId) => {
-    // Skip if already attached
-    if (attachedSessions.some(s => s.id === sessionId)) {
-      setActiveSessionId(sessionId);
-      return;
-    }
-
-    try {
-      const res = await fetch(`http://localhost:3001/api/sessions/${sessionId}`);
-      if (!res.ok) throw new Error(`Failed to fetch session: ${res.status}`);
-      const data = await res.json();
-
-      const session: Session = {
-        id: data.id as SessionId,
-        cwd: data.cwd || '/workspace',
-        chains: data.chains || [],
-        status: data.status || 'in_progress',
-        startedAt: data.startedAt,
-        user: data.user,
-        hostname: data.hostname,
-      };
-
-      setAttachedSessions((prev) => {
-        if (prev.some(s => s.id === sessionId)) return prev;
-        return [...prev, session];
-      });
-      setActiveSessionId(sessionId);
-    } catch (err) {
-      console.error('Failed to attach session:', err);
-      // Fallback to minimal session
-      const fallback: Session = {
-        id: sessionId,
-        cwd: '/workspace',
-        chains: [],
-        status: 'in_progress',
-        startedAt: brandedTypes.currentTimestamp(),
-      };
-      setAttachedSessions((prev) => {
-        if (prev.some(s => s.id === sessionId)) return prev;
-        return [...prev, fallback];
-      });
-      setActiveSessionId(sessionId);
-    }
-  }, [attachedSessions]);
-
-  /**
-   * Handle session close
+   * Handle session close — clear active selection
    */
   const handleSessionClose = useCallback((sessionId: string) => {
-    setAttachedSessions((prev) => prev.filter(s => s.id !== sessionId));
     if (activeSessionId === sessionId) {
       setActiveSessionId(undefined);
     }
-    console.log('Session closed:', sessionId);
   }, [activeSessionId]);
 
   /**
-   * Handle session detach
+   * Handle session detach — clear active selection
    */
   const handleSessionDetach = useCallback((sessionId: string) => {
-    setAttachedSessions((prev) => prev.filter(s => s.id !== sessionId));
     if (activeSessionId === sessionId) {
       setActiveSessionId(undefined);
     }
-    console.log('Session detached:', sessionId);
   }, [activeSessionId]);
 
   /**
