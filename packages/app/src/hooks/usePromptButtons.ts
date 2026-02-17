@@ -6,14 +6,14 @@
 
 import { useMemo, useCallback } from 'react';
 import type { Session } from '@afw/shared';
-import type { ChatMessage } from './useChatMessages';
+import type { ChatDisplayMessage } from './useChatMessages';
 import { selectPromptButtons, type PromptButton, type PromptButtonContext } from '../services/promptButtonSelector';
 
 export interface UsePromptButtonsOptions {
   /** Current session data */
   session?: Session;
   /** Chat messages for context detection */
-  messages: ChatMessage[];
+  messages: ChatDisplayMessage[];
   /** Whether the CLI session is currently running */
   cliRunning: boolean;
 }

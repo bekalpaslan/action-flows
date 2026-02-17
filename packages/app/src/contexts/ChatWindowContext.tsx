@@ -85,8 +85,8 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
   const workbenchChatMap = useRef<Map<WorkbenchId, PerWorkbenchChatState>>(new Map());
   const [workbenchesWithChat, setWorkbenchesWithChat] = useState<WorkbenchId[]>([]);
 
-  // Get session context for auto-creation
-  const { createSession, activeSessionId } = useSessionContext();
+  // Get session context to inherit activeSessionId when chat opens
+  const { activeSessionId } = useSessionContext();
 
   const openChat = useCallback(
     async (newSource: string, context?: Record<string, unknown>) => {
@@ -96,20 +96,12 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
       // Explicit context sessionId takes precedence
       if (context?.sessionId) {
         setSessionIdState(context.sessionId as SessionId);
-      } else if (!sessionId && !activeSessionId) {
-        // Auto-create session if none active and none in chat state
-        try {
-          const newId = await createSession(undefined, `Chat: ${newSource}`);
-          setSessionIdState(newId);
-        } catch (error) {
-          console.error('[ChatWindowContext] Failed to auto-create session:', error);
-          // Continue with no session set - user can select one manually
-        }
       } else if (!sessionId && activeSessionId) {
         setSessionIdState(activeSessionId);
       }
+      // No active session — chat opens with null sessionId; SlidingChatWindow session selector handles user selection
     },
-    [sessionId, activeSessionId, createSession]
+    [sessionId, activeSessionId]
   );
 
   const closeChat = useCallback(() => {

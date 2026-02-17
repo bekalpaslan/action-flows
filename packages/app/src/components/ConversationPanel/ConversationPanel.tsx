@@ -80,6 +80,7 @@ interface Message {
   hasInlineButtons?: boolean;
 }
 
+/** @deprecated Use ChatPanel + useChatMessages instead. Retained for contract compatibility. */
 export function ConversationPanel({ session, onSubmitInput }: ConversationPanelProps) {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);

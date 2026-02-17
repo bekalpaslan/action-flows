@@ -709,6 +709,38 @@
 }
 
 /* ============================================================================
+ * Quick Responses
+ * ============================================================================ */
+
+.chat-panel__quick-responses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--border-secondary, #333);
+}
+
+.chat-panel__quick-response-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-primary, #555);
+  background: var(--bg-secondary, #2a2a2a);
+  color: var(--text-primary, #e0e0e0);
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.15s;
+}
+
+.chat-panel__quick-response-btn:hover:not(:disabled) {
+  background: var(--bg-tertiary, #3a3a3a);
+}
+
+.chat-panel__quick-response-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
  * Input Area — NEW TWO-ROW DESIGN
  * ============================================================================ */
 

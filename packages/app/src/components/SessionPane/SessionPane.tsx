@@ -4,7 +4,7 @@ import { ChainDAG } from '../ChainDAG';
 import { TimelineView } from '../TimelineView';
 import { ControlButtons } from '../ControlButtons/ControlButtons';
 import { StepInspector } from '../StepInspector/StepInspector';
-import { ConversationPanel } from '../ConversationPanel';
+import { ChatPanel } from '../SessionPanel/ChatPanel';
 import { ErrorModal } from '../ErrorModal';
 import { useSessionInput } from '../../hooks/useSessionInput';
 import { useErrorAnnouncements } from '../../hooks/useErrorAnnouncements';
@@ -268,10 +268,12 @@ export function SessionPane({ session, onDetach, onClose, position }: SessionPan
         </div>
 
         <div className="conversation-section">
-          <ConversationPanel
+          <ChatPanel
+            sessionId={session.id as SessionId}
             session={session}
-            onSubmitInput={async (input) => {
-              await submitInput(session.id, input, session.lastPrompt?.text);
+            cwd={session.cwd}
+            onSendMessage={async (input) => {
+              await submitInput(session.id as SessionId, input);
             }}
           />
         </div>

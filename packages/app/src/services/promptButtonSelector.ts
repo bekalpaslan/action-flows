@@ -11,7 +11,7 @@
  */
 
 import type { ButtonAction } from '@afw/shared';
-import type { ChatMessage } from '../hooks/useChatMessages';
+import type { ChatDisplayMessage } from '../hooks/useChatMessages';
 
 /**
  * PromptButton - simplified button for the chat prompt area
@@ -33,7 +33,7 @@ export interface PromptButtonContext {
   /** Current conversation state */
   conversationState?: 'idle' | 'awaiting_input' | 'receiving_input' | 'active';
   /** Last message in the chat */
-  lastMessage?: ChatMessage;
+  lastMessage?: ChatDisplayMessage;
   /** Whether CLI session is running */
   cliRunning: boolean;
   /** Whether a chain is currently paused */
@@ -48,17 +48,8 @@ export interface PromptButtonContext {
 export function selectPromptButtons(context: PromptButtonContext): PromptButton[] {
   const buttons: PromptButton[] = [];
 
-  // 1. Quick responses from session (binary prompts)
-  if (context.conversationState === 'awaiting_input' && context.quickResponses && context.quickResponses.length > 0) {
-    context.quickResponses.forEach((response, idx) => {
-      buttons.push({
-        id: `quick-response-${idx}`,
-        label: response,
-        category: 'approval',
-        promptText: response,
-      });
-    });
-  }
+  // 1. Quick responses from session — now rendered by ChatPanel's dedicated quick-responses block.
+  // (Removed from prompt button selector to avoid duplicate UI)
 
   // 2. Approval buttons (when awaiting input and no specific quick responses)
   if (context.conversationState === 'awaiting_input' && (!context.quickResponses || context.quickResponses.length === 0)) {

@@ -10,9 +10,10 @@ import type { SessionId, ClaudeCliOutputEvent, WorkspaceEvent } from '@afw/share
 import { useWebSocketContext } from '../contexts/WebSocketContext';
 
 /**
- * Local ChatMessage type (mirrors shared ChatMessage but with display-friendly metadata)
+ * Display-only ViewModel — distinct from @afw/shared ChatMessage.
+ * Enriches backend message fields with display-friendly metadata (cost, duration strings).
  */
-export interface ChatMessage {
+export interface ChatDisplayMessage {
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
@@ -40,7 +41,7 @@ function generateMessageId(): string {
  * useChatMessages - Hook to manage chat message state from WebSocket events
  */
 export function useChatMessages(sessionId: SessionId) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatDisplayMessage[]>([]);
   const [isLoading] = useState(false);
   const [error] = useState<Error | null>(null);
   const { onEvent, subscribe, unsubscribe } = useWebSocketContext();
@@ -88,15 +89,12 @@ export function useChatMessages(sessionId: SessionId) {
         };
         const msg = chatEvent.message;
         if (msg && msg.id) {
-          // Skip user messages from backend — we add those locally for instant feedback
-          if (msg.role === 'user') return;
-
-          const chatMsg: ChatMessage = {
+          const chatMsg: ChatDisplayMessage = {
             id: msg.id,
-            role: (msg.role as ChatMessage['role']) || 'assistant',
+            role: (msg.role as ChatDisplayMessage['role']) || 'assistant',
             content: msg.content || '',
             timestamp: msg.timestamp || new Date().toISOString(),
-            messageType: (msg.messageType as ChatMessage['messageType']) || 'text',
+            messageType: (msg.messageType as ChatDisplayMessage['messageType']) || 'text',
             metadata: msg.metadata
               ? {
                   model: msg.metadata.model as string | undefined,
@@ -142,12 +140,12 @@ export function useChatMessages(sessionId: SessionId) {
           }>;
         };
         if (historyEvent.messages && Array.isArray(historyEvent.messages)) {
-          const chatMsgs: ChatMessage[] = historyEvent.messages.map(msg => ({
+          const chatMsgs: ChatDisplayMessage[] = historyEvent.messages.map(msg => ({
             id: msg.id,
-            role: (msg.role as ChatMessage['role']) || 'assistant',
+            role: (msg.role as ChatDisplayMessage['role']) || 'assistant',
             content: msg.content || '',
             timestamp: msg.timestamp || new Date().toISOString(),
-            messageType: (msg.messageType as ChatMessage['messageType']) || 'text',
+            messageType: (msg.messageType as ChatDisplayMessage['messageType']) || 'text',
             metadata: msg.metadata
               ? {
                   model: msg.metadata.model as string | undefined,
@@ -176,7 +174,7 @@ export function useChatMessages(sessionId: SessionId) {
       if (event.type === 'claude-cli:output') {
         const outputEvent = event as ClaudeCliOutputEvent;
         if (outputEvent.stream === 'stderr') {
-          const errMsg: ChatMessage = {
+          const errMsg: ChatDisplayMessage = {
             id: generateMessageId(),
             role: 'system',
             content: outputEvent.output,
@@ -189,7 +187,7 @@ export function useChatMessages(sessionId: SessionId) {
 
       // Handle CLI exit events
       if (event.type === 'claude-cli:exited') {
-        const exitMsg: ChatMessage = {
+        const exitMsg: ChatDisplayMessage = {
           id: generateMessageId(),
           role: 'system',
           content: 'Claude CLI session ended',
@@ -207,7 +205,7 @@ export function useChatMessages(sessionId: SessionId) {
    * Add a user message to the chat
    */
   const addUserMessage = useCallback((content: string) => {
-    const msg: ChatMessage = {
+    const msg: ChatDisplayMessage = {
       id: generateMessageId(),
       role: 'user',
       content,

@@ -20,7 +20,7 @@ import type { SessionId, Session, WorkspaceEvent, ReminderDefinition, ReminderVa
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import { useDiscussContext } from '../../contexts/DiscussContext';
 import { useChatWindowContext, AVAILABLE_MODELS } from '../../contexts/ChatWindowContext';
-import { useChatMessages, type ChatMessage } from '../../hooks/useChatMessages';
+import { useChatMessages, type ChatDisplayMessage } from '../../hooks/useChatMessages';
 import { usePromptButtons } from '../../hooks/usePromptButtons';
 import { claudeCliService } from '../../services/claudeCliService';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
@@ -394,9 +394,6 @@ export function ChatPanel({
         }
       }
 
-      // Add user message to chat
-      addUserMessage(trimmed);
-
       // Check if message is an approval
       const lowerTrimmed = trimmed.toLowerCase();
       if (lowerTrimmed === 'yes' || lowerTrimmed === 'execute' || lowerTrimmed === 'approve') {
@@ -622,7 +619,7 @@ export function ChatPanel({
   /**
    * Render a single message bubble
    */
-  const renderMessage = (msg: ChatMessage, idx: number) => {
+  const renderMessage = (msg: ChatDisplayMessage, idx: number) => {
     const isUser = msg.role === 'user';
     const isSystem = msg.role === 'system';
     const isError = msg.messageType === 'error';
@@ -867,6 +864,24 @@ export function ChatPanel({
                   data-testid={`prompt-button-${idx}`}
                 >
                   {button.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Quick Responses — shown when session is awaiting input */}
+          {session?.conversationState === 'awaiting_input' &&
+           session?.lastPrompt?.quickResponses &&
+           session.lastPrompt.quickResponses.length > 0 && (
+            <div className="chat-panel__quick-responses">
+              {session.lastPrompt.quickResponses.map((response: string, idx: number) => (
+                <button
+                  key={idx}
+                  className="chat-panel__quick-response-btn"
+                  onClick={() => handleSendMessage(response)}
+                  disabled={isSending}
+                >
+                  {response}
                 </button>
               ))}
             </div>
