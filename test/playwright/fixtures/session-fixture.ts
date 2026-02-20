@@ -22,13 +22,7 @@ type SessionFixture = {
 
 export const test = base.extend<SessionFixture>({
   sessionId: async ({ page }, use) => {
-    // Navigate to app first so SessionContext is mounted
-    await page.goto('/');
-    await expect(page.locator(SELECTORS.workbenchLayout)).toBeVisible({
-      timeout: TIMEOUTS.navigation,
-    });
-
-    // Create session via API — SessionContext will pick it up on next fetch/WS event
+    // Create session via API before navigating — SessionContext fetches on mount
     const response = await page.request.post(API.sessions, {
       data: {
         cwd: process.cwd(),
@@ -47,8 +41,8 @@ export const test = base.extend<SessionFixture>({
       throw new Error(`Session creation returned no ID: ${JSON.stringify(body)}`);
     }
 
-    // Reload page so SessionContext fetches the new session list
-    await page.reload();
+    // Navigate to app — SessionContext will fetch sessions including the one we just created
+    await page.goto('/');
     await expect(page.locator(SELECTORS.workbenchLayout)).toBeVisible({
       timeout: TIMEOUTS.navigation,
     });
@@ -56,7 +50,14 @@ export const test = base.extend<SessionFixture>({
     // Provide session ID to the test
     await use(id);
 
-    // Teardown: Delete session (best effort, ignore failures)
+    // Teardown: Stop CLI session first, then delete API session (best effort)
+    try {
+      await page.request.post(`http://localhost:3001/api/claude-cli/${id}/stop`, {
+        data: {},
+      });
+    } catch {
+      // Ignore CLI stop errors
+    }
     try {
       await page.request.delete(`http://localhost:3001/api/sessions/${id}`);
     } catch {

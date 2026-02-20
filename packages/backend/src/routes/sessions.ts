@@ -7,6 +7,7 @@ import { startWatching, stopWatching } from '../services/fileWatcher.js';
 import { clientRegistry } from '../ws/clientRegistry.js';
 import { broadcastEvent } from '../ws/handler.js';
 import { activityTracker } from '../services/activityTracker.js';
+import { claudeCliManager } from '../services/claudeCliManager.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
@@ -504,6 +505,13 @@ router.delete('/:id', writeLimiter, async (req, res) => {
     } catch (error) {
       console.error(`[API] Error stopping file watching for session ${id}:`, error);
       // Don't fail deletion if file watching stop fails
+    }
+
+    // Stop Claude CLI session if active
+    try {
+      claudeCliManager.stopSession(id as SessionId);
+    } catch (error) {
+      // Don't fail deletion if CLI stop fails
     }
 
     // Clean up activity tracking for this session

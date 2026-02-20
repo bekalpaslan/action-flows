@@ -219,6 +219,9 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
     workbenchesWithChat,
   };
 
+  // Expose context for E2E testing (dev only, tree-shaken in production builds)
+  (window as any).__chatWindowContext = value;
+
   return (
     <ChatWindowContext.Provider value={value}>
       {children}

@@ -81,7 +81,7 @@ export const TIMEOUTS = {
   element: 5000,
   network: 3000,
   message: 5000,
-  userMessage: 10000,      // User message appearance: 10s
-  assistantResponse: 30000, // Assistant response: 30s (LLM inference)
-  testTotal: 60000,        // Total test timeout: 60s
+  userMessage: 10000,       // User message appearance: 10s
+  assistantResponse: 60000, // Assistant response: 60s (LLM inference + CLI startup)
+  testTotal: 90000,         // Total test timeout: 90s
 } as const;
