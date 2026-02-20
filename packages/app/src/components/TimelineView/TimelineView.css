@@ -159,7 +159,7 @@
 .timeline-step.completed {
   background: var(--system-green);
   color: var(--text-primary);
-  border: 1px solid rgba(50, 215, 75, 0.6);
+  border: 1px solid rgba(63, 185, 80, 0.6);
 }
 
 .timeline-step.failed {
@@ -240,7 +240,7 @@
 
 .legend-indicator.completed {
   background: var(--system-green);
-  border-color: rgba(50, 215, 75, 0.6);
+  border-color: rgba(63, 185, 80, 0.6);
 }
 
 .legend-indicator.failed {

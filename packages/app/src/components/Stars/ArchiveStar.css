@@ -776,7 +776,7 @@
 }
 
 [data-theme="dark"] .status-badge.status-completed {
-  background-color: rgba(50, 215, 75, 0.15);
+  background-color: rgba(63, 185, 80, 0.15);
   color: var(--system-green);
 }
 

@@ -1,43 +1,61 @@
 /* ============================================================================
-   ActionFlows Dashboard — Apple-Style Design Token System
+   ActionFlows Dashboard — GitHub-Dark Design Token System
 
-   A comprehensive design token system inspired by Apple's dark mode material
-   design language, featuring deep layered blacks, subtle transparency, thin
-   borders with gentle glows, and a frosted glass aesthetic.
+   A comprehensive design token system inspired by GitHub's dark mode,
+   featuring deep layered blues, subtle transparency, thin borders with
+   gentle glows, and a modern code-focused aesthetic.
    ============================================================================ */
 
 :root {
   /* ==========================================================================
-     Color Palette — Apple Dark Mode Foundation
+     Color Palette — GitHub Dark Mode Foundation
      ========================================================================== */
 
   /* Base Application Colors */
-  --app-bg-base: #000000;              /* True black foundation */
-  --app-bg-primary: #1c1c1e;           /* Primary app background */
-  --app-bg-secondary: #2c2c2e;         /* Secondary surfaces */
-  --app-bg-tertiary: #3a3a3c;          /* Elevated surfaces */
+  --app-bg-base: #080c14;              /* Deep blue-black foundation */
+  --app-bg-primary: #0f1520;           /* Primary app background */
+  --app-bg-secondary: #151d2b;         /* Secondary surfaces */
+  --app-bg-tertiary: #1a2436;          /* Elevated surfaces */
   --app-bg-quaternary: #48484a;        /* Highest elevation */
 
   /* Text Colors */
-  --text-primary: #ffffff;             /* Primary text */
-  --text-secondary: #98989d;           /* Secondary text */
-  --text-tertiary: #636366;            /* Tertiary/muted text */
+  --text-primary: #e6edf3;             /* Bright primary text */
+  --text-secondary: #c9d1d9;           /* Standard text */
+  --text-tertiary: #6e7a8a;            /* Muted/dim text */
   --text-quaternary: #48484a;          /* Disabled/placeholder text */
 
   /* Separator & Border Base */
-  --separator-base: rgba(100, 160, 255, 0.18);
-  --separator-opaque: rgba(80, 120, 200, 0.35);
+  --separator-base: rgba(88, 166, 255, 0.08);
+  --separator-opaque: rgba(88, 166, 255, 0.15);
 
-  /* System Colors — Apple Palette */
-  --system-blue: #0a84ff;
-  --system-purple: #bf5af2;
+  /* System Colors — GitHub Dark Palette */
+  --system-blue: #58a6ff;
+  --system-purple: #a371f7;
   --system-pink: #ff375f;
   --system-red: #ff453a;
-  --system-orange: #ff9f0a;
+  --system-orange: #f0883e;
   --system-yellow: #ffd60a;
-  --system-green: #32d74b;
-  --system-teal: #64d2ff;
+  --system-green: #3fb950;
+  --system-teal: #39d2c0;
   --system-indigo: #5e5ce6;
+
+  /* Mock Compatibility Aliases — Direct mapping to layout-demo.html */
+  --bg: #080c14;
+  --surface: #0f1520;
+  --surface2: #151d2b;
+  --surface3: #1a2436;
+  --border: rgba(88, 166, 255, 0.08);
+  --border-glow: rgba(88, 166, 255, 0.15);
+  --text: #c9d1d9;
+  --text-dim: #6e7a8a;
+  --text-bright: #e6edf3;
+  --accent: #58a6ff;
+  --accent-glow: rgba(88, 166, 255, 0.25);
+  --accent2: #3fb950;
+  --purple: #a371f7;
+  --orange: #f0883e;
+  --cyan: #39d2c0;
+  --star-active: #f0883e;
 
   /* Fill Colors — Apple's translucent fills */
   --fill-primary: rgba(120, 120, 128, 0.36);
@@ -212,22 +230,22 @@
      ========================================================================== */
 
   /* Panel Backgrounds — Layered with subtle transparency */
-  --panel-bg-base: rgba(28, 28, 30, 0.95);         /* Standard panel */
-  --panel-bg-elevated: rgba(44, 44, 46, 0.92);     /* Elevated panel */
-  --panel-bg-raised: rgba(58, 58, 60, 0.90);       /* Highest panels */
-  --panel-bg-inset: rgba(0, 0, 0, 0.85);           /* Inset/recessed areas */
+  --panel-bg-base: rgba(15, 21, 32, 0.95);         /* Standard panel */
+  --panel-bg-elevated: rgba(21, 29, 43, 0.92);     /* Elevated panel */
+  --panel-bg-raised: rgba(26, 36, 54, 0.90);       /* Highest panels */
+  --panel-bg-inset: rgba(8, 12, 20, 0.85);         /* Inset/recessed areas */
 
-  /* Panel Borders — Bright visible borders */
-  --panel-border-default: 1px solid rgba(100, 160, 255, 0.30);
-  --panel-border-subtle: 1px solid rgba(100, 160, 255, 0.18);
-  --panel-border-strong: 1px solid rgba(100, 160, 255, 0.45);
-  --panel-border-accent: 1px solid rgba(10, 132, 255, 0.55);
+  /* Panel Borders — GitHub-style subtle borders */
+  --panel-border-default: 1px solid rgba(88, 166, 255, 0.08);
+  --panel-border-subtle: 1px solid rgba(88, 166, 255, 0.05);
+  --panel-border-strong: 1px solid rgba(88, 166, 255, 0.15);
+  --panel-border-accent: 1px solid rgba(88, 166, 255, 0.25);
 
   /* Panel Border Colors (for use in custom borders) */
-  --panel-border-color-default: rgba(100, 160, 255, 0.30);
-  --panel-border-color-subtle: rgba(100, 160, 255, 0.18);
-  --panel-border-color-strong: rgba(100, 160, 255, 0.45);
-  --panel-border-color-accent: rgba(10, 132, 255, 0.55);
+  --panel-border-color-default: rgba(88, 166, 255, 0.08);
+  --panel-border-color-subtle: rgba(88, 166, 255, 0.05);
+  --panel-border-color-strong: rgba(88, 166, 255, 0.15);
+  --panel-border-color-accent: rgba(88, 166, 255, 0.25);
 
   /* Panel Radius Scale */
   --panel-radius-sm: 6px;      /* Small panels/cards */
@@ -235,15 +253,15 @@
   --panel-radius-lg: 14px;     /* Large panels/modals */
   --panel-radius-xl: 18px;     /* Extra large containers */
 
-  /* Panel Glow — Bright blue illumination */
-  --panel-glow-default: 0 0 8px rgba(80, 140, 255, 0.20), 0 0 2px rgba(100, 160, 255, 0.30);
-  --panel-glow-accent: 0 0 12px rgba(10, 132, 255, 0.35), 0 0 3px rgba(10, 132, 255, 0.45);
-  --panel-glow-hover: 0 0 14px rgba(80, 140, 255, 0.30), 0 0 3px rgba(100, 160, 255, 0.40);
-  --panel-glow-focus: 0 0 18px rgba(10, 132, 255, 0.40), 0 0 4px rgba(10, 132, 255, 0.55);
+  /* Panel Glow — Subtle GitHub-style glow */
+  --panel-glow-default: 0 0 8px rgba(88, 166, 255, 0.10), 0 0 2px rgba(88, 166, 255, 0.15);
+  --panel-glow-accent: 0 0 12px rgba(88, 166, 255, 0.20), 0 0 3px rgba(88, 166, 255, 0.25);
+  --panel-glow-hover: 0 0 14px rgba(88, 166, 255, 0.15), 0 0 3px rgba(88, 166, 255, 0.20);
+  --panel-glow-focus: 0 0 18px rgba(88, 166, 255, 0.25), 0 0 4px rgba(88, 166, 255, 0.30);
 
   /* Panel Header — Distinct header area */
   --panel-header-bg: rgba(255, 255, 255, 0.05);
-  --panel-header-border: 1px solid rgba(100, 160, 255, 0.20);
+  --panel-header-border: 1px solid rgba(88, 166, 255, 0.08);
   --panel-header-text-color: var(--text-primary);
   --panel-header-secondary-color: var(--text-secondary);
 
@@ -252,31 +270,31 @@
      ========================================================================== */
 
   /* Button Backgrounds */
-  --btn-bg-primary: rgba(10, 132, 255, 0.95);      /* Primary action */
+  --btn-bg-primary: rgba(88, 166, 255, 0.95);      /* Primary action */
   --btn-bg-secondary: rgba(120, 120, 128, 0.36);   /* Secondary action */
   --btn-bg-tertiary: rgba(255, 255, 255, 0.08);    /* Tertiary/ghost */
   --btn-bg-danger: rgba(255, 69, 58, 0.95);        /* Destructive action */
 
   /* Button Hover States */
-  --btn-hover-primary: rgba(10, 132, 255, 1);
+  --btn-hover-primary: rgba(88, 166, 255, 1);
   --btn-hover-secondary: rgba(120, 120, 128, 0.42);
   --btn-hover-tertiary: rgba(255, 255, 255, 0.12);
   --btn-hover-danger: rgba(255, 69, 58, 1);
 
   /* Button Active/Pressed States */
-  --btn-active-primary: rgba(8, 106, 204, 0.95);
+  --btn-active-primary: rgba(70, 133, 204, 0.95);
   --btn-active-secondary: rgba(120, 120, 128, 0.48);
   --btn-active-tertiary: rgba(255, 255, 255, 0.16);
   --btn-active-danger: rgba(204, 55, 46, 0.95);
 
   /* Button Borders */
-  --btn-border-default: 1px solid rgba(100, 160, 255, 0.25);
-  --btn-border-focus: 1px solid rgba(10, 132, 255, 0.6);
+  --btn-border-default: 1px solid rgba(88, 166, 255, 0.08);
+  --btn-border-focus: 1px solid rgba(88, 166, 255, 0.6);
   --btn-border-none: none;
 
   /* Button Border Colors */
-  --btn-border-color-default: rgba(100, 160, 255, 0.25);
-  --btn-border-color-focus: rgba(10, 132, 255, 0.6);
+  --btn-border-color-default: rgba(88, 166, 255, 0.08);
+  --btn-border-color-focus: rgba(88, 166, 255, 0.6);
 
   /* Button Radius */
   --btn-radius-sm: 6px;        /* Small buttons */
@@ -285,9 +303,9 @@
   --btn-radius-pill: 999px;    /* Pill-shaped buttons */
 
   /* Button Glow */
-  --btn-glow-default: 0 0 6px rgba(80, 140, 255, 0.18), 0 0 2px rgba(100, 160, 255, 0.25);
-  --btn-glow-hover: 0 0 12px rgba(10, 132, 255, 0.35), 0 0 3px rgba(10, 132, 255, 0.45);
-  --btn-glow-focus: 0 0 16px rgba(10, 132, 255, 0.45), 0 0 4px rgba(10, 132, 255, 0.55);
+  --btn-glow-default: 0 0 6px rgba(88, 166, 255, 0.18), 0 0 2px rgba(88, 166, 255, 0.25);
+  --btn-glow-hover: 0 0 12px rgba(88, 166, 255, 0.35), 0 0 3px rgba(88, 166, 255, 0.45);
+  --btn-glow-focus: 0 0 16px rgba(88, 166, 255, 0.45), 0 0 4px rgba(88, 166, 255, 0.55);
 
   /* Button Text Colors */
   --btn-text-primary: #ffffff;
@@ -306,15 +324,15 @@
   --input-bg-disabled: rgba(118, 118, 128, 0.12);
 
   /* Input Borders */
-  --input-border-default: 1px solid rgba(100, 160, 255, 0.25);
-  --input-border-hover: 1px solid rgba(100, 160, 255, 0.35);
-  --input-border-focus: 1px solid rgba(10, 132, 255, 0.6);
+  --input-border-default: 1px solid rgba(88, 166, 255, 0.08);
+  --input-border-hover: 1px solid rgba(88, 166, 255, 0.15);
+  --input-border-focus: 1px solid rgba(88, 166, 255, 0.6);
   --input-border-error: 1px solid rgba(255, 69, 58, 0.5);
 
   /* Input Border Colors */
-  --input-border-color-default: rgba(100, 160, 255, 0.25);
-  --input-border-color-hover: rgba(100, 160, 255, 0.35);
-  --input-border-color-focus: rgba(10, 132, 255, 0.6);
+  --input-border-color-default: rgba(88, 166, 255, 0.08);
+  --input-border-color-hover: rgba(88, 166, 255, 0.15);
+  --input-border-color-focus: rgba(88, 166, 255, 0.6);
   --input-border-color-error: rgba(255, 69, 58, 0.5);
 
   /* Input Radius */
@@ -323,8 +341,8 @@
   --input-radius-lg: 10px;     /* Large inputs */
 
   /* Input Glow */
-  --input-glow-default: 0 0 6px rgba(80, 140, 255, 0.15), 0 0 2px rgba(100, 160, 255, 0.25);
-  --input-glow-focus: 0 0 14px rgba(10, 132, 255, 0.40), 0 0 3px rgba(10, 132, 255, 0.50);
+  --input-glow-default: 0 0 6px rgba(88, 166, 255, 0.15), 0 0 2px rgba(88, 166, 255, 0.25);
+  --input-glow-focus: 0 0 14px rgba(88, 166, 255, 0.40), 0 0 3px rgba(88, 166, 255, 0.50);
   --input-glow-error: 0 0 10px rgba(255, 69, 58, 0.35), 0 0 3px rgba(255, 69, 58, 0.45);
 
   /* Input Text */
@@ -336,13 +354,13 @@
      ========================================================================== */
 
   /* Header Backgrounds */
-  --header-bg-default: rgba(28, 28, 30, 0.95);
-  --header-bg-translucent: rgba(28, 28, 30, 0.85);
-  --header-bg-glass: rgba(28, 28, 30, 0.75);
+  --header-bg-default: rgba(15, 21, 32, 0.95);
+  --header-bg-translucent: rgba(15, 21, 32, 0.85);
+  --header-bg-glass: rgba(15, 21, 32, 0.75);
 
   /* Header Borders */
-  --header-border-bottom: 1px solid rgba(100, 160, 255, 0.22);
-  --header-border-color: rgba(100, 160, 255, 0.22);
+  --header-border-bottom: 1px solid rgba(88, 166, 255, 0.08);
+  --header-border-color: rgba(88, 166, 255, 0.08);
 
   /* Header Text */
   --header-text-primary: var(--text-primary);
@@ -351,7 +369,7 @@
   /* Navigation Colors */
   --nav-item-bg-default: transparent;
   --nav-item-bg-hover: rgba(255, 255, 255, 0.08);
-  --nav-item-bg-active: rgba(10, 132, 255, 0.15);
+  --nav-item-bg-active: rgba(88, 166, 255, 0.15);
   --nav-item-text-default: var(--text-secondary);
   --nav-item-text-hover: var(--text-primary);
   --nav-item-text-active: var(--system-blue);
@@ -416,10 +434,10 @@
   --toolbar-h: 48px;          /* Star toolbar height */
   --bottom-h: 64px;           /* Command center height */
   --chat-w: 360px;            /* Chat window width */
-  --panel-radius: 10px;       /* Standard panel border radius */
+  --panel-radius: 10px;       /* Standard panel border radius (matches mock) */
 
   /* AppSidebar colors */
-  --app-sidebar-accent-purple: #CB3CFF;
+  --app-sidebar-accent-active: #f0883e;
 
   /* ==========================================================================
      Glass Effect Token System
@@ -437,14 +455,14 @@
   --glass-blur-xl: blur(40px);
 
   /* Glass Borders */
-  --glass-border-default: 1px solid rgba(100, 160, 255, 0.25);
-  --glass-border-subtle: 1px solid rgba(100, 160, 255, 0.15);
-  --glass-border-strong: 1px solid rgba(100, 160, 255, 0.40);
+  --glass-border-default: 1px solid rgba(88, 166, 255, 0.08);
+  --glass-border-subtle: 1px solid rgba(88, 166, 255, 0.05);
+  --glass-border-strong: 1px solid rgba(88, 166, 255, 0.15);
 
   /* Glass Border Colors */
-  --glass-border-color-default: rgba(100, 160, 255, 0.25);
-  --glass-border-color-subtle: rgba(100, 160, 255, 0.15);
-  --glass-border-color-strong: rgba(100, 160, 255, 0.40);
+  --glass-border-color-default: rgba(88, 166, 255, 0.08);
+  --glass-border-color-subtle: rgba(88, 166, 255, 0.05);
+  --glass-border-color-strong: rgba(88, 166, 255, 0.15);
 
   /* ==========================================================================
      Glow & Illumination Token System
@@ -452,11 +470,11 @@
 
   /* Glow Colors */
   --glow-color-default: rgba(255, 255, 255, 0.15);
-  --glow-color-accent: rgba(10, 132, 255, 0.25);
-  --glow-color-success: rgba(50, 215, 75, 0.25);
-  --glow-color-warning: rgba(255, 159, 10, 0.25);
+  --glow-color-accent: rgba(88, 166, 255, 0.25);
+  --glow-color-success: rgba(63, 185, 80, 0.25);
+  --glow-color-warning: rgba(240, 136, 62, 0.25);
   --glow-color-error: rgba(255, 69, 58, 0.25);
-  --glow-color-purple: rgba(191, 90, 242, 0.25);
+  --glow-color-purple: rgba(163, 113, 247, 0.25);
 
   /* Glow Spread Values */
   --glow-spread-sm: 0 0 2px;
@@ -659,14 +677,14 @@
      ========================================================================== */
 
   /* Success States */
-  --status-success-bg: rgba(50, 215, 75, 0.15);
-  --status-success-border: rgba(50, 215, 75, 0.3);
-  --status-success-text: #32d74b;
+  --status-success-bg: rgba(63, 185, 80, 0.15);
+  --status-success-border: rgba(63, 185, 80, 0.3);
+  --status-success-text: #3fb950;
 
   /* Warning States */
-  --status-warning-bg: rgba(255, 159, 10, 0.15);
-  --status-warning-border: rgba(255, 159, 10, 0.3);
-  --status-warning-text: #ff9f0a;
+  --status-warning-bg: rgba(240, 136, 62, 0.15);
+  --status-warning-border: rgba(240, 136, 62, 0.3);
+  --status-warning-text: #f0883e;
 
   /* Error States */
   --status-error-bg: rgba(255, 69, 58, 0.15);
@@ -674,16 +692,16 @@
   --status-error-text: #ff453a;
 
   /* Info States */
-  --status-info-bg: rgba(10, 132, 255, 0.15);
-  --status-info-border: rgba(10, 132, 255, 0.3);
-  --status-info-text: #0a84ff;
+  --status-info-bg: rgba(88, 166, 255, 0.15);
+  --status-info-border: rgba(88, 166, 255, 0.3);
+  --status-info-text: #58a6ff;
 
   /* ==========================================================================
      Semantic Color Tokens for Components
      ========================================================================== */
 
   /* Success/Added color palette */
-  --semantic-success: #32d74b;
+  --semantic-success: #3fb950;
   --semantic-success-bg-light: #e8f5e9;
   --semantic-success-bg-light-opacity: rgba(34, 197, 94, 0.15);
   --semantic-success-border-light: #a5d6a7;
@@ -781,8 +799,8 @@
      Component Hover State Colors — for button hover backgrounds
      ========================================================================== */
 
-  --btn-hover-warning-light: rgba(255, 159, 10, 0.1);
-  --btn-hover-success-light: rgba(50, 215, 75, 0.1);
+  --btn-hover-warning-light: rgba(240, 136, 62, 0.1);
+  --btn-hover-success-light: rgba(63, 185, 80, 0.1);
   --btn-hover-error-light: rgba(255, 69, 58, 0.1);
 
   /* ==========================================================================
@@ -816,10 +834,10 @@
      ========================================================================== */
 
   /* Focus ring styling for keyboard navigation */
-  --focus-ring-color: var(--system-blue, #0a84ff);
+  --focus-ring-color: var(--system-blue, #58a6ff);
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
-  --focus-ring-glow: 0 0 8px rgba(10, 132, 255, 0.4);
+  --focus-ring-glow: 0 0 8px rgba(88, 166, 255, 0.4);
 
   /* ==========================================================================
      SnowUI Design Tokens — Light Mode

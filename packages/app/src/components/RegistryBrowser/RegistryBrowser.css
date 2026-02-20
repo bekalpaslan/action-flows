@@ -304,7 +304,7 @@
 }
 
 .entry-type.type-modifier {
-  background: rgba(255, 159, 10, 0.15);
+  background: rgba(240, 136, 62, 0.15);
   color: rgba(217, 119, 6, 1);
 }
 
@@ -541,7 +541,7 @@
 .toggle-switch input:checked + .toggle-slider {
   background: var(--success-color);
   border-color: var(--success-color);
-  box-shadow: 0 0 8px rgba(50, 215, 75, 0.25);
+  box-shadow: 0 0 8px rgba(63, 185, 80, 0.25);
 }
 
 .toggle-switch input:checked + .toggle-slider::before {
@@ -717,7 +717,7 @@
   background: var(--success-color-dark);
   border-color: var(--success-color-dark);
   transform: translateY(-1px);
-  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(50, 215, 75, 0.25);
+  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(63, 185, 80, 0.25);
 }
 
 .uninstall-btn {

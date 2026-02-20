@@ -85,7 +85,7 @@
   gap: var(--space-1);
   font-size: var(--text-xs);
   color: var(--system-teal);
-  background: rgba(100, 210, 255, 0.08);
+  background: rgba(57, 210, 192, 0.08);
   padding: var(--space-0-5) var(--space-2);
   border-radius: 10px;
   font-weight: var(--font-medium);
@@ -156,7 +156,7 @@
 }
 
 .chat-panel__close-btn:focus-visible {
-  outline: 2px solid var(--focus-ring-color, rgba(10, 132, 255, 0.5));
+  outline: 2px solid var(--focus-ring-color, rgba(88, 166, 255, 0.5));
   outline-offset: 2px;
 }
 
@@ -234,8 +234,8 @@
 }
 
 .chat-panel__info-chip--active {
-  background: rgba(10, 132, 255, 0.15);
-  color: var(--system-blue, #0a84ff);
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--system-blue, #58a6ff);
   border: 1px solid var(--glow-color-accent);
 }
 
@@ -260,14 +260,14 @@
 }
 
 .chat-panel-header__session-status--green {
-  background-color: rgba(50, 215, 75, 0.12);
+  background-color: rgba(63, 185, 80, 0.12);
   color: var(--system-green);
-  border: 1px solid rgba(50, 215, 75, 0.25);
+  border: 1px solid rgba(63, 185, 80, 0.25);
 }
 
 .chat-panel-header__session-status--green .chat-panel-header__session-dot {
   background-color: var(--system-green);
-  box-shadow: 0 0 6px rgba(50, 215, 75, 0.50);
+  box-shadow: 0 0 6px rgba(63, 185, 80, 0.50);
 }
 
 .chat-panel-header__session-status--gray {
@@ -674,7 +674,7 @@
 
 /* Category-specific button colors */
 .chat-panel__prompt-btn--approval {
-  border-color: rgba(100, 210, 255, 0.25);
+  border-color: rgba(57, 210, 192, 0.25);
   color: var(--system-teal);
 }
 
@@ -701,12 +701,12 @@
 }
 
 .chat-panel__prompt-btn--code-action {
-  border-color: rgba(10, 132, 255, 0.25);
+  border-color: rgba(88, 166, 255, 0.25);
   color: var(--system-blue);
 }
 
 .chat-panel__prompt-btn--code-action:hover {
-  background: rgba(10, 132, 255, 0.12);
+  background: rgba(88, 166, 255, 0.12);
 }
 
 /* ============================================================================

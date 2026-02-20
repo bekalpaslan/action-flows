@@ -28,19 +28,19 @@
   --color-border-subtle: var(--panel-border-color-subtle); /* rgba(255, 255, 255, 0.04) */
 
   /* Accent colors — Using Apple system purple */
-  --color-accent: var(--system-purple);            /* #bf5af2 */
+  --color-accent: var(--system-purple);            /* #a371f7 */
   --color-accent-hover: #d4b3ff;                   /* Maintained for compatibility */
 
   /* Interactive states — Mapped to design tokens */
   --color-bg-hover: rgba(255, 255, 255, 0.08);     /* Slightly reduced from 0.1 */
   --color-bg-active: rgba(255, 255, 255, 0.12);    /* Slightly reduced from 0.15 */
-  --color-focus-ring: rgba(191, 90, 242, 0.5);     /* Purple focus ring */
+  --color-focus-ring: rgba(163, 113, 247, 0.5);     /* Purple focus ring */
 
   /* Status colors — Mapped to Apple system colors */
-  --color-success: var(--system-green);            /* #32d74b */
-  --color-warning: var(--system-orange);           /* #ff9f0a */
+  --color-success: var(--system-green);            /* #3fb950 */
+  --color-warning: var(--system-orange);           /* #f0883e */
   --color-error: var(--system-red);                /* #ff453a */
-  --color-info: var(--system-blue);                /* #0a84ff */
+  --color-info: var(--system-blue);                /* #58a6ff */
 
   /* Shadows — Mapped to design token shadow system */
   --shadow-sm: var(--shadow-xs);

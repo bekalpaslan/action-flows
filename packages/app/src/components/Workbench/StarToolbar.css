@@ -1,0 +1,77 @@
+/* ============================================================================
+ * StarToolbar - Fixed toolbar at top of workbench panel (L4)
+ * ============================================================================
+ *
+ * Mock reference: layout-demo.html lines 256-274, 616-624
+ * Height: 48px (var(--toolbar-h))
+ * Flex: row with gap, border-bottom separator
+ */
+
+.star-toolbar {
+  height: var(--toolbar-h);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--gap);
+  gap: var(--gap);
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+}
+
+.star-toolbar__title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-bright);
+  margin: 0;
+}
+
+.star-toolbar__badge {
+  background: rgba(240, 136, 62, 0.12);
+  color: var(--orange);
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.star-toolbar__actions {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.star-toolbar .icon-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  font-size: 16px;
+  padding: 0;
+}
+
+.star-toolbar .icon-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border);
+}
+
+.star-toolbar .icon-btn:active {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.star-toolbar .icon-btn:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-toolbar .icon-btn {
+    transition: none;
+  }
+}

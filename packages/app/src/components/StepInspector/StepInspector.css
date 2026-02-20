@@ -210,12 +210,12 @@
 }
 
 .model-sonnet {
-  background-color: rgba(191, 90, 242, 0.10);
+  background-color: rgba(163, 113, 247, 0.10);
   color: var(--system-purple);
 }
 
 .model-opus {
-  background-color: rgba(255, 159, 10, 0.10);
+  background-color: rgba(240, 136, 62, 0.10);
   color: #e65100;
 }
 
@@ -443,7 +443,7 @@
 /* Learning Block */
 .learning-block {
   padding: var(--space-3);
-  background-color: rgba(191, 90, 242, 0.10);
+  background-color: rgba(163, 113, 247, 0.10);
   border: 1px solid #e1bee7;
   border-radius: 6px;
   border-left: 4px solid #6a1b9a;

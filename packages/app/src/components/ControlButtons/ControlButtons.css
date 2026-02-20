@@ -30,29 +30,29 @@
 }
 
 .control-btn:focus-visible {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #58a6ff);
   outline-offset: var(--focus-ring-offset, 2px);
-  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(88, 166, 255, 0.4));
 }
 
 .pause-btn {
-  border-color: var(--status-warning-text, #ff9f0a);
-  color: var(--status-warning-text, #ff9f0a);
+  border-color: var(--status-warning-text, #f0883e);
+  color: var(--status-warning-text, #f0883e);
 }
 
 .pause-btn:hover:not(:disabled) {
   background: var(--btn-hover-warning-light);
-  border-color: var(--status-warning-text, #ff9f0a);
+  border-color: var(--status-warning-text, #f0883e);
 }
 
 .resume-btn {
-  border-color: var(--status-success-text, #32d74b);
-  color: var(--status-success-text, #32d74b);
+  border-color: var(--status-success-text, #3fb950);
+  color: var(--status-success-text, #3fb950);
 }
 
 .resume-btn:hover:not(:disabled) {
   background: var(--btn-hover-success-light);
-  border-color: var(--status-success-text, #32d74b);
+  border-color: var(--status-success-text, #3fb950);
 }
 
 .cancel-btn {
@@ -186,9 +186,9 @@
 }
 
 .confirm-btn:focus-visible {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #58a6ff);
   outline-offset: var(--focus-ring-offset, 2px);
-  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(88, 166, 255, 0.4));
 }
 
 /* Reduced motion support */

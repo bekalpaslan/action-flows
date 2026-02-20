@@ -255,6 +255,18 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
           />
         )}
 
+        {/* New Session Button */}
+        {!isCollapsed && (
+          <button
+            className="app-sidebar__new-session-btn"
+            onClick={() => console.log('TODO: Create new session')}
+            aria-label="Create new session"
+          >
+            <span className="app-sidebar__new-session-icon">+</span>
+            New Session
+          </button>
+        )}
+
         {/* Nav Section */}
         <div className="app-sidebar__nav-section">
           {/* Groups */}

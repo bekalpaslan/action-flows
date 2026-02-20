@@ -7,6 +7,7 @@
  */
 
 .sliding-chat-window {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: var(--chat-w);
@@ -16,13 +17,30 @@
   overflow: hidden;
   transition: width var(--duration-normal, 300ms) var(--ease-in-out, cubic-bezier(0.4, 0, 0.2, 1));
   flex-shrink: 0;
-  position: relative;
+}
+
+/* DRIFT-006: Left edge glow effect */
+.sliding-chat-window::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(88,166,255,0.25), transparent 40%, transparent 60%, rgba(88,166,255,0.25));
+  pointer-events: none;
+  z-index: 10;
+}
+
+.sliding-chat-window.sliding-chat-window--hidden::before {
+  display: none;
 }
 
 .sliding-chat-window--hidden {
   width: 0;
   border: none;
   overflow: hidden;
+  margin-left: calc(-1 * var(--gap));
 }
 
 /* Embedded mode: full-width panel without sliding mechanics */

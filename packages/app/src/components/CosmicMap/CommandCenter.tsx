@@ -293,6 +293,12 @@ export function CommandCenter({
         </button>
       </div>
 
+      {/* Spacer */}
+      <div style={{ flex: 1 }} />
+
+      {/* Ctrl+K Badge (DRIFT-010) */}
+      <span className="command-center__kbd">Ctrl+K</span>
+
       {/* Middle: Session Selector */}
       <div className="command-center__session-section" ref={dropdownRef}>
         <button

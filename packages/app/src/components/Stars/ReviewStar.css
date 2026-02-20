@@ -55,12 +55,12 @@
 }
 
 .review-workbench__stats .stat.pending {
-  background-color: rgba(255, 159, 10, 0.15);
+  background-color: rgba(240, 136, 62, 0.15);
   color: var(--system-yellow);
 }
 
 .review-workbench__stats .stat.approved {
-  background-color: rgba(50, 215, 75, 0.15);
+  background-color: rgba(63, 185, 80, 0.15);
   color: var(--system-green);
 }
 
@@ -181,7 +181,7 @@
 }
 
 .review-pr-item.selected {
-  background-color: rgba(191, 90, 242, 0.12);
+  background-color: rgba(163, 113, 247, 0.12);
   border-color: var(--system-purple);
 }
 
@@ -503,7 +503,7 @@
 }
 
 .review-file-item.selected {
-  background-color: rgba(191, 90, 242, 0.12);
+  background-color: rgba(163, 113, 247, 0.12);
   color: var(--color-text-primary);
 }
 
@@ -520,7 +520,7 @@
 }
 
 .review-file-status.added {
-  background-color: rgba(50, 215, 75, 0.25);
+  background-color: rgba(63, 185, 80, 0.25);
   color: var(--system-green);
 }
 
@@ -535,7 +535,7 @@
 }
 
 .review-file-status.renamed {
-  background-color: rgba(191, 90, 242, 0.25);
+  background-color: rgba(163, 113, 247, 0.25);
   color: var(--system-purple);
 }
 

@@ -66,13 +66,13 @@
 }
 
 .command-palette-input__clear:focus-visible {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #58a6ff);
   outline-offset: var(--focus-ring-offset, 2px);
-  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(88, 166, 255, 0.4));
 }
 
 .command-palette-input__field:focus-visible {
-  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #0a84ff);
+  outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #58a6ff);
   outline-offset: var(--focus-ring-offset, 2px);
-  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(88, 166, 255, 0.4));
 }

@@ -386,7 +386,7 @@
   position: absolute;
   border: var(--space-0-5) dashed var(--system-orange);
   border-radius: var(--radius-lg);
-  background-color: rgba(255, 159, 10, 0.03);
+  background-color: rgba(240, 136, 62, 0.03);
   pointer-events: none;
 }
 

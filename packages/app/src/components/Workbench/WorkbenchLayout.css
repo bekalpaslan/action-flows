@@ -69,7 +69,8 @@
 }
 
 /* ============================================================================
- * Workbench Panel (Layer 3 - contains star content + chat side by side)
+ * Workbench Panel (Layer 3 - contains toolbar + star content)
+ * Chat window is now a sibling in main-content, not a child
  * ============================================================================ */
 
 .workbench-panel {

@@ -62,11 +62,11 @@
 }
 
 .settings-workbench__action-btn:hover {
-  background-color: rgba(191, 90, 242, 0.85);
+  background-color: rgba(163, 113, 247, 0.85);
 }
 
 .settings-workbench__action-btn:active {
-  background-color: rgba(191, 90, 242, 0.7);
+  background-color: rgba(163, 113, 247, 0.7);
 }
 
 @keyframes fadeIn {

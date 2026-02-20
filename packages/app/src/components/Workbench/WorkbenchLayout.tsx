@@ -13,6 +13,7 @@ import { ChatPanel } from '../SessionPanel/ChatPanel';
 import { CosmicMap } from '../CosmicMap/CosmicMap';
 import { RegionFocusView } from '../RegionFocus/RegionFocusView';
 import { BreadcrumbBar } from '../shared/BreadcrumbBar';
+import { StarToolbar } from './StarToolbar';
 import { WorkStar } from '../Stars/WorkStar';
 import { CanvasTool } from '../Tools/CanvasTool/CanvasTool';
 import { EditorTool } from '../Tools/EditorTool/EditorTool';
@@ -633,7 +634,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
       <AppSidebar onCollapseChange={setSidebarCollapsed} />
 
       <div className="main-content" data-testid="layout-wrapper">
-        {/* Layer 3: workbench-panel — contains star content + chat side by side */}
+        {/* Layer 3: workbench-panel — contains toolbar + star content (chat is sibling) */}
         <div className="workbench-panel" data-testid="workbench-panel">
           {/* Cosmic Map View + Zooming In/Out states */}
           {effectiveCosmicMapEnabled && (viewMode === 'cosmic-map' || viewMode === 'zooming-in' || viewMode === 'zooming-out') ? (
@@ -652,47 +653,53 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
             </div>
           ) : (
             /* Workbench View (legacy mode when cosmic map disabled or classic mode enabled) */
-            <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} data-testid="content-area">
-              <main id="main-content" className="workbench-main" role="main">
-                <div className={`workbench-content ${transitionClass}`}>
-                  {/* Return to Universe button (visible when cosmic map is enabled and not in classic mode) */}
-                  {effectiveCosmicMapEnabled && (
-                    <button
-                      className="workbench-layout__return-to-universe"
-                      onClick={handleReturnToUniverse}
-                      title="Return to universe view (U)"
-                    >
-                      🌌 Universe
-                    </button>
-                  )}
+            <>
+              {/* StarToolbar - L4 fixed toolbar at top of workbench */}
+              <StarToolbar activeSessionCount={attachedSessions.length} />
 
-                  {/* BreadcrumbBar */}
-                  <BreadcrumbBar
-                    segments={[
-                      { label: 'ActionFlows', onClick: effectiveCosmicMapEnabled ? handleReturnToUniverse : undefined },
-                      { label: STAR_CONFIGS[activeWorkbench]?.label || activeWorkbench },
-                      ...(activeSessionId && getSession(activeSessionId) ? [{ label: getSession(activeSessionId)?.name || getSession(activeSessionId)?.id || 'Session' }] : [])
-                    ]}
-                  />
+              <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} data-testid="content-area">
+                <main id="main-content" className="workbench-main" role="main">
+                  <div className={`workbench-content ${transitionClass}`}>
+                    {/* Return to Universe button (visible when cosmic map is enabled and not in classic mode) */}
+                    {effectiveCosmicMapEnabled && (
+                      <button
+                        className="workbench-layout__return-to-universe"
+                        onClick={handleReturnToUniverse}
+                        title="Return to universe view (U)"
+                      >
+                        🌌 Universe
+                      </button>
+                    )}
 
-                  {renderWorkbenchContent(activeWorkbench)}
-                  {children}
-                </div>
-              </main>
-            </div>
+                    {/* BreadcrumbBar */}
+                    <BreadcrumbBar
+                      segments={[
+                        { label: 'ActionFlows', onClick: effectiveCosmicMapEnabled ? handleReturnToUniverse : undefined },
+                        { label: STAR_CONFIGS[activeWorkbench]?.label || activeWorkbench },
+                        ...(activeSessionId && getSession(activeSessionId) ? [{ label: getSession(activeSessionId)?.name || getSession(activeSessionId)?.id || 'Session' }] : [])
+                      ]}
+                    />
+
+                    {renderWorkbenchContent(activeWorkbench)}
+                    {children}
+                  </div>
+                </main>
+              </div>
+            </>
           )}
-
-          <SlidingChatWindow>
-            {chatSessionId !== null && (
-              <ChatPanel
-                sessionId={chatSessionId}
-                session={getSession(chatSessionId)}
-                showCloseButton={true}
-                onClose={closeChat}
-              />
-            )}
-          </SlidingChatWindow>
         </div>
+
+        {/* SlidingChatWindow - Now sibling of workbench-panel (L6 hierarchy fix) */}
+        <SlidingChatWindow>
+          {chatSessionId !== null && (
+            <ChatPanel
+              sessionId={chatSessionId}
+              session={getSession(chatSessionId)}
+              showCloseButton={true}
+              onClose={closeChat}
+            />
+          )}
+        </SlidingChatWindow>
       </div>
 
       {/* Layer 2: CommandCenter — app shell level, always visible */}
