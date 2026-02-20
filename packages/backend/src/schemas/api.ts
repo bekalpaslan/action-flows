@@ -32,6 +32,8 @@ export const createSessionSchema = z.object({
     .enum(['win32', 'darwin', 'linux', 'aix', 'freebsd', 'openbsd', 'sunos'])
     .optional(),
   userId: z.string().max(100, 'userId too long').optional(),
+  name: z.string().max(200, 'name too long').optional(),
+  workbenchId: z.string().max(50).optional(),
 });
 
 export type CreateSessionRequest = z.infer<typeof createSessionSchema>;

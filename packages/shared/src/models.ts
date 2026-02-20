@@ -14,6 +14,7 @@ import type {
   ChainSourceString,
   DurationMs,
 } from './types.js';
+import type { WorkbenchId } from './workbenchTypes.js';
 
 /**
  * Chain Step - represents a single step in a chain
@@ -174,6 +175,12 @@ export interface Session {
 
   /** Session-level summary */
   summary?: string;
+
+  /** Human-readable display name (e.g., "work: Discuss AuthPanel") */
+  name?: string;
+
+  /** Which workbench created this session */
+  workbenchId?: WorkbenchId;
 
   /** Total number of steps executed */
   totalStepsExecuted?: number;

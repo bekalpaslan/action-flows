@@ -7,7 +7,7 @@ import {
   ReactNode,
   useMemo,
 } from 'react';
-import type { Session, SessionId } from '@afw/shared';
+import type { Session, SessionId, WorkbenchId } from '@afw/shared';
 
 /**
  * SessionContext Type Definition
@@ -29,7 +29,7 @@ interface SessionContextType {
   isLoading: boolean;
 
   /** Create a new session on the backend and add to local state */
-  createSession: (cwd?: string, name?: string) => Promise<SessionId>;
+  createSession: (cwd?: string, name?: string, workbenchId?: WorkbenchId) => Promise<SessionId>;
 
   /** Delete a session from backend and remove from local state */
   deleteSession: (sessionId: SessionId) => Promise<void>;
@@ -122,11 +122,12 @@ export function SessionProvider({ children }: SessionProviderProps) {
   /**
    * Create a new session on the backend
    * @param cwd Working directory (optional)
-   * @param name Session name (optional, ignored by backend but kept for API compatibility)
+   * @param name Session display name (optional, e.g., "work: Discuss AuthPanel")
+   * @param workbenchId Workbench that owns this session (optional)
    * @returns The new session's ID
    */
   const createSession = useCallback(
-    async (cwd?: string, name?: string): Promise<SessionId> => {
+    async (cwd?: string, name?: string, workbenchId?: WorkbenchId): Promise<SessionId> => {
       try {
         // Normalize platform to match backend enum (win32, darwin, linux)
         const rawPlatform = typeof navigator !== 'undefined' ? navigator.platform : 'unknown';
@@ -139,6 +140,8 @@ export function SessionProvider({ children }: SessionProviderProps) {
           cwd: cwd || import.meta.env.VITE_PROJECT_DIR || (typeof process !== 'undefined' ? process.cwd?.() : undefined) || '/app',
           hostname: typeof window !== 'undefined' ? 'browser' : 'unknown',
           ...(normalizedPlatform ? { platform: normalizedPlatform } : {}),
+          ...(name ? { name } : {}),
+          ...(workbenchId ? { workbenchId } : {}),
         };
 
         const response = await fetch(`${API_BASE_URL}/api/sessions`, {

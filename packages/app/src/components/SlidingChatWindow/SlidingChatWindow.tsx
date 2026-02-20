@@ -7,9 +7,10 @@
  * Supports draggable left-edge resize handle with localStorage persistence.
  */
 
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState, useMemo } from 'react';
 import { useChatWindowContext } from '../../contexts/ChatWindowContext';
 import { useSessionContext } from '../../contexts/SessionContext';
+import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { useActiveChain } from '../../hooks/useActiveChain';
 import { useActivityFeed } from '../../hooks/useActivityFeed';
 import type { SessionId } from '@afw/shared';
@@ -26,63 +27,23 @@ interface SlidingChatWindowProps {
 }
 
 export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, embedded = false }) => {
-  const { isOpen, chatWidth, source, sessionId, closeChat, setChatWidth, setSessionId, isMinimized, unreadCount, minimizeChat, restoreChat, openChat } = useChatWindowContext();
+  const { isOpen, source, sessionId, closeChat, setSessionId, isMinimized, unreadCount, minimizeChat, restoreChat, openChat } = useChatWindowContext();
   const { sessions } = useSessionContext();
-  const panelRef = useRef<HTMLDivElement>(null);
+  const { activeWorkbench } = useWorkbenchContext();
   const [activeTab, setActiveTab] = useState<'chat' | 'flow' | 'activity'>('chat');
+
+  // Filter sessions to only show those belonging to the active workbench
+  // Fall back to all sessions if no workbench-scoped sessions exist yet
+  const workbenchSessions = useMemo(() => {
+    const scoped = sessions.filter(s => s.workbenchId === activeWorkbench);
+    return scoped.length > 0 ? scoped : sessions;
+  }, [sessions, activeWorkbench]);
 
   // Fetch active chain for flow visualization
   const { activeChain, loading: chainLoading } = useActiveChain(sessionId || ('' as SessionId));
 
   // Fetch activity feed items
   const { items: activityItems, isLoading: activityLoading } = useActivityFeed(sessionId || undefined);
-
-  /**
-   * Handle resize start - attach mouse move/up listeners and update cursor
-   */
-  const handleResizeStart = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    const startX = e.clientX;
-    const startWidth = chatWidth;
-
-    // Get container width for percentage calculation
-    const container = panelRef.current?.parentElement;
-    const containerWidth = container?.clientWidth || window.innerWidth;
-
-    const handleMouseMove = (moveE: MouseEvent) => {
-      // Negative deltaX = moving left = wider panel
-      const deltaX = startX - moveE.clientX;
-      const deltaPercent = (deltaX / containerWidth) * 100;
-      const newWidth = startWidth + deltaPercent;
-
-      // Clamp to 25-60% (matching ChatWindowContext constraints)
-      const clampedWidth = Math.min(60, Math.max(25, newWidth));
-      setChatWidth(clampedWidth);
-    };
-
-    const handleMouseUp = () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.body.style.cursor = '';
-      document.body.style.userSelect = '';
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-  }, [chatWidth, setChatWidth]);
-
-  /**
-   * Handle double-click to reset width to default (40%)
-   */
-  const handleDoubleClick = useCallback(() => {
-    setChatWidth(30);
-  }, [setChatWidth]);
-
-  // In embedded mode, always render at full width without sliding mechanics
-  const effectiveWidth = embedded ? '100%' : (isOpen ? `${chatWidth}%` : '0%');
-  const showResizeHandle = !embedded;
 
   // If minimized, show floating indicator instead of full chat
   if (isMinimized && !embedded) {
@@ -91,23 +52,8 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
 
   return (
     <div
-      ref={panelRef}
-      className={`sliding-chat-window ${embedded ? 'sliding-chat-window--embedded' : ''}`}
-      style={{ width: effectiveWidth }}
+      className={`sliding-chat-window ${embedded ? 'sliding-chat-window--embedded' : ''} ${!isOpen && !embedded ? 'sliding-chat-window--hidden' : ''}`}
     >
-      {showResizeHandle && (
-        <div
-          className="sliding-chat-window__resize-handle"
-          onMouseDown={handleResizeStart}
-          onDoubleClick={handleDoubleClick}
-          role="separator"
-          aria-orientation="vertical"
-          aria-label="Resize chat panel"
-          aria-valuenow={Math.round(chatWidth)}
-          aria-valuemin={25}
-          aria-valuemax={60}
-        />
-      )}
       <div className="sliding-chat-window__header">
         <span className="sliding-chat-window__title">Chat</span>
         {source && (
@@ -124,9 +70,9 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
           aria-label="Select chat session"
         >
           <option value="">No session</option>
-          {sessions.map((s) => (
+          {workbenchSessions.map((s) => (
             <option key={s.id} value={s.id}>
-              {s.name || s.id}
+              {s.name || `Session ${s.id.slice(-6)}`}
             </option>
           ))}
         </select>

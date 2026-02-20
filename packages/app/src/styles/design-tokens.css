@@ -407,6 +407,17 @@
   --app-sidebar-group-header-height: 36px;
   --app-sidebar-z-index: 1100;
 
+  /* ==========================================================================
+     Layout System — Panel-based Grid
+     ========================================================================== */
+
+  --gap: 20px;                /* Universal spacing between all panels */
+  --sidebar-w: 260px;         /* Sidebar width (alias for --app-sidebar-width) */
+  --toolbar-h: 48px;          /* Star toolbar height */
+  --bottom-h: 64px;           /* Command center height */
+  --chat-w: 360px;            /* Chat window width */
+  --panel-radius: 10px;       /* Standard panel border radius */
+
   /* AppSidebar colors */
   --app-sidebar-accent-purple: #CB3CFF;
 

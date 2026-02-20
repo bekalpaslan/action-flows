@@ -116,7 +116,7 @@ function isPathDenied(filePath: string): boolean {
  */
 router.post('/', sessionCreateLimiter, validateBody(createSessionSchema), async (req, res) => {
   try {
-    const { cwd, hostname, platform, userId } = req.body;
+    const { cwd, hostname, platform, userId, name, workbenchId } = req.body;
 
     // Validate that directory exists (Agent A security fix)
     // Skip check for Windows paths when running in Linux (Docker container receiving host paths)
@@ -146,6 +146,8 @@ router.post('/', sessionCreateLimiter, validateBody(createSessionSchema), async 
       hostname,
       platform,
       user: userId ? brandedTypes.userId(userId) : undefined,
+      name: name || undefined,
+      workbenchId: workbenchId || undefined,
       chains: [],
       status: 'pending',
       startedAt: brandedTypes.currentTimestamp(),
@@ -226,6 +228,8 @@ router.get('/', async (req, res) => {
       count: sessions.length,
       sessions: sessions.map((s) => ({
         id: s.id,
+        name: s.name,
+        workbenchId: s.workbenchId,
         user: s.user,
         status: s.status,
         cwd: s.cwd,

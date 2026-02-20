@@ -1,10 +1,14 @@
 /* ============================================================================
- * WorkbenchLayout - Main shell layout styles
+ * WorkbenchLayout - Main shell layout styles (Panel-Based Grid System)
  * ============================================================================ */
 
-.workbench-layout {
-  display: flex;
-  flex-direction: column;
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  grid-template-rows: 1fr var(--bottom-h);
+  column-gap: var(--gap);
+  row-gap: var(--gap);
+  padding: var(--gap);
   height: 100vh;
   width: 100vw;
   background: var(--app-bg-base);
@@ -53,29 +57,15 @@
 }
 
 /* ============================================================================
- * Body Section (Main content only - Sidebar is fixed position)
+ * Main Content (Grid Cell - Contains Workbench + Chat)
  * ============================================================================ */
 
-.workbench-body {
+.main-content {
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  gap: var(--gap);
   overflow: hidden;
-  min-height: 0; /* Important for flex child scrolling */
-  position: relative; /* Establish positioning context */
-  margin-left: var(--app-sidebar-width);
-  transition: margin-left var(--duration-normal) var(--ease-apple);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .workbench-body {
-    transition: none;
-  }
-}
-
-/* When AppSidebar is collapsed */
-.workbench-body.sidebar-collapsed {
-  margin-left: var(--app-sidebar-width-collapsed);
+  min-width: 0;
+  min-height: 0;
 }
 
 /* ============================================================================
@@ -83,11 +73,13 @@
  * ============================================================================ */
 
 .workbench-panel {
-  display: flex;
-  flex-direction: row;
   flex: 1;
-  min-height: 0;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel-bg-base);
+  border: 1px solid var(--panel-border-color-default);
+  border-radius: var(--panel-radius);
   overflow: hidden;
 }
 
@@ -95,15 +87,8 @@
  * Command Center (Layer 2 - App Shell Level)
  * ============================================================================ */
 
-.workbench-layout > .command-center {
-  flex-shrink: 0;
-  position: relative;
-  margin-left: var(--app-sidebar-width);
-  transition: margin-left var(--duration-normal) var(--ease-apple);
-}
-
-.workbench-layout.sidebar-collapsed > .command-center {
-  margin-left: var(--app-sidebar-width-collapsed);
+.app-shell > .command-center {
+  grid-column: 1 / -1;
 }
 
 /* ============================================================================
@@ -132,19 +117,12 @@
 .workbench-main {
   flex: 1;
   overflow: auto;
-  padding: var(--space-4);
-  background: var(--app-bg-base);
+  padding: var(--gap);
+  background: transparent;
   color: var(--text-primary);
-  min-width: 0; /* Important for flex child scrolling */
-  transition: margin-left var(--duration-fast) var(--ease-apple);
-  position: relative; /* Establish positioning context for children */
-  contain: layout style; /* CSS containment to prevent layout escape */
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .workbench-main {
-    transition: none;
-  }
+  min-width: 0;
+  position: relative;
+  contain: layout style;
 }
 
 
@@ -257,8 +235,10 @@
  * ============================================================================ */
 
 @media (max-width: 768px) {
-  .workbench-body {
-    margin-left: 0;
+  .app-shell {
+    grid-template-columns: 1fr;
+    padding: var(--space-3);
+    column-gap: 0;
   }
 
   .workbench-main {
@@ -272,13 +252,12 @@
 }
 
 @media (max-width: 480px) {
-  .workbench-main {
+  .app-shell {
     padding: var(--space-2);
   }
 
-  /* Reduce sidebar margin on mobile */
   .workbench-main {
-    margin-left: 0;
+    padding: var(--space-2);
   }
 
   .workbench-bottom {

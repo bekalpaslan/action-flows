@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useCallback, useRef, ReactNode } from 'react';
 import type { SessionId, WorkbenchId } from '@afw/shared';
 import { useSessionContext } from './SessionContext';
+import { useWorkbenchContext } from './WorkbenchContext';
 
 interface PerWorkbenchChatState {
   isOpen: boolean;
@@ -38,11 +39,8 @@ interface ChatWindowProviderProps {
   children: ReactNode;
 }
 
-const CHAT_WIDTH_STORAGE_KEY = 'afw-chat-width';
 const MODEL_STORAGE_KEY = 'afw-selected-model';
-const DEFAULT_CHAT_WIDTH = 30;
-const MIN_CHAT_WIDTH = 25;
-const MAX_CHAT_WIDTH = 60;
+const FIXED_CHAT_WIDTH = 360; // Fixed width in pixels (matches --chat-w CSS variable)
 const DEFAULT_MODEL = 'sonnet-4.5';
 
 export const AVAILABLE_MODELS = [
@@ -53,22 +51,12 @@ export const AVAILABLE_MODELS = [
 
 /**
  * ChatWindowProvider
- * Manages the chat panel state including visibility, width, and source context.
- * Width is persisted to localStorage for consistent UX across sessions.
+ * Manages the chat panel state including visibility and source context.
+ * Width is now fixed via CSS (--chat-w variable).
  *
  * NOTE: Must be nested inside SessionProvider to access useSessionContext()
  */
 export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
-  // Initialize width from localStorage, with fallback to default
-  const [chatWidth, setChatWidthState] = useState<number>(() => {
-    const stored = localStorage.getItem(CHAT_WIDTH_STORAGE_KEY);
-    if (stored) {
-      const parsed = parseInt(stored, 10);
-      return isNaN(parsed) ? DEFAULT_CHAT_WIDTH : Math.min(Math.max(parsed, MIN_CHAT_WIDTH), MAX_CHAT_WIDTH);
-    }
-    return DEFAULT_CHAT_WIDTH;
-  });
-
   // Initialize selected model from localStorage, with fallback to default
   const [selectedModel, setSelectedModelState] = useState<string>(() => {
     const stored = localStorage.getItem(MODEL_STORAGE_KEY);
@@ -85,8 +73,12 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
   const workbenchChatMap = useRef<Map<WorkbenchId, PerWorkbenchChatState>>(new Map());
   const [workbenchesWithChat, setWorkbenchesWithChat] = useState<WorkbenchId[]>([]);
 
-  // Get session context to inherit activeSessionId when chat opens
-  const { activeSessionId } = useSessionContext();
+  // Get session context to access sessions and create new ones
+  const { createSession, sessions } = useSessionContext();
+  const { activeWorkbench } = useWorkbenchContext();
+
+  // Ref to prevent duplicate session creation on rapid double-clicks
+  const creatingSessionRef = useRef<boolean>(false);
 
   const openChat = useCallback(
     async (newSource: string, context?: Record<string, unknown>) => {
@@ -96,12 +88,38 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
       // Explicit context sessionId takes precedence
       if (context?.sessionId) {
         setSessionIdState(context.sessionId as SessionId);
-      } else if (!sessionId && activeSessionId) {
-        setSessionIdState(activeSessionId);
+        return;
       }
-      // No active session — chat opens with null sessionId; SlidingChatWindow session selector handles user selection
+
+      // Check if there's already a session scoped to the current workbench
+      const existingWorkbenchSession = sessions.find(
+        (s) => s.workbenchId === activeWorkbench
+      );
+
+      if (existingWorkbenchSession) {
+        // Reuse the existing session for this workbench
+        setSessionIdState(existingWorkbenchSession.id);
+      } else if (!sessionId && !creatingSessionRef.current) {
+        // No workbench-scoped session exists — removed cross-workbench fallback to enforce isolation
+        // Auto-create a session scoped to the current workbench
+        // Guard prevents duplicate creation on rapid double-clicks
+        creatingSessionRef.current = true;
+        const workbenchLabel = activeWorkbench || 'unknown';
+        const sessionName = context?.componentName
+          ? `${workbenchLabel}: Discuss ${context.componentName as string}`
+          : `${workbenchLabel}: ${newSource}`;
+        try {
+          const newSessionId = await createSession(undefined, sessionName, activeWorkbench as WorkbenchId);
+          setSessionIdState(newSessionId);
+        } catch (error) {
+          console.error('[ChatWindowContext] Failed to auto-create session:', error);
+          // Graceful degradation — chat opens without session
+        } finally {
+          creatingSessionRef.current = false;
+        }
+      }
     },
-    [sessionId, activeSessionId]
+    [sessionId, sessions, activeWorkbench, createSession]
   );
 
   const closeChat = useCallback(() => {
@@ -150,10 +168,9 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
     setUnreadCount(0);
   }, []);
 
-  const setChatWidth = useCallback((width: number) => {
-    const clamped = Math.min(Math.max(width, MIN_CHAT_WIDTH), MAX_CHAT_WIDTH);
-    setChatWidthState(clamped);
-    localStorage.setItem(CHAT_WIDTH_STORAGE_KEY, String(clamped));
+  // No-op function kept for backward compatibility
+  const setChatWidth = useCallback((_width: number) => {
+    // Width is now fixed via CSS (--chat-w), this function is a no-op
   }, []);
 
   const setSelectedModel = useCallback((model: string) => {
@@ -201,7 +218,7 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
     isOpen,
     sessionId,
     source,
-    chatWidth,
+    chatWidth: FIXED_CHAT_WIDTH, // Return constant value for backward compatibility
     selectedModel,
     isMinimized,
     unreadCount,
@@ -220,7 +237,9 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
   };
 
   // Expose context for E2E testing (dev only, tree-shaken in production builds)
-  (window as any).__chatWindowContext = value;
+  if (import.meta.env.DEV) {
+    (window as any).__chatWindowContext = value;
+  }
 
   return (
     <ChatWindowContext.Provider value={value}>

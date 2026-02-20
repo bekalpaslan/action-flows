@@ -8,24 +8,17 @@
    ============================================================================ */
 
 .app-sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  width: var(--app-sidebar-width);
-  background-color: var(--panel-bg-base);
-  border-right: var(--panel-border-default);
-  box-shadow: var(--panel-glow-default);
-  z-index: var(--app-sidebar-z-index);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: width var(--duration-normal) var(--ease-apple);
+  background-color: var(--panel-bg-base);
+  border: 1px solid var(--panel-border-color-default);
+  border-radius: var(--panel-radius);
 }
 
-/* Collapsed state */
+/* Collapsed state - CSS-only cosmetic (width controlled by grid) */
 .app-sidebar--collapsed {
-  width: var(--app-sidebar-width-collapsed);
+  /* No width change - grid controls it */
 }
 
 /* Mobile overlay */
@@ -691,6 +684,12 @@
 
 @media (max-width: 768px) {
   .app-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: var(--app-sidebar-width);
+    z-index: var(--app-sidebar-z-index);
     transform: translateX(-100%);
     transition: transform var(--duration-normal) var(--ease-apple);
   }

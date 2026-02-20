@@ -38,6 +38,7 @@ export interface UseDiscussButtonReturn {
  * useDiscussButton - Hook for managing DiscussButton/DiscussDialog state
  */
 export function useDiscussButton({
+  componentName,
   getContext,
 }: UseDiscussButtonParams): UseDiscussButtonReturn {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -81,7 +82,7 @@ ${JSON.stringify(context, null, 2)}
 
       // Open chat panel if not already open (creates session if needed)
       if (!isOpen) {
-        openChat('discuss').then(() => {
+        openChat('discuss', { componentName }).then(() => {
           // Delay prefill to let ChatPanel mount and register its input setter
           setTimeout(() => prefillChatInput(formattedMessage), 150);
         });
@@ -89,7 +90,7 @@ ${JSON.stringify(context, null, 2)}
         prefillChatInput(formattedMessage);
       }
     },
-    [getContext, prefillChatInput, registerDiscussionMessage, isOpen, openChat]
+    [getContext, prefillChatInput, registerDiscussionMessage, isOpen, openChat, componentName]
   );
 
   return {

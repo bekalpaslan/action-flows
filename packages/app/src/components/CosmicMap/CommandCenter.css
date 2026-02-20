@@ -15,18 +15,24 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  padding: var(--space-3) var(--space-5);
+  padding: 0 var(--gap);
+  height: var(--bottom-h);
   background: var(--panel-bg-elevated);
-  border-top: var(--panel-border-default);
-  box-shadow: 0 -2px 12px var(--text-tertiary), var(--panel-glow-default);
+  border: 1px solid var(--panel-border-color-default);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--panel-glow-default);
   backdrop-filter: blur(20px);
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Control row wrapper (input, session, health) */
 .command-center__controls {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--gap);
+  width: 100%;
 }
 
 /* ============================================================================

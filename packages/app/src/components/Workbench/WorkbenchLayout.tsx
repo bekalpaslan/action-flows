@@ -629,10 +629,10 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   };
 
   return (
-    <div className={`workbench-layout${sidebarCollapsed ? ' sidebar-collapsed' : ''}`} data-testid="workbench-layout">
+    <div className="app-shell" data-testid="workbench-layout">
       <AppSidebar onCollapseChange={setSidebarCollapsed} />
 
-      <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`} data-testid="layout-wrapper">
+      <div className="main-content" data-testid="layout-wrapper">
         {/* Layer 3: workbench-panel — contains star content + chat side by side */}
         <div className="workbench-panel" data-testid="workbench-panel">
           {/* Cosmic Map View + Zooming In/Out states */}
