@@ -207,6 +207,13 @@ Use these criteria when assigning severity levels to findings:
 3. Generate Output
 
 See Output Contract above. Write contract-compliant review-report.md to log folder with format:
+
+**Two-part triage header (before findings):**
+- **Mechanical Fixes** — Items a code agent can fix autonomously (wrong paths, filename mismatches, missing git adds, typos, unused imports)
+- **Human Decision Required** — Items needing architectural judgment (rename strategy, scope decisions, structural choices, API contracts, feature design)
+
+This lets humans quickly prioritize which findings need their input vs which can be auto-triaged.
+
 ```markdown
 # Review Report: {scope}
 
@@ -215,6 +222,14 @@ See Output Contract above. Write contract-compliant review-report.md to log fold
 
 ## Summary
 {2-3 sentence overview}
+
+## Triage
+
+### Mechanical Fixes
+{List of items that can be auto-fixed}
+
+### Human Decision Required
+{List of items needing human judgment}
 
 ## Findings
 

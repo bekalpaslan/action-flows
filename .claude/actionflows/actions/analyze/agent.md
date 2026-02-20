@@ -174,6 +174,7 @@ See Output Contract above. Write contract-compliant report to log folder.
 - Present findings in tables
 - Cross-reference across packages for completeness
 - Provide actionable recommendations with specific file paths
+- Always exclude from scans: `node_modules/`, `.git/`, `packages/*/dist/`, `.auto-claude/worktrees/` (git worktree copies that inflate counts)
 
 ### DO NOT
 - Make subjective assessments without data
