@@ -1,0 +1,199 @@
+/* Panel Component Styles */
+
+.afw-panel {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--panel-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--panel-border-default);
+}
+
+/* Variants */
+.afw-panel--base {
+  background: var(--panel-bg-base);
+}
+
+.afw-panel--elevated {
+  background: var(--panel-bg-elevated);
+  box-shadow: var(--panel-glow-default);
+}
+
+.afw-panel--raised {
+  background: var(--panel-bg-raised);
+  border-color: var(--panel-border-strong);
+}
+
+/* Header */
+.afw-panel__header {
+  background: var(--panel-header-bg);
+  border-bottom: 1px solid var(--panel-border-default);
+  min-height: 44px;
+}
+
+.afw-panel__header-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+}
+
+.afw-panel--collapsible .afw-panel__header-row {
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-in-out);
+}
+
+.afw-panel--collapsible .afw-panel__header-row:hover {
+  background: var(--glass-bg-light);
+}
+
+.afw-panel__header-icon {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.afw-panel__header-title {
+  flex: 1;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.afw-panel__header-actions {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-2);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.afw-panel__header-tabs {
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--panel-border-default);
+}
+
+/* Body */
+.afw-panel__body {
+  flex: 1;
+  min-height: 0;
+}
+
+.afw-panel__body--pad-sm {
+  padding: var(--space-3);
+}
+
+.afw-panel__body--pad-md {
+  padding: var(--space-4);
+}
+
+.afw-panel__body--pad-lg {
+  padding: var(--space-6);
+}
+
+.afw-panel__body--scrollable {
+  overflow-y: auto;
+}
+
+/* Custom scrollbar for scrollable body */
+.afw-panel__body--scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.afw-panel__body--scrollable::-webkit-scrollbar-track {
+  background: var(--panel-bg-base);
+}
+
+.afw-panel__body--scrollable::-webkit-scrollbar-thumb {
+  background: rgba(88, 166, 255, 0.15);
+  border-radius: 3px;
+}
+
+.afw-panel__body--scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(88, 166, 255, 0.25);
+}
+
+/* Footer */
+.afw-panel__footer {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--panel-border-default);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* Collapse state */
+.afw-panel--collapsed .afw-panel__body {
+  display: none;
+}
+
+.afw-panel--collapsed .afw-panel__footer {
+  display: none;
+}
+
+/* Collapse toggle button */
+.afw-panel__collapse-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  padding: var(--space-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--duration-fast) var(--ease-in-out),
+    color var(--duration-fast) var(--ease-in-out);
+}
+
+.afw-panel__collapse-btn:hover {
+  color: var(--text-primary);
+}
+
+.afw-panel--collapsed .afw-panel__collapse-btn {
+  transform: rotate(-90deg);
+}
+
+.afw-panel__collapse-btn:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Close button */
+.afw-panel__close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  padding: var(--space-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--duration-fast) var(--ease-in-out);
+}
+
+.afw-panel__close-btn:hover {
+  color: var(--text-primary);
+}
+
+.afw-panel__close-btn:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .afw-panel__collapse-btn,
+  .afw-panel__close-btn,
+  .afw-panel--collapsible .afw-panel__header-row {
+    transition: none;
+  }
+}

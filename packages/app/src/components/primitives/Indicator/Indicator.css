@@ -1,0 +1,221 @@
+/* Indicator Component */
+
+.afw-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all var(--duration-fast) var(--ease-in-out);
+}
+
+/* Status Colors */
+.afw-indicator--info {
+  color: var(--system-blue);
+}
+
+.afw-indicator--success {
+  color: var(--system-green);
+}
+
+.afw-indicator--warning {
+  color: var(--system-orange);
+}
+
+.afw-indicator--error {
+  color: var(--system-red);
+}
+
+/* Circle Shape */
+.afw-indicator--circle {
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.afw-indicator--circle.afw-indicator--xs {
+  width: 6px;
+  height: 6px;
+}
+
+.afw-indicator--circle.afw-indicator--sm {
+  width: 8px;
+  height: 8px;
+}
+
+.afw-indicator--circle.afw-indicator--md {
+  width: 10px;
+  height: 10px;
+}
+
+.afw-indicator--circle.afw-indicator--lg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Dot Shape */
+.afw-indicator--dot {
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.afw-indicator--dot.afw-indicator--xs {
+  width: 6px;
+  height: 6px;
+}
+
+.afw-indicator--dot.afw-indicator--sm {
+  width: 8px;
+  height: 8px;
+}
+
+.afw-indicator--dot.afw-indicator--md {
+  width: 10px;
+  height: 10px;
+}
+
+.afw-indicator--dot.afw-indicator--lg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Pill Shape */
+.afw-indicator--pill {
+  border-radius: 9999px;
+  padding: 0 var(--space-2);
+  background: currentColor;
+  opacity: 0.15;
+  border: 1px solid currentColor;
+}
+
+.afw-indicator--pill.afw-indicator--xs {
+  height: 18px;
+}
+
+.afw-indicator--pill.afw-indicator--sm {
+  height: 20px;
+}
+
+.afw-indicator--pill.afw-indicator--md {
+  height: 24px;
+}
+
+.afw-indicator--pill.afw-indicator--lg {
+  height: 28px;
+}
+
+.afw-indicator--pill .afw-indicator__label {
+  color: currentColor;
+  opacity: 1;
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  line-height: 1;
+}
+
+/* Bar Shape */
+.afw-indicator--bar {
+  width: 100%;
+  background: var(--panel-bg-elevated);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.afw-indicator--bar.afw-indicator--xs {
+  height: 4px;
+}
+
+.afw-indicator--bar.afw-indicator--sm {
+  height: 6px;
+}
+
+.afw-indicator--bar.afw-indicator--md {
+  height: 8px;
+}
+
+.afw-indicator--bar.afw-indicator--lg {
+  height: 10px;
+}
+
+.afw-indicator__fill {
+  height: 100%;
+  background: currentColor;
+  border-radius: inherit;
+  transition: width var(--duration-normal) var(--ease-apple);
+}
+
+.afw-indicator__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-2xs);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  pointer-events: none;
+}
+
+/* Count Badge */
+.afw-indicator__count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--system-red);
+  color: white;
+  font-size: var(--text-2xs);
+  font-weight: var(--font-bold);
+  border-radius: 9999px;
+  line-height: 1;
+}
+
+/* Glow Effect */
+.afw-indicator--glow {
+  box-shadow: 0 0 8px currentColor;
+  opacity: 0.4;
+}
+
+.afw-indicator--glow.afw-indicator--circle,
+.afw-indicator--glow.afw-indicator--dot {
+  opacity: 1;
+}
+
+/* Pulse Animation */
+@keyframes afw-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.7;
+  }
+}
+
+.afw-indicator--pulse {
+  animation: afw-pulse 2s var(--ease-in-out) infinite;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .afw-indicator {
+    transition: none;
+  }
+
+  .afw-indicator__fill {
+    transition: none;
+  }
+
+  .afw-indicator--pulse {
+    animation: none;
+  }
+
+  .afw-indicator--glow {
+    animation: none;
+    box-shadow: 0 0 4px currentColor;
+  }
+}

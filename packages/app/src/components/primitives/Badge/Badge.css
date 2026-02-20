@@ -1,0 +1,146 @@
+/* Badge Component */
+
+.afw-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: inherit;
+  white-space: nowrap;
+  user-select: none;
+  transition: all var(--duration-fast) var(--ease-in-out);
+  font-weight: var(--font-medium);
+  line-height: 1;
+}
+
+/* Sizes */
+.afw-badge--xs {
+  height: 18px;
+  padding: 0 var(--space-1);
+  font-size: var(--text-2xs);
+}
+
+.afw-badge--sm {
+  height: 20px;
+  padding: 0 var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.afw-badge--md {
+  height: 24px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.afw-badge--lg {
+  height: 28px;
+  padding: 0 var(--space-4);
+  font-size: var(--text-base);
+}
+
+/* Shapes */
+.afw-badge--pill {
+  border-radius: 9999px;
+}
+
+.afw-badge--rounded {
+  border-radius: var(--radius-sm);
+}
+
+.afw-badge--square {
+  border-radius: var(--radius-xs);
+}
+
+/* Colors - Neutral */
+.afw-badge--neutral {
+  background: var(--glass-bg-light);
+  color: var(--text-secondary);
+  border: 1px solid var(--panel-border-default);
+}
+
+/* Colors - Blue */
+.afw-badge--blue {
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--system-blue);
+  border: 1px solid rgba(88, 166, 255, 0.25);
+}
+
+/* Colors - Green */
+.afw-badge--green {
+  background: rgba(63, 185, 80, 0.15);
+  color: var(--system-green);
+  border: 1px solid rgba(63, 185, 80, 0.25);
+}
+
+/* Colors - Yellow */
+.afw-badge--yellow {
+  background: rgba(255, 214, 10, 0.15);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 214, 10, 0.25);
+}
+
+/* Colors - Red */
+.afw-badge--red {
+  background: rgba(255, 69, 58, 0.15);
+  color: var(--system-red);
+  border: 1px solid rgba(255, 69, 58, 0.25);
+}
+
+/* Colors - Orange */
+.afw-badge--orange {
+  background: rgba(240, 136, 62, 0.15);
+  color: var(--system-orange);
+  border: 1px solid rgba(240, 136, 62, 0.25);
+}
+
+/* Colors - Purple */
+.afw-badge--purple {
+  background: rgba(188, 140, 255, 0.15);
+  color: var(--system-purple);
+  border: 1px solid rgba(188, 140, 255, 0.25);
+}
+
+/* Dot */
+.afw-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* Icon */
+.afw-badge__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Interactive */
+.afw-badge--interactive {
+  cursor: pointer;
+}
+
+.afw-badge--interactive:hover {
+  transform: translateY(-1px);
+}
+
+.afw-badge--interactive:active {
+  transform: translateY(0);
+}
+
+.afw-badge--interactive:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .afw-badge {
+    transition: none;
+  }
+
+  .afw-badge--interactive:hover {
+    transform: none;
+  }
+}

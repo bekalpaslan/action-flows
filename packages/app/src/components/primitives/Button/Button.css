@@ -1,0 +1,334 @@
+/* Base Button Styles */
+.afw-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--duration-fast) var(--ease-in-out);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  font-weight: var(--font-medium);
+}
+
+/* Variant Styles */
+.afw-button--primary {
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--system-blue);
+  border: 1px solid rgba(88, 166, 255, 0.25);
+}
+
+.afw-button--primary:hover:not(:disabled):not(.afw-button--loading) {
+  background: rgba(88, 166, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(88, 166, 255, 0.2);
+}
+
+.afw-button--secondary {
+  background: var(--glass-bg-light);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border-default);
+}
+
+.afw-button--secondary:hover:not(:disabled):not(.afw-button--loading) {
+  background: var(--glass-bg-medium);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.afw-button--tertiary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--panel-border-default);
+}
+
+.afw-button--tertiary:hover:not(:disabled):not(.afw-button--loading) {
+  background: var(--glass-bg-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.afw-button--danger {
+  background: rgba(255, 69, 58, 0.15);
+  color: var(--system-red);
+  border: 1px solid rgba(255, 69, 58, 0.25);
+}
+
+.afw-button--danger:hover:not(:disabled):not(.afw-button--loading) {
+  background: rgba(255, 69, 58, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 69, 58, 0.2);
+}
+
+.afw-button--success {
+  background: rgba(63, 185, 80, 0.15);
+  color: var(--system-green);
+  border: 1px solid rgba(63, 185, 80, 0.25);
+}
+
+.afw-button--success:hover:not(:disabled):not(.afw-button--loading) {
+  background: rgba(63, 185, 80, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(63, 185, 80, 0.2);
+}
+
+.afw-button--warning {
+  background: rgba(240, 136, 62, 0.15);
+  color: var(--system-orange);
+  border: 1px solid rgba(240, 136, 62, 0.25);
+}
+
+.afw-button--warning:hover:not(:disabled):not(.afw-button--loading) {
+  background: rgba(240, 136, 62, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(240, 136, 62, 0.2);
+}
+
+.afw-button--ghost {
+  background: transparent;
+  color: var(--text-primary);
+  border: none;
+}
+
+.afw-button--ghost:hover:not(:disabled):not(.afw-button--loading) {
+  background: var(--glass-bg-light);
+}
+
+/* Size Styles */
+.afw-button--xs {
+  height: 28px;
+  padding: 0 var(--space-2);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-sm);
+}
+
+.afw-button--sm {
+  height: 32px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+}
+
+.afw-button--md {
+  height: 36px;
+  padding: 0 var(--space-4);
+  font-size: var(--text-base);
+  border-radius: var(--radius-md);
+}
+
+.afw-button--lg {
+  height: 42px;
+  padding: 0 var(--space-5);
+  font-size: var(--text-base);
+  border-radius: var(--radius-md);
+}
+
+.afw-button--xl {
+  height: 48px;
+  padding: 0 var(--space-6);
+  font-size: var(--text-lg);
+  border-radius: var(--radius-lg);
+}
+
+/* Shape Styles */
+.afw-button--rectangle {
+  border-radius: var(--radius-md);
+}
+
+.afw-button--square {
+  border-radius: var(--radius-md);
+  padding: 0;
+}
+
+.afw-button--square.afw-button--xs {
+  width: 28px;
+}
+
+.afw-button--square.afw-button--sm {
+  width: 32px;
+}
+
+.afw-button--square.afw-button--md {
+  width: 36px;
+}
+
+.afw-button--square.afw-button--lg {
+  width: 42px;
+}
+
+.afw-button--square.afw-button--xl {
+  width: 48px;
+}
+
+.afw-button--circle {
+  border-radius: 50%;
+  padding: 0;
+}
+
+.afw-button--circle.afw-button--xs {
+  width: 28px;
+}
+
+.afw-button--circle.afw-button--sm {
+  width: 32px;
+}
+
+.afw-button--circle.afw-button--md {
+  width: 36px;
+}
+
+.afw-button--circle.afw-button--lg {
+  width: 42px;
+}
+
+.afw-button--circle.afw-button--xl {
+  width: 48px;
+}
+
+.afw-button--pill {
+  border-radius: 9999px;
+}
+
+/* Icon Only Styles */
+.afw-button--icon-only {
+  padding: 0;
+}
+
+.afw-button--icon-only.afw-button--xs {
+  width: 28px;
+}
+
+.afw-button--icon-only.afw-button--sm {
+  width: 32px;
+}
+
+.afw-button--icon-only.afw-button--md {
+  width: 36px;
+}
+
+.afw-button--icon-only.afw-button--lg {
+  width: 42px;
+}
+
+.afw-button--icon-only.afw-button--xl {
+  width: 48px;
+}
+
+/* State Styles */
+.afw-button--loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.afw-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Glow Effects */
+.afw-button--glow-default {
+  box-shadow: 0 0 8px currentColor;
+}
+
+.afw-button--glow-hover:hover:not(:disabled):not(.afw-button--loading) {
+  box-shadow: 0 0 16px currentColor;
+}
+
+.afw-button--glow-always {
+  box-shadow: 0 0 16px currentColor;
+}
+
+/* Pulse Effect */
+@keyframes afw-button-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.afw-button--pulse {
+  animation: afw-button-pulse 2s ease-in-out infinite;
+}
+
+/* Shimmer Effect */
+@keyframes afw-button-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.afw-button--shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: afw-button-shimmer 3s linear infinite;
+  pointer-events: none;
+}
+
+/* Spinner */
+@keyframes afw-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.afw-button__spinner {
+  animation: afw-spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+/* Icon */
+.afw-button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Label */
+.afw-button__label {
+  display: inline-block;
+}
+
+/* Focus Styles */
+.afw-button:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .afw-button,
+  .afw-button--pulse,
+  .afw-button--shimmer,
+  .afw-button__spinner {
+    animation: none;
+    transition: none;
+  }
+
+  .afw-button:hover:not(:disabled):not(.afw-button--loading) {
+    transform: none;
+  }
+}

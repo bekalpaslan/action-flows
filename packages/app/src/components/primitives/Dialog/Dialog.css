@@ -1,0 +1,168 @@
+/* Dialog Backdrop */
+.afw-dialog__backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: afw-dialog-fade-in var(--duration-normal) var(--ease-in-out);
+}
+
+.afw-dialog__backdrop--blur {
+  backdrop-filter: blur(4px);
+}
+
+/* Dialog Content */
+.afw-dialog__content {
+  background: var(--panel-bg-elevated);
+  border: 1px solid var(--panel-border-strong);
+  border-radius: var(--panel-radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: afw-dialog-slide-up var(--duration-normal) var(--ease-apple);
+  position: relative;
+}
+
+/* Size Variants */
+.afw-dialog__content--sm {
+  max-width: 400px;
+}
+
+.afw-dialog__content--md {
+  max-width: 500px;
+}
+
+.afw-dialog__content--lg {
+  max-width: 600px;
+}
+
+.afw-dialog__content--xl {
+  max-width: 700px;
+}
+
+/* Dialog Header */
+.afw-dialog__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--panel-border-default);
+}
+
+.afw-dialog__header-icon {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.afw-dialog__header-title {
+  flex: 1;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Close Button */
+.afw-dialog__close-btn {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--duration-fast) var(--ease-in-out),
+              background-color var(--duration-fast) var(--ease-in-out);
+}
+
+.afw-dialog__close-btn:hover {
+  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.afw-dialog__close-btn:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
+}
+
+/* Dialog Body */
+.afw-dialog__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-5);
+}
+
+/* Custom scrollbar for dialog body */
+.afw-dialog__body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.afw-dialog__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.afw-dialog__body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.afw-dialog__body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Dialog Footer */
+.afw-dialog__footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--panel-border-default);
+}
+
+/* Animations */
+@keyframes afw-dialog-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes afw-dialog-slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .afw-dialog__backdrop,
+  .afw-dialog__content {
+    animation: none;
+  }
+}
+
+/* Focus styles for focusable elements inside dialog */
+.afw-dialog__content *:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
+}
