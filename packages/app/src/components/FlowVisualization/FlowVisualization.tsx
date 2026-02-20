@@ -19,10 +19,12 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import type { Chain } from '@afw/shared';
-import type { FlowNodeData } from '@afw/shared';
-import { AnimatedStepNode, type AnimatedStepNodeData } from './AnimatedStepNode';
+import { AnimatedStepNode } from './AnimatedStepNode';
 import { AnimatedFlowEdge } from './AnimatedFlowEdge';
+import { FlowchartNode } from './FlowchartNode';
+import { FlowchartEdge } from './FlowchartEdge';
 import { SwimlaneBackground } from './SwimlaneBackground';
+import type { FlowchartShape } from './FlowchartNode';
 import {
   assignSwimlanes,
   calculateNodePositions,
@@ -41,11 +43,27 @@ export interface FlowVisualizationProps {
 
 const nodeTypes = {
   animatedStep: AnimatedStepNode,
+  flowchartNode: FlowchartNode,
 };
 
 const edgeTypes = {
   animatedEdge: AnimatedFlowEdge,
+  flowchartEdge: FlowchartEdge,
 };
+
+/** Infer flowchart shape from action string and step position */
+function inferShape(action: string, stepIndex: number, totalSteps: number, isGate: boolean): FlowchartShape {
+  // First/last steps → start/end pill
+  if (stepIndex === 0 || stepIndex === totalSteps - 1) return 'start-end';
+  // Human gates / awaiting input → decision diamond
+  if (isGate || action.startsWith('gate/')) return 'decision';
+  // Analysis and planning → input parallelogram
+  if (action.startsWith('analyze/') || action.startsWith('plan/')) return 'input';
+  // Commits, docs, registry → data cylinder
+  if (action.startsWith('commit/') || action.startsWith('docs/') || action === 'registry-update') return 'data';
+  // Code, review, test → process rectangle (default)
+  return 'process';
+}
 
 export const FlowVisualization: React.FC<FlowVisualizationProps> = ({
   chain,
@@ -79,44 +97,32 @@ export const FlowVisualization: React.FC<FlowVisualizationProps> = ({
   );
 
   // Build nodes from chain steps
-  const nodes = useMemo<Node<AnimatedStepNodeData>[]>(() => {
+  const nodes = useMemo<Node[]>(() => {
     const positions = calculateNodePositions(chain.steps, swimlaneAssignments);
     const positionMap = new Map(positions.map(p => [p.id, p]));
 
-    return chain.steps.map(step => {
+    return chain.steps.map((step, index) => {
       const position = positionMap.get(`step-${step.stepNumber}`)!;
-
-      // Determine animation state based on status
-      let animationState: FlowNodeData['animationState'] = 'idle';
-      if (enableAnimations) {
-        if (step.status === 'pending') {
-          animationState = 'slide-in';
-        } else if (step.status === 'in_progress') {
-          animationState = 'pulse';
-        } else if (step.status === 'completed') {
-          animationState = 'shrink';
-        } else if (step.status === 'failed') {
-          animationState = 'shake';
-        }
-      }
+      const isGate = step.action.includes('gate');
+      const shape = inferShape(step.action, index, chain.steps.length, isGate);
 
       return {
         id: `step-${step.stepNumber}`,
-        type: 'animatedStep',
+        type: 'flowchartNode',
         position: { x: position.x, y: position.y },
         data: {
-          step,
+          label: step.action,
+          shape,
+          status: step.status as 'pending' | 'in_progress' | 'completed' | 'failed' | 'skipped',
           stepNumber: step.stepNumber,
-          action: step.action,
-          status: step.status,
-          description: step.description,
           model: step.model,
-          animationState,
-          onInspect: (stepNumber: number) => {
+          duration: step.duration ? `${(step.duration / 1000).toFixed(1)}s` : undefined,
+          error: step.error,
+          onSelect: (stepNumber: number) => {
             setSelectedStep(stepNumber);
             onStepClick?.(stepNumber);
           },
-        } as AnimatedStepNodeData,
+        },
       };
     });
   }, [chain.steps, swimlaneAssignments, onStepClick, enableAnimations]);
@@ -126,23 +132,16 @@ export const FlowVisualization: React.FC<FlowVisualizationProps> = ({
     const edgeDefinitions = calculateSwimlaneEdges(chain.steps);
 
     return edgeDefinitions.map(edge => {
-      // Extract step numbers from edge IDs (format: edge-{sourceNum}-{targetNum})
-      const idParts = edge.id.split('-');
-      const sourceStepNum = idParts[1] ? Number(idParts[1]) : 0;
-      const targetStepNum = idParts[2] ? Number(idParts[2]) : 0;
-
       return {
         id: edge.id,
         source: edge.source,
         target: edge.target,
-        type: 'animatedEdge',
-        animated: edge.animated,
-        markerEnd: { type: MarkerType.ArrowClosed, color: edge.animated ? '#fbc02d' : '#bdbdbd' },
+        type: 'flowchartEdge',
+        markerEnd: { type: MarkerType.ArrowClosed, color: edge.animated ? '#fbc02d' : '#6e7a8a' },
         data: {
-          dataLabel: edge.dataLabel,
+          label: edge.dataLabel,
           active: edge.animated,
-          sourceStep: sourceStepNum as import('@afw/shared').StepNumber,
-          targetStep: targetStepNum as import('@afw/shared').StepNumber,
+          variant: 'default' as const,
         },
       };
     });
@@ -200,15 +199,14 @@ export const FlowVisualization: React.FC<FlowVisualizationProps> = ({
         <Controls />
         <MiniMap
           nodeColor={(node) => {
-            const step = (node.data as AnimatedStepNodeData).step;
-            if (!step) return '#ccc';
-            switch (step.status) {
-              case 'completed': return '#4caf50';
-              case 'failed': return '#f44336';
-              case 'in_progress': return '#fbc02d';
-              case 'pending': return '#ccc';
-              case 'skipped': return '#999';
-              default: return '#ccc';
+            const status = node.data?.status;
+            switch (status) {
+              case 'completed': return '#3fb950';
+              case 'failed': return '#ff453a';
+              case 'in_progress': return '#ffd60a';
+              case 'pending': return '#6e7a8a';
+              case 'skipped': return '#484f58';
+              default: return '#6e7a8a';
             }
           }}
           maskColor="rgba(0, 0, 0, 0.05)"

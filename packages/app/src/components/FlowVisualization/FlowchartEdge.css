@@ -1,0 +1,101 @@
+/* Flowchart edge path styles */
+.afw-flowchart-edge__path {
+  stroke-width: 2;
+  fill: none;
+  transition: stroke var(--duration-fast) var(--ease-in-out);
+}
+
+.afw-flowchart-edge__path--default {
+  stroke: var(--text-tertiary);
+}
+
+.afw-flowchart-edge__path--conditional {
+  stroke: var(--system-blue);
+  stroke-dasharray: 6 4;
+}
+
+.afw-flowchart-edge__path--error {
+  stroke: var(--system-red);
+}
+
+.afw-flowchart-edge__path--active {
+  stroke: var(--system-yellow);
+  stroke-width: 2.5;
+}
+
+/* Edge particles for active state animation */
+.afw-flowchart-edge__particles {
+  pointer-events: none;
+}
+
+.afw-flowchart-edge__particle {
+  fill: var(--system-yellow);
+  filter: drop-shadow(0 0 3px rgba(255, 214, 0, 0.6));
+}
+
+/* Edge label */
+.afw-flowchart-edge__label-wrapper {
+  overflow: visible;
+  pointer-events: none;
+}
+
+.afw-flowchart-edge__label {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel-bg-elevated);
+  border: 1px solid var(--panel-border-default);
+  border-radius: 9999px;
+  padding: 2px var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  pointer-events: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  box-sizing: border-box;
+}
+
+/* Hover states */
+.afw-flowchart-edge__path:hover {
+  stroke-width: 3;
+}
+
+.afw-flowchart-edge__path--default:hover {
+  stroke: var(--text-secondary);
+}
+
+.afw-flowchart-edge__path--conditional:hover {
+  stroke: var(--system-blue);
+  filter: brightness(1.2);
+}
+
+.afw-flowchart-edge__path--error:hover {
+  stroke: var(--system-red);
+  filter: brightness(1.2);
+}
+
+.afw-flowchart-edge__path--active:hover {
+  stroke: var(--system-yellow);
+  filter: brightness(1.1);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .afw-flowchart-edge__path {
+    transition: none;
+  }
+
+  .afw-flowchart-edge__particle animate,
+  .afw-flowchart-edge__particle animateMotion {
+    display: none;
+  }
+
+  .afw-flowchart-edge__particle {
+    opacity: 0;
+  }
+}
