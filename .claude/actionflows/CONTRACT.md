@@ -182,7 +182,7 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 #### Format 1.3: Chain Status Update (P4)
 **TypeScript:** `ChainStatusUpdateParsed`
 **Parser:** `parseChainStatusUpdate(text: string)`
-**Pattern:** `/^## Chain Status: (.+)$/m`
+**Pattern:** `/^## Chain: (.+) -- Updated$/m`
 **Example:** ORCHESTRATOR.md § Chain Status Update
 
 **Required Fields:**

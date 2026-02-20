@@ -85,6 +85,7 @@ ACTIONS.md contains 5 distinct table formats organized by action category. Choos
 **Example:**
 ```markdown
 | analyze/ | Codebase analysis | YES | aspect, scope | sonnet | YES (5.2) |
+| brainstorm/ | Structured ideation | YES | topic | opus | YES (5.3) |
 ```
 
 **Validation Rules:**

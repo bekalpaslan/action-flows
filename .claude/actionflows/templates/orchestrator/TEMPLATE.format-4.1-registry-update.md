@@ -23,7 +23,7 @@ None
 
 ## Validation Rules
 
-- File must be one of the four registry files
+- File is commonly INDEX.md, FLOWS.md, ACTIONS.md, or LEARNINGS.md, but any registry file path is valid (extensible)
 - Operation must be one of the valid types
 - Line content should be the exact text added/removed/updated
 

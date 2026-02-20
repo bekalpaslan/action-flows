@@ -23,7 +23,7 @@ These fields MUST be present in every dual output:
 8. **Disagreements Count** — `- Disagreements: {N}`
 9. **Full Reports Label** — `**Full reports:**`
 10. **Original Report Path** — `- Original: \`{path}\``
-11. **Critique Report Path** — `- Critique: \`{path}\``
+11. **Second Opinion Report Path** — `- Second Opinion: \`{path}\``
 12. **Continuing** — `Continuing to Step {N}...`
 
 ---
@@ -57,7 +57,7 @@ These fields are optional:
 
 **Full reports:**
 - Original: `{path-to-original-report}`
-- Critique: `{path-to-critique-report}`
+- Second Opinion: `{path-to-second-opinion-report}`
 
 Continuing to Step {N}...
 ```
@@ -134,20 +134,20 @@ Continuing to Step {N}...
 
 ### Report Paths
 
-- **Original Report Pattern:** `Original report: {path}`
-- **Critique Report Pattern:** `Critique report: {path}`
+- **Original Report Pattern:** `- Original: \`{path}\``
+- **Second Opinion Report Pattern:** `- Second Opinion: \`{path}\``
 - **Path Format:** Relative to project root (e.g., `.claude/actionflows/logs/review/{name}/review-report.md`)
 - **Example:**
   ```
-  Original report: .claude/actionflows/logs/review/auth-middleware_2026-02-13-14-30-45/review-report.md
-  Critique report: .claude/actionflows/logs/review/auth-middleware_2026-02-13-14-30-45/second-opinion-critique.md
+  - Original: `.claude/actionflows/logs/review/auth-middleware_2026-02-13-14-30-45/review-report.md`
+  - Second Opinion: `.claude/actionflows/logs/review/auth-middleware_2026-02-13-14-30-45/second-opinion-critique.md`
   ```
 
 ### Continuing
 
-- **Pattern:** `Continuing with Step {N}...`
+- **Pattern:** `Continuing to Step {N}...`
 - **Step Number:** Integer (next step number)
-- **Example:** `Continuing with Step 4...`
+- **Example:** `Continuing to Step 4...`
 
 ---
 
@@ -216,7 +216,7 @@ The original review's severity assessment for error message exposure is appropri
 
 **Full reports:**
 - Original: `.claude/actionflows/logs/review/auth-middleware_2026-02-13-14-30-45/review-report.md`
-- Critique: `.claude/actionflows/logs/review/auth-middleware_2026-02-13-14-30-45/second-opinion-critique.md`
+- Second Opinion: `.claude/actionflows/logs/review/auth-middleware_2026-02-13-14-30-45/second-opinion-critique.md`
 
 Continuing to Step 4...
 ```
@@ -242,9 +242,9 @@ StepPatterns.dualOutput = {
   missedIssues: /^- Missed issues: (\d+)/m,
   disagreements: /^- Disagreements: (\d+)/m,
   notable: /^- Notable: (.+)/m,
-  originalReport: /^Original report: (.+)/m,
-  critiqueReport: /^Critique report: (.+)/m,
-  continuing: /^Continuing with Step (\d+)/m,
+  originalReport: /^- Original: (.+)/m,
+  secondOpinionReport: /^- Second Opinion: (.+)/m,
+  continuing: /^Continuing to Step (\d+)/m,
 };
 ```
 

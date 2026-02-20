@@ -13,7 +13,7 @@
 These sections MUST be present in every review report:
 
 1. **Title** — `# Review Report: {scope}`
-2. **Verdict** — `## Verdict: {APPROVED | NEEDS_CHANGES | REJECTED}`
+2. **Verdict** — `## Verdict: {APPROVED | NEEDS_CHANGES}`
 3. **Score** — `## Score: {0-100}%`
 4. **Summary** — 2-3 sentence overview
 5. **Findings** — Table with 6 columns (can be empty if no findings)
@@ -35,7 +35,7 @@ These sections are conditional:
 ```markdown
 # Review Report: {scope}
 
-## Verdict: {APPROVED | NEEDS_CHANGES | REJECTED}
+## Verdict: {APPROVED | NEEDS_CHANGES}
 ## Score: {0-100}%
 
 ## Summary
@@ -78,7 +78,7 @@ Or: N/A — mode is review-only
 
 ### Verdict
 
-- **Type:** Enum (`APPROVED` | `NEEDS_CHANGES` | `REJECTED`)
+- **Type:** Enum (`APPROVED` | `NEEDS_CHANGES`)
 - **Validation:** Enforced by Zod schema
 - **Optional qualifiers:** Can include notes in parentheses (e.g., "APPROVED (with recommendations)")
 - **Lowercase allowed:** Parser accepts "APPROVED", "Approved", "approved"
@@ -104,7 +104,7 @@ Or: N/A — mode is review-only
 |--------|------|-------------|---------|
 | **#** | Integer | Finding number (sequential: 1, 2, 3...) | `1` |
 | **File** | String | Relative path from project root | `packages/backend/src/routes/session.ts` |
-| **Line** | String | Single line or range | `42` or `42-45` |
+| **Line** | Integer | Single line number only | `42` |
 | **Severity** | Enum | `critical` \| `high` \| `medium` \| `low` (lowercase) | `high` |
 | **Description** | String | What the issue is (with code context if helpful) | Missing input validation for sessionId parameter |
 | **Suggestion** | String | How to fix it (with code examples if applicable) | Add Zod validation: `z.object({ sessionId: z.string() })` |
@@ -169,7 +169,7 @@ The auth middleware implementation is mostly correct but has 3 critical security
 |---|------|------|----------|-------------|------------|
 | 1 | packages/backend/src/middleware/auth.ts | 15 | critical | Missing input validation for `Authorization` header | Add Zod validation: `z.string().min(1).startsWith('Bearer ')` |
 | 2 | packages/backend/src/middleware/auth.ts | 23 | high | JWT verification doesn't check token expiration | Use `jwt.verify()` with `expiresIn` option |
-| 3 | packages/backend/src/middleware/auth.ts | 45-50 | medium | Error messages expose internal details | Use generic "Unauthorized" message instead of stack traces |
+| 3 | packages/backend/src/middleware/auth.ts | 45 | medium | Error messages expose internal details | Use generic "Unauthorized" message instead of stack traces |
 
 ## Fixes Applied
 

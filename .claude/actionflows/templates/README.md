@@ -6,20 +6,32 @@ This directory contains canonical template files for creating new actions and fl
 
 ```
 templates/
-├── orchestrator/         # Orchestrator output format templates (8 formats)
+├── orchestrator/         # Orchestrator output format templates (14 formats)
 │   ├── TEMPLATE.format-1.1-chain-compilation.md
 │   ├── TEMPLATE.format-1.2-execution-start.md
 │   ├── TEMPLATE.format-1.3-chain-status.md
 │   ├── TEMPLATE.format-1.4-execution-complete.md
 │   ├── TEMPLATE.format-2.1-step-completion.md
 │   ├── TEMPLATE.format-2.2-dual-output.md
+│   ├── TEMPLATE.format-2.3-second-opinion-skip.md
+│   ├── TEMPLATE.format-3.1-human-gate.md
+│   ├── TEMPLATE.format-3.3-session-start.md
 │   ├── TEMPLATE.format-3.2-learning-surface.md
-│   └── TEMPLATE.format-4.1-registry-update.md
-├── agent/                # Agent output templates (4 formats)
+│   ├── TEMPLATE.format-4.1-registry-update.md
+│   ├── TEMPLATE.format-4.2-index-entry.md
+│   ├── TEMPLATE.format-4.3-learnings-entry.md
+│   ├── TEMPLATE.format-6.1-error.md
+│   └── TEMPLATE.format-6.2-routing.md
+├── agent/                # Agent output templates (9 formats)
 │   ├── TEMPLATE.report.md
 │   ├── TEMPLATE.review-report.md
 │   ├── TEMPLATE.changes.md
-│   └── TEMPLATE.test-report.md
+│   ├── TEMPLATE.test-report.md
+│   ├── TEMPLATE.format-5.3-brainstorm-report.md
+│   ├── TEMPLATE.format-5.4-plan-report.md
+│   ├── TEMPLATE.format-5.5-analysis-report.md
+│   ├── TEMPLATE.format-5.6-second-opinion-report.md
+│   └── TEMPLATE.format-6-notification.md
 ├── git/                  # Git convention templates (2 formats)
 │   ├── TEMPLATE.commit-message.md
 │   └── TEMPLATE.pr-description.md
@@ -55,8 +67,15 @@ Each template includes:
 4. **TEMPLATE.format-1.4-execution-complete.md** — Final chain completion summary
 5. **TEMPLATE.format-2.1-step-completion.md** — Single step completion announcement
 6. **TEMPLATE.format-2.2-dual-output.md** — Dual output (review + second-opinion)
-7. **TEMPLATE.format-3.2-learning-surface.md** — Surface agent learnings to orchestrator
-8. **TEMPLATE.format-4.1-registry-update.md** — Registry file modification announcement
+7. **TEMPLATE.format-2.3-second-opinion-skip.md** — Skip second-opinion step announcement
+8. **TEMPLATE.format-3.1-human-gate.md** — Human decision gate presentation
+9. **TEMPLATE.format-3.2-learning-surface.md** — Surface agent learnings to orchestrator
+10. **TEMPLATE.format-3.3-session-start.md** — Session initialization acknowledgment
+11. **TEMPLATE.format-4.1-registry-update.md** — Registry file modification announcement
+12. **TEMPLATE.format-4.2-index-entry.md** — INDEX.md execution record entry
+13. **TEMPLATE.format-4.3-learnings-entry.md** — LEARNINGS.md discovery entry
+14. **TEMPLATE.format-6.1-error.md** — Error announcement during execution
+15. **TEMPLATE.format-6.2-routing.md** — Context routing decision announcement
 
 **Source:** CONTRACT.md § Formats 1.x, 2.x, 3.x, 4.x
 
@@ -77,16 +96,25 @@ Each template includes:
 
 **Output Templates:**
 
-1. **TEMPLATE.report.md** — Analysis/audit/plan output (from analyze/ and plan/ agents)
+1. **TEMPLATE.report.md** — Analysis/audit output (from analyze/ agents) — CONTRACT.md Format 5.2
 2. **TEMPLATE.review-report.md** — Review output (from review/ agents) — CONTRACT.md Format 5.1
 3. **TEMPLATE.changes.md** — Code implementation output (from code/ agents)
 4. **TEMPLATE.test-report.md** — Test execution output (from test/ agents)
+5. **TEMPLATE.format-5.3-brainstorm-report.md** — Brainstorm session transcript — CONTRACT.md Format 5.3
+6. **TEMPLATE.format-5.4-plan-report.md** — Planning output (from plan/ agents) — CONTRACT.md Format 5.4
+7. **TEMPLATE.format-5.5-analysis-report.md** — Detailed technical analysis — Extension of Format 5.2
+8. **TEMPLATE.format-5.6-second-opinion-report.md** — Second-opinion critique output — CONTRACT.md Format 5.6
+9. **TEMPLATE.format-6-notification.md** — Notification announcements — Multiple formats (info, warning, critical)
 
 **Contract Status:**
 - `TEMPLATE.review-report.md` — Fully contract-defined (Format 5.1), parsed, validated
 - `TEMPLATE.report.md` — Contract-defined (Format 5.2), parser exists
+- `TEMPLATE.format-5.3-brainstorm-report.md` — Contract-defined (Format 5.3), recommended but not strictly enforced
+- `TEMPLATE.format-5.4-plan-report.md` — Contract-defined (Format 5.4), parser pending
+- `TEMPLATE.format-5.6-second-opinion-report.md` — Contract-defined (Format 5.6), parser pending
 - `TEMPLATE.changes.md` — Free-form documentation (no parser)
 - `TEMPLATE.test-report.md` — Free-form documentation (no parser)
+- `TEMPLATE.format-6-notification.md` — Free-form documentation (no parser)
 
 **Source:** Analysis of agent outputs, CONTRACT.md § Format 5.x
 
@@ -219,10 +247,15 @@ Each template covers:
 **When implementing agent output:**
 
 1. **Identify output type:**
-   - Analysis/audit/plan → Use `agent/TEMPLATE.report.md`
+   - Analysis/audit → Use `agent/TEMPLATE.report.md` (Format 5.2)
    - Review → Use `agent/TEMPLATE.review-report.md` (MUST follow CONTRACT.md Format 5.1)
-   - Code implementation → Use `agent/TEMPLATE.changes.md`
-   - Test execution → Use `agent/TEMPLATE.test-report.md`
+   - Brainstorm session → Use `agent/TEMPLATE.format-5.3-brainstorm-report.md` (Format 5.3)
+   - Planning/diagnosis → Use `agent/TEMPLATE.format-5.4-plan-report.md` (Format 5.4)
+   - Deep technical analysis → Use `agent/TEMPLATE.format-5.5-analysis-report.md` (Format 5.5)
+   - Second opinion/critique → Use `agent/TEMPLATE.format-5.6-second-opinion-report.md` (Format 5.6)
+   - Code implementation → Use `agent/TEMPLATE.changes.md` (free-form)
+   - Test execution → Use `agent/TEMPLATE.test-report.md` (free-form)
+   - Notifications → Use `agent/TEMPLATE.format-6-notification.md` (Format 6.x)
 
 2. **Follow template structure:**
    - Replace all `{placeholder}` values
@@ -230,15 +263,19 @@ Each template covers:
    - Omit optional sections if not applicable
    - Follow validation rules (for contract-defined formats)
 
-3. **Contract compliance (review/ agents only):**
-   - Verdict must be exact enum: APPROVED | NEEDS_CHANGES | REJECTED
-   - Score must be integer 0-100 with `%` symbol
-   - Findings table must have exactly 6 columns in order
-   - Severity must be lowercase: critical | high | medium | low
+3. **Contract compliance (contract-defined formats only):**
+   - **Review reports (Format 5.1):** Verdict must be exact enum: APPROVED | NEEDS_CHANGES (no REJECTED), Score 0-100 with `%`, Findings table 6 columns, Severity lowercase
+   - **Analysis reports (Format 5.2):** Required sections with numbered analysis, Recommendations with P0/P1/P2 priority
+   - **Brainstorm (Format 5.3):** Recommended but not enforced; free-form Q&A transcript with Key Insights
+   - **Second opinion (Format 5.6):** Original + Critique structure, Missed Issues section, Disagreements section with evidence
+   - **Notifications (Format 6.x):** Message + Details + Action structure, Severity level (info/warning/critical)
 
 4. **Save to log folder:**
    - Analysis: `.claude/actionflows/logs/analyze/{description}_{datetime}/report.md`
    - Review: `.claude/actionflows/logs/review/{description}_{datetime}/review-report.md`
+   - Brainstorm: `.claude/actionflows/logs/brainstorm/{description}_{datetime}/transcript.md`
+   - Plan: `.claude/actionflows/logs/plan/{description}_{datetime}/plan-report.md`
+   - Second Opinion: `.claude/actionflows/logs/review/{description}_{datetime}/second-opinion-critique.md`
    - Code: `.claude/actionflows/logs/code/{description}_{datetime}/changes.md`
    - Test: `.claude/actionflows/logs/test/{description}_{datetime}/test-results.md`
 

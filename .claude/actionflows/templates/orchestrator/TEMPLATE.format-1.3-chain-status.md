@@ -74,4 +74,4 @@ Continuing execution...
 - **CONTRACT.md:** § Format 1.3 — Chain Status Update
 - **TypeScript Type:** `ChainStatusUpdateParsed`
 - **Parser:** `parseChainStatusUpdate(text: string)` in `packages/shared/src/contract/parsers.ts`
-- **Pattern:** `/^## Chain Status: (.+)$/m` or `/^## Chain: (.+) -- Updated$/m`
+- **Pattern:** `/^## Chain: (.+) -- Updated$/m`
