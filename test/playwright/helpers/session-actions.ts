@@ -72,3 +72,23 @@ export async function getCurrentSessionId(page: Page): Promise<string> {
   const text = await sessionIdText.textContent({ timeout: TIMEOUTS.element });
   return text?.trim() || '';
 }
+
+/**
+ * Wait for a chat message to appear by index and verify role
+ * @param page Playwright page
+ * @param index Message index (1-indexed)
+ * @param role Expected role ('user' | 'assistant')
+ * @param timeout Optional timeout in ms
+ */
+export async function waitForMessage(
+  page: Page,
+  index: number,
+  role: 'user' | 'assistant',
+  timeout: number = TIMEOUTS.message
+): Promise<void> {
+  const selector = `[data-testid="message-msg-${index}"]`;
+  await expect(page.locator(selector)).toBeVisible({ timeout });
+
+  const roleClass = role === 'user' ? 'chat-bubble--user' : 'chat-bubble--assistant';
+  await expect(page.locator(selector)).toHaveClass(new RegExp(roleClass));
+}

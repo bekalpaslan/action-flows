@@ -13,11 +13,14 @@
  */
 
 import React from 'react';
-import type { Session, FlowAction } from '@afw/shared';
+import type { Session, FlowAction, SessionId, WorkbenchId } from '@afw/shared';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { StatCard, StatCardRow } from '../shared/StatCard';
 import { DashboardCard } from '../shared/DashboardCard';
+import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
+import { useTerminal } from '../../contexts/TerminalContext';
+import LazyTerminal from '../LazyTerminal';
 import './WorkStar.css';
 
 export interface WorkStarProps {
@@ -64,11 +67,21 @@ export function WorkStar({
   actions = [],
 }: WorkStarProps): React.ReactElement {
   const sessionCount = sessions.length;
+  const { activeWorkbench } = useWorkbenchContext();
+  const { perWorkbenchState, updateHeight, toggleCollapsed } = useTerminal();
 
   // Determine the active session: use activeSessionId if provided, else default to first session
   const activeSession = activeSessionId
     ? sessions.find(s => s.id === activeSessionId) || sessions[0]
     : sessions[0];
+
+  // Get terminal state for current workbench
+  const terminalState = perWorkbenchState.get(activeWorkbench as WorkbenchId) || {
+    isVisible: false,
+    sessionId: null,
+    height: 200,
+    isCollapsed: false,
+  };
 
   // DiscussButton integration
   const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
@@ -161,6 +174,19 @@ export function WorkStar({
               <p>Active session not found. Select a session from the sidebar.</p>
             </div>
           </DashboardCard>
+        )}
+
+        {/* Terminal - mounted via LazyTerminal for code-splitting */}
+        {activeSessionId && (
+          <div className="work-workbench__terminal-container" style={{ marginTop: '20px' }}>
+            <LazyTerminal
+              sessionId={activeSessionId as SessionId}
+              height={terminalState.height}
+              onHeightChange={(height: number) => updateHeight(activeWorkbench as WorkbenchId, height)}
+              isCollapsed={terminalState.isCollapsed}
+              onToggleCollapse={() => toggleCollapsed(activeWorkbench as WorkbenchId)}
+            />
+          </div>
         )}
       </div>
 

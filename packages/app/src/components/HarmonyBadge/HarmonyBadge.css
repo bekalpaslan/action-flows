@@ -11,7 +11,7 @@
   font-family: 'Inter', sans-serif;
   font-weight: var(--font-medium);
   cursor: default;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .harmony-badge[role="button"] {

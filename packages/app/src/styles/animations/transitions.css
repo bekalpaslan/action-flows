@@ -9,19 +9,19 @@
  */
 
 /* ============================================================================
- * CSS Custom Properties
+ * CSS Custom Properties — Aliases to Canonical Design Tokens
  * ============================================================================ */
 
 :root {
-  /* Transition timing */
-  --transition-duration: 180ms;
-  --transition-duration-fast: 120ms;
-  --transition-duration-slow: 250ms;
+  /* Transition timing — aliases to canonical motion tokens */
+  --transition-duration: var(--duration-normal);
+  --transition-duration-fast: var(--duration-fast);
+  --transition-duration-slow: var(--duration-slow);
 
-  /* Easing functions */
-  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
-  --ease-in: cubic-bezier(0.4, 0.0, 1, 1);
-  --ease-in-out: cubic-bezier(0.4, 0.0, 0.2, 1);
+  /* Easing functions — aliases to canonical motion tokens */
+  --ease-out: var(--ease-out);
+  --ease-in: var(--ease-in);
+  --ease-in-out: var(--ease-in-out);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -341,6 +341,11 @@
     --transition-duration: 0ms;
     --transition-duration-fast: 0ms;
     --transition-duration-slow: 0ms;
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
   }
 
   /* Disable all animations */

@@ -840,6 +840,20 @@
 }
 
 /* ==========================================================================
+   Motion Token Accessibility Override
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+  }
+}
+
+/* ==========================================================================
    SnowUI Design Tokens — Dark Mode
    ========================================================================== */
 

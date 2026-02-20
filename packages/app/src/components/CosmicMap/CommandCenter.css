@@ -45,7 +45,7 @@
   background: var(--input-bg-default);
   border: var(--input-border-default);
   border-radius: var(--btn-radius-md);
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .command-center__input-section:hover {
@@ -97,7 +97,7 @@
   color: var(--text-secondary);
   cursor: pointer;
   border-radius: var(--btn-radius-sm);
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .command-center__submit-btn:hover:not(:disabled) {
@@ -137,7 +137,7 @@
   font-weight: var(--font-medium);
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .command-center__session-trigger:hover {
@@ -235,7 +235,7 @@
   cursor: pointer;
   width: 100%;
   text-align: left;
-  transition: all 0.15s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .command-center__session-option:hover {
@@ -304,7 +304,7 @@
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
   cursor: help;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .command-center__health-indicator:hover {

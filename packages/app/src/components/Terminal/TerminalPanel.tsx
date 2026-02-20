@@ -2,9 +2,9 @@
  * Terminal Panel Component
  * Embedded xterm.js terminal for agent output with step attribution
  *
- * NOTE: This component is designed for single-session terminal mode.
- * Currently, TerminalTabs is used in AppContent for multi-session support.
- * This file is kept for potential future use or as reference implementation.
+ * NOTE: Rendered by WorkStar via LazyTerminal.
+ * This is a session-aware terminal for the active workbench.
+ * Terminal state (height, collapsed) is persisted per-workbench via TerminalContext.
  */
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -16,7 +16,7 @@ import type { SessionId, StepNumber, TerminalOutputEvent } from '@afw/shared';
 import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { useDiscussButton } from '../../hooks/useDiscussButton';
 
-interface TerminalPanelProps {
+export interface TerminalPanelProps {
   sessionId?: SessionId;
   height: number;
   onHeightChange: (height: number) => void;

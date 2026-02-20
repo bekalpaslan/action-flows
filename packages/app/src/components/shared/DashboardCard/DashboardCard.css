@@ -11,7 +11,7 @@
   border-radius: var(--snow-radius);
   box-shadow: var(--snow-shadow);
   padding: var(--space-5);
-  transition: all var(--duration-normal) var(--ease-in-out);
+  transition: opacity var(--duration-normal) var(--ease-in-out), color var(--duration-normal) var(--ease-in-out), background-color var(--duration-normal) var(--ease-in-out), border-color var(--duration-normal) var(--ease-in-out), transform var(--duration-normal) var(--ease-in-out);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 

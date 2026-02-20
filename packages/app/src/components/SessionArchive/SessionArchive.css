@@ -52,7 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .archive-close-btn:hover {
@@ -86,7 +86,7 @@
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 14px;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .archive-item:hover {
@@ -161,7 +161,7 @@
   font-size: var(--text-xs);
   font-weight: var(--font-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .restore-btn {

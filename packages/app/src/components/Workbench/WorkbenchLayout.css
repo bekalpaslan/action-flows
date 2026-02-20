@@ -27,7 +27,7 @@
   font-weight: var(--font-medium);
   cursor: pointer;
   box-shadow: var(--panel-glow-default);
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .workbench-layout__return-to-universe:hover {
@@ -37,8 +37,19 @@
   transform: translateY(-var(--space-px));
 }
 
+.workbench-layout__return-to-universe:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
+}
+
 .workbench-layout__return-to-universe:active {
   transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workbench-layout__return-to-universe {
+    transition: background-color 0.15s linear, border-color 0.15s linear;
+  }
 }
 
 /* ============================================================================
@@ -54,6 +65,12 @@
   position: relative; /* Establish positioning context */
   margin-left: var(--app-sidebar-width);
   transition: margin-left var(--duration-normal) var(--ease-apple);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workbench-body {
+    transition: none;
+  }
 }
 
 /* When AppSidebar is collapsed */
@@ -94,6 +111,12 @@
   transition: margin-left var(--duration-fast) var(--ease-apple);
   position: relative; /* Establish positioning context for children */
   contain: layout style; /* CSS containment to prevent layout escape */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workbench-main {
+    transition: none;
+  }
 }
 
 

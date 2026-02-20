@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: fadeIn 0.3s ease-in;
+  animation: fadeIn var(--duration-normal) var(--ease-out);
 }
 
 @keyframes fadeIn {
@@ -49,9 +49,9 @@
   font-weight: var(--font-medium);
   cursor: pointer;
   box-shadow: var(--panel-glow-default);
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-normal) var(--ease-out), color var(--duration-normal) var(--ease-out), background-color var(--duration-normal) var(--ease-out), border-color var(--duration-normal) var(--ease-out), transform var(--duration-normal) var(--ease-out);
   z-index: 10000;
-  animation: slideInFromBottom 0.3s ease-out;
+  animation: slideInFromBottom var(--duration-normal) var(--ease-out);
 }
 
 @keyframes slideInFromBottom {
@@ -62,6 +62,17 @@
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+@keyframes slideOutToBottom {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(20px);
+    opacity: 0;
   }
 }
 

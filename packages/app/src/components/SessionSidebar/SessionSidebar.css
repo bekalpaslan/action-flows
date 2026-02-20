@@ -89,6 +89,12 @@
   transform: scale(0.92);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-new-session-btn:active {
+    transform: none;
+  }
+}
+
 
 /* Scrollable content */
 .sidebar-content {
@@ -179,50 +185,48 @@
 }
 
 /* Light theme adjustments */
-@media (prefers-color-scheme: light) {
-  .session-sidebar {
-    background-color: var(--panel-bg-elevated);
-    border-right-color: var(--glass-bg-dark);
-  }
+[data-theme='light'] .session-sidebar {
+  background-color: var(--panel-bg-elevated);
+  border-right-color: var(--glass-bg-dark);
+}
 
-  .sidebar-header {
-    background-color: rgba(0, 0, 0, 0.03);
-    border-bottom-color: var(--glass-bg-dark);
-  }
+[data-theme='light'] .sidebar-header {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom-color: var(--glass-bg-dark);
+}
 
-  .sidebar-title {
-    color: var(--panel-bg-inset);
-  }
+[data-theme='light'] .sidebar-title {
+  color: var(--panel-bg-inset);
+}
 
-  .section-title {
-    color: rgba(0, 0, 0, 0.5);
-  }
+[data-theme='light'] .section-title {
+  color: rgba(0, 0, 0, 0.5);
+}
 
-  .sidebar-divider {
-    background-color: var(--glass-bg-dark);
-  }
+[data-theme='light'] .sidebar-divider {
+  background-color: var(--glass-bg-dark);
+}
 
-  .empty-message {
-    color: rgba(0, 0, 0, 0.4);
-  }
+[data-theme='light'] .empty-message {
+  color: rgba(0, 0, 0, 0.4);
+}
 
-  .session-count,
-  .session-count-compact {
-    color: rgba(0, 0, 0, 0.5);
-  }
+[data-theme='light'] .session-count,
+[data-theme='light'] .session-count-compact {
+  color: rgba(0, 0, 0, 0.5);
+}
 
-  .sidebar-footer {
-    background-color: rgba(0, 0, 0, 0.03);
-    border-top-color: var(--glass-bg-dark);
-  }
+[data-theme='light'] .sidebar-footer {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-top-color: var(--glass-bg-dark);
+}
 
-  .sidebar-content::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-  }
+[data-theme='light'] .sidebar-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
 
-  .sidebar-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.3);
-  }
+[data-theme='light'] .sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 

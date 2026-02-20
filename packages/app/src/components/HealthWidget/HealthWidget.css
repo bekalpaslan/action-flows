@@ -267,7 +267,7 @@
   border: 1px solid rgba(99, 102, 241, 0.4);
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   font-family: var(--font-family-mono, 'SF Mono', Consolas, monospace);
   font-size: 11px;
   color: var(--text-primary, #fff);

@@ -30,11 +30,25 @@
   font-size: var(--text-sm);
   animation: toast-slide-in 0.3s ease-out;
   pointer-events: auto;
-  transition: opacity 0.2s var(--transition-fast), transform 0.2s var(--transition-fast);
+  transition: color var(--duration-fast) var(--ease-in-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transition: none;
+  }
+
+  .toast--dismissing {
+    animation: none;
+  }
 }
 
 .toast:hover {
   opacity: 1 !important;
+}
+
+.toast--dismissing {
+  animation: toast-exit var(--duration-fast) var(--ease-in) forwards;
 }
 
 @keyframes toast-slide-in {
@@ -45,6 +59,17 @@
   to {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+@keyframes toast-exit {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(120%);
+    opacity: 0;
   }
 }
 
@@ -80,6 +105,11 @@
 .toast-close:hover {
   color: var(--color-text-primary);
   background: var(--color-bg-hover);
+}
+
+.toast-close:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
 }
 
 /* Toast type variants */

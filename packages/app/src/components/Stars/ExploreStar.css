@@ -52,7 +52,7 @@
   border-radius: var(--space-1-5);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .explore-workbench__action-btn:hover {
@@ -80,7 +80,7 @@
   border: var(--space-px) solid var(--light-border-default);
   border-radius: var(--space-2);
   padding: 0 var(--space-3);
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .explore-workbench__search-input-wrapper:focus-within {
@@ -118,7 +118,7 @@
   border-radius: var(--space-1);
   font-size: var(--text-sm);
   line-height: var(--leading-tight);
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .explore-workbench__search-clear:hover {
@@ -244,7 +244,7 @@
   padding: var(--space-1-5) var(--space-3);
   cursor: pointer;
   border-radius: var(--space-1-5);
-  transition: all 0.15s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   user-select: none;
 }
 

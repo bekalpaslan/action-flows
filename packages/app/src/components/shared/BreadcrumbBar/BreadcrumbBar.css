@@ -40,7 +40,7 @@
   color: var(--snow-text-secondary);
   white-space: nowrap;
   border-radius: 4px;
-  transition: all var(--duration-fast) var(--ease-in-out);
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   user-select: none;
 }
 

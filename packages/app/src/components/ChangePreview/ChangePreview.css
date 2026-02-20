@@ -109,7 +109,7 @@
   font-size: var(--text-xs);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .expand-btn:hover:not(:disabled) {
@@ -369,7 +369,7 @@
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   display: flex;
   align-items: center;
   justify-content: center;

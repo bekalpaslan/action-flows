@@ -22,6 +22,21 @@ export const SELECTORS = {
   chatMessages: '.chat-panel__messages',
   chatInfoBar: '.chat-panel__info-bar',
 
+  // Chat panel (data-testid attributes - preferred for stability)
+  chatPanel: '[data-testid="chat-panel"]',
+  chatInputTestId: '[data-testid="chat-input"]',
+  chatSendBtnTestId: '[data-testid="send-button"]',
+  chatMessageList: '[data-testid="message-list"]',
+  chatMessageByIndex: (index: number) => `[data-testid="message-msg-${index}"]`,
+  typingIndicator: '[data-testid="typing-indicator"]',
+  sessionInfoHeader: '[data-testid="session-info-header"]',
+
+  // Message bubble classes (for role verification)
+  chatBubbleUser: '.chat-bubble--user',
+  chatBubbleAssistant: '.chat-bubble--assistant',
+  chatBubbleContent: '.chat-bubble__content',
+  chatBubbleTimestamp: '.chat-bubble__timestamp',
+
   // Dashboard
   dashboardHeading: 'h1:has-text("Work Dashboard")',
   sessionInfoBar: '.chat-panel__info-bar', // Contains session ID and metadata
@@ -66,4 +81,7 @@ export const TIMEOUTS = {
   element: 5000,
   network: 3000,
   message: 5000,
+  userMessage: 10000,      // User message appearance: 10s
+  assistantResponse: 30000, // Assistant response: 30s (LLM inference)
+  testTotal: 60000,        // Total test timeout: 60s
 } as const;

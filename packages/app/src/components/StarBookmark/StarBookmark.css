@@ -19,7 +19,7 @@
   border-radius: 4px;
   font-size: var(--text-lg);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   color: var(--text-secondary);
 }
 
@@ -143,7 +143,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .close-button:hover:not(:disabled) {
@@ -319,7 +319,7 @@ form {
   border-radius: 4px;
   font-size: var(--text-base);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   font-weight: var(--font-semibold);
 }
 
@@ -365,7 +365,7 @@ form {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .remove-tag:hover:not(:disabled) {
@@ -397,7 +397,7 @@ form {
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   white-space: nowrap;
 }
 

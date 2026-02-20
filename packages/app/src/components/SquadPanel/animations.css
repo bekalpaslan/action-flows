@@ -157,32 +157,32 @@
 
 /* ===== LOG PANEL ANIMATIONS ===== */
 
-/* Expand animation - unfold downward */
+/* Expand animation - unfold downward (GPU-accelerated) */
 @keyframes log-panel-expand {
   from {
-    max-height: 0;
+    transform: scaleY(0);
     opacity: 0;
-    transform: translateY(-10px);
   }
   to {
-    max-height: 400px;
+    transform: scaleY(1);
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-/* Collapse animation - fold upward */
+/* Collapse animation - fold upward (GPU-accelerated) */
 @keyframes log-panel-collapse {
   from {
-    max-height: 400px;
+    transform: scaleY(1);
     opacity: 1;
-    transform: translateY(0);
   }
   to {
-    max-height: 0;
+    transform: scaleY(0);
     opacity: 0;
-    transform: translateY(-10px);
   }
+}
+
+.log-panel {
+  transform-origin: top;
 }
 
 /* ===== HOVER ANIMATIONS ===== */
@@ -199,14 +199,18 @@
 
 /* ===== PROGRESS BAR ANIMATIONS ===== */
 
-/* Progress bar fill - smooth width transition */
+/* Progress bar fill - smooth scale transition (GPU-accelerated) */
 @keyframes progress-fill {
   from {
-    width: 0%;
+    transform: scaleX(0);
   }
   to {
-    width: var(--progress-width);
+    transform: scaleX(1);
   }
+}
+
+.progress-fill {
+  transform-origin: left;
 }
 
 /* Progress shimmer - active work indicator */

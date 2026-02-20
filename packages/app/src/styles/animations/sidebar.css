@@ -75,36 +75,40 @@
 
 /* ===== ANIMATION CLASSES ===== */
 
-/* Slide-in class: apply when expanding */
+/* Slide-in class: apply when expanding (uses keyframe animation for entrance) */
 .sidebar-slide-in {
   animation: sidebar-slide-in var(--sidebar-slide-duration) var(--sidebar-slide-easing) forwards;
   width: var(--sidebar-width-expanded);
+  /* Note: animation is for entrance effect; no competing transition */
 }
 
-/* Slide-out class: apply when collapsing */
+/* Slide-out class: apply when collapsing (uses keyframe animation for exit) */
 .sidebar-slide-out {
   animation: sidebar-slide-out var(--sidebar-slide-duration) var(--sidebar-slide-easing) forwards;
   width: var(--sidebar-width-expanded);
+  /* Note: animation is for exit effect; no competing transition */
 }
 
 /* ===== STATE CLASSES ===== */
 
-/* Expanded state: final resting position */
+/* Expanded state: final resting position (uses transition for state changes) */
 .sidebar-expanded {
   width: var(--sidebar-width-expanded);
   transform: translateX(0);
   box-shadow: var(--sidebar-shadow-expanded);
   transition:
     box-shadow var(--sidebar-slide-duration) var(--sidebar-slide-easing);
+  /* Note: transition is for state changes (shadow); animation is not used here to avoid double-firing */
 }
 
-/* Collapsed state: hidden position */
+/* Collapsed state: hidden position (uses transition for state changes) */
 .sidebar-collapsed {
   width: var(--sidebar-width-collapsed);
   transform: translateX(0);
   box-shadow: var(--sidebar-shadow-collapsed);
   transition:
     box-shadow var(--sidebar-slide-duration) var(--sidebar-slide-easing);
+  /* Note: transition is for state changes (shadow); animation is not used here to avoid double-firing */
 }
 
 /* ===== CONTENT FADE TRANSITIONS ===== */

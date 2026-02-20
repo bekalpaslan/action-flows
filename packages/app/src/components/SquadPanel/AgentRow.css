@@ -34,7 +34,7 @@
 .agent-row-orchestrator .agent-character-card {
   position: relative;
   box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
-  transition: all 0.3s var(--ease-natural);
+  transition: opacity var(--duration-normal) var(--ease-in-out), color var(--duration-normal) var(--ease-in-out), background-color var(--duration-normal) var(--ease-in-out), border-color var(--duration-normal) var(--ease-in-out), transform var(--duration-normal) var(--ease-in-out);
 }
 
 .agent-row-orchestrator .agent-character-card:hover {

@@ -74,9 +74,33 @@
   color: var(--text-primary);
   cursor: pointer;
   transition: color 0.2s ease;
+  border-radius: var(--radius-sm);
 }
 
 .cosmic-map__controls button:hover {
+  color: var(--system-blue);
+}
+
+.cosmic-map__controls button:focus-visible,
+.cosmic-map__zoom-in:focus-visible,
+.cosmic-map__zoom-out:focus-visible {
+  outline: 2px solid var(--focus-color, var(--system-blue));
+  outline-offset: 2px;
+}
+
+/* Zoom button styles */
+.cosmic-map__zoom-in,
+.cosmic-map__zoom-out {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  border-radius: var(--radius-sm);
+}
+
+.cosmic-map__zoom-in:hover,
+.cosmic-map__zoom-out:hover {
   color: var(--system-blue);
 }
 
@@ -107,7 +131,7 @@
   font-weight: var(--font-medium);
   cursor: pointer;
   box-shadow: var(--panel-glow-default);
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .cosmic-map__god-view-button:hover {
@@ -115,6 +139,11 @@
   border-color: var(--system-blue);
   box-shadow: 0 0 12px var(--glow-color-accent);
   transform: translateY(-1px);
+}
+
+.cosmic-map__god-view-button:focus-visible {
+  outline: 2px solid var(--focus-color, var(--system-blue));
+  outline-offset: 2px;
 }
 
 .cosmic-map__god-view-button:active {

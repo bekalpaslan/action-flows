@@ -44,7 +44,7 @@
   cursor: pointer;
   font-size: 0.75rem;
   color: var(--color-text-primary, #1a1a1a);
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out);
   white-space: nowrap;
 }
 
@@ -208,7 +208,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out);
 }
 
 .role-assignment__button:hover {
@@ -307,7 +307,7 @@
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out);
 }
 
 .unauthorized-page__link:hover {

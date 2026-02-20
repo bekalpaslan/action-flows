@@ -6,7 +6,7 @@
   background: var(--background-secondary);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: opacity var(--duration-normal) var(--ease-in-out), color var(--duration-normal) var(--ease-in-out), background-color var(--duration-normal) var(--ease-in-out), border-color var(--duration-normal) var(--ease-in-out), transform var(--duration-normal) var(--ease-in-out);
 }
 
 .persistent-toolbar.loading {
@@ -40,7 +40,7 @@
   color: white;
   font-size: var(--text-xs);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   white-space: nowrap;
 }
 

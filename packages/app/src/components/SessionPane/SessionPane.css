@@ -127,7 +127,7 @@
   color: var(--text-secondary, var(--text-tertiary));
   cursor: pointer;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   white-space: nowrap;
 }
 
@@ -155,7 +155,7 @@
   line-height: var(--leading-tight);
   cursor: pointer;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .session-detach-btn:hover {

@@ -6,7 +6,7 @@
   background: var(--background-secondary);
   border-top: 1px solid var(--border-color);
   border-radius: 0 0 8px 8px;
-  transition: all 0.3s ease;
+  transition: opacity var(--duration-normal) var(--ease-in-out), color var(--duration-normal) var(--ease-in-out), background-color var(--duration-normal) var(--ease-in-out), border-color var(--duration-normal) var(--ease-in-out), transform var(--duration-normal) var(--ease-in-out);
 }
 
 .quick-action-bar.pulse-animation {
@@ -50,7 +50,7 @@
   font-size: var(--text-xs);
   font-weight: var(--font-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   white-space: nowrap;
 }
 
@@ -115,7 +115,7 @@
   color: var(--text-primary);
   font-size: var(--text-xs);
   outline: none;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .manual-input-field:focus {
@@ -140,7 +140,7 @@
   color: white;
   font-size: var(--text-base);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .manual-input-submit:hover:not(:disabled) {

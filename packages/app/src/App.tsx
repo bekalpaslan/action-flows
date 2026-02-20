@@ -9,6 +9,7 @@ import { WorkbenchProvider } from './contexts/WorkbenchContext'
 import { UniverseProvider } from './contexts/UniverseContext'
 import { DiscoveryProvider } from './contexts/DiscoveryContext'
 import { ChatWindowProvider } from './contexts/ChatWindowContext'
+import { TerminalProvider } from './contexts/TerminalContext'
 import { VimNavigationProvider } from './contexts/VimNavigationContext'
 import { DiscussProvider } from './contexts/DiscussContext'
 import { NotificationGlowProvider } from './hooks/useNotificationGlow'
@@ -51,13 +52,15 @@ function App() {
                     <UniverseProvider>
                       <DiscoveryProvider>
                         <ChatWindowProvider>
-                          <DiscussProvider>
-                            <NotificationGlowProvider>
-                              <VimNavigationProvider>
-                                <AppWithVim />
-                              </VimNavigationProvider>
-                            </NotificationGlowProvider>
-                          </DiscussProvider>
+                          <TerminalProvider>
+                            <DiscussProvider>
+                              <NotificationGlowProvider>
+                                <VimNavigationProvider>
+                                  <AppWithVim />
+                                </VimNavigationProvider>
+                              </NotificationGlowProvider>
+                            </DiscussProvider>
+                          </TerminalProvider>
                         </ChatWindowProvider>
                       </DiscoveryProvider>
                     </UniverseProvider>

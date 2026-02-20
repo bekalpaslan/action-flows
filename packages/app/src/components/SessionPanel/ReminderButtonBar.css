@@ -61,7 +61,7 @@
   background: var(--surface-primary, #fff);
   color: var(--text-primary, #222);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   white-space: nowrap;
 }
 

@@ -3,6 +3,7 @@ import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { useUniverseContext } from '../../contexts/UniverseContext';
 import { useSessionContext } from '../../contexts/SessionContext';
 import { useChatWindowContext } from '../../contexts/ChatWindowContext';
+import { useTerminal } from '../../contexts/TerminalContext';
 import { useChatKeyboardShortcuts } from '../../hooks/useChatKeyboardShortcuts';
 import { useFeatureFlagSimple } from '../../hooks/useFeatureFlag';
 import { AppSidebar } from '../AppSidebar';
@@ -276,18 +277,20 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const { targetWorkbenchId, universe } = useUniverseContext();
   const { sessions: contextSessions, activeSessionId: contextActiveSessionId, getSession } = useSessionContext();
   const { sessionId: chatSessionId, closeChat, saveAndSwitch } = useChatWindowContext();
+  const { saveAndSwitch: saveTerminalSwitch } = useTerminal();
 
   // Enable keyboard shortcuts for chat window
   useChatKeyboardShortcuts();
 
-  // Save/restore chat state when switching workbenches
+  // Save/restore chat and terminal state when switching workbenches
   const prevWorkbenchForChat = useRef<WorkbenchId>(activeWorkbench);
   useEffect(() => {
     if (prevWorkbenchForChat.current !== activeWorkbench) {
       saveAndSwitch(prevWorkbenchForChat.current, activeWorkbench);
+      saveTerminalSwitch(prevWorkbenchForChat.current, activeWorkbench);
       prevWorkbenchForChat.current = activeWorkbench;
     }
-  }, [activeWorkbench, saveAndSwitch]);
+  }, [activeWorkbench, saveAndSwitch, saveTerminalSwitch]);
 
   // Feature flags for cosmic map and classic mode
   const cosmicMapEnabled = useFeatureFlagSimple('COSMIC_MAP_ENABLED');

@@ -18,7 +18,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   text-align: left;
@@ -90,7 +90,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  transition: all 0.15s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   position: relative;
   border-left: 2px solid transparent;
   font-size: var(--text-sm);

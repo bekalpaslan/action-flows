@@ -100,7 +100,7 @@
   color: rgba(86, 156, 214, 1);
   font-size: var(--text-xs);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .show-details-btn:hover {
@@ -128,7 +128,7 @@
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   display: flex;
   align-items: center;
   justify-content: center;

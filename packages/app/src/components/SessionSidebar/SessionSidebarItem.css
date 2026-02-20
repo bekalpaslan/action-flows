@@ -93,6 +93,8 @@
   50% {
     box-shadow: 0 0 16px var(--system-green);
   }
+  /* Animation easing: use linear to avoid jank in reduced-motion fallback */
+  animation-timing-function: var(--ease-in-out, ease-in-out);
 }
 
 @keyframes pulse-glow-error {
@@ -250,6 +252,11 @@
   border-color: var(--system-red);
   color: var(--text-primary);
   box-shadow: 0 0 8px rgba(255, 69, 58, 0.6);
+}
+
+.session-delete-btn:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
 }
 
 .session-delete-btn:active {

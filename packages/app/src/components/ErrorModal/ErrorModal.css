@@ -24,7 +24,11 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: slideUp 0.3s ease-out;
+  animation: slideUp var(--duration-slow) var(--ease-out);
+}
+
+.error-modal--closing {
+  animation: modal-exit var(--duration-slow) var(--ease-in) forwards;
 }
 
 @keyframes slideUp {
@@ -35,6 +39,17 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes modal-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
   }
 }
 
@@ -109,7 +124,7 @@
   line-height: var(--leading-tight);
   cursor: pointer;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -220,7 +235,7 @@
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   white-space: nowrap;
 }
 
@@ -274,6 +289,13 @@
 .btn-acknowledge:hover {
   background: var(--bg-hover);
   border-color: var(--border-secondary);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .error-modal--closing {
+    animation: none;
+  }
 }
 
 /* Responsive */

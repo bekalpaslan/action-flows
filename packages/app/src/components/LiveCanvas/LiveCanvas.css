@@ -55,7 +55,7 @@
   margin-bottom: 8px;
   cursor: pointer;
   text-align: left;
-  transition: all 0.2s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .live-canvas__artifact-item:hover {

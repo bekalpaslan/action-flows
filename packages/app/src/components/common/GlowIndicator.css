@@ -59,19 +59,19 @@
 
 /* Pulse animation */
 .glow-indicator--pulse.glow-indicator--info {
-  animation: glow-pulse-info 2s ease-in-out infinite;
+  animation: glow-pulse-info var(--duration-lg, 2s) var(--ease-in-out, ease-in-out) infinite;
 }
 
 .glow-indicator--pulse.glow-indicator--success {
-  animation: glow-pulse-success 2s ease-in-out infinite;
+  animation: glow-pulse-success var(--duration-lg, 2s) var(--ease-in-out, ease-in-out) infinite;
 }
 
 .glow-indicator--pulse.glow-indicator--warning {
-  animation: glow-pulse-warning 2s ease-in-out infinite;
+  animation: glow-pulse-warning var(--duration-lg, 2s) var(--ease-in-out, ease-in-out) infinite;
 }
 
 .glow-indicator--pulse.glow-indicator--error {
-  animation: glow-pulse-error 2s ease-in-out infinite;
+  animation: glow-pulse-error var(--duration-lg, 2s) var(--ease-in-out, ease-in-out) infinite;
 }
 
 /* Keyframe animations for each level */

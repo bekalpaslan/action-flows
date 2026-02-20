@@ -180,7 +180,7 @@
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .coverage-workbench__tab-btn:hover {
@@ -230,7 +230,7 @@
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .coverage-contracts-tab__filter-buttons button:hover {
@@ -399,7 +399,7 @@
   cursor: pointer;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--space-1);
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .coverage-contract-modal__header button:hover {

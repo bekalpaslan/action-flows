@@ -195,7 +195,7 @@
   border-radius: 8px;
   color: var(--color-text-primary, #e0e0e0);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -293,7 +293,7 @@
   color: var(--color-text-primary, #e0e0e0);
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   white-space: nowrap;
 }
 
@@ -323,7 +323,7 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   border: none;
 }
 
