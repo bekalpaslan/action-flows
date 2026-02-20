@@ -11,22 +11,20 @@
 
 import { test, expect } from '@playwright/test';
 import { SELECTORS, API, TIMEOUTS } from '../helpers/selectors';
-import { createSession, waitForSessionSidebar } from '../helpers/session-actions';
+import { createSession } from '../helpers/session-actions';
 
 test.describe('Session Management', { tag: '@session' }, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await waitForSessionSidebar(page);
   });
 
   test('create new session @crud', async ({ page }) => {
     const sessionId = await createSession(page);
     expect(sessionId).toBeTruthy();
 
-    // Verify session appears in sidebar
-    await expect(page.locator(SELECTORS.sessionSidebarItem)).toBeVisible({
-      timeout: TIMEOUTS.element,
-    });
+    // Verify session was created via API response
+    const response = await page.request.get(`${API.sessionById(sessionId)}`);
+    expect(response.ok()).toBeTruthy();
   });
 
   test('list sessions via API @api', async ({ request }) => {
@@ -37,7 +35,7 @@ test.describe('Session Management', { tag: '@session' }, () => {
     expect(Array.isArray(sessions)).toBeTruthy();
   });
 
-  test('session sidebar shows new session btn', async ({ page }) => {
+  test('new session button available', async ({ page }) => {
     await expect(page.locator(SELECTORS.sidebarNewSessionBtn)).toBeVisible();
   });
 });

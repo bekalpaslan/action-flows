@@ -136,10 +136,6 @@ vi.mock('../../components/SlidingChatWindow/SlidingChatWindow', () => ({
   SlidingChatWindow: ({ children }: any) => <div data-testid="sliding-chat-window">{children}</div>,
 }));
 
-vi.mock('../../components/SessionSidebar', () => ({
-  SessionSidebar: () => <div data-testid="session-sidebar" />,
-}));
-
 vi.mock('../../components/RegionFocus/RegionFocusView', () => ({
   RegionFocusView: () => <div data-testid="region-focus-view" />,
 }));
@@ -185,12 +181,6 @@ describe('WorkbenchLayout', () => {
     render(<WorkbenchLayout />);
     // WorkbenchLayout renders workbench-specific content (e.g., work-star for work workbench)
     expect(screen.getByTestId('work-star')).toBeInTheDocument();
-  });
-
-  it('renders session sidebar when in workbench view', () => {
-    render(<WorkbenchLayout />);
-    // Cosmic map is disabled via useFeatureFlagSimple mock, so we're in workbench view
-    expect(screen.getByTestId('session-sidebar')).toBeInTheDocument();
   });
 
   it('renders sliding chat window container', () => {
@@ -302,16 +292,14 @@ describe('WorkbenchLayout', () => {
     expect(layoutWrapper.className).toContain('workbench-body');
   });
 
-  it('preserves sidebar and session sidebar on navigation', async () => {
+  it('preserves sidebar on navigation', async () => {
     const { rerender } = render(<WorkbenchLayout />);
 
     expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
-    expect(screen.getByTestId('session-sidebar')).toBeInTheDocument();
 
     rerender(<WorkbenchLayout />);
 
     expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
-    expect(screen.getByTestId('session-sidebar')).toBeInTheDocument();
   });
 
   it('handles split-view resize gracefully', async () => {
@@ -350,7 +338,6 @@ describe('WorkbenchLayout', () => {
     // All child components should be rendered with proper context
     expect(screen.getByTestId('app-sidebar')).toBeInTheDocument();
     expect(screen.getByTestId('work-star')).toBeInTheDocument();
-    expect(screen.getByTestId('session-sidebar')).toBeInTheDocument();
     expect(screen.getByTestId('sliding-chat-window')).toBeInTheDocument();
   });
 });

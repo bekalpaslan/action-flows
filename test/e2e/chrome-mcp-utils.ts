@@ -191,7 +191,7 @@ export const SELECTORS = {
   /** New session button in sidebar */
   newSessionBtn: 'sidebar-new-session-btn',
 
-  /** Session list items */
+  /** Session list items (now in AppSidebar, was SessionSidebar) */
   sessionItem: 'session-sidebar-item',
 
   /** Active or Recent sessions section (new sessions start as "pending" in RECENT) */
@@ -241,7 +241,7 @@ export const SELECTORS = {
   sectionTitle: 'section-title',
   sessionCount: 'session-count',
 
-  /** Session Sidebar Item selectors (verified 2026-02-10) */
+  /** Session Sidebar Item selectors (CSS classes now in AppSidebar, not SessionSidebar component) */
   sessionSidebarItem: 'session-sidebar-item',
   sessionSidebarItemActive: 'session-sidebar-item active',
   statusDot: 'status-dot',

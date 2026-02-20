@@ -12,7 +12,7 @@ const MONOREPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..', '..');
  * Detects: missing props (in code but not contract), phantom props (in contract but not code),
  * and type mismatches.
  *
- * Focus: High-priority contracts (ChatPanel, SessionSidebar, DiscussButton, etc.)
+ * Focus: High-priority contracts (ChatPanel, DiscussButton, etc.)
  */
 
 // Extract props from a TypeScript file
@@ -87,7 +87,6 @@ function extractContractProps(contractContent: string): Map<string, { type: stri
 // High-priority contracts to test
 const HIGH_PRIORITY_CONTRACTS = [
   { name: 'ChatPanel', contractPath: 'packages/app/src/contracts/components/ChatPanel/ChatPanel.contract.md', filePath: 'packages/app/src/components/SessionPanel/ChatPanel.tsx' },
-  { name: 'SessionSidebar', contractPath: 'packages/app/src/contracts/components/SessionSidebar/SessionSidebar.contract.md', filePath: 'packages/app/src/components/SessionSidebar/SessionSidebar.tsx' },
   { name: 'DiscussButton', contractPath: 'packages/app/src/contracts/components/DiscussButton/DiscussButton.contract.md', filePath: 'packages/app/src/components/DiscussButton/DiscussButton.tsx' },
   { name: 'DiscussDialog', contractPath: 'packages/app/src/contracts/components/DiscussButton/DiscussDialog.contract.md', filePath: 'packages/app/src/components/DiscussButton/DiscussDialog.tsx' },
   { name: 'FlowVisualization', contractPath: 'packages/app/src/contracts/components/Canvas/FlowVisualization.contract.md', filePath: 'packages/app/src/components/Canvas/FlowVisualization.tsx' },

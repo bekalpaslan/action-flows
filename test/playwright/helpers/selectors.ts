@@ -11,10 +11,8 @@ export const SELECTORS = {
   workbenchBody: '.workbench-body',
   topBar: '.top-bar',
 
-  // Session sidebar
-  sessionSidebar: '.session-sidebar',
+  // Sidebar buttons
   sidebarNewSessionBtn: '.sidebar-new-session-btn',
-  sessionSidebarItem: '.session-sidebar-item',
 
   // Chat panel
   chatInput: '.chat-panel__input-field',

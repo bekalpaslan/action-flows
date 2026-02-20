@@ -15,13 +15,12 @@ import { test, expect } from '@playwright/test';
 import { SELECTORS, API, TIMEOUTS } from '../helpers/selectors';
 import {
   createSession,
-  waitForSessionSidebar,
 } from '../helpers/session-actions';
 
 test.describe('Error Handling', { tag: ['@error', '@resilience'] }, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await waitForSessionSidebar(page);
+    await page.waitForSelector('.app-sidebar', { state: 'visible' });
   });
 
   test('ERR-001: Graceful handling of API timeout @network', async ({
@@ -52,7 +51,7 @@ test.describe('Error Handling', { tag: ['@error', '@resilience'] }, () => {
 
     try {
       // Wait for either success or error
-      const sessionItem = page.locator(SELECTORS.sessionSidebarItem);
+      const sessionItem = page.locator('.session-sidebar-item');
       sessionItem.waitForCount(1, { timeout: 10000 }).catch(() => {});
       sessionCreated = await sessionItem.count().then((c) => c > 0);
     } catch {
@@ -130,7 +129,7 @@ test.describe('Error Handling', { tag: ['@error', '@resilience'] }, () => {
     await page.waitForTimeout(1000);
 
     // Check if app recovered or shows error
-    const sessionItems = page.locator(SELECTORS.sessionSidebarItem);
+    const sessionItems = page.locator('.session-sidebar-item');
     const errorAlert = page.locator('[role="alert"], .error-message');
 
     let recovered = false;
@@ -236,7 +235,7 @@ test.describe('Error Handling', { tag: ['@error', '@resilience'] }, () => {
     await page.waitForTimeout(2000);
 
     // App should still be functional
-    const sessionItems = page.locator(SELECTORS.sessionSidebarItem);
+    const sessionItems = page.locator('.session-sidebar-item');
     const count = await sessionItems.count();
 
     // At least some should be created (not all might succeed due to race conditions)

@@ -13,11 +13,10 @@ import type { RespectCheckResult } from '@afw/shared';
 const RESPECT_CHECK_SCRIPT = `(() => {
   const componentsToCheck = [
     // ============================================================
-    // ORIGINAL 24 SELECTORS (preserved exactly)
+    // ORIGINAL 24 SELECTORS (preserved exactly, .session-sidebar removed)
     // ============================================================
     { selector: '.workbench-layout', type: 'layout-shell', expected: { width: 'viewport', height: 'viewport' } },
     { selector: '.top-bar', type: 'topbar', expected: { height: 52 } },
-    { selector: '.session-sidebar', type: 'sidebar', expected: { width: 240 } },
     { selector: '.workbench-body', type: 'layout-shell' },
     { selector: '.workbench-main', type: 'layout-shell' },
     { selector: '.workbench-content', type: 'layout-shell' },

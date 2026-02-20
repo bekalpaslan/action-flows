@@ -12,7 +12,7 @@ const MONOREPO_ROOT = path.resolve(__dirname, '..', '..', '..', '..', '..');
  *
  * Prevents: E2E test failures due to class name changes (like .conversation-* → .chat-panel*)
  *
- * Focus: High-priority components (ChatPanel, SessionSidebar, DiscussButton, FlowVisualization)
+ * Focus: High-priority components (ChatPanel, DiscussButton, FlowVisualization)
  */
 
 // Extract CSS classes from a stylesheet (CSS or CSS Module)
@@ -93,11 +93,6 @@ const TEST_COMPONENTS = [
     name: 'ChatPanel',
     contractPath: 'packages/app/src/contracts/components/ChatPanel/ChatPanel.contract.md',
     stylesheetPath: 'packages/app/src/components/SessionPanel/ChatPanel.css',
-  },
-  {
-    name: 'SessionSidebar',
-    contractPath: 'packages/app/src/contracts/components/SessionSidebar/SessionSidebar.contract.md',
-    stylesheetPath: 'packages/app/src/components/SessionSidebar/SessionSidebar.css',
   },
   {
     name: 'DiscussButton',

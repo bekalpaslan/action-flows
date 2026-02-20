@@ -28,7 +28,7 @@ import { useFeatureFlagSimple } from '../../hooks/useFeatureFlag';
 import { CosmicBackground } from './CosmicBackground';
 import { RegionStar, type RegionStarData } from './RegionStar';
 import { LightBridgeEdge, type LightBridgeData } from './LightBridgeEdge';
-import { CommandCenter } from './CommandCenter';
+
 import { BigBangAnimation } from './BigBangAnimation';
 import { SparkAnimation } from './SparkAnimation';
 import { LiveRegion } from './LiveRegion';
@@ -76,7 +76,6 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
   const [activeSparks, setActiveSparks] = useState<Map<ChainId, SparkState>>(new Map());
 
   // Feature flags
-  const commandCenterEnabled = useFeatureFlagSimple('COMMAND_CENTER_ENABLED');
   const sparkAnimationEnabled = useFeatureFlagSimple('SPARK_ANIMATION_ENABLED');
 
   // Performance monitoring
@@ -276,13 +275,6 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
     fitView({ padding: 0.2, duration: 800 });
   }, [fitView]);
 
-  // Handle command from CommandCenter
-  const handleCommand = useCallback((command: string) => {
-    console.log('[CosmicMap] Command received:', command);
-    // TODO: Integrate with orchestrator backend
-    // For now, just log the command
-  }, []);
-
   if (isLoading) {
     return (
       <div className="cosmic-map cosmic-map--loading" data-testid="cosmic-map-loading">
@@ -451,10 +443,6 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
         🌌 God View
       </button>
 
-      {/* Command Center bottom bar */}
-      {commandCenterEnabled && (
-        <CommandCenter onCommand={handleCommand} showHealthStatus={true} />
-      )}
       </div>
 
       {/* Onboarding tooltip sequence */}

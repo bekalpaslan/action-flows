@@ -29,6 +29,7 @@ import { StoryStar } from '../Stars/StoryStar/StoryStar';
 import { CoverageTool } from '../Tools/CoverageTool/CoverageTool';
 import { useSessionArchive } from '../../hooks/useSessionArchive';
 import { HealthWidget } from '../HealthWidget';
+import { CommandCenter } from '../CosmicMap/CommandCenter';
 import {
   type WorkbenchId,
   type SessionId,
@@ -295,6 +296,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   // Feature flags for cosmic map and classic mode
   const cosmicMapEnabled = useFeatureFlagSimple('COSMIC_MAP_ENABLED');
   const classicMode = useFeatureFlagSimple('CLASSIC_DASHBOARD_MODE');
+  const commandCenterEnabled = useFeatureFlagSimple('COMMAND_CENTER_ENABLED');
 
   // Update initial view mode logic to respect classic mode and check if universe has data
   const effectiveCosmicMapEnabled = cosmicMapEnabled && !classicMode && (universe?.regions?.length ?? 0) > 0;
@@ -627,68 +629,76 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   };
 
   return (
-    <div className="workbench-layout" data-testid="workbench-layout">
+    <div className={`workbench-layout${sidebarCollapsed ? ' sidebar-collapsed' : ''}`} data-testid="workbench-layout">
       <AppSidebar onCollapseChange={setSidebarCollapsed} />
 
       <div className={`workbench-body${sidebarCollapsed ? ' sidebar-collapsed' : ''}`} data-testid="layout-wrapper">
-        {/* Cosmic Map View + Zooming In/Out states */}
-        {effectiveCosmicMapEnabled && (viewMode === 'cosmic-map' || viewMode === 'zooming-in' || viewMode === 'zooming-out') ? (
-          <div className="workbench-dashboard" style={{ flex: 1 }} data-testid="content-area">
-            <CosmicMap visible={viewMode === 'cosmic-map'} zooming={viewMode === 'zooming-in' || viewMode === 'zooming-out'} />
-          </div>
-        ) : effectiveCosmicMapEnabled && viewMode === 'region-focus' ? (
-          /* Region Focus View - Dual-panel with workbench + chat */
-          <div className="workbench-dashboard" style={{ flex: 1 }} data-testid="content-area">
-            <RegionFocusView
-              workbenchContent={renderWorkbenchContent(activeWorkbench)}
-              chatSessionId={chatSessionId}
-              onReturnToUniverse={handleReturnToUniverse}
-              workbenchId={activeWorkbench}
-            />
-          </div>
-        ) : (
-          /* Workbench View (legacy mode when cosmic map disabled or classic mode enabled) */
-          <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} data-testid="content-area">
-            <main id="main-content" className="workbench-main" role="main">
-              <div className={`workbench-content ${transitionClass}`}>
-                {/* Return to Universe button (visible when cosmic map is enabled and not in classic mode) */}
-                {effectiveCosmicMapEnabled && (
-                  <button
-                    className="workbench-layout__return-to-universe"
-                    onClick={handleReturnToUniverse}
-                    title="Return to universe view (U)"
-                  >
-                    🌌 Universe
-                  </button>
-                )}
+        {/* Layer 3: workbench-panel — contains star content + chat side by side */}
+        <div className="workbench-panel" data-testid="workbench-panel">
+          {/* Cosmic Map View + Zooming In/Out states */}
+          {effectiveCosmicMapEnabled && (viewMode === 'cosmic-map' || viewMode === 'zooming-in' || viewMode === 'zooming-out') ? (
+            <div className="workbench-dashboard" style={{ flex: 1 }} data-testid="content-area">
+              <CosmicMap visible={viewMode === 'cosmic-map'} zooming={viewMode === 'zooming-in' || viewMode === 'zooming-out'} />
+            </div>
+          ) : effectiveCosmicMapEnabled && viewMode === 'region-focus' ? (
+            /* Region Focus View - Dual-panel with workbench + chat */
+            <div className="workbench-dashboard" style={{ flex: 1 }} data-testid="content-area">
+              <RegionFocusView
+                workbenchContent={renderWorkbenchContent(activeWorkbench)}
+                chatSessionId={chatSessionId}
+                onReturnToUniverse={handleReturnToUniverse}
+                workbenchId={activeWorkbench}
+              />
+            </div>
+          ) : (
+            /* Workbench View (legacy mode when cosmic map disabled or classic mode enabled) */
+            <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} data-testid="content-area">
+              <main id="main-content" className="workbench-main" role="main">
+                <div className={`workbench-content ${transitionClass}`}>
+                  {/* Return to Universe button (visible when cosmic map is enabled and not in classic mode) */}
+                  {effectiveCosmicMapEnabled && (
+                    <button
+                      className="workbench-layout__return-to-universe"
+                      onClick={handleReturnToUniverse}
+                      title="Return to universe view (U)"
+                    >
+                      🌌 Universe
+                    </button>
+                  )}
 
-                {/* BreadcrumbBar */}
-                <BreadcrumbBar
-                  segments={[
-                    { label: 'ActionFlows', onClick: effectiveCosmicMapEnabled ? handleReturnToUniverse : undefined },
-                    { label: STAR_CONFIGS[activeWorkbench]?.label || activeWorkbench },
-                    ...(activeSessionId && getSession(activeSessionId) ? [{ label: getSession(activeSessionId)?.name || getSession(activeSessionId)?.id || 'Session' }] : [])
-                  ]}
-                />
+                  {/* BreadcrumbBar */}
+                  <BreadcrumbBar
+                    segments={[
+                      { label: 'ActionFlows', onClick: effectiveCosmicMapEnabled ? handleReturnToUniverse : undefined },
+                      { label: STAR_CONFIGS[activeWorkbench]?.label || activeWorkbench },
+                      ...(activeSessionId && getSession(activeSessionId) ? [{ label: getSession(activeSessionId)?.name || getSession(activeSessionId)?.id || 'Session' }] : [])
+                    ]}
+                  />
 
-                {renderWorkbenchContent(activeWorkbench)}
-                {children}
-              </div>
-            </main>
-          </div>
-        )}
-
-        <SlidingChatWindow>
-          {chatSessionId !== null && (
-            <ChatPanel
-              sessionId={chatSessionId}
-              session={getSession(chatSessionId)}
-              showCloseButton={true}
-              onClose={closeChat}
-            />
+                  {renderWorkbenchContent(activeWorkbench)}
+                  {children}
+                </div>
+              </main>
+            </div>
           )}
-        </SlidingChatWindow>
+
+          <SlidingChatWindow>
+            {chatSessionId !== null && (
+              <ChatPanel
+                sessionId={chatSessionId}
+                session={getSession(chatSessionId)}
+                showCloseButton={true}
+                onClose={closeChat}
+              />
+            )}
+          </SlidingChatWindow>
+        </div>
       </div>
+
+      {/* Layer 2: CommandCenter — app shell level, always visible */}
+      {commandCenterEnabled && (
+        <CommandCenter onCommand={(cmd) => console.log('Command:', cmd)} showHealthStatus={true} />
+      )}
 
       {/* Global Health Widget - visible in all views (cosmic-map, region-focus, workbench) */}
       <HealthWidget

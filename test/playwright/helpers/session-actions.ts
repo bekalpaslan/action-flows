@@ -39,28 +39,19 @@ export async function sendChatMessage(
 }
 
 /**
- * Wait for the session sidebar to be visible
- */
-export async function waitForSessionSidebar(page: Page): Promise<void> {
-  await expect(page.locator(SELECTORS.sessionSidebar)).toBeVisible({
-    timeout: TIMEOUTS.element,
-  });
-}
-
-/**
- * Select a session from the sidebar by session ID
+ * Select a session from the chat panel by session ID
  * @param page Playwright page
- * @param sessionId The session ID to select (will match button text containing this ID)
+ * @param sessionId The session ID to select
+ * @deprecated SessionSidebar component has been removed. This function is deprecated.
  */
 export async function selectSession(
   page: Page,
   sessionId: string
 ): Promise<void> {
-  // Session name div has title=full session ID
-  const sessionButton = page.locator(`${SELECTORS.sessionSidebarItem}:has([title="${sessionId}"])`);
-
-  await sessionButton.click();
-  await page.waitForTimeout(300); // Allow UI to update
+  // This function is no longer used since SessionSidebar has been removed.
+  // Sessions are now managed through the ChatPanel interface.
+  console.warn('selectSession is deprecated - SessionSidebar has been removed');
+  throw new Error('selectSession no longer available - use ChatPanel session management instead');
 }
 
 /**

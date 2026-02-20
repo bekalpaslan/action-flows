@@ -4,7 +4,7 @@
 
 .workbench-layout {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
   background: var(--app-bg-base);
@@ -58,7 +58,7 @@
 
 .workbench-body {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex: 1;
   overflow: hidden;
   min-height: 0; /* Important for flex child scrolling */
@@ -75,6 +75,34 @@
 
 /* When AppSidebar is collapsed */
 .workbench-body.sidebar-collapsed {
+  margin-left: var(--app-sidebar-width-collapsed);
+}
+
+/* ============================================================================
+ * Workbench Panel (Layer 3 - contains star content + chat side by side)
+ * ============================================================================ */
+
+.workbench-panel {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ============================================================================
+ * Command Center (Layer 2 - App Shell Level)
+ * ============================================================================ */
+
+.workbench-layout > .command-center {
+  flex-shrink: 0;
+  position: relative;
+  margin-left: var(--app-sidebar-width);
+  transition: margin-left var(--duration-normal) var(--ease-apple);
+}
+
+.workbench-layout.sidebar-collapsed > .command-center {
   margin-left: var(--app-sidebar-width-collapsed);
 }
 

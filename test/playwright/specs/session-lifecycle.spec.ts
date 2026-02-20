@@ -14,7 +14,6 @@ import { test, expect } from '@playwright/test';
 import { SELECTORS, API, TIMEOUTS } from '../helpers/selectors';
 import {
   createSession,
-  waitForSessionSidebar,
   selectSession,
   getCurrentSessionId,
 } from '../helpers/session-actions';
@@ -22,7 +21,7 @@ import {
 test.describe('Session Lifecycle', { tag: ['@session', '@lifecycle'] }, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await waitForSessionSidebar(page);
+    await page.waitForSelector('.app-sidebar', { state: 'visible' });
   });
 
   test('LIFECYCLE-001: Create new session via UI button @crud', async ({
@@ -36,7 +35,7 @@ test.describe('Session Lifecycle', { tag: ['@session', '@lifecycle'] }, () => {
 
     // Step 2: Verify session appears in sidebar
     await expect(
-      page.locator(`${SELECTORS.sessionSidebarItem}:has([title="${sessionId}"])`)
+      page.locator(`.session-sidebar-item:has([title="${sessionId}"])`)
     ).toBeVisible({ timeout: TIMEOUTS.element });
 
     // Step 3: Verify session is displayed in info bar
@@ -77,7 +76,7 @@ test.describe('Session Lifecycle', { tag: ['@session', '@lifecycle'] }, () => {
 
     // Step 5: Verify status indicator changed (visual cue in sidebar)
     const sessionItem = page.locator(
-      `${SELECTORS.sessionSidebarItem}:has([title="${sessionId}"])`
+      `.session-sidebar-item:has([title="${sessionId}"])`
     );
     await expect(sessionItem).toBeVisible({ timeout: TIMEOUTS.element });
 
@@ -121,7 +120,7 @@ test.describe('Session Lifecycle', { tag: ['@session', '@lifecycle'] }, () => {
 
     // Step 3: Verify session appears in sidebar
     const sessionItem = page.locator(
-      `${SELECTORS.sessionSidebarItem}:has([title="${sessionId}"])`
+      `.session-sidebar-item:has([title="${sessionId}"])`
     );
     await expect(sessionItem).toBeVisible({ timeout: TIMEOUTS.element });
 
@@ -164,7 +163,7 @@ test.describe('Session Lifecycle', { tag: ['@session', '@lifecycle'] }, () => {
     // Step 2: Verify all three appear in sidebar
     for (const sessionId of sessionIds) {
       await expect(
-        page.locator(`${SELECTORS.sessionSidebarItem}:has([title="${sessionId}"])`)
+        page.locator(`.session-sidebar-item:has([title="${sessionId}"])`)
       ).toBeVisible({ timeout: TIMEOUTS.element });
     }
 
@@ -179,7 +178,7 @@ test.describe('Session Lifecycle', { tag: ['@session', '@lifecycle'] }, () => {
 
     // Step 4: Delete middle session
     const middleItem = page.locator(
-      `${SELECTORS.sessionSidebarItem}:has([title="${sessionIds[1]}"])`
+      `.session-sidebar-item:has([title="${sessionIds[1]}"])`
     );
     await middleItem.hover();
     const deleteBtn = middleItem.locator('button[aria-label*="delete"], .session-delete-btn');
@@ -193,10 +192,10 @@ test.describe('Session Lifecycle', { tag: ['@session', '@lifecycle'] }, () => {
 
     // Step 5: Verify remaining sessions still exist
     await expect(
-      page.locator(`${SELECTORS.sessionSidebarItem}:has([title="${sessionIds[0]}"])`)
+      page.locator(`.session-sidebar-item:has([title="${sessionIds[0]}"])`)
     ).toBeVisible({ timeout: TIMEOUTS.element });
     await expect(
-      page.locator(`${SELECTORS.sessionSidebarItem}:has([title="${sessionIds[2]}"])`)
+      page.locator(`.session-sidebar-item:has([title="${sessionIds[2]}"])`)
     ).toBeVisible({ timeout: TIMEOUTS.element });
 
     // Cleanup
@@ -223,7 +222,7 @@ test.describe('Session Lifecycle', { tag: ['@session', '@lifecycle'] }, () => {
 
     // Step 4: Verify session still appears in sidebar
     await expect(
-      page.locator(`${SELECTORS.sessionSidebarItem}:has([title="${sessionId}"])`)
+      page.locator(`.session-sidebar-item:has([title="${sessionId}"])`)
     ).toBeVisible({ timeout: TIMEOUTS.element });
 
     // Step 5: Verify session data is still available via API

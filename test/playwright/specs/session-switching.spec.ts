@@ -14,7 +14,6 @@ import { test, expect } from '@playwright/test';
 import { SELECTORS, TIMEOUTS } from '../helpers/selectors';
 import {
   createSession,
-  waitForSessionSidebar,
   selectSession,
   getCurrentSessionId,
 } from '../helpers/session-actions';
@@ -22,7 +21,7 @@ import {
 test.describe('Session Switching', { tag: ['@session', '@dashboard'] }, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await waitForSessionSidebar(page);
+    await page.waitForSelector('.app-sidebar', { state: 'visible' });
   });
 
   test('switching between sessions updates dashboard content @crud', async ({
@@ -34,7 +33,7 @@ test.describe('Session Switching', { tag: ['@session', '@dashboard'] }, () => {
 
     // Step 2: Verify first session appears in sidebar
     await expect(
-      page.locator(`${SELECTORS.sessionSidebarItem}:has([title="${firstSessionId}"])`)
+      page.locator(`.session-sidebar-item:has([title="${firstSessionId}"])`)
     ).toBeVisible({ timeout: TIMEOUTS.element });
 
     // Step 3: Verify dashboard shows first session
@@ -49,7 +48,7 @@ test.describe('Session Switching', { tag: ['@session', '@dashboard'] }, () => {
 
     // Step 5: Verify second session appears in sidebar
     await expect(
-      page.locator(`${SELECTORS.sessionSidebarItem}:has([title="${secondSessionId}"])`)
+      page.locator(`.session-sidebar-item:has([title="${secondSessionId}"])`)
     ).toBeVisible({ timeout: TIMEOUTS.element });
 
     // Step 6: Dashboard should now show second session (newly created)
@@ -85,12 +84,12 @@ test.describe('Session Switching', { tag: ['@session', '@dashboard'] }, () => {
     // Verify all 3 appear in sidebar
     for (const sessionId of sessionIds) {
       await expect(
-        page.locator(`${SELECTORS.sessionSidebarItem}:has([title="${sessionId}"])`)
+        page.locator(`.session-sidebar-item:has([title="${sessionId}"])`)
       ).toBeVisible({ timeout: TIMEOUTS.element });
     }
 
     // Verify we have at least 3 session items
-    const sessionItems = page.locator(SELECTORS.sessionSidebarItem);
+    const sessionItems = page.locator('.session-sidebar-item');
     const count = await sessionItems.count();
     expect(count).toBeGreaterThanOrEqual(3);
   });

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ActionFlows Layout Demo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --sidebar-w: 56px;
+    --sidebar-w-expanded: 220px;
+    --bottom-h: 48px;
+    --chat-w: 340px;
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2128;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-dim: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --star-active: #f0883e;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+
+  /* App Shell */
+  .app-shell {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) 1fr;
+    grid-template-rows: 1fr var(--bottom-h);
+    height: 100vh;
+  }
+
+  /* Layer 1: Sidebar */
+  .sidebar {
+    grid-row: 1 / -1;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    gap: 4px;
+    transition: width 0.2s;
+    overflow: hidden;
+    z-index: 10;
+  }
+  .sidebar.expanded { width: var(--sidebar-w-expanded); position: absolute; height: 100%; }
+  .sidebar-logo { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), #a371f7); margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+  .star-btn { width: 40px; height: 40px; border-radius: 10px; border: none; background: transparent; color: var(--text-dim); cursor: pointer; font-size: 18px; transition: all 0.15s; position: relative; }
+  .star-btn:hover { background: var(--surface2); color: var(--text); }
+  .star-btn.active { background: var(--surface2); color: var(--star-active); }
+  .star-btn.active::before { content: ''; position: absolute; left: -8px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: var(--star-active); }
+  .sidebar-spacer { flex: 1; }
+  .sidebar-bottom { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+
+  /* Layer 6: Main Content */
+  .main-content {
+    display: flex;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  /* Layer 3: Workbench Panel */
+  .workbench-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  /* Layer 4: Star Content */
+  .star-toolbar {
+    height: 44px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .star-toolbar .title { font-weight: 600; font-size: 14px; }
+  .star-toolbar .badge { background: var(--accent); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+  .star-content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .placeholder-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 80px;
+  }
+  .placeholder-card h3 { font-size: 13px; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .placeholder-card p { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+
+  /* Layer 5: Chat Window */
+  .chat-window {
+    width: var(--chat-w);
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: width 0.25s ease, opacity 0.2s;
+  }
+  .chat-window.hidden { width: 0; opacity: 0; overflow: hidden; border: none; }
+  .chat-header {
+    height: 44px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    flex-shrink: 0;
+  }
+  .chat-header span { font-size: 13px; font-weight: 600; }
+  .chat-messages {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .chat-bubble { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; }
+  .chat-bubble.user { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .chat-bubble.assistant { background: var(--surface2); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .chat-input-area {
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .chat-input-area input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text); font-size: 13px; outline: none; }
+  .chat-input-area input:focus { border-color: var(--accent); }
+  .chat-input-area button { background: var(--accent); border: none; border-radius: 8px; padding: 8px 14px; color: #fff; cursor: pointer; font-size: 13px; }
+
+  /* Layer 2: Bottom Bar */
+  .bottom-bar {
+    grid-column: 1 / -1;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .bottom-bar .cmd-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; color: var(--text); font-size: 12px; width: 280px; outline: none; }
+  .bottom-bar .cmd-input:focus { border-color: var(--accent); }
+  .health-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); }
+  .bottom-spacer { flex: 1; }
+
+  /* Utility */
+  .icon-btn { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 16px; padding: 4px; border-radius: 4px; }
+  .icon-btn:hover { color: var(--text); background: var(--surface2); }
+
+  /* Layer labels */
+  .layer-label { position: absolute; font-size: 10px; background: var(--accent); color: #fff; padding: 1px 6px; border-radius: 4px; z-index: 20; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+  .show-labels .layer-label { opacity: 1; }
+  .sidebar .layer-label { top: 4px; right: 4px; }
+  .main-content .layer-label { top: 4px; left: 4px; }
+  .workbench-panel .layer-label { top: 4px; left: 60px; }
+  .star-toolbar .layer-label { top: 2px; right: 4px; }
+  .chat-window .layer-label { top: 4px; left: 4px; }
+  .bottom-bar .layer-label { top: 2px; left: 60px; }
+</style>
+</head>
+<body>
+<div class="app-shell" id="app">
+  <!-- Layer 1: Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <span class="layer-label">L1</span>
+    <div class="sidebar-logo" title="Toggle sidebar">AF</div>
+    <button class="star-btn active" title="Work" data-star="work">&#9733;</button>
+    <button class="star-btn" title="Maintenance" data-star="maint">&#9881;</button>
+    <button class="star-btn" title="Explore" data-star="explore">&#9752;</button>
+    <button class="star-btn" title="Review" data-star="review">&#128269;</button>
+    <button class="star-btn" title="PM" data-star="pm">&#128203;</button>
+    <button class="star-btn" title="Settings" data-star="settings">&#9881;</button>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-bottom">
+      <button class="icon-btn" title="Toggle labels" onclick="toggleLabels()">?</button>
+    </div>
+  </nav>
+
+  <!-- Layer 6: Main Content -->
+  <div class="main-content" style="position:relative;">
+    <span class="layer-label">L6</span>
+
+    <!-- Layer 3: Workbench Panel -->
+    <div class="workbench-panel" style="position:relative;">
+      <span class="layer-label">L3</span>
+
+      <!-- Layer 4: Star Toolbar + Content -->
+      <div class="star-toolbar" style="position:relative;">
+        <span class="layer-label">L4</span>
+        <span class="title" id="star-title">Work</span>
+        <span class="badge">3 active</span>
+        <div style="flex:1"></div>
+        <button class="icon-btn" onclick="toggleChat()" title="Toggle chat">&#128172;</button>
+      </div>
+
+      <div class="star-content" id="star-content">
+        <div class="placeholder-card">
+          <h3>Active Chains</h3>
+          <p>Chain execution cards appear here. Each chain shows steps, status, and progress.</p>
+        </div>
+        <div class="placeholder-card">
+          <h3>Recent Sessions</h3>
+          <p>Session history with quick-resume capability.</p>
+        </div>
+        <div class="placeholder-card">
+          <h3>Workbench Content</h3>
+          <p>Star-specific content fills this area. When chat (L5) is hidden, this expands to fill the full width of L6.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 5: Chat Window -->
+    <div class="chat-window" id="chat-window" style="position:relative;">
+      <span class="layer-label">L5</span>
+      <div class="chat-header">
+        <span>Chat</span>
+        <button class="icon-btn" onclick="toggleChat()">&#10005;</button>
+      </div>
+      <div class="chat-messages">
+        <div class="chat-bubble user">Build a login page with email and password</div>
+        <div class="chat-bubble assistant">Compiling chain: analyze &rarr; plan &rarr; code &rarr; review &rarr; commit. Approve?</div>
+        <div class="chat-bubble user">Yes, go ahead</div>
+        <div class="chat-bubble assistant">Spawning Step 1: analyze/ (haiku)...</div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" placeholder="Send a message...">
+        <button>Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 2: Bottom Bar -->
+  <div class="bottom-bar" style="position:relative;">
+    <span class="layer-label">L2</span>
+    <input class="cmd-input" placeholder="Command or search..." />
+    <select style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:12px;">
+      <option>Session: e2e-test-01</option>
+      <option>Session: dev-session</option>
+    </select>
+    <div class="bottom-spacer"></div>
+    <span class="health-dot" title="Healthy"></span>
+    <span>Connected</span>
+  </div>
+</div>
+
+<script>
+  // Toggle chat window (L5)
+  function toggleChat() {
+    document.getElementById('chat-window').classList.toggle('hidden');
+  }
+
+  // Toggle layer labels
+  function toggleLabels() {
+    document.getElementById('app').classList.toggle('show-labels');
+  }
+
+  // Star navigation
+  const stars = { work: 'Work', maint: 'Maintenance', explore: 'Explore', review: 'Review', pm: 'PM', settings: 'Settings' };
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.star-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('star-title').textContent = stars[btn.dataset.star] || 'Work';
+    });
+  });
+</script>
+</body>
+</html>
