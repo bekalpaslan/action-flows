@@ -1,0 +1,207 @@
+/* SearchField.css — Composite search component with dropdown */
+
+/* ─────────────────────────────────────────────────────────────
+   Container
+   ───────────────────────────────────────────────────────────── */
+
+.afw-search-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.afw-search-field--full-width {
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Divider (between clear button and search icon)
+   ───────────────────────────────────────────────────────────── */
+
+.afw-search-field__divider {
+  width: 1px;
+  height: var(--space-6);
+  background: var(--panel-border-default);
+  flex-shrink: 0;
+}
+
+/* Search button */
+.afw-search-field__search-btn {
+  background: none;
+  border: none;
+  padding: var(--space-1);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-colors);
+}
+
+.afw-search-field__search-btn:hover {
+  color: var(--text-secondary);
+}
+
+.afw-search-field__search-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Dropdown Panel
+   ───────────────────────────────────────────────────────────── */
+
+.afw-search-field__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: var(--space-1);
+  background: var(--panel-bg-elevated);
+  border: 1px solid var(--panel-border-default);
+  border-radius: var(--input-radius-md);
+  padding: var(--space-1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 50;
+  box-shadow: 0px 20px 40px -5px rgba(0, 16, 53, 0.1),
+              0px 10px 10px -5px rgba(0, 16, 53, 0.04),
+              inset 0px 0px 1px 0px rgba(0, 16, 53, 0.16);
+  /* Animation */
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity var(--duration-fast) var(--ease-in-out),
+              transform var(--duration-fast) var(--ease-in-out);
+}
+
+.afw-search-field__dropdown--open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Custom Scrollbar
+   ───────────────────────────────────────────────────────────── */
+
+.afw-search-field__dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+
+.afw-search-field__dropdown::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px;
+}
+
+.afw-search-field__dropdown::-webkit-scrollbar-thumb {
+  background: var(--text-quaternary, rgba(7, 22, 112, 0.21));
+  border-radius: var(--input-radius-sm);
+}
+
+.afw-search-field__dropdown::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Dropdown Item (matches TSX class: afw-search-field__item)
+   ───────────────────────────────────────────────────────────── */
+
+.afw-search-field__item {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background var(--duration-fast) var(--ease-in-out);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.5;
+}
+
+.afw-search-field__item:hover,
+.afw-search-field__item--highlighted {
+  background: var(--input-bg-default, rgba(118, 118, 128, 0.12));
+}
+
+.afw-search-field__item-icon {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+}
+
+.afw-search-field__item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.afw-search-field__item-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.afw-search-field__item-description {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   No Results / Loading States
+   ───────────────────────────────────────────────────────────── */
+
+.afw-search-field__no-results,
+.afw-search-field__loading {
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+  text-align: center;
+  font-family: var(--font-sans);
+}
+
+.afw-search-field__loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: var(--text-tertiary);
+  border-radius: 50%;
+  animation: afw-search-spin 0.8s linear infinite;
+  margin-right: var(--space-2);
+  vertical-align: middle;
+}
+
+@keyframes afw-search-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Reduced Motion
+   ───────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .afw-search-field__dropdown {
+    transition: none;
+  }
+
+  .afw-search-field__item {
+    transition: none;
+  }
+
+  .afw-search-field__loading-spinner {
+    animation: none;
+    border-top-color: transparent;
+    border-right-color: var(--text-tertiary);
+  }
+}

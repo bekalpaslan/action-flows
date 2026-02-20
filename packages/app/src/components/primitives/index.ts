@@ -21,3 +21,6 @@ export type { DialogProps, DialogHeaderProps, DialogFooterProps } from './Dialog
 
 export { Input } from './Input';
 export type { InputProps, TextareaProps, UnifiedInputProps } from './Input';
+
+export { SearchField } from './SearchField';
+export type { SearchFieldProps, SearchFieldSuggestion } from './SearchField';
