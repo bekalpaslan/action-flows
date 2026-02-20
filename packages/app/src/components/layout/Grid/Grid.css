@@ -1,0 +1,212 @@
+/**
+ * Grid Layout System
+ *
+ * A flexible grid system using CSS Grid with design tokens.
+ * Supports responsive column counts and item spanning.
+ *
+ * Usage:
+ * <Grid cols={16} gap="md">
+ *   <GridItem colSpan={4} colStart={1}>...</GridItem>
+ * </Grid>
+ */
+
+/* ============================================================================
+   Grid Container
+   ========================================================================= */
+
+.afw-grid {
+  display: grid;
+  --grid-cols: 16;
+  --grid-gap-none: 0;
+  --grid-gap-xs: var(--space-1);
+  --grid-gap-sm: var(--space-2);
+  --grid-gap-md: var(--space-4);
+  --grid-gap-lg: var(--space-6);
+  --grid-gap-xl: var(--space-8);
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  gap: var(--grid-gap, var(--space-4));
+  width: 100%;
+}
+
+/* Fixed column overrides */
+.afw-grid--cols-4 {
+  --grid-cols: 4 !important;
+}
+
+.afw-grid--cols-8 {
+  --grid-cols: 8 !important;
+}
+
+.afw-grid--cols-12 {
+  --grid-cols: 12 !important;
+}
+
+.afw-grid--cols-16 {
+  --grid-cols: 16 !important;
+}
+
+/* Gap variants */
+.afw-grid--gap-none {
+  gap: 0;
+}
+
+.afw-grid--gap-xs {
+  gap: var(--space-1);
+}
+
+.afw-grid--gap-sm {
+  gap: var(--space-2);
+}
+
+.afw-grid--gap-md {
+  gap: var(--space-4);
+}
+
+.afw-grid--gap-lg {
+  gap: var(--space-6);
+}
+
+.afw-grid--gap-xl {
+  gap: var(--space-8);
+}
+
+/* Variant shortcuts */
+.afw-grid--compact {
+  gap: var(--space-2);
+}
+
+.afw-grid--loose {
+  gap: var(--space-6);
+}
+
+/* ============================================================================
+   Grid Item
+   ========================================================================= */
+
+.afw-grid__item {
+  /* Default: span 1 column, auto-placed */
+  grid-column: var(--col-start, auto) / span var(--col-span, 1);
+  grid-row: var(--row-start, auto) / span var(--row-span, 1);
+  min-width: 0; /* Prevent overflow */
+}
+
+/* Full span variants */
+.afw-grid__item--col-full {
+  grid-column: 1 / -1;
+}
+
+.afw-grid__item--row-full {
+  grid-row: 1 / -1;
+}
+
+/* ============================================================================
+   Responsive Behavior
+   ========================================================================= */
+
+/* Mobile: 4 columns (≤480px) */
+@media (max-width: 480px) {
+  .afw-grid {
+    --grid-cols: 4;
+  }
+
+  .afw-grid__item {
+    --col-span: var(--col-span-mobile, 1);
+    --col-start: var(--col-start-mobile, auto);
+    --row-span: var(--row-span-mobile, 1);
+    --row-start: var(--row-start-mobile, auto);
+  }
+
+  .afw-grid__item--mobile-full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Tablet: 8 columns (481px-768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .afw-grid {
+    --grid-cols: 8;
+  }
+
+  .afw-grid__item {
+    --col-span: var(--col-span-tablet, 1);
+    --col-start: var(--col-start-tablet, auto);
+    --row-span: var(--row-span-tablet, 1);
+    --row-start: var(--row-start-tablet, auto);
+  }
+
+  .afw-grid__item--tablet-full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Desktop: 16 columns (769px-1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .afw-grid__item {
+    --col-span: var(--col-span-desktop, 1);
+    --col-start: var(--col-start-desktop, auto);
+    --row-span: var(--row-span-desktop, 1);
+    --row-start: var(--row-start-desktop, auto);
+  }
+
+  .afw-grid__item--desktop-full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Wide: 16 columns (≥1025px) */
+@media (min-width: 1025px) {
+  .afw-grid__item {
+    --col-span: var(--col-span-wide, 1);
+    --col-start: var(--col-start-wide, auto);
+    --row-span: var(--row-span-wide, 1);
+    --row-start: var(--row-start-wide, auto);
+  }
+
+  .afw-grid__item--wide-full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ============================================================================
+   Debug Overlay
+   ========================================================================= */
+
+.afw-grid--debug {
+  position: relative;
+}
+
+.afw-grid--debug::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  /* Pink grid lines matching Figma spec */
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      rgba(226, 8, 113, 0.15) 0px,
+      rgba(226, 8, 113, 0.15) 1px,
+      transparent 1px,
+      transparent calc(100% / var(--grid-cols))
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(226, 8, 113, 0.15) 0px,
+      rgba(226, 8, 113, 0.15) 1px,
+      transparent 1px,
+      transparent 54px
+    );
+  background-size: calc(100% / var(--grid-cols)) 100%, 100% 54px;
+}
+
+/* ============================================================================
+   Accessibility
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .afw-grid,
+  .afw-grid__item {
+    transition: none;
+  }
+}

@@ -64,6 +64,72 @@
   --fill-quaternary: rgba(118, 118, 128, 0.18);
 
   /* ==========================================================================
+     Brand Palette — Raw color scale, prefix: --palette-
+     Source: ActionFlows brand color system (5 hues × 11 stops each)
+     Use these for semantic token definitions; do NOT use directly in components.
+     ========================================================================== */
+
+  /* Black */
+  --palette-black:     #000000;
+  --palette-black-100: #000000;
+  --palette-black-200: #000000;
+  --palette-black-300: #000000;
+  --palette-black-400: #000000;
+  --palette-black-500: #000000;
+  --palette-black-600: #333333;
+  --palette-black-700: #666666;
+  --palette-black-800: #999999;
+  --palette-black-900: #cccccc;
+
+  /* Prussian Blue */
+  --palette-prussian-blue:     #14213d;
+  --palette-prussian-blue-100: #04070c;
+  --palette-prussian-blue-200: #080d19;
+  --palette-prussian-blue-300: #0c1425;
+  --palette-prussian-blue-400: #101b31;
+  --palette-prussian-blue-500: #14213d;
+  --palette-prussian-blue-600: #29447e;
+  --palette-prussian-blue-700: #3e67bf;
+  --palette-prussian-blue-800: #7e99d5;
+  --palette-prussian-blue-900: #beccea;
+
+  /* Orange */
+  --palette-orange:     #fca311;
+  --palette-orange-100: #362101;
+  --palette-orange-200: #6b4201;
+  --palette-orange-300: #a16402;
+  --palette-orange-400: #d68502;
+  --palette-orange-500: #fca311;
+  --palette-orange-600: #fdb541;
+  --palette-orange-700: #fec871;
+  --palette-orange-800: #fedaa0;
+  --palette-orange-900: #ffedd0;
+
+  /* Alabaster Grey */
+  --palette-alabaster-grey:     #e5e5e5;
+  --palette-alabaster-grey-100: #2e2e2e;
+  --palette-alabaster-grey-200: #5c5c5c;
+  --palette-alabaster-grey-300: #8a8a8a;
+  --palette-alabaster-grey-400: #b8b8b8;
+  --palette-alabaster-grey-500: #e5e5e5;
+  --palette-alabaster-grey-600: #ebebeb;
+  --palette-alabaster-grey-700: #f0f0f0;
+  --palette-alabaster-grey-800: #f5f5f5;
+  --palette-alabaster-grey-900: #fafafa;
+
+  /* White */
+  --palette-white:     #ffffff;
+  --palette-white-100: #333333;
+  --palette-white-200: #666666;
+  --palette-white-300: #999999;
+  --palette-white-400: #cccccc;
+  --palette-white-500: #ffffff;
+  --palette-white-600: #ffffff;
+  --palette-white-700: #ffffff;
+  --palette-white-800: #ffffff;
+  --palette-white-900: #ffffff;
+
+  /* ==========================================================================
      Light Theme Tokens
      ========================================================================== */
 
@@ -435,6 +501,25 @@
   --bottom-h: 64px;           /* Command center height */
   --chat-w: 360px;            /* Chat window width */
   --panel-radius: 10px;       /* Standard panel border radius (matches mock) */
+
+  /* ==========================================================================
+     Grid System — 16-Column Figma FLOW V.4.0 Spec
+     ========================================================================== */
+
+  /* Grid Dimensions (1440px viewport basis) */
+  --grid-viewport-width: 1440px;
+  --grid-content-width: 1312px;
+  --grid-column-count: 16;
+  --grid-column-width: 82px;       /* 1312 / 16 */
+  --grid-row-height: 54px;         /* 864 / 16 */
+  --grid-margin-horizontal: 64px;  /* Side margins */
+  --grid-margin-vertical: 80px;    /* Top/bottom margins */
+
+  /* Responsive Breakpoints */
+  --breakpoint-mobile: 480px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-wide: 1440px;
 
   /* AppSidebar colors */
   --app-sidebar-accent-active: #f0883e;
