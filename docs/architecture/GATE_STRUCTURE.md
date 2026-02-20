@@ -1,5 +1,7 @@
 # Orchestrator Gate Specifications
 
+> See also: `.claude/actionflows/GATE_STRUCTURE.md` for quick-reference summary.
+
 **Version:** 1.0
 **Date:** 2026-02-13
 **Phase:** 1 (Routing Foundation)

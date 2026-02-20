@@ -1,6 +1,6 @@
 # Orchestrator Gate Structure
 
-> Quick reference for orchestrator execution gates. Implementation specs live in code JSDoc.
+> Quick reference for orchestrator execution gates. See also: `docs/architecture/GATE_STRUCTURE.md` for detailed I/O contracts and trace specs.
 
 ---
 

@@ -21,6 +21,13 @@ Complete guide to ActionFlows Dashboard documentation.
 
 - [Orchestrator Integration](architecture/ORCHESTRATOR_INTEGRATION.md) — ActionFlows framework integration patterns
 - [Telemetry System](architecture/TELEMETRY_SYSTEM.md) — Telemetry implementation and system design
+- [Gate Structure](architecture/GATE_STRUCTURE.md) — Gate I/O contracts and orchestration flow
+
+### CosmicMap
+
+- [Command Center](architecture/cosmicmap/COMMAND_CENTER.md) — Command Center component architecture
+- [Command Center Architecture](architecture/cosmicmap/COMMAND_CENTER_ARCHITECTURE.md) — Detailed architectural patterns
+- [Component Structure](architecture/cosmicmap/COMPONENT_STRUCTURE.md) — CosmicMap component hierarchy
 
 ## Deployment
 
@@ -33,16 +40,36 @@ Complete guide to ActionFlows Dashboard documentation.
 
 ## Guides
 
+### Backend Guides
+
+- [Redis Index](guides/backend/REDIS_INDEX.md) — Redis integration navigation and quick start
+- [Redis Integration](guides/backend/REDIS_INTEGRATION.md) — Comprehensive Redis integration guide
+- [Redis Quick Start](guides/backend/REDIS_QUICK_START.md) — 5-minute Redis setup guide
+- [Backend Testing Guide](guides/backend/TESTING_GUIDE.md) — Backend testing strategies and patterns
+- [Backend Implementation Checklist](guides/backend/IMPLEMENTATION_CHECKLIST.md) — Backend feature implementation tracking
+
+### App/Frontend Guides
+
+- [Bundle Optimization](guides/app/BUNDLE_OPTIMIZATION.md) — Frontend bundle size optimization techniques
+- [Optimization Checklist](guides/app/OPTIMIZATION_CHECKLIST.md) — Performance optimization verification
+- [App Setup](guides/app/SETUP.md) — Frontend development environment setup
+- [App Quick Start](guides/app/QUICK_START.md) — Frontend development quick start guide
+- [SquadPanel Component Guide](guides/app/SQUADPANEL_COMPONENT_GUIDE.md) — SquadPanel component architecture and usage
+- [SquadPanel Overlay Mode](guides/app/SQUADPANEL_OVERLAY_MODE_USAGE.md) — SquadPanel overlay mode reference
+
+### General Guides
+
 - [Multi-User Testing](guides/MULTI_USER_TESTING.md) — Testing with multiple concurrent users
 - [Quick Start: Real-Time](guides/quick-start-real-time.md) — Real-time features quick start
 - [WebSocket Guide](guides/websocket-guide.md) — WebSocket connection and messaging
 
-## Requirements & Specifications
+## Specifications
 
-- [FRD](FRD.md) — Functional Requirements Document
-- [FRD: Self-Evolving UI](FRD-SelfEvolvingUI.md) — Self-evolving UI requirements
-- [SRD](SRD.md) — System Requirements Document
-- [SRD: Self-Evolving UI](SRD-SelfEvolvingUI.md) — Self-evolving UI system requirements
+- [Specifications Index](specs/INDEX.md) — Overview of all requirement and specification documents
+- [FRD](specs/FRD.md) — Functional Requirements Document
+- [FRD: Self-Evolving UI](specs/FRD-SelfEvolvingUI.md) — Self-evolving UI requirements
+- [SRD](specs/SRD.md) — System Requirements Document
+- [SRD: Self-Evolving UI](specs/SRD-SelfEvolvingUI.md) — Self-evolving UI system requirements
 
 ## Setup
 
@@ -65,6 +92,7 @@ Complete guide to ActionFlows Dashboard documentation.
 
 ### Deliveries
 
+- [Deliveries Index](status/deliveries/INDEX.md) — Complete list of delivery reports
 - [Batch C Contracts](status/deliveries/batch-c-contracts.md) — Behavioral contract phase C implementation
 - [Batch E Contracts](status/deliveries/batch-e-contracts.md) — Behavioral contract phase E completion
 - [Testing Delivery](status/deliveries/testing-delivery.md) — Testing implementation delivery report
@@ -91,7 +119,7 @@ Complete guide to ActionFlows Dashboard documentation.
 - [E2E Test Guide](testing/E2E_TEST_GUIDE.md) — End-to-end testing guide
 - [Integration Test Summary](testing/integration-summary.md) — Integration test results
 - [Test Files Summary](testing/test-files-summary.md) — Test file organization
-- [Performance Baseline](PERFORMANCE_BASELINE.md) — Benchmark results and performance targets
+- [Performance Baseline](performance/PERFORMANCE_BASELINE.md) — Benchmark results and performance targets
 - [Contract Compliance Roadmap](CONTRACT_COMPLIANCE_ROADMAP.md) — Contract validation status and roadmap
 - [Test Deliverables](testing/deliverables/INDEX.md) — Test delivery reports
 - [Security Documentation](testing/security/INDEX.md) — Security fix documentation

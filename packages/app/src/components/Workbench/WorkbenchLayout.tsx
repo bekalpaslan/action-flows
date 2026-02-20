@@ -205,14 +205,14 @@ const initialDemoDocs: DocLink[] = [
   {
     id: 'doc-1',
     title: 'FRD - Self-Evolving UI',
-    url: '/docs/FRD.md',
+    url: '/docs/specs/FRD-SelfEvolvingUI.md',
     category: 'Requirements',
     description: 'Functional Requirements Document for Self-Evolving UI',
   },
   {
     id: 'doc-2',
     title: 'SRD - Self-Evolving UI',
-    url: '/docs/SRD.md',
+    url: '/docs/specs/SRD-SelfEvolvingUI.md',
     category: 'Requirements',
     description: 'System Requirements Document with technical specifications',
   },
