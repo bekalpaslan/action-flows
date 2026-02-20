@@ -22,16 +22,18 @@ templates/
 │   ├── TEMPLATE.format-4.3-learnings-entry.md
 │   ├── TEMPLATE.format-6.1-error.md
 │   └── TEMPLATE.format-6.2-routing.md
-├── agent/                # Agent output templates (9 formats)
+├── agent/                # Agent output templates (12 formats)
 │   ├── TEMPLATE.report.md
 │   ├── TEMPLATE.review-report.md
 │   ├── TEMPLATE.changes.md
 │   ├── TEMPLATE.test-report.md
 │   ├── TEMPLATE.format-5.3-brainstorm-report.md
-│   ├── TEMPLATE.format-5.4-plan-report.md
-│   ├── TEMPLATE.format-5.5-analysis-report.md
-│   ├── TEMPLATE.format-5.6-second-opinion-report.md
-│   └── TEMPLATE.format-6-notification.md
+│   ├── TEMPLATE.plan-report.md
+│   ├── TEMPLATE.format-5.4-diagnosis-report.md
+│   ├── TEMPLATE.format-5.5-healing-verification-report.md
+│   ├── TEMPLATE.format-5.6-quarantine-report.md
+│   ├── TEMPLATE.second-opinion-report.md
+│   └── TEMPLATE.notification.md
 ├── git/                  # Git convention templates (2 formats)
 │   ├── TEMPLATE.commit-message.md
 │   └── TEMPLATE.pr-description.md
@@ -98,23 +100,28 @@ Each template includes:
 
 1. **TEMPLATE.report.md** — Analysis/audit output (from analyze/ agents) — CONTRACT.md Format 5.2
 2. **TEMPLATE.review-report.md** — Review output (from review/ agents) — CONTRACT.md Format 5.1
-3. **TEMPLATE.changes.md** — Code implementation output (from code/ agents)
-4. **TEMPLATE.test-report.md** — Test execution output (from test/ agents)
+3. **TEMPLATE.changes.md** — Code implementation output (from code/ agents) — Free-form
+4. **TEMPLATE.test-report.md** — Test execution output (from test/ agents) — Free-form
 5. **TEMPLATE.format-5.3-brainstorm-report.md** — Brainstorm session transcript — CONTRACT.md Format 5.3
-6. **TEMPLATE.format-5.4-plan-report.md** — Planning output (from plan/ agents) — CONTRACT.md Format 5.4
-7. **TEMPLATE.format-5.5-analysis-report.md** — Detailed technical analysis — Extension of Format 5.2
-8. **TEMPLATE.format-5.6-second-opinion-report.md** — Second-opinion critique output — CONTRACT.md Format 5.6
-9. **TEMPLATE.format-6-notification.md** — Notification announcements — Multiple formats (info, warning, critical)
+6. **TEMPLATE.plan-report.md** — Planning output (from plan/ agents) — Free-form (plan/ has no contract-defined format)
+7. **TEMPLATE.format-5.4-diagnosis-report.md** — Root cause analysis (from diagnose/ agents) — CONTRACT.md Format 5.4
+8. **TEMPLATE.format-5.5-healing-verification-report.md** — Healing verification (from verify-healing/ agents) — CONTRACT.md Format 5.5
+9. **TEMPLATE.format-5.6-quarantine-report.md** — Quarantine operations (from isolate/ agents) — CONTRACT.md Format 5.6
+10. **TEMPLATE.second-opinion-report.md** — Second-opinion critique output (from second-opinion/ agents) — Free-form (second-opinion/ has no contract-defined format)
+11. **TEMPLATE.notification.md** — Notification announcements (from notify/ agents) — Free-form
 
 **Contract Status:**
-- `TEMPLATE.review-report.md` — Fully contract-defined (Format 5.1), parsed, validated
-- `TEMPLATE.report.md` — Contract-defined (Format 5.2), parser exists
-- `TEMPLATE.format-5.3-brainstorm-report.md` — Contract-defined (Format 5.3), recommended but not strictly enforced
-- `TEMPLATE.format-5.4-plan-report.md` — Contract-defined (Format 5.4), parser pending
-- `TEMPLATE.format-5.6-second-opinion-report.md` — Contract-defined (Format 5.6), parser pending
-- `TEMPLATE.changes.md` — Free-form documentation (no parser)
-- `TEMPLATE.test-report.md` — Free-form documentation (no parser)
-- `TEMPLATE.format-6-notification.md` — Free-form documentation (no parser)
+- `TEMPLATE.review-report.md` — CONTRACT.md Format 5.1 (Review Report Structure) — Parser: parseReviewReport
+- `TEMPLATE.report.md` — CONTRACT.md Format 5.2 (Analysis Report Structure) — Parser: parseAnalysisReport
+- `TEMPLATE.format-5.3-brainstorm-report.md` — CONTRACT.md Format 5.3 (Brainstorm Session Transcript) — Recommended but not strictly enforced
+- `TEMPLATE.plan-report.md` — Free-form (plan/ has no contract-defined format)
+- `TEMPLATE.format-5.4-diagnosis-report.md` — CONTRACT.md Format 5.4 (Diagnosis Report) — Parser: parseDiagnosisReport
+- `TEMPLATE.format-5.5-healing-verification-report.md` — CONTRACT.md Format 5.5 (Healing Verification Report) — Parser: parseHealingVerification
+- `TEMPLATE.format-5.6-quarantine-report.md` — CONTRACT.md Format 5.6 (Quarantine Operations Report) — Parser: parseQuarantineOperations
+- `TEMPLATE.second-opinion-report.md` — Free-form (second-opinion/ has no contract-defined format)
+- `TEMPLATE.changes.md` — Free-form (code/ has no contract-defined format)
+- `TEMPLATE.test-report.md` — Free-form (test/ has no contract-defined format)
+- `TEMPLATE.notification.md` — Free-form (notify/ has no contract-defined format)
 
 **Source:** Analysis of agent outputs, CONTRACT.md § Format 5.x
 
@@ -248,14 +255,16 @@ Each template covers:
 
 1. **Identify output type:**
    - Analysis/audit → Use `agent/TEMPLATE.report.md` (Format 5.2)
-   - Review → Use `agent/TEMPLATE.review-report.md` (MUST follow CONTRACT.md Format 5.1)
+   - Review → Use `agent/TEMPLATE.review-report.md` (Format 5.1)
    - Brainstorm session → Use `agent/TEMPLATE.format-5.3-brainstorm-report.md` (Format 5.3)
-   - Planning/diagnosis → Use `agent/TEMPLATE.format-5.4-plan-report.md` (Format 5.4)
-   - Deep technical analysis → Use `agent/TEMPLATE.format-5.5-analysis-report.md` (Format 5.5)
-   - Second opinion/critique → Use `agent/TEMPLATE.format-5.6-second-opinion-report.md` (Format 5.6)
+   - Planning → Use `agent/TEMPLATE.plan-report.md` (free-form)
+   - Root cause diagnosis → Use `agent/TEMPLATE.format-5.4-diagnosis-report.md` (Format 5.4)
+   - Healing verification → Use `agent/TEMPLATE.format-5.5-healing-verification-report.md` (Format 5.5)
+   - Quarantine operations → Use `agent/TEMPLATE.format-5.6-quarantine-report.md` (Format 5.6)
+   - Second opinion/critique → Use `agent/TEMPLATE.second-opinion-report.md` (free-form)
    - Code implementation → Use `agent/TEMPLATE.changes.md` (free-form)
    - Test execution → Use `agent/TEMPLATE.test-report.md` (free-form)
-   - Notifications → Use `agent/TEMPLATE.format-6-notification.md` (Format 6.x)
+   - Notifications → Use `agent/TEMPLATE.notification.md` (free-form)
 
 2. **Follow template structure:**
    - Replace all `{placeholder}` values
@@ -265,17 +274,21 @@ Each template covers:
 
 3. **Contract compliance (contract-defined formats only):**
    - **Review reports (Format 5.1):** Verdict must be exact enum: APPROVED | NEEDS_CHANGES (no REJECTED), Score 0-100 with `%`, Findings table 6 columns, Severity lowercase
-   - **Analysis reports (Format 5.2):** Required sections with numbered analysis, Recommendations with P0/P1/P2 priority
+   - **Analysis reports (Format 5.2):** Title, Aspect, Scope, Date, Agent, numbered analysis sections, Recommendations
    - **Brainstorm (Format 5.3):** Recommended but not enforced; free-form Q&A transcript with Key Insights
-   - **Second opinion (Format 5.6):** Original + Critique structure, Missed Issues section, Disagreements section with evidence
-   - **Notifications (Format 6.x):** Message + Details + Action structure, Severity level (info/warning/critical)
+   - **Diagnosis reports (Format 5.4):** Gate, Pattern, Severity, Confidence, Evidence, Root Cause Classification, Healing Recommendation, Prevention Suggestion
+   - **Healing Verification (Format 5.5):** Health Score Comparison table, Target Gate Analysis, Verdict (SUCCESS | PARTIAL | FAILED | ESCALATE), Recommendations
+   - **Quarantine Operations (Format 5.6):** Subcommand (quarantine | release | list), Target Type, Target ID, Redis Record, WebSocket Event, Impact sections
 
 4. **Save to log folder:**
    - Analysis: `.claude/actionflows/logs/analyze/{description}_{datetime}/report.md`
    - Review: `.claude/actionflows/logs/review/{description}_{datetime}/review-report.md`
    - Brainstorm: `.claude/actionflows/logs/brainstorm/{description}_{datetime}/transcript.md`
    - Plan: `.claude/actionflows/logs/plan/{description}_{datetime}/plan-report.md`
-   - Second Opinion: `.claude/actionflows/logs/review/{description}_{datetime}/second-opinion-critique.md`
+   - Diagnosis: `.claude/actionflows/logs/diagnose/{description}_{datetime}/diagnosis-report.md`
+   - Healing Verification: `.claude/actionflows/logs/verify-healing/{description}_{datetime}/verification-report.md`
+   - Quarantine: `.claude/actionflows/logs/isolate/{description}_{datetime}/quarantine-report.md`
+   - Second Opinion: `.claude/actionflows/logs/second-opinion/{description}_{datetime}/second-opinion-report.md`
    - Code: `.claude/actionflows/logs/code/{description}_{datetime}/changes.md`
    - Test: `.claude/actionflows/logs/test/{description}_{datetime}/test-results.md`
 

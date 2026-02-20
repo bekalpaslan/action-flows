@@ -1,7 +1,7 @@
 # Notification Report Template
 
 **Purpose:** Used by notification actions to announce important events
-**Contract Reference:** CONTRACT.md § Format 6.1-6.2 (Notifications) — P1-P5 Priorities
+**Contract Reference:** Free-form — notification templates are guidance for agents (Format 6.1 Error Announcement and Format 6.2 Routing are orchestrator formats, not agent templates)
 **Producer:** See `.claude/actionflows/actions/notify/agent.md`
 
 ---
@@ -280,7 +280,7 @@ Log Folder: .claude/actionflows/logs/code/auth-impl_2026-02-21-15-30/
 
 ## Cross-References
 
-- **Error Announcements:** FORMAT 6.1 (errors)
-- **Routing Announcements:** FORMAT 6.2 (routing decisions)
+- **Contract Specification:** `.claude/actionflows/CONTRACT.md` § Format 6.1 (Error Announcement), Format 6.2 (Routing Announcement) — for reference
+- **Agent Definition:** `.claude/actionflows/actions/notify/agent.md`
 - **Dashboard Integration:** Notifications appear in real-time panel
 - **Slack MCP:** Requires configuration in project settings

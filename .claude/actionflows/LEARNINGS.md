@@ -250,3 +250,12 @@
 - **Example:** Format 2.1 StepCompletion `nextStep` — TypeScript type defined `number | string | null`, Zod schema only accepted `string | null`. Parser returned both types. Runtime health: 100%. Actual alignment: broken (CRITICAL).
 - **Fix:** Consider adding a "contract alignment score" alongside runtime health. Runtime = parsing success rate. Alignment = spec-type-schema-parser agreement at field level. Both 100% = true harmony.
 - **Status:** Open (insight logged, no code change yet)
+
+### L028: Code Agent Misapplies "X wins over Y" Conflict Resolution Instructions
+- **Date:** 2026-02-21
+- **From:** code/framework/ (haiku) during template-content-fixes chain
+- **Issue:** Human decided "ORCHESTRATOR.md wins" for Format 1.3 heading conflict (CONTRACT.md `## Chain Status:` vs ORCHESTRATOR.md `## Chain: {title} -- Updated`). Agent implemented the opposite — kept `## Chain Status:` in the template and left CONTRACT.md unchanged.
+- **Root Cause:** Spawn prompt said which source wins but didn't say which file to edit. Agent defaulted to treating CONTRACT.md as authoritative and updated the template to match it, rather than updating CONTRACT.md to match ORCHESTRATOR.md.
+- **Fix:** When spawning code agents to resolve source-of-truth conflicts, always phrase the instruction as an explicit edit directive: "Update FILE_A to match FILE_B" — not "B wins over A." Ambiguity about which file is the target of the edit causes agents to choose wrong.
+- **Pattern:** "B wins" → agent updates A to look like B. Instead say: "Edit CONTRACT.md pattern to match ORCHESTRATOR.md heading `## Chain: {title} -- Updated`."
+- **Status:** Closed (manually triaged — template and CONTRACT.md corrected)

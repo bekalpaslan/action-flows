@@ -1,8 +1,8 @@
 # Second Opinion Report Template
 
 **Purpose:** Used by `second-opinion/` action agents to critique other agent outputs
-**Contract Reference:** CONTRACT.md § Format 5.6 (Second Opinion Report) — P4 Priority
-**Parser:** `parseSecondOpinionReport` in `packages/shared/src/contract/parsers/actionParser.ts`
+**Contract Reference:** Free-form — second-opinion/ has no CONTRACT-defined format
+**Parser:** None — templates are free-form guidance for agents
 **Producer:** See `.claude/actionflows/actions/second-opinion/agent.md`
 
 ---
@@ -464,7 +464,6 @@ Authentication is a high-security area where "good but incomplete" is insufficie
 
 ## Cross-References
 
-- **Contract Specification:** `.claude/actionflows/CONTRACT.md` § Format 5.6
-- **Parser Implementation:** `packages/shared/src/contract/parsers/actionParser.ts`
 - **Agent Definition:** `.claude/actionflows/actions/second-opinion/agent.md`
-- **Related Templates:** `TEMPLATE.review-report.md` (Original review template)
+- **Contract Specification:** `.claude/actionflows/CONTRACT.md` (for reference on contract-defined formats)
+- **Related Templates:** `TEMPLATE.review-report.md` (Review Report Format 5.1), `TEMPLATE.report.md` (Analysis Report Format 5.2)

@@ -1,8 +1,8 @@
 # Plan Report Template
 
 **Purpose:** Used by `plan/` action agents to produce structured planning reports
-**Contract Reference:** CONTRACT.md § Format 5.4 (Plan Report) — P4 Priority
-**Parser:** `parsePlanReport` in `packages/shared/src/contract/parsers/actionParser.ts`
+**Contract Reference:** Free-form — plan/ has no CONTRACT-defined format
+**Parser:** None — templates are free-form guidance for agents
 **Producer:** See `.claude/actionflows/actions/plan/agent.md`
 
 ---
@@ -372,7 +372,6 @@ After completion, verify:
 
 ## Cross-References
 
-- **Contract Specification:** `.claude/actionflows/CONTRACT.md` § Format 5.4 (Diagnosis Report)
-- **Parser Implementation:** `packages/shared/src/contract/parsers/actionParser.ts`
 - **Agent Definition:** `.claude/actionflows/actions/plan/agent.md`
-- **Related Templates:** `TEMPLATE.report.md` (Analysis Report)
+- **Contract Specification:** `.claude/actionflows/CONTRACT.md` (for reference on contract-defined formats)
+- **Related Templates:** `TEMPLATE.report.md` (Analysis Report Format 5.2), `TEMPLATE.review-report.md` (Review Report Format 5.1)
