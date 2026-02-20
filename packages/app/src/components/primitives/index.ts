@@ -18,3 +18,6 @@ export type { PanelProps, PanelHeaderProps, PanelFooterProps } from './Panel';
 
 export { Dialog, DialogHeader, DialogFooter } from './Dialog';
 export type { DialogProps, DialogHeaderProps, DialogFooterProps } from './Dialog';
+
+export { Input } from './Input';
+export type { InputProps, TextareaProps, UnifiedInputProps } from './Input';

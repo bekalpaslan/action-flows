@@ -1,0 +1,279 @@
+/* ========================================================================
+   Input Component Styles
+   ======================================================================== */
+
+/* Container
+   ======================================================================== */
+
+.afw-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.afw-input--full-width {
+  width: 100%;
+}
+
+/* Label
+   ======================================================================== */
+
+.afw-input__label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+}
+
+.afw-input__label--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.afw-input__label-required {
+  color: var(--system-red);
+  margin-left: var(--space-1);
+}
+
+.afw-input__label-optional {
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+  margin-left: var(--space-1);
+  font-weight: var(--font-medium);
+}
+
+/* Wrapper (Visual Input Box)
+   ======================================================================== */
+
+.afw-input__wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--input-bg-default);
+  border: var(--input-border-default);
+  transition: var(--transition-colors);
+}
+
+/* Size Modifiers */
+.afw-input__wrapper--sm {
+  height: 32px;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  border-radius: var(--input-radius-sm);
+}
+
+.afw-input__wrapper--md {
+  height: 40px;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-base);
+  border-radius: var(--input-radius-md);
+}
+
+.afw-input__wrapper--lg {
+  height: 48px;
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--text-lg);
+  border-radius: var(--input-radius-lg);
+}
+
+/* State Modifiers */
+.afw-input__wrapper:hover:not(.afw-input__wrapper--disabled):not(.afw-input__wrapper--readonly) {
+  background: var(--input-bg-hover);
+  border-color: var(--input-border-color-hover);
+}
+
+.afw-input__wrapper--focused {
+  background: var(--input-bg-focus);
+  border-color: var(--input-border-color-focus);
+  box-shadow: var(--input-glow-focus);
+}
+
+.afw-input__wrapper--error {
+  border-color: var(--input-border-color-error);
+  box-shadow: var(--input-glow-error);
+}
+
+.afw-input__wrapper--success {
+  border-color: var(--system-green);
+  box-shadow: var(--input-glow-success, 0 0 10px rgba(63, 185, 80, 0.25));
+}
+
+.afw-input__wrapper--disabled {
+  background: var(--input-bg-disabled);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.afw-input__wrapper--readonly {
+  background: var(--input-bg-disabled);
+  cursor: default;
+}
+
+/* Textarea Wrapper (remove fixed height) */
+.afw-input__wrapper--textarea {
+  height: auto;
+  align-items: flex-start;
+}
+
+/* Field
+   ======================================================================== */
+
+.afw-input__field {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--input-text-color);
+  font-family: var(--font-sans);
+  font-size: inherit;
+  width: 100%;
+  line-height: 1.5;
+}
+
+.afw-input__field::placeholder {
+  color: var(--input-placeholder-color);
+}
+
+.afw-input__field:disabled {
+  cursor: not-allowed;
+}
+
+.afw-input__field:read-only {
+  cursor: default;
+}
+
+/* Textarea Field */
+.afw-input__field--textarea {
+  resize: vertical;
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+.afw-input__field--textarea--no-resize {
+  resize: none;
+}
+
+/* Prefix/Suffix
+   ======================================================================== */
+
+.afw-input__prefix {
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  margin-right: var(--space-2);
+  flex-shrink: 0;
+}
+
+.afw-input__suffix {
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  margin-left: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* Action Buttons
+   ======================================================================== */
+
+.afw-input__actions {
+  display: flex;
+  gap: var(--space-1);
+  margin-left: var(--space-2);
+  align-items: center;
+}
+
+.afw-input__clear-btn,
+.afw-input__password-toggle {
+  background: none;
+  border: none;
+  padding: var(--space-1);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-colors);
+  width: 24px;
+  height: 24px;
+}
+
+.afw-input__clear-btn:hover,
+.afw-input__password-toggle:hover {
+  color: var(--text-secondary);
+  background: var(--input-action-hover-bg, rgba(255, 255, 255, 0.08));
+}
+
+.afw-input__clear-btn:active,
+.afw-input__password-toggle:active {
+  transform: scale(0.95);
+}
+
+.afw-input__clear-btn:disabled,
+.afw-input__password-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Helper Text
+   ======================================================================== */
+
+.afw-input__helper {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  margin-top: var(--space-1);
+}
+
+.afw-input__helper--error {
+  color: var(--system-red);
+}
+
+.afw-input__helper--success {
+  color: var(--system-green);
+}
+
+/* Character Count
+   ======================================================================== */
+
+.afw-input__char-count {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  text-align: right;
+  margin-top: var(--space-1);
+  font-family: var(--font-sans);
+}
+
+.afw-input__char-count--over {
+  color: var(--system-red);
+  font-weight: var(--font-semibold);
+}
+
+/* Focus-Visible (Keyboard Navigation)
+   ======================================================================== */
+
+.afw-input__wrapper:focus-within {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Reduced Motion
+   ======================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .afw-input__wrapper {
+    transition: none;
+  }
+
+  .afw-input__clear-btn,
+  .afw-input__password-toggle {
+    transition: none;
+    transform: none !important;
+  }
+}
