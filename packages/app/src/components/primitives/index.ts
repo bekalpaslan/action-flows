@@ -96,3 +96,6 @@ export type { SkeletonProps } from './Skeleton';
 
 export { Pagination } from './Pagination';
 export type { PaginationProps } from './Pagination';
+
+export { Slider } from './Slider';
+export type { SliderProps } from './Slider';

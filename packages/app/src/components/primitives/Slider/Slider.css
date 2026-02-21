@@ -1,0 +1,105 @@
+/* Slider Component */
+
+.afw-slider {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.afw-slider[data-disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Header */
+
+.afw-slider__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-1);
+}
+
+.afw-slider__label {
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--text-secondary);
+}
+
+.afw-slider__value {
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Track */
+
+.afw-slider__track {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background-color: var(--app-bg-quaternary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-in-out);
+}
+
+.afw-slider[data-size="sm"] .afw-slider__track {
+  height: 4px;
+}
+
+/* Fill */
+
+.afw-slider__fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  transition: left var(--duration-fast) var(--ease-in-out),
+    width var(--duration-fast) var(--ease-in-out);
+}
+
+/* Thumb */
+
+.afw-slider__thumb {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background-color: var(--app-bg-base);
+  border: 2px solid;
+  border-radius: var(--radius-full);
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  transition: transform var(--duration-fast) var(--ease-in-out),
+    box-shadow var(--duration-fast) var(--ease-in-out);
+}
+
+.afw-slider[data-size="sm"] .afw-slider__thumb {
+  width: 12px;
+  height: 12px;
+}
+
+.afw-slider__thumb:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.afw-slider__thumb:active {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.afw-slider__thumb:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .afw-slider__fill,
+  .afw-slider__thumb {
+    transition: none;
+  }
+}
