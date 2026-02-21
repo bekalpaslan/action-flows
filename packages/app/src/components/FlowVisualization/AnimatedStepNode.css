@@ -105,7 +105,7 @@
 
 .model-badge.model-opus {
   background-color: var(--light-bg-secondary);
-  color: var(--system-orange);
+  color: var(--brand-accent);
 }
 
 .node-duration {
@@ -251,7 +251,7 @@
 }
 
 .animated-step-node .react-flow__handle.connectingNode {
-  background-color: var(--system-orange);
+  background-color: var(--brand-accent);
 }
 
 .animated-step-node .react-flow__handle.valid {

@@ -88,7 +88,7 @@
 /* Colors - Orange */
 .afw-badge--orange {
   background: rgba(240, 136, 62, 0.15);
-  color: var(--system-orange);
+  color: var(--brand-accent);
   border: 1px solid rgba(240, 136, 62, 0.25);
 }
 

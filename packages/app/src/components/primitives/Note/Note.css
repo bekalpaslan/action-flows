@@ -26,7 +26,7 @@
 }
 
 .afw-note__dot--orange {
-  background-color: var(--system-orange);
+  background-color: var(--brand-accent);
 }
 
 .afw-note__dot--red {

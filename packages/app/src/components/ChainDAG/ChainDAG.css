@@ -218,7 +218,7 @@
 
 .parallel-indicator {
   font-size: var(--text-sm);
-  color: var(--system-orange);
+  color: var(--brand-accent);
   font-weight: var(--font-bold);
   title: 'Parallel execution';
 }
@@ -304,7 +304,7 @@
 }
 
 .react-flow__handle.connectingNode {
-  background-color: var(--system-orange);
+  background-color: var(--brand-accent);
 }
 
 .react-flow__handle.valid {
@@ -384,7 +384,7 @@
 /* Parallel group background */
 .parallel-group {
   position: absolute;
-  border: var(--space-0-5) dashed var(--system-orange);
+  border: var(--space-0-5) dashed var(--brand-accent);
   border-radius: var(--radius-lg);
   background-color: rgba(240, 136, 62, 0.03);
   pointer-events: none;
@@ -394,7 +394,7 @@
   position: absolute;
   top: calc(var(--space-4) * -1);
   left: var(--space-2);
-  background-color: var(--system-orange);
+  background-color: var(--brand-accent);
   color: white;
   padding: var(--space-0-5) var(--space-1-5);
   border-radius: 3px;

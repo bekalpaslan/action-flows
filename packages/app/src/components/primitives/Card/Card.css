@@ -87,7 +87,7 @@
 }
 
 .afw-card--accent-orange {
-  border-left: 4px solid var(--system-orange);
+  border-left: 4px solid var(--brand-accent);
 }
 
 .afw-card--accent-purple {

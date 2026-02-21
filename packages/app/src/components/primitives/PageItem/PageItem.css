@@ -44,9 +44,9 @@
 }
 
 .afw-page-item--orange {
-  background: color-mix(in srgb, var(--system-orange) 15%, var(--app-bg-secondary));
+  background: color-mix(in srgb, var(--brand-accent) 15%, var(--app-bg-secondary));
   color: var(--text-primary);
-  border-left: 3px solid var(--system-orange);
+  border-left: 3px solid var(--brand-accent);
 }
 
 .afw-page-item--red {

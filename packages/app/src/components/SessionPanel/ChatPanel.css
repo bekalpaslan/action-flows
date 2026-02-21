@@ -954,7 +954,7 @@
 }
 
 .chat-panel__send-btn:hover:not(:disabled) {
-  background: var(--system-orange);
+  background: var(--brand-accent);
   box-shadow: 0 2px 6px var(--glass-bg-dark);
   transform: translateY(-1px);
 }

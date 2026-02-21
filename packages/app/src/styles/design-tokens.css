@@ -56,6 +56,7 @@
   --orange: var(--palette-orange-500);
   --cyan: #39d2c0;
   --star-active: var(--palette-orange-500);
+  --brand-accent: var(--palette-orange-500);
 
   /* Fill Colors — Apple's translucent fills */
   --fill-primary: rgba(120, 120, 128, 0.36);
@@ -769,7 +770,7 @@
   /* Warning States */
   --status-warning-bg: rgba(240, 136, 62, 0.15);
   --status-warning-border: rgba(240, 136, 62, 0.3);
-  --status-warning-text: #f0883e;
+  --status-warning-text: var(--system-orange);
 
   /* Error States */
   --status-error-bg: rgba(255, 69, 58, 0.15);

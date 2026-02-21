@@ -207,7 +207,7 @@
 
 .category-badge.badge-shortcut {
   background: var(--light-status-warning-bg);
-  color: var(--system-orange);
+  color: var(--brand-accent);
 }
 
 .category-badge.badge-custom-prompt {
@@ -300,7 +300,7 @@
 
 .entry-type.type-shortcut {
   background: var(--light-status-warning-bg);
-  color: var(--system-orange);
+  color: var(--brand-accent);
 }
 
 .entry-type.type-modifier {

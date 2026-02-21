@@ -258,7 +258,7 @@
   background: linear-gradient(135deg, var(--accent, #58a6ff), var(--purple, #a371f7));
   border: none;
   border-radius: 8px;
-  color: #fff;
+  color: #ffffff;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -431,9 +431,9 @@
 .app-sidebar__nav-item--active {
   background: var(--nav-item-bg-active);
   color: var(--text-primary);
-  border-left-color: var(--star-active, #f0883e);
+  border-left-color: var(--star-active, var(--brand-accent));
   padding-left: calc(var(--space-3) - var(--app-sidebar-accent-bar-width));
-  box-shadow: 0 0 8px var(--star-active, #f0883e);
+  box-shadow: 0 0 8px var(--star-active, var(--brand-accent));
 }
 
 .app-sidebar__nav-item--active .app-sidebar__nav-item-label {
@@ -451,9 +451,9 @@
   outline-offset: calc(var(--focus-ring-offset, 2px) * -1);
   background: var(--nav-item-bg-active);
   color: var(--text-primary);
-  border-left-color: var(--star-active, #f0883e);
+  border-left-color: var(--star-active, var(--brand-accent));
   padding-left: calc(var(--space-3) - var(--app-sidebar-accent-bar-width));
-  box-shadow: 0 0 8px var(--star-active, #f0883e);
+  box-shadow: 0 0 8px var(--star-active, var(--brand-accent));
 }
 
 .app-sidebar__nav-item-icon {
@@ -464,6 +464,7 @@
   color: var(--text-tertiary);
   width: 20px;
   text-align: center;
+  position: relative;
 }
 
 .app-sidebar--collapsed .app-sidebar__nav-item {
@@ -506,9 +507,6 @@
 }
 
 /* Chat active indicator dot */
-.app-sidebar__nav-item-icon {
-  position: relative;
-}
 
 .app-sidebar__chat-indicator {
   position: absolute;

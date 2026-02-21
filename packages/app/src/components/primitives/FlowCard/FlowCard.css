@@ -23,7 +23,7 @@
 }
 
 .afw-flow-card--progress {
-  --flow-card-accent: var(--system-orange);
+  --flow-card-accent: var(--brand-accent);
 }
 
 .afw-flow-card--hold {

@@ -81,8 +81,8 @@
 }
 
 .afw-avatar--orange {
-  background-color: color-mix(in srgb, var(--system-orange) 20%, transparent);
-  color: var(--system-orange);
+  background-color: color-mix(in srgb, var(--brand-accent) 20%, transparent);
+  color: var(--brand-accent);
 }
 
 .afw-avatar--purple {
