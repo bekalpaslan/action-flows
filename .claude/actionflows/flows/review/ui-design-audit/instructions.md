@@ -1,18 +1,18 @@
 # UI Design Audit Flow
 
-> Audit actual UI implementation against a design reference (mock, Figma, spec, screenshot, or current tokens).
+> Audit actual UI implementation against a design reference (Figma, spec, screenshot, or current tokens).
 
 ---
 
 ## When to Use
 
-- Verifying UI implementation matches a design mock, Figma file, or spec document
+- Verifying UI implementation matches a Figma file or spec document
 - Detecting visual drift between design intent and production code
 - Auditing design token compliance (color, spacing, typography)
 - Checking layout consistency across breakpoints
 - Validating accessibility standards (WCAG 2.1) in implemented components
 - Running motion/animation audits against design specs
-- When human requests "UI audit", "design audit", "visual audit", "mock compliance", "layout audit", "color audit", "motion audit", "design drift", or "UI compliance"
+- When human requests "UI audit", "design audit", "visual audit", "layout audit", "color audit", "motion audit", "design drift", or "UI compliance"
 
 ---
 
@@ -20,8 +20,8 @@
 
 | Input | Description | Example |
 |-------|-------------|---------|
-| referenceType | What the UI is compared against | "mock-html", "figma", "spec-doc", "screenshot", "tokens" |
-| referencePath | Path/URL to the reference | "mocks/dashboard.html", Figma URL, or "current" for token-based audits |
+| referenceType | What the UI is compared against | "figma", "spec-doc", "screenshot", "tokens" |
+| referencePath | Path/URL to the reference | Figma URL, spec file path, or "current" for token-based audits |
 | auditType | Dimension(s) to audit | "layout", "color", "motion", "hierarchy", "accessibility", "comprehensive" |
 | fixMode | Audit only or audit and fix | "audit-only" (default) or "audit-and-fix" |
 | severityThreshold | Minimum severity to fix (audit-and-fix only) | "CRITICAL", "HIGH", "MEDIUM", "LOW" |
@@ -211,7 +211,7 @@ Step 1 (analyze) → Step 2 (HUMAN GATE) → Step 3 (code/frontend/) → Step 4 
 
 ## Chains With
 
-- <- Triggered when human requests "UI audit", "design audit", "visual audit", or "mock compliance"
+- <- Triggered when human requests "UI audit", "design audit", "visual audit", or "design drift"
 - <- Triggered when design tokens are updated (design-system-sync/)
 - -> code-and-review/ (to fix additional issues beyond audit scope)
 - -> post-completion/ (after audit-and-fix chain completes)

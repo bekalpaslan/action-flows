@@ -47,7 +47,7 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 ### review
 **Purpose:** Code reviews, audits, and quality checks
 **Icon:** 👁️
-**Triggers:** review, code review, audit, check quality, security scan, inspect, examine, validate, verify, UI audit, design audit, visual audit, mock compliance, layout audit, design drift
+**Triggers:** review, code review, audit, check quality, security scan, inspect, examine, validate, verify, UI audit, design audit, visual audit, layout audit, design drift
 **Flows:** audit-and-fix/, test-coverage/, e2e-playwright/, ui-design-audit/
 **Examples:**
 - "review the auth implementation"
@@ -158,4 +158,4 @@ These contexts receive content automatically — not routed by user intent.
 | "track domain X" / "gather intel" | intel | intel-analysis/ |
 | "dissolve learnings" / "process learnings" / "learning retrospective" / "update docs from learnings" | pm | learning-dissolution/ |
 | "audit flows" / "check flow drift" / "flow health deep scan" / "flow instructions audit" | settings | flow-drift-audit/ |
-| "UI audit" / "design audit" / "visual drift" / "mock compliance" | review | ui-design-audit/ |
+| "UI audit" / "design audit" / "visual drift" / "design drift" | review | ui-design-audit/ |
