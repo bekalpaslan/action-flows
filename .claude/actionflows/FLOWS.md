@@ -43,6 +43,7 @@
 | e2e-playwright/ | Create and execute Playwright E2E tests | analyze → plan → HUMAN GATE → code → playwright-test (orchestrator) → review |
 | contract-index/ | Create/update behavioral contract specifications for components | analyze → plan → human gate → code×N → review → second-opinion/ → commit |
 | contract-compliance-audit/ | Audit contracts for inconsistencies, drift, and create compliance tests | analyze×2 (parallel) → plan → human gate → code×2 (parallel) → review → second-opinion/ → commit |
+| ui-design-audit/ | Audit UI against design reference | analyze → HUMAN GATE → (code/frontend/ → review → second-opinion/ → commit) |
 
 ## settings
 
