@@ -24,3 +24,9 @@ export type { InputProps, TextareaProps, UnifiedInputProps } from './Input';
 
 export { SearchField } from './SearchField';
 export type { SearchFieldProps, SearchFieldSuggestion } from './SearchField';
+
+export { Avatar } from './Avatar';
+export type { AvatarProps } from './Avatar';
+
+export { AvatarGroup } from './Avatar';
+export type { AvatarGroupProps } from './Avatar';

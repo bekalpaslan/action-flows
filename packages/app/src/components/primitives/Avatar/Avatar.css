@@ -1,0 +1,175 @@
+/* Avatar — Circular user avatar with image, initials, or icon fallback */
+
+.afw-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--separator-opaque);
+  overflow: hidden;
+  background-color: var(--surface);
+  user-select: none;
+}
+
+/* Size variants */
+.afw-avatar--xs {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+}
+
+.afw-avatar--sm {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+}
+
+.afw-avatar--md {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+}
+
+.afw-avatar--lg {
+  width: 56px;
+  height: 56px;
+  font-size: 18px;
+}
+
+.afw-avatar--xl {
+  width: 96px;
+  height: 96px;
+  font-size: 32px;
+}
+
+/* Image */
+.afw-avatar__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-full);
+}
+
+/* Initials */
+.afw-avatar__initials {
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+}
+
+/* Initials color variants */
+.afw-avatar--blue {
+  background-color: color-mix(in srgb, var(--system-blue) 20%, transparent);
+  color: var(--system-blue);
+}
+
+.afw-avatar--green {
+  background-color: color-mix(in srgb, var(--system-green) 20%, transparent);
+  color: var(--system-green);
+}
+
+.afw-avatar--yellow {
+  background-color: color-mix(in srgb, var(--system-yellow) 20%, transparent);
+  color: var(--system-yellow);
+}
+
+.afw-avatar--red {
+  background-color: color-mix(in srgb, var(--system-red) 20%, transparent);
+  color: var(--system-red);
+}
+
+.afw-avatar--orange {
+  background-color: color-mix(in srgb, var(--system-orange) 20%, transparent);
+  color: var(--system-orange);
+}
+
+.afw-avatar--purple {
+  background-color: color-mix(in srgb, var(--system-purple) 20%, transparent);
+  color: var(--system-purple);
+}
+
+.afw-avatar--pink {
+  background-color: color-mix(in srgb, var(--system-pink) 20%, transparent);
+  color: var(--system-pink);
+}
+
+.afw-avatar--teal {
+  background-color: color-mix(in srgb, var(--system-teal) 20%, transparent);
+  color: var(--system-teal);
+}
+
+.afw-avatar--neutral {
+  background-color: color-mix(in srgb, var(--text-secondary) 15%, transparent);
+  color: var(--text-primary);
+}
+
+/* Icon fallback */
+.afw-avatar__icon {
+  width: 60%;
+  height: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+}
+
+.afw-avatar__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Status indicator */
+.afw-avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 25%;
+  height: 25%;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--surface);
+  box-sizing: border-box;
+}
+
+.afw-avatar__status--online {
+  background-color: var(--system-green);
+}
+
+.afw-avatar__status--offline {
+  background-color: var(--text-quaternary);
+}
+
+.afw-avatar__status--busy {
+  background-color: var(--system-red);
+}
+
+.afw-avatar__status--away {
+  background-color: var(--system-yellow);
+}
+
+/* Interactive state */
+.afw-avatar--interactive {
+  cursor: pointer;
+  transition: opacity var(--duration-fast) var(--ease-in-out);
+}
+
+.afw-avatar--interactive:hover {
+  opacity: 0.8;
+}
+
+.afw-avatar--interactive:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.afw-avatar--interactive:active {
+  opacity: 0.6;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .afw-avatar--interactive {
+    transition: none;
+  }
+}

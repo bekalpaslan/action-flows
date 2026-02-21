@@ -1,0 +1,56 @@
+/* AvatarGroup — Face pile component with overlapping avatars */
+
+.afw-avatar-group {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+/* Individual avatar wrapper */
+.afw-avatar-group__item {
+  position: relative;
+  display: inline-flex;
+  transition: transform var(--duration-fast) var(--ease-in-out);
+}
+
+/* Apply negative margin to all items except the first */
+.afw-avatar-group__item:not(:first-child) {
+  margin-left: calc(-1 * var(--avatar-overlap));
+}
+
+/* Hover lift effect */
+.afw-avatar-group__item:hover {
+  transform: translateY(-2px);
+  z-index: 999 !important; /* Override inline z-index on hover */
+}
+
+/* Overflow counter circle */
+.afw-avatar-group__overflow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--separator-opaque);
+  background-color: var(--system-indigo);
+  color: var(--text-bright, #fff);
+  font-size: var(--overflow-font-size);
+  font-weight: 600;
+  text-align: center;
+  user-select: none;
+  margin-left: calc(-1 * var(--avatar-overlap));
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .afw-avatar-group__item {
+    transition: none;
+  }
+
+  .afw-avatar-group__item:hover {
+    transform: none;
+  }
+}
