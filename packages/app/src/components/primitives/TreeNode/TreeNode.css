@@ -1,0 +1,158 @@
+/* TreeNode — Recursive tree structure with CSS connectors */
+
+.afw-tree-node {
+  --tree-line-color: var(--separator-opaque);
+
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
+/* Node label box */
+.afw-tree-node__label {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--separator-opaque);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 500;
+  background-color: var(--app-bg-secondary);
+  color: var(--text-primary);
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+
+/* Label variants */
+.afw-tree-node__label--default {
+  /* Uses base styles */
+}
+
+.afw-tree-node__label--page-link {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.afw-tree-node__label--content {
+  background-color: color-mix(in srgb, var(--system-blue) 80%, transparent);
+  color: var(--text-bright);
+}
+
+.afw-tree-node__label--highlight {
+  background-color: color-mix(in srgb, var(--system-purple) 80%, transparent);
+  color: var(--text-bright);
+}
+
+.afw-tree-node__label--menu-item {
+  background-color: color-mix(in srgb, var(--system-teal) 80%, transparent);
+  color: var(--text-bright);
+}
+
+.afw-tree-node__label--cta {
+  background-color: color-mix(in srgb, var(--system-indigo) 80%, transparent);
+  color: var(--text-bright);
+  font-weight: 600;
+}
+
+/* Connector line from parent to children */
+.afw-tree-node__connector {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Children container */
+.afw-tree-node__children {
+  display: flex;
+  position: relative;
+}
+
+/* Individual child wrapper */
+.afw-tree-node__child {
+  position: relative;
+}
+
+/* ========================================
+   VERTICAL DIRECTION (default)
+   ======================================== */
+
+/* Vertical connector: line down from parent */
+.afw-tree-node__connector {
+  width: 1px;
+  height: var(--space-3);
+  background-color: var(--tree-line-color);
+  margin-left: calc(var(--space-3) + var(--space-1));
+}
+
+/* Vertical children: stacked column */
+.afw-tree-node__children {
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-left: var(--space-6);
+}
+
+/* Vertical child: L-shaped connector */
+.afw-tree-node__child::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-6) + var(--space-3) + var(--space-1));
+  top: calc(var(--space-1) + var(--space-1) / 2);
+  width: calc(var(--space-6) - var(--space-3) - var(--space-1));
+  height: 1px;
+  background-color: var(--tree-line-color);
+}
+
+/* Vertical trunk line connecting all children */
+.afw-tree-node__children::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-6) + var(--space-3) + var(--space-1));
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background-color: var(--tree-line-color);
+}
+
+/* ========================================
+   HORIZONTAL DIRECTION
+   ======================================== */
+
+/* Horizontal connector: line right from parent */
+.afw-tree-node--horizontal .afw-tree-node__connector {
+  width: var(--space-3);
+  height: 1px;
+  margin-left: 0;
+  margin-top: calc(var(--space-1) + var(--space-1) / 2);
+}
+
+/* Horizontal children: row layout */
+.afw-tree-node--horizontal .afw-tree-node__children {
+  flex-direction: row;
+  gap: var(--space-2);
+  padding-left: 0;
+  padding-top: var(--space-4);
+  align-items: flex-start;
+}
+
+/* Horizontal child: vertical line down, then node */
+.afw-tree-node--horizontal .afw-tree-node__child::before {
+  left: calc(var(--space-1) + var(--space-1) / 2);
+  top: calc(-1 * var(--space-4));
+  width: 1px;
+  height: var(--space-4);
+}
+
+/* Horizontal trunk line connecting all children (above them) */
+.afw-tree-node--horizontal .afw-tree-node__children::before {
+  left: 0;
+  top: calc(-1 * var(--space-4));
+  width: 100%;
+  height: 1px;
+}
+
+/* Horizontal layout: align tree horizontally */
+.afw-tree-node--horizontal {
+  flex-direction: row;
+  align-items: flex-start;
+}

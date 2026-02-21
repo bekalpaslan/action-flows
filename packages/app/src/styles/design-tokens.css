@@ -12,17 +12,17 @@
      ========================================================================== */
 
   /* Base Application Colors */
-  --app-bg-base: #080c14;              /* Deep blue-black foundation */
-  --app-bg-primary: #0f1520;           /* Primary app background */
-  --app-bg-secondary: #151d2b;         /* Secondary surfaces */
-  --app-bg-tertiary: #1a2436;          /* Elevated surfaces */
+  --app-bg-base: var(--palette-prussian-blue-200);              /* Deep blue-black foundation */
+  --app-bg-primary: var(--palette-prussian-blue-300);           /* Primary app background */
+  --app-bg-secondary: var(--palette-prussian-blue-400);         /* Secondary surfaces */
+  --app-bg-tertiary: var(--palette-prussian-blue-500);          /* Elevated surfaces */
   --app-bg-quaternary: #48484a;        /* Highest elevation */
 
   /* Text Colors */
-  --text-primary: #e6edf3;             /* Bright primary text */
-  --text-secondary: #c9d1d9;           /* Standard text */
-  --text-tertiary: #6e7a8a;            /* Muted/dim text */
-  --text-quaternary: #48484a;          /* Disabled/placeholder text */
+  --text-primary: var(--palette-alabaster-grey-500);             /* Bright primary text */
+  --text-secondary: var(--palette-alabaster-grey-400);           /* Standard text */
+  --text-tertiary: var(--palette-alabaster-grey-200);            /* Muted/dim text */
+  --text-quaternary: var(--palette-alabaster-grey-100);          /* Disabled/placeholder text */
 
   /* Separator & Border Base */
   --separator-base: rgba(88, 166, 255, 0.08);
@@ -40,10 +40,10 @@
   --system-indigo: #5e5ce6;
 
   /* Mock Compatibility Aliases — Direct mapping to layout-demo.html */
-  --bg: #080c14;
-  --surface: #0f1520;
-  --surface2: #151d2b;
-  --surface3: #1a2436;
+  --bg: var(--palette-prussian-blue-200);
+  --surface: var(--palette-prussian-blue-300);
+  --surface2: var(--palette-prussian-blue-400);
+  --surface3: var(--palette-prussian-blue-500);
   --border: rgba(88, 166, 255, 0.08);
   --border-glow: rgba(88, 166, 255, 0.15);
   --text: #c9d1d9;
@@ -53,9 +53,9 @@
   --accent-glow: rgba(88, 166, 255, 0.25);
   --accent2: #3fb950;
   --purple: #a371f7;
-  --orange: #f0883e;
+  --orange: var(--palette-orange-500);
   --cyan: #39d2c0;
-  --star-active: #f0883e;
+  --star-active: var(--palette-orange-500);
 
   /* Fill Colors — Apple's translucent fills */
   --fill-primary: rgba(120, 120, 128, 0.36);
@@ -522,7 +522,7 @@
   --breakpoint-wide: 1440px;
 
   /* AppSidebar colors */
-  --app-sidebar-accent-active: #f0883e;
+  --app-sidebar-accent-active: var(--palette-orange-500);
 
   /* ==========================================================================
      Glass Effect Token System
@@ -596,7 +596,7 @@
      Accent Colors
      ========================================================================== */
 
-  --afw-color-accent-main: #c6613f;  /* Send button background */
+  --afw-color-accent-main: var(--palette-orange-400);  /* Send button background */
 
   /* ==========================================================================
      Typography Scale — Apple System

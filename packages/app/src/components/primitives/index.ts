@@ -51,3 +51,12 @@ export type { ChecklistProps, ChecklistItem } from './Checklist';
 
 export { SectionHeading } from './SectionHeading';
 export type { SectionHeadingProps } from './SectionHeading';
+
+export { IABox } from './IABox';
+export type { IABoxProps, IABoxVariant } from './IABox';
+
+export { TreeNode } from './TreeNode';
+export type { TreeNodeProps, TreeNodeData } from './TreeNode';
+
+export { PageItem, PageHierarchy } from './PageItem';
+export type { PageItemProps, PageItemColor, PageHierarchyProps, PageHierarchyItem } from './PageItem';

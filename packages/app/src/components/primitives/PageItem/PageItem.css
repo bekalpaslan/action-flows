@@ -1,0 +1,101 @@
+/* PageItem */
+.afw-page-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 500;
+  min-width: 120px;
+  margin-left: calc(var(--space-6) * var(--indent-level, 0));
+  transition: background-color 150ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afw-page-item {
+    transition: none;
+  }
+}
+
+.afw-page-item__title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Color variants */
+.afw-page-item--neutral {
+  background: var(--app-bg-tertiary);
+  color: var(--text-primary);
+  border-left: 3px solid var(--separator-opaque);
+}
+
+.afw-page-item--blue {
+  background: color-mix(in srgb, var(--system-blue) 15%, var(--app-bg-secondary));
+  color: var(--text-primary);
+  border-left: 3px solid var(--system-blue);
+}
+
+.afw-page-item--green {
+  background: color-mix(in srgb, var(--system-green) 15%, var(--app-bg-secondary));
+  color: var(--text-primary);
+  border-left: 3px solid var(--system-green);
+}
+
+.afw-page-item--orange {
+  background: color-mix(in srgb, var(--system-orange) 15%, var(--app-bg-secondary));
+  color: var(--text-primary);
+  border-left: 3px solid var(--system-orange);
+}
+
+.afw-page-item--red {
+  background: color-mix(in srgb, var(--system-red) 15%, var(--app-bg-secondary));
+  color: var(--text-primary);
+  border-left: 3px solid var(--system-red);
+}
+
+/* Interactive state */
+.afw-page-item--interactive {
+  cursor: pointer;
+}
+
+.afw-page-item--interactive:hover {
+  filter: brightness(1.1);
+}
+
+.afw-page-item--interactive:focus-visible {
+  outline: 2px solid var(--system-blue);
+  outline-offset: 2px;
+}
+
+.afw-page-item--interactive:active {
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afw-page-item--interactive:active {
+    transform: none;
+  }
+}
+
+/* PageHierarchy */
+.afw-page-hierarchy {
+  background: var(--app-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  border: 1px solid var(--separator-base);
+}
+
+.afw-page-hierarchy__title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-3) 0;
+  font-size: var(--text-base, 1rem);
+}
+
+.afw-page-hierarchy__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
