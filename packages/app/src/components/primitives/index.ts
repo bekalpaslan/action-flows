@@ -99,3 +99,6 @@ export type { PaginationProps } from './Pagination';
 
 export { Slider } from './Slider';
 export type { SliderProps } from './Slider';
+
+export { Stepper } from './Stepper';
+export type { StepperProps, StepperStep } from './Stepper';

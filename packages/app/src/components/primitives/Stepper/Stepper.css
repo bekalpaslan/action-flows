@@ -1,0 +1,177 @@
+/* ============================================================================
+   Stepper — Multi-step progress indicator
+   ========================================================================= */
+
+.afw-stepper {
+  --stepper-color: var(--system-blue);
+  --stepper-indicator-size: 28px;
+  --stepper-connector-thickness: 2px;
+  --stepper-ring-spread: 3px;
+}
+
+.afw-stepper[data-size='sm'] {
+  --stepper-indicator-size: 24px;
+}
+
+/* Horizontal layout
+   ========================================================================= */
+
+.afw-stepper--horizontal {
+  display: flex;
+  align-items: flex-start;
+}
+
+.afw-stepper--horizontal .afw-stepper__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.afw-stepper--horizontal .afw-stepper__step:last-child {
+  flex: 0;
+}
+
+.afw-stepper--horizontal .afw-stepper__indicator-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.afw-stepper--horizontal .afw-stepper__connector {
+  height: var(--stepper-connector-thickness);
+  flex: 1;
+  min-width: 24px;
+  background-color: var(--separator-opaque);
+}
+
+.afw-stepper--horizontal .afw-stepper__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: var(--space-1);
+  gap: var(--space-05, 0.25rem);
+}
+
+/* Horizontal compact (sm) — hide labels */
+.afw-stepper--horizontal[data-size='sm'] .afw-stepper__label {
+  display: none;
+}
+
+/* Vertical layout
+   ========================================================================= */
+
+.afw-stepper--vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.afw-stepper--vertical .afw-stepper__step {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.afw-stepper--vertical .afw-stepper__indicator-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.afw-stepper--vertical .afw-stepper__connector {
+  width: var(--stepper-connector-thickness);
+  min-height: 24px;
+  flex: 1;
+  background-color: var(--separator-opaque);
+}
+
+.afw-stepper--vertical .afw-stepper__label {
+  display: flex;
+  flex-direction: column;
+  margin-left: var(--space-2);
+  padding-bottom: var(--space-3);
+  gap: var(--space-05, 0.25rem);
+}
+
+/* Indicator circle
+   ========================================================================= */
+
+.afw-stepper__indicator {
+  width: var(--stepper-indicator-size);
+  height: var(--stepper-indicator-size);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: box-shadow var(--duration-fast) var(--ease-in-out),
+    background-color var(--duration-fast) var(--ease-in-out),
+    border-color var(--duration-fast) var(--ease-in-out);
+}
+
+/* Completed indicator */
+.afw-stepper__step--completed .afw-stepper__indicator {
+  background-color: var(--stepper-color);
+  color: var(--text-bright);
+}
+
+/* Active indicator */
+.afw-stepper__step--active .afw-stepper__indicator {
+  background-color: var(--stepper-color);
+  color: var(--text-bright);
+  box-shadow: 0 0 0 var(--stepper-ring-spread)
+    color-mix(in srgb, var(--stepper-color) 30%, transparent);
+}
+
+/* Upcoming indicator */
+.afw-stepper__step--upcoming .afw-stepper__indicator {
+  background-color: transparent;
+  border: 2px solid var(--separator-opaque);
+  color: var(--text-tertiary);
+}
+
+/* Number variant */
+.afw-stepper__number {
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Connector lines
+   ========================================================================= */
+
+.afw-stepper__connector--completed {
+  background-color: var(--stepper-color);
+}
+
+/* Label text
+   ========================================================================= */
+
+.afw-stepper__title {
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.afw-stepper__description {
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* Upcoming step — muted title */
+.afw-stepper__step--upcoming .afw-stepper__title {
+  color: var(--text-tertiary);
+}
+
+/* Reduced motion
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .afw-stepper__indicator,
+  .afw-stepper__connector {
+    transition: none;
+  }
+}
