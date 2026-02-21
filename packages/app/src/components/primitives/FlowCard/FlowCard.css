@@ -1,0 +1,100 @@
+/* FlowCard — Card/list layout for flow items with status indication */
+
+.afw-flow-card {
+  --flow-card-accent: var(--separator-opaque);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--app-bg-secondary);
+  border-left: 3px solid var(--flow-card-accent);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  transition: background var(--duration-fast) var(--ease-in-out);
+}
+
+/* Status accent colors */
+.afw-flow-card--review {
+  --flow-card-accent: var(--system-blue);
+}
+
+.afw-flow-card--ready {
+  --flow-card-accent: var(--system-green);
+}
+
+.afw-flow-card--progress {
+  --flow-card-accent: var(--system-orange);
+}
+
+.afw-flow-card--hold {
+  --flow-card-accent: var(--system-red);
+}
+
+/* List variant */
+.afw-flow-card--list {
+  border-left: none;
+  border-top: 2px solid var(--flow-card-accent);
+  background: transparent;
+  border-radius: 0;
+  padding: var(--space-3) 0;
+}
+
+/* Interactive state */
+.afw-flow-card--interactive {
+  cursor: pointer;
+}
+
+.afw-flow-card--interactive:hover {
+  background: var(--app-bg-tertiary);
+}
+
+.afw-flow-card--list.afw-flow-card--interactive:hover {
+  background: var(--app-bg-secondary);
+}
+
+.afw-flow-card--interactive:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Status badge */
+.afw-flow-card__status {
+  display: flex;
+  align-items: center;
+}
+
+/* Body */
+.afw-flow-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.afw-flow-card__title {
+  margin: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.afw-flow-card__description {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+  line-height: var(--line-height-normal);
+}
+
+/* Footer */
+.afw-flow-card__footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .afw-flow-card {
+    transition: none;
+  }
+}

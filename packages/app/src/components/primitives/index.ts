@@ -33,3 +33,6 @@ export type { AvatarGroupProps } from './Avatar';
 
 export { CoverCard } from './CoverCard';
 export type { CoverCardProps, CoverCardType } from './CoverCard';
+
+export { FlowCard } from './FlowCard';
+export type { FlowCardProps } from './FlowCard';
