@@ -1,0 +1,66 @@
+/* Base skeleton styles */
+.afw-skeleton {
+  background-color: var(--app-bg-tertiary);
+  border-radius: var(--radius-sm);
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Text variant */
+.afw-skeleton--text {
+  height: 1em;
+  width: 100%;
+  border-radius: var(--radius-sm);
+}
+
+/* Circular variant */
+.afw-skeleton--circular {
+  border-radius: var(--radius-full);
+}
+
+/* Rectangular variant */
+.afw-skeleton--rectangular {
+  border-radius: var(--radius-md);
+}
+
+/* Text group for multiple lines */
+.afw-skeleton__text-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Shimmer animation */
+@keyframes afw-skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.afw-skeleton--animate::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--separator-base) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: afw-skeleton-shimmer 1.5s infinite;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .afw-skeleton--animate::before {
+    animation: none;
+  }
+}

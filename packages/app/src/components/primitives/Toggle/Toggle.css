@@ -1,0 +1,110 @@
+.afw-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.afw-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.afw-toggle__track {
+  display: block;
+  background-color: var(--app-bg-quaternary);
+  border-radius: var(--radius-full);
+  transition: background-color var(--duration-normal);
+  position: relative;
+}
+
+.afw-toggle[data-checked="true"] .afw-toggle__track {
+  background-color: var(--system-green);
+}
+
+.afw-toggle__thumb {
+  display: block;
+  background-color: var(--text-bright);
+  border-radius: 50%;
+  transition: transform var(--duration-normal);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+.afw-toggle:focus-visible .afw-toggle__track {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Sizes */
+.afw-toggle[data-size="sm"] .afw-toggle__track {
+  width: 28px;
+  height: 16px;
+}
+
+.afw-toggle[data-size="sm"] .afw-toggle__thumb {
+  width: 12px;
+  height: 12px;
+}
+
+.afw-toggle[data-size="sm"][data-checked="true"] .afw-toggle__thumb {
+  transform: translateX(12px);
+}
+
+.afw-toggle[data-size="md"] .afw-toggle__track {
+  width: 36px;
+  height: 20px;
+}
+
+.afw-toggle[data-size="md"] .afw-toggle__thumb {
+  width: 16px;
+  height: 16px;
+}
+
+.afw-toggle[data-size="md"][data-checked="true"] .afw-toggle__thumb {
+  transform: translateX(16px);
+}
+
+.afw-toggle[data-size="lg"] .afw-toggle__track {
+  width: 44px;
+  height: 24px;
+}
+
+.afw-toggle[data-size="lg"] .afw-toggle__thumb {
+  width: 20px;
+  height: 20px;
+}
+
+.afw-toggle[data-size="lg"][data-checked="true"] .afw-toggle__thumb {
+  transform: translateX(20px);
+}
+
+/* Wrapper with label */
+.afw-toggle-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.afw-toggle-wrapper[data-label-position="left"] {
+  flex-direction: row-reverse;
+}
+
+.afw-toggle-wrapper__label {
+  color: var(--text-primary);
+  user-select: none;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .afw-toggle__track,
+  .afw-toggle__thumb {
+    transition: none;
+  }
+}
