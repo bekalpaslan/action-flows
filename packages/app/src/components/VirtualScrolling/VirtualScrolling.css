@@ -52,7 +52,7 @@
   flex-shrink: 0;
   font-size: 0.75rem;
   transform: rotate(-90deg);
-  transition: transform 0.15s ease-out;
+  transition: transform var(--duration-fast) var(--ease-out);
   cursor: pointer;
 }
 

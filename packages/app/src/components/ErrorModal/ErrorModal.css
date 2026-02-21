@@ -135,6 +135,12 @@
   color: var(--text-primary);
 }
 
+.error-modal-close:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 /* Body */
 .error-modal-body {
   flex: 1;
@@ -241,6 +247,12 @@
 
 .btn-error-action:hover {
   transform: translateY(-1px);
+}
+
+.btn-error-action:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .btn-error-action:active {

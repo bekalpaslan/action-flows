@@ -1,20 +1,23 @@
 /**
  * CommandCenter Component Tests
  *
- * Tests the Living Universe command center bottom bar including:
- * - Smoke rendering with optional props
- * - Command input and submission
+ * Tests the streamlined command center bottom bar including:
+ * - Smoke rendering
+ * - Session selector dropdown behavior
+ * - Session -> workbench navigation wiring
  * - Health status display
- * - Session selector dropdown
- * - Callback invocation
- * - Accessibility attributes
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { CommandCenter } from '../../components/CosmicMap/CommandCenter';
-import type { SessionId, Session } from '@afw/shared';
+import type { SessionId, Session, WorkbenchId } from '@afw/shared';
 import { useCommonTestSetup, createMockSession, createMockChain } from '../../__tests__/utils';
+
+const mockSetActiveSession = vi.fn();
+const mockNavigateToRegion = vi.fn();
+const mockGetRegionByWorkbench = vi.fn();
+const mockSetActiveWorkbench = vi.fn();
 
 // Mock contexts
 vi.mock('../../contexts/SessionContext', () => ({
@@ -23,13 +26,19 @@ vi.mock('../../contexts/SessionContext', () => ({
       createMockSession({
         id: 'session-123' as SessionId,
         chains: [createMockChain({ id: 'chain-1' })],
+        workbenchId: 'review' as WorkbenchId,
+      }),
+      createMockSession({
+        id: 'session-456' as SessionId,
+        chains: [createMockChain({ id: 'chain-2' })],
+        workbenchId: 'pm' as WorkbenchId,
       }),
     ] as Session[],
     activeSessionId: 'session-123' as SessionId,
     isLoading: false,
     createSession: vi.fn(),
     deleteSession: vi.fn(),
-    setActiveSession: vi.fn(),
+    setActiveSession: mockSetActiveSession,
     getSession: vi.fn(),
   }),
 }));
@@ -51,17 +60,35 @@ vi.mock('../../contexts/UniverseContext', () => ({
     },
     isLoading: false,
     error: null,
-    navigateToRegion: vi.fn(),
+    navigateToRegion: mockNavigateToRegion,
     zoomToRegion: vi.fn(),
     returnToGodView: vi.fn(),
     getRegion: vi.fn(),
-    getRegionByWorkbench: vi.fn(),
+    getRegionByWorkbench: mockGetRegionByWorkbench,
     getBridge: vi.fn(),
     isRegionAccessible: vi.fn(() => false),
     refreshUniverse: vi.fn(),
     zoomTargetRegionId: null,
     targetWorkbenchId: null,
     clearZoomTarget: vi.fn(),
+  }),
+}));
+
+vi.mock('../../contexts/WorkbenchContext', () => ({
+  useWorkbenchContext: () => ({
+    activeWorkbench: 'work' as WorkbenchId,
+    setActiveWorkbench: mockSetActiveWorkbench,
+    workbenchConfigs: new Map(),
+    workbenchNotifications: new Map(),
+    addNotification: vi.fn(),
+    clearNotifications: vi.fn(),
+    previousWorkbench: null,
+    goBack: vi.fn(),
+    routingFilter: null,
+    setRoutingFilter: vi.fn(),
+    filterSessionsByContext: vi.fn((sessions: Session[]) => sessions),
+    activeTool: null,
+    setActiveTool: vi.fn(),
   }),
 }));
 
@@ -83,21 +110,30 @@ vi.mock('../CommandCenter/discoveryConfig', () => ({
 describe('CommandCenter', () => {
   useCommonTestSetup();
 
-  it('renders without crashing with no props', () => {
+  beforeEach(() => {
+    mockSetActiveSession.mockReset();
+    mockNavigateToRegion.mockReset();
+    mockGetRegionByWorkbench.mockReset();
+    mockSetActiveWorkbench.mockReset();
+  });
+
+  it('renders without crashing', () => {
     const { container } = render(<CommandCenter />);
     expect(container).toBeTruthy();
   });
 
-  it('applies correct data-testid on main container', () => {
+  it('renders command center container and session dropdown selector', () => {
     render(<CommandCenter />);
     expect(screen.getByTestId('command-center')).toBeInTheDocument();
+    expect(screen.getByTestId('mode-selector')).toBeInTheDocument();
   });
 
-  it('renders command input field with correct testid', () => {
+  it('does not render command input textbox', () => {
     render(<CommandCenter />);
-    const inputElement = screen.getByTestId('action-panel');
-    expect(inputElement).toBeInTheDocument();
-    expect(inputElement).toHaveAttribute('type', 'text');
+    expect(screen.queryByTestId('action-panel')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Submit command|Execute command/i })
+    ).not.toBeInTheDocument();
   });
 
   it('renders health status indicator when showHealthStatus is true', () => {
@@ -110,79 +146,8 @@ describe('CommandCenter', () => {
     expect(screen.queryByTestId('health-display')).not.toBeInTheDocument();
   });
 
-  it('calls onCommand callback with input value on submit', async () => {
-    const mockOnCommand = vi.fn();
-    render(<CommandCenter onCommand={mockOnCommand} />);
-
-    const input = screen.getByTestId('action-panel');
-    fireEvent.change(input, { target: { value: 'test command' } });
-
-    // Find submit button by its SVG or look for the button adjacent to input
-    const submitBtn = screen.getByRole('button', { name: /Submit command|Execute command/ });
-    fireEvent.click(submitBtn);
-
-    expect(mockOnCommand).toHaveBeenCalledWith('test command');
-  });
-
-  it('clears input after successful command submission', async () => {
-    const mockOnCommand = vi.fn();
-    render(<CommandCenter onCommand={mockOnCommand} />);
-
-    const input = screen.getByTestId('action-panel') as HTMLInputElement;
-    fireEvent.change(input, { target: { value: 'test command' } });
-
-    const sendButton = screen.getByRole('button', { name: /Submit command|Execute command/ });
-    fireEvent.click(sendButton);
-
-    await waitFor(() => {
-      expect(input.value).toBe('');
-    });
-  });
-
-  it('ignores empty command submissions', () => {
-    const mockOnCommand = vi.fn();
-    render(<CommandCenter onCommand={mockOnCommand} />);
-
-    const input = screen.getByTestId('action-panel');
-    fireEvent.change(input, { target: { value: '   ' } });
-
-    const sendButton = screen.getByRole('button', { name: /Submit command|Execute command/ });
-    fireEvent.click(sendButton);
-
-    expect(mockOnCommand).not.toHaveBeenCalled();
-  });
-
-  it('handles Enter key submission in command input', () => {
-    const mockOnCommand = vi.fn();
-    render(<CommandCenter onCommand={mockOnCommand} />);
-
-    const input = screen.getByTestId('action-panel');
-    fireEvent.change(input, { target: { value: 'enter command' } });
-    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
-
-    expect(mockOnCommand).toHaveBeenCalledWith('enter command');
-  });
-
-  it('does not submit command on other key presses', () => {
-    const mockOnCommand = vi.fn();
-    render(<CommandCenter onCommand={mockOnCommand} />);
-
-    const input = screen.getByTestId('action-panel');
-    fireEvent.change(input, { target: { value: 'test' } });
-    fireEvent.keyDown(input, { key: 'ArrowUp', code: 'ArrowUp' });
-
-    expect(mockOnCommand).not.toHaveBeenCalled();
-  });
-
-  it('renders session dropdown selector', () => {
-    render(<CommandCenter />);
-    const sessionDropdown = screen.getByTestId('mode-selector');
-    expect(sessionDropdown).toBeInTheDocument();
-  });
-
   it('toggles session dropdown on button click', async () => {
     render(<CommandCenter />);
-
     const dropdownButton = screen.getByTestId('mode-selector');
     expect(screen.queryByTestId('quick-actions')).not.toBeInTheDocument();
 
@@ -193,66 +158,32 @@ describe('CommandCenter', () => {
     });
   });
 
-  it('displays active session in selector', () => {
+  it('selecting a session sets active session and navigates to its region when available', async () => {
+    mockGetRegionByWorkbench.mockReturnValueOnce({ id: 'region-review' });
+
     render(<CommandCenter />);
-    // Check that the session label is displayed in the mode-selector button
-    const sessionButton = screen.getByTestId('mode-selector');
-    expect(sessionButton).toBeInTheDocument();
-    // Verify the session label text is present
-    expect(sessionButton.textContent).toContain('session-123');
+    fireEvent.click(screen.getByTestId('mode-selector'));
+
+    const option = await screen.findByRole('option', { name: /session-456/i });
+    fireEvent.click(option);
+
+    expect(mockSetActiveSession).toHaveBeenCalledWith('session-456');
+    expect(mockGetRegionByWorkbench).toHaveBeenCalledWith('pm');
+    expect(mockNavigateToRegion).toHaveBeenCalledWith('region-review');
+    expect(mockSetActiveWorkbench).not.toHaveBeenCalled();
   });
 
-  it('counts active chains correctly across sessions', () => {
+  it('falls back to direct workbench switch when no region exists', async () => {
+    mockGetRegionByWorkbench.mockReturnValueOnce(undefined);
+
     render(<CommandCenter />);
-    // When there are no active chains (default mock), the running chains section should not appear
-    expect(screen.queryByText(/chain.*running/i)).not.toBeInTheDocument();
-  });
+    fireEvent.click(screen.getByTestId('mode-selector'));
 
-  it('respects optional onCommand prop', () => {
-    // Should not crash if onCommand is undefined
-    const { container } = render(<CommandCenter />);
-    expect(container).toBeTruthy();
+    const option = await screen.findByRole('option', { name: /session-456/i });
+    fireEvent.click(option);
 
-    const input = screen.getByTestId('action-panel');
-    fireEvent.change(input, { target: { value: 'test' } });
-
-    const sendButton = screen.getByRole('button', { name: /Submit command|Execute command/ });
-    expect(() => fireEvent.click(sendButton)).not.toThrow();
-  });
-
-  it('includes accessibility attributes on controls', () => {
-    render(<CommandCenter />);
-
-    const input = screen.getByTestId('action-panel');
-    expect(input).toHaveAttribute('aria-label');
-
-    const sendButton = screen.getByRole('button', { name: /Submit command|Execute command/ });
-    expect(sendButton).toHaveAttribute('aria-label');
-  });
-
-  it('updates health status display dynamically', async () => {
-    const { rerender } = render(<CommandCenter showHealthStatus={true} />);
-
-    const healthStatus = screen.getByTestId('health-display');
-    expect(healthStatus).toBeInTheDocument();
-
-    // Re-render with different context state (mocked)
-    rerender(<CommandCenter showHealthStatus={true} />);
-
-    // Health indicator should still be present
-    expect(screen.getByTestId('health-display')).toBeInTheDocument();
-  });
-
-  it('trims whitespace from command input before submission', () => {
-    const mockOnCommand = vi.fn();
-    render(<CommandCenter onCommand={mockOnCommand} />);
-
-    const input = screen.getByTestId('action-panel');
-    fireEvent.change(input, { target: { value: '  test command  ' } });
-
-    const sendButton = screen.getByRole('button', { name: /Submit command|Execute command/ });
-    fireEvent.click(sendButton);
-
-    expect(mockOnCommand).toHaveBeenCalledWith('test command');
+    expect(mockSetActiveSession).toHaveBeenCalledWith('session-456');
+    expect(mockSetActiveWorkbench).toHaveBeenCalledWith('pm');
+    expect(mockNavigateToRegion).not.toHaveBeenCalled();
   });
 });

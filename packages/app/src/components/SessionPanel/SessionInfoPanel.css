@@ -63,7 +63,7 @@
 }
 
 .collapse-icon {
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) var(--ease-in-out);
 }
 
 .collapse-icon.collapsed {
@@ -145,7 +145,7 @@
 
 .copy-icon {
   opacity: 0.6;
-  transition: opacity 0.15s ease;
+  transition: opacity var(--duration-fast) var(--ease-in-out);
   flex-shrink: 0;
 }
 
@@ -183,7 +183,7 @@
 .status-badge.status-green .status-dot {
   background-color: var(--status-success-text, #3fb950);
   box-shadow: 0 0 8px var(--glow-color-success, var(--glow-color-success));
-  animation: pulse-green 2s ease-in-out infinite;
+  animation: pulse-green 2s var(--ease-in-out) infinite;
 }
 
 .status-badge.status-gray {
@@ -214,7 +214,7 @@
 
 .status-badge.status-yellow .status-dot {
   background-color: var(--status-warning-text, #f0883e);
-  animation: pulse-yellow 2s ease-in-out infinite;
+  animation: pulse-yellow 2s var(--ease-in-out) infinite;
 }
 
 /* Info Rows */
@@ -393,7 +393,7 @@
   border-radius: 50%;
   background-color: var(--status-success-text, #3fb950);
   box-shadow: 0 0 var(--space-1-5) var(--glow-color-success, var(--glow-color-success));
-  animation: pulse-green 2s ease-in-out infinite;
+  animation: pulse-green 2s var(--ease-in-out) infinite;
 }
 
 .active-text {

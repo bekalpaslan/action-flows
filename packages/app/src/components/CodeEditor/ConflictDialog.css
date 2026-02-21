@@ -60,7 +60,7 @@
 .conflict-details {
   margin: var(--space-4) 0;
   padding: var(--space-3);
-  background: #2d2d2d;
+  background: var(--app-bg-secondary);
   border: 1px solid var(--app-bg-tertiary);
   border-radius: 4px;
 }
@@ -82,13 +82,13 @@
   margin: 0 0 var(--space-2) 0;
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
-  color: rgba(86, 156, 214, 1);
+  color: var(--system-blue);
 }
 
 .version-card p {
   margin: 0;
   font-size: var(--text-xs);
-  color: #9cdcfe;
+  color: var(--text-secondary);
 }
 
 .show-details-btn {
@@ -97,15 +97,21 @@
   background: transparent;
   border: 1px solid var(--app-bg-tertiary);
   border-radius: 4px;
-  color: rgba(86, 156, 214, 1);
+  color: var(--system-blue);
   font-size: var(--text-xs);
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .show-details-btn:hover {
-  background: #2d2d2d;
-  border-color: rgba(86, 156, 214, 1);
+  background: var(--app-bg-secondary);
+  border-color: var(--system-blue);
+}
+
+.show-details-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .conflict-instructions {
@@ -144,23 +150,41 @@
   background: var(--semantic-info);
 }
 
+.btn-primary:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .btn-secondary {
   background: var(--app-bg-tertiary);
   color: var(--text-primary);
 }
 
 .btn-secondary:hover {
-  background: #4c4c4c;
+  background: var(--app-bg-quaternary);
+}
+
+.btn-secondary:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .btn-tertiary {
   background: transparent;
-  border: 1px solid #569cd6;
-  color: rgba(86, 156, 214, 1);
+  border: 1px solid var(--system-blue);
+  color: var(--system-blue);
 }
 
 .btn-tertiary:hover {
   background: rgba(86, 156, 214, 0.1);
+}
+
+.btn-tertiary:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .btn-text {
@@ -171,7 +195,13 @@
 }
 
 .btn-text:hover {
-  background: #2d2d2d;
+  background: var(--app-bg-secondary);
+}
+
+.btn-text:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .conflict-dialog-footer {

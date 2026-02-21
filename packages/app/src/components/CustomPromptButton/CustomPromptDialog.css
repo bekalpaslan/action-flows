@@ -98,6 +98,12 @@
   box-shadow: var(--btn-glow-hover);
 }
 
+.close-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .close-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -238,6 +244,12 @@ form {
   transform: translateY(-1px);
 }
 
+.btn-primary:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -253,6 +265,12 @@ form {
   background: var(--glass-bg-medium);
   box-shadow: var(--btn-glow-hover);
   transform: translateY(-1px);
+}
+
+.btn-secondary:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .btn-secondary:disabled {

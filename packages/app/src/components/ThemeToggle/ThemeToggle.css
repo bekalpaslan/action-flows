@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color var(--duration-normal) var(--ease-in-out), color var(--duration-normal) var(--ease-in-out);
   padding: 0;
   outline: none;
 }
@@ -32,7 +32,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
+  transition: transform var(--duration-slow) var(--ease-in-out);
 }
 
 .theme-toggle:active .theme-toggle__icon {

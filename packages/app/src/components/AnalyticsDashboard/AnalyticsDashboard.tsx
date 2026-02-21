@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useAnalytics, type TimeRange } from '../../hooks/useAnalytics';
 import { useToast } from '../../contexts/ToastContext';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { FlowMetricsPanel } from './FlowMetricsPanel';
 import { AgentMetricsPanel } from './AgentMetricsPanel';
 import { TimelineChart } from './TimelineChart';
@@ -27,23 +25,6 @@ export function AnalyticsDashboard(): React.ReactElement {
     'sessions',
     'chains',
   ]);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'AnalyticsDashboard',
-    getContext: () => ({
-      timeRange,
-      summary: summary ? {
-        totalSessions: summary.totalSessions,
-        totalChains: summary.totalChains,
-        totalSteps: summary.totalSteps,
-        successRate: summary.successRate,
-      } : null,
-      flowMetricsCount: flowMetrics.length,
-      agentMetricsCount: agentMetrics.length,
-      timelinePointsCount: timeline.length,
-    }),
-  });
 
   const handleExportJSON = () => {
     const data = {
@@ -156,7 +137,6 @@ export function AnalyticsDashboard(): React.ReactElement {
             >
               ⬇ CSV
             </button>
-            <DiscussButton componentName="AnalyticsDashboard" onClick={openDialog} size="small" />
           </div>
         </div>
       </div>
@@ -232,26 +212,6 @@ export function AnalyticsDashboard(): React.ReactElement {
           </div>
         </div>
       </div>
-
-      {/* DiscussDialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="AnalyticsDashboard"
-        componentContext={{
-          timeRange,
-          summary: summary ? {
-            totalSessions: summary.totalSessions,
-            totalChains: summary.totalChains,
-            totalSteps: summary.totalSteps,
-            successRate: summary.successRate,
-          } : null,
-          flowMetricsCount: flowMetrics.length,
-          agentMetricsCount: agentMetrics.length,
-          timelinePointsCount: timeline.length,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

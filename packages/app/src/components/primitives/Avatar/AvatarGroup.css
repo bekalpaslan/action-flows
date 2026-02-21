@@ -21,7 +21,7 @@
 /* Hover lift effect */
 .afw-avatar-group__item:hover {
   transform: translateY(-2px);
-  z-index: 999 !important; /* Override inline z-index on hover */
+  z-index: 999; /* Override inline z-index on hover */
 }
 
 /* Overflow counter circle */

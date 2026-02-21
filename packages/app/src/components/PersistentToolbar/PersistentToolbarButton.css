@@ -32,6 +32,12 @@
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
+.persistent-toolbar-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .persistent-toolbar-btn:active:not(:disabled) {
   transform: translateY(0);
 }
@@ -177,6 +183,12 @@
 .context-menu-item:hover {
   background: var(--background-hover);
   color: var(--accent-primary);
+}
+
+.context-menu-item:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .context-menu-item.danger:hover {

@@ -44,7 +44,7 @@
 
 /* Edge color transitions */
 .react-flow__edge-path {
-  transition: stroke 0.3s ease, stroke-width 0.3s ease;
+  transition: stroke var(--duration-slow) var(--ease-in-out), stroke-width var(--duration-slow) var(--ease-in-out);
 }
 
 .react-flow__edge.selected .react-flow__edge-path {

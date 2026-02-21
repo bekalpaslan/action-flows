@@ -1,8 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useFlowBrowser, type FlowMetadata } from '../../hooks/useFlowBrowser';
 import { useToast } from '../../contexts/ToastContext';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { FlowDetails } from './FlowDetails';
 import './FlowBrowser.css';
 
@@ -33,20 +31,6 @@ export function FlowBrowser({ onFlowSelect }: FlowBrowserProps): React.ReactElem
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all');
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<SortOption>('mostUsed');
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'FlowBrowser',
-    getContext: () => ({
-      totalFlows: flows.length,
-      viewMode,
-      selectedCategory,
-      searchQuery,
-      selectedTags: Array.from(selectedTags),
-      sortBy,
-      filteredCount: filteredFlows.length,
-    }),
-  });
 
   // Extract all unique tags from flows
   const allTags = useMemo(() => {

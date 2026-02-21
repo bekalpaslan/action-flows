@@ -14,10 +14,10 @@
   justify-content: center;
   /* GAP-3 & GAP-4: Smooth transitions for color and glow changes */
   transition:
-    opacity 0.3s ease,
-    filter 0.2s ease,
-    --star-evolved-color 0.3s ease,
-    --star-glow-intensity 0.2s ease;
+    opacity var(--duration-slow) var(--ease-in-out),
+    filter var(--duration-normal) var(--ease-in-out),
+    --star-evolved-color var(--duration-slow) var(--ease-in-out),
+    --star-glow-intensity var(--duration-normal) var(--ease-in-out);
 }
 
 /* Reduced motion: disable transitions */
@@ -56,7 +56,7 @@
   );
   pointer-events: none;
   /* GAP-4: Smooth transitions for glow changes */
-  transition: opacity 0.2s ease, background 0.3s ease;
+  transition: opacity var(--duration-normal) var(--ease-in-out), background var(--duration-slow) var(--ease-in-out);
   /* GPU optimization for animations */
   will-change: transform, opacity;
 }
@@ -72,7 +72,7 @@
   box-shadow: 0 0 8px var(--star-evolved-color, var(--cosmic-star-glow));
   z-index: 1;
   /* GAP-4: Smooth transition for glow changes */
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow var(--duration-slow) var(--ease-in-out);
 }
 
 /* Layer-based coloring */
@@ -141,12 +141,12 @@
 
 .region-star__status-indicator.status-active {
   background: var(--system-blue);
-  animation: cosmicPulse 2s ease-in-out infinite;
+  animation: cosmicPulse 2s var(--ease-in-out) infinite;
 }
 
 .region-star__status-indicator.status-waiting {
   background: var(--system-purple);
-  animation: cosmicPulse 3s ease-in-out infinite;
+  animation: cosmicPulse 3s var(--ease-in-out) infinite;
 }
 
 /* Health indicator */
@@ -205,13 +205,19 @@
 }
 
 .region-star.fog-revealed:hover .region-star__glow {
-  opacity: 1 !important;
+  opacity: 1;
   filter: brightness(1.2);
+}
+
+.region-star.fog-revealed:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 /* Revelation animation (FAINT → REVEALED transition) */
 .region-star.fog-revealed.revealing {
-  animation: star-reveal 0.5s ease-out;
+  animation: star-reveal var(--duration-slowest) var(--ease-out);
 }
 
 @keyframes star-reveal {
@@ -230,7 +236,7 @@
 /* Accessibility: Reduced motion for revelation */
 @media (prefers-reduced-motion: reduce) {
   .region-star.fog-revealed.revealing {
-    animation: star-reveal-reduced 0.2s ease-out;
+    animation: star-reveal-reduced var(--duration-normal) var(--ease-out);
   }
 
   @keyframes star-reveal-reduced {
@@ -250,11 +256,11 @@
 
 /* Status animations */
 .region-star.status-active .region-star__glow {
-  animation: cosmicGlow var(--cosmic-glow-pulse-duration) ease-in-out infinite;
+  animation: cosmicGlow var(--cosmic-glow-pulse-duration) var(--ease-in-out) infinite;
 }
 
 .region-star.status-waiting .region-star__glow {
-  animation: cosmicGlow calc(var(--cosmic-glow-pulse-duration) * 1.5) ease-in-out infinite;
+  animation: cosmicGlow calc(var(--cosmic-glow-pulse-duration) * 1.5) var(--ease-in-out) infinite;
 }
 
 /* Animations */
@@ -283,7 +289,7 @@
   background: var(--cosmic-bridge-idle);
   border: 1px solid var(--cosmic-star-core);
   opacity: 0.5;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--duration-normal) var(--ease-in-out);
 }
 
 .region-star:hover .react-flow__handle {
@@ -376,7 +382,7 @@
 
   /* Fog lift uses quick fade instead of slow transition */
   .region-star.revealing .region-star__fog {
-    animation: fog-lift-reduced 200ms ease-out forwards;
+    animation: fog-lift-reduced var(--duration-normal) var(--ease-out) forwards;
   }
 
   @keyframes fog-lift-reduced {
@@ -401,7 +407,7 @@
 
 /* Active state (pulsing ring animation, step executing) */
 .region-star.glow-active .region-star__core {
-  animation: region-glow-pulse 1.5s ease-in-out infinite;
+  animation: region-glow-pulse 1.5s var(--ease-in-out) infinite;
   /* GPU optimization */
   will-change: transform, filter;
 }
@@ -419,7 +425,7 @@
 
 /* Waiting state (gentle breathing animation, chain waiting) */
 .region-star.glow-waiting .region-star__core {
-  animation: region-glow-breath 3s ease-in-out infinite;
+  animation: region-glow-breath 3s var(--ease-in-out) infinite;
 }
 
 @keyframes region-glow-breath {
@@ -441,7 +447,7 @@
     var(--cosmic-star-glow) 0%,
     transparent 70%
   );
-  animation: burst-expand 1s ease-out forwards;
+  animation: burst-expand 1s var(--ease-out) forwards;
   pointer-events: none;
   z-index: 5;
   /* GPU optimization */
@@ -468,7 +474,7 @@
 
   /* Burst effect uses quick fade instead of expansion */
   .region-star__burst {
-    animation: burst-fade 300ms ease-out forwards;
+    animation: burst-fade var(--duration-slow) var(--ease-out) forwards;
   }
 
   @keyframes burst-fade {

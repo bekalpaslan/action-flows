@@ -118,6 +118,12 @@
   color: var(--text-primary);
 }
 
+.expand-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .expand-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -146,11 +152,17 @@
   border-radius: var(--radius-sm);
   background: var(--bg-primary);
   overflow: hidden;
-  transition: border-color 0.2s;
+  transition: border-color var(--duration-normal) var(--ease-in-out);
 }
 
 .change-item:hover {
   border-color: var(--accent-color);
+}
+
+.change-item:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .change-item.change-destructive {
@@ -178,6 +190,12 @@
 
 .change-header.collapsible:hover {
   background: var(--bg-hover);
+}
+
+.change-header.collapsible:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 /* Change type icon */
@@ -279,7 +297,7 @@
 .expand-icon {
   font-size: var(--text-xs);
   color: var(--text-secondary);
-  transition: transform 0.2s;
+  transition: transform var(--duration-normal) var(--ease-in-out);
   flex-shrink: 0;
 }
 
@@ -293,7 +311,7 @@
   flex-direction: column;
   gap: var(--space-2);
   padding: var(--space-3);
-  transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease;
+  transition: max-height var(--duration-slow) var(--ease-in-out), padding var(--duration-slow) var(--ease-in-out), opacity var(--duration-normal) var(--ease-in-out);
   overflow: hidden;
 }
 
@@ -387,6 +405,12 @@
   border-color: var(--accent-color);
 }
 
+.cancel-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .confirm-btn {
   background: var(--accent-color);
   border: 1px solid var(--accent-color);
@@ -398,6 +422,12 @@
   border-color: var(--accent-color-dark);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px var(--overlay-dark-20);
+}
+
+.confirm-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .confirm-btn.confirm-destructive {

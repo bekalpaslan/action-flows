@@ -48,7 +48,7 @@
     var(--cosmic-layer-physics) 75%,
     var(--cosmic-layer-experience) 100%
   );
-  transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transition: width var(--duration-slowest) var(--ease-in-out);
   box-shadow: 0 0 8px var(--cosmic-star-glow);
   border-radius: 4px;
 }
@@ -73,6 +73,12 @@
   box-shadow: var(--shadow-md), var(--panel-glow-default);
 }
 
+.discovery-progress:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 /* Animation for progress fill growth */
 @keyframes fill-grow {
   from {
@@ -86,7 +92,7 @@
 }
 
 .discovery-progress__fill {
-  animation: fill-grow 0.5s ease-out;
+  animation: fill-grow var(--duration-slowest) var(--ease-out);
 }
 
 /* Responsive adjustments */
@@ -109,6 +115,6 @@
 @media (prefers-reduced-motion: reduce) {
   .discovery-progress__fill {
     animation: none;
-    transition: width 0.2s ease;
+    transition: width var(--duration-normal) var(--ease-in-out);
   }
 }

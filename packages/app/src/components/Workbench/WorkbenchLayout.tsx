@@ -10,33 +10,32 @@ import { AppSidebar } from '../AppSidebar';
 
 import { SlidingChatWindow } from '../SlidingChatWindow/SlidingChatWindow';
 import { ChatPanel } from '../SessionPanel/ChatPanel';
-import { CosmicMap } from '../CosmicMap/CosmicMap';
+import { CosmicMap as WorkbenchMap } from '../CosmicMap/CosmicMap';
 import { RegionFocusView } from '../RegionFocus/RegionFocusView';
 import { BreadcrumbBar } from '../shared/BreadcrumbBar';
-import { StarToolbar } from './StarToolbar';
-import { WorkStar } from '../Stars/WorkStar';
+import { WorkbenchToolbar } from './StarToolbar';
+import { WorkStar as WorkWorkbench } from '../Stars/WorkStar';
 import { CanvasTool } from '../Tools/CanvasTool/CanvasTool';
 import { EditorTool } from '../Tools/EditorTool/EditorTool';
-import { ReviewStar } from '../Stars/ReviewStar';
-import { PMStar, type PMTask, type DocLink, type Milestone, type TaskStatus } from '../Stars/PMStar';
-import { MaintenanceStar } from '../Stars/MaintenanceStar';
-import { SettingsStar } from '../Stars/SettingsStar';
+import { ReviewStar as ReviewWorkbench } from '../Stars/ReviewStar';
+import { PMStar as PMWorkbench, type PMTask, type DocLink, type Milestone, type TaskStatus } from '../Stars/PMStar';
+import { MaintenanceStar as MaintenanceWorkbench } from '../Stars/MaintenanceStar';
+import { SettingsStar as SettingsWorkbench } from '../Stars/SettingsStar';
 import { HarmonySpaceWorkbench } from '../Harmony/HarmonySpaceWorkbench';
-import { ExploreStar } from '../Stars/ExploreStar';
-import { ArchiveStar } from '../Stars/ArchiveStar';
-import { IntelStar } from '../Stars/IntelStar';
-import { RespectStar } from '../Stars/RespectStar/RespectStar';
-import { StoryStar } from '../Stars/StoryStar/StoryStar';
+import { ExploreStar as ExploreWorkbench } from '../Stars/ExploreStar';
+import { ArchiveStar as ArchiveWorkbench } from '../Stars/ArchiveStar';
+import { IntelStar as IntelWorkbench } from '../Stars/IntelStar';
+import { RespectStar as RespectWorkbench } from '../Stars/RespectStar/RespectStar';
+import { StoryStar as StoryWorkbench } from '../Stars/StoryStar/StoryStar';
 import { CoverageTool } from '../Tools/CoverageTool/CoverageTool';
 import { useSessionArchive } from '../../hooks/useSessionArchive';
-import { HealthWidget } from '../HealthWidget';
 import { CommandCenter } from '../CosmicMap/CommandCenter';
 import {
   type WorkbenchId,
   type SessionId,
   type Session,
   type FlowAction,
-  STAR_CONFIGS,
+  STAR_CONFIGS as WORKBENCH_CONFIGS,
 } from '@afw/shared';
 import './WorkbenchLayout.css';
 
@@ -276,7 +275,7 @@ const initialDemoMilestones: Milestone[] = [
 
 export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
-  const { targetWorkbenchId, universe } = useUniverseContext();
+  const { targetWorkbenchId, universe: workbenchGraph } = useUniverseContext();
   const { sessions: contextSessions, activeSessionId: contextActiveSessionId, getSession } = useSessionContext();
   const { sessionId: chatSessionId, closeChat, saveAndSwitch } = useChatWindowContext();
   const { saveAndSwitch: saveTerminalSwitch } = useTerminal();
@@ -294,19 +293,19 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
     }
   }, [activeWorkbench, saveAndSwitch, saveTerminalSwitch]);
 
-  // Feature flags for cosmic map and classic mode
-  const cosmicMapEnabled = useFeatureFlagSimple('COSMIC_MAP_ENABLED');
+  // Feature flags for map mode and classic mode
+  const mapModeEnabled = useFeatureFlagSimple('COSMIC_MAP_ENABLED');
   const classicMode = useFeatureFlagSimple('CLASSIC_DASHBOARD_MODE');
   const commandCenterEnabled = useFeatureFlagSimple('COMMAND_CENTER_ENABLED');
 
-  // Update initial view mode logic to respect classic mode and check if universe has data
-  const effectiveCosmicMapEnabled = cosmicMapEnabled && !classicMode && (universe?.regions?.length ?? 0) > 0;
+  // Initial view mode: respect classic mode and verify map data exists
+  const effectiveMapModeEnabled = mapModeEnabled && !classicMode && (workbenchGraph?.regions?.length ?? 0) > 0;
 
   // View mode state: 4-state FSM for zoom transitions
-  // 'cosmic-map' -> 'zooming-in' -> 'region-focus' -> 'zooming-out' -> 'cosmic-map'
-  type ViewMode = 'cosmic-map' | 'zooming-in' | 'region-focus' | 'zooming-out' | 'workbench';
+  // 'map' -> 'zooming-in' -> 'region-focus' -> 'zooming-out' -> 'map'
+  type ViewMode = 'map' | 'zooming-in' | 'region-focus' | 'zooming-out' | 'workbench';
   const [viewMode, setViewMode] = useState<ViewMode>(
-    effectiveCosmicMapEnabled ? 'cosmic-map' : 'workbench'
+    effectiveMapModeEnabled ? 'map' : 'workbench'
   );
 
   // Track AppSidebar collapse state for layout adjustment
@@ -406,14 +405,14 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   }, [clearAllArchives]);
 
   /**
-   * Handle file selection in ExploreStar
+   * Handle file selection in Explore workbench
    */
   const handleFileSelect = useCallback((path: string) => {
     console.log('File selected:', path);
   }, []);
 
   /**
-   * Handle file open in ExploreStar
+   * Handle file open in Explore workbench
    */
   const handleFileOpen = useCallback((path: string) => {
     console.log('File opened:', path);
@@ -512,16 +511,15 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   }, [demoDocs]);
 
   /**
-   * Handle cosmic map region navigation
-   * When user clicks a region in cosmic map, switch to region-focus view with zoom transition
+   * Handle map region navigation
+   * When user clicks a region in map view, switch to region-focus with zoom transition
    */
   useEffect(() => {
-    // Listen for targetWorkbenchId from UniverseContext (set by navigateToRegion)
-    if (viewMode === 'cosmic-map' && targetWorkbenchId) {
+    if (viewMode === 'map' && targetWorkbenchId) {
       // Set active workbench immediately
       setActiveWorkbench(targetWorkbenchId);
 
-      // Start zoom-in transition (FSM: cosmic-map -> zooming-in)
+      // Start zoom-in transition (FSM: map -> zooming-in)
       setViewMode('zooming-in');
 
       // Switch to region-focus after 400ms zoom animation (FSM: zooming-in -> region-focus)
@@ -535,10 +533,10 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   }, [targetWorkbenchId, viewMode, setActiveWorkbench]);
 
   /**
-   * Handle return to universe button click
-   * Triggers zoom-out transition back to cosmic map
+   * Handle return to map button click
+   * Triggers zoom-out transition back to map
    */
-  const handleReturnToUniverse = useCallback(() => {
+  const handleReturnToMap = useCallback(() => {
     // Prevent double-triggering during transition
     if (viewMode === 'zooming-out' || viewMode === 'zooming-in') return;
 
@@ -550,21 +548,21 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
     // Start zoom-out transition (FSM: region-focus -> zooming-out)
     setViewMode('zooming-out');
 
-    // Switch to cosmic-map after 400ms zoom animation (FSM: zooming-out -> cosmic-map)
+    // Switch to map after 400ms zoom animation (FSM: zooming-out -> map)
     returnTimeout.current = setTimeout(() => {
-      setViewMode('cosmic-map');
+      setViewMode('map');
     }, 400);
   }, [viewMode]);
 
   /**
    * Render workbench-specific content based on activeWorkbench
-   * Phase D: Only handles stars + harmony. Tools are NOT routable destinations.
+   * Phase D: Handles workbenches + harmony. Tools are not routable destinations.
    */
   const renderWorkbenchContent = (workbench: WorkbenchId): ReactNode => {
     switch (workbench) {
       case 'work':
         return (
-          <WorkStar
+          <WorkWorkbench
             sessions={attachedSessions}
             activeSessionId={activeSessionId}
             onSessionClose={handleSessionClose}
@@ -577,20 +575,20 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
           />
         );
       case 'maintenance':
-        return <MaintenanceStar />;
+        return <MaintenanceWorkbench />;
       case 'explore':
         return (
-          <ExploreStar
+          <ExploreWorkbench
             sessionId={activeSessionId}
             onFileSelect={handleFileSelect}
             onFileOpen={handleFileOpen}
           />
         );
       case 'review':
-        return <ReviewStar />;
+        return <ReviewWorkbench />;
       case 'archive':
         return (
-          <ArchiveStar
+          <ArchiveWorkbench
             archivedSessions={archivedSessions}
             onRestore={handleArchiveRestore}
             onDelete={handleArchiveDelete}
@@ -598,10 +596,10 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
           />
         );
       case 'settings':
-        return <SettingsStar />;
+        return <SettingsWorkbench />;
       case 'pm':
         return (
-          <PMStar
+          <PMWorkbench
             tasks={demoTasks}
             docs={demoDocs}
             milestones={demoMilestones}
@@ -614,11 +612,11 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
       case 'harmony':
         return <HarmonySpaceWorkbench sessionId={activeSessionId} />;
       case 'intel':
-        return <IntelStar />;
+        return <IntelWorkbench />;
       case 'respect':
-        return <RespectStar />;
+        return <RespectWorkbench />;
       case 'story':
-        return <StoryStar />;
+        return <StoryWorkbench />;
       default:
         return (
           <div className="workbench-placeholder">
@@ -634,51 +632,51 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
       <AppSidebar onCollapseChange={setSidebarCollapsed} />
 
       <div className="main-content" data-testid="layout-wrapper">
-        {/* Layer 3: workbench-panel — contains toolbar + star content (chat is sibling) */}
+        {/* Layer 3: workbench-panel — contains toolbar + workbench content (chat is sibling) */}
         <div className="workbench-panel" data-testid="workbench-panel">
-          {/* Cosmic Map View + Zooming In/Out states */}
-          {effectiveCosmicMapEnabled && (viewMode === 'cosmic-map' || viewMode === 'zooming-in' || viewMode === 'zooming-out') ? (
+          {/* Map View + Zooming In/Out states */}
+          {effectiveMapModeEnabled && (viewMode === 'map' || viewMode === 'zooming-in' || viewMode === 'zooming-out') ? (
             <div className="workbench-dashboard" style={{ flex: 1 }} data-testid="content-area">
-              <CosmicMap visible={viewMode === 'cosmic-map'} zooming={viewMode === 'zooming-in' || viewMode === 'zooming-out'} />
+              <WorkbenchMap visible={viewMode === 'map'} zooming={viewMode === 'zooming-in' || viewMode === 'zooming-out'} />
             </div>
-          ) : effectiveCosmicMapEnabled && viewMode === 'region-focus' ? (
+          ) : effectiveMapModeEnabled && viewMode === 'region-focus' ? (
             /* Region Focus View - Dual-panel with workbench + chat */
             <div className="workbench-dashboard" style={{ flex: 1 }} data-testid="content-area">
               <RegionFocusView
                 workbenchContent={renderWorkbenchContent(activeWorkbench)}
                 chatSessionId={chatSessionId}
-                onReturnToUniverse={handleReturnToUniverse}
+                onReturnToUniverse={handleReturnToMap}
                 workbenchId={activeWorkbench}
               />
             </div>
           ) : (
-            /* Workbench View (legacy mode when cosmic map disabled or classic mode enabled) */
+            /* Workbench View (legacy mode when map mode is disabled or classic mode is enabled) */
             <>
-              {/* StarToolbar - L4 fixed toolbar at top of workbench */}
-              <StarToolbar activeSessionCount={attachedSessions.length} />
+              {/* WorkbenchToolbar - L4 fixed toolbar at top of workbench */}
+              <WorkbenchToolbar />
 
               <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} data-testid="content-area">
                 <main id="main-content" className="workbench-main" role="main">
                   <div className={`workbench-content ${transitionClass}`}>
-                    {/* Return to Universe button (visible when cosmic map is enabled and not in classic mode) */}
-                    {effectiveCosmicMapEnabled && (
+                    {/* Return to Map button (visible when map mode is enabled and not in classic mode) */}
+                    {effectiveMapModeEnabled && (
                       <button
-                        className="workbench-layout__return-to-universe"
-                        onClick={handleReturnToUniverse}
-                        title="Return to universe view (U)"
+                        className="workbench-layout__return-to-map"
+                        onClick={handleReturnToMap}
+                        title="Return to map view (U)"
                       >
-                        🌌 Universe
+                        Map
                       </button>
                     )}
 
-                    {/* BreadcrumbBar */}
-                    <BreadcrumbBar
-                      segments={[
-                        { label: 'ActionFlows', onClick: effectiveCosmicMapEnabled ? handleReturnToUniverse : undefined },
-                        { label: STAR_CONFIGS[activeWorkbench]?.label || activeWorkbench },
-                        ...(activeSessionId && getSession(activeSessionId) ? [{ label: getSession(activeSessionId)?.name || getSession(activeSessionId)?.id || 'Session' }] : [])
-                      ]}
-                    />
+                    {/* BreadcrumbBar (Harmony renders its own breadcrumb in header) */}
+                    {activeWorkbench !== 'harmony' && (
+                      <BreadcrumbBar
+                        segments={[
+                          { label: WORKBENCH_CONFIGS[activeWorkbench]?.label || activeWorkbench }
+                        ]}
+                      />
+                    )}
 
                     {renderWorkbenchContent(activeWorkbench)}
                     {children}
@@ -704,14 +702,8 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
 
       {/* Layer 2: CommandCenter — app shell level, always visible */}
       {commandCenterEnabled && (
-        <CommandCenter onCommand={(cmd) => console.log('Command:', cmd)} showHealthStatus={true} />
+        <CommandCenter showHealthStatus={true} />
       )}
-
-      {/* Global Health Widget - visible in all views (cosmic-map, region-focus, workbench) */}
-      <HealthWidget
-        sessionId={activeSessionId ?? null}
-        position="bottom-right"
-      />
 
       {/* BottomControlPanel removed in Phase 2 - functionality moved to ConversationPanel + SmartPromptLibrary */}
     </div>

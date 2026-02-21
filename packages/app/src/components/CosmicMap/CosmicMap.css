@@ -11,12 +11,13 @@
   background: var(--cosmic-void);
   overflow: hidden;
   opacity: 1;
-  transition: opacity 100ms ease-in-out;
+  transition: opacity var(--duration-fastest) var(--ease-in-out);
+  contain: layout paint;
 }
 
 /* Zooming state - fade out during last 100ms (200-300ms) of zoom animation */
 .cosmic-map--zooming {
-  animation: cosmic-map-fade-out 100ms ease-in 200ms forwards;
+  animation: cosmic-map-fade-out var(--duration-fastest) var(--ease-in) var(--duration-normal) forwards;
 }
 
 @keyframes cosmic-map-fade-out {
@@ -73,7 +74,7 @@
   border: none;
   color: var(--text-primary);
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color var(--duration-normal) var(--ease-in-out);
   border-radius: var(--radius-sm);
 }
 
@@ -95,7 +96,7 @@
   border: none;
   color: var(--text-primary);
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color var(--duration-normal) var(--ease-in-out);
   border-radius: var(--radius-sm);
 }
 
@@ -218,7 +219,7 @@
 }
 
 .cosmic-map .react-flow__edge:hover {
-  stroke-width: 3 !important;
+  stroke-width: 3;
 }
 
 .cosmic-map .react-flow__attribution {

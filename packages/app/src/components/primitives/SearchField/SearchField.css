@@ -93,7 +93,7 @@
 
 .afw-search-field__dropdown::-webkit-scrollbar-track {
   background: transparent;
-  margin: 4px;
+  margin: var(--space-1);
 }
 
 .afw-search-field__dropdown::-webkit-scrollbar-thumb {

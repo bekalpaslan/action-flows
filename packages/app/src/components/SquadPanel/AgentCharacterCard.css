@@ -174,7 +174,7 @@
   gap: var(--space-1-5);
   width: 100%;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity var(--duration-slow) var(--ease-in-out);
   pointer-events: none;
 }
 
@@ -219,7 +219,7 @@
   height: var(--space-1-5);
   border-radius: 50%;
   flex-shrink: 0;
-  animation: statusPulse 2s ease-in-out infinite;
+  animation: statusPulse 2s var(--ease-in-out) infinite;
 }
 
 @keyframes statusPulse {
@@ -237,7 +237,7 @@
 }
 
 .agent-character-card.status-success .status-indicator {
-  animation: statusSuccess 1.5s ease-out;
+  animation: statusSuccess 1.5s var(--ease-out);
 }
 
 @keyframes statusSuccess {
@@ -252,7 +252,7 @@
 }
 
 .agent-character-card.status-error .status-indicator {
-  animation: statusError 0.5s ease-in-out infinite;
+  animation: statusError var(--duration-slowest) var(--ease-in-out) infinite;
 }
 
 @keyframes statusError {
@@ -310,13 +310,13 @@
   );
   width: var(--progress-amount);
   border-radius: var(--space-0-5);
-  transition: width 0.4s var(--ease-natural);
+  transition: width var(--duration-slower) var(--ease-apple);
   box-shadow: 0 0 var(--space-2) var(--progress-color);
   animation: progress-fill 0.6s var(--ease-ghibli);
 }
 
 .agent-character-card.status-working .progress-fill {
-  animation: progress-fill 0.6s var(--ease-ghibli), progress-shimmer 2s ease-in-out infinite;
+  animation: progress-fill 0.6s var(--ease-ghibli), progress-shimmer 2s var(--ease-in-out) infinite;
 }
 
 @keyframes progress-shimmer {
@@ -338,7 +338,7 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.3s ease, color 0.3s ease;
+  transition: opacity var(--duration-slow) var(--ease-in-out), color var(--duration-slow) var(--ease-in-out);
   color: var(--text-secondary);
 }
 
@@ -377,7 +377,7 @@
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  animation: hintFadeIn 0.3s ease-out forwards;
+  animation: hintFadeIn var(--duration-slow) var(--ease-out) forwards;
   z-index: 100;
 }
 

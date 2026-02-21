@@ -86,6 +86,13 @@
   box-shadow: var(--btn-glow-hover);
 }
 
+.flow-browser__view-toggle:focus-visible,
+.flow-browser__export-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 /* Toolbar */
 .flow-browser__toolbar {
   display: flex;
@@ -158,6 +165,12 @@
   color: var(--text-primary);
 }
 
+.flow-browser__category-tab:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .flow-browser__category-tab.active {
   background: var(--color-accent);
   color: white;
@@ -208,6 +221,12 @@
 
 .tags-list .tag:hover {
   background: rgba(10, 132, 255, 0.1);
+}
+
+.tags-list .tag:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .tags-list .tag.active {
@@ -273,6 +292,12 @@
   opacity: 0.9;
 }
 
+.empty-reset:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 /* Flow card */
 .flow-card {
   padding: var(--space-3);
@@ -291,6 +316,12 @@
   border-color: var(--color-accent);
   background: var(--glass-bg-medium);
   box-shadow: 0 0 12px rgba(10, 132, 255, 0.15);
+}
+
+.flow-card:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .flow-card.active {

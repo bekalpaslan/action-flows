@@ -28,7 +28,7 @@
 
 /* Pulse animation for spark core (optional enhancement) */
 .spark-dot {
-  animation: spark-pulse 0.8s ease-in-out infinite alternate;
+  animation: spark-pulse 0.8s var(--ease-in-out) infinite alternate;
 }
 
 @keyframes spark-pulse {

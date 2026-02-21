@@ -13,7 +13,7 @@
 /* Heat glow overlay with pulsing animation */
 .trace-heat-glow {
   /* Base filter handled inline for dynamic blur scaling */
-  animation: pulse-heat 2s ease-in-out infinite;
+  animation: pulse-heat 2s var(--ease-in-out) infinite;
   will-change: opacity;
 }
 
@@ -37,7 +37,7 @@
   filter: blur(0.5px);
   will-change: opacity, transform;
   /* Animation handled by useMemo for performance - static render */
-  transition: opacity 0.5s ease-out;
+  transition: opacity var(--duration-slowest) var(--ease-out);
 }
 
 /* Activity indicator for reduced motion mode */

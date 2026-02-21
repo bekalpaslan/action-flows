@@ -21,12 +21,24 @@
   box-shadow: var(--shadow-sm);
 }
 
+.chain-badge:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .chain-badge[role='button'] {
   cursor: pointer;
 }
 
 .chain-badge[role='button']:hover {
   opacity: 0.9;
+}
+
+.chain-badge[role='button']:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 /* Label styling */

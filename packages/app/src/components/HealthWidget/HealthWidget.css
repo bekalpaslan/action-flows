@@ -21,12 +21,18 @@
   border: 2px solid transparent;
   font-weight: 600;
   font-size: 12px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform var(--duration-normal) var(--ease-in-out), box-shadow var(--duration-normal) var(--ease-in-out);
   background: var(--bg-secondary, #1a1a2e);
 }
 
 .health-widget__compact:hover {
   transform: scale(1.1);
+}
+
+.health-widget__compact:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .health-widget__compact--green {
@@ -52,7 +58,7 @@
 
 /* Critical health pulse animation */
 .health-widget--critical {
-  animation: pulse-critical 2s ease-in-out infinite;
+  animation: pulse-critical 2s var(--ease-in-out) infinite;
 }
 
 @keyframes pulse-critical {
@@ -112,7 +118,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--border-color, #333);
 }
 
@@ -137,11 +143,17 @@
   color: var(--text-primary, #fff);
 }
 
+.health-widget__close:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .health-widget__overall {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--space-3);
+  padding: var(--space-4);
 }
 
 .health-widget__badge {
@@ -169,8 +181,8 @@
 .health-widget__urgent {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
+  gap: var(--space-2);
+  padding: 10px var(--space-4);
   background: rgba(240, 136, 62, 0.15);
   border-bottom: 1px solid rgba(240, 136, 62, 0.3);
   color: var(--system-orange, #f0883e);
@@ -184,13 +196,13 @@
 
 .health-widget__gates,
 .health-widget__recommendations {
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   border-top: 1px solid var(--border-color, #333);
 }
 
 .health-widget__gates h5,
 .health-widget__recommendations h5 {
-  margin: 0 0 8px 0;
+  margin: 0 0 var(--space-2) 0;
   font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary, #888);
@@ -201,8 +213,8 @@
 .health-widget__gate {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 4px 0;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
   font-size: 13px;
 }
 
@@ -229,7 +241,7 @@
 .health-widget__recommendation {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
   width: 100%;
   padding: 10px;
   margin: 6px 0;
@@ -241,7 +253,7 @@
 .health-widget__rec-header {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .health-widget__rec-icon {
@@ -262,7 +274,7 @@
   align-items: center;
   gap: 6px;
   width: 100%;
-  padding: 8px 10px;
+  padding: var(--space-2) 10px;
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
   border: 1px solid rgba(99, 102, 241, 0.4);
   border-radius: 6px;
@@ -278,6 +290,12 @@
   border-color: rgba(99, 102, 241, 0.6);
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.health-widget__run-flow:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .health-widget__run-flow:active {
@@ -299,7 +317,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: var(--space-3) var(--space-4);
   border-top: 1px solid var(--border-color, #333);
 }
 
@@ -309,13 +327,19 @@
   color: var(--text-secondary, #888);
   font-size: 12px;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: var(--space-1) var(--space-2);
   border-radius: 4px;
 }
 
 .health-widget__refresh:hover {
   background: var(--bg-tertiary, #252540);
   color: var(--text-primary, #fff);
+}
+
+.health-widget__refresh:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .health-widget__timestamp {
@@ -329,8 +353,8 @@
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 12px;
-  padding: 8px 16px;
+  margin-bottom: var(--space-3);
+  padding: var(--space-2) var(--space-4);
   background: rgba(34, 197, 94, 0.95);
   color: white;
   font-size: 12px;

@@ -21,6 +21,12 @@
   border-color: var(--glass-border-hover);
 }
 
+.widget:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 /* ============================================================================ */
 /* StatCard Widget */
 /* ============================================================================ */
@@ -117,7 +123,7 @@
 .widget-insight-card__confidence-fill {
   height: 100%;
   background: var(--color-accent);
-  transition: width 0.3s var(--ease-apple);
+  transition: width var(--duration-slow) var(--ease-apple);
 }
 
 .widget-insight-card__confidence-label {
@@ -268,7 +274,7 @@
 .widget-code-health__factor-fill {
   height: 100%;
   background: var(--color-accent);
-  transition: width 0.3s var(--ease-apple);
+  transition: width var(--duration-slow) var(--ease-apple);
 }
 
 .widget-code-health__factor-value {
@@ -319,6 +325,12 @@
 
 .widget-file-tree__node-label:hover {
   background: var(--glass-bg-medium);
+}
+
+.widget-file-tree__node-label:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .widget-file-tree__icon {

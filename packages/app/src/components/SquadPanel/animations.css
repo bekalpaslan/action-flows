@@ -233,17 +233,17 @@
   .log-panel,
   .agent-character-card {
     animation: none !important;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity var(--duration-normal) var(--ease-in-out), transform var(--duration-normal) var(--ease-in-out);
   }
 
   /* Keep only scale transform for click/hover feedback */
   .agent-character-card:hover {
     transform: scale(1.05);
-    transition: transform 0.2s ease;
+    transition: transform var(--duration-normal) var(--ease-in-out);
   }
 
   /* Keep progress bar transitions for usability */
   .progress-fill {
-    transition: width 0.3s ease;
+    transition: width var(--duration-slow) var(--ease-in-out);
   }
 }

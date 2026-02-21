@@ -47,14 +47,14 @@
   border-radius: 50%;
   border: var(--space-0-5) solid var(--glow-color);
   opacity: 0.6;
-  transition: opacity 0.3s ease, box-shadow 0.3s ease;
+  transition: opacity var(--duration-slow) var(--ease-in-out), box-shadow var(--duration-slow) var(--ease-in-out);
   pointer-events: none;
   box-shadow: 0 0 var(--space-3) var(--glow-color);
 }
 
 /* Idle aura - slow, dim pulse */
 .avatar-aura.aura-idle {
-  animation: auraPulseIdle 3s ease-in-out infinite;
+  animation: auraPulseIdle 3s var(--ease-in-out) infinite;
 }
 
 @keyframes auraPulseIdle {
@@ -70,7 +70,7 @@
 
 /* Thinking aura - medium rhythm, contemplative */
 .avatar-aura.aura-thinking {
-  animation: auraPulseThinking 2s ease-in-out infinite;
+  animation: auraPulseThinking 2s var(--ease-in-out) infinite;
 }
 
 @keyframes auraPulseThinking {
@@ -86,7 +86,7 @@
 
 /* Working aura - steady, bright */
 .avatar-aura.aura-working {
-  animation: auraPulseWorking 1.5s ease-in-out infinite;
+  animation: auraPulseWorking 1.5s var(--ease-in-out) infinite;
   opacity: 0.85;
 }
 
@@ -103,7 +103,7 @@
 
 /* Waiting aura - slow breathe, patient */
 .avatar-aura.aura-waiting {
-  animation: auraPulseWaiting 2.5s ease-in-out infinite;
+  animation: auraPulseWaiting 2.5s var(--ease-in-out) infinite;
 }
 
 @keyframes auraPulseWaiting {
@@ -119,7 +119,7 @@
 
 /* Success aura - quick sparkle burst then fade */
 .avatar-aura.aura-success {
-  animation: auraBurst 1.2s ease-out;
+  animation: auraBurst 1.2s var(--ease-out);
   opacity: 0.8;
 }
 
@@ -140,7 +140,7 @@
 
 /* Error aura - frantic flicker */
 .avatar-aura.aura-error {
-  animation: auraFlicker 0.6s ease-in-out infinite;
+  animation: auraFlicker 0.6s var(--ease-in-out) infinite;
 }
 
 @keyframes auraFlicker {
@@ -164,7 +164,7 @@
 
 /* Spawning aura - energetic release */
 .avatar-aura.aura-spawning {
-  animation: auraSpawn 1s ease-out;
+  animation: auraSpawn 1s var(--ease-out);
   opacity: 0.9;
 }
 
@@ -193,7 +193,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: floatDefault 3s ease-in-out infinite;
+  animation: floatDefault 3s var(--ease-in-out) infinite;
 }
 
 /* Float animation - gentle bobbing motion */
@@ -209,11 +209,11 @@
 /* Expression states alter float and body pose */
 
 .agent-avatar.expression-idle .avatar-character {
-  animation: floatDefault 3s ease-in-out infinite;
+  animation: floatDefault 3s var(--ease-in-out) infinite;
 }
 
 .agent-avatar.expression-thinking .avatar-character {
-  animation: floatThinking 3.5s ease-in-out infinite;
+  animation: floatThinking 3.5s var(--ease-in-out) infinite;
 }
 
 @keyframes floatThinking {
@@ -226,7 +226,7 @@
 }
 
 .agent-avatar.expression-working .avatar-character {
-  animation: floatWorking 2s ease-in-out infinite;
+  animation: floatWorking 2s var(--ease-in-out) infinite;
 }
 
 @keyframes floatWorking {
@@ -239,7 +239,7 @@
 }
 
 .agent-avatar.expression-error .avatar-character {
-  animation: joltError 0.5s ease-in-out;
+  animation: joltError var(--duration-slowest) var(--ease-in-out);
 }
 
 @keyframes joltError {
@@ -270,7 +270,7 @@
 
 /* Mouth expressions based on status */
 .avatar-mouth {
-  transition: d 0.3s ease;
+  transition: d var(--duration-slow) var(--ease-in-out);
 }
 
 /* Idle/waiting: relaxed mouth */
@@ -359,7 +359,7 @@
 .agent-avatar.expression-waiting circle[cx='35'][cy='35'],
 .agent-avatar.expression-idle circle[cx='65'][cy='35'],
 .agent-avatar.expression-waiting circle[cx='65'][cy='35'] {
-  animation: blink 4s ease-in-out infinite;
+  animation: blink 4s var(--ease-in-out) infinite;
 }
 
 /* ===== STATUS-BASED ANIMATIONS (from animations.css) ===== */
@@ -409,7 +409,7 @@
 
 /* Error aura - flicker */
 .agent-aura-error {
-  animation: aura-pulse-error 0.6s ease-in-out infinite;
+  animation: aura-pulse-error 0.6s var(--ease-in-out) infinite;
 }
 
 /* Success aura - brief bright pulse */

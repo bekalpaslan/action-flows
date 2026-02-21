@@ -31,9 +31,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: var(--space-4) var(--space-5);
   border-bottom: 1px solid var(--color-border, #3e3e4e);
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .evolution-settings-panel .settings-header h2 {
@@ -57,7 +57,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  transition: background-color 0.2s;
+  transition: background-color var(--duration-normal) var(--ease-in-out);
 }
 
 .evolution-settings-panel .settings-close-btn:hover {
@@ -66,14 +66,14 @@
 }
 
 .evolution-settings-panel .settings-content {
-  padding: 20px;
+  padding: var(--space-5);
   overflow-y: auto;
   flex: 1;
 }
 
 .evolution-settings-panel .setting-section {
-  margin-bottom: 24px;
-  padding-bottom: 24px;
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-6);
   border-bottom: 1px solid var(--color-border-subtle, #2e2e3e);
 }
 
@@ -88,11 +88,11 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--color-text-primary, #e0e0e0);
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 }
 
 .evolution-settings-panel .setting-label input[type="checkbox"] {
-  margin-right: 8px;
+  margin-right: var(--space-2);
   cursor: pointer;
 }
 
@@ -100,26 +100,26 @@
   font-size: 13px;
   color: var(--color-text-secondary, #a0a0a0);
   line-height: 1.5;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
 }
 
 /* Speed Options */
 .evolution-settings-panel .speed-options {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 12px;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
 }
 
 .evolution-settings-panel .speed-option {
   display: flex;
   align-items: flex-start;
-  padding: 12px;
+  padding: var(--space-3);
   border: 1px solid var(--color-border, #3e3e4e);
   border-radius: 4px;
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .evolution-settings-panel .speed-option:hover {
@@ -157,7 +157,7 @@
 
 /* Buttons */
 .evolution-settings-panel .btn-secondary {
-  padding: 8px 16px;
+  padding: var(--space-2) var(--space-4);
   background: var(--color-button-secondary-bg, #2e2e3e);
   border: 1px solid var(--color-border, #3e3e4e);
   border-radius: 4px;
@@ -179,15 +179,15 @@
 /* Current State Section */
 .evolution-settings-panel .state-section {
   background: rgba(255, 255, 255, 0.03);
-  padding: 16px;
+  padding: var(--space-4);
   border-radius: 4px;
 }
 
 .evolution-settings-panel .state-info {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
 }
 
 .evolution-settings-panel .state-item {
@@ -211,13 +211,13 @@
 .evolution-settings-panel .settings-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 20px;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
   border-top: 1px solid var(--color-border, #3e3e4e);
 }
 
 .evolution-settings-panel .footer-btn {
-  padding: 8px 20px;
+  padding: var(--space-2) var(--space-5);
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;

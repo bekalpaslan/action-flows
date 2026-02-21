@@ -46,7 +46,7 @@
   border-right: 1px solid var(--app-bg-tertiary);
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.2s;
+  transition: background-color var(--duration-normal) var(--ease-in-out);
   flex-shrink: 0;
   min-width: 0;
   max-width: 200px;
@@ -54,6 +54,12 @@
 
 .editor-tab:hover {
   background-color: rgba(50, 50, 51, 1);
+}
+
+.editor-tab:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .editor-tab.active {
@@ -91,13 +97,19 @@
   font-size: var(--text-xl);
   line-height: var(--leading-tight);
   border-radius: 3px;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color var(--duration-normal) var(--ease-in-out), color var(--duration-normal) var(--ease-in-out);
   flex-shrink: 0;
 }
 
 .tab-close-btn:hover {
   background-color: var(--app-bg-tertiary);
   color: var(--text-primary);
+}
+
+.tab-close-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .tab-scroll-btn {
@@ -109,13 +121,19 @@
   height: 35px;
   font-size: var(--text-xl);
   line-height: var(--leading-tight);
-  transition: background-color 0.2s;
+  transition: background-color var(--duration-normal) var(--ease-in-out);
   flex-shrink: 0;
   border-right: 1px solid var(--app-bg-tertiary);
 }
 
 .tab-scroll-btn:hover {
   background-color: rgba(50, 50, 51, 1);
+}
+
+.tab-scroll-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .tab-scroll-left {

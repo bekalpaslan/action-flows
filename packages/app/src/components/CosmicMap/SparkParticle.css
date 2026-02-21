@@ -27,7 +27,7 @@
   border-radius: 50%;
   background: radial-gradient(circle, var(--system-blue) 0%, transparent 70%);
   opacity: 0.6;
-  animation: sparkGlow 1.5s ease-in-out infinite;
+  animation: sparkGlow 1.5s var(--ease-in-out) infinite;
 }
 
 /* Core particle */
@@ -44,7 +44,7 @@
 /* Status variants */
 .spark-particle--spawning .spark-particle__glow {
   background: radial-gradient(circle, var(--system-purple) 0%, transparent 70%);
-  animation: sparkSpawning 1s ease-in-out infinite;
+  animation: sparkSpawning 1s var(--ease-in-out) infinite;
 }
 
 .spark-particle--spawning .spark-particle__core {
@@ -63,7 +63,7 @@
 
 .spark-particle--completing .spark-particle__glow {
   background: radial-gradient(circle, var(--system-green) 0%, transparent 70%);
-  animation: sparkCompleting 0.8s ease-out forwards;
+  animation: sparkCompleting 0.8s var(--ease-out) forwards;
 }
 
 .spark-particle--completing .spark-particle__core {
@@ -73,7 +73,7 @@
 
 .spark-particle--vanished {
   opacity: 0;
-  transition: opacity 0.3s ease-out;
+  transition: opacity var(--duration-slow) var(--ease-out);
 }
 
 /* Animations */

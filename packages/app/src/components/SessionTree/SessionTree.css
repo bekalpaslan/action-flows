@@ -13,7 +13,7 @@
   padding: var(--space-2) var(--space-3);
   background: transparent;
   border: none;
-  color: #808080;
+  color: var(--text-tertiary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -28,9 +28,9 @@
 }
 
 .session-tree-toggle:hover {
-  color: #b0b0b0;
+  color: var(--text-secondary);
   background: rgba(187, 134, 252, 0.05);
-  border-left-color: #bb86fc;
+  border-left-color: var(--system-purple);
 }
 
 .tree-chevron {
@@ -40,7 +40,7 @@
   width: 16px;
   height: 16px;
   font-size: var(--text-xs);
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) var(--ease-in-out);
   flex-shrink: 0;
 }
 
@@ -61,7 +61,7 @@
   flex-direction: column;
   max-height: 600px;
   overflow-y: auto;
-  border-left: 1px solid #303030;
+  border-left: 1px solid var(--panel-border-color-default);
   margin-left: var(--space-3);
 }
 
@@ -85,7 +85,7 @@
   padding: var(--space-2) 0.6rem;
   background: transparent;
   border: none;
-  color: #909090;
+  color: var(--text-tertiary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -99,14 +99,14 @@
 
 .session-button:hover {
   background: rgba(187, 134, 252, 0.06);
-  color: #b0b0b0;
+  color: var(--text-secondary);
   border-left-color: rgba(187, 134, 252, 0.4);
 }
 
 .session-button.attached {
   background: rgba(187, 134, 252, 0.1);
-  color: #bb86fc;
-  border-left-color: #bb86fc;
+  color: var(--system-purple);
+  border-left-color: var(--system-purple);
 }
 
 .session-button.attached:hover {
@@ -136,7 +136,7 @@
   background: rgba(187, 134, 252, 0.08);
   padding: 0.15rem 0.3rem;
   border-radius: 3px;
-  color: #bb86fc;
+  color: var(--system-purple);
   letter-spacing: 0.5px;
   font-weight: var(--font-medium);
 }
@@ -147,8 +147,8 @@
   justify-content: center;
   width: 14px;
   height: 14px;
-  background: #4caf50;
-  color: white;
+  background: var(--system-green);
+  color: var(--btn-text-primary);
   border-radius: 50%;
   font-size: var(--text-xs);
   font-weight: var(--font-bold);
@@ -175,17 +175,17 @@
 }
 
 .status-indicator.status-active {
-  background: #4caf50;
+  background: var(--system-green);
   box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
   animation: pulse-session-active 2s infinite;
 }
 
 .status-indicator.status-idle {
-  background: #ffc107;
+  background: var(--system-yellow);
 }
 
 .status-indicator.status-ended {
-  background: #757575;
+  background: var(--text-tertiary);
 }
 
 @keyframes pulse-session-active {
@@ -209,7 +209,7 @@
 /* Current Chain */
 .current-chain {
   font-size: var(--text-sm);
-  color: #9366ff;
+  color: var(--system-purple);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -221,7 +221,7 @@
 /* Session Timestamp */
 .session-timestamp {
   font-size: var(--text-xs);
-  color: #707070;
+  color: var(--text-quaternary);
   flex-shrink: 0;
   text-align: right;
 }
@@ -229,7 +229,7 @@
 /* Empty State */
 .session-tree-empty {
   padding: var(--space-4) var(--space-3);
-  color: #606060;
+  color: var(--text-quaternary);
   font-size: var(--text-sm);
   text-align: center;
 }
@@ -244,12 +244,12 @@
 }
 
 .session-tree-content::-webkit-scrollbar-thumb {
-  background: #353535;
+  background: var(--app-bg-tertiary);
   border-radius: 2px;
 }
 
 .session-tree-content::-webkit-scrollbar-thumb:hover {
-  background: #454545;
+  background: var(--app-bg-quaternary);
 }
 
 /* Responsive adjustments */

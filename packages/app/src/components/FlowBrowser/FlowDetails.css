@@ -58,6 +58,12 @@
   background: var(--glass-bg-light);
 }
 
+.flow-details__close:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .flow-details__loading {
   display: flex;
   align-items: center;
@@ -265,6 +271,12 @@
 .flow-details__execute-button:hover:not(:disabled) {
   opacity: 0.9;
   box-shadow: 0 0 12px rgba(10, 132, 255, 0.3);
+}
+
+.flow-details__execute-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .flow-details__execute-button:disabled {

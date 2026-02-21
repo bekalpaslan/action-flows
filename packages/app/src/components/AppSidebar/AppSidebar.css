@@ -12,6 +12,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding: 0;
   background-color: var(--panel-bg-base);
   border: 1px solid var(--panel-border-color-default);
   border-radius: var(--panel-radius);
@@ -253,7 +254,7 @@
    ============================================================================ */
 
 .app-sidebar__new-session-btn {
-  margin: 0 14px 8px;
+  margin: 0 14px var(--space-2);
   padding: 9px 14px;
   background: linear-gradient(135deg, var(--accent, #58a6ff), var(--purple, #a371f7));
   border: none;
@@ -264,8 +265,8 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.15s;
+  gap: var(--space-2);
+  transition: all var(--duration-fast);
   box-shadow: 0 2px 12px rgba(88, 166, 255, 0.15);
   flex-shrink: 0;
 }
@@ -389,7 +390,7 @@
 }
 
 .app-sidebar__nav-group-items.collapsed {
-  max-height: 0 !important;
+  max-height: 0;
   opacity: 0;
 }
 

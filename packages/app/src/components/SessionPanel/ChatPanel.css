@@ -20,7 +20,7 @@
 }
 
 .chat-panel.collapsed {
-  height: 32px !important;
+  height: 32px;
   flex: 0 0 auto;
 }
 
@@ -97,7 +97,7 @@
   height: 6px;
   background: var(--system-teal);
   border-radius: 50%;
-  animation: chat-pulse 2s ease-in-out infinite;
+  animation: chat-pulse 2s var(--ease-in-out) infinite;
 }
 
 @keyframes chat-pulse {
@@ -128,7 +128,7 @@
 }
 
 .chat-panel .collapse-icon {
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) var(--ease-in-out);
 }
 
 .chat-panel .collapse-icon.collapsed {
@@ -352,7 +352,7 @@
   border-radius: 12px;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  animation: chat-bubble-in 0.15s ease-out;
+  animation: chat-bubble-in var(--duration-fast) var(--ease-out);
 }
 
 @keyframes chat-bubble-in {
@@ -457,7 +457,7 @@
   flex-shrink: 0;
   width: 10px;
   font-size: var(--text-xs);
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) var(--ease-in-out);
   color: var(--text-tertiary);
 }
 
@@ -602,7 +602,7 @@
   height: 5px;
   background: var(--text-tertiary);
   border-radius: 50%;
-  animation: typing-bounce 1.4s ease-in-out infinite;
+  animation: typing-bounce 1.4s var(--ease-in-out) infinite;
 }
 
 .chat-panel__typing-dot:nth-child(2) {
@@ -716,20 +716,20 @@
 .chat-panel__quick-responses {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
   border-top: 1px solid var(--border-secondary, #333);
 }
 
 .chat-panel__quick-response-btn {
-  padding: 6px 12px;
+  padding: 6px var(--space-3);
   border-radius: 6px;
   border: 1px solid var(--border-primary, #555);
   background: var(--bg-secondary, #2a2a2a);
   color: var(--text-primary, #e0e0e0);
   cursor: pointer;
   font-size: 13px;
-  transition: background 0.15s;
+  transition: background var(--duration-fast) var(--ease-in-out);
 }
 
 .chat-panel__quick-response-btn:hover:not(:disabled) {
@@ -871,7 +871,7 @@
   width: 16px;
   height: 16px;
   opacity: 0.6;
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) var(--ease-in-out);
 }
 
 .chat-panel__model-selector-trigger[aria-expanded="true"] .chat-panel__model-selector-caret {

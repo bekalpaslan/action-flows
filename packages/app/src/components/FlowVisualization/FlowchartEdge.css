@@ -65,6 +65,12 @@
   stroke-width: 3;
 }
 
+.afw-flowchart-edge__path:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .afw-flowchart-edge__path--default:hover {
   stroke: var(--text-secondary);
 }

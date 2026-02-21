@@ -120,6 +120,12 @@
   transform: translateY(-2px);
 }
 
+.step-node:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .step-node.selected {
   border-color: var(--system-blue);
   box-shadow: 0 0 0 var(--space-0-5) rgba(10, 132, 255, 0.1);
@@ -366,6 +372,12 @@
   border-color: var(--text-tertiary);
 }
 
+.chain-dag-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .chain-dag-button.primary {
   background-color: var(--system-blue);
   color: white;
@@ -440,9 +452,9 @@
 }
 
 .error-message {
-  color: var(--system-red) !important;
+  color: var(--system-red);
   font-family: 'Monaco', 'Menlo', monospace;
-  font-size: var(--text-xs) !important;
+  font-size: var(--text-xs);
 }
 
 /* Legend */

@@ -1,10 +1,9 @@
 /**
  * CommandCenter - Living Universe command center bottom bar styles
  *
- * Cosmic-themed bottom bar with three main sections:
- * - Left: Command input field with submit button
- * - Middle: Session dropdown selector
- * - Right: Health status indicator
+ * Cosmic-themed bottom bar focused on session context:
+ * - Session dropdown selector
+ * - Health status indicator
  *
  * Uses cosmic design tokens for visual consistency with CosmicMap.
  */
@@ -27,120 +26,13 @@
   justify-content: center;
 }
 
-/* Control row wrapper (input, session, health) */
+/* Control row wrapper (session, health) */
 .command-center__controls {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: var(--gap);
   width: 100%;
-}
-
-/* ============================================================================
-   Input Section (Left)
-   ============================================================================ */
-
-.command-center__input-section {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 0 var(--space-3);
-  background: var(--input-bg-default);
-  border: var(--input-border-default);
-  border-radius: var(--btn-radius-md);
-  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
-}
-
-.command-center__input-section:hover {
-  background: var(--input-bg-hover);
-  border-color: var(--panel-border-color-strong);
-  box-shadow: var(--btn-glow-default);
-}
-
-.command-center__input-section:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring-color);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--focus-ring-glow);
-}
-
-.command-center__input-section:focus-within {
-  background: var(--input-bg-focus);
-  border-color: var(--input-border-focus);
-  box-shadow: var(--panel-glow-focus);
-}
-
-.command-center__input-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--cosmic-star-idle);
-  transition: color var(--duration-normal) var(--ease-in-out);
-}
-
-.command-center__input-section:focus-within .command-center__input-icon {
-  color: var(--system-blue);
-}
-
-.command-center__input {
-  flex: 1;
-  padding: var(--space-2) 0;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  font-size: var(--text-sm);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  outline: none;
-}
-
-.command-center__input::placeholder {
-  color: var(--text-tertiary);
-}
-
-.command-center__submit-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-1-5);
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  border-radius: var(--btn-radius-sm);
-  transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
-}
-
-.command-center__submit-btn:hover:not(:disabled) {
-  background: var(--btn-bg-tertiary);
-  color: var(--system-blue);
-}
-
-.command-center__submit-btn:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring-color);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--focus-ring-glow);
-}
-
-.command-center__submit-btn:active:not(:disabled) {
-  transform: scale(0.95);
-}
-
-.command-center__submit-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-/* ============================================================================
-   Ctrl+K Badge (DRIFT-010)
-   ============================================================================ */
-
-.command-center__kbd {
-  background: var(--surface2, #151d2b);
-  border: 1px solid var(--border, rgba(88,166,255,0.08));
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-family: 'SF Mono', monospace;
-  color: var(--text-dim, #6e7a8a);
 }
 
 /* ============================================================================
@@ -393,12 +285,8 @@
   }
 
   .command-center__controls {
-    flex-wrap: wrap;
+    justify-content: space-between;
     gap: var(--space-2);
-  }
-
-  .command-center__input-section {
-    flex: 1 1 100%;
   }
 
   .command-center__session-section {

@@ -18,7 +18,7 @@
   padding: var(--spacing-4);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   z-index: 9999;
-  animation: tooltip-fade-in 0.3s ease;
+  animation: tooltip-fade-in var(--duration-slow) var(--ease-in-out);
 }
 
 @keyframes tooltip-fade-in {
@@ -71,11 +71,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease;
+  transition: color var(--duration-normal) var(--ease-in-out);
 }
 
 .tooltip-close:hover {
   color: var(--text-primary);
+}
+
+.tooltip-close:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .onboarding-tooltip h3 {
@@ -115,6 +121,12 @@
   color: var(--text-primary);
 }
 
+.btn-skip:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .step-indicator {
   font-size: var(--font-size-sm);
   color: var(--text-tertiary);
@@ -135,7 +147,7 @@
   cursor: pointer;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  transition: background 0.2s ease;
+  transition: background var(--duration-normal) var(--ease-in-out);
 }
 
 .btn-prev {
@@ -148,6 +160,18 @@
   background: var(--panel-bg-active);
 }
 
+.btn-prev:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .btn-next:hover {
   background: var(--system-accent-hover);
+}
+
+.btn-next:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }

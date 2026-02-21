@@ -14,9 +14,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Session, ButtonDefinition, ButtonId } from '@afw/shared';
 import { InlineButtons } from '../InlineButtons';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { ErrorModal } from '../ErrorModal';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { useErrorAnnouncements } from '../../hooks/useErrorAnnouncements';
 import './ConversationPanel.css';
 
@@ -96,15 +94,6 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
   const { unreadErrors, dismissError, handleRecoveryAction } = useErrorAnnouncements(session.id);
   const [displayedErrorIndex, setDisplayedErrorIndex] = useState(0);
   const currentError = unreadErrors.length > 0 ? unreadErrors[displayedErrorIndex] : null;
-
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'ConversationPanel',
-    getContext: () => ({
-      sessionId: session.id,
-      messageCount: messages.length,
-      conversationState: session.conversationState,
-    }),
-  });
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -235,7 +224,6 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
               Awaiting Input
             </span>
           )}
-          <DiscussButton componentName="ConversationPanel" onClick={openDialog} size="small" />
         </div>
       </div>
 
@@ -322,17 +310,6 @@ export function ConversationPanel({ session, onSubmitInput }: ConversationPanelP
           </div>
         )}
       </div>
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="ConversationPanel"
-        componentContext={{
-          sessionId: session.id,
-          messageCount: messages.length,
-          conversationState: session.conversationState,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
 
       <ErrorModal
         isOpen={currentError !== null}

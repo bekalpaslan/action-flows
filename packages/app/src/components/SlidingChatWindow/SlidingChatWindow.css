@@ -43,9 +43,21 @@
   margin-left: calc(-1 * var(--gap));
 }
 
+/* Collapsed state: thin vertical strip on the right edge */
+.sliding-chat-window--collapsed {
+  width: 32px;
+  min-width: 32px;
+  overflow: hidden;
+  border-left: 1px solid var(--separator-base);
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  border-radius: 0;
+}
+
 /* Embedded mode: full-width panel without sliding mechanics */
 .sliding-chat-window--embedded {
-  width: 100% !important;
+  width: 100%;
   border-left: none;
   transition: none;
 }
@@ -171,6 +183,36 @@
   background-color: var(--color-bg-active);
 }
 
+.sliding-chat-window__collapse-btn {
+  flex: 0 0 auto;
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm, 3px);
+  transition: color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.sliding-chat-window__collapse-btn:hover {
+  color: var(--text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+.sliding-chat-window__collapse-btn:focus-visible {
+  outline: 2px solid var(--color-focus-ring, #0066cc);
+  outline-offset: 2px;
+}
+
+.sliding-chat-window__collapse-btn:active {
+  background-color: var(--color-bg-active);
+}
+
 .sliding-chat-window__tabs {
   display: flex;
   border-bottom: 1px solid var(--color-border);
@@ -252,7 +294,7 @@
 /* Responsive: Full width on small screens when open */
 @media (max-width: 768px) {
   .sliding-chat-window {
-    width: 100% !important;
+    width: 100%;
   }
 }
 
@@ -263,7 +305,8 @@
   }
 
   .sliding-chat-window__minimize-btn,
-  .sliding-chat-window__close-btn {
+  .sliding-chat-window__close-btn,
+  .sliding-chat-window__collapse-btn {
     transition-duration: 0ms;
   }
 
@@ -272,6 +315,10 @@
   }
 
   .sliding-chat-window__tab {
+    transition-duration: 0ms;
+  }
+
+  .sliding-chat-window__expand-btn {
     transition-duration: 0ms;
   }
 }
@@ -297,4 +344,42 @@
 .sliding-chat-window__resize-handle:focus-visible {
   outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, var(--system-blue));
   outline-offset: var(--focus-ring-offset, 2px);
+}
+
+/* Collapse Strip: Shown when chat is collapsed */
+.sliding-chat-window__collapse-strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: var(--panel-bg-base, var(--app-bg-secondary));
+  border-left: 1px solid var(--separator-base);
+}
+
+.sliding-chat-window__expand-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: var(--space-2, 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm, 3px);
+  transition: color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.sliding-chat-window__expand-btn:hover {
+  color: var(--text-primary);
+  background-color: var(--color-bg-hover);
+}
+
+.sliding-chat-window__expand-btn:focus-visible {
+  outline: 2px solid var(--color-focus-ring, #0066cc);
+  outline-offset: 2px;
+}
+
+.sliding-chat-window__expand-btn:active {
+  background-color: var(--color-bg-active);
 }

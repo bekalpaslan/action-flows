@@ -29,6 +29,12 @@
   transform: translateY(-1px);
 }
 
+.inline-button-item:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .inline-button-item:active:not(:disabled) {
   transform: translateY(0);
 }

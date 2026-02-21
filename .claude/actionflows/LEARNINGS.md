@@ -251,6 +251,14 @@
 - **Fix:** Consider adding a "contract alignment score" alongside runtime health. Runtime = parsing success rate. Alignment = spec-type-schema-parser agreement at field level. Both 100% = true harmony.
 - **Status:** Open (insight logged, no code change yet)
 
+### L029: Code Agent Remap Counts Should Come From Diff, Not Manual Tally
+- **Date:** 2026-02-21
+- **From:** review/ (sonnet) during wire-brand-palette-to-system-tokens chain
+- **Issue:** Code agent applied 16 token remaps but reported 14 in the changes.md summary. The `--app-sidebar-accent-active` token was correctly remapped but omitted from the table count because it lives at line 525 (AppSidebar section) rather than in the top-level token group.
+- **Root Cause:** Agent counted remaps mentally by group rather than via grep/diff verification. Physical separation of a token in the file led to it being excluded from the mental count.
+- **Fix:** When code agents produce changes.md logs with a remap count, they should derive the count from a post-change `grep -c "var(--palette-"` or equivalent diff line count — not manual tallying.
+- **Status:** Closed (lesson logged)
+
 ### L028: Code Agent Misapplies "X wins over Y" Conflict Resolution Instructions
 - **Date:** 2026-02-21
 - **From:** code/framework/ (haiku) during template-content-fixes chain

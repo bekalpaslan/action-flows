@@ -72,6 +72,12 @@
   filter: brightness(1.1);
 }
 
+.dossier-view__action-btn--primary:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .dossier-view__action-btn--danger {
   background: var(--color-error);
   color: white;
@@ -79,6 +85,12 @@
 
 .dossier-view__action-btn--danger:hover:not(:disabled) {
   filter: brightness(1.1);
+}
+
+.dossier-view__action-btn--danger:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .dossier-view__header-meta {
@@ -161,10 +173,16 @@
   background: var(--glass-bg-light);
 }
 
+.dossier-view__section-header:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .dossier-view__section-icon {
   font-size: var(--text-xs);
   color: var(--text-tertiary);
-  transition: transform 0.2s var(--ease-apple);
+  transition: transform var(--duration-normal) var(--ease-apple);
 }
 
 .dossier-view__section-title {

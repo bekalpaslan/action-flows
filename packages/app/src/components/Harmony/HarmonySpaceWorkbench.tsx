@@ -1,518 +1,295 @@
-/**
- * HarmonySpaceWorkbench Component
- * Dashboard for monitoring contract compliance and harmony detection
- *
- * Features:
- * - Displays contract compliance status via HarmonyPanel
- * - Shows drift detection results
- * - Harmony score visualization
- * - Manual harmony check triggering
- * - Real-time updates via WebSocket
- *
- * Layout:
- * - Header bar with global harmony score and refresh controls
- * - Main content with HarmonyPanel and drift detection results
- * - Quick actions for triggering checks
- */
-
-import React, { useState, useCallback, useMemo } from 'react';
-import type { SessionId, ProjectId, HarmonyCheck } from '@afw/shared';
-import { HarmonyPanel } from '../HarmonyPanel/HarmonyPanel';
+import { useCallback, useMemo, useState } from 'react';
+import type { HarmonyCheck, ProjectId, SessionId } from '@afw/shared';
 import { HarmonyBadge } from '../HarmonyBadge/HarmonyBadge';
-import { useHarmonyMetrics } from '../../hooks/useHarmonyMetrics';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { OrchestratorButton } from '../OrchestratorButton';
-import { HarmonyHealthDashboard } from '../HarmonyHealthDashboard';
+import { BreadcrumbBar } from '../shared/BreadcrumbBar';
+import { useHarmonyHealth } from '../../hooks/useHarmonyHealth';
+import { useHarmonyMetrics } from '../../hooks/useHarmonyMetrics';
 import './HarmonySpaceWorkbench.css';
 
-/**
- * View mode for the workbench
- */
-type ViewMode = 'session' | 'project' | 'global';
+type RecommendationSeverity = 'low' | 'medium' | 'high' | 'critical';
 
-/**
- * Tab mode for the workbench
- */
-type TabMode = 'metrics' | 'health';
+type GateSummary = {
+  gateId: string;
+  name: string;
+  score: number;
+  violations: number;
+  trend: string;
+};
 
-/**
- * Drift detection result type
- */
-interface DriftResult {
-  id: string;
-  timestamp: string;
-  formatName: string;
-  expectedFields: string[];
-  actualFields: string[];
-  driftedFields: string[];
-  severity: 'low' | 'medium' | 'high';
-  recommendation: string;
-}
+const SEVERITY_ORDER: Record<RecommendationSeverity, number> = {
+  low: 1,
+  medium: 2,
+  high: 3,
+  critical: 4,
+};
+
+const formatTimestamp = (timestamp?: string): string => {
+  if (!timestamp) return 'Never';
+  return new Date(timestamp).toLocaleString();
+};
+
+const getScoreTone = (score: number): 'healthy' | 'warning' | 'critical' => {
+  if (score >= 90) return 'healthy';
+  if (score >= 70) return 'warning';
+  return 'critical';
+};
 
 export interface HarmonySpaceWorkbenchProps {
-  /** Active session ID for session-level monitoring */
   sessionId?: SessionId;
-
-  /** Active project ID for project-level monitoring */
   projectId?: ProjectId;
-
-  /** Callback when a violation is clicked */
   onViolationClick?: (check: HarmonyCheck) => void;
-
-  /** Callback when triggering a manual harmony check */
   onTriggerCheck?: () => void;
 }
 
-/**
- * HarmonyWorkbench - Dashboard for harmony monitoring and contract compliance
- */
 export function HarmonySpaceWorkbench({
   sessionId,
   projectId,
   onViolationClick,
   onTriggerCheck,
-}: HarmonySpaceWorkbenchProps): React.ReactElement {
-  // Reserved for future: wire to HarmonyPanel when it supports violation callbacks
-  void onViolationClick;
+}: HarmonySpaceWorkbenchProps) {
+  const [copiedFlow, setCopiedFlow] = useState<string | null>(null);
 
-  // State
-  const [viewMode, setViewMode] = useState<ViewMode>(
-    sessionId ? 'session' : projectId ? 'project' : 'global'
-  );
-  const [tab, setTab] = useState<TabMode>('metrics');
-  const [manualCheckText, setManualCheckText] = useState('');
-  const [isCheckingManually, setIsCheckingManually] = useState(false);
-  const [manualCheckResult, setManualCheckResult] = useState<{
-    result: 'valid' | 'degraded' | 'violation';
-    parsedFormat: string | null;
-    missingFields?: string[];
-  } | null>(null);
-  const [showManualCheck, setShowManualCheck] = useState(false);
+  const metricsTarget = sessionId ?? projectId ?? null;
+  const metricsTargetType: 'session' | 'project' = sessionId ? 'session' : 'project';
 
-  // Determine target based on view mode
-  const target = useMemo(() => {
-    if (viewMode === 'session' && sessionId) return sessionId;
-    if (viewMode === 'project' && projectId) return projectId;
-    return projectId || sessionId || ('' as SessionId);
-  }, [viewMode, sessionId, projectId]);
+  const {
+    metrics,
+    loading: metricsLoading,
+    error: metricsError,
+    refresh: refreshMetrics,
+  } = useHarmonyMetrics((metricsTarget ?? '') as SessionId | ProjectId, metricsTargetType);
 
-  const targetType = viewMode === 'session' ? 'session' : 'project';
+  const {
+    health,
+    loading: healthLoading,
+    error: healthError,
+    refresh: refreshHealth,
+  } = useHarmonyHealth(sessionId ?? null, { pollInterval: 10000 });
 
-  // Use harmony metrics hook (only when we have a valid target)
-  const { metrics, loading, error, refresh } = useHarmonyMetrics(
-    target || ('' as SessionId),
-    targetType
-  );
+  const harmonyScore = metrics?.harmonyPercentage ?? health?.overall ?? 100;
+  const scoreTone = getScoreTone(harmonyScore);
+  const hasMetricsScope = Boolean(metricsTarget);
 
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'HarmonySpaceWorkbench',
-    getContext: () => ({
-      harmonyStatus: metrics?.harmonyPercentage ?? 100,
-      checksCount: metrics?.formatBreakdown ? Object.keys(metrics.formatBreakdown).length : 0,
-      viewMode,
-    }),
-  });
+  const gateHealth = useMemo<GateSummary[]>(() => {
+    return Object.entries(health?.byGate ?? {})
+      .map(([gateId, gate]) => {
+        const enrichedGate = gate as typeof gate & {
+          name?: string;
+          violationCount?: number;
+        };
+        return {
+          gateId,
+          name: enrichedGate.name || gateId,
+          score: enrichedGate.score ?? 100,
+          violations: enrichedGate.violations ?? enrichedGate.violationCount ?? 0,
+          trend: enrichedGate.trend ?? 'stable',
+        };
+      })
+      .sort((a, b) => a.score - b.score)
+      .slice(0, 6);
+  }, [health]);
 
-  // Mock drift detection results (to be replaced with actual API call)
-  const [driftResults] = useState<DriftResult[]>([
-    {
-      id: 'drift-1',
-      timestamp: new Date().toISOString(),
-      formatName: 'ChainCompilation',
-      expectedFields: ['title', 'steps', 'status'],
-      actualFields: ['title', 'steps'],
-      driftedFields: ['status'],
-      severity: 'medium',
-      recommendation: 'Add status field to chain compilation output',
-    },
-  ]);
+  const focusRecommendations = useMemo(() => {
+    return [...(health?.healingRecommendations ?? [])]
+      .sort((a, b) => {
+        const aSeverity = (a.severity as RecommendationSeverity) || 'low';
+        const bSeverity = (b.severity as RecommendationSeverity) || 'low';
+        return (
+          SEVERITY_ORDER[bSeverity] - SEVERITY_ORDER[aSeverity] ||
+          (b.violationCount ?? 0) - (a.violationCount ?? 0)
+        );
+      })
+      .slice(0, 4);
+  }, [health]);
 
-  /**
-   * Handle manual harmony check
-   */
-  const handleManualCheck = useCallback(async () => {
-    if (!manualCheckText.trim() || !target) return;
+  const isLoading = (hasMetricsScope && metricsLoading) || healthLoading;
+  const error = metricsError || healthError;
 
-    setIsCheckingManually(true);
-    setManualCheckResult(null);
+  const refreshAll = useCallback(async () => {
+    await Promise.all([refreshMetrics(), refreshHealth()]);
+  }, [refreshMetrics, refreshHealth]);
 
-    try {
-      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-      const response = await fetch(`${apiBase}/harmony/${target}/check`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: manualCheckText }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Check failed: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      setManualCheckResult({
-        result: data.result,
-        parsedFormat: data.parsed,
-        missingFields: data.check?.missingFields,
-      });
-
-      // Refresh metrics after check
-      refresh();
-    } catch (err) {
-      console.error('Manual check failed:', err);
-      setManualCheckResult({
-        result: 'violation',
-        parsedFormat: null,
-        missingFields: undefined,
-      });
-    } finally {
-      setIsCheckingManually(false);
-    }
-  }, [manualCheckText, target, refresh]);
-
-  /**
-   * Handle triggering a full harmony check
-   */
-  const handleTriggerFullCheck = useCallback(() => {
+  const triggerCheck = useCallback(async () => {
     if (onTriggerCheck) {
       onTriggerCheck();
     }
-    refresh();
-  }, [onTriggerCheck, refresh]);
+    await refreshAll();
+  }, [onTriggerCheck, refreshAll]);
 
-  /**
-   * Get severity color class
-   */
-  const getSeverityClass = (severity: 'low' | 'medium' | 'high'): string => {
-    switch (severity) {
-      case 'high':
-        return 'harmony-workbench__drift-item--high';
-      case 'medium':
-        return 'harmony-workbench__drift-item--medium';
-      case 'low':
-        return 'harmony-workbench__drift-item--low';
-    }
-  };
-
-  /**
-   * Get result icon
-   */
-  const getResultIcon = (result: 'valid' | 'degraded' | 'violation'): string => {
-    switch (result) {
-      case 'valid':
-        return '✓';
-      case 'degraded':
-        return '⚠';
-      case 'violation':
-        return '✗';
-    }
-  };
-
-  /**
-   * Get result color class
-   */
-  const getResultClass = (result: 'valid' | 'degraded' | 'violation'): string => {
-    switch (result) {
-      case 'valid':
-        return 'harmony-workbench__result--valid';
-      case 'degraded':
-        return 'harmony-workbench__result--degraded';
-      case 'violation':
-        return 'harmony-workbench__result--violation';
-    }
-  };
-
-  // Compute global harmony score
-  const harmonyScore = metrics?.harmonyPercentage ?? 100;
+  const copyFlow = useCallback(async (flow: string) => {
+    await navigator.clipboard.writeText(flow);
+    setCopiedFlow(flow);
+    setTimeout(() => setCopiedFlow((current) => (current === flow ? null : current)), 1600);
+  }, []);
 
   return (
-    <div className="harmony-workbench">
-      {/* Header Bar */}
+    <div className="harmony-workbench" data-testid="harmony-workbench">
       <header className="harmony-workbench__header">
-        <div className="harmony-workbench__header-left">
-          <h1 className="harmony-workbench__title">Harmony Dashboard</h1>
-          <DiscussButton componentName="HarmonyWorkbench" onClick={openDialog} size="small" />
-          <div className="harmony-workbench__subtitle">
-            Contract compliance monitoring and drift detection
-          </div>
+        <div className="harmony-workbench__breadcrumb-wrap">
+          <BreadcrumbBar
+            segments={[
+              { label: 'Harmony' },
+            ]}
+          />
+          <p className="harmony-workbench__subtitle">
+            Last update: {formatTimestamp(health?.timestamp || metrics?.lastCheck)}
+          </p>
         </div>
 
-        <div className="harmony-workbench__header-center">
-          <div className="harmony-workbench__score-display">
-            <HarmonyBadge
-              percentage={harmonyScore}
-              showLabel
-              size="large"
-              onClick={refresh}
-            />
-          </div>
-        </div>
+        <div className="harmony-workbench__header-actions">
+          <HarmonyBadge percentage={harmonyScore} size="large" showLabel />
 
-        <div className="harmony-workbench__header-right">
-          {/* Tab Selector */}
-          <div className="harmony-workbench__tab-group">
-            <button
-              className={`harmony-workbench__view-btn ${tab === 'metrics' ? 'harmony-workbench__view-btn--active' : ''}`}
-              onClick={() => setTab('metrics')}
-            >
-              Metrics
-            </button>
-            <button
-              className={`harmony-workbench__view-btn ${tab === 'health' ? 'harmony-workbench__view-btn--active' : ''}`}
-              onClick={() => setTab('health')}
-            >
-              Health
-            </button>
-          </div>
-
-          {/* View Mode Selector */}
-          <div className="harmony-workbench__view-selector">
-            {sessionId && (
-              <button
-                className={`harmony-workbench__view-btn ${viewMode === 'session' ? 'harmony-workbench__view-btn--active' : ''}`}
-                onClick={() => setViewMode('session')}
-              >
-                Session
-              </button>
-            )}
-            {projectId && (
-              <button
-                className={`harmony-workbench__view-btn ${viewMode === 'project' ? 'harmony-workbench__view-btn--active' : ''}`}
-                onClick={() => setViewMode('project')}
-              >
-                Project
-              </button>
-            )}
-            <button
-              className={`harmony-workbench__view-btn ${viewMode === 'global' ? 'harmony-workbench__view-btn--active' : ''}`}
-              onClick={() => setViewMode('global')}
-            >
-              Global
-            </button>
-          </div>
-
-          {/* Actions */}
           <OrchestratorButton source="harmony-recheck" context={{ action: 'recheck-harmony' }}>
-            <button
-              className="harmony-workbench__action-btn harmony-workbench__action-btn--primary"
-              onClick={handleTriggerFullCheck}
-            >
-              Re-check Harmony
+            <button className="harmony-workbench__button harmony-workbench__button--primary" onClick={triggerCheck}>
+              Re-check
             </button>
           </OrchestratorButton>
-          <button
-            className="harmony-workbench__action-btn"
-            onClick={() => setShowManualCheck(!showManualCheck)}
-          >
-            {showManualCheck ? 'Hide' : 'Manual Check'}
+
+          <button className="harmony-workbench__button" onClick={refreshAll}>
+            Refresh
           </button>
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="harmony-workbench__content">
-        {/* Metrics Tab */}
-        {tab === 'metrics' && (
-          <>
-            {/* Left Column: HarmonyPanel */}
-            <div className="harmony-workbench__panel harmony-workbench__panel--main">
-              {target ? (
-                <HarmonyPanel
-                  target={target}
-                  targetType={targetType}
-                  className="harmony-workbench__harmony-panel"
-                />
-              ) : (
-                <div className="harmony-workbench__empty-state">
-                  <h3>No Target Selected</h3>
-                  <p>Select a session or project to view harmony metrics.</p>
-                </div>
-              )}
-            </div>
-
-            {/* Right Column: Drift Detection + Manual Check */}
-            <div className="harmony-workbench__sidebar">
-              {/* Manual Check Panel */}
-              {showManualCheck && (
-                <div className="harmony-workbench__panel harmony-workbench__panel--manual">
-                  <h3 className="harmony-workbench__panel-title">Manual Harmony Check</h3>
-                  <p className="harmony-workbench__panel-description">
-                    Paste orchestrator output to check contract compliance.
-                  </p>
-
-                  <textarea
-                    className="harmony-workbench__manual-input"
-                    placeholder="Paste orchestrator output here..."
-                    value={manualCheckText}
-                    onChange={(e) => setManualCheckText(e.target.value)}
-                    rows={6}
-                  />
-
-                  <div className="harmony-workbench__manual-actions">
-                    <button
-                      className="harmony-workbench__action-btn harmony-workbench__action-btn--primary"
-                      onClick={handleManualCheck}
-                      disabled={!manualCheckText.trim() || isCheckingManually}
-                    >
-                      {isCheckingManually ? 'Checking...' : 'Check Output'}
-                    </button>
-                    <button
-                      className="harmony-workbench__action-btn"
-                      onClick={() => {
-                        setManualCheckText('');
-                        setManualCheckResult(null);
-                      }}
-                    >
-                      Clear
-                    </button>
-                  </div>
-
-                  {/* Manual Check Result */}
-                  {manualCheckResult && (
-                    <div
-                      className={`harmony-workbench__manual-result ${getResultClass(manualCheckResult.result)}`}
-                    >
-                      <div className="harmony-workbench__result-header">
-                        <span className="harmony-workbench__result-icon">
-                          {getResultIcon(manualCheckResult.result)}
-                        </span>
-                        <span className="harmony-workbench__result-label">
-                          {manualCheckResult.result.toUpperCase()}
-                        </span>
-                      </div>
-
-                      {manualCheckResult.parsedFormat && (
-                        <div className="harmony-workbench__result-format">
-                          Format: {manualCheckResult.parsedFormat}
-                        </div>
-                      )}
-
-                      {manualCheckResult.missingFields &&
-                        manualCheckResult.missingFields.length > 0 && (
-                          <div className="harmony-workbench__result-missing">
-                            Missing fields: {manualCheckResult.missingFields.join(', ')}
-                          </div>
-                        )}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Drift Detection Panel */}
-              <div className="harmony-workbench__panel harmony-workbench__panel--drift">
-                <h3 className="harmony-workbench__panel-title">Drift Detection</h3>
-                <p className="harmony-workbench__panel-description">
-                  Schema changes detected between contract versions.
-                </p>
-
-                {driftResults.length === 0 ? (
-                  <div className="harmony-workbench__drift-empty">
-                    <span className="harmony-workbench__drift-icon">✓</span>
-                    <span>No drift detected</span>
-                  </div>
-                ) : (
-                  <div className="harmony-workbench__drift-list">
-                    {driftResults.map((drift) => (
-                      <div
-                        key={drift.id}
-                        className={`harmony-workbench__drift-item ${getSeverityClass(drift.severity)}`}
-                      >
-                        <div className="harmony-workbench__drift-header">
-                          <span className="harmony-workbench__drift-format">
-                            {drift.formatName}
-                          </span>
-                          <span className="harmony-workbench__drift-severity">
-                            {drift.severity}
-                          </span>
-                        </div>
-
-                        <div className="harmony-workbench__drift-fields">
-                          <strong>Drifted:</strong>{' '}
-                          {drift.driftedFields.join(', ') || 'None'}
-                        </div>
-
-                        <div className="harmony-workbench__drift-recommendation">
-                          {drift.recommendation}
-                        </div>
-
-                        <div className="harmony-workbench__drift-timestamp">
-                          {new Date(drift.timestamp).toLocaleString()}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Contract Status */}
-              <div className="harmony-workbench__panel harmony-workbench__panel--contract">
-                <h3 className="harmony-workbench__panel-title">Contract Status</h3>
-
-                <div className="harmony-workbench__contract-info">
-                  <div className="harmony-workbench__contract-row">
-                    <span className="harmony-workbench__contract-label">Version:</span>
-                    <span className="harmony-workbench__contract-value">1.0.0</span>
-                  </div>
-                  <div className="harmony-workbench__contract-row">
-                    <span className="harmony-workbench__contract-label">
-                      Registered Formats:
-                    </span>
-                    <span className="harmony-workbench__contract-value">
-                      {metrics?.formatBreakdown
-                        ? Object.keys(metrics.formatBreakdown).length
-                        : 0}
-                    </span>
-                  </div>
-                  <div className="harmony-workbench__contract-row">
-                    <span className="harmony-workbench__contract-label">Last Check:</span>
-                    <span className="harmony-workbench__contract-value">
-                      {metrics?.lastCheck
-                        ? new Date(metrics.lastCheck).toLocaleString()
-                        : 'Never'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Health Tab — system-wide, no target required */}
-        {tab === 'health' && (
-          <HarmonyHealthDashboard />
-        )}
-      </div>
-
-      {/* Loading Overlay */}
-      {loading && (
-        <div className="harmony-workbench__loading-overlay">
-          <div className="harmony-workbench__spinner">Loading harmony data...</div>
-        </div>
-      )}
-
-      {/* Error Display */}
       {error && (
-        <div className="harmony-workbench__error-banner">
-          <span className="harmony-workbench__error-icon">!</span>
-          <span className="harmony-workbench__error-message">{error}</span>
-          <button className="harmony-workbench__error-dismiss" onClick={refresh}>
-            Retry
-          </button>
+        <div className="harmony-workbench__banner harmony-workbench__banner--error">
+          <span>{error}</span>
+          <button className="harmony-workbench__button" onClick={refreshAll}>Retry</button>
         </div>
       )}
 
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="HarmonyWorkbench"
-        componentContext={{
-          harmonyStatus: metrics?.harmonyPercentage ?? 100,
-          checksCount: metrics?.formatBreakdown ? Object.keys(metrics.formatBreakdown).length : 0,
-          viewMode,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
+      <section className="harmony-workbench__kpis">
+        <article className={`harmony-workbench__kpi harmony-workbench__kpi--${scoreTone}`}>
+          <span className="harmony-workbench__kpi-label">Harmony Score</span>
+          <strong className="harmony-workbench__kpi-value">{Math.round(harmonyScore)}%</strong>
+        </article>
+        <article className="harmony-workbench__kpi">
+          <span className="harmony-workbench__kpi-label">Total Checks</span>
+          <strong className="harmony-workbench__kpi-value">{metrics?.totalChecks ?? 0}</strong>
+        </article>
+        <article className="harmony-workbench__kpi">
+          <span className="harmony-workbench__kpi-label">Violations</span>
+          <strong className="harmony-workbench__kpi-value">{metrics?.violationCount ?? 0}</strong>
+        </article>
+        <article className="harmony-workbench__kpi">
+          <span className="harmony-workbench__kpi-label">24h Gate Violations</span>
+          <strong className="harmony-workbench__kpi-value">{health?.violations24h ?? 0}</strong>
+        </article>
+      </section>
+
+      <main className="harmony-workbench__grid">
+        <section className="harmony-workbench__card">
+          <div className="harmony-workbench__card-head">
+            <h2>Action Queue</h2>
+            <span>{focusRecommendations.length} items</span>
+          </div>
+
+          {focusRecommendations.length === 0 ? (
+            <p className="harmony-workbench__empty">No urgent healing actions right now.</p>
+          ) : (
+            <ul className="harmony-workbench__list">
+              {focusRecommendations.map((rec, index) => (
+                <li key={`${rec.suggestedFlow}-${index}`} className="harmony-workbench__list-item">
+                  <div>
+                    <div className="harmony-workbench__item-title">{rec.reason || rec.pattern}</div>
+                    <div className="harmony-workbench__item-meta">
+                      {rec.severity?.toUpperCase() || 'LOW'}
+                      {' · '}
+                      {rec.violationCount ?? 0} affected
+                    </div>
+                  </div>
+                  <button className="harmony-workbench__button" onClick={() => copyFlow(rec.suggestedFlow)}>
+                    {copiedFlow === rec.suggestedFlow ? 'Copied' : 'Copy flow'}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section className="harmony-workbench__card">
+          <div className="harmony-workbench__card-head">
+            <h2>Gate Risk</h2>
+            <span>Lowest scores first</span>
+          </div>
+
+          {gateHealth.length === 0 ? (
+            <p className="harmony-workbench__empty">No gate health data yet.</p>
+          ) : (
+            <ul className="harmony-workbench__gate-list">
+              {gateHealth.map((gate) => (
+                <li key={gate.gateId}>
+                  <div className="harmony-workbench__gate-row">
+                    <span className="harmony-workbench__gate-name">{gate.name}</span>
+                    <span className="harmony-workbench__gate-score">{gate.score}%</span>
+                  </div>
+                  <div className="harmony-workbench__meter" role="presentation">
+                    <div className="harmony-workbench__meter-fill" style={{ width: `${Math.max(0, Math.min(100, gate.score))}%` }} />
+                  </div>
+                  <div className="harmony-workbench__item-meta">
+                    {gate.violations} violations · trend {gate.trend}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section className="harmony-workbench__card harmony-workbench__card--wide">
+          <div className="harmony-workbench__card-head">
+            <h2>Recent Violations</h2>
+            <span>{metrics?.recentViolations?.length ?? 0} recent</span>
+          </div>
+
+          {!hasMetricsScope && (
+            <p className="harmony-workbench__empty">
+              Attach a session or project to load violation-level harmony metrics.
+            </p>
+          )}
+
+          {hasMetricsScope && (metrics?.recentViolations?.length ?? 0) === 0 && (
+            <p className="harmony-workbench__empty">No recent violations.</p>
+          )}
+
+          {hasMetricsScope && (metrics?.recentViolations?.length ?? 0) > 0 && (
+            <ul className="harmony-workbench__list">
+              {metrics?.recentViolations.map((violation) => (
+                <li
+                  key={violation.id}
+                  className="harmony-workbench__list-item harmony-workbench__list-item--interactive"
+                  onClick={() => onViolationClick?.(violation)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      onViolationClick?.(violation);
+                    }
+                  }}
+                >
+                  <div>
+                    <div className="harmony-workbench__item-title">
+                      {violation.parsedFormat ?? 'Unknown format'}
+                    </div>
+                    <div className="harmony-workbench__item-meta">
+                      {formatTimestamp(violation.timestamp)}
+                      {violation.missingFields?.length ? ` · missing: ${violation.missingFields.join(', ')}` : ''}
+                    </div>
+                  </div>
+                  <span className="harmony-workbench__pill">Violation</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </main>
+
+      {isLoading && (
+        <div className="harmony-workbench__banner">
+          Loading harmony telemetry...
+        </div>
+      )}
     </div>
   );
 }

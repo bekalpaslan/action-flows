@@ -16,8 +16,8 @@
   font-family: var(--font-sans);
 }
 
-/* Return to Universe button */
-.workbench-layout__return-to-universe {
+/* Return to Map button */
+.workbench-layout__return-to-map {
   position: fixed;
   top: var(--space-5);
   right: var(--space-5);
@@ -31,28 +31,28 @@
   font-weight: var(--font-medium);
   cursor: pointer;
   box-shadow: var(--panel-glow-default);
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: background-color var(--duration-normal) var(--ease-in-out), border-color var(--duration-normal) var(--ease-in-out), box-shadow var(--duration-normal) var(--ease-in-out), transform var(--duration-normal) var(--ease-in-out);
 }
 
-.workbench-layout__return-to-universe:hover {
+.workbench-layout__return-to-map:hover {
   background: var(--panel-bg-hover);
   border-color: var(--system-blue);
   box-shadow: 0 0 var(--space-3) var(--glow-color-accent);
   transform: translateY(-var(--space-px));
 }
 
-.workbench-layout__return-to-universe:focus-visible {
+.workbench-layout__return-to-map:focus-visible {
   outline: 2px solid var(--system-blue);
   outline-offset: 2px;
 }
 
-.workbench-layout__return-to-universe:active {
+.workbench-layout__return-to-map:active {
   transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .workbench-layout__return-to-universe {
-    transition: background-color 0.15s linear, border-color 0.15s linear;
+  .workbench-layout__return-to-map {
+    transition: background-color var(--duration-fast) var(--ease-linear), border-color var(--duration-fast) var(--ease-linear);
   }
 }
 
@@ -69,7 +69,7 @@
 }
 
 /* ============================================================================
- * Workbench Panel (Layer 3 - contains toolbar + star content)
+ * Workbench Panel (Layer 3 - contains toolbar + workbench content)
  * Chat window is now a sibling in main-content, not a child
  * ============================================================================ */
 

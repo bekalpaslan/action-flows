@@ -14,8 +14,8 @@
 }
 
 .diff-view-container {
-  background-color: #1e1e1e;
-  border: 1px solid #3c3c3c;
+  background-color: var(--app-bg-primary);
+  border: 1px solid var(--app-bg-tertiary);
   border-radius: 8px;
   width: 90%;
   height: 80%;
@@ -30,8 +30,8 @@
   justify-content: space-between;
   align-items: center;
   padding: var(--space-3) var(--space-4);
-  background-color: #252526;
-  border-bottom: 1px solid #3c3c3c;
+  background-color: var(--app-bg-secondary);
+  border-bottom: 1px solid var(--app-bg-tertiary);
 }
 
 .diff-view-title {
@@ -58,12 +58,18 @@
   font-size: var(--text-3xl);
   line-height: var(--leading-tight);
   border-radius: 4px;
-  transition: background-color 0.2s;
+  transition: background-color var(--duration-normal) var(--ease-in-out);
   flex-shrink: 0;
 }
 
 .diff-close-btn:hover {
-  background-color: #3c3c3c;
+  background-color: var(--app-bg-tertiary);
+}
+
+.diff-close-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .diff-view-content {
@@ -84,22 +90,22 @@
 }
 
 .diff-error {
-  color: #f48771;
+  color: var(--status-error-text);
 }
 
 .diff-error .error-message {
   font-family: monospace;
   font-size: var(--text-xs);
   margin-top: var(--space-2);
-  background-color: #3c3c3c;
+  background-color: var(--app-bg-tertiary);
   padding: var(--space-2);
   border-radius: 4px;
   max-width: 600px;
 }
 
 .diff-warning {
-  background-color: #3c3c3c;
-  color: #f0ad4e;
+  background-color: var(--app-bg-tertiary);
+  color: var(--system-orange);
   padding: var(--space-3);
   margin: var(--space-3);
   border-radius: 4px;

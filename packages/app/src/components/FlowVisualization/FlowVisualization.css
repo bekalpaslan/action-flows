@@ -8,6 +8,7 @@
   height: 100%;
   position: relative;
   background-color: var(--panel-bg-secondary);
+  contain: layout paint;
 }
 
 /* Swimlane background panel */
@@ -31,11 +32,11 @@
 }
 
 .swimlane {
-  transition: background-color 0.3s ease;
+  transition: background-color var(--duration-slow) var(--ease-in-out);
 }
 
 .swimlane-label {
-  transition: opacity 0.3s ease;
+  transition: opacity var(--duration-slow) var(--ease-in-out);
   user-select: none;
 }
 
@@ -58,11 +59,17 @@
 .flow-visualization .react-flow__controls-button {
   background-color: white;
   border-bottom: 1px solid var(--panel-border-color-subtle);
-  transition: background-color 0.2s ease;
+  transition: background-color var(--duration-normal) var(--ease-in-out);
 }
 
 .flow-visualization .react-flow__controls-button:hover {
   background-color: var(--panel-bg-secondary);
+}
+
+.flow-visualization .react-flow__controls-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .flow-visualization .react-flow__controls-button svg {
@@ -79,11 +86,11 @@
 
 /* Chain recompilation animations */
 .flow-visualization.recompiling .react-flow__node {
-  animation: fadeOut 0.3s ease-out;
+  animation: fadeOut var(--duration-slow) var(--ease-out);
 }
 
 .flow-visualization.recompiling .react-flow__edge {
-  animation: fadeOut 0.3s ease-out;
+  animation: fadeOut var(--duration-slow) var(--ease-out);
 }
 
 @keyframes fadeOut {
@@ -97,7 +104,7 @@
 
 /* New chain slide-in */
 .flow-visualization.new-chain .react-flow__node {
-  animation: slideInNewChain 0.4s ease-out;
+  animation: slideInNewChain var(--duration-slower) var(--ease-out);
 }
 
 @keyframes slideInNewChain {

@@ -133,11 +133,17 @@
   gap: var(--space-3);
   padding: var(--space-3);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color var(--duration-normal) var(--ease-in-out);
 }
 
 .harmony-violation__header:hover {
   background-color: rgba(239, 68, 68, 0.15); /* Error hover state */
+}
+
+.harmony-violation__header:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .harmony-violation__icon {
@@ -203,11 +209,17 @@
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color var(--duration-normal) var(--ease-in-out);
 }
 
 .harmony-panel__refresh:hover {
   background-color: var(--light-btn-hover-primary);
+}
+
+.harmony-panel__refresh:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 /* Loading & Error States */
@@ -246,4 +258,10 @@
 
 .harmony-panel__retry:hover {
   background-color: var(--semantic-error-reduced);
+}
+
+.harmony-panel__retry:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }

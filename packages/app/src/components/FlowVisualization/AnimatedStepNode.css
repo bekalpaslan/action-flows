@@ -9,7 +9,7 @@
   background-color: var(--light-bg-base);
   border: 2px solid var(--light-text-tertiary);
   cursor: pointer;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow var(--duration-normal) var(--ease-in-out), transform var(--duration-normal) var(--ease-in-out);
   box-shadow: 0 2px 4px var(--glass-bg-dark);
   min-width: 180px;
   max-width: 220px;
@@ -20,6 +20,12 @@
 .animated-step-node:hover {
   box-shadow: 0 4px 12px var(--glass-bg-dark);
   transform: translateY(-2px);
+}
+
+.animated-step-node:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 /* Node content layout */
@@ -169,7 +175,7 @@
 
 /* Slide-in animation (for pending nodes appearing) */
 .animated-step-node.anim-slide-in {
-  animation: slideIn 0.4s ease-out;
+  animation: slideIn var(--duration-slower) var(--ease-out);
 }
 
 @keyframes slideIn {
@@ -185,7 +191,7 @@
 
 /* Pulse animation (for running nodes) */
 .animated-step-node.anim-pulse {
-  animation: pulse 1.5s ease-in-out infinite;
+  animation: pulse 1.5s var(--ease-in-out) infinite;
 }
 
 @keyframes pulse {
@@ -199,7 +205,7 @@
 
 /* Shrink animation (for completed nodes) */
 .animated-step-node.anim-shrink {
-  animation: shrink 0.3s ease-out forwards;
+  animation: shrink var(--duration-slow) var(--ease-out) forwards;
 }
 
 @keyframes shrink {
@@ -213,7 +219,7 @@
 
 /* Shake animation (for failed nodes) */
 .animated-step-node.anim-shake {
-  animation: shake 0.4s ease-in-out;
+  animation: shake var(--duration-slower) var(--ease-in-out);
 }
 
 @keyframes shake {

@@ -99,6 +99,12 @@
   border-color: #4a4a4a;
 }
 
+.dossier-card:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .dossier-card.selected {
   background-color: #2d2d44;
   border-color: #9c27b0;

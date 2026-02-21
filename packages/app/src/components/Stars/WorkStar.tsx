@@ -14,8 +14,6 @@
 
 import React from 'react';
 import type { Session, FlowAction, SessionId, WorkbenchId } from '@afw/shared';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { StatCard, StatCardRow } from '../shared/StatCard';
 import { DashboardCard } from '../shared/DashboardCard';
 import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
@@ -83,15 +81,6 @@ export function WorkStar({
     isCollapsed: false,
   };
 
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'WorkStar',
-    getContext: () => ({
-      sessionCount: sessions.length,
-      activeSession: activeSession?.id || null,
-    }),
-  });
-
   // Calculate metrics for StatCards
   const activeSessions = sessions.filter(s => s.status === 'in_progress' || s.status === 'pending').length;
   const totalChains = sessions.reduce((acc, s) => acc + (s.chains?.length || 0), 0);
@@ -115,7 +104,6 @@ export function WorkStar({
           </div>
         </div>
         <div className="work-workbench__header-right">
-          <DiscussButton componentName="WorkStar" onClick={openDialog} size="small" />
           {/* Future: Add workbench controls (layout toggle, etc.) */}
         </div>
       </div>
@@ -189,17 +177,6 @@ export function WorkStar({
           </div>
         )}
       </div>
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="WorkStar"
-        componentContext={{
-          sessionCount: sessions.length,
-          activeSession: activeSession?.id || null,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

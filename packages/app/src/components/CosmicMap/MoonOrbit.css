@@ -14,11 +14,17 @@
   justify-content: center;
   pointer-events: auto;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) var(--ease-in-out);
 }
 
 .moon-orbit:hover {
   transform: scale(1.1);
+}
+
+.moon-orbit:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 /* Moon core */
@@ -29,7 +35,7 @@
   background: var(--cosmic-star-core);
   border: 1px solid var(--panel-border-default);
   box-shadow: 0 0 4px var(--cosmic-star-glow);
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow var(--duration-normal) var(--ease-in-out);
 }
 
 .moon-orbit:hover .moon-orbit__core {
@@ -64,7 +70,7 @@
 .moon-orbit--error .moon-orbit__core {
   background: var(--system-red);
   box-shadow: 0 0 6px var(--system-red);
-  animation: moonError 1s ease-in-out infinite;
+  animation: moonError 1s var(--ease-in-out) infinite;
 }
 
 /* Error pulse animation */

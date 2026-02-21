@@ -9,8 +9,6 @@ import { ErrorModal } from '../ErrorModal';
 import { useSessionInput } from '../../hooks/useSessionInput';
 import { useErrorAnnouncements } from '../../hooks/useErrorAnnouncements';
 import { claudeCliService } from '../../services/claudeCliService';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './SessionPane.css';
 
 export interface SessionPaneProps {
@@ -42,15 +40,6 @@ export function SessionPane({ session, onDetach, onClose, position }: SessionPan
   // Error announcements management
   const { unreadErrors, dismissError, handleRecoveryAction } = useErrorAnnouncements(session.id);
   const currentError = unreadErrors.length > 0 ? unreadErrors[displayedErrorIndex] : null;
-
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'SessionPane',
-    getContext: () => ({
-      sessionId: session.id,
-      status: session.status,
-      chainsCount: session.chains?.length || 0,
-    }),
-  });
 
   const handleDetach = () => {
     if (!session.id) {
@@ -166,7 +155,6 @@ export function SessionPane({ session, onDetach, onClose, position }: SessionPan
           </div>
         </div>
         <div className="session-pane-controls">
-          <DiscussButton componentName="SessionPane" onClick={openDialog} size="small" />
           <ControlButtons session={session} />
           {session.currentChain && (
             <div className="view-toggle">
@@ -298,17 +286,6 @@ export function SessionPane({ session, onDetach, onClose, position }: SessionPan
           </div>
         </div>
       )}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="SessionPane"
-        componentContext={{
-          sessionId: session.id,
-          status: session.status,
-          chainsCount: session.chains?.length || 0,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
 
       <ErrorModal
         isOpen={currentError !== null}

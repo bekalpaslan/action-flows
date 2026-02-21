@@ -116,6 +116,12 @@
   transform: translateY(-2px);
 }
 
+.context-option:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .context-option:active {
   transform: translateY(0);
 }
@@ -209,6 +215,12 @@
   background: var(--color-bg-hover, var(--glass-bg-light));
   border-color: var(--color-text-secondary, #b0b0b0);
   color: var(--color-text-primary, var(--panel-border-color-subtle));
+}
+
+.btn-cancel:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .btn-cancel:active {

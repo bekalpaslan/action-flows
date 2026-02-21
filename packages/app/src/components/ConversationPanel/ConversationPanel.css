@@ -40,7 +40,7 @@
   height: 8px;
   background: var(--system-teal);
   border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
+  animation: pulse 2s var(--ease-in-out) infinite;
 }
 
 @keyframes pulse {
@@ -165,7 +165,13 @@
 
 .quick-response-btn:hover:not(:disabled) {
   background: var(--semantic-info);
-  border-color: #1890e0;
+  border-color: var(--system-blue);
+}
+
+.quick-response-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .quick-response-btn:disabled {
@@ -189,12 +195,12 @@
   font-family: inherit;
   resize: vertical;
   min-height: 60px;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--duration-normal) var(--ease-in-out);
 }
 
 .input-field:focus {
   outline: none;
-  border-color: #0e639c;
+  border-color: var(--system-blue);
 }
 
 .input-field:disabled {
@@ -217,7 +223,13 @@
 
 .send-btn:hover:not(:disabled) {
   background: var(--semantic-info);
-  border-color: #1890e0;
+  border-color: var(--system-blue);
+}
+
+.send-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .send-btn:disabled {

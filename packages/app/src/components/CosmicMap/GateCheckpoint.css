@@ -13,11 +13,17 @@
   justify-content: center;
   pointer-events: auto;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) var(--ease-in-out);
 }
 
 .gate-checkpoint:hover {
   transform: scale(1.2);
+}
+
+.gate-checkpoint:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 /* Diamond shape */
@@ -30,7 +36,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color var(--duration-normal) var(--ease-in-out), box-shadow var(--duration-normal) var(--ease-in-out);
 }
 
 /* Inner diamond (status indicator) */
@@ -38,7 +44,7 @@
   width: 6px;
   height: 6px;
   background: var(--text-tertiary);
-  transition: background 0.2s ease;
+  transition: background var(--duration-normal) var(--ease-in-out);
 }
 
 /* Status: passing (clear) */
@@ -68,7 +74,7 @@
 }
 
 .gate-checkpoint--warning .gate-checkpoint__diamond {
-  animation: gateWarning 2s ease-in-out infinite;
+  animation: gateWarning 2s var(--ease-in-out) infinite;
 }
 
 /* Status: violation */
@@ -85,7 +91,7 @@
 }
 
 .gate-checkpoint--violation .gate-checkpoint__diamond {
-  animation: gateViolation 1s ease-in-out infinite;
+  animation: gateViolation 1s var(--ease-in-out) infinite;
 }
 
 /* Animations */

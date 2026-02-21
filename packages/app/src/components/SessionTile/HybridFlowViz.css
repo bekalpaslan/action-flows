@@ -51,7 +51,7 @@
 .hybrid-flow-viz__flow-container .react-flow__controls-button {
   background-color: transparent;
   border-bottom: 1px solid var(--glass-bg-light);
-  transition: background-color 0.2s ease;
+  transition: background-color var(--duration-normal) var(--ease-in-out);
 }
 
 .hybrid-flow-viz__flow-container .react-flow__controls-button:hover {
@@ -99,12 +99,12 @@
 
 /* Smooth transitions for agent movements */
 .hybrid-flow-viz__squad-overlay .agent-character-card {
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  transition: transform var(--duration-slow) var(--ease-out), opacity var(--duration-slow) var(--ease-out);
 }
 
 /* Subtle entrance animation for agents */
 .hybrid-flow-viz__squad-overlay .agent-character-card {
-  animation: agentFadeIn 0.5s ease-out;
+  animation: agentFadeIn var(--duration-slowest) var(--ease-out);
 }
 
 @keyframes agentFadeIn {

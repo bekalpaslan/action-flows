@@ -12,7 +12,7 @@ import { SidebarNavGroup } from './SidebarNavGroup';
 import { SidebarNavItem } from './SidebarNavItem';
 import { SidebarSearch } from './SidebarSearch';
 import { SidebarUserProfile } from './SidebarUserProfile';
-import { DEFAULT_WORKBENCH_CONFIGS } from '@afw/shared';
+import { STAR_CONFIGS, TOOL_CONFIGS, HARMONY_CONFIG } from '@afw/shared';
 import type { WorkbenchId } from '@afw/shared';
 import './AppSidebar.css';
 
@@ -118,13 +118,16 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
 
     const query = searchQuery.toLowerCase();
     const matches = new Set<WorkbenchId>();
+    const allConfigs = { ...STAR_CONFIGS, ...TOOL_CONFIGS, [HARMONY_CONFIG.id]: HARMONY_CONFIG };
 
     Object.values(WORKBENCH_GROUPS).forEach(group => {
       group.workbenches.forEach(id => {
-        const config = DEFAULT_WORKBENCH_CONFIGS[id];
+        const config = allConfigs[id as keyof typeof allConfigs];
         if (
-          config.label.toLowerCase().includes(query) ||
-          id.toLowerCase().includes(query)
+          config && (
+            config.label.toLowerCase().includes(query) ||
+            id.toLowerCase().includes(query)
+          )
         ) {
           matches.add(id);
         }
@@ -290,17 +293,20 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
                 onToggle={handleGroupToggle}
               >
                 {visibleWorkbenches.map(workbenchId => {
-                  const config = DEFAULT_WORKBENCH_CONFIGS[workbenchId];
+                  const allConfigs = { ...STAR_CONFIGS, ...TOOL_CONFIGS, [HARMONY_CONFIG.id]: HARMONY_CONFIG };
+                  const config = allConfigs[workbenchId as keyof typeof allConfigs];
                   return (
-                    <SidebarNavItem
-                      key={workbenchId}
-                      workbenchId={workbenchId}
-                      config={config}
-                      isActive={activeWorkbench === workbenchId}
-                      isCollapsed={isCollapsed}
-                      notificationCount={workbenchNotifications.get(workbenchId) || 0}
-                      onClick={() => handleWorkbenchClick(workbenchId)}
-                    />
+                    config && (
+                      <SidebarNavItem
+                        key={workbenchId}
+                        workbenchId={workbenchId}
+                        config={config}
+                        isActive={activeWorkbench === workbenchId}
+                        isCollapsed={isCollapsed}
+                        notificationCount={workbenchNotifications.get(workbenchId) || 0}
+                        onClick={() => handleWorkbenchClick(workbenchId)}
+                      />
+                    )
                   );
                 })}
               </SidebarNavGroup>

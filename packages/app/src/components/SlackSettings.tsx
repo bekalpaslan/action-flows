@@ -7,8 +7,6 @@
 
 import { useState, useEffect } from 'react';
 import { useSlackConfig } from '../hooks/useSlackConfig';
-import { DiscussButton, DiscussDialog } from './DiscussButton';
-import { useDiscussButton } from '../hooks/useDiscussButton';
 import './SlackSettings.css';
 
 export interface SlackSettingsProps {
@@ -46,26 +44,6 @@ export function SlackSettings({ onClose }: SlackSettingsProps) {
 
   // Track if there are unsaved changes
   const hasUnsavedChanges = JSON.stringify(localConfig) !== JSON.stringify(config);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
-    componentName: 'SlackSettings',
-    getContext: () => ({
-      settingsCategory: 'Slack Notifications',
-      enabled: localConfig.enabled,
-      defaultChannel: localConfig.defaultChannel,
-      notificationLevel: localConfig.notificationLevel,
-      unsavedChanges: hasUnsavedChanges,
-      connectionStatus,
-    }),
-  });
-
-  // Handle discuss dialog send
-  const handleDiscussDialogSend = (message: string) => {
-    const formattedMessage = handleDiscussSend(message);
-    console.log('Discussion message:', formattedMessage);
-    closeDialog();
-  };
 
   const handleEnabledToggle = () => {
     setLocalConfig({
@@ -125,16 +103,13 @@ export function SlackSettings({ onClose }: SlackSettingsProps) {
         <div className="slack-settings-panel" onClick={(e) => e.stopPropagation()}>
           <div className="settings-header">
             <h2>Slack Notifications</h2>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <DiscussButton componentName="SlackSettings" onClick={openDialog} />
-              <button
-                className="settings-close-btn"
-                onClick={onClose}
-                aria-label="Close settings"
-              >
-                ×
-              </button>
-            </div>
+            <button
+              className="settings-close-btn"
+              onClick={onClose}
+              aria-label="Close settings"
+            >
+              ×
+            </button>
           </div>
 
           <div className="settings-content">
@@ -260,15 +235,6 @@ export function SlackSettings({ onClose }: SlackSettingsProps) {
           </div>
         </div>
       </div>
-
-      {isDialogOpen && (
-        <DiscussDialog
-          isOpen={isDialogOpen}
-          onClose={closeDialog}
-          onSend={handleDiscussDialogSend}
-          componentName="SlackSettings"
-        />
-      )}
     </>
   );
 }

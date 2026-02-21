@@ -23,9 +23,7 @@ import { useChatWindowContext, AVAILABLE_MODELS } from '../../contexts/ChatWindo
 import { useChatMessages, type ChatDisplayMessage } from '../../hooks/useChatMessages';
 import { usePromptButtons } from '../../hooks/usePromptButtons';
 import { claudeCliService } from '../../services/claudeCliService';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { ErrorModal } from '../ErrorModal';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { useErrorAnnouncements } from '../../hooks/useErrorAnnouncements';
 import { extractChainCompilation } from '../../services/chainCompilationDetector';
 import { ReminderButtonBar } from './ReminderButtonBar';
@@ -177,16 +175,6 @@ export function ChatPanel({
   // Error announcements management
   const { unreadErrors, dismissError, handleRecoveryAction } = useErrorAnnouncements(sessionId);
   const currentError = unreadErrors.length > 0 ? unreadErrors[displayedErrorIndex] : null;
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'ChatPanel',
-    getContext: () => ({
-      messageCount: messages.length,
-      sessionStatus: session?.status,
-      cliState,
-    }),
-  });
 
   /**
    * Synchronously update both ref and state
@@ -726,7 +714,6 @@ export function ChatPanel({
               Live
             </span>
           )}
-          <DiscussButton componentName="ChatPanel" onClick={openDialog} size="small" />
           {showCloseButton && (
             <button
               className="chat-panel__close-btn"
@@ -999,19 +986,6 @@ export function ChatPanel({
           </div>
         </>
       )}
-
-      {/* DiscussDialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="ChatPanel"
-        componentContext={{
-          messageCount: messages.length,
-          sessionStatus: session?.status,
-          cliState,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
 
       <ErrorModal
         isOpen={currentError !== null}

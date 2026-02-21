@@ -77,7 +77,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 0.2s ease;
+  animation: fadeIn var(--duration-normal) var(--ease-in-out);
 }
 
 @keyframes fadeIn {
@@ -94,14 +94,14 @@
 /* ============================================================================ */
 
 .star-bookmark-dialog {
-  background: white;
+  background: var(--light-bg-elevated);
   border-radius: 8px;
   box-shadow: var(--shadow-elevation-8);
   max-width: 500px;
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
-  animation: slideUp 0.3s ease;
+  animation: slideUp var(--duration-slow) var(--ease-in-out);
 }
 
 @keyframes slideUp {
@@ -167,8 +167,8 @@
 .message-preview {
   margin-bottom: var(--space-5);
   padding: var(--space-3);
-  background-color: #f9f9f9;
-  border-left: 3px solid #ffd700;
+  background-color: var(--light-bg-panel);
+  border-left: 3px solid var(--system-yellow);
   border-radius: 4px;
 }
 
@@ -237,7 +237,7 @@ form {
   flex: 1;
   padding: var(--space-2);
   border-radius: 4px;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--duration-normal) var(--ease-in-out);
 }
 
 .category-radio input[type='radio']:checked + label {
@@ -252,7 +252,7 @@ form {
 
 .category-description {
   font-size: var(--text-xs);
-  color: #888;
+  color: var(--light-text-secondary);
 }
 
 /* ============================================================================ */
@@ -261,13 +261,13 @@ form {
 
 .explanation-input {
   padding: var(--space-2-5) var(--space-3);
-  border: 1px solid #ddd;
+  border: 1px solid var(--light-border-default);
   border-radius: 4px;
   font-family: inherit;
   font-size: var(--text-sm);
   color: var(--light-text-primary);
   resize: vertical;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--duration-normal) var(--ease-in-out);
 }
 
 .explanation-input:focus {
@@ -293,12 +293,12 @@ form {
 .tags-input {
   flex: 1;
   padding: var(--space-2-5) var(--space-3);
-  border: 1px solid #ddd;
+  border: 1px solid var(--light-border-default);
   border-radius: 4px;
   font-family: inherit;
   font-size: var(--text-sm);
   color: var(--light-text-primary);
-  transition: border-color 0.2s ease;
+  transition: border-color var(--duration-normal) var(--ease-in-out);
 }
 
 .tags-input:focus {
@@ -315,7 +315,7 @@ form {
 .add-tag-button {
   padding: var(--space-2-5) 14px;
   background-color: var(--light-bg-inset);
-  border: 1px solid #ddd;
+  border: 1px solid var(--light-border-default);
   border-radius: 4px;
   font-size: var(--text-base);
   cursor: pointer;
@@ -324,7 +324,7 @@ form {
 }
 
 .add-tag-button:hover:not(:disabled) {
-  background-color: #e0e0e0;
+  background-color: var(--light-bg-tertiary);
   border-color: var(--light-text-secondary);
 }
 
@@ -346,7 +346,7 @@ form {
   gap: var(--space-1-5);
   padding: var(--space-1-5) var(--space-3);
   background-color: var(--light-bg-inset);
-  border: 1px solid #ddd;
+  border: 1px solid var(--light-border-default);
   border-radius: 16px;
   font-size: var(--text-sm);
   color: var(--light-text-primary);
@@ -369,7 +369,7 @@ form {
 }
 
 .remove-tag:hover:not(:disabled) {
-  background-color: #e0e0e0;
+  background-color: var(--light-bg-tertiary);
   color: var(--light-text-primary);
 }
 
@@ -387,7 +387,7 @@ form {
   gap: var(--space-3);
   justify-content: flex-end;
   padding-top: var(--space-3);
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--light-border-subtle);
 }
 
 .btn {
@@ -407,7 +407,7 @@ form {
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #ffed4e;
+  background-color: var(--system-yellow);
   box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
 }
 
@@ -419,11 +419,11 @@ form {
 .btn-secondary {
   background-color: var(--light-bg-inset);
   color: var(--light-text-primary);
-  border: 1px solid #ddd;
+  border: 1px solid var(--light-border-default);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: var(--light-text-tertiary);
+  background-color: var(--light-bg-tertiary);
 }
 
 .btn-secondary:disabled {

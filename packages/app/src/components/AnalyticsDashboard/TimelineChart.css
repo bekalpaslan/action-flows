@@ -50,6 +50,12 @@
   stroke-width: 2;
 }
 
+.timeline-chart__line:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 /* Point styling */
 .timeline-chart__point {
   opacity: 0.6;
@@ -59,6 +65,12 @@
 .timeline-chart__point:hover {
   opacity: 1;
   r: 3;
+}
+
+.timeline-chart__point:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 /* X-axis labels */

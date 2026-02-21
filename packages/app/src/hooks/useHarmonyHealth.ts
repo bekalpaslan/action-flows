@@ -14,10 +14,22 @@ export interface HarmonyHealthData {
   overall: number;
   byGate: Record<string, {
     score: number;
-    violations: number;
+    violations?: number;
+    violationCount?: number;
     trend: string;
+    name?: string;
+    phase?: string;
+    format?: string | null;
+  }>;
+  violations24h?: number;
+  violationsTotal?: number;
+  scoreHistory?: Array<{
+    timestamp: string;
+    overall: number;
+    byGate: Record<string, number>;
   }>;
   healingRecommendations: Array<{
+    id?: string;
     pattern: string;
     severity: string;
     suggestedFlow: string;
@@ -62,6 +74,7 @@ export function useHarmonyHealth(
   sessionId: SessionId | null,
   options: UseHarmonyHealthOptions = {}
 ): UseHarmonyHealthResult {
+  void sessionId;
   const { pollInterval = 5000, enabled = true } = options;
 
   const [health, setHealth] = useState<HarmonyHealthData | null>(null);

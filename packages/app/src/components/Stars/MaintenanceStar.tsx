@@ -15,8 +15,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import { useAllSessions } from '../../hooks/useAllSessions';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { StatCard, StatCardRow } from '../shared/StatCard';
 import { DashboardCard } from '../shared/DashboardCard';
 import './MaintenanceStar.css';
@@ -96,16 +94,6 @@ export function MaintenanceStar(): React.ReactElement {
 
   // Loading state for manual refresh
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'MaintenanceStar',
-    getContext: () => ({
-      taskCount: sessions.length,
-      activeTask: activeSessions,
-      wsStatus,
-    }),
-  });
 
   /**
    * Add error to recent errors list
@@ -239,7 +227,6 @@ export function MaintenanceStar(): React.ReactElement {
       <div className="maintenance-workbench__header">
         <div className="maintenance-workbench__header-left">
           <h1 className="maintenance-workbench__title">System Health</h1>
-          <DiscussButton componentName="MaintenanceStar" onClick={openDialog} size="small" />
           <div className={`maintenance-workbench__status-badge maintenance-workbench__status-badge--${overallStatus}`}>
             <span className="status-dot" />
             <span className="status-text">
@@ -334,18 +321,6 @@ export function MaintenanceStar(): React.ReactElement {
           </div>
         </DashboardCard>
       </div>
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="MaintenanceStar"
-        componentContext={{
-          taskCount: sessions.length,
-          activeTask: activeSessions,
-          wsStatus,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

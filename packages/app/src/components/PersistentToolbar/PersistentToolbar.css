@@ -48,6 +48,12 @@
   opacity: 0.8;
 }
 
+.retry-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .toolbar-header {
   display: flex;
   align-items: center;
