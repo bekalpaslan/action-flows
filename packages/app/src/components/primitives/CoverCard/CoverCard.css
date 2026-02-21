@@ -1,0 +1,141 @@
+/* CoverCard Component */
+
+.afw-cover-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 280px;
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background-color: var(--cover-card-bg, var(--app-bg-base));
+  transition: transform var(--duration-fast) var(--ease-in-out);
+}
+
+/* Type variants: background colors */
+.afw-cover-card--project {
+  --cover-card-bg: var(--app-bg-base);
+  --cover-card-text: var(--text-primary);
+  --cover-card-text-secondary: var(--text-secondary);
+}
+
+.afw-cover-card--library,
+.afw-cover-card--template,
+.afw-cover-card--boilerplate,
+.afw-cover-card--training {
+  --cover-card-bg: var(--app-bg-primary, #0f1520);
+  --cover-card-text: var(--text-bright, #fff);
+  --cover-card-text-secondary: var(--text-tertiary);
+}
+
+/* Interactive state */
+.afw-cover-card--interactive {
+  cursor: pointer;
+}
+
+.afw-cover-card--interactive:hover {
+  transform: scale(1.01);
+}
+
+.afw-cover-card--interactive:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afw-cover-card {
+    transition: none;
+  }
+
+  .afw-cover-card--interactive:hover {
+    transform: none;
+  }
+}
+
+/* Header: tags/status badges */
+.afw-cover-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+/* Body: title + description */
+.afw-cover-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.afw-cover-card__title {
+  margin: 0;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--cover-card-text);
+}
+
+.afw-cover-card__description {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--cover-card-text-secondary);
+}
+
+/* Footer: avatars + icon */
+.afw-cover-card__footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: auto;
+}
+
+.afw-cover-card__avatars {
+  display: flex;
+  align-items: center;
+}
+
+/* Icon container */
+.afw-cover-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-16, 64px);
+  height: var(--space-16, 64px);
+  border-radius: var(--radius-2xl);
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+/* Icon tint colors per type — using system palette with color-mix */
+.afw-cover-card__icon--library {
+  background-color: color-mix(in srgb, var(--text-tertiary) 30%, transparent);
+}
+
+.afw-cover-card__icon--template {
+  background-color: color-mix(in srgb, var(--system-yellow) 20%, transparent);
+}
+
+.afw-cover-card__icon--boilerplate {
+  background-color: color-mix(in srgb, var(--system-green) 20%, transparent);
+}
+
+.afw-cover-card__icon--training {
+  background-color: color-mix(in srgb, var(--system-pink) 30%, transparent);
+}
+
+/* Thumbnail (project type) */
+.afw-cover-card__thumbnail {
+  width: 96px;
+  height: var(--space-16, 64px);
+  border-radius: var(--radius-lg);
+  background-color: var(--separator-base);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  flex-shrink: 0;
+}
