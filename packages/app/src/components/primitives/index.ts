@@ -106,5 +106,8 @@ export type { StepperProps, StepperStep } from './Stepper';
 export { Tag } from './Tag';
 export type { TagProps } from './Tag';
 
+export { Timeline } from './Timeline';
+export type { TimelineProps, TimelineEventItem } from './Timeline';
+
 export { DataTable } from './DataTable';
 export type { DataTableProps, DataTableColumn, DataTableRow, DataTableAction, DataTableBulkAction, SortDirection, CellType } from './DataTable';
