@@ -240,7 +240,7 @@
 - **Issue:** First health-protocol run surfaced 4 issues: (P1) Backend wouldn't start — pnpm 8.0.0 incompatible with Node.js 24.13.1, `npx tsx` double-resolving node_modules. (P2) L012 orphan flows all fixed, but new orphan template-creation/ discovered. (P3) 5 of 14 gates had no explicit validation methods (5, 8, 10, 11, 14). (P4) L024 — zero input protection for agent.md files (no checksum verification before spawn).
 - **Root Cause:** (P1) packageManager field pinned to old version, never updated when Node.js upgraded. (P2) Flow registration without instructions.md creates ghost entries. (P3) Gate checkpoint service was built incrementally — newer gates never got explicit validators. (P4) Trust model assumed agent.md files are immutable — no runtime verification mechanism existed.
 - **Fix:** (P1) Updated packageManager to pnpm@10.29.3, changed npx tsx → tsx in scripts. (P2) Closed L012, noted template-creation/ orphan. (P3) Added validateGate5/8/10/11/14 methods to gateCheckpoint.ts. (P4) Created agentIntegrityService.ts with SHA-256 checksums and singleton pattern.
-- **Status:** Open (healing applied, pending commit and backend restart verification)
+- **Status:** Closed (healing committed in 62a14d6 — packageManager pnpm@10.29.3, gate validators 5/8/10/11/14, agentIntegrityService.ts)
 
 ### L027: Runtime Health ≠ Design-Time Alignment — Proactive Audits Catch Invisible Drift
 - **Date:** 2026-02-14
