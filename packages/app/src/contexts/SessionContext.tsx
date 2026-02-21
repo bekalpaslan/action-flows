@@ -77,8 +77,8 @@ export function SessionProvider({ children }: SessionProviderProps) {
         }
 
         const data = await response.json();
-        const fetchedSessions = Array.isArray(data.sessions)
-          ? data.sessions
+        const fetchedSessions: Session[] = Array.isArray(data.sessions)
+          ? (data.sessions as Session[])
           : [];
 
         // Apply session pruning: Keep max 20 sessions (remove oldest)

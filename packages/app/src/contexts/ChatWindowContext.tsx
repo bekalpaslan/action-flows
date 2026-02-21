@@ -8,6 +8,7 @@ interface PerWorkbenchChatState {
   sessionId: SessionId | null;
   source: string | null;
   isMinimized: boolean;
+  isCollapsed: boolean;
   unreadCount: number;
 }
 
@@ -18,6 +19,7 @@ interface ChatWindowContextType {
   chatWidth: number;            // percentage (25-60, default 40)
   selectedModel: string;        // selected AI model (e.g., "sonnet-4.5")
   isMinimized: boolean;         // whether chat is minimized to floating indicator
+  isCollapsed: boolean;         // whether chat is collapsed to right edge
   unreadCount: number;          // unread message count when minimized
   openChat: (source: string, context?: Record<string, unknown>) => Promise<void>;
   closeChat: () => void;
@@ -27,6 +29,9 @@ interface ChatWindowContextType {
   setSelectedModel: (model: string) => void;
   minimizeChat: () => void;
   restoreChat: () => void;
+  collapseChat: () => void;
+  expandChat: () => void;
+  toggleCollapse: () => void;
   incrementUnreadCount: () => void;
   resetUnreadCount: () => void;
   saveAndSwitch: (fromWorkbench: WorkbenchId, toWorkbench: WorkbenchId) => void;
@@ -67,6 +72,7 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
   const [sessionId, setSessionIdState] = useState<SessionId | null>(null);
   const [source, setSource] = useState<string | null>(null);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
   // Per-workbench chat state persistence
@@ -125,6 +131,7 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
   const closeChat = useCallback(() => {
     setIsOpen(false);
     setIsMinimized(false);
+    setIsCollapsed(false);
     setUnreadCount(0);
     // Note: we do NOT clear sessionId — it's preserved for state continuity
   }, []);
@@ -168,6 +175,36 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
     setUnreadCount(0);
   }, []);
 
+  const collapseChat = useCallback(() => {
+    setIsCollapsed(true);
+    // Announce to screen readers
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.textContent = 'Chat collapsed';
+    announcement.style.position = 'absolute';
+    announcement.style.left = '-10000px';
+    document.body.appendChild(announcement);
+    setTimeout(() => document.body.removeChild(announcement), 1000);
+  }, []);
+
+  const expandChat = useCallback(() => {
+    setIsCollapsed(false);
+    // Announce to screen readers
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.textContent = 'Chat expanded';
+    announcement.style.position = 'absolute';
+    announcement.style.left = '-10000px';
+    document.body.appendChild(announcement);
+    setTimeout(() => document.body.removeChild(announcement), 1000);
+  }, []);
+
+  const toggleCollapse = useCallback(() => {
+    setIsCollapsed((prev) => !prev);
+  }, []);
+
   // No-op function kept for backward compatibility
   const setChatWidth = useCallback((_width: number) => {
     // Width is now fixed via CSS (--chat-w), this function is a no-op
@@ -194,6 +231,7 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
       sessionId,
       source,
       isMinimized,
+      isCollapsed,
       unreadCount,
     });
 
@@ -204,15 +242,19 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
       setSessionIdState(saved.sessionId);
       setSource(saved.source);
       setIsMinimized(saved.isMinimized);
+      setIsCollapsed(saved.isCollapsed);
       setUnreadCount(saved.unreadCount);
     } else {
       setIsOpen(false);
+      setSessionIdState(null);
+      setSource(null);
       setIsMinimized(false);
+      setIsCollapsed(false);
       setUnreadCount(0);
     }
 
     syncWorkbenchesWithChat();
-  }, [isOpen, sessionId, source, isMinimized, unreadCount, syncWorkbenchesWithChat]);
+  }, [isOpen, sessionId, source, isMinimized, isCollapsed, unreadCount, syncWorkbenchesWithChat]);
 
   const value: ChatWindowContextType = {
     isOpen,
@@ -221,6 +263,7 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
     chatWidth: FIXED_CHAT_WIDTH, // Return constant value for backward compatibility
     selectedModel,
     isMinimized,
+    isCollapsed,
     unreadCount,
     openChat,
     closeChat,
@@ -230,6 +273,9 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
     setSelectedModel,
     minimizeChat,
     restoreChat,
+    collapseChat,
+    expandChat,
+    toggleCollapse,
     incrementUnreadCount,
     resetUnreadCount,
     saveAndSwitch,

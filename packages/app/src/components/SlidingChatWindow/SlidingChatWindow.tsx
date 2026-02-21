@@ -7,7 +7,7 @@
  * Supports draggable left-edge resize handle with localStorage persistence.
  */
 
-import React, { useRef, useCallback, useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useChatWindowContext } from '../../contexts/ChatWindowContext';
 import { useSessionContext } from '../../contexts/SessionContext';
 import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
@@ -27,16 +27,14 @@ interface SlidingChatWindowProps {
 }
 
 export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, embedded = false }) => {
-  const { isOpen, source, sessionId, closeChat, setSessionId, isMinimized, unreadCount, minimizeChat, restoreChat, openChat } = useChatWindowContext();
+  const { isOpen, source, sessionId, closeChat, setSessionId, isMinimized, isCollapsed, unreadCount, minimizeChat, restoreChat, toggleCollapse, expandChat, openChat } = useChatWindowContext();
   const { sessions } = useSessionContext();
   const { activeWorkbench } = useWorkbenchContext();
   const [activeTab, setActiveTab] = useState<'chat' | 'flow' | 'activity'>('chat');
 
   // Filter sessions to only show those belonging to the active workbench
-  // Fall back to all sessions if no workbench-scoped sessions exist yet
   const workbenchSessions = useMemo(() => {
-    const scoped = sessions.filter(s => s.workbenchId === activeWorkbench);
-    return scoped.length > 0 ? scoped : sessions;
+    return sessions.filter(s => s.workbenchId === activeWorkbench);
   }, [sessions, activeWorkbench]);
 
   // Fetch active chain for flow visualization
@@ -48,6 +46,27 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
   // If minimized, show floating indicator instead of full chat
   if (isMinimized && !embedded) {
     return <ChatMinimizedIndicator unreadCount={unreadCount} onClick={restoreChat} />;
+  }
+
+  // If collapsed and open, show only the collapse strip
+  if (isCollapsed && isOpen && !embedded) {
+    return (
+      <div className="sliding-chat-window sliding-chat-window--collapsed">
+        <div className="sliding-chat-window__collapse-strip">
+          <button
+            className="sliding-chat-window__expand-btn"
+            onClick={expandChat}
+            aria-label="Expand chat"
+            title="Expand chat"
+            type="button"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -77,14 +96,27 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
           ))}
         </select>
         {!embedded && (
-          <button
-            className="sliding-chat-window__minimize-btn"
-            onClick={minimizeChat}
-            aria-label="Minimize chat panel"
-            type="button"
-          >
-            −
-          </button>
+          <>
+            <button
+              className="sliding-chat-window__collapse-btn"
+              onClick={toggleCollapse}
+              aria-label="Collapse chat"
+              title="Collapse chat"
+              type="button"
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button
+              className="sliding-chat-window__minimize-btn"
+              onClick={minimizeChat}
+              aria-label="Minimize chat panel"
+              type="button"
+            >
+              −
+            </button>
+          </>
         )}
         <button
           className="sliding-chat-window__close-btn"

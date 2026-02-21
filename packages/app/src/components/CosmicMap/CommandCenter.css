@@ -57,6 +57,12 @@
   box-shadow: var(--btn-glow-default);
 }
 
+.command-center__input-section:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .command-center__input-section:focus-within {
   background: var(--input-bg-focus);
   border-color: var(--input-border-focus);
@@ -68,7 +74,7 @@
   align-items: center;
   justify-content: center;
   color: var(--cosmic-star-idle);
-  transition: color 0.2s ease;
+  transition: color var(--duration-normal) var(--ease-in-out);
 }
 
 .command-center__input-section:focus-within .command-center__input-icon {
@@ -106,6 +112,12 @@
 .command-center__submit-btn:hover:not(:disabled) {
   background: var(--btn-bg-tertiary);
   color: var(--system-blue);
+}
+
+.command-center__submit-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .command-center__submit-btn:active:not(:disabled) {
@@ -163,6 +175,12 @@
   box-shadow: var(--btn-glow-default);
 }
 
+.command-center__session-trigger:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .command-center__session-trigger:active {
   transform: scale(0.98);
 }
@@ -179,7 +197,7 @@
 
 .command-center__session-caret {
   color: var(--text-secondary);
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) var(--ease-in-out);
   flex-shrink: 0;
 }
 
@@ -189,9 +207,9 @@
 
 /* Session Dropdown */
 .command-center__session-dropdown {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 0;
+  position: fixed;
+  bottom: calc(var(--bottom-h) + var(--gap) + 8px);
+  left: calc(var(--sidebar-w) + var(--gap) + var(--gap));
   min-width: 280px;
   max-height: 320px;
   overflow-y: auto;
@@ -200,8 +218,8 @@
   border-radius: var(--panel-radius-md);
   box-shadow: var(--shadow-elevation-9), var(--panel-glow-accent);
   padding: var(--space-1);
-  z-index: 100;
-  animation: slideUpFadeIn 0.2s ease;
+  z-index: 1000;
+  animation: slideUpFadeIn var(--duration-normal) var(--ease-in-out);
 }
 
 @keyframes slideUpFadeIn {
@@ -257,6 +275,12 @@
 
 .command-center__session-option:hover {
   background: var(--btn-bg-tertiary);
+}
+
+.command-center__session-option:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
 }
 
 .command-center__session-option.selected {
@@ -329,6 +353,12 @@
   transform: translateY(-1px);
 }
 
+.command-center__health-indicator:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--focus-ring-glow);
+}
+
 .command-center__health-icon {
   flex-shrink: 0;
 }
@@ -396,7 +426,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 6px 16px;
+  padding: 6px var(--space-4);
   background: var(--panel-bg-base);
   border: 1px solid var(--cosmic-bridge-glow);
   border-radius: 20px;
@@ -404,7 +434,7 @@
   font-weight: 500;
   color: var(--text-secondary);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  animation: pulse-glow 2s ease-in-out infinite;
+  animation: pulse-glow 2s var(--ease-in-out) infinite;
 }
 
 .running-chain-spinner {

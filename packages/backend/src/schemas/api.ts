@@ -33,7 +33,7 @@ export const createSessionSchema = z.object({
     .optional(),
   userId: z.string().max(100, 'userId too long').optional(),
   name: z.string().max(200, 'name too long').optional(),
-  workbenchId: z.string().max(50).optional(),
+  workbenchId: z.enum(STAR_IDS as any as [string, ...string[]]).optional(),
 });
 
 export type CreateSessionRequest = z.infer<typeof createSessionSchema>;
