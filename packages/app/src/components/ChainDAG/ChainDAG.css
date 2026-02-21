@@ -3,15 +3,28 @@
  * Styling for DAG visualization, nodes, edges, and status indicators
  */
 
+/* Widget-scoped light-theme tokens */
 .chain-dag-container {
+  --widget-bg:          #ffffff;
+  --widget-bg-subtle:   #f5f5f5;
+  --widget-bg-muted:    #fafafa;
+  --widget-border:      #e0e0e0;
+  --widget-border-light: #cccccc;
+  --widget-text:        #333333;
+  --widget-text-sec:    #666666;
+  --widget-text-muted:  #999999;
+  --widget-primary:     #1976d2;
+  --widget-primary-dim: rgba(25, 118, 210, 0.1);
+
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: row;
-  background-color: #f5f5f5;
+  background-color: var(--widget-bg-subtle);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  contain: layout;
 }
 
 .chain-dag-main {
@@ -23,8 +36,8 @@
 
 .chain-dag-header {
   padding: 16px;
-  background-color: white;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: var(--widget-bg);
+  border-bottom: 1px solid var(--widget-border);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -40,7 +53,7 @@
 .chain-dag-title {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--widget-text);
   margin: 0;
   flex: 1;
 }
@@ -49,7 +62,7 @@
   display: flex;
   gap: 20px;
   font-size: 13px;
-  color: #666;
+  color: var(--widget-text-sec);
 }
 
 .chain-dag-stat {
@@ -60,7 +73,7 @@
 
 .chain-dag-stat-value {
   font-weight: 600;
-  color: #333;
+  color: var(--widget-text);
 }
 
 .chain-dag-canvas {
@@ -76,25 +89,25 @@
 }
 
 .react-flow {
-  background-color: #f5f5f5;
+  background-color: var(--widget-bg-subtle);
 }
 
 .react-flow__viewport {
   background: linear-gradient(
     45deg,
-    #f5f5f5 25%,
+    var(--widget-bg-subtle) 25%,
     transparent 25%,
     transparent 75%,
-    #f5f5f5 75%,
-    #f5f5f5
+    var(--widget-bg-subtle) 75%,
+    var(--widget-bg-subtle)
   ),
   linear-gradient(
     45deg,
-    #f5f5f5 25%,
+    var(--widget-bg-subtle) 25%,
     transparent 25%,
     transparent 75%,
-    #f5f5f5 75%,
-    #f5f5f5
+    var(--widget-bg-subtle) 75%,
+    var(--widget-bg-subtle)
   );
   background-size: 40px 40px;
   background-position: 0 0, 20px 20px;
@@ -105,10 +118,10 @@
 .step-node {
   padding: 12px;
   border-radius: 8px;
-  background-color: white;
-  border: 2px solid #ccc;
+  background-color: var(--widget-bg);
+  border: 2px solid var(--widget-border-light);
   cursor: pointer;
-  transition: all 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+  transition: all var(--duration-slow) var(--easing-default), border-color var(--duration-slow) var(--easing-default), background-color var(--duration-slow) var(--easing-default);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   min-width: 160px;
   font-size: 12px;
@@ -121,8 +134,8 @@
 }
 
 .step-node.selected {
-  border-color: #1976d2;
-  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+  border-color: var(--widget-primary);
+  box-shadow: 0 0 0 3px var(--widget-primary-dim);
   background-color: #f0f7ff;
 }
 
@@ -136,29 +149,29 @@
 
 /* Status colors */
 .step-node.status-pending {
-  border-color: #bdbdbd;
-  background-color: #fafafa;
+  border-color: var(--color-status-pending-border);
+  background-color: var(--color-status-pending-bg);
 }
 
 .step-node.status-in_progress {
-  border-color: #fbc02d;
-  background-color: #fffde7;
-  animation: pulse-border 2s ease-in-out infinite, pulse-glow 1.5s ease-out infinite;
+  border-color: var(--color-status-progress-border);
+  background-color: var(--color-status-progress-bg);
+  animation: pulse-border 2s var(--easing-in-out) infinite, pulse-glow 1.5s var(--easing-out) infinite;
 }
 
 .step-node.status-completed {
-  border-color: #4caf50;
-  background-color: #f1f8e9;
+  border-color: var(--color-status-completed-border);
+  background-color: var(--color-status-completed-bg);
 }
 
 .step-node.status-failed {
-  border-color: #f44336;
-  background-color: #ffebee;
+  border-color: var(--color-status-failed-border);
+  background-color: var(--color-status-failed-bg);
 }
 
 .step-node.status-skipped {
-  border-color: #9e9e9e;
-  background-color: #f5f5f5;
+  border-color: var(--color-status-skipped-border);
+  background-color: var(--color-status-skipped-bg);
   opacity: 0.7;
 }
 
@@ -206,7 +219,7 @@
   justify-content: space-between;
   align-items: center;
   font-weight: 600;
-  color: #333;
+  color: var(--widget-text);
 }
 
 .step-number {
@@ -225,7 +238,7 @@
 
 .step-node-action {
   font-weight: 600;
-  color: #1976d2;
+  color: var(--widget-primary);
   word-break: break-word;
 }
 
@@ -261,16 +274,16 @@
 
 .step-node-duration {
   font-size: 10px;
-  color: #4caf50;
+  color: var(--color-status-completed-border);
   font-weight: 600;
 }
 
 .step-node-error {
   font-size: 10px;
-  color: #f44336;
+  color: var(--color-status-failed-border);
   font-weight: 600;
   padding: 2px 4px;
-  background-color: rgba(244, 67, 54, 0.1);
+  background-color: var(--color-error-dim);
   border-radius: 2px;
 }
 
@@ -284,9 +297,9 @@
   width: 12px;
   height: 12px;
   border: 2px solid rgba(251, 192, 45, 0.3);
-  border-top-color: #fbc02d;
+  border-top-color: var(--color-status-progress-border);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 1s var(--easing-linear) infinite;
 }
 
 @keyframes spin {
@@ -297,7 +310,7 @@
 
 /* React Flow handles */
 .react-flow__handle {
-  background-color: #1976d2;
+  background-color: var(--widget-primary);
   border: 2px solid white;
   width: 8px;
   height: 8px;
@@ -308,29 +321,29 @@
 }
 
 .react-flow__handle.valid {
-  background-color: #4caf50;
+  background-color: var(--color-status-completed-border);
 }
 
 /* Edges */
 .react-flow__edge-path {
-  stroke: #bdbdbd;
+  stroke: var(--color-status-pending-border);
   stroke-width: 2;
 }
 
 .react-flow__edge.selected .react-flow__edge-path {
-  stroke: #1976d2;
+  stroke: var(--widget-primary);
   stroke-width: 3;
 }
 
 .react-flow__edge-smoothstep path {
-  stroke: #bdbdbd;
+  stroke: var(--color-status-pending-border);
 }
 
 /* Animated edges for in-progress steps */
 .react-flow__edge.animated .react-flow__edge-path {
-  stroke: #fbc02d;
+  stroke: var(--color-status-progress-border);
   stroke-dasharray: 5, 5;
-  animation: dash 20s linear infinite;
+  animation: dash 20s var(--easing-linear) infinite;
 }
 
 @keyframes dash {
@@ -342,8 +355,8 @@
 /* Controls */
 .chain-dag-controls {
   padding: 12px;
-  background-color: white;
-  border-top: 1px solid #e0e0e0;
+  background-color: var(--widget-bg);
+  border-top: 1px solid var(--widget-border);
   display: flex;
   gap: 8px;
   justify-content: center;
@@ -352,22 +365,22 @@
 
 .chain-dag-button {
   padding: 8px 16px;
-  border: 1px solid #ccc;
-  background-color: white;
+  border: 1px solid var(--widget-border-light);
+  background-color: var(--widget-bg);
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) var(--easing-default);
 }
 
 .chain-dag-button:hover {
-  background-color: #f5f5f5;
-  border-color: #999;
+  background-color: var(--widget-bg-subtle);
+  border-color: var(--widget-text-muted);
 }
 
 .chain-dag-button.primary {
-  background-color: #1976d2;
+  background-color: var(--widget-primary);
   color: white;
   border-color: #1565c0;
 }
@@ -415,41 +428,42 @@
 }
 
 .status-badge.status-pending {
-  background-color: #f5f5f5;
-  color: #666;
+  background-color: var(--color-status-pending-bg);
+  color: var(--color-status-pending-text);
 }
 
 .status-badge.status-in_progress {
-  background-color: #fffde7;
-  color: #f57f17;
+  background-color: var(--color-status-progress-bg);
+  color: var(--color-status-progress-text);
 }
 
 .status-badge.status-completed {
-  background-color: #f1f8e9;
-  color: #33691e;
+  background-color: var(--color-status-completed-bg);
+  color: var(--color-status-completed-text);
 }
 
 .status-badge.status-failed {
-  background-color: #ffebee;
-  color: #c62828;
+  background-color: var(--color-status-failed-bg);
+  color: var(--color-status-failed-text);
 }
 
 .status-badge.status-skipped {
-  background-color: #f5f5f5;
-  color: #616161;
+  background-color: var(--color-status-skipped-bg);
+  color: var(--color-status-skipped-text);
 }
 
-.error-message {
-  color: #f44336 !important;
+/* D: Remove !important — use specificity via the .chain-dag-container scope */
+.chain-dag-container .error-message {
+  color: var(--color-status-failed-border);
   font-family: 'Monaco', 'Menlo', monospace;
-  font-size: 11px !important;
+  font-size: 11px;
 }
 
 /* Legend */
 .chain-dag-legend {
   padding: 12px;
-  background-color: #fafafa;
-  border-top: 1px solid #e0e0e0;
+  background-color: var(--widget-bg-muted);
+  border-top: 1px solid var(--widget-border);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
@@ -470,28 +484,28 @@
 }
 
 .legend-indicator.pending {
-  background-color: #fafafa;
-  border-color: #bdbdbd;
+  background-color: var(--color-status-pending-bg);
+  border-color: var(--color-status-pending-border);
 }
 
 .legend-indicator.in-progress {
-  background-color: #fffde7;
-  border-color: #fbc02d;
+  background-color: var(--color-status-progress-bg);
+  border-color: var(--color-status-progress-border);
 }
 
 .legend-indicator.completed {
-  background-color: #f1f8e9;
-  border-color: #4caf50;
+  background-color: var(--color-status-completed-bg);
+  border-color: var(--color-status-completed-border);
 }
 
 .legend-indicator.failed {
-  background-color: #ffebee;
-  border-color: #f44336;
+  background-color: var(--color-status-failed-bg);
+  border-color: var(--color-status-failed-border);
 }
 
 .legend-indicator.skipped {
-  background-color: #f5f5f5;
-  border-color: #9e9e9e;
+  background-color: var(--color-status-skipped-bg);
+  border-color: var(--color-status-skipped-border);
   opacity: 0.7;
 }
 

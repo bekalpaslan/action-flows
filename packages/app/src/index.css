@@ -1,3 +1,133 @@
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* --- Color: Backgrounds (dark theme) --- */
+  --color-bg-base:     #1a1a1a;
+  --color-bg-surface:  #1e1e1e;
+  --color-bg-elevated: #242424;
+  --color-bg-toolbar:  #252525;
+  --color-bg-overlay:  #2a2a2a;
+
+  /* --- Color: Borders --- */
+  --color-border:        #404040;
+  --color-border-subtle: #333333;
+  --color-border-input:  #3c3c3c;
+
+  /* --- Color: Text --- */
+  --color-text-primary:   #e0e0e0;
+  --color-text-secondary: #b0b0b0;
+  --color-text-muted:     #808080;
+  --color-text-dim:       #606060;
+  --color-text-code:      #cccccc;
+  --color-text-inverted:  #1a1a1a;
+
+  /* --- Color: Accent (purple) --- */
+  --color-accent:        #bb86fc;
+  --color-accent-deep:   #9366ff;
+  --color-accent-bg:     rgba(187, 134, 252, 0.15);
+  --color-accent-bg-sm:  rgba(187, 134, 252, 0.08);
+  --color-accent-bg-xl:  rgba(187, 134, 252, 0.3);
+  --color-accent-shadow: rgba(187, 134, 252, 0.5);
+
+  /* --- Color: Hover overlays --- */
+  --color-hover-sm: rgba(255, 255, 255, 0.05);
+  --color-hover-md: rgba(255, 255, 255, 0.1);
+
+  /* --- Color: Semantic --- */
+  --color-success:     #4caf50;
+  --color-success-dim: rgba(76, 175, 80, 0.1);
+  --color-warning:     #ff9800;
+  --color-warning-dim: rgba(255, 152, 0, 0.1);
+  --color-error:       #f44336;
+  --color-error-dim:   rgba(244, 67, 54, 0.1);
+  --color-info:        #2196f3;
+  --color-info-dim:    rgba(33, 150, 243, 0.1);
+  --color-primary:     #1976d2;
+
+  /* --- Color: Status --- */
+  --color-status-pending-bg:       #fafafa;
+  --color-status-pending-border:   #bdbdbd;
+  --color-status-pending-text:     #666666;
+  --color-status-progress-bg:      #fffde7;
+  --color-status-progress-border:  #fbc02d;
+  --color-status-progress-text:    #f57f17;
+  --color-status-completed-bg:     #f1f8e9;
+  --color-status-completed-border: #4caf50;
+  --color-status-completed-text:   #33691e;
+  --color-status-failed-bg:        #ffebee;
+  --color-status-failed-border:    #f44336;
+  --color-status-failed-text:      #c62828;
+  --color-status-skipped-bg:       #f5f5f5;
+  --color-status-skipped-border:   #9e9e9e;
+  --color-status-skipped-text:     #616161;
+
+  /* --- Color: Scrollbars --- */
+  --color-scrollbar-track: transparent;
+  --color-scrollbar-thumb: #404040;
+  --color-scrollbar-hover: #505050;
+
+  /* --- Color: Pure white (used as text on dark backgrounds, modal/widget backgrounds) --- */
+  --color-white: #ffffff;
+
+  /* --- Color: VS Code blue (used in ConversationPanel editor-style UI) --- */
+  --color-vscode-blue: #0e639c;
+  --color-vscode-blue-hover: #1177bb;
+
+  /* --- Color: Focus ring --- */
+  --color-focus-ring: #bb86fc;
+
+  /* --- Motion: Durations --- */
+  --duration-fast:   0.15s;
+  --duration-base:   0.2s;
+  --duration-slow:   0.3s;
+  --duration-slower: 0.5s;
+
+  /* --- Motion: Easing --- */
+  --easing-default: ease;
+  --easing-out:     ease-out;
+  --easing-in-out:  ease-in-out;
+  --easing-linear:  linear;
+
+  /* --- Legacy aliases (match existing var() usages in components) --- */
+  --bg-primary:          var(--color-bg-elevated);
+  --bg-secondary:        var(--color-bg-surface);
+  --bg-hover:            var(--color-hover-md);
+  --hover-bg:            var(--color-hover-md);
+  --hover-background:    var(--color-hover-sm);
+  --selected-bg:         rgba(0, 122, 204, 0.3);
+  --border-color:        var(--color-border);
+  --border-hover:        var(--color-text-muted);
+  --text-primary:        var(--color-text-primary);
+  --text-secondary:      var(--color-text-secondary);
+  --text-tertiary:       var(--color-text-muted);
+  --error-color:         var(--color-error);
+  --primary-color:       var(--color-info);
+  --surface-background:  var(--color-bg-surface);
+  --header-background:   var(--color-bg-toolbar);
+  --pane-background:     var(--color-bg-base);
+  --footer-background:   var(--color-bg-toolbar);
+  --code-background:     var(--color-bg-overlay);
+  --toggle-background:   var(--color-bg-overlay);
+  --layout-background:   var(--color-bg-base);
+}
+
+/* ============================================================
+   ACCESSIBILITY — Focus visible
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Remove the default focus ring for mouse/touch users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
 * {
   margin: 0;
   padding: 0;
@@ -14,8 +144,8 @@ body,
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #1a1a1a;
-  color: #e0e0e0;
+  background: var(--color-bg-base);
+  color: var(--color-text-primary);
 }
 
 body {
@@ -34,9 +164,23 @@ a {
 }
 
 code {
-  background: #2a2a2a;
+  background: var(--color-bg-overlay);
   padding: 2px 6px;
   border-radius: 3px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.9em;
+}
+
+/* ============================================================
+   MOTION — Reduced-motion override
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

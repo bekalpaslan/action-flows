@@ -14,8 +14,8 @@
 }
 
 .diff-view-container {
-  background-color: #1e1e1e;
-  border: 1px solid #3c3c3c;
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border-input);
   border-radius: 8px;
   width: 90%;
   height: 80%;
@@ -30,15 +30,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background-color: #252526;
-  border-bottom: 1px solid #3c3c3c;
+  background-color: var(--color-bg-toolbar);
+  border-bottom: 1px solid var(--color-border-input);
 }
 
 .diff-view-title {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #cccccc;
+  color: var(--color-text-code);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -47,7 +47,7 @@
 .diff-close-btn {
   background: none;
   border: none;
-  color: #cccccc;
+  color: var(--color-text-code);
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -58,12 +58,12 @@
   font-size: 28px;
   line-height: 1;
   border-radius: 4px;
-  transition: background-color 0.2s;
+  transition: background-color var(--duration-base);
   flex-shrink: 0;
 }
 
 .diff-close-btn:hover {
-  background-color: #3c3c3c;
+  background-color: var(--color-border-input);
 }
 
 .diff-view-content {
@@ -79,7 +79,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #cccccc;
+  color: var(--color-text-code);
   padding: 20px;
 }
 
@@ -91,14 +91,14 @@
   font-family: monospace;
   font-size: 12px;
   margin-top: 8px;
-  background-color: #3c3c3c;
+  background-color: var(--color-border-input);
   padding: 8px;
   border-radius: 4px;
   max-width: 600px;
 }
 
 .diff-warning {
-  background-color: #3c3c3c;
+  background-color: var(--color-border-input);
   color: #f0ad4e;
   padding: 12px;
   margin: 12px;

@@ -3,12 +3,13 @@
 .code-editor {
   display: flex;
   flex-direction: column;
-  background-color: #1e1e1e;
-  border-left: 1px solid #3c3c3c;
-  transition: width 0.3s ease;
+  background-color: var(--color-bg-surface);
+  border-left: 1px solid var(--color-border-input);
+  transition: width var(--duration-slow) var(--easing-default);
   height: 100%;
   min-width: 400px;
   max-width: 100%;
+  contain: layout;
 }
 
 .code-editor.collapsed {
@@ -21,15 +22,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background-color: #252526;
-  border-bottom: 1px solid #3c3c3c;
+  background-color: var(--color-bg-toolbar);
+  border-bottom: 1px solid var(--color-border-input);
 }
 
 .code-editor-title {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #cccccc;
+  color: var(--color-text-code);
 }
 
 .code-editor-actions {
@@ -41,17 +42,17 @@
 .code-editor-actions .sidebar-toggle-btn {
   background: none;
   border: none;
-  color: #cccccc;
+  color: var(--color-text-code);
   cursor: pointer;
   padding: 4px 8px;
   font-size: 16px;
   border-radius: 4px;
-  transition: background-color 0.2s;
+  transition: background-color var(--duration-base);
 }
 
 .code-editor-actions .action-btn:hover,
 .code-editor-actions .sidebar-toggle-btn:hover {
-  background-color: #3c3c3c;
+  background-color: var(--color-border-input);
 }
 
 .code-editor-content {
@@ -68,7 +69,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #cccccc;
+  color: var(--color-text-code);
   padding: 20px;
   text-align: center;
 }
@@ -81,7 +82,7 @@
   font-family: monospace;
   font-size: 12px;
   margin-top: 8px;
-  background-color: #3c3c3c;
+  background-color: var(--color-border-input);
   padding: 8px;
   border-radius: 4px;
   max-width: 400px;
