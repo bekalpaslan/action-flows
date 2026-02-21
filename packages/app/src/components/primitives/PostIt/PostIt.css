@@ -1,0 +1,87 @@
+.afw-post-it {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  aspect-ratio: 1 / 1;
+  min-width: 120px;
+  max-width: 200px;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-small-medium);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: 1.5;
+  overflow: hidden;
+  transition: transform var(--duration-normal) var(--ease-in-out), box-shadow var(--duration-normal) var(--ease-in-out);
+}
+
+.afw-post-it:hover {
+  box-shadow: var(--shadow-spaced-medium);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afw-post-it {
+    transition: none;
+  }
+
+  .afw-post-it:hover {
+    transform: none;
+  }
+}
+
+/* Color variants */
+.afw-post-it--blue {
+  background: color-mix(in srgb, var(--system-blue) 25%, var(--app-bg-secondary));
+  color: var(--system-blue);
+}
+
+.afw-post-it--green {
+  background: color-mix(in srgb, var(--system-green) 25%, var(--app-bg-secondary));
+  color: var(--system-green);
+}
+
+.afw-post-it--red {
+  background: color-mix(in srgb, var(--system-red) 25%, var(--app-bg-secondary));
+  color: var(--system-red);
+}
+
+.afw-post-it--yellow {
+  background: color-mix(in srgb, var(--system-yellow) 25%, var(--app-bg-secondary));
+  color: var(--text-primary);
+}
+
+.afw-post-it--neutral {
+  background: var(--app-bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Content */
+.afw-post-it__content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+  z-index: 1;
+}
+
+.afw-post-it__content[contenteditable="true"]:focus {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+  border-radius: calc(var(--radius-md) - var(--space-4));
+}
+
+/* Placeholder */
+.afw-post-it__placeholder {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  right: var(--space-4);
+  color: currentColor;
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}

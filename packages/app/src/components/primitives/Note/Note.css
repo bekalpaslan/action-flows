@@ -1,0 +1,178 @@
+/* Note annotation component */
+
+.afw-note {
+  position: relative;
+  display: inline-block;
+  max-width: 280px;
+}
+
+/* Optional colored dot above card */
+.afw-note__dot {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, calc(-100% - var(--space-2)));
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.afw-note__dot--blue {
+  background-color: var(--system-blue);
+}
+
+.afw-note__dot--green {
+  background-color: var(--system-green);
+}
+
+.afw-note__dot--orange {
+  background-color: var(--system-orange);
+}
+
+.afw-note__dot--red {
+  background-color: var(--system-red);
+}
+
+/* Card body */
+.afw-note__card {
+  position: relative;
+  background-color: var(--app-bg-secondary);
+  border: 1px solid var(--separator-opaque);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+.afw-note--variant-simple .afw-note__card {
+  padding: var(--space-3);
+}
+
+/* Title */
+.afw-note__title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm, 0.875rem);
+}
+
+/* Body text */
+.afw-note__body {
+  color: var(--text-secondary);
+  font-size: var(--text-sm, 0.875rem);
+  line-height: 1.5;
+}
+
+/* Status badges footer */
+.afw-note__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* Pointer/arrow using pseudo-elements */
+/* Strategy: ::before = border triangle (slightly larger), ::after = fill triangle */
+
+/* Pointer UP */
+.afw-note--pointer-up .afw-note__card::before,
+.afw-note--pointer-up .afw-note__card::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.afw-note--pointer-up .afw-note__card::before {
+  top: -9px;
+  border-width: 0 9px 9px 9px;
+  border-color: transparent transparent var(--separator-opaque) transparent;
+}
+
+.afw-note--pointer-up .afw-note__card::after {
+  top: -8px;
+  border-width: 0 8px 8px 8px;
+  border-color: transparent transparent var(--app-bg-secondary) transparent;
+}
+
+/* Pointer RIGHT */
+.afw-note--pointer-right .afw-note__card::before,
+.afw-note--pointer-right .afw-note__card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.afw-note--pointer-right .afw-note__card::before {
+  right: -9px;
+  border-width: 9px 0 9px 9px;
+  border-color: transparent transparent transparent var(--separator-opaque);
+}
+
+.afw-note--pointer-right .afw-note__card::after {
+  right: -8px;
+  border-width: 8px 0 8px 8px;
+  border-color: transparent transparent transparent var(--app-bg-secondary);
+}
+
+/* Pointer DOWN */
+.afw-note--pointer-down .afw-note__card::before,
+.afw-note--pointer-down .afw-note__card::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.afw-note--pointer-down .afw-note__card::before {
+  bottom: -9px;
+  border-width: 9px 9px 0 9px;
+  border-color: var(--separator-opaque) transparent transparent transparent;
+}
+
+.afw-note--pointer-down .afw-note__card::after {
+  bottom: -8px;
+  border-width: 8px 8px 0 8px;
+  border-color: var(--app-bg-secondary) transparent transparent transparent;
+}
+
+/* Pointer LEFT */
+.afw-note--pointer-left .afw-note__card::before,
+.afw-note--pointer-left .afw-note__card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.afw-note--pointer-left .afw-note__card::before {
+  left: -9px;
+  border-width: 9px 9px 9px 0;
+  border-color: transparent var(--separator-opaque) transparent transparent;
+}
+
+.afw-note--pointer-left .afw-note__card::after {
+  left: -8px;
+  border-width: 8px 8px 8px 0;
+  border-color: transparent var(--app-bg-secondary) transparent transparent;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .afw-note,
+  .afw-note__card,
+  .afw-note__dot {
+    transition: none;
+  }
+}

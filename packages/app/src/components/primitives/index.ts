@@ -39,3 +39,15 @@ export type { FlowCardProps } from './FlowCard';
 
 export { IndexTable } from './IndexTable';
 export type { IndexTableProps, IndexTableGroup, IndexTableItem, IndexTableStatus } from './IndexTable';
+
+export { Note } from './Note';
+export type { NoteProps } from './Note';
+
+export { PostIt } from './PostIt';
+export type { PostItProps } from './PostIt';
+
+export { Checklist } from './Checklist';
+export type { ChecklistProps, ChecklistItem } from './Checklist';
+
+export { SectionHeading } from './SectionHeading';
+export type { SectionHeadingProps } from './SectionHeading';

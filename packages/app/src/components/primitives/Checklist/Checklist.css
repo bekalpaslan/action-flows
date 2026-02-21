@@ -1,0 +1,137 @@
+/* ========================================
+   Checklist Component
+   ======================================== */
+
+/* Base checklist container */
+.afw-checklist {
+  width: 100%;
+}
+
+/* Inline variant - for embedding in tables */
+.afw-checklist--inline {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card variant - standalone card */
+.afw-checklist--card {
+  background-color: var(--app-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+/* Card header */
+.afw-checklist__header {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
+/* List container for card variant */
+.afw-checklist__list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Checklist row - grid layout */
+.afw-checklist__row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--separator-base);
+}
+
+.afw-checklist__row:last-child {
+  border-bottom: none;
+}
+
+/* Card variant: simpler grid (no status column) */
+.afw-checklist--card .afw-checklist__row {
+  grid-template-columns: auto 1fr;
+}
+
+/* Checkbox button */
+.afw-checklist__checkbox {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--separator-opaque);
+  background-color: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: border-color var(--duration-normal) var(--ease-in-out), background-color var(--duration-normal) var(--ease-in-out);
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .afw-checklist__checkbox {
+    transition: none;
+  }
+}
+
+/* Checkbox hover state */
+.afw-checklist__checkbox:hover:not(:disabled) {
+  border-color: var(--text-tertiary);
+}
+
+/* Checkbox focus state */
+.afw-checklist__checkbox:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Checkbox checked state */
+.afw-checklist__checkbox--checked {
+  background-color: var(--system-green);
+  border-color: var(--system-green);
+}
+
+/* Checkbox disabled state */
+.afw-checklist__checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Checkbox icon (hidden until checked) */
+.afw-checklist__checkbox svg {
+  display: block;
+}
+
+/* Label text */
+.afw-checklist__label {
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .afw-checklist__label {
+    transition: none;
+  }
+}
+
+/* Label checked state */
+.afw-checklist__label--checked {
+  color: var(--text-quaternary);
+  text-decoration: line-through;
+}
+
+/* Status text */
+.afw-checklist__status {
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+/* Status done state */
+.afw-checklist__status--done {
+  color: var(--system-green);
+}
