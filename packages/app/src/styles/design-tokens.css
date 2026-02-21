@@ -16,7 +16,7 @@
   --app-bg-primary: var(--palette-prussian-blue-300);           /* Primary app background */
   --app-bg-secondary: var(--palette-prussian-blue-400);         /* Secondary surfaces */
   --app-bg-tertiary: var(--palette-prussian-blue-500);          /* Elevated surfaces */
-  --app-bg-quaternary: #48484a;        /* Highest elevation */
+  --app-bg-quaternary: var(--palette-alabaster-grey-200);        /* Highest elevation */
 
   /* Text Colors */
   --text-primary: var(--palette-alabaster-grey-500);             /* Bright primary text */
@@ -25,44 +25,44 @@
   --text-quaternary: var(--palette-alabaster-grey-100);          /* Disabled/placeholder text */
 
   /* Separator & Border Base */
-  --separator-base: rgba(88, 166, 255, 0.08);
-  --separator-opaque: rgba(88, 166, 255, 0.15);
+  --separator-base: rgba(62, 103, 191, 0.08);
+  --separator-opaque: rgba(62, 103, 191, 0.15);
 
   /* System Colors — GitHub Dark Palette */
-  --system-blue: #58a6ff;
-  --system-purple: #a371f7;
-  --system-pink: #ff375f;
-  --system-red: #ff453a;
-  --system-orange: #f0883e;
-  --system-yellow: #ffd60a;
-  --system-green: #3fb950;
-  --system-teal: #39d2c0;
-  --system-indigo: #5e5ce6;
+  --system-blue: var(--palette-prussian-blue-700);
+  --system-purple: var(--palette-prussian-blue-600);
+  --system-pink: var(--palette-orange-400);
+  --system-red: var(--palette-orange-400);
+  --system-orange: var(--palette-orange-500);
+  --system-yellow: var(--palette-orange-600);
+  --system-green: var(--palette-prussian-blue-800);
+  --system-teal: var(--palette-prussian-blue-800);
+  --system-indigo: var(--palette-prussian-blue-600);
 
   /* Mock Compatibility Aliases — Direct mapping to layout-demo.html */
   --bg: var(--palette-prussian-blue-200);
   --surface: var(--palette-prussian-blue-300);
   --surface2: var(--palette-prussian-blue-400);
   --surface3: var(--palette-prussian-blue-500);
-  --border: rgba(88, 166, 255, 0.08);
-  --border-glow: rgba(88, 166, 255, 0.15);
-  --text: #c9d1d9;
-  --text-dim: #6e7a8a;
-  --text-bright: #e6edf3;
-  --accent: #58a6ff;
-  --accent-glow: rgba(88, 166, 255, 0.25);
-  --accent2: #3fb950;
-  --purple: #a371f7;
+  --border: rgba(62, 103, 191, 0.08);
+  --border-glow: rgba(62, 103, 191, 0.15);
+  --text: var(--palette-alabaster-grey-400);
+  --text-dim: var(--palette-black-700);
+  --text-bright: var(--palette-alabaster-grey-600);
+  --accent: var(--palette-prussian-blue-700);
+  --accent-glow: rgba(62, 103, 191, 0.25);
+  --accent2: var(--palette-prussian-blue-800);
+  --purple: var(--palette-prussian-blue-600);
   --orange: var(--palette-orange-500);
-  --cyan: #39d2c0;
+  --cyan: var(--palette-prussian-blue-800);
   --star-active: var(--palette-orange-500);
   --brand-accent: var(--palette-orange-500);
 
   /* Fill Colors — Apple's translucent fills */
-  --fill-primary: rgba(120, 120, 128, 0.36);
-  --fill-secondary: rgba(120, 120, 128, 0.32);
-  --fill-tertiary: rgba(118, 118, 128, 0.24);
-  --fill-quaternary: rgba(118, 118, 128, 0.18);
+  --fill-primary: rgba(138, 138, 138, 0.36);
+  --fill-secondary: rgba(138, 138, 138, 0.32);
+  --fill-tertiary: rgba(138, 138, 138, 0.24);
+  --fill-quaternary: rgba(138, 138, 138, 0.18);
 
   /* ==========================================================================
      Brand Palette — Raw color scale, prefix: --palette-
@@ -135,59 +135,59 @@
      ========================================================================== */
 
   /* Light Theme Backgrounds */
-  --light-bg-base: #ffffff;
-  --light-bg-primary: #f9fafb;
-  --light-bg-secondary: #f3f4f6;
-  --light-bg-tertiary: #e5e7eb;
-  --light-bg-quaternary: #d1d5db;
-  --light-bg-panel: #fafafa;
-  --light-bg-elevated: #ffffff;
-  --light-bg-inset: #f3f4f6;
+  --light-bg-base: var(--palette-white);
+  --light-bg-primary: var(--palette-alabaster-grey-900);
+  --light-bg-secondary: var(--palette-alabaster-grey-700);
+  --light-bg-tertiary: var(--palette-alabaster-grey-500);
+  --light-bg-quaternary: var(--palette-black-900);
+  --light-bg-panel: var(--palette-alabaster-grey-900);
+  --light-bg-elevated: var(--palette-white);
+  --light-bg-inset: var(--palette-alabaster-grey-700);
 
   /* Light Theme Text Colors */
-  --light-text-primary: #111827;
-  --light-text-secondary: #6b7280;
-  --light-text-tertiary: #9ca3af;
-  --light-text-quaternary: #d1d5db;
-  --light-text-inverted: #ffffff;
+  --light-text-primary: var(--palette-black-600);
+  --light-text-secondary: var(--palette-black-700);
+  --light-text-tertiary: var(--palette-black-800);
+  --light-text-quaternary: var(--palette-black-900);
+  --light-text-inverted: var(--palette-white);
 
   /* Light Theme Borders */
-  --light-border-default: #e5e7eb;
-  --light-border-subtle: #f3f4f6;
-  --light-border-strong: #d1d5db;
-  --light-border-accent: #3b82f6;
+  --light-border-default: var(--palette-alabaster-grey-500);
+  --light-border-subtle: var(--palette-alabaster-grey-700);
+  --light-border-strong: var(--palette-black-900);
+  --light-border-accent: var(--palette-prussian-blue-700);
   --light-separator: rgba(0, 0, 0, 0.08);
 
   /* Light Theme Status Colors */
-  --light-status-success-bg: #d1fae5;
-  --light-status-success-text: #065f46;
-  --light-status-success-border: #6ee7b7;
-  --light-status-warning-bg: #fef3c7;
-  --light-status-warning-text: #92400e;
-  --light-status-warning-border: #fbbf24;
-  --light-status-error-bg: #fee2e2;
-  --light-status-error-text: #991b1b;
-  --light-status-error-border: #fca5a5;
-  --light-status-info-bg: #dbeafe;
-  --light-status-info-text: #1e40af;
-  --light-status-info-border: #93c5fd;
+  --light-status-success-bg: var(--palette-prussian-blue-900);
+  --light-status-success-text: var(--palette-prussian-blue-500);
+  --light-status-success-border: var(--palette-prussian-blue-800);
+  --light-status-warning-bg: var(--palette-orange-900);
+  --light-status-warning-text: var(--palette-orange-200);
+  --light-status-warning-border: var(--palette-orange-600);
+  --light-status-error-bg: var(--palette-orange-900);
+  --light-status-error-text: var(--palette-orange-200);
+  --light-status-error-border: var(--palette-orange-700);
+  --light-status-info-bg: var(--palette-prussian-blue-900);
+  --light-status-info-text: var(--palette-prussian-blue-600);
+  --light-status-info-border: var(--palette-prussian-blue-800);
 
   /* Light Theme Buttons */
-  --light-btn-bg-primary: #3b82f6;
-  --light-btn-bg-secondary: #e5e7eb;
-  --light-btn-hover-primary: #2563eb;
-  --light-btn-hover-secondary: #d1d5db;
+  --light-btn-bg-primary: var(--palette-prussian-blue-700);
+  --light-btn-bg-secondary: var(--palette-alabaster-grey-500);
+  --light-btn-hover-primary: var(--palette-prussian-blue-700);
+  --light-btn-hover-secondary: var(--palette-black-900);
 
   /* Light Theme Input */
-  --light-input-bg: #ffffff;
-  --light-input-border: #d1d5db;
-  --light-input-focus-border: #3b82f6;
-  --light-input-hover-border: #9ca3af;
+  --light-input-bg: var(--palette-white);
+  --light-input-border: var(--palette-black-900);
+  --light-input-focus-border: var(--palette-prussian-blue-700);
+  --light-input-hover-border: var(--palette-black-800);
 
   /* Light Theme Panel */
-  --light-panel-bg: #fafafa;
-  --light-panel-border: #e5e7eb;
-  --light-panel-header-bg: #ffffff;
+  --light-panel-bg: var(--palette-alabaster-grey-900);
+  --light-panel-border: var(--palette-alabaster-grey-500);
+  --light-panel-header-bg: var(--palette-white);
   --light-panel-hover-bg: var(--light-bg-secondary);
   --light-panel-bg-base: rgba(255, 255, 255, 0.98);
   --light-panel-bg-elevated: rgba(250, 250, 250, 0.95);
@@ -196,68 +196,68 @@
   --light-panel-border-default: 1px solid rgba(0, 0, 0, 0.08);
   --light-panel-border-subtle: 1px solid rgba(0, 0, 0, 0.05);
   --light-panel-border-strong: 1px solid rgba(0, 0, 0, 0.12);
-  --light-panel-border-accent: 1px solid rgba(59, 130, 246, 0.6);
+  --light-panel-border-accent: 1px solid rgba(62, 103, 191, 0.6);
   --light-panel-border-color-default: rgba(0, 0, 0, 0.08);
   --light-panel-border-color-subtle: rgba(0, 0, 0, 0.05);
   --light-panel-border-color-strong: rgba(0, 0, 0, 0.12);
-  --light-panel-border-color-accent: rgba(59, 130, 246, 0.6);
-  --light-panel-header-bg: #f9fafb;
+  --light-panel-border-color-accent: rgba(62, 103, 191, 0.6);
+  --light-panel-header-bg: var(--palette-alabaster-grey-900);
   --light-panel-header-border: 1px solid rgba(0, 0, 0, 0.06);
   --light-panel-header-text-color: var(--light-text-primary);
   --light-panel-header-secondary-color: var(--light-text-secondary);
-  --light-panel-glow-default: 0 0 8px rgba(59, 130, 246, 0.08), 0 0 2px rgba(59, 130, 246, 0.12);
-  --light-panel-glow-accent: 0 0 12px rgba(59, 130, 246, 0.15), 0 0 3px rgba(59, 130, 246, 0.25);
-  --light-panel-glow-hover: 0 0 14px rgba(59, 130, 246, 0.12), 0 0 3px rgba(59, 130, 246, 0.18);
-  --light-panel-glow-focus: 0 0 18px rgba(59, 130, 246, 0.18), 0 0 4px rgba(59, 130, 246, 0.28);
-  --light-btn-bg-primary: #3b82f6;
-  --light-btn-bg-secondary: #e5e7eb;
+  --light-panel-glow-default: 0 0 8px rgba(62, 103, 191, 0.08), 0 0 2px rgba(62, 103, 191, 0.12);
+  --light-panel-glow-accent: 0 0 12px rgba(62, 103, 191, 0.15), 0 0 3px rgba(62, 103, 191, 0.25);
+  --light-panel-glow-hover: 0 0 14px rgba(62, 103, 191, 0.12), 0 0 3px rgba(62, 103, 191, 0.18);
+  --light-panel-glow-focus: 0 0 18px rgba(62, 103, 191, 0.18), 0 0 4px rgba(62, 103, 191, 0.28);
+  --light-btn-bg-primary: var(--palette-prussian-blue-700);
+  --light-btn-bg-secondary: var(--palette-alabaster-grey-500);
   --light-btn-bg-tertiary: rgba(255, 255, 255, 0.8);
-  --light-btn-bg-danger: #ef4444;
-  --light-btn-hover-primary: #2563eb;
-  --light-btn-hover-secondary: #d1d5db;
+  --light-btn-bg-danger: var(--palette-orange-400);
+  --light-btn-hover-primary: var(--palette-prussian-blue-700);
+  --light-btn-hover-secondary: var(--palette-black-900);
   --light-btn-hover-tertiary: rgba(0, 0, 0, 0.05);
-  --light-btn-hover-danger: #dc2626;
-  --light-btn-active-primary: #1d4ed8;
-  --light-btn-active-secondary: #bfdbfe;
+  --light-btn-hover-danger: var(--palette-orange-400);
+  --light-btn-active-primary: var(--palette-prussian-blue-600);
+  --light-btn-active-secondary: var(--palette-prussian-blue-900);
   --light-btn-active-tertiary: rgba(0, 0, 0, 0.08);
-  --light-btn-active-danger: #991b1b;
+  --light-btn-active-danger: var(--palette-orange-200);
   --light-btn-border-default: 1px solid rgba(0, 0, 0, 0.12);
-  --light-btn-border-focus: 1px solid rgba(59, 130, 246, 0.8);
+  --light-btn-border-focus: 1px solid rgba(62, 103, 191, 0.8);
   --light-btn-border-none: none;
   --light-btn-border-color-default: rgba(0, 0, 0, 0.12);
-  --light-btn-border-color-focus: rgba(59, 130, 246, 0.8);
+  --light-btn-border-color-focus: rgba(62, 103, 191, 0.8);
   --light-btn-radius-sm: 6px;
   --light-btn-radius-md: 8px;
   --light-btn-radius-lg: 10px;
   --light-btn-radius-pill: 999px;
-  --light-btn-glow-default: 0 0 6px rgba(59, 130, 246, 0.08), 0 0 2px rgba(59, 130, 246, 0.12);
-  --light-btn-glow-hover: 0 0 12px rgba(59, 130, 246, 0.15), 0 0 3px rgba(59, 130, 246, 0.25);
-  --light-btn-glow-focus: 0 0 16px rgba(59, 130, 246, 0.22), 0 0 4px rgba(59, 130, 246, 0.35);
-  --light-btn-text-primary: #ffffff;
+  --light-btn-glow-default: 0 0 6px rgba(62, 103, 191, 0.08), 0 0 2px rgba(62, 103, 191, 0.12);
+  --light-btn-glow-hover: 0 0 12px rgba(62, 103, 191, 0.15), 0 0 3px rgba(62, 103, 191, 0.25);
+  --light-btn-glow-focus: 0 0 16px rgba(62, 103, 191, 0.22), 0 0 4px rgba(62, 103, 191, 0.35);
+  --light-btn-text-primary: var(--palette-white);
   --light-btn-text-secondary: var(--light-text-primary);
   --light-btn-text-tertiary: var(--light-text-primary);
   --light-btn-text-disabled: var(--light-text-quaternary);
-  --light-input-bg-default: #ffffff;
-  --light-input-bg-hover: #f9fafb;
-  --light-input-bg-focus: #ffffff;
-  --light-input-bg-disabled: #f3f4f6;
-  --light-input-border-default: 1px solid #d1d5db;
-  --light-input-border-hover: 1px solid #9ca3af;
-  --light-input-border-focus: 1px solid #3b82f6;
-  --light-input-border-error: 1px solid #ef4444;
-  --light-input-border-color-default: #d1d5db;
-  --light-input-border-color-hover: #9ca3af;
-  --light-input-border-color-focus: #3b82f6;
-  --light-input-border-color-error: #ef4444;
+  --light-input-bg-default: var(--palette-white);
+  --light-input-bg-hover: var(--palette-alabaster-grey-900);
+  --light-input-bg-focus: var(--palette-white);
+  --light-input-bg-disabled: var(--palette-alabaster-grey-700);
+  --light-input-border-default: 1px solid var(--palette-black-900);
+  --light-input-border-hover: 1px solid var(--palette-black-800);
+  --light-input-border-focus: 1px solid var(--palette-prussian-blue-700);
+  --light-input-border-error: 1px solid var(--palette-orange-400);
+  --light-input-border-color-default: var(--palette-black-900);
+  --light-input-border-color-hover: var(--palette-black-800);
+  --light-input-border-color-focus: var(--palette-prussian-blue-700);
+  --light-input-border-color-error: var(--palette-orange-400);
   --light-input-radius-sm: 6px;
   --light-input-radius-md: 8px;
   --light-input-radius-lg: 10px;
-  --light-input-glow-default: 0 0 6px rgba(59, 130, 246, 0.05), 0 0 2px rgba(59, 130, 246, 0.08);
-  --light-input-glow-focus: 0 0 14px rgba(59, 130, 246, 0.15), 0 0 3px rgba(59, 130, 246, 0.25);
-  --light-input-glow-error: 0 0 10px rgba(239, 68, 68, 0.12), 0 0 3px rgba(239, 68, 68, 0.18);
+  --light-input-glow-default: 0 0 6px rgba(62, 103, 191, 0.05), 0 0 2px rgba(62, 103, 191, 0.08);
+  --light-input-glow-focus: 0 0 14px rgba(62, 103, 191, 0.15), 0 0 3px rgba(62, 103, 191, 0.25);
+  --light-input-glow-error: 0 0 10px rgba(214, 133, 2, 0.12), 0 0 3px rgba(214, 133, 2, 0.18);
   --light-input-text-color: var(--light-text-primary);
   --light-input-placeholder-color: var(--light-text-tertiary);
-  --light-header-bg-default: #ffffff;
+  --light-header-bg-default: var(--palette-white);
   --light-header-bg-translucent: rgba(255, 255, 255, 0.95);
   --light-header-bg-glass: rgba(255, 255, 255, 0.9);
   --light-header-border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -266,22 +266,22 @@
   --light-header-text-secondary: var(--light-text-secondary);
   --light-nav-item-bg-default: transparent;
   --light-nav-item-bg-hover: rgba(0, 0, 0, 0.05);
-  --light-nav-item-bg-active: rgba(59, 130, 246, 0.1);
+  --light-nav-item-bg-active: rgba(62, 103, 191, 0.1);
   --light-nav-item-text-default: var(--light-text-secondary);
   --light-nav-item-text-hover: var(--light-text-primary);
-  --light-nav-item-text-active: #3b82f6;
-  --light-status-success-bg: #d1fae5;
-  --light-status-success-text: #065f46;
-  --light-status-success-border: #6ee7b7;
-  --light-status-warning-bg: #fef3c7;
-  --light-status-warning-text: #92400e;
-  --light-status-warning-border: #fbbf24;
-  --light-status-error-bg: #fee2e2;
-  --light-status-error-text: #991b1b;
-  --light-status-error-border: #fca5a5;
-  --light-status-info-bg: #dbeafe;
-  --light-status-info-text: #1e40af;
-  --light-status-info-border: #93c5fd;
+  --light-nav-item-text-active: var(--palette-prussian-blue-700);
+  --light-status-success-bg: var(--palette-prussian-blue-900);
+  --light-status-success-text: var(--palette-prussian-blue-500);
+  --light-status-success-border: var(--palette-prussian-blue-800);
+  --light-status-warning-bg: var(--palette-orange-900);
+  --light-status-warning-text: var(--palette-orange-200);
+  --light-status-warning-border: var(--palette-orange-600);
+  --light-status-error-bg: var(--palette-orange-900);
+  --light-status-error-text: var(--palette-orange-200);
+  --light-status-error-border: var(--palette-orange-700);
+  --light-status-info-bg: var(--palette-prussian-blue-900);
+  --light-status-info-text: var(--palette-prussian-blue-600);
+  --light-status-info-border: var(--palette-prussian-blue-800);
   --light-glass-bg-light: rgba(255, 255, 255, 0.95);
   --light-glass-bg-medium: rgba(255, 255, 255, 0.9);
   --light-glass-bg-dark: rgba(0, 0, 0, 0.05);
@@ -297,22 +297,22 @@
      ========================================================================== */
 
   /* Panel Backgrounds — Layered with subtle transparency */
-  --panel-bg-base: rgba(15, 21, 32, 0.95);         /* Standard panel */
-  --panel-bg-elevated: rgba(21, 29, 43, 0.92);     /* Elevated panel */
-  --panel-bg-raised: rgba(26, 36, 54, 0.90);       /* Highest panels */
-  --panel-bg-inset: rgba(8, 12, 20, 0.85);         /* Inset/recessed areas */
+  --panel-bg-base: rgba(8, 13, 25, 0.95);         /* Standard panel */
+  --panel-bg-elevated: rgba(12, 20, 37, 0.92);     /* Elevated panel */
+  --panel-bg-raised: rgba(16, 27, 49, 0.90);       /* Highest panels */
+  --panel-bg-inset: rgba(4, 7, 12, 0.85);         /* Inset/recessed areas */
 
   /* Panel Borders — GitHub-style subtle borders */
-  --panel-border-default: 1px solid rgba(88, 166, 255, 0.08);
-  --panel-border-subtle: 1px solid rgba(88, 166, 255, 0.05);
-  --panel-border-strong: 1px solid rgba(88, 166, 255, 0.15);
-  --panel-border-accent: 1px solid rgba(88, 166, 255, 0.25);
+  --panel-border-default: 1px solid rgba(62, 103, 191, 0.08);
+  --panel-border-subtle: 1px solid rgba(62, 103, 191, 0.05);
+  --panel-border-strong: 1px solid rgba(62, 103, 191, 0.15);
+  --panel-border-accent: 1px solid rgba(62, 103, 191, 0.25);
 
   /* Panel Border Colors (for use in custom borders) */
-  --panel-border-color-default: rgba(88, 166, 255, 0.08);
-  --panel-border-color-subtle: rgba(88, 166, 255, 0.05);
-  --panel-border-color-strong: rgba(88, 166, 255, 0.15);
-  --panel-border-color-accent: rgba(88, 166, 255, 0.25);
+  --panel-border-color-default: rgba(62, 103, 191, 0.08);
+  --panel-border-color-subtle: rgba(62, 103, 191, 0.05);
+  --panel-border-color-strong: rgba(62, 103, 191, 0.15);
+  --panel-border-color-accent: rgba(62, 103, 191, 0.25);
 
   /* Panel Radius Scale */
   --panel-radius-sm: 6px;      /* Small panels/cards */
@@ -321,14 +321,14 @@
   --panel-radius-xl: 18px;     /* Extra large containers */
 
   /* Panel Glow — Subtle GitHub-style glow */
-  --panel-glow-default: 0 0 8px rgba(88, 166, 255, 0.10), 0 0 2px rgba(88, 166, 255, 0.15);
-  --panel-glow-accent: 0 0 12px rgba(88, 166, 255, 0.20), 0 0 3px rgba(88, 166, 255, 0.25);
-  --panel-glow-hover: 0 0 14px rgba(88, 166, 255, 0.15), 0 0 3px rgba(88, 166, 255, 0.20);
-  --panel-glow-focus: 0 0 18px rgba(88, 166, 255, 0.25), 0 0 4px rgba(88, 166, 255, 0.30);
+  --panel-glow-default: 0 0 8px rgba(62, 103, 191, 0.10), 0 0 2px rgba(62, 103, 191, 0.15);
+  --panel-glow-accent: 0 0 12px rgba(62, 103, 191, 0.20), 0 0 3px rgba(62, 103, 191, 0.25);
+  --panel-glow-hover: 0 0 14px rgba(62, 103, 191, 0.15), 0 0 3px rgba(62, 103, 191, 0.20);
+  --panel-glow-focus: 0 0 18px rgba(62, 103, 191, 0.25), 0 0 4px rgba(62, 103, 191, 0.30);
 
   /* Panel Header — Distinct header area */
   --panel-header-bg: rgba(255, 255, 255, 0.05);
-  --panel-header-border: 1px solid rgba(88, 166, 255, 0.08);
+  --panel-header-border: 1px solid rgba(62, 103, 191, 0.08);
   --panel-header-text-color: var(--text-primary);
   --panel-header-secondary-color: var(--text-secondary);
 
@@ -337,31 +337,31 @@
      ========================================================================== */
 
   /* Button Backgrounds */
-  --btn-bg-primary: rgba(88, 166, 255, 0.95);      /* Primary action */
-  --btn-bg-secondary: rgba(120, 120, 128, 0.36);   /* Secondary action */
+  --btn-bg-primary: rgba(62, 103, 191, 0.95);      /* Primary action */
+  --btn-bg-secondary: rgba(138, 138, 138, 0.36);   /* Secondary action */
   --btn-bg-tertiary: rgba(255, 255, 255, 0.08);    /* Tertiary/ghost */
-  --btn-bg-danger: rgba(255, 69, 58, 0.95);        /* Destructive action */
+  --btn-bg-danger: rgba(214, 133, 2, 0.95);        /* Destructive action */
 
   /* Button Hover States */
-  --btn-hover-primary: rgba(88, 166, 255, 1);
-  --btn-hover-secondary: rgba(120, 120, 128, 0.42);
+  --btn-hover-primary: rgba(62, 103, 191, 1);
+  --btn-hover-secondary: rgba(138, 138, 138, 0.42);
   --btn-hover-tertiary: rgba(255, 255, 255, 0.12);
-  --btn-hover-danger: rgba(255, 69, 58, 1);
+  --btn-hover-danger: rgba(214, 133, 2, 1);
 
   /* Button Active/Pressed States */
   --btn-active-primary: rgba(70, 133, 204, 0.95);
-  --btn-active-secondary: rgba(120, 120, 128, 0.48);
+  --btn-active-secondary: rgba(138, 138, 138, 0.48);
   --btn-active-tertiary: rgba(255, 255, 255, 0.16);
   --btn-active-danger: rgba(204, 55, 46, 0.95);
 
   /* Button Borders */
-  --btn-border-default: 1px solid rgba(88, 166, 255, 0.08);
-  --btn-border-focus: 1px solid rgba(88, 166, 255, 0.6);
+  --btn-border-default: 1px solid rgba(62, 103, 191, 0.08);
+  --btn-border-focus: 1px solid rgba(62, 103, 191, 0.6);
   --btn-border-none: none;
 
   /* Button Border Colors */
-  --btn-border-color-default: rgba(88, 166, 255, 0.08);
-  --btn-border-color-focus: rgba(88, 166, 255, 0.6);
+  --btn-border-color-default: rgba(62, 103, 191, 0.08);
+  --btn-border-color-focus: rgba(62, 103, 191, 0.6);
 
   /* Button Radius */
   --btn-radius-sm: 6px;        /* Small buttons */
@@ -370,12 +370,12 @@
   --btn-radius-pill: 999px;    /* Pill-shaped buttons */
 
   /* Button Glow */
-  --btn-glow-default: 0 0 6px rgba(88, 166, 255, 0.18), 0 0 2px rgba(88, 166, 255, 0.25);
-  --btn-glow-hover: 0 0 12px rgba(88, 166, 255, 0.35), 0 0 3px rgba(88, 166, 255, 0.45);
-  --btn-glow-focus: 0 0 16px rgba(88, 166, 255, 0.45), 0 0 4px rgba(88, 166, 255, 0.55);
+  --btn-glow-default: 0 0 6px rgba(62, 103, 191, 0.18), 0 0 2px rgba(62, 103, 191, 0.25);
+  --btn-glow-hover: 0 0 12px rgba(62, 103, 191, 0.35), 0 0 3px rgba(62, 103, 191, 0.45);
+  --btn-glow-focus: 0 0 16px rgba(62, 103, 191, 0.45), 0 0 4px rgba(62, 103, 191, 0.55);
 
   /* Button Text Colors */
-  --btn-text-primary: #ffffff;
+  --btn-text-primary: var(--palette-white);
   --btn-text-secondary: var(--text-primary);
   --btn-text-tertiary: var(--text-primary);
   --btn-text-disabled: var(--text-quaternary);
@@ -385,22 +385,22 @@
      ========================================================================== */
 
   /* Input Backgrounds */
-  --input-bg-default: rgba(118, 118, 128, 0.24);
-  --input-bg-hover: rgba(118, 118, 128, 0.28);
-  --input-bg-focus: rgba(118, 118, 128, 0.32);
-  --input-bg-disabled: rgba(118, 118, 128, 0.12);
+  --input-bg-default: rgba(138, 138, 138, 0.24);
+  --input-bg-hover: rgba(138, 138, 138, 0.28);
+  --input-bg-focus: rgba(138, 138, 138, 0.32);
+  --input-bg-disabled: rgba(138, 138, 138, 0.12);
 
   /* Input Borders */
-  --input-border-default: 1px solid rgba(88, 166, 255, 0.08);
-  --input-border-hover: 1px solid rgba(88, 166, 255, 0.15);
-  --input-border-focus: 1px solid rgba(88, 166, 255, 0.6);
-  --input-border-error: 1px solid rgba(255, 69, 58, 0.5);
+  --input-border-default: 1px solid rgba(62, 103, 191, 0.08);
+  --input-border-hover: 1px solid rgba(62, 103, 191, 0.15);
+  --input-border-focus: 1px solid rgba(62, 103, 191, 0.6);
+  --input-border-error: 1px solid rgba(214, 133, 2, 0.5);
 
   /* Input Border Colors */
-  --input-border-color-default: rgba(88, 166, 255, 0.08);
-  --input-border-color-hover: rgba(88, 166, 255, 0.15);
-  --input-border-color-focus: rgba(88, 166, 255, 0.6);
-  --input-border-color-error: rgba(255, 69, 58, 0.5);
+  --input-border-color-default: rgba(62, 103, 191, 0.08);
+  --input-border-color-hover: rgba(62, 103, 191, 0.15);
+  --input-border-color-focus: rgba(62, 103, 191, 0.6);
+  --input-border-color-error: rgba(214, 133, 2, 0.5);
 
   /* Input Radius */
   --input-radius-sm: 6px;      /* Small inputs */
@@ -408,9 +408,9 @@
   --input-radius-lg: 10px;     /* Large inputs */
 
   /* Input Glow */
-  --input-glow-default: 0 0 6px rgba(88, 166, 255, 0.15), 0 0 2px rgba(88, 166, 255, 0.25);
-  --input-glow-focus: 0 0 14px rgba(88, 166, 255, 0.40), 0 0 3px rgba(88, 166, 255, 0.50);
-  --input-glow-error: 0 0 10px rgba(255, 69, 58, 0.35), 0 0 3px rgba(255, 69, 58, 0.45);
+  --input-glow-default: 0 0 6px rgba(62, 103, 191, 0.15), 0 0 2px rgba(62, 103, 191, 0.25);
+  --input-glow-focus: 0 0 14px rgba(62, 103, 191, 0.40), 0 0 3px rgba(62, 103, 191, 0.50);
+  --input-glow-error: 0 0 10px rgba(214, 133, 2, 0.35), 0 0 3px rgba(214, 133, 2, 0.45);
 
   /* Input Text */
   --input-text-color: var(--text-primary);
@@ -421,13 +421,13 @@
      ========================================================================== */
 
   /* Header Backgrounds */
-  --header-bg-default: rgba(15, 21, 32, 0.95);
-  --header-bg-translucent: rgba(15, 21, 32, 0.85);
-  --header-bg-glass: rgba(15, 21, 32, 0.75);
+  --header-bg-default: rgba(8, 13, 25, 0.95);
+  --header-bg-translucent: rgba(8, 13, 25, 0.85);
+  --header-bg-glass: rgba(8, 13, 25, 0.75);
 
   /* Header Borders */
-  --header-border-bottom: 1px solid rgba(88, 166, 255, 0.08);
-  --header-border-color: rgba(88, 166, 255, 0.08);
+  --header-border-bottom: 1px solid rgba(62, 103, 191, 0.08);
+  --header-border-color: rgba(62, 103, 191, 0.08);
 
   /* Header Text */
   --header-text-primary: var(--text-primary);
@@ -436,7 +436,7 @@
   /* Navigation Colors */
   --nav-item-bg-default: transparent;
   --nav-item-bg-hover: rgba(255, 255, 255, 0.08);
-  --nav-item-bg-active: rgba(88, 166, 255, 0.15);
+  --nav-item-bg-active: rgba(62, 103, 191, 0.15);
   --nav-item-text-default: var(--text-secondary);
   --nav-item-text-hover: var(--text-primary);
   --nav-item-text-active: var(--system-blue);
@@ -446,19 +446,19 @@
      ========================================================================== */
 
   /* Sidebar gradients */
-  --sidebar-gradient-from: #3e3d45;
-  --sidebar-gradient-to: #202020;
+  --sidebar-gradient-from: var(--palette-alabaster-grey-100);
+  --sidebar-gradient-to: var(--palette-black-600);
   --sidebar-bg-gradient: linear-gradient(180deg, var(--sidebar-gradient-from) 0%, var(--sidebar-gradient-to) 100%);
 
   /* Sidebar accent colors */
-  --sidebar-accent-pink: #E91F63;
-  --sidebar-section-header-bg: #505054;
-  --sidebar-section-header-hover: #5a5a5e;
+  --sidebar-accent-pink: var(--palette-orange-500);
+  --sidebar-section-header-bg: var(--palette-alabaster-grey-200);
+  --sidebar-section-header-hover: var(--palette-alabaster-grey-200);
   --sidebar-badge-bg: rgba(255, 255, 255, 0.1);
 
   /* Avatar gradients */
-  --avatar-gradient-from: #667eea;
-  --avatar-gradient-to: #764ba2;
+  --avatar-gradient-from: var(--palette-prussian-blue-700);
+  --avatar-gradient-to: var(--palette-prussian-blue-600);
   --avatar-gradient: linear-gradient(135deg, var(--avatar-gradient-from) 0%, var(--avatar-gradient-to) 100%);
 
   /* Separator variant */
@@ -541,14 +541,14 @@
   --glass-blur-xl: blur(40px);
 
   /* Glass Borders */
-  --glass-border-default: 1px solid rgba(88, 166, 255, 0.08);
-  --glass-border-subtle: 1px solid rgba(88, 166, 255, 0.05);
-  --glass-border-strong: 1px solid rgba(88, 166, 255, 0.15);
+  --glass-border-default: 1px solid rgba(62, 103, 191, 0.08);
+  --glass-border-subtle: 1px solid rgba(62, 103, 191, 0.05);
+  --glass-border-strong: 1px solid rgba(62, 103, 191, 0.15);
 
   /* Glass Border Colors */
-  --glass-border-color-default: rgba(88, 166, 255, 0.08);
-  --glass-border-color-subtle: rgba(88, 166, 255, 0.05);
-  --glass-border-color-strong: rgba(88, 166, 255, 0.15);
+  --glass-border-color-default: rgba(62, 103, 191, 0.08);
+  --glass-border-color-subtle: rgba(62, 103, 191, 0.05);
+  --glass-border-color-strong: rgba(62, 103, 191, 0.15);
 
   /* ==========================================================================
      Glow & Illumination Token System
@@ -556,11 +556,11 @@
 
   /* Glow Colors */
   --glow-color-default: rgba(255, 255, 255, 0.15);
-  --glow-color-accent: rgba(88, 166, 255, 0.25);
-  --glow-color-success: rgba(63, 185, 80, 0.25);
-  --glow-color-warning: rgba(240, 136, 62, 0.25);
-  --glow-color-error: rgba(255, 69, 58, 0.25);
-  --glow-color-purple: rgba(163, 113, 247, 0.25);
+  --glow-color-accent: rgba(62, 103, 191, 0.25);
+  --glow-color-success: rgba(126, 153, 213, 0.25);
+  --glow-color-warning: rgba(252, 163, 17, 0.25);
+  --glow-color-error: rgba(214, 133, 2, 0.25);
+  --glow-color-purple: rgba(41, 68, 126, 0.25);
 
   /* Glow Spread Values */
   --glow-spread-sm: 0 0 2px;
@@ -763,90 +763,90 @@
      ========================================================================== */
 
   /* Success States */
-  --status-success-bg: rgba(63, 185, 80, 0.15);
-  --status-success-border: rgba(63, 185, 80, 0.3);
-  --status-success-text: #3fb950;
+  --status-success-bg: rgba(126, 153, 213, 0.15);
+  --status-success-border: rgba(126, 153, 213, 0.3);
+  --status-success-text: var(--palette-prussian-blue-800);
 
   /* Warning States */
-  --status-warning-bg: rgba(240, 136, 62, 0.15);
-  --status-warning-border: rgba(240, 136, 62, 0.3);
+  --status-warning-bg: rgba(252, 163, 17, 0.15);
+  --status-warning-border: rgba(252, 163, 17, 0.3);
   --status-warning-text: var(--system-orange);
 
   /* Error States */
-  --status-error-bg: rgba(255, 69, 58, 0.15);
-  --status-error-border: rgba(255, 69, 58, 0.3);
-  --status-error-text: #ff453a;
+  --status-error-bg: rgba(214, 133, 2, 0.15);
+  --status-error-border: rgba(214, 133, 2, 0.3);
+  --status-error-text: var(--palette-orange-400);
 
   /* Info States */
-  --status-info-bg: rgba(88, 166, 255, 0.15);
-  --status-info-border: rgba(88, 166, 255, 0.3);
-  --status-info-text: #58a6ff;
+  --status-info-bg: rgba(62, 103, 191, 0.15);
+  --status-info-border: rgba(62, 103, 191, 0.3);
+  --status-info-text: var(--palette-prussian-blue-700);
 
   /* ==========================================================================
      Semantic Color Tokens for Components
      ========================================================================== */
 
   /* Success/Added color palette */
-  --semantic-success: #3fb950;
-  --semantic-success-bg-light: #e8f5e9;
-  --semantic-success-bg-light-opacity: rgba(34, 197, 94, 0.15);
-  --semantic-success-border-light: #a5d6a7;
-  --semantic-success-text-light: #1b5e20;
-  --semantic-success-text-light-dark: #003300;
-  --semantic-success-bg-dark: #1b5e20;
-  --semantic-success-border-dark: #2e7d32;
-  --semantic-success-text-dark: #e8f5e9;
+  --semantic-success: var(--palette-prussian-blue-800);
+  --semantic-success-bg-light: var(--palette-prussian-blue-900);
+  --semantic-success-bg-light-opacity: rgba(126, 153, 213, 0.15);
+  --semantic-success-border-light: var(--palette-prussian-blue-800);
+  --semantic-success-text-light: var(--palette-prussian-blue-400);
+  --semantic-success-text-light-dark: var(--palette-prussian-blue-100);
+  --semantic-success-bg-dark: var(--palette-prussian-blue-400);
+  --semantic-success-border-dark: var(--palette-prussian-blue-400);
+  --semantic-success-text-dark: var(--palette-prussian-blue-900);
 
   /* Error/Deleted/Warning color palette */
-  --semantic-error: #ef4444;
-  --semantic-error-dark: #ff453a;
-  --semantic-error-reduced: #dc2626;
-  --semantic-error-bg-light: rgba(239, 68, 68, 0.15);
-  --semantic-error-border-light: rgba(239, 68, 68, 0.3);
-  --semantic-error-border-light-dark: rgba(239, 68, 68, 0.5);
+  --semantic-error: var(--palette-orange-400);
+  --semantic-error-dark: var(--palette-orange-400);
+  --semantic-error-reduced: var(--palette-orange-400);
+  --semantic-error-bg-light: rgba(214, 133, 2, 0.15);
+  --semantic-error-border-light: rgba(214, 133, 2, 0.3);
+  --semantic-error-border-light-dark: rgba(214, 133, 2, 0.5);
 
   /* Info/Modified color palette */
-  --semantic-info: #3b82f6;
-  --semantic-info-bg-light: rgba(59, 130, 246, 0.15);
+  --semantic-info: var(--palette-prussian-blue-700);
+  --semantic-info-bg-light: rgba(62, 103, 191, 0.15);
 
   /* Blue/OpenSpec color palette (light mode) */
-  --semantic-blue-light-bg: #e3f2fd;
-  --semantic-blue-light-text: #1565c0;
-  --semantic-blue-light-border: #90caf9;
-  --semantic-blue-light-hover-bg: #bbdefb;
-  --semantic-blue-light-hover-border: #64b5f6;
-  --semantic-blue-light-inferred: #0d47a1;
-  --semantic-blue-dark-bg: #0d47a1;
-  --semantic-blue-dark-text: #e3f2fd;
-  --semantic-blue-dark-border: #1976d2;
-  --semantic-blue-dark-hover-bg: #1565c0;
-  --semantic-blue-dark-hover-border: #1e88e5;
+  --semantic-blue-light-bg: var(--palette-prussian-blue-900);
+  --semantic-blue-light-text: var(--palette-prussian-blue-600);
+  --semantic-blue-light-border: var(--palette-prussian-blue-800);
+  --semantic-blue-light-hover-bg: var(--palette-prussian-blue-900);
+  --semantic-blue-light-hover-border: var(--palette-prussian-blue-800);
+  --semantic-blue-light-inferred: var(--palette-prussian-blue-500);
+  --semantic-blue-dark-bg: var(--palette-prussian-blue-500);
+  --semantic-blue-dark-text: var(--palette-prussian-blue-900);
+  --semantic-blue-dark-border: var(--palette-prussian-blue-600);
+  --semantic-blue-dark-hover-bg: var(--palette-prussian-blue-600);
+  --semantic-blue-dark-hover-border: var(--palette-prussian-blue-700);
 
   /* Purple/Code-Review color palette (light mode) */
-  --semantic-purple-light-bg: #f3e5f5;
-  --semantic-purple-light-text: #6a1b9a;
-  --semantic-purple-light-border: #ce93d8;
-  --semantic-purple-light-hover-bg: #e1bee7;
-  --semantic-purple-light-hover-border: #ba68c8;
-  --semantic-purple-light-inferred: #4a148c;
-  --semantic-purple-dark-bg: #4a148c;
-  --semantic-purple-dark-text: #f3e5f5;
-  --semantic-purple-dark-border: #7b1fa2;
-  --semantic-purple-dark-hover-bg: #6a1b9a;
-  --semantic-purple-dark-hover-border: #8e24aa;
+  --semantic-purple-light-bg: var(--palette-alabaster-grey-800);
+  --semantic-purple-light-text: var(--palette-prussian-blue-600);
+  --semantic-purple-light-border: var(--palette-prussian-blue-800);
+  --semantic-purple-light-hover-bg: var(--palette-prussian-blue-900);
+  --semantic-purple-light-hover-border: var(--palette-prussian-blue-800);
+  --semantic-purple-light-inferred: var(--palette-prussian-blue-600);
+  --semantic-purple-dark-bg: var(--palette-prussian-blue-600);
+  --semantic-purple-dark-text: var(--palette-alabaster-grey-800);
+  --semantic-purple-dark-border: var(--palette-prussian-blue-600);
+  --semantic-purple-dark-hover-bg: var(--palette-prussian-blue-600);
+  --semantic-purple-dark-hover-border: var(--palette-prussian-blue-700);
 
   /* Orange/Audit color palette (light mode) */
-  --semantic-orange-light-bg: #fff3e0;
-  --semantic-orange-light-text: #e65100;
-  --semantic-orange-light-border: #ffe0b2;
-  --semantic-orange-light-hover-bg: #ffe0b2;
-  --semantic-orange-light-hover-border: #ffcc80;
-  --semantic-orange-light-inferred: #bf360c;
-  --semantic-orange-dark-bg: #bf360c;
-  --semantic-orange-dark-text: #fff3e0;
-  --semantic-orange-dark-border: #e65100;
-  --semantic-orange-dark-hover-bg: #d84315;
-  --semantic-orange-dark-hover-border: #ff6f00;
+  --semantic-orange-light-bg: var(--palette-orange-900);
+  --semantic-orange-light-text: var(--palette-orange-300);
+  --semantic-orange-light-border: var(--palette-orange-800);
+  --semantic-orange-light-hover-bg: var(--palette-orange-800);
+  --semantic-orange-light-hover-border: var(--palette-orange-700);
+  --semantic-orange-light-inferred: var(--palette-orange-200);
+  --semantic-orange-dark-bg: var(--palette-orange-200);
+  --semantic-orange-dark-text: var(--palette-orange-900);
+  --semantic-orange-dark-border: var(--palette-orange-300);
+  --semantic-orange-dark-hover-bg: var(--palette-orange-300);
+  --semantic-orange-dark-hover-border: var(--palette-orange-500);
 
   /* ==========================================================================
      Opacity Scale
@@ -870,9 +870,9 @@
      Neutral/Gray Badge Colors — for idle/neutral status indicators
      ========================================================================== */
 
-  --semantic-neutral-bg-light: rgba(156, 163, 175, 0.15);
-  --semantic-neutral-border-light: rgba(156, 163, 175, 0.3);
-  --semantic-neutral-text: #98989d;
+  --semantic-neutral-bg-light: rgba(138, 138, 138, 0.15);
+  --semantic-neutral-border-light: rgba(138, 138, 138, 0.3);
+  --semantic-neutral-text: var(--palette-alabaster-grey-300);
 
   /* ==========================================================================
      Overlay & Background Colors — for modals, dialogs, overlays
@@ -885,68 +885,68 @@
      Component Hover State Colors — for button hover backgrounds
      ========================================================================== */
 
-  --btn-hover-warning-light: rgba(240, 136, 62, 0.1);
-  --btn-hover-success-light: rgba(63, 185, 80, 0.1);
-  --btn-hover-error-light: rgba(255, 69, 58, 0.1);
+  --btn-hover-warning-light: rgba(252, 163, 17, 0.1);
+  --btn-hover-success-light: rgba(126, 153, 213, 0.1);
+  --btn-hover-error-light: rgba(214, 133, 2, 0.1);
 
   /* ==========================================================================
      Animation Glow Colors — for pulsing status indicators
      ========================================================================== */
 
-  --glow-success-60: rgba(34, 197, 94, 0.6);
-  --glow-success-80: rgba(34, 197, 94, 0.8);
-  --glow-warning-60: rgba(234, 179, 8, 0.6);
-  --glow-warning-80: rgba(234, 179, 8, 0.8);
+  --glow-success-60: rgba(126, 153, 213, 0.6);
+  --glow-success-80: rgba(126, 153, 213, 0.8);
+  --glow-warning-60: rgba(252, 163, 17, 0.6);
+  --glow-warning-80: rgba(252, 163, 17, 0.8);
 
   /* ==========================================================================
      Error State Variants — for change preview delete backgrounds
      ========================================================================== */
 
-  --semantic-error-bg-ultra-light: rgba(239, 68, 68, 0.08);
-  --semantic-error-bg-very-light: rgba(239, 68, 68, 0.1);
-  --semantic-error-border-light-10: rgba(239, 68, 68, 0.2);
-  --semantic-error-border-medium: rgba(239, 68, 68, 0.5);
+  --semantic-error-bg-ultra-light: rgba(214, 133, 2, 0.08);
+  --semantic-error-bg-very-light: rgba(214, 133, 2, 0.1);
+  --semantic-error-border-light-10: rgba(214, 133, 2, 0.2);
+  --semantic-error-border-medium: rgba(214, 133, 2, 0.5);
 
   /* ==========================================================================
      Success State Variants — for change preview add backgrounds
      ========================================================================== */
 
-  --semantic-success-bg-ultra-light: rgba(34, 197, 94, 0.08);
-  --semantic-success-bg-very-light: rgba(34, 197, 94, 0.1);
-  --semantic-success-border-light-10: rgba(34, 197, 94, 0.2);
+  --semantic-success-bg-ultra-light: rgba(126, 153, 213, 0.08);
+  --semantic-success-bg-very-light: rgba(126, 153, 213, 0.1);
+  --semantic-success-border-light-10: rgba(126, 153, 213, 0.2);
 
   /* ==========================================================================
      Accessibility: Focus Indicators
      ========================================================================== */
 
   /* Focus ring styling for keyboard navigation */
-  --focus-ring-color: var(--system-blue, #58a6ff);
+  --focus-ring-color: var(--system-blue, var(--palette-prussian-blue-700));
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
-  --focus-ring-glow: 0 0 8px rgba(88, 166, 255, 0.4);
+  --focus-ring-glow: 0 0 8px rgba(62, 103, 191, 0.4);
 
   /* ==========================================================================
      SnowUI Design Tokens — Light Mode
      ========================================================================== */
 
   /* SnowUI Backgrounds (Light) */
-  --snow-bg-1: #ffffff;
-  --snow-bg-2: #f9f9fa;
-  --snow-bg-4: #edeefc;  /* accent/purple tint */
-  --snow-bg-5: #e6f1fd;  /* info/blue tint */
+  --snow-bg-1: var(--palette-white);
+  --snow-bg-2: var(--palette-alabaster-grey-900);
+  --snow-bg-4: var(--palette-prussian-blue-900);  /* accent/purple tint */
+  --snow-bg-5: var(--palette-prussian-blue-900);  /* info/blue tint */
 
   /* SnowUI Text (Light) */
-  --snow-text-primary: #000000;
+  --snow-text-primary: var(--palette-black);
   --snow-text-secondary: rgba(0, 0, 0, 0.8);
   --snow-text-muted: rgba(0, 0, 0, 0.4);
   --snow-text-subtle: rgba(0, 0, 0, 0.1);
 
   /* SnowUI Accents */
-  --snow-accent-cyan: #a0bce8;
-  --snow-accent-purple: #b899eb;
-  --snow-accent-green: #71dd8c;
-  --snow-accent-blue: #7dbbff;
-  --snow-accent-mint: #6be6d3;
+  --snow-accent-cyan: var(--palette-prussian-blue-800);
+  --snow-accent-purple: var(--palette-prussian-blue-800);
+  --snow-accent-green: var(--palette-prussian-blue-800);
+  --snow-accent-blue: var(--palette-prussian-blue-800);
+  --snow-accent-mint: var(--palette-prussian-blue-800);
 
   /* SnowUI Spacing (reference scale) */
   --snow-radius: 8px;
@@ -974,13 +974,13 @@
 
 [data-theme='dark'] {
   /* SnowUI Backgrounds (Dark) */
-  --snow-bg-1: #1a1a2e;
-  --snow-bg-2: #16213e;
-  --snow-bg-4: #2a2a4a;
-  --snow-bg-5: #1a2a3e;
+  --snow-bg-1: var(--palette-prussian-blue-500);
+  --snow-bg-2: var(--palette-prussian-blue-400);
+  --snow-bg-4: var(--palette-prussian-blue-600);
+  --snow-bg-5: var(--palette-prussian-blue-400);
 
   /* SnowUI Text (Dark) */
-  --snow-text-primary: #ffffff;
+  --snow-text-primary: var(--palette-white);
   --snow-text-secondary: rgba(255, 255, 255, 0.8);
   --snow-text-muted: rgba(255, 255, 255, 0.4);
   --snow-text-subtle: rgba(255, 255, 255, 0.1);
