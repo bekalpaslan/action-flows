@@ -102,3 +102,6 @@ export type { SliderProps } from './Slider';
 
 export { Stepper } from './Stepper';
 export type { StepperProps, StepperStep } from './Stepper';
+
+export { DataTable } from './DataTable';
+export type { DataTableProps, DataTableColumn, DataTableRow, DataTableAction, DataTableBulkAction, SortDirection, CellType } from './DataTable';
