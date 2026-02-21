@@ -2,9 +2,10 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #1e1e1e;
-  border: 1px solid #3c3c3c;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-input);
   border-radius: 4px;
+  contain: layout;
 }
 
 .conversation-header {
@@ -12,15 +13,15 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid #3c3c3c;
-  background: #252525;
+  border-bottom: 1px solid var(--color-border-input);
+  background: var(--color-bg-toolbar);
 }
 
 .conversation-header h3 {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #cccccc;
+  color: var(--color-text-code);
 }
 
 .awaiting-badge {
@@ -40,7 +41,7 @@
   height: 8px;
   background: #4ec9b0;
   border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
+  animation: pulse 2s var(--easing-in-out) infinite;
 }
 
 @keyframes pulse {
@@ -68,7 +69,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #808080;
+  color: var(--color-text-muted);
   font-size: 13px;
   text-align: center;
   padding: 20px;
@@ -86,13 +87,13 @@
 .message-assistant {
   align-self: flex-start;
   background: #2d2d30;
-  border: 1px solid #3c3c3c;
+  border: 1px solid var(--color-border-input);
 }
 
 .message-user {
   align-self: flex-end;
   background: #094771;
-  border: 1px solid #1177bb;
+  border: 1px solid var(--color-vscode-blue-hover);
 }
 
 .message-role {
@@ -100,7 +101,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #808080;
+  color: var(--color-text-muted);
 }
 
 .message-user .message-role {
@@ -110,21 +111,21 @@
 .message-content {
   font-size: 13px;
   line-height: 1.5;
-  color: #cccccc;
+  color: var(--color-text-code);
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
 .message-timestamp {
   font-size: 10px;
-  color: #606060;
+  color: var(--color-text-dim);
   align-self: flex-end;
 }
 
 .input-area {
-  border-top: 1px solid #3c3c3c;
+  border-top: 1px solid var(--color-border-input);
   padding: 12px;
-  background: #252525;
+  background: var(--color-bg-toolbar);
 }
 
 .quick-responses {
@@ -136,19 +137,19 @@
 
 .quick-response-btn {
   padding: 6px 14px;
-  background: #0e639c;
+  background: var(--color-vscode-blue);
   color: #ffffff;
-  border: 1px solid #1177bb;
+  border: 1px solid var(--color-vscode-blue-hover);
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) var(--easing-default);
 }
 
 .quick-response-btn:hover:not(:disabled) {
-  background: #1177bb;
-  border-color: #1890e0;
+  background: var(--color-vscode-blue-hover);
+  border-color: var(--color-info);
 }
 
 .quick-response-btn:disabled {
@@ -164,20 +165,19 @@
 .input-field {
   flex: 1;
   padding: 10px;
-  background: #1e1e1e;
-  border: 1px solid #3c3c3c;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-input);
   border-radius: 4px;
-  color: #cccccc;
+  color: var(--color-text-code);
   font-size: 13px;
   font-family: inherit;
   resize: vertical;
   min-height: 60px;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--duration-base) var(--easing-default);
 }
 
 .input-field:focus {
-  outline: none;
-  border-color: #0e639c;
+  border-color: var(--color-vscode-blue);
 }
 
 .input-field:disabled {
@@ -187,20 +187,20 @@
 
 .send-btn {
   padding: 10px 20px;
-  background: #0e639c;
+  background: var(--color-vscode-blue);
   color: #ffffff;
-  border: 1px solid #1177bb;
+  border: 1px solid var(--color-vscode-blue-hover);
   border-radius: 4px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) var(--easing-default);
   align-self: flex-start;
 }
 
 .send-btn:hover:not(:disabled) {
-  background: #1177bb;
-  border-color: #1890e0;
+  background: var(--color-vscode-blue-hover);
+  border-color: var(--color-info);
 }
 
 .send-btn:disabled {
@@ -214,7 +214,7 @@
 }
 
 .not-awaiting-notice small {
-  color: #808080;
+  color: var(--color-text-muted);
   font-size: 11px;
 }
 
@@ -224,11 +224,11 @@
 }
 
 .messages-container::-webkit-scrollbar-track {
-  background: #1e1e1e;
+  background: var(--color-bg-surface);
 }
 
 .messages-container::-webkit-scrollbar-thumb {
-  background: #3c3c3c;
+  background: var(--color-border-input);
   border-radius: 4px;
 }
 

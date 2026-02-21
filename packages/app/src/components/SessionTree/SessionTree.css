@@ -13,12 +13,12 @@
   padding: 0.5rem 0.75rem;
   background: transparent;
   border: none;
-  color: #808080;
+  color: var(--color-text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) var(--easing-default);
   font-size: 0.8rem;
   font-weight: 500;
   text-align: left;
@@ -28,9 +28,9 @@
 }
 
 .session-tree-toggle:hover {
-  color: #b0b0b0;
-  background: rgba(187, 134, 252, 0.05);
-  border-left-color: #bb86fc;
+  color: var(--color-text-secondary);
+  background: var(--color-accent-bg-sm);
+  border-left-color: var(--color-accent);
 }
 
 .tree-chevron {
@@ -40,7 +40,7 @@
   width: 16px;
   height: 16px;
   font-size: 0.6rem;
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-base) var(--easing-default);
   flex-shrink: 0;
 }
 
@@ -61,7 +61,7 @@
   flex-direction: column;
   max-height: 600px;
   overflow-y: auto;
-  border-left: 1px solid #303030;
+  border-left: 1px solid var(--color-border-subtle);
   margin-left: 0.75rem;
 }
 
@@ -85,12 +85,12 @@
   padding: 0.5rem 0.6rem;
   background: transparent;
   border: none;
-  color: #909090;
+  color: var(--color-text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  transition: all 0.15s ease;
+  transition: all var(--duration-fast) var(--easing-default);
   position: relative;
   border-left: 2px solid transparent;
   font-size: 0.75rem;
@@ -98,15 +98,15 @@
 }
 
 .session-button:hover {
-  background: rgba(187, 134, 252, 0.06);
-  color: #b0b0b0;
+  background: var(--color-accent-bg-sm);
+  color: var(--color-text-secondary);
   border-left-color: rgba(187, 134, 252, 0.4);
 }
 
 .session-button.attached {
-  background: rgba(187, 134, 252, 0.1);
-  color: #bb86fc;
-  border-left-color: #bb86fc;
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+  border-left-color: var(--color-accent);
 }
 
 .session-button.attached:hover {
@@ -133,10 +133,10 @@
 .session-id {
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   font-size: 0.7rem;
-  background: rgba(187, 134, 252, 0.08);
+  background: var(--color-accent-bg-sm);
   padding: 0.15rem 0.3rem;
   border-radius: 3px;
-  color: #bb86fc;
+  color: var(--color-accent);
   letter-spacing: 0.5px;
   font-weight: 500;
 }
@@ -147,7 +147,7 @@
   justify-content: center;
   width: 14px;
   height: 14px;
-  background: #4caf50;
+  background: var(--color-success);
   color: white;
   border-radius: 50%;
   font-size: 0.6rem;
@@ -175,9 +175,9 @@
 }
 
 .status-indicator.status-active {
-  background: #4caf50;
+  background: var(--color-success);
   box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
-  animation: pulse-session-active 2s infinite;
+  animation: pulse-session-active 2s var(--easing-in-out) infinite;
 }
 
 .status-indicator.status-idle {
@@ -209,7 +209,7 @@
 /* Current Chain */
 .current-chain {
   font-size: 0.7rem;
-  color: #9366ff;
+  color: var(--color-accent-deep);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -221,7 +221,7 @@
 /* Session Timestamp */
 .session-timestamp {
   font-size: 0.65rem;
-  color: #707070;
+  color: var(--color-text-dim);
   flex-shrink: 0;
   text-align: right;
 }
@@ -229,7 +229,7 @@
 /* Empty State */
 .session-tree-empty {
   padding: 1rem 0.75rem;
-  color: #606060;
+  color: var(--color-text-dim);
   font-size: 0.75rem;
   text-align: center;
 }
@@ -244,12 +244,12 @@
 }
 
 .session-tree-content::-webkit-scrollbar-thumb {
-  background: #353535;
+  background: var(--color-scrollbar-thumb);
   border-radius: 2px;
 }
 
 .session-tree-content::-webkit-scrollbar-thumb:hover {
-  background: #454545;
+  background: var(--color-scrollbar-hover);
 }
 
 /* Responsive adjustments */

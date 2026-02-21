@@ -1,12 +1,13 @@
 .user-sidebar {
   width: 280px;
-  background: #1e1e1e;
-  border-right: 1px solid #404040;
+  background: var(--color-bg-surface);
+  border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: width 0.3s ease;
+  transition: width var(--duration-slow) var(--easing-default);
   overflow: hidden;
+  contain: layout;
 }
 
 .user-sidebar.collapsed {
@@ -19,7 +20,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid #404040;
+  border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;
 }
 
@@ -27,7 +28,7 @@
   margin: 0;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #b0b0b0;
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   white-space: nowrap;
@@ -36,7 +37,7 @@
 .sidebar-toggle-btn {
   background: none;
   border: none;
-  color: #808080;
+  color: var(--color-text-muted);
   cursor: pointer;
   font-size: 1rem;
   padding: 0.25rem;
@@ -46,13 +47,13 @@
   width: 32px;
   height: 32px;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) var(--easing-default);
   flex-shrink: 0;
 }
 
 .sidebar-toggle-btn:hover {
-  background: #2a2a2a;
-  color: #e0e0e0;
+  background: var(--color-bg-overlay);
+  color: var(--color-text-primary);
 }
 
 /* Content */
@@ -67,7 +68,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #606060;
+  color: var(--color-text-dim);
   font-size: 0.875rem;
   text-align: center;
   padding: 1rem;
@@ -99,27 +100,27 @@
   padding: 0.75rem 0.75rem;
   background: transparent;
   border: none;
-  color: #b0b0b0;
+  color: var(--color-text-secondary);
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  transition: all 0.2s ease;
+  transition: all var(--duration-base) var(--easing-default);
   position: relative;
   overflow: hidden;
   border-left: 3px solid transparent;
 }
 
 .user-button:hover {
-  background: rgba(187, 134, 252, 0.08);
-  color: #e0e0e0;
-  border-left-color: #bb86fc;
+  background: var(--color-accent-bg-sm);
+  color: var(--color-text-primary);
+  border-left-color: var(--color-accent);
 }
 
 .user-item.selected .user-button {
-  background: rgba(187, 134, 252, 0.15);
-  color: #bb86fc;
-  border-left-color: #bb86fc;
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
+  border-left-color: var(--color-accent);
 }
 
 /* Avatar */
@@ -129,14 +130,14 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #bb86fc, #9366ff);
+  background: var(--color-accent-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 0.875rem;
-  color: #1a1a1a;
-  transition: all 0.2s ease;
+  color: var(--color-text-inverted);
+  transition: all var(--duration-base) var(--easing-default);
 }
 
 .user-button:hover .user-avatar {
@@ -145,7 +146,7 @@
 }
 
 .user-item.selected .user-avatar {
-  box-shadow: 0 0 12px rgba(187, 134, 252, 0.5);
+  box-shadow: 0 0 12px var(--color-accent-shadow);
 }
 
 .avatar-text {
@@ -160,11 +161,11 @@
   right: 0;
   width: 12px;
   height: 12px;
-  background: #4caf50;
+  background: var(--color-success);
   border-radius: 50%;
-  border: 2px solid #1e1e1e;
+  border: 2px solid var(--color-bg-surface);
   box-shadow: 0 0 4px rgba(76, 175, 80, 0.6);
-  animation: pulse-online 2s infinite;
+  animation: pulse-online 2s var(--easing-in-out) infinite;
 }
 
 @keyframes pulse-online {
@@ -200,8 +201,8 @@
 .current-badge {
   display: inline-block;
   padding: 0.125rem 0.5rem;
-  background: rgba(187, 134, 252, 0.2);
-  color: #bb86fc;
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
   border-radius: 3px;
   font-size: 0.7rem;
   font-weight: 600;
@@ -212,7 +213,7 @@
 
 .user-sessions {
   font-size: 0.75rem;
-  color: #808080;
+  color: var(--color-text-muted);
 }
 
 /* Session Badge */
@@ -222,8 +223,8 @@
   justify-content: center;
   min-width: 24px;
   height: 24px;
-  background: rgba(187, 134, 252, 0.15);
-  color: #bb86fc;
+  background: var(--color-accent-bg);
+  color: var(--color-accent);
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -231,20 +232,20 @@
 }
 
 .user-item.selected .session-badge {
-  background: rgba(187, 134, 252, 0.3);
+  background: var(--color-accent-bg-xl);
 }
 
 /* Footer */
 .user-sidebar-footer {
   padding: 0.75rem 1rem;
-  border-top: 1px solid #404040;
+  border-top: 1px solid var(--color-border);
   background: #171717;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   font-size: 0.75rem;
-  color: #808080;
+  color: var(--color-text-muted);
 }
 
 .user-count,
@@ -291,7 +292,7 @@
 .user-sessions-tree {
   padding: 0 0.75rem;
   background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid #2a2a2a;
+  border-top: 1px solid var(--color-bg-overlay);
 }
 
 /* Scrollbar styling for user list */
@@ -304,10 +305,10 @@
 }
 
 .user-sidebar-content::-webkit-scrollbar-thumb {
-  background: #404040;
+  background: var(--color-scrollbar-thumb);
   border-radius: 3px;
 }
 
 .user-sidebar-content::-webkit-scrollbar-thumb:hover {
-  background: #505050;
+  background: var(--color-scrollbar-hover);
 }

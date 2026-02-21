@@ -3,8 +3,8 @@
 .editor-tabs {
   display: flex;
   align-items: center;
-  background-color: #252526;
-  border-bottom: 1px solid #3c3c3c;
+  background-color: var(--color-bg-toolbar);
+  border-bottom: 1px solid var(--color-border-input);
   height: 35px;
   overflow: hidden;
   position: relative;
@@ -16,7 +16,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
-  scrollbar-color: #424242 #252526;
+  scrollbar-color: #424242 var(--color-bg-toolbar);
 }
 
 .editor-tabs-container::-webkit-scrollbar {
@@ -24,7 +24,7 @@
 }
 
 .editor-tabs-container::-webkit-scrollbar-track {
-  background: #252526;
+  background: var(--color-bg-toolbar);
 }
 
 .editor-tabs-container::-webkit-scrollbar-thumb {
@@ -43,10 +43,10 @@
   padding: 0 12px;
   height: 35px;
   background-color: #2d2d30;
-  border-right: 1px solid #3c3c3c;
+  border-right: 1px solid var(--color-border-input);
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.2s;
+  transition: background-color var(--duration-base);
   flex-shrink: 0;
   min-width: 0;
   max-width: 200px;
@@ -57,7 +57,7 @@
 }
 
 .editor-tab.active {
-  background-color: #1e1e1e;
+  background-color: var(--color-bg-surface);
   border-bottom: 2px solid #007acc;
 }
 
@@ -66,7 +66,7 @@
   align-items: center;
   gap: 4px;
   font-size: 13px;
-  color: #cccccc;
+  color: var(--color-text-code);
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -91,27 +91,27 @@
   font-size: 20px;
   line-height: 1;
   border-radius: 3px;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color var(--duration-base), color var(--duration-base);
   flex-shrink: 0;
 }
 
 .tab-close-btn:hover {
-  background-color: #3c3c3c;
+  background-color: var(--color-border-input);
   color: #ffffff;
 }
 
 .tab-scroll-btn {
   background-color: #2d2d30;
   border: none;
-  color: #cccccc;
+  color: var(--color-text-code);
   cursor: pointer;
   padding: 0 8px;
   height: 35px;
   font-size: 20px;
   line-height: 1;
-  transition: background-color 0.2s;
+  transition: background-color var(--duration-base);
   flex-shrink: 0;
-  border-right: 1px solid #3c3c3c;
+  border-right: 1px solid var(--color-border-input);
 }
 
 .tab-scroll-btn:hover {
@@ -119,9 +119,9 @@
 }
 
 .tab-scroll-left {
-  border-left: 1px solid #3c3c3c;
+  border-left: 1px solid var(--color-border-input);
 }
 
 .tab-scroll-right {
-  border-right: 1px solid #3c3c3c;
+  border-right: 1px solid var(--color-border-input);
 }
