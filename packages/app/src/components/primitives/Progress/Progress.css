@@ -5,6 +5,14 @@
 
 .afw-progress--bar {
   gap: var(--space-2);
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.afw-progress--loading {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .afw-progress--circle {
@@ -21,6 +29,7 @@
   background-color: var(--app-bg-quaternary);
   border-radius: var(--radius-full);
   overflow: hidden;
+  position: relative;
 }
 
 .afw-progress__bar-fill {
@@ -29,21 +38,47 @@
   transition: width var(--duration-slow);
 }
 
-.afw-progress--bar[data-size="sm"] .afw-progress__bar-track {
+.afw-progress__bar-fill--indeterminate {
+  background-size: 20px 20px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 25%,
+    rgba(255, 255, 255, 0.15) 25%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 50%
+  );
+  animation: afw-progress-stripe var(--duration-slowest) linear infinite;
+}
+
+.afw-progress__bar-fill--loading {
+  position: absolute;
+  width: 30%;
+  animation: afw-progress-loading var(--duration-slowest) var(--ease-in-out) infinite;
+}
+
+.afw-progress--bar[data-size="sm"] .afw-progress__bar-track,
+.afw-progress--loading[data-size="sm"] .afw-progress__bar-track {
   height: 4px;
 }
 
-.afw-progress--bar[data-size="md"] .afw-progress__bar-track {
+.afw-progress--bar[data-size="md"] .afw-progress__bar-track,
+.afw-progress--loading[data-size="md"] .afw-progress__bar-track {
   height: 8px;
 }
 
-.afw-progress--bar[data-size="lg"] .afw-progress__bar-track {
+.afw-progress--bar[data-size="lg"] .afw-progress__bar-track,
+.afw-progress--loading[data-size="lg"] .afw-progress__bar-track {
   height: 12px;
 }
 
 /* Circle variant */
 .afw-progress__circle-svg {
   transform: rotate(-90deg);
+}
+
+.afw-progress__circle-svg--indeterminate {
+  animation: afw-progress-spin var(--duration-slow) linear infinite;
 }
 
 .afw-progress__circle-track {
@@ -55,6 +90,23 @@
   fill: none;
   transition: stroke-dashoffset var(--duration-slow);
   stroke-linecap: round;
+}
+
+/* Form Label */
+.afw-progress__form-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.afw-progress__form-label-text {
+  flex: 1;
+}
+
+.afw-progress__form-label-value {
+  flex-shrink: 0;
 }
 
 /* Labels */
@@ -78,5 +130,42 @@
   .afw-progress__bar-fill,
   .afw-progress__circle-fill {
     transition: none;
+  }
+
+  .afw-progress__bar-fill--indeterminate,
+  .afw-progress__bar-fill--loading,
+  .afw-progress__circle-svg--indeterminate {
+    animation: none;
+  }
+}
+
+/* Animations */
+@keyframes afw-progress-stripe {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 20px;
+  }
+}
+
+@keyframes afw-progress-loading {
+  0% {
+    left: 0;
+  }
+  50% {
+    left: 70%;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+@keyframes afw-progress-spin {
+  0% {
+    transform: rotate(-90deg);
+  }
+  100% {
+    transform: rotate(270deg);
   }
 }
