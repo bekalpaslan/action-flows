@@ -36,3 +36,6 @@ export type { CoverCardProps, CoverCardType } from './CoverCard';
 
 export { FlowCard } from './FlowCard';
 export type { FlowCardProps } from './FlowCard';
+
+export { IndexTable } from './IndexTable';
+export type { IndexTableProps, IndexTableGroup, IndexTableItem, IndexTableStatus } from './IndexTable';
