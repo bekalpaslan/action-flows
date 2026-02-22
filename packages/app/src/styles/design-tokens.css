@@ -301,6 +301,7 @@
   --panel-bg-elevated: rgba(12, 20, 37, 0.92);     /* Elevated panel */
   --panel-bg-raised: rgba(16, 27, 49, 0.90);       /* Highest panels */
   --panel-bg-inset: rgba(4, 7, 12, 0.85);         /* Inset/recessed areas */
+  --panel-bg-hover: rgba(255, 255, 255, 0.06);    /* Panel hover state overlay */
 
   /* Panel Borders — GitHub-style subtle borders */
   --panel-border-default: 1px solid rgba(62, 103, 191, 0.08);
@@ -524,6 +525,7 @@
 
   /* AppSidebar colors */
   --app-sidebar-accent-active: var(--palette-orange-500);
+  --chat-glow-color: rgba(88, 166, 255, 0.5);     /* Chat indicator pulse glow */
 
   /* ==========================================================================
      Glass Effect Token System
