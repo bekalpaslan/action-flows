@@ -619,6 +619,8 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         return <RespectStar />;
       case 'story':
         return <StoryStar />;
+      case 'cosmic':
+        return <CosmicMap />;
       default:
         return (
           <div className="workbench-placeholder">

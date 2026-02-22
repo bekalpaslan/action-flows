@@ -23,7 +23,8 @@ export type StarId =
   | 'pm'
   | 'intel'      // Custom star (demo)
   | 'respect'    // Custom star (demo)
-  | 'story';     // Custom star (demo)
+  | 'story'      // Custom star (demo)
+  | 'cosmic';    // Custom star (demo)
 
 /**
  * Tools: embedded capabilities within star interiors (NOT stars themselves).
@@ -70,6 +71,7 @@ export const WORKBENCH_IDS: readonly NavigationTarget[] = [
   'respect',
   'canvas',
   'coverage',
+  'cosmic',
 ] as const;
 
 /**
@@ -86,6 +88,7 @@ export const STAR_IDS: readonly StarId[] = [
   'intel',
   'respect',
   'story',
+  'cosmic',
 ] as const;
 
 /**
@@ -400,6 +403,19 @@ export const STAR_CONFIGS: Record<StarId, StarConfig> = {
     routingExamples: [],
     cosmicName: 'The Chronicle',
   },
+  cosmic: {
+    id: 'cosmic',
+    label: 'Cosmic',
+    icon: '🌌',
+    hasNotifications: false,
+    notificationCount: 0,
+    tooltip: 'Living universe — the cosmic map view of all regions and bridges',
+    routable: false,
+    triggers: [],
+    flows: [],
+    routingExamples: [],
+    cosmicName: 'The Universe',
+  },
 };
 
 /**
@@ -591,6 +607,20 @@ export const DEFAULT_WORKBENCH_CONFIGS: Record<NavigationTarget, WorkbenchConfig
     triggers: STAR_CONFIGS.story.triggers,
     flows: STAR_CONFIGS.story.flows,
     routingExamples: STAR_CONFIGS.story.routingExamples,
+  },
+  cosmic: {
+    id: 'cosmic',
+    label: STAR_CONFIGS.cosmic.label,
+    icon: STAR_CONFIGS.cosmic.icon,
+    hasNotifications: STAR_CONFIGS.cosmic.hasNotifications,
+    notificationCount: STAR_CONFIGS.cosmic.notificationCount,
+    glowColor: STAR_CONFIGS.cosmic.glowColor,
+    disabled: STAR_CONFIGS.cosmic.disabled,
+    tooltip: STAR_CONFIGS.cosmic.tooltip,
+    routable: STAR_CONFIGS.cosmic.routable,
+    triggers: STAR_CONFIGS.cosmic.triggers,
+    flows: STAR_CONFIGS.cosmic.flows,
+    routingExamples: STAR_CONFIGS.cosmic.routingExamples,
   },
   // Harmony
   harmony: {

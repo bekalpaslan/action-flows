@@ -23,7 +23,7 @@ const WORKBENCH_GROUPS = {
     id: 'framework',
     label: 'Framework Tools',
     icon: '⚙️',
-    workbenches: ['harmony', 'respect', 'intel', 'settings'] as WorkbenchId[],
+    workbenches: ['harmony', 'cosmic', 'respect', 'intel', 'settings'] as WorkbenchId[],
     defaultExpanded: false,
   },
   project: {

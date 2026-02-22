@@ -30,6 +30,7 @@ const LAYER_ASSIGNMENTS: Record<StarId, 'platform' | 'template' | 'philosophy' |
   intel: 'experience',
   pm: 'experience',
   story: 'experience',
+  cosmic: 'experience',              // The universe viewer itself
 
   // Physics Layer (execution workbenches)
   work: 'physics',
@@ -69,6 +70,7 @@ const INITIAL_POSITIONS: Record<StarId, { x: number; y: number }> = {
   pm: { x: -200, y: 350 },
   archive: { x: 200, y: 350 },
   story: { x: 0, y: 350 },
+  cosmic: { x: 0, y: -450 },        // Upper anchor — the universe viewer
 };
 
 // ============================================================================
@@ -91,6 +93,7 @@ const INITIAL_FOG_STATES: Record<StarId, FogState> = {
   intel: FogState.HIDDEN,            // Unlocked after dossier creation
   respect: FogState.HIDDEN,          // Unlocked after boundary check
   story: FogState.HIDDEN,            // Unlocked after narrative creation
+  cosmic: FogState.REVEALED,         // Always visible — it's the map itself
 };
 
 // ============================================================================
@@ -333,7 +336,7 @@ function createDiscoveryTriggers(): DiscoveryTrigger[] {
 export function createDefaultUniverse(): UniverseGraph {
   // Only stars become regions (filter out tools and harmony)
   const starIds: StarId[] = NAVIGATION_TARGETS.filter(
-    (id) => id !== 'harmony' && id !== 'editor' && id !== 'canvas' && id !== 'coverage'
+    (id) => id !== 'harmony' && id !== 'editor' && id !== 'canvas' && id !== 'coverage' && id !== 'cosmic'
   ) as StarId[];
 
   const regions = starIds.map(createRegion);
