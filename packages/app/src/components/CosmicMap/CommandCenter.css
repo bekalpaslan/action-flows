@@ -40,7 +40,8 @@
    ============================================================================ */
 
 .command-center__input-section {
-  flex: 1;
+  width: 300px;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -363,6 +364,25 @@
   flex-shrink: 0;
 }
 
+.command-center__health-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3fb950;
+  box-shadow: 0 0 6px rgba(63, 185, 80, 0.5);
+  flex-shrink: 0;
+}
+
+.command-center__health-indicator--medium .command-center__health-dot {
+  background: var(--system-yellow, #fdb541);
+  box-shadow: 0 0 6px rgba(253, 181, 65, 0.5);
+}
+
+.command-center__health-indicator--low .command-center__health-dot {
+  background: var(--system-red, #d68502);
+  box-shadow: 0 0 6px rgba(214, 133, 2, 0.5);
+}
+
 .command-center__health-value {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
@@ -399,6 +419,7 @@
 
   .command-center__input-section {
     flex: 1 1 100%;
+    width: auto;
   }
 
   .command-center__session-section {

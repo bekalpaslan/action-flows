@@ -59,6 +59,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  height: var(--toolbar-h, 48px);
   padding: var(--space-3);
   background: var(--color-bg-secondary);
   border-bottom: 1px solid var(--color-border);

@@ -396,18 +396,9 @@ export function CommandCenter({
               title={`Universe health: ${universeHealth}%`}
               aria-label={`Universe health: ${universeHealth}%`}
             >
-              <svg
-                className="command-center__health-icon"
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-              >
-                <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 13A6 6 0 118 2a6 6 0 010 12z" />
-                <path d="M8 4.5a.5.5 0 01.5.5v3.5H12a.5.5 0 010 1H8.5v3.5a.5.5 0 01-1 0V9H4a.5.5 0 010-1h3.5V4.5a.5.5 0 01.5-.5z" />
-              </svg>
+              <span className="command-center__health-dot" aria-hidden="true" />
               <span className="command-center__health-value">
-                {universeHealth}%
+                Connected
               </span>
             </div>
           </div>

@@ -218,7 +218,12 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
         <div className="app-sidebar__header">
           <div className="app-sidebar__logo">
             <span className="app-sidebar__logo-icon">AF</span>
-            {!isCollapsed && <span className="app-sidebar__logo-text">ActionFlows</span>}
+            {!isCollapsed && (
+              <div className="app-sidebar__logo-text-group">
+                <span className="app-sidebar__logo-text">ActionFlows</span>
+                <span className="app-sidebar__logo-subtitle">Living Universe</span>
+              </div>
+            )}
           </div>
           <button
             className="app-sidebar__collapse-btn"

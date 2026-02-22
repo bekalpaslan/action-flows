@@ -10,6 +10,7 @@ export const SidebarUserProfile: React.FC = () => {
     <div className="app-sidebar__user-profile">
       <div className="app-sidebar__user-avatar">
         <span>U</span>
+        <span className="app-sidebar__user-avatar-status" aria-hidden="true" />
       </div>
       <span className="app-sidebar__user-name">User</span>
     </div>
