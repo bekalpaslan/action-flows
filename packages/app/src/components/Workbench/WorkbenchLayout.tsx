@@ -29,7 +29,6 @@ import { RespectStar } from '../Stars/RespectStar/RespectStar';
 import { StoryStar } from '../Stars/StoryStar/StoryStar';
 import { CoverageTool } from '../Tools/CoverageTool/CoverageTool';
 import { useSessionArchive } from '../../hooks/useSessionArchive';
-import { HealthWidget } from '../HealthWidget';
 import { CommandCenter } from '../CosmicMap/CommandCenter';
 import {
   type WorkbenchId,
@@ -715,11 +714,6 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
         <CommandCenter onCommand={(cmd) => console.log('Command:', cmd)} showHealthStatus={true} />
       )}
 
-      {/* Global Health Widget - visible in all views (cosmic-map, region-focus, workbench) */}
-      <HealthWidget
-        sessionId={activeSessionId ?? null}
-        position="bottom-right"
-      />
 
       {/* BottomControlPanel removed in Phase 2 - functionality moved to ConversationPanel + SmartPromptLibrary */}
     </div>
