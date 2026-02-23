@@ -33,9 +33,9 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
   const { activeWorkbench } = useWorkbenchContext();
   const [activeTab, setActiveTab] = useState<'chat' | 'flow' | 'activity'>('chat');
 
-  // Show sessions belonging to the active workbench, plus unassigned sessions (e.g. CLI-started)
+  // Only show sessions belonging to the active workbench
   const workbenchSessions = useMemo(() => {
-    return sessions.filter(s => !s.workbenchId || s.workbenchId === activeWorkbench);
+    return sessions.filter(s => s.workbenchId === activeWorkbench);
   }, [sessions, activeWorkbench]);
 
   // Fetch active chain for flow visualization

@@ -98,14 +98,19 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
   // Ref to prevent duplicate session creation on rapid double-clicks
   const creatingSessionRef = useRef<boolean>(false);
 
-  // After sessions load, clear stale sessionId if the session no longer exists
+  // When workbench changes or sessions load: auto-select the latest session for the active workbench.
+  // If the current sessionId is already valid for this workbench, keep it.
   useEffect(() => {
-    if (sessionsLoading || !sessionId) return;
-    const exists = sessions.some((s) => s.id === sessionId);
-    if (!exists) {
-      setSessionIdState(null);
+    if (sessionsLoading) return;
+    const workbenchSessions = sessions
+      .filter((s) => s.workbenchId === activeWorkbench)
+      .sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
+
+    const currentValid = sessionId && workbenchSessions.some((s) => s.id === sessionId);
+    if (!currentValid) {
+      setSessionIdState(workbenchSessions[0]?.id ?? null);
     }
-  }, [sessionsLoading, sessions, sessionId, setSessionIdState]);
+  }, [sessionsLoading, sessions, sessionId, activeWorkbench, setSessionIdState]);
 
   const openChat = useCallback(
     async (newSource: string, context?: Record<string, unknown>) => {
@@ -123,9 +128,9 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
         (s) => s.workbenchId === activeWorkbench
       );
 
-      // Check if the currently selected session belongs to this workbench (or has no workbench)
+      // Check if the currently selected session belongs to this workbench
       const currentSessionValid = sessionId && sessions.some(
-        (s) => s.id === sessionId && (!s.workbenchId || s.workbenchId === activeWorkbench)
+        (s) => s.id === sessionId && s.workbenchId === activeWorkbench
       );
 
       if (existingWorkbenchSession) {
