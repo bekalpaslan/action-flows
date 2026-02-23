@@ -29,14 +29,31 @@ interface SlidingChatWindowProps {
 
 export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, embedded = false }) => {
   const { isOpen, source, sessionId, closeChat, setSessionId, isMinimized, isCollapsed, unreadCount, minimizeChat, restoreChat, toggleCollapse, expandChat, openChat } = useChatWindowContext();
-  const { sessions } = useSessionContext();
+  const { sessions, createSession } = useSessionContext();
   const { activeWorkbench } = useWorkbenchContext();
   const [activeTab, setActiveTab] = useState<'chat' | 'flow' | 'activity'>('chat');
+  const [isCreatingSession, setIsCreatingSession] = useState(false);
 
   // Only show sessions belonging to the active workbench
   const workbenchSessions = useMemo(() => {
     return sessions.filter(s => s.workbenchId === activeWorkbench);
   }, [sessions, activeWorkbench]);
+
+  const handleNewSession = React.useCallback(async () => {
+    if (isCreatingSession) return;
+    setIsCreatingSession(true);
+    try {
+      const newId = await createSession(
+        undefined,
+        `${activeWorkbench}: session`,
+        activeWorkbench as import('@afw/shared').WorkbenchId
+      );
+      setSessionId(newId);
+      if (!isOpen) openChat('new-session');
+    } finally {
+      setIsCreatingSession(false);
+    }
+  }, [isCreatingSession, createSession, activeWorkbench, setSessionId, isOpen, openChat]);
 
   // Fetch active chain for flow visualization
   const { activeChain, loading: chainLoading } = useActiveChain(sessionId || ('' as SessionId));
@@ -204,6 +221,22 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
           </div>
         )}
       </div>
+
+      {/* New Session footer — only shown when there is at least one session for this workbench */}
+      {workbenchSessions.length > 0 && (
+        <div className="sliding-chat-window__footer">
+          <Button
+            variant="ghost"
+            className="sliding-chat-window__new-session-btn"
+            onClick={handleNewSession}
+            disabled={isCreatingSession}
+            aria-label="Start a new session"
+            type="button"
+          >
+            {isCreatingSession ? 'Creating…' : '+ New Session'}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
