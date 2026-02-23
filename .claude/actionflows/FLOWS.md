@@ -19,6 +19,7 @@
 | bug-triage/ | Structured bug fix | analyze → code → test → review → second-opinion/ |
 | code-and-review/ | Refactor and review code | code → review → second-opinion/ → (loop if needed) |
 | cleanup/ | Human-directed repository cleanup | analyze → plan → human gate → code → review → second-opinion/ → commit |
+| design-token-migration/ | Replace hardcoded CSS colors with design tokens | analyze → HUMAN GATE → (code/frontend/×N parallel → analyze/verify → review → batch decision gate)× → commit |
 | harmony-audit-and-fix/ | Remediate format drift and contract violations | analyze/harmony-violation → code/fix-parser OR code/update-orchestrator OR code/update-contract → review/harmony-fix → second-opinion/ → commit |
 | health-protocol/ | 7-phase immune response for contract violations | analyze (detect) → analyze (classify) → isolate (conditional) → diagnose → human gate → healing flow → verify-healing → analyze (learn) |
 | parser-update/ | Update backend parser for evolved formats | analyze/parser-gap → code/backend/parser → test/parser → review → second-opinion/ → commit |

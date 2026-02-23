@@ -1,16 +1,15 @@
 /**
  * AppSidebar Component
  * Vertical navigation sidebar for workbench switching, replacing the horizontal TopBar.
- * Features collapsible groups, search, theme toggle, and connection status.
+ * Features collapsible groups, theme toggle, and connection status.
  */
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useWorkbenchContext } from '../../contexts/WorkbenchContext';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
 import { ThemeToggle } from '../ThemeToggle';
 import { SidebarNavGroup } from './SidebarNavGroup';
 import { SidebarNavItem } from './SidebarNavItem';
-import { SidebarSearch } from './SidebarSearch';
 import { SidebarUserProfile } from './SidebarUserProfile';
 import { DEFAULT_WORKBENCH_CONFIGS } from '@afw/shared';
 import type { WorkbenchId } from '@afw/shared';
@@ -65,9 +64,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
     return new Set(['project']);
   });
 
-  // Search state
-  const [searchQuery, setSearchQuery] = useState<string>('');
-
   // Mobile overlay state
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
 
@@ -112,40 +108,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
     [setActiveWorkbench, isMobileOpen]
   );
 
-  // Filter workbenches by search query
-  const filteredWorkbenches = useMemo(() => {
-    if (!searchQuery.trim()) return null;
-
-    const query = searchQuery.toLowerCase();
-    const matches = new Set<WorkbenchId>();
-
-    Object.values(WORKBENCH_GROUPS).forEach(group => {
-      group.workbenches.forEach(id => {
-        const config = DEFAULT_WORKBENCH_CONFIGS[id];
-        if (
-          config.label.toLowerCase().includes(query) ||
-          id.toLowerCase().includes(query)
-        ) {
-          matches.add(id);
-        }
-      });
-    });
-
-    return matches;
-  }, [searchQuery]);
-
-  // Auto-expand groups with matches when searching
-  useEffect(() => {
-    if (filteredWorkbenches) {
-      const groupsToExpand = new Set<string>();
-      Object.entries(WORKBENCH_GROUPS).forEach(([groupId, group]) => {
-        if (group.workbenches.some(id => filteredWorkbenches.has(id))) {
-          groupsToExpand.add(groupId);
-        }
-      });
-      setExpandedGroups(groupsToExpand);
-    }
-  }, [filteredWorkbenches]);
 
   // Get connection status badge color
   const getConnectionStatusColor = () => {
@@ -251,39 +213,10 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
           />
         </div>
 
-        {/* Search */}
-        {!isCollapsed && (
-          <SidebarSearch
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Search workbenches..."
-          />
-        )}
-
-        {/* New Session Button */}
-        {!isCollapsed && (
-          <button
-            className="app-sidebar__new-session-btn"
-            onClick={() => console.log('TODO: Create new session')}
-            aria-label="Create new session"
-          >
-            <span className="app-sidebar__new-session-icon">+</span>
-            New Session
-          </button>
-        )}
-
         {/* Nav Section */}
         <div className="app-sidebar__nav-section">
           {/* Groups */}
           {Object.entries(WORKBENCH_GROUPS).map(([groupId, group]) => {
-            const visibleWorkbenches = filteredWorkbenches
-              ? group.workbenches.filter(id => filteredWorkbenches.has(id))
-              : group.workbenches;
-
-            if (filteredWorkbenches && visibleWorkbenches.length === 0) {
-              return null;
-            }
-
             return (
               <SidebarNavGroup
                 key={groupId}
@@ -294,7 +227,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
                 isCollapsed={isCollapsed}
                 onToggle={handleGroupToggle}
               >
-                {visibleWorkbenches.map(workbenchId => {
+                {group.workbenches.map(workbenchId => {
                   const config = DEFAULT_WORKBENCH_CONFIGS[workbenchId];
                   return (
                     <SidebarNavItem
@@ -312,12 +245,6 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
             );
           })}
 
-          {/* No results state */}
-          {filteredWorkbenches && filteredWorkbenches.size === 0 && (
-            <div className="app-sidebar__no-results">
-              <p>No workbenches found</p>
-            </div>
-          )}
         </div>
 
         {/* Footer */}

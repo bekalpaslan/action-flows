@@ -315,6 +315,15 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
     return stored === 'true';
   });
 
+  // Keep --sidebar-w in sync with collapse state so the grid column tracks it
+  useEffect(() => {
+    const collapsed = sidebarCollapsed;
+    document.documentElement.style.setProperty(
+      '--sidebar-w',
+      collapsed ? 'var(--app-sidebar-width-collapsed)' : 'var(--app-sidebar-width)'
+    );
+  }, [sidebarCollapsed]);
+
   // Sessions come from SessionContext — no local duplication needed
   const attachedSessions = contextSessions;
   const [activeSessionId, setActiveSessionId] = useState<SessionId | undefined>();

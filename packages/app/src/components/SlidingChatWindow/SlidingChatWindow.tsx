@@ -222,9 +222,8 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
         )}
       </div>
 
-      {/* New Session footer — only shown when there is at least one session for this workbench */}
-      {workbenchSessions.length > 0 && (
-        <div className="sliding-chat-window__footer">
+      {/* New Session footer — always visible */}
+      <div className="sliding-chat-window__footer">
           <Button
             variant="ghost"
             className="sliding-chat-window__new-session-btn"
@@ -236,7 +235,6 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
             {isCreatingSession ? 'Creating…' : '+ New Session'}
           </Button>
         </div>
-      )}
     </div>
   );
 };
