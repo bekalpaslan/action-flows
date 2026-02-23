@@ -6,17 +6,17 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--overlay-dark-50);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
+  z-index: var(--z-modal-backdrop);
 }
 
 .conflict-dialog {
   background: var(--app-bg-secondary);
   border: 1px solid var(--app-bg-tertiary);
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
@@ -60,9 +60,9 @@
 .conflict-details {
   margin: var(--space-4) 0;
   padding: var(--space-3);
-  background: #2d2d2d;
+  background: var(--app-bg-quaternary);
   border: 1px solid var(--app-bg-tertiary);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
 }
 
 .version-info {
@@ -75,20 +75,20 @@
   padding: var(--space-3);
   background: var(--app-bg-secondary);
   border: 1px solid var(--app-bg-tertiary);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
 }
 
 .version-card h4 {
   margin: 0 0 var(--space-2) 0;
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
-  color: rgba(86, 156, 214, 1);
+  color: var(--semantic-info);
 }
 
 .version-card p {
   margin: 0;
   font-size: var(--text-xs);
-  color: #9cdcfe;
+  color: var(--text-secondary);
 }
 
 .show-details-btn {
@@ -96,16 +96,16 @@
   padding: var(--space-1-5) var(--space-3);
   background: transparent;
   border: 1px solid var(--app-bg-tertiary);
-  border-radius: 4px;
-  color: rgba(86, 156, 214, 1);
+  border-radius: var(--radius-xs);
+  color: var(--semantic-info);
   font-size: var(--text-xs);
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .show-details-btn:hover {
-  background: #2d2d2d;
-  border-color: rgba(86, 156, 214, 1);
+  background: var(--app-bg-quaternary);
+  border-color: var(--semantic-info);
 }
 
 .conflict-instructions {
@@ -124,7 +124,7 @@
 .btn {
   padding: var(--space-3) var(--space-4);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   cursor: pointer;
@@ -150,17 +150,17 @@
 }
 
 .btn-secondary:hover {
-  background: #4c4c4c;
+  background: var(--app-bg-quaternary);
 }
 
 .btn-tertiary {
   background: transparent;
-  border: 1px solid #569cd6;
-  color: rgba(86, 156, 214, 1);
+  border: 1px solid var(--semantic-info);
+  color: var(--semantic-info);
 }
 
 .btn-tertiary:hover {
-  background: rgba(86, 156, 214, 0.1);
+  background: color-mix(in srgb, var(--semantic-info) 10%, transparent);
 }
 
 .btn-text {
@@ -171,7 +171,7 @@
 }
 
 .btn-text:hover {
-  background: #2d2d2d;
+  background: var(--app-bg-quaternary);
 }
 
 .conflict-dialog-footer {

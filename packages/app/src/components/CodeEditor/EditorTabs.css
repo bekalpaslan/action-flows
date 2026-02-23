@@ -3,7 +3,7 @@
 .editor-tabs {
   display: flex;
   align-items: center;
-  background-color: rgba(37, 37, 38, 1);
+  background-color: var(--app-bg-primary);
   border-bottom: 1px solid var(--app-bg-tertiary);
   height: 35px;
   overflow: hidden;
@@ -16,7 +16,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
-  scrollbar-color: rgba(66, 66, 66, 1) rgba(37, 37, 38, 1);
+  scrollbar-color: var(--palette-alabaster-grey-200) var(--app-bg-primary);
 }
 
 .editor-tabs-container::-webkit-scrollbar {
@@ -28,12 +28,12 @@
 }
 
 .editor-tabs-container::-webkit-scrollbar-thumb {
-  background: rgba(66, 66, 66, 1);
-  border-radius: 3px;
+  background: var(--palette-alabaster-grey-200);
+  border-radius: var(--radius-xs-sm);
 }
 
 .editor-tabs-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(78, 78, 78, 1);
+  background: var(--palette-alabaster-grey-300);
 }
 
 .editor-tab {
@@ -42,7 +42,7 @@
   gap: var(--space-2);
   padding: 0 var(--space-3);
   height: 35px;
-  background-color: rgba(45, 45, 48, 1);
+  background-color: var(--app-bg-secondary);
   border-right: 1px solid var(--app-bg-tertiary);
   cursor: pointer;
   white-space: nowrap;
@@ -53,7 +53,7 @@
 }
 
 .editor-tab:hover {
-  background-color: rgba(50, 50, 51, 1);
+  background-color: var(--app-bg-tertiary);
 }
 
 .editor-tab.active {
@@ -80,7 +80,7 @@
 .tab-close-btn {
   background: none;
   border: none;
-  color: #858585;
+  color: var(--text-tertiary);
   cursor: pointer;
   padding: 0;
   width: 18px;
@@ -90,7 +90,7 @@
   justify-content: center;
   font-size: var(--text-xl);
   line-height: var(--leading-tight);
-  border-radius: 3px;
+  border-radius: var(--radius-xs-sm);
   transition: background-color 0.2s, color 0.2s;
   flex-shrink: 0;
 }
@@ -101,7 +101,7 @@
 }
 
 .tab-scroll-btn {
-  background-color: rgba(45, 45, 48, 1);
+  background-color: var(--app-bg-secondary);
   border: none;
   color: var(--panel-border-color-default);
   cursor: pointer;
@@ -115,7 +115,7 @@
 }
 
 .tab-scroll-btn:hover {
-  background-color: rgba(50, 50, 51, 1);
+  background-color: var(--app-bg-tertiary);
 }
 
 .tab-scroll-left {

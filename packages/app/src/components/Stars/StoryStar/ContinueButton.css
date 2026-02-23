@@ -5,22 +5,22 @@
 
 .continue-button {
   align-self: flex-end;
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.8), rgba(59, 130, 246, 0.6));
-  border: 1px solid rgba(139, 92, 246, 0.4);
-  border-radius: 6px;
-  color: #fff;
-  font-size: 0.95rem;
-  font-weight: 600;
+  padding: var(--space-3) var(--space-6);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--palette-prussian-blue-600) 80%, transparent), color-mix(in srgb, var(--palette-prussian-blue-700) 60%, transparent));
+  border: 1px solid color-mix(in srgb, var(--palette-prussian-blue-600) 40%, transparent);
+  border-radius: var(--btn-radius-sm);
+  color: var(--btn-text-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   cursor: pointer;
   transition: opacity var(--duration-normal) var(--ease-in-out), color var(--duration-normal) var(--ease-in-out), background-color var(--duration-normal) var(--ease-in-out), border-color var(--duration-normal) var(--ease-in-out), transform var(--duration-normal) var(--ease-in-out);
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--space-3);
   white-space: nowrap;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  box-shadow: var(--btn-glow-default);
 }
 
 .continue-button::before {
@@ -30,7 +30,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.1),
+    color-mix(in srgb, var(--palette-white) 10%, transparent),
     transparent
   );
   transform: translateX(-100%);
@@ -47,14 +47,14 @@
 }
 
 .continue-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(59, 130, 246, 0.8));
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, var(--palette-prussian-blue-600), color-mix(in srgb, var(--palette-prussian-blue-700) 80%, transparent));
+  box-shadow: var(--btn-glow-hover), inset 0 0 20px color-mix(in srgb, var(--palette-white) 10%, transparent);
   transform: translateY(-2px);
 }
 
 .continue-button:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+  box-shadow: var(--btn-glow-default);
 }
 
 .continue-button:disabled,
@@ -69,18 +69,18 @@
 
 .continue-button__text {
   position: relative;
-  z-index: 1;
+  z-index: var(--z-base);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .continue-button__spinner {
   display: inline-block;
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top: 2px solid #fff;
+  border: 2px solid color-mix(in srgb, var(--palette-white) 30%, transparent);
+  border-top: 2px solid var(--palette-white);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -97,8 +97,8 @@
 /* Responsive */
 @media (max-width: 768px) {
   .continue-button {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.85rem;
+    padding: var(--space-2-5) var(--space-5);
+    font-size: var(--text-xs);
     align-self: center;
     width: 100%;
     justify-content: center;

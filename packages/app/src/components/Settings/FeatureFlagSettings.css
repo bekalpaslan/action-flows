@@ -3,30 +3,30 @@
  */
 
 .feature-flag-settings {
-  padding: var(--spacing-4);
+  padding: var(--space-4);
   max-width: 800px;
 }
 
 .feature-flag-settings h2 {
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-2);
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-2);
   color: var(--text-primary);
 }
 
 .warning-text {
-  background: var(--system-warning-bg, rgba(255, 193, 7, 0.1));
-  border-left: 4px solid var(--system-warning, #ffc107);
-  padding: var(--spacing-3);
+  background: var(--status-warning-bg);
+  border-left: var(--space-1) solid var(--system-orange);
+  padding: var(--space-3);
   border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-4);
-  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: var(--leading-normal);
 }
 
 .flags-list {
-  margin-bottom: var(--spacing-4);
-  border: 1px solid var(--panel-border);
+  margin-bottom: var(--space-4);
+  border: var(--panel-border-default);
   border-radius: var(--radius-md);
   overflow: hidden;
 }
@@ -35,9 +35,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-3);
-  border-bottom: 1px solid var(--panel-border);
-  gap: var(--spacing-4);
+  padding: var(--space-3);
+  border-bottom: var(--panel-border-default);
+  gap: var(--space-4);
 }
 
 .flag-item:last-child {
@@ -52,23 +52,23 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
+  gap: var(--space-1);
 }
 
 .flag-info label {
   display: block;
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-semibold);
   color: var(--text-primary);
-  margin-bottom: var(--spacing-1);
+  margin-bottom: var(--space-1);
   cursor: pointer;
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
 }
 
 .flag-description {
   display: block;
-  font-size: var(--font-size-sm);
+  font-size: var(--text-sm);
   color: var(--text-secondary);
-  line-height: 1.4;
+  line-height: var(--leading-snug);
 }
 
 .flag-item input[type='checkbox'] {
@@ -84,8 +84,8 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   background: var(--panel-bg-hover);
-  border: 2px solid var(--panel-border);
-  border-radius: 12px;
+  border: var(--space-0-5) solid var(--panel-border-color-default);
+  border-radius: var(--radius-full);
   position: relative;
   outline: none;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
@@ -99,58 +99,58 @@
 .flag-item input[type='checkbox']::before {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px;
-  height: 16px;
-  background: white;
+  top: var(--space-0-5);
+  left: var(--space-0-5);
+  width: var(--space-4);
+  height: var(--space-4);
+  background: var(--palette-white);
   border-radius: 50%;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .flag-item input[type='checkbox']:checked::before {
-  left: 18px;
+  left: calc(var(--space-4) + var(--space-2));
 }
 
 .flag-actions {
   display: flex;
-  gap: var(--spacing-3);
-  padding-top: var(--spacing-4);
-  border-top: 1px solid var(--panel-border);
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: var(--panel-border-default);
 }
 
 .btn {
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   cursor: pointer;
   border: none;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
-  font-family: inherit;
+  font-family: var(--font-sans);
 }
 
 .btn-danger {
-  background: var(--system-error, #dc3545);
-  color: white;
+  background: var(--btn-bg-danger);
+  color: var(--btn-text-primary);
 }
 
 .btn-danger:hover {
-  background: var(--system-error-hover, #c82333);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+  background: var(--btn-hover-danger);
+  transform: translateY(calc(var(--space-px) * -1));
+  box-shadow: var(--shadow-md);
 }
 
 .btn-secondary {
   background: var(--panel-bg-hover);
   color: var(--text-primary);
-  border: 1px solid var(--panel-border);
+  border: var(--panel-border-default);
 }
 
 .btn-secondary:hover {
-  background: var(--panel-bg-active);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--panel-bg-elevated);
+  transform: translateY(calc(var(--space-px) * -1));
+  box-shadow: var(--shadow-sm);
 }
 
 .btn:active {
@@ -159,9 +159,9 @@
 
 /* Dark theme adjustments */
 [data-theme='dark'] .warning-text {
-  background: rgba(255, 193, 7, 0.15);
+  background: color-mix(in srgb, var(--system-orange) 15%, transparent);
 }
 
 [data-theme='dark'] .flag-item input[type='checkbox']::before {
-  background: var(--panel-bg);
+  background: var(--panel-bg-base);
 }

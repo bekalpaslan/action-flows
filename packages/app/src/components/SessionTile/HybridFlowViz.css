@@ -16,8 +16,8 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #1a1a1a;
-  border-radius: 8px;
+  background-color: var(--app-bg-primary);
+  border-radius: var(--radius-md);
 }
 
 /* ===== FLOW CONTAINER ===== */
@@ -34,7 +34,7 @@
 
 /* Dark theme for ReactFlow background */
 .hybrid-flow-viz__flow-container .react-flow {
-  background-color: #1a1a1a;
+  background-color: var(--app-bg-primary);
 }
 
 .hybrid-flow-viz__flow-container .react-flow__viewport {
@@ -43,39 +43,39 @@
 
 /* Dark theme for controls */
 .hybrid-flow-viz__flow-container .react-flow__controls {
-  background-color: rgba(38, 38, 38, 0.95);
-  border: 1px solid var(--glass-bg-light);
+  background-color: var(--panel-bg-elevated);
+  border: 1px solid var(--panel-border-default);
   box-shadow: var(--shadow-elevation-3);
 }
 
 .hybrid-flow-viz__flow-container .react-flow__controls-button {
   background-color: transparent;
-  border-bottom: 1px solid var(--glass-bg-light);
-  transition: background-color 0.2s ease;
+  border-bottom: 1px solid var(--panel-border-default);
+  transition: background-color var(--duration-normal) ease;
 }
 
 .hybrid-flow-viz__flow-container .react-flow__controls-button:hover {
-  background-color: var(--glass-bg-medium);
+  background-color: var(--panel-bg-hover);
 }
 
 .hybrid-flow-viz__flow-container .react-flow__controls-button svg {
-  fill: rgba(255, 255, 255, 0.7);
+  fill: color-mix(in srgb, var(--palette-white) 70%, transparent);
 }
 
 /* Dark theme for minimap */
 .hybrid-flow-viz__flow-container .react-flow__minimap {
-  background-color: rgba(38, 38, 38, 0.95);
-  border: 1px solid var(--glass-bg-light);
+  background-color: var(--panel-bg-elevated);
+  border: 1px solid var(--panel-border-default);
   box-shadow: var(--shadow-elevation-3);
 }
 
 .hybrid-flow-viz__flow-container .react-flow__minimap-mask {
-  fill: rgba(0, 0, 0, 0.6);
+  fill: color-mix(in srgb, var(--palette-black) 60%, transparent);
 }
 
 /* Dark background pattern */
 .hybrid-flow-viz__flow-container .react-flow__background {
-  background-color: #1a1a1a;
+  background-color: var(--app-bg-primary);
 }
 
 /* ===== SQUAD OVERLAY ===== */
@@ -84,7 +84,7 @@
   position: absolute;
   /* Position will be handled by SquadPanel's overlay mode */
   pointer-events: none;
-  z-index: 100;
+  z-index: var(--z-dropdown);
   /* Allow SquadPanel to handle its own positioning */
   top: 0;
   left: 0;
@@ -99,18 +99,18 @@
 
 /* Smooth transitions for agent movements */
 .hybrid-flow-viz__squad-overlay .agent-character-card {
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  transition: transform var(--duration-slow) ease-out, opacity var(--duration-slow) ease-out;
 }
 
 /* Subtle entrance animation for agents */
 .hybrid-flow-viz__squad-overlay .agent-character-card {
-  animation: agentFadeIn 0.5s ease-out;
+  animation: agentFadeIn var(--duration-slowest) ease-out;
 }
 
 @keyframes agentFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.9) translateY(10px);
+    transform: scale(0.9) translateY(var(--space-2-5));
   }
   to {
     opacity: 1;
@@ -149,7 +149,7 @@
 /* When agent is clicked, add emphasis */
 .hybrid-flow-viz__squad-overlay .agent-character-card.is-clicked {
   transform: scale(1.05);
-  z-index: 101;
+  z-index: calc(var(--z-dropdown) + 1);
 }
 
 /* When hovering over agents, show subtle glow */
@@ -161,17 +161,17 @@
 
 /* Enhance glow effects in dark theme */
 .hybrid-flow-viz .agent-character-card[data-role="orchestrator"] {
-  box-shadow: 0 0 24px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--palette-orange-600) 30%, transparent);
 }
 
 .hybrid-flow-viz .agent-character-card[data-status="working"] {
-  box-shadow: 0 0 16px rgba(251, 192, 45, 0.4);
+  box-shadow: 0 0 16px var(--glow-warning-60);
 }
 
 .hybrid-flow-viz .agent-character-card[data-status="success"] {
-  box-shadow: 0 0 16px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 0 16px var(--glow-success-60);
 }
 
 .hybrid-flow-viz .agent-character-card[data-status="error"] {
-  box-shadow: 0 0 16px rgba(244, 67, 54, 0.4);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--palette-orange-400) 40%, transparent);
 }

@@ -7,17 +7,17 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px var(--glass-bg-dark);
+  background-color: var(--light-bg-base);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
 .monitor-header {
   padding: var(--space-4);
-  background: linear-gradient(135deg, var(--system-blue) 0%, #1565c0 100%);
-  color: white;
-  border-bottom: 2px solid #0d47a1;
+  background: linear-gradient(135deg, var(--system-blue) 0%, var(--palette-prussian-blue-600) 100%);
+  color: var(--light-btn-text-primary);
+  border-bottom: 2px solid var(--palette-prussian-blue-700);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -51,16 +51,16 @@
 
 .indicator-dot.online {
   background-color: var(--system-green);
-  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--palette-prussian-blue-800) 30%, transparent);
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
 @keyframes pulse-dot {
   0%, 100% {
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--palette-prussian-blue-800) 30%, transparent);
   }
   50% {
-    box-shadow: 0 0 0 6px rgba(76, 175, 80, 0.1);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--palette-prussian-blue-800) 10%, transparent);
   }
 }
 
@@ -69,9 +69,9 @@
 }
 
 .event-counter {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: color-mix(in srgb, var(--palette-white) 20%, transparent);
   padding: var(--space-1) var(--space-2);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   font-size: var(--text-xs);
 }
 
@@ -109,13 +109,13 @@
 }
 
 .event-info code {
-  background-color: #fff;
+  background-color: var(--light-bg-elevated);
   padding: var(--space-0-5) var(--space-1-5);
-  border-radius: 3px;
-  border: 1px solid #ddd;
-  font-family: 'Monaco', 'Menlo', monospace;
+  border-radius: var(--radius-xs-sm);
+  border: 1px solid var(--light-border-subtle);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--text-secondary);
+  color: var(--light-text-secondary);
 }
 
 /* Loading State */

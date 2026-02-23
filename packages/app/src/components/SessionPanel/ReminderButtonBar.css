@@ -1,16 +1,17 @@
 /* ReminderButtonBar Styles */
 
 .reminder-button-bar {
-  background: var(--surface-secondary, var(--light-bg-secondary));
-  border-top: 1px solid var(--border-subtle, #e0e0e0);
+  background: var(--light-bg-secondary);
+  border-top: 1px solid var(--light-border-subtle);
   padding: var(--space-3) var(--space-4);
   margin-bottom: var(--space-2);
 }
 
 .reminder-button-bar--loading {
   text-align: center;
-  color: var(--text-muted, #666);
+  color: var(--light-text-tertiary);
   font-size: var(--text-sm);
+  font-family: var(--font-sans);
 }
 
 .reminder-button-bar__header {
@@ -20,7 +21,8 @@
   margin-bottom: var(--space-2-5);
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
-  color: var(--text-primary, #222);
+  color: var(--light-text-primary);
+  font-family: var(--font-sans);
 }
 
 .reminder-button-bar__icon {
@@ -29,7 +31,7 @@
 
 .reminder-button-bar__label {
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--tracking-wide);
 }
 
 .reminder-button-bar__buttons {
@@ -48,26 +50,28 @@
 .reminder-button-bar__group-label {
   font-size: var(--text-xs);
   font-weight: var(--font-semibold);
-  color: var(--text-secondary, #444);
+  color: var(--light-text-secondary);
   margin-right: var(--space-1);
   min-width: 100px;
+  font-family: var(--font-sans);
 }
 
 .reminder-button-bar__button {
   padding: var(--space-1) var(--space-2-5);
   font-size: var(--text-xs);
-  border: 1px solid var(--border-default, var(--light-text-tertiary));
-  border-radius: 4px;
-  background: var(--surface-primary, #fff);
-  color: var(--text-primary, #222);
+  border: 1px solid var(--light-border-default);
+  border-radius: var(--radius-xs);
+  background: var(--palette-white);
+  color: var(--light-text-primary);
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   white-space: nowrap;
+  font-family: var(--font-sans);
 }
 
 .reminder-button-bar__button:hover {
-  background: var(--surface-hover, #f9f9f9);
-  border-color: var(--border-focus, #999);
+  background: var(--light-bg-secondary);
+  border-color: var(--light-text-tertiary);
 }
 
 .reminder-button-bar__button:active {
@@ -75,21 +79,21 @@
 }
 
 .reminder-button-bar__button--double-check {
-  border-color: var(--color-info, #0066cc);
-  color: var(--color-info, #0066cc);
+  border-color: var(--palette-prussian-blue-700);
+  color: var(--palette-prussian-blue-700);
 }
 
 .reminder-button-bar__button--approve {
-  border-color: var(--color-success, #0a0);
-  color: var(--color-success, #0a0);
+  border-color: var(--palette-prussian-blue-800);
+  color: var(--palette-prussian-blue-800);
 }
 
 .reminder-button-bar__button--restart {
-  border-color: var(--color-warning, #f90);
-  color: var(--color-warning, #f90);
+  border-color: var(--palette-orange-500);
+  color: var(--palette-orange-500);
 }
 
 .reminder-button-bar__button--generic {
-  border-color: var(--color-neutral, #666);
-  color: var(--color-neutral, #666);
+  border-color: var(--palette-black-700);
+  color: var(--palette-black-700);
 }
