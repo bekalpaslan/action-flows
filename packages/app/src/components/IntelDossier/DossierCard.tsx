@@ -10,8 +10,6 @@
  */
 
 import type { IntelDossier } from '@afw/shared';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 
 // ============================================================================
 // Types
@@ -77,36 +75,14 @@ function getStatusLabel(status: IntelDossier['status']): string {
 // ============================================================================
 
 export function DossierCard({ dossier, isSelected, onClick }: DossierCardProps) {
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'DossierCard',
-    getContext: () => ({
-      dossierId: dossier.id,
-      name: dossier.name,
-      status: dossier.status,
-      targetCount: dossier.targets.length,
-      analysisCount: dossier.analysisCount,
-    }),
-  });
-
-  const handleDiscussClick = () => {
-    openDialog();
-  };
-
   return (
     <>
       <button
         className={`dossier-card ${isSelected ? 'selected' : ''}`}
-        onClick={(e) => {
-          // If clicking the DiscussButton, don't trigger card selection
-          if ((e.target as HTMLElement).closest('.discuss-button__trigger')) {
-            return;
-          }
-          onClick();
-        }}
+        onClick={onClick}
         type="button"
         aria-label={`Select dossier: ${dossier.name}`}
       >
-        {/* Header: Name + Status Dot + Discuss Button */}
         <div className="dossier-card__header">
           <h3 className="dossier-card__name">{dossier.name}</h3>
           <span
@@ -115,11 +91,7 @@ export function DossierCard({ dossier, isSelected, onClick }: DossierCardProps) 
             title={getStatusLabel(dossier.status)}
             aria-label={`Status: ${getStatusLabel(dossier.status)}`}
           />
-          <DiscussButton
-            componentName="DossierCard"
-            onClick={handleDiscussClick}
-            size="small"
-          />
+          
         </div>
 
         {/* Meta: Target Count + Last Updated */}
@@ -145,20 +117,6 @@ export function DossierCard({ dossier, isSelected, onClick }: DossierCardProps) 
           </div>
         )}
       </button>
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="DossierCard"
-        componentContext={{
-          dossierId: dossier.id,
-          name: dossier.name,
-          status: dossier.status,
-          targetCount: dossier.targets.length,
-          analysisCount: dossier.analysisCount,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </>
   );
 }

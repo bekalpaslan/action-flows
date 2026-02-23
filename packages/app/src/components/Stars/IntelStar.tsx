@@ -13,8 +13,6 @@ import { useState } from 'react';
 import { DossierList, DossierView, DossierCreationDialog } from '../IntelDossier';
 import { useDossiers } from '../../hooks/useDossiers';
 import type { DossierId } from '@afw/shared';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { OrchestratorButton } from '../OrchestratorButton';
 import './IntelStar.css';
 
@@ -47,15 +45,6 @@ export function IntelStar(_props?: IntelStarProps) {
 
   // Selected dossier
   const selectedDossier = dossiers.find((d) => d.id === selectedDossierId) || null;
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'IntelStar',
-    getContext: () => ({
-      dossierCount: dossiers.length,
-      activeDossier: selectedDossierId,
-    }),
-  });
 
   // Handlers
   const handleDossierSelect = (dossierId: string) => {
@@ -99,7 +88,7 @@ export function IntelStar(_props?: IntelStarProps) {
       {/* Header */}
       <header className="intel-workbench__header">
         <h1 className="intel-workbench__title">Intel</h1>
-        <DiscussButton componentName="IntelStar" onClick={openDialog} size="small" />
+        
         <OrchestratorButton source="intel-analyze" context={{ action: 'analyze-intel' }}>
           <button className="intel-workbench__action-btn">Analyze with Orchestrator</button>
         </OrchestratorButton>
@@ -167,17 +156,6 @@ export function IntelStar(_props?: IntelStarProps) {
           onClose={() => setShowCreateDialog(false)}
         />
       )}
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="IntelStar"
-        componentContext={{
-          dossierCount: dossiers.length,
-          activeDossier: selectedDossierId,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

@@ -20,10 +20,9 @@ import type { SessionId, ProjectId, HarmonyCheck } from '@afw/shared';
 import { HarmonyPanel } from '../HarmonyPanel/HarmonyPanel';
 import { HarmonyBadge } from '../HarmonyBadge/HarmonyBadge';
 import { useHarmonyMetrics } from '../../hooks/useHarmonyMetrics';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { OrchestratorButton } from '../OrchestratorButton';
 import { HarmonyHealthDashboard } from '../HarmonyHealthDashboard';
+import { Button } from '../primitives';
 import './HarmonySpaceWorkbench.css';
 
 /**
@@ -104,16 +103,6 @@ export function HarmonySpaceWorkbench({
     target || ('' as SessionId),
     targetType
   );
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'HarmonySpaceWorkbench',
-    getContext: () => ({
-      harmonyStatus: metrics?.harmonyPercentage ?? 100,
-      checksCount: metrics?.formatBreakdown ? Object.keys(metrics.formatBreakdown).length : 0,
-      viewMode,
-    }),
-  });
 
   // Mock drift detection results (to be replaced with actual API call)
   const [driftResults] = useState<DriftResult[]>([
@@ -232,7 +221,7 @@ export function HarmonySpaceWorkbench({
       <header className="harmony-workbench__header">
         <div className="harmony-workbench__header-left">
           <h1 className="harmony-workbench__title">Harmony Dashboard</h1>
-          <DiscussButton componentName="HarmonyWorkbench" onClick={openDialog} size="small" />
+          
           <div className="harmony-workbench__subtitle">
             Contract compliance monitoring and drift detection
           </div>
@@ -252,61 +241,61 @@ export function HarmonySpaceWorkbench({
         <div className="harmony-workbench__header-right">
           {/* Tab Selector */}
           <div className="harmony-workbench__tab-group">
-            <button
+            <Button variant="ghost"
               className={`harmony-workbench__view-btn ${tab === 'metrics' ? 'harmony-workbench__view-btn--active' : ''}`}
               onClick={() => setTab('metrics')}
             >
               Metrics
-            </button>
-            <button
+            </Button>
+            <Button variant="ghost"
               className={`harmony-workbench__view-btn ${tab === 'health' ? 'harmony-workbench__view-btn--active' : ''}`}
               onClick={() => setTab('health')}
             >
               Health
-            </button>
+            </Button>
           </div>
 
           {/* View Mode Selector */}
           <div className="harmony-workbench__view-selector">
             {sessionId && (
-              <button
+              <Button variant="ghost"
                 className={`harmony-workbench__view-btn ${viewMode === 'session' ? 'harmony-workbench__view-btn--active' : ''}`}
                 onClick={() => setViewMode('session')}
               >
                 Session
-              </button>
+              </Button>
             )}
             {projectId && (
-              <button
+              <Button variant="ghost"
                 className={`harmony-workbench__view-btn ${viewMode === 'project' ? 'harmony-workbench__view-btn--active' : ''}`}
                 onClick={() => setViewMode('project')}
               >
                 Project
-              </button>
+              </Button>
             )}
-            <button
+            <Button variant="ghost"
               className={`harmony-workbench__view-btn ${viewMode === 'global' ? 'harmony-workbench__view-btn--active' : ''}`}
               onClick={() => setViewMode('global')}
             >
               Global
-            </button>
+            </Button>
           </div>
 
           {/* Actions */}
           <OrchestratorButton source="harmony-recheck" context={{ action: 'recheck-harmony' }}>
-            <button
+            <Button variant="ghost"
               className="harmony-workbench__action-btn harmony-workbench__action-btn--primary"
               onClick={handleTriggerFullCheck}
             >
               Re-check Harmony
-            </button>
+            </Button>
           </OrchestratorButton>
-          <button
+          <Button variant="ghost"
             className="harmony-workbench__action-btn"
             onClick={() => setShowManualCheck(!showManualCheck)}
           >
             {showManualCheck ? 'Hide' : 'Manual Check'}
-          </button>
+          </Button>
         </div>
       </header>
 
@@ -350,14 +339,14 @@ export function HarmonySpaceWorkbench({
                   />
 
                   <div className="harmony-workbench__manual-actions">
-                    <button
+                    <Button variant="ghost"
                       className="harmony-workbench__action-btn harmony-workbench__action-btn--primary"
                       onClick={handleManualCheck}
                       disabled={!manualCheckText.trim() || isCheckingManually}
                     >
                       {isCheckingManually ? 'Checking...' : 'Check Output'}
-                    </button>
-                    <button
+                    </Button>
+                    <Button variant="ghost"
                       className="harmony-workbench__action-btn"
                       onClick={() => {
                         setManualCheckText('');
@@ -365,7 +354,7 @@ export function HarmonySpaceWorkbench({
                       }}
                     >
                       Clear
-                    </button>
+                    </Button>
                   </div>
 
                   {/* Manual Check Result */}
@@ -496,23 +485,12 @@ export function HarmonySpaceWorkbench({
         <div className="harmony-workbench__error-banner">
           <span className="harmony-workbench__error-icon">!</span>
           <span className="harmony-workbench__error-message">{error}</span>
-          <button className="harmony-workbench__error-dismiss" onClick={refresh}>
+          <Button variant="ghost" className="harmony-workbench__error-dismiss" onClick={refresh}>
             Retry
-          </button>
+          </Button>
         </div>
       )}
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="HarmonyWorkbench"
-        componentContext={{
-          harmonyStatus: metrics?.harmonyPercentage ?? 100,
-          checksCount: metrics?.formatBreakdown ? Object.keys(metrics.formatBreakdown).length : 0,
-          viewMode,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }
+

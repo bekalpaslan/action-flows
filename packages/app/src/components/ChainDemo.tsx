@@ -7,6 +7,7 @@ import { useState, useCallback, useMemo } from 'react';
 import type { Chain } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { ChainDAG } from './ChainDAG';
+import { Button } from './primitives';
 import { sampleChain } from '../data/sampleChain';
 import '../styles/ChainDemo.css';
 
@@ -189,16 +190,16 @@ export const ChainDemo: React.FC = () => {
       <div className="chain-demo-controls">
         <div className="control-section">
           <h3>Automated Scenario</h3>
-          <button
+          <Button variant="ghost"
             className="demo-button primary"
             onClick={runScenario}
             disabled={isRunning}
           >
             {isRunning ? `Running... (${currentStep}/${scenarios.length})` : 'Run Full Scenario'}
-          </button>
-          <button className="demo-button" onClick={handleReset}>
+          </Button>
+          <Button variant="ghost" className="demo-button" onClick={handleReset}>
             Reset
-          </button>
+          </Button>
         </div>
 
         <div className="control-section">
@@ -208,34 +209,34 @@ export const ChainDemo: React.FC = () => {
               <div key={stepNum} className="step-control-group">
                 <span className="step-label">Step {stepNum}</span>
                 <div className="step-buttons">
-                  <button
+                  <Button variant="ghost"
                     className="demo-button small"
                     onClick={() => handleSpawnStep(stepNum)}
                     title="Spawn step (set to in_progress)"
                   >
                     Spawn
-                  </button>
-                  <button
+                  </Button>
+                  <Button variant="ghost"
                     className="demo-button small success"
                     onClick={() => handleCompleteStep(stepNum)}
                     title="Complete step"
                   >
                     Complete
-                  </button>
-                  <button
+                  </Button>
+                  <Button variant="ghost"
                     className="demo-button small danger"
                     onClick={() => handleFailStep(stepNum)}
                     title="Fail step"
                   >
                     Fail
-                  </button>
-                  <button
+                  </Button>
+                  <Button variant="ghost"
                     className="demo-button small"
                     onClick={() => handleSkipStep(stepNum)}
                     title="Skip step"
                   >
                     Skip
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}
@@ -275,3 +276,5 @@ export const ChainDemo: React.FC = () => {
     </div>
   );
 };
+
+

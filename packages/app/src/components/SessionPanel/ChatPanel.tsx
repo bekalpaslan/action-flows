@@ -18,14 +18,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import type { SessionId, Session, WorkspaceEvent, ReminderDefinition, ReminderVariant, ChainId } from '@afw/shared';
 import { useWebSocketContext } from '../../contexts/WebSocketContext';
-import { useDiscussContext } from '../../contexts/DiscussContext';
 import { useChatWindowContext, AVAILABLE_MODELS } from '../../contexts/ChatWindowContext';
 import { useChatMessages, type ChatDisplayMessage } from '../../hooks/useChatMessages';
 import { usePromptButtons } from '../../hooks/usePromptButtons';
 import { claudeCliService } from '../../services/claudeCliService';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
 import { ErrorModal } from '../ErrorModal';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { useErrorAnnouncements } from '../../hooks/useErrorAnnouncements';
 import { extractChainCompilation } from '../../services/chainCompilationDetector';
 import { ReminderButtonBar } from './ReminderButtonBar';
@@ -33,6 +30,7 @@ import { useReminderButtons } from '../../hooks/useReminderButtons';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import type { PromptButton } from '../../services/promptButtonSelector';
+import { Button } from '../primitives';
 import './ChatPanel.css';
 
 /* ============================================================================
@@ -120,7 +118,6 @@ export interface ChatPanelProps {
   cwd?: string;
   /** Called when user clicks close in chat header */
   onClose?: () => void;
-  /** Pre-populate the input field (from DiscussButton context) */
   prefillMessage?: string;
   /** Show X button in header (default false for backward compat) */
   showCloseButton?: boolean;
@@ -164,7 +161,6 @@ export function ChatPanel({
   const modelDropdownRef = useRef<HTMLDivElement>(null);
 
   const { send } = useWebSocketContext();
-  const { registerChatInput, unregisterChatInput } = useDiscussContext();
   const { selectedModel, setSelectedModel } = useChatWindowContext();
   const { messages, addUserMessage } = useChatMessages(sessionId);
   const { buttons, getButtonPromptText } = usePromptButtons({
@@ -177,16 +173,6 @@ export function ChatPanel({
   // Error announcements management
   const { unreadErrors, dismissError, handleRecoveryAction } = useErrorAnnouncements(sessionId);
   const currentError = unreadErrors.length > 0 ? unreadErrors[displayedErrorIndex] : null;
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'ChatPanel',
-    getContext: () => ({
-      messageCount: messages.length,
-      sessionStatus: session?.status,
-      cliState,
-    }),
-  });
 
   /**
    * Synchronously update both ref and state
@@ -263,19 +249,9 @@ export function ChatPanel({
     : undefined;
 
   /**
-   * Register chat send function with DiscussContext on mount.
    * Uses a ref so the registered callback always calls the latest handleSendMessage.
    */
   const handleSendMessageRef = useRef<(msg: string) => void>(() => {});
-  useEffect(() => {
-    registerChatInput((message: string) => {
-      handleSendMessageRef.current(message);
-    });
-
-    return () => {
-      unregisterChatInput();
-    };
-  }, [registerChatInput, unregisterChatInput]);
 
   /**
    * Auto-scroll to bottom when new messages arrive
@@ -421,7 +397,6 @@ export function ChatPanel({
     }
   }, [isSending, sessionId, send, onSendMessage, startCliSession, addUserMessage]);
 
-  // Keep ref in sync so DiscussContext always calls the latest version
   handleSendMessageRef.current = handleSendMessage;
 
   /**
@@ -651,7 +626,7 @@ export function ChatPanel({
         {/* Spawn Prompt Expandable Section */}
         {isToolUse && msg.metadata?.spawnPrompt && (
           <div className="chat-bubble__spawn-prompt">
-            <button
+            <Button variant="ghost"
               className="chat-bubble__spawn-prompt-header"
               onClick={() => toggleSpawnPrompt(msg.id)}
               aria-expanded={expandedSpawnPrompts.has(msg.id)}
@@ -664,7 +639,7 @@ export function ChatPanel({
               <span className="chat-bubble__spawn-prompt-label">
                 Spawn Prompt
               </span>
-            </button>
+            </Button>
             {expandedSpawnPrompts.has(msg.id) && (
               <pre
                 className="chat-bubble__spawn-prompt-content"
@@ -703,7 +678,19 @@ export function ChatPanel({
       data-testid="chat-panel"
     >
       {/* Header — includes session info bar */}
-      <div className="chat-panel-header" onClick={collapsible ? toggleCollapse : undefined}>
+      <div
+        className="chat-panel-header"
+        onClick={collapsible ? toggleCollapse : undefined}
+        role="button"
+        tabIndex={0}
+        aria-disabled={!collapsible}
+        onKeyDown={(e) => {
+          if (collapsible && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            toggleCollapse();
+          }
+        }}
+      >
         <div className="chat-panel-header__left">
           <h3 className="panel-title">Chat</h3>
           {/* Status badge (from SessionInfoPanel) */}
@@ -726,9 +713,9 @@ export function ChatPanel({
               Live
             </span>
           )}
-          <DiscussButton componentName="ChatPanel" onClick={openDialog} size="small" />
+          
           {showCloseButton && (
-            <button
+            <Button variant="ghost"
               className="chat-panel__close-btn"
               onClick={(e) => {
                 e.stopPropagation();
@@ -740,10 +727,10 @@ export function ChatPanel({
               title="Close chat"
             >
               ×
-            </button>
+            </Button>
           )}
           {collapsible && (
-            <button
+            <Button variant="ghost"
               className="collapse-toggle"
               aria-label={isCollapsed ? 'Expand panel' : 'Collapse panel'}
               onClick={(e) => {
@@ -760,7 +747,7 @@ export function ChatPanel({
               >
                 <path d="M4.427 9.573l3.396-3.396a.25.25 0 0 1 .354 0l3.396 3.396a.25.25 0 0 1-.177.427H4.604a.25.25 0 0 1-.177-.427z" />
               </svg>
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -768,7 +755,7 @@ export function ChatPanel({
       {/* Session Info Bar — compact metadata row (non-scrolling, always visible) */}
       {!isCollapsed && session && (
         <div className="chat-panel__info-bar" data-testid="session-info-header">
-          <button
+          <Button variant="ghost"
             className="chat-panel__info-session-id"
             onClick={(e) => { e.stopPropagation(); handleCopyId(); }}
             title={copyTooltip}
@@ -782,7 +769,7 @@ export function ChatPanel({
               <path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2z" />
               <path d="M2 6a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1H6a3 3 0 0 1-3-3V6H2z" />
             </svg>
-          </button>
+          </Button>
           {session.startedAt && (
             <span className="chat-panel__info-chip" title={new Date(session.startedAt).toLocaleString()}>
               {formatRelativeTime(new Date(session.startedAt).getTime())}
@@ -855,7 +842,7 @@ export function ChatPanel({
           {buttons && buttons.length > 0 && (
             <div className="chat-panel__prompt-buttons" data-testid="prompt-buttons-container">
               {buttons.map((button, idx) => (
-                <button
+                <Button variant="ghost"
                   key={button.id}
                   className={`chat-panel__prompt-btn chat-panel__prompt-btn--${button.category}`}
                   onClick={() => handlePromptButtonClick(button)}
@@ -864,7 +851,7 @@ export function ChatPanel({
                   data-testid={`prompt-button-${idx}`}
                 >
                   {button.label}
-                </button>
+                </Button>
               ))}
             </div>
           )}
@@ -875,14 +862,14 @@ export function ChatPanel({
            session.lastPrompt.quickResponses.length > 0 && (
             <div className="chat-panel__quick-responses">
               {session.lastPrompt.quickResponses.map((response: string, idx: number) => (
-                <button
+                <Button variant="ghost"
                   key={idx}
                   className="chat-panel__quick-response-btn"
                   onClick={() => handleSendMessage(response)}
                   disabled={isSending}
                 >
                   {response}
-                </button>
+                </Button>
               ))}
             </div>
           )}
@@ -908,7 +895,7 @@ export function ChatPanel({
             {/* Bottom row: toolbar */}
             <div className="chat-panel__toolbar">
               {/* Left: Add context button */}
-              <button
+              <Button variant="ghost"
                 className="chat-panel__add-context-btn"
                 onClick={handleAddContextClick}
                 aria-label="Add context"
@@ -918,13 +905,13 @@ export function ChatPanel({
                   <line x1="10" y1="5" x2="10" y2="15" />
                   <line x1="5" y1="10" x2="15" y2="10" />
                 </svg>
-              </button>
+              </Button>
 
               {/* Right: Model selector + Send button */}
               <div className="chat-panel__toolbar-right">
                 {/* Model selector */}
                 <div className="chat-panel__model-selector" ref={modelDropdownRef}>
-                  <button
+                  <Button variant="ghost"
                     className="chat-panel__model-selector-trigger"
                     onClick={() => setIsModelDropdownOpen(prev => !prev)}
                     onKeyDown={handleModelSelectorKeyDown}
@@ -938,7 +925,7 @@ export function ChatPanel({
                     <svg className="chat-panel__model-selector-caret" width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                       <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                     </svg>
-                  </button>
+                  </Button>
 
                   {/* Model dropdown menu */}
                   {isModelDropdownOpen && (
@@ -948,7 +935,7 @@ export function ChatPanel({
                       aria-label="Available AI models"
                     >
                       {AVAILABLE_MODELS.map((model, index) => (
-                        <button
+                        <Button variant="ghost"
                           key={model.id}
                           role="option"
                           aria-selected={selectedModel === model.id}
@@ -964,14 +951,14 @@ export function ChatPanel({
                               <path d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z" />
                             </svg>
                           )}
-                        </button>
+                        </Button>
                       ))}
                     </div>
                   )}
                 </div>
 
                 {/* Send button */}
-                <button
+                <Button variant="ghost"
                   className="chat-panel__send-btn"
                   onClick={() => handleSendMessage(input)}
                   disabled={!input.trim() || isSending}
@@ -993,25 +980,13 @@ export function ChatPanel({
                       <path d="M8 0a.5.5 0 01.5.5v11.793l3.146-3.147a.5.5 0 01.708.708l-4 4a.5.5 0 01-.708 0l-4-4a.5.5 0 01.708-.708L7.5 12.293V.5A.5.5 0 018 0z" />
                     </svg>
                   )}
-                </button>
+                </Button>
               </div>
             </div>
           </div>
         </>
       )}
 
-      {/* DiscussDialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="ChatPanel"
-        componentContext={{
-          messageCount: messages.length,
-          sessionStatus: session?.status,
-          cliState,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
 
       <ErrorModal
         isOpen={currentError !== null}
@@ -1024,3 +999,4 @@ export function ChatPanel({
     </div>
   );
 }
+

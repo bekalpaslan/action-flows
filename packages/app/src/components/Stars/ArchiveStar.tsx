@@ -13,8 +13,7 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import type { ArchivedSession } from '../../hooks/useSessionArchive';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { Button } from '../primitives';
 import './ArchiveStar.css';
 
 export interface ArchiveStarProps {
@@ -55,18 +54,6 @@ export function ArchiveStar({
 
   // Selection state for bulk actions
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'ArchiveStar',
-    getContext: () => ({
-      archivedCount: archivedSessions.length,
-      selectedSession: selectedIds.size > 0 ? Array.from(selectedIds)[0] : null,
-      filteredCount: filteredSessions.length,
-      searchQuery,
-      statusFilter,
-    }),
-  });
 
   // Get unique statuses for filter dropdown
   const uniqueStatuses = useMemo(() => {
@@ -219,9 +206,9 @@ export function ArchiveStar({
           </div>
         </div>
         <div className="archive-workbench__header-right">
-          <DiscussButton componentName="ArchiveStar" onClick={openDialog} size="small" />
+          
           {onClearAll && archivedSessions.length > 0 && (
-            <button
+            <Button variant="ghost"
               className="archive-workbench__clear-all-btn"
               onClick={() => {
                 if (window.confirm('Delete all archived sessions? This cannot be undone.')) {
@@ -231,7 +218,7 @@ export function ArchiveStar({
               title="Clear all archives"
             >
               Clear All
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -299,13 +286,13 @@ export function ArchiveStar({
           </div>
 
           {hasActiveFilters && (
-            <button
+            <Button variant="ghost"
               className="archive-filter-clear-btn"
               onClick={clearFilters}
               title="Clear all filters"
             >
               Clear Filters
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -315,15 +302,15 @@ export function ArchiveStar({
         <div className="archive-workbench__bulk-actions">
           <span className="bulk-actions-count">{selectedIds.size} selected</span>
           <div className="bulk-actions-buttons">
-            <button className="bulk-action-btn bulk-restore-btn" onClick={handleBulkRestore}>
+            <Button variant="ghost" className="bulk-action-btn bulk-restore-btn" onClick={handleBulkRestore}>
               Restore Selected
-            </button>
-            <button className="bulk-action-btn bulk-delete-btn" onClick={handleBulkDelete}>
+            </Button>
+            <Button variant="ghost" className="bulk-action-btn bulk-delete-btn" onClick={handleBulkDelete}>
               Delete Selected
-            </button>
-            <button className="bulk-action-btn bulk-deselect-btn" onClick={deselectAll}>
+            </Button>
+            <Button variant="ghost" className="bulk-action-btn bulk-deselect-btn" onClick={deselectAll}>
               Deselect All
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -341,9 +328,9 @@ export function ArchiveStar({
             <div className="empty-icon">🔍</div>
             <h2>No Matching Sessions</h2>
             <p>Try adjusting your filters or search query.</p>
-            <button className="archive-clear-filters-btn" onClick={clearFilters}>
+            <Button variant="ghost" className="archive-clear-filters-btn" onClick={clearFilters}>
               Clear Filters
-            </button>
+            </Button>
           </div>
         ) : (
           <>
@@ -357,7 +344,8 @@ export function ArchiveStar({
                   title="Select all"
                 />
               </div>
-              <div
+              <Button
+                variant="ghost"
                 className={`archive-table-cell archive-cell-id ${sortField === 'startedAt' ? 'sorted' : ''}`}
                 onClick={() => handleSort('startedAt')}
               >
@@ -365,10 +353,11 @@ export function ArchiveStar({
                 {sortField === 'startedAt' && (
                   <span className="sort-indicator">{sortDirection === 'asc' ? '▲' : '▼'}</span>
                 )}
-              </div>
+              </Button>
               <div className="archive-table-cell archive-cell-user">User</div>
               <div className="archive-table-cell archive-cell-status">Status</div>
-              <div
+              <Button
+                variant="ghost"
                 className={`archive-table-cell archive-cell-chains ${sortField === 'chainsCount' ? 'sorted' : ''}`}
                 onClick={() => handleSort('chainsCount')}
               >
@@ -376,9 +365,10 @@ export function ArchiveStar({
                 {sortField === 'chainsCount' && (
                   <span className="sort-indicator">{sortDirection === 'asc' ? '▲' : '▼'}</span>
                 )}
-              </div>
+              </Button>
               <div className="archive-table-cell archive-cell-duration">Duration</div>
-              <div
+              <Button
+                variant="ghost"
                 className={`archive-table-cell archive-cell-archived ${sortField === 'archivedAt' ? 'sorted' : ''}`}
                 onClick={() => handleSort('archivedAt')}
               >
@@ -386,7 +376,7 @@ export function ArchiveStar({
                 {sortField === 'archivedAt' && (
                   <span className="sort-indicator">{sortDirection === 'asc' ? '▲' : '▼'}</span>
                 )}
-              </div>
+              </Button>
               <div className="archive-table-cell archive-cell-actions">Actions</div>
             </div>
 
@@ -432,14 +422,14 @@ export function ArchiveStar({
                     {formatTimestamp(session.archivedAt)}
                   </div>
                   <div className="archive-table-cell archive-cell-actions">
-                    <button
+                    <Button variant="ghost"
                       className="archive-action-btn restore-btn"
                       onClick={() => onRestore(session.sessionId)}
                       title="Restore session"
                     >
                       Restore
-                    </button>
-                    <button
+                    </Button>
+                    <Button variant="ghost"
                       className="archive-action-btn delete-btn"
                       onClick={() => {
                         if (window.confirm('Delete this archived session? This cannot be undone.')) {
@@ -449,7 +439,7 @@ export function ArchiveStar({
                       title="Delete permanently"
                     >
                       Delete
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -457,20 +447,8 @@ export function ArchiveStar({
           </>
         )}
       </div>
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="ArchiveStar"
-        componentContext={{
-          archivedCount: archivedSessions.length,
-          selectedSession: selectedIds.size > 0 ? Array.from(selectedIds)[0] : null,
-          filteredCount: filteredSessions.length,
-          searchQuery,
-          statusFilter,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }
+
+

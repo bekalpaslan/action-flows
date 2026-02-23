@@ -18,7 +18,6 @@ import { WorkbenchProvider } from '../contexts/WorkbenchContext';
 import { UniverseProvider } from '../contexts/UniverseContext';
 import { DiscoveryProvider } from '../contexts/DiscoveryContext';
 import { ChatWindowProvider } from '../contexts/ChatWindowContext';
-import { DiscussProvider } from '../contexts/DiscussContext';
 import { NotificationGlowProvider } from '../hooks/useNotificationGlow';
 import { VimNavigationProvider } from '../contexts/VimNavigationContext';
 
@@ -47,13 +46,11 @@ function TestProviders({ children }: TestProvidersProps) {
                     <UniverseProvider>
                       <DiscoveryProvider>
                         <ChatWindowProvider>
-                          <DiscussProvider>
-                            <NotificationGlowProvider>
-                              <VimNavigationProvider>
-                                {children}
-                              </VimNavigationProvider>
-                            </NotificationGlowProvider>
-                          </DiscussProvider>
+                          <NotificationGlowProvider>
+                            <VimNavigationProvider>
+                              {children}
+                            </VimNavigationProvider>
+                          </NotificationGlowProvider>
                         </ChatWindowProvider>
                       </DiscoveryProvider>
                     </UniverseProvider>

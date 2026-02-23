@@ -7,13 +7,11 @@
  * - Tabbed interface for contracts, drift detection, and health checks
  * - Search and filter capabilities
  * - Manual refresh with cache info
- * - DiscussButton integration
  */
 
 import React, { useState, useMemo } from 'react';
 import { useCoverageMetrics } from '../../../hooks/useCoverageMetrics';
-import { DiscussButton, DiscussDialog } from '../../DiscussButton';
-import { useDiscussButton } from '../../../hooks/useDiscussButton';
+import { Button } from '../../primitives';
 import type { ContractDetail } from '../../../hooks/useCoverageMetrics';
 import './CoverageTool.css';
 
@@ -82,12 +80,12 @@ function ContractRow({ contract, onViewDetails }: ContractRowProps) {
       <td className="coverage-contract-row__errors">{contract.errors.length}</td>
       <td className="coverage-contract-row__warnings">{contract.warnings.length}</td>
       <td className="coverage-contract-row__actions">
-        <button
+        <Button variant="ghost"
           className="coverage-contract-row__view-btn"
           onClick={() => onViewDetails(contract)}
         >
           View
-        </button>
+        </Button>
       </td>
     </tr>
   );
@@ -96,7 +94,7 @@ function ContractRow({ contract, onViewDetails }: ContractRowProps) {
 /**
  * Main CoverageWorkbench Component
  */
-export function CoverageTool({}: CoverageToolProps): React.ReactElement {
+export function CoverageTool(_props: CoverageToolProps): React.ReactElement {
   const { metrics, loading, error, lastRefresh, refresh } = useCoverageMetrics();
 
   const [activeTab, setActiveTab] = useState<TabId>('contracts');
@@ -104,17 +102,6 @@ export function CoverageTool({}: CoverageToolProps): React.ReactElement {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedContract, setSelectedContract] = useState<ContractDetail | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'CoverageTool',
-    getContext: () => ({
-      coverage: metrics?.summary.componentCoverage ?? 0,
-      totalContracts: metrics?.summary.totalContracts ?? 0,
-      errorCount: metrics?.summary.errorContracts ?? 0,
-      activeTab,
-    }),
-  });
 
   // Handle manual refresh
   const handleRefresh = async () => {
@@ -189,7 +176,7 @@ export function CoverageTool({}: CoverageToolProps): React.ReactElement {
         <div className="coverage-workbench__error">
           <p>Failed to load coverage metrics</p>
           <p className="coverage-workbench__error-details">{error}</p>
-          <button onClick={handleRefresh}>Retry</button>
+          <Button variant="ghost" onClick={handleRefresh}>Retry</Button>
         </div>
       </div>
     );
@@ -212,14 +199,14 @@ export function CoverageTool({}: CoverageToolProps): React.ReactElement {
           )}
         </div>
         <div className="coverage-workbench__header-actions">
-          <button
+          <Button variant="ghost"
             className="coverage-workbench__refresh-btn"
             onClick={handleRefresh}
             disabled={isRefreshing}
           >
             {isRefreshing ? 'Refreshing...' : 'Refresh'}
-          </button>
-          <DiscussButton componentName="CoverageWorkbench" onClick={openDialog} size="small" />
+          </Button>
+          
         </div>
       </header>
 
@@ -254,24 +241,24 @@ export function CoverageTool({}: CoverageToolProps): React.ReactElement {
       {/* Tabs */}
       <div className="coverage-workbench__tabs">
         <div className="coverage-workbench__tab-buttons">
-          <button
+          <Button variant="ghost"
             className={`coverage-workbench__tab-btn ${activeTab === 'contracts' ? 'active' : ''}`}
             onClick={() => setActiveTab('contracts')}
           >
             Contracts ({filteredContracts.length})
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`coverage-workbench__tab-btn ${activeTab === 'drift' ? 'active' : ''}`}
             onClick={() => setActiveTab('drift')}
           >
             Drift Detection
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`coverage-workbench__tab-btn ${activeTab === 'health' ? 'active' : ''}`}
             onClick={() => setActiveTab('health')}
           >
             Health Checks
-          </button>
+          </Button>
         </div>
 
         {/* Tab Content */}
@@ -282,30 +269,30 @@ export function CoverageTool({}: CoverageToolProps): React.ReactElement {
               {/* Filters */}
               <div className="coverage-contracts-tab__filters">
                 <div className="coverage-contracts-tab__filter-buttons">
-                  <button
+                  <Button variant="ghost"
                     className={filterMode === 'all' ? 'active' : ''}
                     onClick={() => setFilterMode('all')}
                   >
                     All
-                  </button>
-                  <button
+                  </Button>
+                  <Button variant="ghost"
                     className={filterMode === 'valid' ? 'active' : ''}
                     onClick={() => setFilterMode('valid')}
                   >
                     Valid ({metrics.details.valid.length})
-                  </button>
-                  <button
+                  </Button>
+                  <Button variant="ghost"
                     className={filterMode === 'warnings' ? 'active' : ''}
                     onClick={() => setFilterMode('warnings')}
                   >
                     Warnings ({metrics.details.warnings.length})
-                  </button>
-                  <button
+                  </Button>
+                  <Button variant="ghost"
                     className={filterMode === 'errors' ? 'active' : ''}
                     onClick={() => setFilterMode('errors')}
                   >
                     Errors ({metrics.details.errors.length})
-                  </button>
+                  </Button>
                 </div>
                 <input
                   type="text"
@@ -370,11 +357,27 @@ export function CoverageTool({}: CoverageToolProps): React.ReactElement {
 
       {/* Contract Details Modal */}
       {selectedContract && (
-        <div className="coverage-contract-modal-backdrop" onClick={() => setSelectedContract(null)}>
-          <div className="coverage-contract-modal" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="coverage-contract-modal-backdrop"
+          role="button"
+          tabIndex={0}
+          aria-label="Close contract details"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setSelectedContract(null);
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setSelectedContract(null);
+            }
+          }}
+        >
+          <div className="coverage-contract-modal">
             <header className="coverage-contract-modal__header">
               <h2>{selectedContract.name}</h2>
-              <button onClick={() => setSelectedContract(null)}>✕</button>
+              <Button variant="ghost" onClick={() => setSelectedContract(null)}>✕</Button>
             </header>
             <div className="coverage-contract-modal__body">
               <div className="coverage-contract-modal__section">
@@ -420,13 +423,7 @@ export function CoverageTool({}: CoverageToolProps): React.ReactElement {
         </div>
       )}
 
-      {/* Discuss Dialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="CoverageWorkbench"
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }
+

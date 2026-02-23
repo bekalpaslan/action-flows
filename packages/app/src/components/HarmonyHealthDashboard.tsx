@@ -6,6 +6,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useWebSocket } from '../hooks/useWebSocket';
 import type { SessionId, ProjectId, WorkspaceEvent } from '@afw/shared';
+import { Button } from './primitives';
 import './HarmonyHealthDashboard.css';
 
 // TODO: Backend needs to implement /api/harmony/health endpoint for these types
@@ -285,9 +286,14 @@ export const HarmonyHealthDashboard: React.FC<HarmonyHealthDashboardProps> = ({
       <div className={`harmony-health-dashboard harmony-health-dashboard--error ${className}`}>
         <div className="harmony-health-dashboard__error">
           <strong>Error:</strong> {error}
-          <button onClick={fetchHealthScore} className="harmony-health-dashboard__retry">
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={fetchHealthScore}
+            className="harmony-health-dashboard__retry"
+          >
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -312,13 +318,15 @@ export const HarmonyHealthDashboard: React.FC<HarmonyHealthDashboardProps> = ({
       <div className="harmony-health-dashboard__score-card">
         <div className="harmony-health-dashboard__score-header">
           <h2 className="harmony-health-dashboard__title">System Harmony Health</h2>
-          <button
+          <Button
+            variant="ghost"
+            type="button"
             onClick={fetchHealthScore}
             className="harmony-health-dashboard__refresh"
             title="Refresh health data"
           >
             ↻
-          </button>
+          </Button>
         </div>
 
         <div className="harmony-health-dashboard__score-display">
@@ -386,6 +394,15 @@ export const HarmonyHealthDashboard: React.FC<HarmonyHealthDashboardProps> = ({
                 <div
                   className="harmony-health-dashboard__gate-row"
                   onClick={() => toggleGate(gate.gateId)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      toggleGate(gate.gateId);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={expandedGate === gate.gateId}
                 >
                   <span className="harmony-health-dashboard__gate-name">
                     {gate.gateName}
@@ -464,24 +481,30 @@ export const HarmonyHealthDashboard: React.FC<HarmonyHealthDashboardProps> = ({
                 )}
 
                 <div className="harmony-health-dashboard__recommendation-actions">
-                  <button
+                  <Button
+                    variant="ghost"
+                    type="button"
                     onClick={() => handleFixNow(rec)}
                     className="harmony-health-dashboard__action-btn harmony-health-dashboard__action-btn--fix"
                   >
                     Fix Now
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    type="button"
                     onClick={() => handleInvestigate(rec.id)}
                     className="harmony-health-dashboard__action-btn harmony-health-dashboard__action-btn--investigate"
                   >
                     {expandedRecommendation === rec.id ? 'Hide Details' : 'Investigate'}
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    type="button"
                     onClick={() => handleIgnore(rec.id)}
                     className="harmony-health-dashboard__action-btn harmony-health-dashboard__action-btn--ignore"
                   >
                     Ignore
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}

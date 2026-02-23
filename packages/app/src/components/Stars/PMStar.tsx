@@ -17,9 +17,8 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { OrchestratorButton } from '../OrchestratorButton';
+import { Button } from '../primitives';
 import './PMStar.css';
 
 /**
@@ -164,15 +163,6 @@ export function PMStar({
   const [newTaskDescription, setNewTaskDescription] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState<TaskPriority>('medium');
 
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'PMStar',
-    getContext: () => ({
-      projectStats: { total: tasks.length, completed: taskCounts.done },
-      milestones: milestones.length,
-    }),
-  });
-
   // Filter tasks based on status
   const filteredTasks = useMemo(() => {
     if (statusFilter === 'all') {
@@ -242,16 +232,16 @@ export function PMStar({
           </div>
         </div>
         <div className="pm-workbench__header-right">
-          <DiscussButton componentName="PMStar" onClick={openDialog} size="small" />
+          
           <OrchestratorButton source="pm-plan" context={{ action: 'plan-review' }}>
-            <button className="pm-workbench__action-btn">Plan with Orchestrator</button>
+            <Button variant="ghost" className="pm-workbench__action-btn">Plan with Orchestrator</Button>
           </OrchestratorButton>
-          <button
+          <Button variant="ghost"
             className="pm-workbench__create-btn"
             onClick={() => setShowCreateForm(!showCreateForm)}
           >
             {showCreateForm ? 'Cancel' : '+ New Task'}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -282,9 +272,9 @@ export function PMStar({
               <option value="high">High</option>
               <option value="critical">Critical</option>
             </select>
-            <button className="create-form__submit" onClick={handleCreateTask}>
+            <Button variant="ghost" className="create-form__submit" onClick={handleCreateTask}>
               Create
-            </button>
+            </Button>
           </div>
           <textarea
             className="create-form__input create-form__input--description"
@@ -299,30 +289,30 @@ export function PMStar({
       {/* Filter Bar */}
       <div className="pm-workbench__filter-bar">
         <div className="filter-bar__tabs">
-          <button
+          <Button variant="ghost"
             className={`filter-tab ${statusFilter === 'all' ? 'filter-tab--active' : ''}`}
             onClick={() => setStatusFilter('all')}
           >
             All ({taskCounts.total})
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`filter-tab ${statusFilter === 'todo' ? 'filter-tab--active' : ''}`}
             onClick={() => setStatusFilter('todo')}
           >
             To Do ({taskCounts.todo})
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`filter-tab ${statusFilter === 'in-progress' ? 'filter-tab--active' : ''}`}
             onClick={() => setStatusFilter('in-progress')}
           >
             In Progress ({taskCounts.inProgress})
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`filter-tab ${statusFilter === 'done' ? 'filter-tab--active' : ''}`}
             onClick={() => setStatusFilter('done')}
           >
             Done ({taskCounts.done})
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -399,13 +389,13 @@ export function PMStar({
                         <option value="done">Done</option>
                       </select>
                       {onTaskDelete && (
-                        <button
+                        <Button variant="ghost"
                           className="task-card__delete-btn"
                           onClick={() => onTaskDelete(task.id)}
                           title="Delete task"
                         >
                           ×
-                        </button>
+                        </Button>
                       )}
                     </div>
                   </div>
@@ -509,17 +499,8 @@ export function PMStar({
           </div>
         </div>
       )}
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="PMStar"
-        componentContext={{
-          projectStats: { total: tasks.length, completed: taskCounts.done },
-          milestones: milestones.length,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }
+
+

@@ -10,8 +10,6 @@
 
 import { DossierCard } from './DossierCard';
 import type { IntelDossier } from '@afw/shared';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './DossierList.css';
 
 // ============================================================================
@@ -32,15 +30,6 @@ export interface DossierListProps {
 // ============================================================================
 
 export function DossierList({ dossiers, selectedId, onSelect }: DossierListProps) {
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'DossierList',
-    getContext: () => ({
-      dossierCount: dossiers.length,
-      selectedDossierId: selectedId || 'none',
-      hasSelection: !!selectedId,
-    }),
-  });
-
   // Empty state
   if (dossiers.length === 0) {
     return (
@@ -59,7 +48,7 @@ export function DossierList({ dossiers, selectedId, onSelect }: DossierListProps
         <h2 className="dossier-list__title">Dossiers</h2>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span className="dossier-list__count">{dossiers.length}</span>
-          <DiscussButton componentName="DossierList" onClick={openDialog} size="small" />
+          
         </div>
       </div>
       <div className="dossier-list__items">
@@ -72,18 +61,6 @@ export function DossierList({ dossiers, selectedId, onSelect }: DossierListProps
           />
         ))}
       </div>
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="DossierList"
-        componentContext={{
-          dossierCount: dossiers.length,
-          selectedDossierId: selectedId || 'none',
-          hasSelection: !!selectedId,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

@@ -1,7 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
 import type { ChangePreviewProps, ChangePreviewData, ChangeSummary } from './types';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './ChangePreview.css';
 
 /**
@@ -180,26 +178,6 @@ export function ChangePreview({
     );
   }, [changes]);
 
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'ChangePreview',
-    getContext: () => ({
-      fileCount: changes.length,
-      totalChanges: summary.total,
-      additions: summary.additions,
-      modifications: summary.modifications,
-      removals: summary.removals,
-      destructiveChanges: summary.destructive,
-      changesSummary: changes.map(c => ({
-        field: c.field,
-        path: c.path,
-        changeType: c.changeType,
-        isDestructive: c.isDestructive,
-      })),
-    }),
-  });
-
-
   // Toggle item expansion
   const toggleItem = useCallback((index: number) => {
     setExpandedItems((prev) => {
@@ -229,7 +207,7 @@ export function ChangePreview({
       {/* Header with summary */}
       <div className="change-preview-header">
         <h3 className="change-preview-title">Preview Changes</h3>
-        <DiscussButton componentName="ChangePreview" onClick={openDialog} size="small" />
+        
         <div className="change-summary">
           {summary.additions > 0 && (
             <span className="summary-item summary-additions">+{summary.additions} added</span>
@@ -312,28 +290,6 @@ export function ChangePreview({
           </button>
         )}
       </div>
-
-      {/* DiscussDialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="ChangePreview"
-        componentContext={{
-          fileCount: changes.length,
-          totalChanges: summary.total,
-          additions: summary.additions,
-          modifications: summary.modifications,
-          removals: summary.removals,
-          destructiveChanges: summary.destructive,
-          changesSummary: changes.map(c => ({
-            field: c.field,
-            path: c.path,
-            changeType: c.changeType,
-            isDestructive: c.isDestructive,
-          })),
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { ButtonDefinition, ToolbarConfig, ProjectId, ButtonId } from '@afw/shared';
 import { getVisibleSlots, trackButtonUsage } from '../../utils/toolbarOrdering';
 import { PersistentToolbarButton } from './PersistentToolbarButton';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './PersistentToolbar.css';
 
 /** Backend URL from environment, defaults to relative path for same-origin */
@@ -38,22 +36,6 @@ export function PersistentToolbar({ projectId, buttons, onButtonClick }: Persist
     if (!config) return [];
     return getVisibleSlots(config.slots, config.maxSlots);
   }, [config]);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
-    componentName: 'PersistentToolbar',
-    getContext: () => ({
-      toolbarItems: visibleSlots.length,
-      pinnedCount: visibleSlots.filter(s => s.pinned).length,
-    }),
-  });
-
-  // Handle discuss dialog send
-  const handleDiscussDialogSend = (message: string) => {
-    const formattedMessage = handleDiscussSend(message);
-    console.log('Discussion message:', formattedMessage);
-    closeDialog();
-  };
 
   // Fetch config on mount
   useEffect(() => {
@@ -174,7 +156,7 @@ export function PersistentToolbar({ projectId, buttons, onButtonClick }: Persist
             {visibleSlots.length} / {config.maxSlots} slots
           </span>
         )}
-        <DiscussButton componentName="PersistentToolbar" onClick={openDialog} size="small" />
+        
       </div>
 
       <div className="toolbar-buttons">
@@ -199,18 +181,6 @@ export function PersistentToolbar({ projectId, buttons, onButtonClick }: Persist
           </div>
         )}
       </div>
-
-      {/* DiscussDialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="PersistentToolbar"
-        componentContext={{
-          toolbarItems: visibleSlots.length,
-          pinnedCount: visibleSlots.filter(s => s.pinned).length,
-        }}
-        onSend={handleDiscussDialogSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

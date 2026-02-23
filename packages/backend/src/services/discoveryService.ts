@@ -141,7 +141,7 @@ export class DiscoveryService {
     const progress: Record<RegionId, number> = {};
 
     // Evaluate each trigger
-    for (const trigger of universe.discoveryTriggers) {
+    for (const trigger of (universe.discoveryTriggers ?? [])) {
       if (trigger.triggered) {
         // Already triggered, skip
         progress[trigger.regionId] = 1.0;

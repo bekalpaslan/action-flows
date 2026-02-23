@@ -432,19 +432,6 @@ function CosmicMapInner({ visible = true, zooming = false }: CosmicMapProps) {
       </ReactFlow>
       </div>
 
-      {/* Return to god view button */}
-      <div className="navigation-overlay" data-testid="navigation-overlay">
-      <button
-        className="cosmic-map__god-view-button"
-        data-testid="god-view-button"
-        onClick={handleReturnToGodView}
-        title="Return to full universe view (Esc)"
-      >
-        🌌 God View
-      </button>
-
-      </div>
-
       {/* Onboarding tooltip sequence */}
       <UniverseOnboarding />
     </div>

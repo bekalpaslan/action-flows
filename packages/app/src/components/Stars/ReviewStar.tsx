@@ -12,8 +12,7 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { DiffEditor } from '@monaco-editor/react';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { Button } from '../primitives';
 import './ReviewStar.css';
 
 // ============================================================================
@@ -385,7 +384,7 @@ interface PRListItemProps {
 
 function PRListItem({ pr, isSelected, onClick }: PRListItemProps) {
   return (
-    <button
+    <Button variant="ghost"
       className={`review-pr-item ${isSelected ? 'selected' : ''}`}
       onClick={onClick}
       type="button"
@@ -424,7 +423,7 @@ function PRListItem({ pr, isSelected, onClick }: PRListItemProps) {
           {pr.comments.filter((c) => !c.resolved).length} unresolved comment(s)
         </div>
       )}
-    </button>
+    </Button>
   );
 }
 
@@ -441,7 +440,7 @@ function FileList({ files, selectedFilePath, onFileSelect }: FileListProps) {
       <ul className="review-file-list__items">
         {files.map((file) => (
           <li key={file.path}>
-            <button
+            <Button variant="ghost"
               className={`review-file-item ${selectedFilePath === file.path ? 'selected' : ''}`}
               onClick={() => onFileSelect(file.path)}
               type="button"
@@ -457,7 +456,7 @@ function FileList({ files, selectedFilePath, onFileSelect }: FileListProps) {
                 <span className="additions">+{file.additions}</span>
                 <span className="deletions">-{file.deletions}</span>
               </span>
-            </button>
+            </Button>
           </li>
         ))}
       </ul>
@@ -476,30 +475,30 @@ interface ReviewActionsProps {
 function ReviewActions({ pr, onApprove, onRequestChanges, onComment, isSubmitting }: ReviewActionsProps) {
   return (
     <div className="review-actions">
-      <button
+      <Button variant="ghost"
         className="review-action-btn approve"
         onClick={onApprove}
         disabled={isSubmitting || pr.status === 'merged' || pr.status === 'closed'}
         type="button"
       >
         Approve
-      </button>
-      <button
+      </Button>
+      <Button variant="ghost"
         className="review-action-btn request-changes"
         onClick={onRequestChanges}
         disabled={isSubmitting || pr.status === 'merged' || pr.status === 'closed'}
         type="button"
       >
         Request Changes
-      </button>
-      <button
+      </Button>
+      <Button variant="ghost"
         className="review-action-btn comment"
         onClick={onComment}
         disabled={isSubmitting}
         type="button"
       >
         Comment
-      </button>
+      </Button>
     </div>
   );
 }
@@ -582,22 +581,22 @@ function CommentDialog({ isOpen, actionType, onSubmit, onCancel, isSubmitting }:
           disabled={isSubmitting}
         />
         <div className="review-comment-dialog__actions">
-          <button
+          <Button variant="ghost"
             className="review-comment-dialog__btn cancel"
             onClick={onCancel}
             disabled={isSubmitting}
             type="button"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`review-comment-dialog__btn submit ${actionType}`}
             onClick={handleSubmit}
             disabled={isSubmitting || (actionType !== 'approve' && !body.trim())}
             type="button"
           >
             {isSubmitting ? 'Submitting...' : actionType === 'approve' ? 'Approve' : 'Submit Review'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -626,16 +625,6 @@ export function ReviewStar({
     actionType: 'approve' | 'request_changes' | 'comment';
   }>({ isOpen: false, actionType: 'comment' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'ReviewStar',
-    getContext: () => ({
-      reviewCount: pullRequests.length,
-      activeReview: selectedPRId,
-      statusFilter,
-    }),
-  });
 
   // Update PRs when external data changes
   useEffect(() => {
@@ -744,7 +733,7 @@ export function ReviewStar({
       <header className="review-workbench__header">
         <div className="review-workbench__header-left">
           <h1 className="review-workbench__title">Review Dashboard</h1>
-          <DiscussButton componentName="ReviewStar" onClick={openDialog} size="small" />
+          
           <div className="review-workbench__stats">
             <span className="stat pending">{stats.pending} pending</span>
             <span className="stat approved">{stats.approved} approved</span>
@@ -851,20 +840,20 @@ export function ReviewStar({
                   {/* View Controls */}
                   <div className="review-controls">
                     <div className="review-view-toggle">
-                      <button
+                      <Button variant="ghost"
                         className={`view-toggle-btn ${viewMode === 'split' ? 'active' : ''}`}
                         onClick={() => setViewMode('split')}
                         type="button"
                       >
                         Split
-                      </button>
-                      <button
+                      </Button>
+                      <Button variant="ghost"
                         className={`view-toggle-btn ${viewMode === 'unified' ? 'active' : ''}`}
                         onClick={() => setViewMode('unified')}
                         type="button"
                       >
                         Unified
-                      </button>
+                      </Button>
                     </div>
                     <ReviewActions
                       pr={selectedPR}
@@ -905,18 +894,8 @@ export function ReviewStar({
         onCancel={handleCloseDialog}
         isSubmitting={isSubmitting}
       />
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="ReviewStar"
-        componentContext={{
-          reviewCount: pullRequests.length,
-          activeReview: selectedPRId,
-          statusFilter,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }
+
+

@@ -1,7 +1,5 @@
 import { useState, useCallback, useEffect, MouseEvent } from 'react';
 import { FileIcon } from './FileIcon';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 
 export interface DirectoryEntry {
   name: string;
@@ -38,15 +36,6 @@ export function FileTree({
   const [selectedPath, setSelectedPath] = useState<string | null>(null);
   const [contextMenuPath, setContextMenuPath] = useState<string | null>(null);
   const [contextMenuPosition, setContextMenuPosition] = useState<{ x: number; y: number } | null>(null);
-
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'FileExplorer',
-    getContext: () => ({
-      currentPath: selectedPath,
-      fileCount: tree.length,
-      selectedFile: selectedPath,
-    }),
-  });
 
   const toggleDirectory = useCallback((path: string) => {
     setExpandedDirs((prev) => {
@@ -124,7 +113,7 @@ export function FileTree({
     <>
       {level === 0 && (
         <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '8px' }}>
-          <DiscussButton componentName="FileExplorer" onClick={openDialog} size="small" />
+          
         </div>
       )}
       <ul className="file-tree" style={{ paddingLeft: level === 0 ? 0 : 16 }}>
@@ -184,19 +173,6 @@ export function FileTree({
             Reveal in Explorer
           </button>
         </div>
-      )}
-      {level === 0 && (
-        <DiscussDialog
-          isOpen={isDialogOpen}
-          componentName="FileExplorer"
-          componentContext={{
-            currentPath: selectedPath,
-            fileCount: tree.length,
-            selectedFile: selectedPath,
-          }}
-          onSend={handleSend}
-          onClose={closeDialog}
-        />
       )}
     </>
   );

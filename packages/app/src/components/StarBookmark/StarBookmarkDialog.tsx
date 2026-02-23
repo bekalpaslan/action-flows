@@ -10,6 +10,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { BookmarkCategory } from '@afw/shared';
+import { Button } from '../primitives';
 import './StarBookmark.css';
 
 interface StarBookmarkDialogProps {
@@ -179,14 +180,16 @@ export function StarBookmarkDialog({
       >
         <div className="star-bookmark-dialog-header">
           <h3 id="star-bookmark-dialog-title">★ Why are you starring this?</h3>
-          <button
+          <Button
+            variant="ghost"
+            type="button"
             className="close-button"
             onClick={handleCancel}
             disabled={isLoading}
             aria-label="Close dialog"
           >
             ✕
-          </button>
+          </Button>
         </div>
 
         <div className="star-bookmark-dialog-body">
@@ -249,7 +252,8 @@ export function StarBookmarkDialog({
                   onKeyDown={handleKeyDown}
                   disabled={isLoading}
                 />
-                <button
+                <Button
+                  variant="ghost"
                   type="button"
                   className="add-tag-button"
                   onClick={handleAddTag}
@@ -257,7 +261,7 @@ export function StarBookmarkDialog({
                   title="Add tag"
                 >
                   +
-                </button>
+                </Button>
               </div>
 
               {tags.length > 0 && (
@@ -265,7 +269,8 @@ export function StarBookmarkDialog({
                   {tags.map((tag) => (
                     <div key={tag} className="tag-chip">
                       <span>{tag}</span>
-                      <button
+                      <Button
+                        variant="ghost"
                         type="button"
                         className="remove-tag"
                         onClick={() => handleRemoveTag(tag)}
@@ -273,7 +278,7 @@ export function StarBookmarkDialog({
                         title="Remove tag"
                       >
                         ✕
-                      </button>
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -281,21 +286,23 @@ export function StarBookmarkDialog({
             </div>
 
             <div className="star-bookmark-dialog-actions">
-              <button
+              <Button
+                variant="ghost"
                 type="submit"
                 className="btn btn-primary"
                 disabled={isLoading || !explanation.trim()}
               >
                 {isLoading ? 'Creating...' : 'Create Bookmark'}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
                 type="button"
                 className="btn btn-secondary"
                 onClick={onCancel}
                 disabled={isLoading}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         </div>

@@ -7,8 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSlackConfig } from '../hooks/useSlackConfig';
-import { DiscussButton, DiscussDialog } from './DiscussButton';
-import { useDiscussButton } from '../hooks/useDiscussButton';
+import { Button } from './primitives';
 import './SlackSettings.css';
 
 export interface SlackSettingsProps {
@@ -46,26 +45,6 @@ export function SlackSettings({ onClose }: SlackSettingsProps) {
 
   // Track if there are unsaved changes
   const hasUnsavedChanges = JSON.stringify(localConfig) !== JSON.stringify(config);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
-    componentName: 'SlackSettings',
-    getContext: () => ({
-      settingsCategory: 'Slack Notifications',
-      enabled: localConfig.enabled,
-      defaultChannel: localConfig.defaultChannel,
-      notificationLevel: localConfig.notificationLevel,
-      unsavedChanges: hasUnsavedChanges,
-      connectionStatus,
-    }),
-  });
-
-  // Handle discuss dialog send
-  const handleDiscussDialogSend = (message: string) => {
-    const formattedMessage = handleDiscussSend(message);
-    console.log('Discussion message:', formattedMessage);
-    closeDialog();
-  };
 
   const handleEnabledToggle = () => {
     setLocalConfig({
@@ -121,19 +100,35 @@ export function SlackSettings({ onClose }: SlackSettingsProps) {
 
   return (
     <>
-      <div className="slack-settings-overlay" onClick={onClose}>
-        <div className="slack-settings-panel" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="slack-settings-overlay"
+        role="button"
+        tabIndex={0}
+        aria-label="Close Slack settings"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            onClose();
+          }
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClose();
+          }
+        }}
+      >
+        <div className="slack-settings-panel">
           <div className="settings-header">
             <h2>Slack Notifications</h2>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <DiscussButton componentName="SlackSettings" onClick={openDialog} />
-              <button
+              
+              <Button variant="ghost"
                 className="settings-close-btn"
                 onClick={onClose}
                 aria-label="Close settings"
               >
                 ×
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -189,30 +184,30 @@ export function SlackSettings({ onClose }: SlackSettingsProps) {
                     Choose which types of notifications to send.
                   </p>
                   <div className="level-buttons">
-                    <button
+                    <Button variant="ghost"
                       className={`level-btn ${localConfig.notificationLevel === 'all' ? 'active' : ''}`}
                       onClick={() => handleLevelChange('all')}
                       disabled={!localConfig.enabled}
                     >
                       <strong>All</strong>
                       <span>Every completion and event</span>
-                    </button>
-                    <button
+                    </Button>
+                    <Button variant="ghost"
                       className={`level-btn ${localConfig.notificationLevel === 'important' ? 'active' : ''}`}
                       onClick={() => handleLevelChange('important')}
                       disabled={!localConfig.enabled}
                     >
                       <strong>Important</strong>
                       <span>Partial completions, warnings</span>
-                    </button>
-                    <button
+                    </Button>
+                    <Button variant="ghost"
                       className={`level-btn ${localConfig.notificationLevel === 'critical' ? 'active' : ''}`}
                       onClick={() => handleLevelChange('critical')}
                       disabled={!localConfig.enabled}
                     >
                       <strong>Critical</strong>
                       <span>Failures and errors only</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
@@ -229,13 +224,13 @@ export function SlackSettings({ onClose }: SlackSettingsProps) {
                         {connectionStatus === 'testing' && 'Testing connection...'}
                       </span>
                     </div>
-                    <button
+                    <Button variant="ghost"
                       className="test-connection-btn"
                       onClick={handleTestConnection}
                       disabled={!localConfig.enabled || testingConnection}
                     >
                       {testingConnection ? 'Testing...' : 'Test Connection'}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </>
@@ -243,32 +238,26 @@ export function SlackSettings({ onClose }: SlackSettingsProps) {
           </div>
 
           <div className="settings-footer">
-            <button
+            <Button variant="ghost"
               className="btn-secondary"
               onClick={handleReset}
               disabled={!hasUnsavedChanges || isSaving}
             >
               Reset
-            </button>
-            <button
+            </Button>
+            <Button variant="ghost"
               className="btn-primary"
               onClick={handleSave}
               disabled={!hasUnsavedChanges || isSaving}
             >
               {isSaving ? 'Saving...' : 'Save Changes'}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
-      {isDialogOpen && (
-        <DiscussDialog
-          isOpen={isDialogOpen}
-          onClose={closeDialog}
-          onSend={handleDiscussDialogSend}
-          componentName="SlackSettings"
-        />
-      )}
     </>
   );
 }
+
+

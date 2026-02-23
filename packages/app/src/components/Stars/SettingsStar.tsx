@@ -16,9 +16,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useTheme, type Theme } from '../../contexts/ThemeContext';
 import { useVimContext } from '../../contexts/VimNavigationContext';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import { OrchestratorButton } from '../OrchestratorButton';
+import { Button } from '../primitives';
 import { PerformanceSettings } from '../Settings/PerformanceSettings';
 import { FeatureFlagSettings } from '../Settings/FeatureFlagSettings';
 import './SettingsStar.css';
@@ -103,15 +102,6 @@ export function SettingsStar(): React.ReactElement {
   const [settings, setSettings] = useState<SettingsState>(loadSettings);
   const [hasChanges, setHasChanges] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'SettingsStar',
-    getContext: () => ({
-      category: activeSection,
-      unsavedChanges: hasChanges,
-    }),
-  });
 
   // Auto-save settings when they change
   useEffect(() => {
@@ -257,7 +247,7 @@ export function SettingsStar(): React.ReactElement {
             </span>
           </div>
           <div className="settings-item__control">
-            <button
+            <Button variant="ghost"
               className="settings-btn settings-btn--secondary"
               onClick={() => {
                 try {
@@ -269,7 +259,7 @@ export function SettingsStar(): React.ReactElement {
               }}
             >
               Reset Onboarding
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -290,7 +280,7 @@ export function SettingsStar(): React.ReactElement {
           </div>
           <div className="settings-item__control">
             <div className="settings-theme-buttons">
-              <button
+              <Button variant="ghost"
                 className={`settings-theme-btn ${theme === 'light' ? 'settings-theme-btn--active' : ''}`}
                 onClick={() => handleThemeChange('light')}
                 title="Light theme"
@@ -307,8 +297,8 @@ export function SettingsStar(): React.ReactElement {
                   <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
                 </svg>
                 <span>Light</span>
-              </button>
-              <button
+              </Button>
+              <Button variant="ghost"
                 className={`settings-theme-btn ${theme === 'dark' ? 'settings-theme-btn--active' : ''}`}
                 onClick={() => handleThemeChange('dark')}
                 title="Dark theme"
@@ -317,8 +307,8 @@ export function SettingsStar(): React.ReactElement {
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg>
                 <span>Dark</span>
-              </button>
-              <button
+              </Button>
+              <Button variant="ghost"
                 className={`settings-theme-btn ${theme === 'system' ? 'settings-theme-btn--active' : ''}`}
                 onClick={() => handleThemeChange('system')}
                 title="System theme"
@@ -329,7 +319,7 @@ export function SettingsStar(): React.ReactElement {
                   <line x1="12" y1="17" x2="12" y2="21" />
                 </svg>
                 <span>System</span>
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -343,19 +333,19 @@ export function SettingsStar(): React.ReactElement {
           </div>
           <div className="settings-item__control">
             <div className="settings-number-input">
-              <button
+              <Button variant="ghost"
                 className="settings-number-btn"
                 onClick={() => updateSetting('fontSize', Math.max(10, settings.fontSize - 1))}
               >
                 -
-              </button>
+              </Button>
               <span className="settings-number-value">{settings.fontSize}px</span>
-              <button
+              <Button variant="ghost"
                 className="settings-number-btn"
                 onClick={() => updateSetting('fontSize', Math.min(24, settings.fontSize + 1))}
               >
                 +
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -474,12 +464,12 @@ export function SettingsStar(): React.ReactElement {
             </span>
           </div>
           <div className="settings-item__control">
-            <button
+            <Button variant="ghost"
               className="settings-btn settings-btn--danger"
               onClick={handleResetSettings}
             >
               Reset to Defaults
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -491,7 +481,7 @@ export function SettingsStar(): React.ReactElement {
             </span>
           </div>
           <div className="settings-item__control">
-            <button
+            <Button variant="ghost"
               className="settings-btn settings-btn--warning"
               onClick={() => {
                 if (window.confirm('This will clear all local data. Are you sure?')) {
@@ -501,7 +491,7 @@ export function SettingsStar(): React.ReactElement {
               }}
             >
               Clear Data
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -547,9 +537,9 @@ export function SettingsStar(): React.ReactElement {
       <div className="settings-workbench__header">
         <div className="settings-workbench__header-left">
           <h1 className="settings-workbench__title">Settings</h1>
-          <DiscussButton componentName="SettingsStar" onClick={openDialog} size="small" />
+          
           <OrchestratorButton source="settings-validate" context={{ action: 'validate-settings' }}>
-            <button className="settings-workbench__action-btn">Validate Configuration</button>
+            <Button variant="ghost" className="settings-workbench__action-btn">Validate Configuration</Button>
           </OrchestratorButton>
           {saveMessage && (
             <span className="settings-workbench__save-message">{saveMessage}</span>
@@ -561,7 +551,7 @@ export function SettingsStar(): React.ReactElement {
       <div className="settings-workbench__content">
         {/* Sidebar navigation */}
         <nav className="settings-nav">
-          <button
+          <Button variant="ghost"
             className={`settings-nav__item ${activeSection === 'general' ? 'settings-nav__item--active' : ''}`}
             onClick={() => setActiveSection('general')}
           >
@@ -570,8 +560,8 @@ export function SettingsStar(): React.ReactElement {
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
             </svg>
             General
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`settings-nav__item ${activeSection === 'appearance' ? 'settings-nav__item--active' : ''}`}
             onClick={() => setActiveSection('appearance')}
           >
@@ -587,8 +577,8 @@ export function SettingsStar(): React.ReactElement {
               <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
             </svg>
             Appearance
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`settings-nav__item ${activeSection === 'keyboard' ? 'settings-nav__item--active' : ''}`}
             onClick={() => setActiveSection('keyboard')}
           >
@@ -604,8 +594,8 @@ export function SettingsStar(): React.ReactElement {
               <line x1="7" y1="16" x2="17" y2="16" />
             </svg>
             Keyboard
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`settings-nav__item ${activeSection === 'performance' ? 'settings-nav__item--active' : ''}`}
             onClick={() => setActiveSection('performance')}
           >
@@ -613,8 +603,8 @@ export function SettingsStar(): React.ReactElement {
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
             </svg>
             Performance
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`settings-nav__item ${activeSection === 'feature-flags' ? 'settings-nav__item--active' : ''}`}
             onClick={() => setActiveSection('feature-flags')}
           >
@@ -623,8 +613,8 @@ export function SettingsStar(): React.ReactElement {
               <line x1="4" y1="22" x2="4" y2="15" />
             </svg>
             Feature Flags
-          </button>
-          <button
+          </Button>
+          <Button variant="ghost"
             className={`settings-nav__item ${activeSection === 'advanced' ? 'settings-nav__item--active' : ''}`}
             onClick={() => setActiveSection('advanced')}
           >
@@ -634,7 +624,7 @@ export function SettingsStar(): React.ReactElement {
               <path d="M2 12l10 5 10-5" />
             </svg>
             Advanced
-          </button>
+          </Button>
         </nav>
 
         {/* Section content */}
@@ -647,17 +637,7 @@ export function SettingsStar(): React.ReactElement {
           {activeSection === 'advanced' && renderAdvancedSection()}
         </div>
       </div>
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="SettingsStar"
-        componentContext={{
-          category: activeSection,
-          unsavedChanges: hasChanges,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }
+

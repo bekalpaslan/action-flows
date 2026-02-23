@@ -2,8 +2,6 @@ import { useState, useEffect, useMemo } from 'react';
 import type { SessionId, QuickActionDefinition, SessionLifecycleState, ProjectId } from '@afw/shared';
 import { QuickActionButton } from './QuickActionButton';
 import { useCustomPromptButtons } from '../../hooks/useCustomPromptButtons';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './QuickActionBar.css';
 
 export interface QuickActionBarProps {
@@ -119,16 +117,6 @@ export function QuickActionBar({
     });
   }, [allQuickActions, lastOutput, compiledPatterns]);
 
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'QuickActionBar',
-    getContext: () => ({
-      sessionId,
-      lifecycleState,
-      visibleActionsCount: visibleActions.length,
-      isWaitingForInput,
-    }),
-  });
-
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!manualInputValue.trim() || disabled) return;
@@ -154,7 +142,7 @@ export function QuickActionBar({
               disabled={disabled}
             />
           ))}
-          <DiscussButton componentName="QuickActionBar" onClick={openDialog} size="small" />
+          
         </div>
 
         <form className="manual-input-form" onSubmit={handleManualSubmit}>
@@ -176,19 +164,6 @@ export function QuickActionBar({
           </button>
         </form>
       </div>
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="QuickActionBar"
-        componentContext={{
-          sessionId,
-          lifecycleState,
-          visibleActionsCount: visibleActions.length,
-          isWaitingForInput,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </>
   );
 }

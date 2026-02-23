@@ -6,8 +6,7 @@
 import { useState } from 'react';
 import type { Session } from '@afw/shared';
 import { useSessionControls } from '../../hooks/useSessionControls';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { Button } from '../primitives';
 import './ControlButtons.css';
 
 export interface ControlButtonsProps {
@@ -25,20 +24,6 @@ export function ControlButtons({ session, disabled = false }: ControlButtonsProp
   const isPaused = session.status === 'paused';
   const isRunning = session.status === 'in_progress';
   const hasActiveChain = !!session.currentChain;
-
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'ControlButtons',
-    getContext: () => ({
-      sessionId: session.id,
-      sessionStatus: session.status,
-      hasActiveChain,
-      availableCommands: {
-        pause: isRunning,
-        resume: isPaused,
-        cancel: true,
-      },
-    }),
-  });
 
   const handlePause = async () => {
     if (!session.id || isPausing || !isRunning) return;
@@ -103,75 +88,76 @@ export function ControlButtons({ session, disabled = false }: ControlButtonsProp
     <>
       <div className="control-buttons">
         {isRunning && (
-          <button
+          <Button variant="ghost"
             className="control-btn pause-btn"
             onClick={handlePause}
             disabled={disabled || isPausing}
             title="Pause chain execution after current step"
           >
             {isPausing ? 'Pausing...' : '⏸ Pause'}
-          </button>
+          </Button>
         )}
 
         {isPaused && (
-          <button
+          <Button variant="ghost"
             className="control-btn resume-btn"
             onClick={handleResume}
             disabled={disabled || isResuming}
             title="Resume chain execution"
           >
             {isResuming ? 'Resuming...' : '▶ Resume'}
-          </button>
+          </Button>
         )}
 
-        <button
+        <Button variant="ghost"
           className="control-btn cancel-btn"
           onClick={handleCancelClick}
           disabled={disabled || isCancelling}
           title="Cancel chain execution"
         >
           {isCancelling ? 'Cancelling...' : '⏹ Cancel'}
-        </button>
+        </Button>
 
-        <DiscussButton componentName="ControlButtons" onClick={openDialog} size="small" />
+        
 
         {showCancelConfirm && (
-          <div className="cancel-confirm-overlay" onClick={handleCancelDismiss}>
-            <div className="cancel-confirm-dialog" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="cancel-confirm-overlay"
+            role="button"
+            tabIndex={0}
+            aria-label="Dismiss cancel confirmation"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                handleCancelDismiss();
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleCancelDismiss();
+              }
+            }}
+          >
+            <div className="cancel-confirm-dialog">
               <h3>Cancel Chain?</h3>
               <p>
                 This will stop the chain execution and abort any remaining steps.
                 Completed steps will be preserved.
               </p>
               <div className="cancel-confirm-actions">
-                <button className="confirm-btn danger" onClick={handleCancelConfirm}>
+                <Button variant="ghost" className="confirm-btn danger" onClick={handleCancelConfirm}>
                   Yes, Cancel Chain
-                </button>
-                <button className="confirm-btn secondary" onClick={handleCancelDismiss}>
+                </Button>
+                <Button variant="ghost" className="confirm-btn secondary" onClick={handleCancelDismiss}>
                   No, Go Back
-                </button>
+                </Button>
               </div>
             </div>
           </div>
         )}
       </div>
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="ControlButtons"
-        componentContext={{
-          sessionId: session.id,
-          sessionStatus: session.status,
-          hasActiveChain,
-          availableCommands: {
-            pause: isRunning,
-            resume: isPaused,
-            cancel: true,
-          },
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </>
   );
 }
+
+

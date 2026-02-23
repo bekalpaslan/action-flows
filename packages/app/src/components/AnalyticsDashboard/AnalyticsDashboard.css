@@ -36,18 +36,6 @@
 
 .retry-button {
   margin-left: var(--space-2);
-  padding: var(--space-1) var(--space-3);
-  background: rgba(239, 68, 68, 0.2);
-  color: inherit;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: var(--btn-radius-sm);
-  cursor: pointer;
-  font-size: var(--text-sm);
-  transition: var(--transition-all);
-}
-
-.retry-button:hover {
-  background: rgba(239, 68, 68, 0.3);
 }
 
 /* Header */
@@ -102,25 +90,23 @@
 }
 
 .time-range-button {
-  padding: var(--space-1-5) var(--space-3);
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  border-radius: var(--btn-radius-sm);
-  cursor: pointer;
-  font-size: var(--text-sm);
-  font-weight: var(--font-medium);
-  transition: var(--transition-all);
+  min-width: 56px;
 }
 
-.time-range-button:hover {
+.time-range-button.afw-button {
+  color: var(--text-secondary);
+  border-color: transparent;
+}
+
+.time-range-button.afw-button:hover {
   background: var(--glass-bg-medium);
   color: var(--text-primary);
 }
 
-.time-range-button.active {
+.time-range-button--active.afw-button {
   background: var(--color-accent);
   color: white;
+  border-color: transparent;
   box-shadow: 0 0 8px rgba(10, 132, 255, 0.25);
 }
 
@@ -132,22 +118,7 @@
 }
 
 .action-button {
-  padding: var(--space-2) var(--space-3);
-  border: var(--panel-border-default);
-  background: var(--btn-bg-tertiary);
-  color: var(--text-secondary);
-  border-radius: var(--btn-radius-md);
-  cursor: pointer;
-  font-size: var(--text-sm);
-  transition: var(--transition-all);
-  box-shadow: var(--btn-glow-default);
   white-space: nowrap;
-}
-
-.action-button:hover {
-  background: var(--glass-bg-medium);
-  color: var(--text-primary);
-  box-shadow: var(--btn-glow-hover);
 }
 
 /* Summary cards */
@@ -208,11 +179,10 @@
 
 /* Section styling */
 .analytics-dashboard__section {
-  padding: var(--space-3);
-  background: var(--panel-bg-primary);
-  border: var(--panel-border-default);
-  border-radius: var(--btn-radius-md);
-  box-shadow: var(--panel-glow-default);
+  min-height: 0;
+}
+
+.analytics-dashboard__section .afw-panel__body {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -309,11 +279,10 @@
   }
 
   .analytics-dashboard__section {
-    padding: var(--space-2);
+    min-height: 0;
   }
 
-  .action-button {
-    padding: var(--space-1-5) var(--space-2);
+  .action-button.afw-button {
     font-size: var(--text-xs);
   }
 }

@@ -3,8 +3,6 @@ import type { ButtonDefinition, ButtonContext, SessionId, ProjectId } from '@afw
 import { detectContext } from '../../utils/buttonContextDetector';
 import { InlineButtonItem } from './InlineButtonItem';
 import { useCustomPromptButtons } from '../../hooks/useCustomPromptButtons';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './InlineButtons.css';
 
 interface InlineButtonsProps {
@@ -69,15 +67,6 @@ export function InlineButtons({
       .sort((a, b) => a.priority - b.priority);
   }, [allButtons, detectedContext]);
 
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'InlineButtons',
-    getContext: () => ({
-      detectedContext,
-      buttonsShown: filteredButtons.length,
-      sessionId,
-    }),
-  });
-
   // 5. Handle empty state (no matching buttons = don't render)
   if (filteredButtons.length === 0) {
     return null;
@@ -95,20 +84,8 @@ export function InlineButtons({
             onAction={onAction}
           />
         ))}
-        <DiscussButton componentName="InlineButtons" onClick={openDialog} size="small" />
+        
       </div>
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="InlineButtons"
-        componentContext={{
-          detectedContext,
-          buttonsShown: filteredButtons.length,
-          sessionId,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </>
   );
 }

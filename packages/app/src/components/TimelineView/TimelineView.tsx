@@ -8,8 +8,6 @@ import type { Chain, ChainStep, StepNumber } from '@afw/shared';
 import { ChainBadge } from '../ChainBadge';
 import { StepInspector } from '../StepInspector';
 import { detectChainType } from '../../utils/chainTypeDetection';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './TimelineView.css';
 
 interface TimelineViewProps {
@@ -169,20 +167,6 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
     return { total, completed, failed, inProgress };
   }, [chain.steps]);
 
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'TimelineView',
-    getContext: () => ({
-      chainId: chain.id,
-      chainTitle: chain.title,
-      stepCount: stats.total,
-      completed: stats.completed,
-      failed: stats.failed,
-      inProgress: stats.inProgress,
-      status: chain.status,
-    }),
-  });
-
   // Calculate timeline positions
   const positions = useMemo(() => calculateTimelinePositions(chain), [chain]);
 
@@ -223,7 +207,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
           <div className="timeline-view-header-top">
             <h3 className="timeline-view-title">{chain.title}</h3>
             <ChainBadge metadata={chainMetadata} />
-            <DiscussButton componentName="TimelineView" onClick={openDialog} size="small" />
+            
           </div>
           <div className="timeline-view-stats">
             <div className="timeline-view-stat">
@@ -342,22 +326,6 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
         onClose={() => setSelectedStep(null)}
       />
 
-      {/* DiscussDialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="TimelineView"
-        componentContext={{
-          chainId: chain.id,
-          chainTitle: chain.title,
-          stepCount: stats.total,
-          completed: stats.completed,
-          failed: stats.failed,
-          inProgress: stats.inProgress,
-          status: chain.status,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 };

@@ -11,7 +11,6 @@ import { DiscoveryProvider } from './contexts/DiscoveryContext'
 import { ChatWindowProvider } from './contexts/ChatWindowContext'
 import { TerminalProvider } from './contexts/TerminalContext'
 import { VimNavigationProvider } from './contexts/VimNavigationContext'
-import { DiscussProvider } from './contexts/DiscussContext'
 import { NotificationGlowProvider } from './hooks/useNotificationGlow'
 import { DashboardCapabilityProvider } from './capabilities/DashboardCapabilityProvider'
 import { ToastProvider } from './contexts/ToastContext'
@@ -53,13 +52,11 @@ function App() {
                       <DiscoveryProvider>
                         <ChatWindowProvider>
                           <TerminalProvider>
-                            <DiscussProvider>
-                              <NotificationGlowProvider>
-                                <VimNavigationProvider>
-                                  <AppWithVim />
-                                </VimNavigationProvider>
-                              </NotificationGlowProvider>
-                            </DiscussProvider>
+                            <NotificationGlowProvider>
+                              <VimNavigationProvider>
+                                <AppWithVim />
+                              </VimNavigationProvider>
+                            </NotificationGlowProvider>
                           </TerminalProvider>
                         </ChatWindowProvider>
                       </DiscoveryProvider>

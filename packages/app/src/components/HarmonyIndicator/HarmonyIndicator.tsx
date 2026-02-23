@@ -4,8 +4,6 @@
  */
 
 import React from 'react';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './HarmonyIndicator.css';
 
 interface HarmonyIndicatorProps {
@@ -34,14 +32,6 @@ export const HarmonyIndicator: React.FC<HarmonyIndicatorProps> = ({
 
   const title = tooltip || defaultTooltips[status];
 
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'HarmonyIndicator',
-    getContext: () => ({
-      status,
-      tooltip: title,
-    }),
-  });
-
   const statusLabels = {
     valid: 'Valid harmony - output parsed successfully',
     degraded: 'Degraded harmony - partial parse',
@@ -63,16 +53,8 @@ export const HarmonyIndicator: React.FC<HarmonyIndicatorProps> = ({
         <span className="sr-only">
           Harmony status: {statusLabels[status]}
         </span>
-        <DiscussButton componentName="HarmonyIndicator" onClick={openDialog} size="small" />
+        
       </div>
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="HarmonyIndicator"
-        componentContext={{ status, tooltip: title }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </>
   );
 };

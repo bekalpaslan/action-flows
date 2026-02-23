@@ -18,6 +18,7 @@ import { HybridFlowViz } from '../SessionTile/HybridFlowViz';
 import { ReactFlowProvider } from 'reactflow';
 import { ChatMinimizedIndicator } from './ChatMinimizedIndicator';
 import { ActivityFeed } from '../shared/ActivityFeed';
+import { Button } from '../primitives';
 import './SlidingChatWindow.css';
 
 interface SlidingChatWindowProps {
@@ -53,7 +54,7 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
     return (
       <div className="sliding-chat-window sliding-chat-window--collapsed">
         <div className="sliding-chat-window__collapse-strip">
-          <button
+          <Button variant="ghost"
             className="sliding-chat-window__expand-btn"
             onClick={expandChat}
             aria-label="Expand chat"
@@ -63,7 +64,7 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -97,7 +98,7 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
         </select>
         {!embedded && (
           <>
-            <button
+            <Button variant="ghost"
               className="sliding-chat-window__collapse-btn"
               onClick={toggleCollapse}
               aria-label="Collapse chat"
@@ -107,30 +108,30 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-            </button>
-            <button
+            </Button>
+            <Button variant="ghost"
               className="sliding-chat-window__minimize-btn"
               onClick={minimizeChat}
               aria-label="Minimize chat panel"
               type="button"
             >
               −
-            </button>
+            </Button>
           </>
         )}
-        <button
+        <Button variant="ghost"
           className="sliding-chat-window__close-btn"
           onClick={closeChat}
           aria-label="Close chat panel"
           type="button"
         >
           ×
-        </button>
+        </Button>
       </div>
 
       {/* Tab Navigation */}
       <div className="sliding-chat-window__tabs">
-        <button
+        <Button variant="ghost"
           className={`sliding-chat-window__tab ${activeTab === 'chat' ? 'sliding-chat-window__tab--active' : ''}`}
           onClick={() => setActiveTab('chat')}
           aria-selected={activeTab === 'chat'}
@@ -138,8 +139,8 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
           type="button"
         >
           Chat
-        </button>
-        <button
+        </Button>
+        <Button variant="ghost"
           className={`sliding-chat-window__tab ${activeTab === 'flow' ? 'sliding-chat-window__tab--active' : ''}`}
           onClick={() => setActiveTab('flow')}
           aria-selected={activeTab === 'flow'}
@@ -147,8 +148,8 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
           type="button"
         >
           Flow
-        </button>
-        <button
+        </Button>
+        <Button variant="ghost"
           className={`sliding-chat-window__tab ${activeTab === 'activity' ? 'sliding-chat-window__tab--active' : ''}`}
           onClick={() => setActiveTab('activity')}
           aria-selected={activeTab === 'activity'}
@@ -156,7 +157,7 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
           type="button"
         >
           Activity
-        </button>
+        </Button>
       </div>
 
       {/* Tab Content */}
@@ -206,3 +207,5 @@ export const SlidingChatWindow: React.FC<SlidingChatWindowProps> = ({ children, 
     </div>
   );
 };
+
+

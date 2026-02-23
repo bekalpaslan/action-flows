@@ -47,6 +47,12 @@
   }
 }
 
+/* Universe canvas wrapper — must fill cosmic-map for ReactFlow ResizeObserver */
+.universe-canvas {
+  position: absolute;
+  inset: 0;
+}
+
 /* ReactFlow container */
 .cosmic-map__flow {
   position: absolute;

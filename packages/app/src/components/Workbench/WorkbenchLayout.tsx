@@ -512,6 +512,22 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   }, [demoDocs]);
 
   /**
+   * Sync viewMode with sidebar workbench selection.
+   * - Selecting 'cosmic' while in workbench mode → return to cosmic-map
+   * - Selecting any other workbench while in cosmic-map mode → drop to workbench mode
+   * Only fires on sidebar-driven changes (targetWorkbenchId handles star-click navigation).
+   */
+  useEffect(() => {
+    if (!effectiveCosmicMapEnabled) return;
+    if (activeWorkbench === 'cosmic' && viewMode === 'workbench') {
+      setViewMode('cosmic-map');
+    } else if (activeWorkbench !== 'cosmic' && viewMode === 'cosmic-map') {
+      setViewMode('workbench');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeWorkbench]);
+
+  /**
    * Handle cosmic map region navigation
    * When user clicks a region in cosmic map, switch to region-focus view with zoom transition
    */
@@ -662,16 +678,6 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
               <div className="workbench-dashboard" style={{ flex: 1, transition: 'flex 300ms cubic-bezier(0.4, 0, 0.2, 1)' }} data-testid="content-area">
                 <main id="main-content" className="workbench-main" role="main">
                   <div className={`workbench-content ${transitionClass}`}>
-                    {/* Return to Universe button (visible when cosmic map is enabled and not in classic mode) */}
-                    {effectiveCosmicMapEnabled && (
-                      <button
-                        className="workbench-layout__return-to-universe"
-                        onClick={handleReturnToUniverse}
-                        title="Return to universe view (U)"
-                      >
-                        🌌 Universe
-                      </button>
-                    )}
 
                     {/* BreadcrumbBar */}
                     <BreadcrumbBar

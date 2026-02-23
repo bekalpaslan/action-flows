@@ -10,8 +10,6 @@ import { PackCard } from './PackCard';
 import { RegistryEntryCard } from './RegistryEntryCard';
 import { CustomPromptDialog } from '../CustomPromptButton';
 import { useToast } from '../../contexts/ToastContext';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './RegistryBrowser.css';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
@@ -43,24 +41,6 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
   const [enabledFilter, setEnabledFilter] = useState<'all' | 'enabled' | 'disabled'>('all');
   const [showCustomPromptDialog, setShowCustomPromptDialog] = useState(false);
   const [isCreatingPrompt, setIsCreatingPrompt] = useState(false);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'RegistryBrowser',
-    getContext: () => ({
-      entryCount: entries.length,
-      packCount: packs.length,
-      activeTab,
-      filters: {
-        type: filter.type,
-        status: filter.status,
-        source: sourceFilter,
-        enabled: enabledFilter,
-        search: searchQuery,
-      },
-      filteredCount: filteredEntries.length,
-    }),
-  });
 
   // Fetch data on mount
   useEffect(() => {
@@ -314,7 +294,7 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
     <div className="registry-browser">
       <div className="registry-header">
         <h2>Behavior Registry</h2>
-        <DiscussButton componentName="RegistryBrowser" onClick={openDialog} size="small" />
+        
         <div className="registry-tabs">
           <button
             className={activeTab === 'entries' ? 'active' : ''}
@@ -520,26 +500,6 @@ export function RegistryBrowser({ projectId, onEntrySelect }: RegistryBrowserPro
         />
       )}
 
-      {/* DiscussDialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="RegistryBrowser"
-        componentContext={{
-          entryCount: entries.length,
-          packCount: packs.length,
-          activeTab,
-          filters: {
-            type: filter.type,
-            status: filter.status,
-            source: sourceFilter,
-            enabled: enabledFilter,
-            search: searchQuery,
-          },
-          filteredCount: filteredEntries.length,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

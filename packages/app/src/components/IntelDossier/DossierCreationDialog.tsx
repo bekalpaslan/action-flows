@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { Button } from '../primitives';
 import './DossierCreationDialog.css';
 
 export interface DossierCreationDialogProps {
@@ -76,14 +77,16 @@ export function DossierCreationDialog({
       >
         <div className="dossier-creation-dialog-header">
           <h3 id="dossier-creation-dialog-title">Create Intel Dossier</h3>
-          <button
+          <Button
+            variant="ghost"
+            type="button"
             className="close-button"
             onClick={onClose}
             disabled={isLoading}
             aria-label="Close dialog"
           >
             ✕
-          </button>
+          </Button>
         </div>
 
         <div className="dossier-creation-dialog-body">
@@ -123,7 +126,8 @@ export function DossierCreationDialog({
                       disabled={isLoading}
                     />
                     {targets.length > 1 && (
-                      <button
+                      <Button
+                        variant="ghost"
                         type="button"
                         className="btn-remove-target"
                         onClick={() => handleRemoveTarget(index)}
@@ -131,19 +135,20 @@ export function DossierCreationDialog({
                         aria-label="Remove target"
                       >
                         ✕
-                      </button>
+                      </Button>
                     )}
                   </div>
                 ))}
               </div>
-              <button
+              <Button
+                variant="ghost"
                 type="button"
                 className="btn btn-add-target"
                 onClick={handleAddTarget}
                 disabled={isLoading}
               >
                 + Add Path
-              </button>
+              </Button>
               <div className="field-hint">
                 File paths or glob patterns to analyze
               </div>
@@ -169,21 +174,23 @@ export function DossierCreationDialog({
             </div>
 
             <div className="dossier-creation-dialog-actions">
-              <button
+              <Button
+                variant="ghost"
                 type="submit"
                 className="btn btn-primary"
                 disabled={isLoading || !isValid}
               >
                 {isLoading ? 'Creating...' : 'Create Dossier'}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
                 type="button"
                 className="btn btn-secondary"
                 onClick={onClose}
                 disabled={isLoading}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         </div>

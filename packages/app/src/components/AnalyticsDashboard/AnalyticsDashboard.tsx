@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { useAnalytics, type TimeRange } from '../../hooks/useAnalytics';
+import { useAnalytics } from '../../hooks/useAnalytics';
 import { useToast } from '../../contexts/ToastContext';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { Button, Panel } from '../primitives';
 import { FlowMetricsPanel } from './FlowMetricsPanel';
 import { AgentMetricsPanel } from './AgentMetricsPanel';
 import { TimelineChart } from './TimelineChart';
@@ -27,23 +26,6 @@ export function AnalyticsDashboard(): React.ReactElement {
     'sessions',
     'chains',
   ]);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'AnalyticsDashboard',
-    getContext: () => ({
-      timeRange,
-      summary: summary ? {
-        totalSessions: summary.totalSessions,
-        totalChains: summary.totalChains,
-        totalSteps: summary.totalSteps,
-        successRate: summary.successRate,
-      } : null,
-      flowMetricsCount: flowMetrics.length,
-      agentMetricsCount: agentMetrics.length,
-      timelinePointsCount: timeline.length,
-    }),
-  });
 
   const handleExportJSON = () => {
     const data = {
@@ -102,9 +84,9 @@ export function AnalyticsDashboard(): React.ReactElement {
         <div className="error-message">
           <span className="error-icon">⚠️</span>
           <span>Failed to load analytics: {error.message}</span>
-          <button className="retry-button" onClick={handleRefresh}>
+          <Button className="retry-button" onClick={handleRefresh} variant="danger" size="sm">
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -127,36 +109,48 @@ export function AnalyticsDashboard(): React.ReactElement {
           {/* Time range selector */}
           <div className="time-range-selector">
             {(['24h', '7d', '30d'] as const).map(range => (
-              <button
+              <Button
                 key={range}
-                className={`time-range-button ${timeRange === range ? 'active' : ''}`}
+                className={`time-range-button ${timeRange === range ? 'time-range-button--active' : ''}`}
                 onClick={() => setTimeRange(range)}
+                variant="ghost"
+                size="sm"
               >
                 {range === '24h' ? '24h' : range === '7d' ? '7d' : '30d'}
-              </button>
+              </Button>
             ))}
           </div>
 
           {/* Action buttons */}
           <div className="analytics-dashboard__actions">
-            <button className="action-button" onClick={handleRefresh} title="Refresh analytics">
+            <Button
+              className="action-button"
+              onClick={handleRefresh}
+              title="Refresh analytics"
+              variant="tertiary"
+              size="sm"
+            >
               ⟳
-            </button>
-            <button
+            </Button>
+            <Button
               className="action-button"
               onClick={handleExportJSON}
               title="Export as JSON"
+              variant="tertiary"
+              size="sm"
             >
               ⬇ JSON
-            </button>
-            <button
+            </Button>
+            <Button
               className="action-button"
               onClick={handleExportCSV}
               title="Export as CSV"
+              variant="tertiary"
+              size="sm"
             >
               ⬇ CSV
-            </button>
-            <DiscussButton componentName="AnalyticsDashboard" onClick={openDialog} size="small" />
+            </Button>
+            
           </div>
         </div>
       </div>
@@ -187,7 +181,7 @@ export function AnalyticsDashboard(): React.ReactElement {
       <div className="analytics-dashboard__content">
         {/* Timeline chart */}
         {timeline.length > 0 && (
-          <div className="analytics-dashboard__section timeline-section">
+          <Panel className="analytics-dashboard__section timeline-section" variant="elevated" padding="sm">
             <div className="section-header">
               <h3 className="section-title">Usage Timeline</h3>
               <div className="metrics-toggle">
@@ -216,42 +210,23 @@ export function AnalyticsDashboard(): React.ReactElement {
               metrics={chartMetrics}
               timeRange={timeRange}
             />
-          </div>
+          </Panel>
         )}
 
         {/* Metrics panels */}
         <div className="analytics-dashboard__panels">
-          <div className="analytics-dashboard__section">
+          <Panel className="analytics-dashboard__section" variant="elevated" padding="sm">
             <h3 className="section-title">Top Flows</h3>
             <FlowMetricsPanel metrics={flowMetrics} />
-          </div>
+          </Panel>
 
-          <div className="analytics-dashboard__section">
+          <Panel className="analytics-dashboard__section" variant="elevated" padding="sm">
             <h3 className="section-title">Top Agents</h3>
             <AgentMetricsPanel metrics={agentMetrics} />
-          </div>
+          </Panel>
         </div>
       </div>
 
-      {/* DiscussDialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="AnalyticsDashboard"
-        componentContext={{
-          timeRange,
-          summary: summary ? {
-            totalSessions: summary.totalSessions,
-            totalChains: summary.totalChains,
-            totalSteps: summary.totalSteps,
-            successRate: summary.successRate,
-          } : null,
-          flowMetricsCount: flowMetrics.length,
-          agentMetricsCount: agentMetrics.length,
-          timelinePointsCount: timeline.length,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

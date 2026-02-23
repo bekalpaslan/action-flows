@@ -6,8 +6,6 @@
  */
 
 import { useState } from 'react';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './EvolutionSettings.css';
 
 /**
@@ -54,24 +52,6 @@ export function EvolutionSettings({
 
   // Track if there are unsaved changes
   const hasUnsavedChanges = JSON.stringify(localSettings) !== JSON.stringify(settings);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
-    componentName: 'EvolutionSettings',
-    getContext: () => ({
-      settingsCategory: 'Living Universe Evolution',
-      currentSpeed: localSettings.speed,
-      autoInference: localSettings.autoInference,
-      unsavedChanges: hasUnsavedChanges,
-    }),
-  });
-
-  // Handle discuss dialog send
-  const handleDiscussDialogSend = (message: string) => {
-    const formattedMessage = handleDiscussSend(message);
-    console.log('Discussion message:', formattedMessage);
-    closeDialog();
-  };
 
   const handleSpeedChange = (speed: EvolutionSpeed) => {
     setLocalSettings({
@@ -151,7 +131,6 @@ export function EvolutionSettings({
       <div className="evolution-settings-panel" onClick={(e) => e.stopPropagation()}>
         <div className="settings-header">
           <h2>Living Universe Evolution</h2>
-          <DiscussButton componentName="EvolutionSettings" onClick={openDialog} size="small" />
           <button className="settings-close-btn" onClick={handleCancel} title="Close">
             ×
           </button>
@@ -280,19 +259,6 @@ export function EvolutionSettings({
           </button>
         </div>
 
-        {/* DiscussDialog */}
-        <DiscussDialog
-          isOpen={isDialogOpen}
-          componentName="EvolutionSettings"
-          componentContext={{
-            settingsCategory: 'Living Universe Evolution',
-            currentSpeed: localSettings.speed,
-            autoInference: localSettings.autoInference,
-            unsavedChanges: hasUnsavedChanges,
-          }}
-          onSend={handleDiscussDialogSend}
-          onClose={closeDialog}
-        />
       </div>
     </div>
   );

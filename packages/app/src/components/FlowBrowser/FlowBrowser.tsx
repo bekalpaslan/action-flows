@@ -1,8 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useFlowBrowser, type FlowMetadata } from '../../hooks/useFlowBrowser';
 import { useToast } from '../../contexts/ToastContext';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
+import { Button } from '../primitives';
 import { FlowDetails } from './FlowDetails';
 import './FlowBrowser.css';
 
@@ -33,20 +32,6 @@ export function FlowBrowser({ onFlowSelect }: FlowBrowserProps): React.ReactElem
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all');
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<SortOption>('mostUsed');
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'FlowBrowser',
-    getContext: () => ({
-      totalFlows: flows.length,
-      viewMode,
-      selectedCategory,
-      searchQuery,
-      selectedTags: Array.from(selectedTags),
-      sortBy,
-      filteredCount: filteredFlows.length,
-    }),
-  });
 
   // Extract all unique tags from flows
   const allTags = useMemo(() => {
@@ -186,21 +171,25 @@ export function FlowBrowser({ onFlowSelect }: FlowBrowserProps): React.ReactElem
           <span className="flow-browser__count">{filteredFlows.length} flows</span>
         </div>
         <div className="flow-browser__header-controls">
-          <button
+          <Button
+            variant="ghost"
+            type="button"
             className="flow-browser__view-toggle"
             onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
             title={`Switch to ${viewMode === 'grid' ? 'list' : 'grid'} view`}
           >
             {viewMode === 'grid' ? '≡' : '⊞'}
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="ghost"
+            type="button"
             className="flow-browser__export-button"
             onClick={handleExportFlows}
             title="Export flows as JSON"
           >
             ⬇
-          </button>
-          <DiscussButton componentName="FlowBrowser" onClick={openDialog} size="small" />
+          </Button>
+          
         </div>
       </div>
 
@@ -232,7 +221,9 @@ export function FlowBrowser({ onFlowSelect }: FlowBrowserProps): React.ReactElem
               ? flows.length
               : flows.filter(f => f.category === category).length;
             return (
-              <button
+              <Button
+                variant="ghost"
+                type="button"
                 key={category}
                 className={`flow-browser__category-tab ${
                   selectedCategory === category ? 'active' : ''
@@ -241,7 +232,7 @@ export function FlowBrowser({ onFlowSelect }: FlowBrowserProps): React.ReactElem
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
                 <span className="count">{count}</span>
-              </button>
+              </Button>
             );
           }
         )}
@@ -253,13 +244,15 @@ export function FlowBrowser({ onFlowSelect }: FlowBrowserProps): React.ReactElem
           <div className="tags-label">Tags:</div>
           <div className="tags-list">
             {allTags.map(tag => (
-              <button
+              <Button
+                variant="ghost"
+                type="button"
                 key={tag}
                 className={`tag ${selectedTags.has(tag) ? 'active' : ''}`}
                 onClick={() => handleTagClick(tag)}
               >
                 {tag}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -271,7 +264,9 @@ export function FlowBrowser({ onFlowSelect }: FlowBrowserProps): React.ReactElem
           <div className="flow-browser__empty">
             <div className="empty-icon">📭</div>
             <div className="empty-message">No flows match your filters</div>
-            <button
+            <Button
+              variant="ghost"
+              type="button"
               className="empty-reset"
               onClick={() => {
                 setSearchQuery('');
@@ -280,7 +275,7 @@ export function FlowBrowser({ onFlowSelect }: FlowBrowserProps): React.ReactElem
               }}
             >
               Clear filters
-            </button>
+            </Button>
           </div>
         ) : (
           <>
@@ -291,6 +286,15 @@ export function FlowBrowser({ onFlowSelect }: FlowBrowserProps): React.ReactElem
                   key={flow.id}
                   className={`flow-card ${selectedFlow?.id === flow.id ? 'active' : ''}`}
                   onClick={() => handleFlowSelect(flow)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleFlowSelect(flow);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={selectedFlow?.id === flow.id}
                 >
                   <div className="flow-card__header">
                     <h3 className="flow-card__title">{flow.name}</h3>
@@ -343,22 +347,6 @@ export function FlowBrowser({ onFlowSelect }: FlowBrowserProps): React.ReactElem
         )}
       </div>
 
-      {/* DiscussDialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="FlowBrowser"
-        componentContext={{
-          totalFlows: flows.length,
-          viewMode,
-          selectedCategory,
-          searchQuery,
-          selectedTags: Array.from(selectedTags),
-          sortBy,
-          filteredCount: filteredFlows.length,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

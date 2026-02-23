@@ -114,6 +114,21 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       return null;
     };
 
+    const hasChildren = children !== null && children !== undefined;
+    const isTextOnly = typeof children === 'string' || typeof children === 'number';
+
+    const renderLabel = () => {
+      if (!hasChildren) {
+        return null;
+      }
+
+      if (isTextOnly) {
+        return <span className="afw-button__label">{children}</span>;
+      }
+
+      return children;
+    };
+
     const renderContent = () => {
       if (iconOnly) {
         return renderIcon();
@@ -122,7 +137,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       if (iconPosition === 'trailing') {
         return (
           <>
-            {children && <span className="afw-button__label">{children}</span>}
+            {renderLabel()}
             {renderIcon()}
           </>
         );
@@ -131,7 +146,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       return (
         <>
           {renderIcon()}
-          {children && <span className="afw-button__label">{children}</span>}
+          {renderLabel()}
         </>
       );
     };

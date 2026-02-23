@@ -22,8 +22,6 @@ import { layoutNodes, layoutEdges, detectParallelGroups } from './layout';
 import { ChainBadge } from '../ChainBadge';
 import { StepInspector } from '../StepInspector';
 import { detectChainType } from '../../utils/chainTypeDetection';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
 import './ChainDAG.css';
 
 interface ChainDAGProps {
@@ -60,18 +58,6 @@ export const ChainDAG: React.FC<ChainDAGProps> = ({
 
     return { total, completed, failed, inProgress, pending, skipped };
   }, [chain.steps]);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'ChainDAG',
-    getContext: () => ({
-      chainId: chain.id,
-      chainTitle: chain.title,
-      stepCount: stats.total,
-      status: chain.status,
-      parallelGroups: parallelGroups.length,
-    }),
-  });
 
   // Compute parallel groups for visual grouping
   const parallelGroups = useMemo(
@@ -162,7 +148,7 @@ export const ChainDAG: React.FC<ChainDAGProps> = ({
           <div className="chain-dag-header-top">
             <h3 className="chain-dag-title">{chain.title}</h3>
             <ChainBadge metadata={chainMetadata} />
-            <DiscussButton componentName="ChainDAG" onClick={openDialog} size="small" />
+            
           </div>
           <div className="chain-dag-stats">
             <div className="chain-dag-stat">
@@ -253,20 +239,6 @@ export const ChainDAG: React.FC<ChainDAGProps> = ({
         onClose={() => setSelectedStep(null)}
       />
 
-      {/* DiscussDialog */}
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="ChainDAG"
-        componentContext={{
-          chainId: chain.id,
-          chainTitle: chain.title,
-          stepCount: stats.total,
-          status: chain.status,
-          parallelGroups: parallelGroups.length,
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 };

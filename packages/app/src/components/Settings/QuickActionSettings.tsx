@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { QuickActionDefinition } from '@afw/shared';
-import { DiscussButton, DiscussDialog } from '../DiscussButton';
-import { useDiscussButton } from '../../hooks/useDiscussButton';
+import { Button } from '../primitives';
 import './QuickActionSettings.css';
 
 export interface QuickActionSettingsProps {
@@ -45,22 +44,6 @@ export function QuickActionSettings({
 
   // Track if there are unsaved changes
   const hasUnsavedChanges = JSON.stringify(actions) !== JSON.stringify(quickActions);
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend: handleDiscussSend } = useDiscussButton({
-    componentName: 'QuickActionSettings',
-    getContext: () => ({
-      settingsCategory: 'Quick Actions',
-      unsavedChanges: hasUnsavedChanges,
-    }),
-  });
-
-  // Handle discuss dialog send
-  const handleDiscussDialogSend = (message: string) => {
-    const formattedMessage = handleDiscussSend(message);
-    console.log('Discussion message:', formattedMessage);
-    closeDialog();
-  };
 
   const handleAddNew = () => {
     const newAction: QuickActionDefinition = {
@@ -129,14 +112,30 @@ export function QuickActionSettings({
   };
 
   return (
-    <div className="quick-action-settings-overlay" onClick={onClose}>
-      <div className="quick-action-settings-panel" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="quick-action-settings-overlay"
+      role="button"
+      tabIndex={0}
+      aria-label="Close quick action settings"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClose();
+        }
+      }}
+    >
+      <div className="quick-action-settings-panel">
         <div className="settings-header">
           <h2>Quick Action Settings</h2>
-          <DiscussButton componentName="QuickActionSettings" onClick={openDialog} size="small" />
-          <button className="settings-close-btn" onClick={onClose} title="Close">
+          
+          <Button variant="ghost" className="settings-close-btn" onClick={onClose} title="Close">
             ×
-          </button>
+          </Button>
         </div>
 
         <div className="settings-content">
@@ -193,12 +192,12 @@ export function QuickActionSettings({
                     </div>
 
                     <div className="form-actions">
-                      <button className="form-btn save-btn" onClick={handleSaveEdit}>
+                      <Button variant="ghost" className="form-btn save-btn" onClick={handleSaveEdit}>
                         Save
-                      </button>
-                      <button className="form-btn cancel-btn" onClick={handleCancelEdit}>
+                      </Button>
+                      <Button variant="ghost" className="form-btn cancel-btn" onClick={handleCancelEdit}>
                         Cancel
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ) : (
@@ -220,37 +219,37 @@ export function QuickActionSettings({
                       {pendingDeleteId === action.id ? (
                         <>
                           <span className="delete-confirm-label">Delete?</span>
-                          <button
+                          <Button variant="ghost"
                             className="action-btn confirm-btn"
                             onClick={handleDeleteConfirm}
                             title="Confirm delete"
                           >
                             Yes
-                          </button>
-                          <button
+                          </Button>
+                          <Button variant="ghost"
                             className="action-btn cancel-btn"
                             onClick={handleDeleteCancel}
                             title="Cancel delete"
                           >
                             No
-                          </button>
+                          </Button>
                         </>
                       ) : (
                         <>
-                          <button
+                          <Button variant="ghost"
                             className="action-btn edit-btn"
                             onClick={() => handleEdit(action)}
                             title="Edit"
                           >
                             Edit
-                          </button>
-                          <button
+                          </Button>
+                          <Button variant="ghost"
                             className="action-btn delete-btn"
                             onClick={() => handleDeleteRequest(action.id)}
                             title="Delete"
                           >
                             Delete
-                          </button>
+                          </Button>
                         </>
                       )}
                     </div>
@@ -260,32 +259,23 @@ export function QuickActionSettings({
             ))}
           </div>
 
-          <button className="add-action-btn" onClick={handleAddNew}>
+          <Button variant="ghost" className="add-action-btn" onClick={handleAddNew}>
             + Add Quick Action
-          </button>
+          </Button>
         </div>
 
         <div className="settings-footer">
-          <button className="footer-btn cancel-footer-btn" onClick={onClose}>
+          <Button variant="ghost" className="footer-btn cancel-footer-btn" onClick={onClose}>
             Cancel
-          </button>
-          <button className="footer-btn save-footer-btn" onClick={handleSave}>
+          </Button>
+          <Button variant="ghost" className="footer-btn save-footer-btn" onClick={handleSave}>
             Save Changes
-          </button>
+          </Button>
         </div>
 
-        {/* DiscussDialog */}
-        <DiscussDialog
-          isOpen={isDialogOpen}
-          componentName="QuickActionSettings"
-          componentContext={{
-            settingsCategory: 'Quick Actions',
-            unsavedChanges: hasUnsavedChanges,
-          }}
-          onSend={handleDiscussDialogSend}
-          onClose={closeDialog}
-        />
       </div>
     </div>
   );
 }
+
+

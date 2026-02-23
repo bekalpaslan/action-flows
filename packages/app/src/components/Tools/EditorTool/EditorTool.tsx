@@ -27,8 +27,6 @@ import { useWebSocketContext } from '../../../contexts/WebSocketContext';
 import { useFileSyncManager, type FileConflict } from '../../../hooks/useFileSyncManager';
 import { ConflictDialog } from '../../CodeEditor/ConflictDialog';
 import { ToastContainer, type ToastMessage } from '../../Toast/Toast';
-import { DiscussButton, DiscussDialog } from '../../DiscussButton';
-import { useDiscussButton } from '../../../hooks/useDiscussButton';
 import './EditorTool.css';
 
 // Configure Monaco workers on module load
@@ -106,16 +104,6 @@ export function EditorTool({
 
   const { readFile, writeFile, isLoading, error } = useEditorFiles(sessionId);
   const { onEvent } = useWebSocketContext();
-
-  // DiscussButton integration
-  const { isDialogOpen, openDialog, closeDialog, handleSend } = useDiscussButton({
-    componentName: 'EditorTool',
-    getContext: () => ({
-      openFiles: openFiles.map(f => f.path),
-      activeFile: activeFilePath,
-      hasUnsavedChanges: openFiles.some((f) => f.isDirty),
-    }),
-  });
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -428,7 +416,7 @@ export function EditorTool({
           )}
         </div>
         <div className="editor-workbench__header-right">
-          <DiscussButton componentName="EditorWorkbench" onClick={openDialog} size="small" />
+          
           {activeFile && (
             <div className="editor-workbench__breadcrumb">
               {getBreadcrumbSegments(activeFile.path).map((segment, index, arr) => (
@@ -551,18 +539,6 @@ export function EditorTool({
 
       {/* Toast notifications */}
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
-
-      <DiscussDialog
-        isOpen={isDialogOpen}
-        componentName="EditorWorkbench"
-        componentContext={{
-          openFiles: openFiles.map(f => f.path),
-          activeFile: activeFilePath,
-          hasUnsavedChanges: openFiles.some((f) => f.isDirty),
-        }}
-        onSend={handleSend}
-        onClose={closeDialog}
-      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ErrorInstance } from '@afw/shared';
+import { Button } from '../primitives';
 import './ErrorModal.css';
 
 interface ErrorModalProps {
@@ -27,6 +28,13 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
     }
   };
 
+  const handleBackdropKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onDismiss(error.id);
+    }
+  };
+
   // Determine severity styling
   const severityClass = `error-modal--severity-${error.severity}`;
 
@@ -36,7 +44,14 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
   const hasCancel = error.recoveryOptions.includes('cancel');
 
   return (
-    <div className="error-modal-backdrop" onClick={handleBackdropClick}>
+    <div
+      className="error-modal-backdrop"
+      onClick={handleBackdropClick}
+      onKeyDown={handleBackdropKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label="Dismiss error modal"
+    >
       <div className={`error-modal ${severityClass}`}>
         {/* Header */}
         <div className="error-modal-header">
@@ -50,13 +65,15 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
             <h2 className="error-modal-title">{error.title}</h2>
             <p className="error-modal-severity">{error.severity.toUpperCase()}</p>
           </div>
-          <button
+          <Button
+            variant="ghost"
+            type="button"
             className="error-modal-close"
             onClick={() => onDismiss(error.id)}
             aria-label="Close error"
           >
             ×
-          </button>
+          </Button>
         </div>
 
         {/* Body */}
@@ -116,40 +133,48 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({
         {/* Footer with recovery actions */}
         <div className="error-modal-footer">
           {hasRetry && (
-            <button
+            <Button
+              variant="ghost"
+              type="button"
               className="btn-error-action btn-retry"
               onClick={() => onRetry(error.id)}
               title="Retry the failed step"
             >
               Retry
-            </button>
+            </Button>
           )}
           {hasSkip && (
-            <button
+            <Button
+              variant="ghost"
+              type="button"
               className="btn-error-action btn-skip"
               onClick={() => onSkip(error.id)}
               title="Skip the current step"
             >
               Skip
-            </button>
+            </Button>
           )}
           {hasCancel && (
-            <button
+            <Button
+              variant="ghost"
+              type="button"
               className="btn-error-action btn-cancel"
               onClick={() => onCancel(error.id)}
               title="Cancel the entire chain"
             >
               Cancel
-            </button>
+            </Button>
           )}
           {!hasRetry && !hasSkip && !hasCancel && (
-            <button
+            <Button
+              variant="ghost"
+              type="button"
               className="btn-error-action btn-acknowledge"
               onClick={() => onDismiss(error.id)}
               title="Acknowledge this error"
             >
               Acknowledge
-            </button>
+            </Button>
           )}
         </div>
       </div>
