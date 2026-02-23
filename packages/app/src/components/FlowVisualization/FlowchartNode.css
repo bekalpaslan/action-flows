@@ -13,8 +13,8 @@
 }
 
 .afw-flowchart-node:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(calc(var(--space-1) * -0.5));
+  box-shadow: var(--shadow-md);
 }
 
 .afw-flowchart-node:focus-visible {
@@ -30,10 +30,10 @@
 
 /* Start/End - Pill/Stadium shape */
 .afw-flowchart-node--start-end {
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   padding: var(--space-4) var(--space-6);
-  background: rgba(251, 146, 60, 0.12);
-  border: 2px solid rgba(251, 146, 60, 0.3);
+  background: color-mix(in srgb, var(--palette-orange-500) 12%, transparent);
+  border: 2px solid color-mix(in srgb, var(--palette-orange-500) 30%, transparent);
   min-height: 80px;
   min-width: 180px;
 }
@@ -44,8 +44,8 @@
   height: 160px;
   min-width: 160px;
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-  background: rgba(148, 163, 184, 0.12);
-  box-shadow: inset 0 0 0 2px rgba(148, 163, 184, 0.3);
+  background: color-mix(in srgb, var(--palette-alabaster-grey-400) 12%, transparent);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--palette-alabaster-grey-400) 30%, transparent);
   padding: var(--space-6);
 }
 
@@ -53,8 +53,8 @@
 .afw-flowchart-node--process {
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
-  background: rgba(52, 211, 153, 0.12);
-  border: 2px solid rgba(52, 211, 153, 0.3);
+  background: color-mix(in srgb, var(--system-green) 12%, transparent);
+  border: 2px solid color-mix(in srgb, var(--system-green) 30%, transparent);
   min-height: 80px;
 }
 
@@ -62,8 +62,8 @@
 .afw-flowchart-node--input {
   clip-path: polygon(12% 0%, 100% 0%, 88% 100%, 0% 100%);
   padding: var(--space-3) var(--space-6);
-  background: rgba(56, 189, 248, 0.12);
-  box-shadow: inset 0 0 0 2px rgba(56, 189, 248, 0.3);
+  background: color-mix(in srgb, var(--system-blue) 12%, transparent);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--system-blue) 30%, transparent);
   min-height: 80px;
   min-width: 200px;
 }
@@ -72,8 +72,8 @@
 .afw-flowchart-node--data {
   border-radius: 50% / 10%;
   padding: var(--space-6) var(--space-4) var(--space-4);
-  background: rgba(244, 114, 182, 0.12);
-  border: 2px solid rgba(244, 114, 182, 0.3);
+  background: color-mix(in srgb, var(--system-pink) 12%, transparent);
+  border: 2px solid color-mix(in srgb, var(--system-pink) 30%, transparent);
   min-height: 120px;
   min-width: 180px;
   position: relative;
@@ -82,19 +82,19 @@
 .afw-flowchart-node--data::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  height: 30px;
+  top: calc(var(--space-0-5) * -1);
+  left: calc(var(--space-0-5) * -1);
+  right: calc(var(--space-0-5) * -1);
+  height: calc(var(--space-4) * 1.875);
   border-radius: 50%;
-  background: rgba(244, 114, 182, 0.15);
-  border: 2px solid rgba(244, 114, 182, 0.3);
+  background: color-mix(in srgb, var(--system-pink) 15%, transparent);
+  border: 2px solid color-mix(in srgb, var(--system-pink) 30%, transparent);
   border-bottom: none;
 }
 
 /* Group - Dashed container */
 .afw-flowchart-node--group {
-  border: 2px dashed var(--panel-border-strong, #444c56);
+  border: 2px dashed var(--panel-border-strong);
   border-radius: var(--radius-sm);
   padding: var(--space-2) var(--space-3);
   background: transparent;
@@ -109,37 +109,37 @@
 }
 
 .afw-flowchart-node--pending.afw-flowchart-node--start-end {
-  border-color: rgba(148, 163, 184, 0.3);
+  border-color: color-mix(in srgb, var(--palette-alabaster-grey-400) 30%, transparent);
 }
 
 .afw-flowchart-node--pending.afw-flowchart-node--decision {
-  box-shadow: inset 0 0 0 2px rgba(148, 163, 184, 0.3);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--palette-alabaster-grey-400) 30%, transparent);
 }
 
 .afw-flowchart-node--pending.afw-flowchart-node--process {
-  border-color: rgba(148, 163, 184, 0.3);
+  border-color: color-mix(in srgb, var(--palette-alabaster-grey-400) 30%, transparent);
 }
 
 .afw-flowchart-node--pending.afw-flowchart-node--input {
-  box-shadow: inset 0 0 0 2px rgba(148, 163, 184, 0.3);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--palette-alabaster-grey-400) 30%, transparent);
 }
 
 .afw-flowchart-node--pending.afw-flowchart-node--data {
-  border-color: rgba(148, 163, 184, 0.3);
+  border-color: color-mix(in srgb, var(--palette-alabaster-grey-400) 30%, transparent);
 }
 
 .afw-flowchart-node--in_progress {
   border-color: var(--system-yellow);
-  box-shadow: 0 0 12px rgba(255, 214, 0, 0.3);
-  animation: afw-flowchart-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--system-yellow) 30%, transparent);
+  animation: afw-flowchart-pulse var(--duration-slower) var(--ease-in-out) infinite;
 }
 
 .afw-flowchart-node--in_progress.afw-flowchart-node--decision {
-  box-shadow: inset 0 0 0 2px var(--system-yellow), 0 0 12px rgba(255, 214, 0, 0.3);
+  box-shadow: inset 0 0 0 2px var(--system-yellow), 0 0 12px color-mix(in srgb, var(--system-yellow) 30%, transparent);
 }
 
 .afw-flowchart-node--in_progress.afw-flowchart-node--input {
-  box-shadow: inset 0 0 0 2px var(--system-yellow), 0 0 12px rgba(255, 214, 0, 0.3);
+  box-shadow: inset 0 0 0 2px var(--system-yellow), 0 0 12px color-mix(in srgb, var(--system-yellow) 30%, transparent);
 }
 
 .afw-flowchart-node--completed {
@@ -157,15 +157,15 @@
 
 .afw-flowchart-node--failed {
   border-color: var(--system-red);
-  box-shadow: 0 0 8px rgba(255, 69, 58, 0.2);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--system-red) 20%, transparent);
 }
 
 .afw-flowchart-node--failed.afw-flowchart-node--decision {
-  box-shadow: inset 0 0 0 2px var(--system-red), 0 0 8px rgba(255, 69, 58, 0.2);
+  box-shadow: inset 0 0 0 2px var(--system-red), 0 0 8px color-mix(in srgb, var(--system-red) 20%, transparent);
 }
 
 .afw-flowchart-node--failed.afw-flowchart-node--input {
-  box-shadow: inset 0 0 0 2px var(--system-red), 0 0 8px rgba(255, 69, 58, 0.2);
+  box-shadow: inset 0 0 0 2px var(--system-red), 0 0 8px color-mix(in srgb, var(--system-red) 20%, transparent);
 }
 
 .afw-flowchart-node--skipped {
@@ -213,39 +213,39 @@
 
 .afw-flowchart-node__model {
   font-size: var(--text-xs);
-  padding: 2px var(--space-2);
-  border-radius: 9999px;
+  padding: var(--space-0-5) var(--space-2);
+  border-radius: var(--radius-full);
   margin-top: var(--space-1);
   font-weight: var(--font-medium);
   text-transform: uppercase;
-  letter-spacing: 0.025em;
+  letter-spacing: var(--tracking-wide);
 }
 
 .afw-flowchart-node__model--haiku {
-  background: rgba(88, 166, 255, 0.15);
+  background: color-mix(in srgb, var(--system-blue) 15%, transparent);
   color: var(--system-blue);
-  border: 1px solid rgba(88, 166, 255, 0.3);
+  border: 1px solid color-mix(in srgb, var(--system-blue) 30%, transparent);
 }
 
 .afw-flowchart-node__model--sonnet {
-  background: rgba(188, 140, 255, 0.15);
+  background: color-mix(in srgb, var(--system-purple) 15%, transparent);
   color: var(--system-purple);
-  border: 1px solid rgba(188, 140, 255, 0.3);
+  border: 1px solid color-mix(in srgb, var(--system-purple) 30%, transparent);
 }
 
 .afw-flowchart-node__model--opus {
-  background: rgba(251, 146, 60, 0.15);
+  background: color-mix(in srgb, var(--brand-accent) 15%, transparent);
   color: var(--brand-accent);
-  border: 1px solid rgba(251, 146, 60, 0.3);
+  border: 1px solid color-mix(in srgb, var(--brand-accent) 30%, transparent);
 }
 
 .afw-flowchart-node__status-icon {
   position: absolute;
   top: var(--space-1);
   right: var(--space-1);
-  font-size: 14px;
+  font-size: var(--text-sm);
   color: var(--text-secondary);
-  z-index: 1;
+  z-index: var(--z-base);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -280,18 +280,18 @@
 }
 
 .afw-flowchart-node__spinner {
-  width: 14px;
-  height: 14px;
+  width: var(--text-sm);
+  height: var(--text-sm);
   border: 2px solid transparent;
   border-top-color: var(--system-yellow);
   border-radius: 50%;
-  animation: afw-spin 1s linear infinite;
+  animation: afw-spin var(--duration-slower) linear infinite;
 }
 
 /* ReactFlow handles */
 .afw-flowchart-node__handle {
-  width: 10px;
-  height: 10px;
+  width: var(--space-2-5);
+  height: var(--space-2-5);
   background: var(--panel-bg-elevated);
   border: 2px solid var(--text-tertiary);
   border-radius: 50%;
@@ -305,11 +305,11 @@
 }
 
 .afw-flowchart-node__handle--target {
-  top: -5px;
+  top: calc(var(--space-2-5) * -1);
 }
 
 .afw-flowchart-node__handle--source {
-  bottom: -5px;
+  bottom: calc(var(--space-2-5) * -1);
 }
 
 /* Animations */
@@ -317,10 +317,10 @@
 @keyframes afw-flowchart-pulse {
   0%,
   100% {
-    box-shadow: 0 0 12px rgba(255, 214, 0, 0.3);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--system-yellow) 30%, transparent);
   }
   50% {
-    box-shadow: 0 0 20px rgba(255, 214, 0, 0.5);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--system-yellow) 50%, transparent);
   }
 }
 

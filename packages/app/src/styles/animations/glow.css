@@ -8,6 +8,8 @@
  * - Reduced motion support
  *
  * Compatible with GlowIndicator component.
+ *
+ * Design System: All colors, opacities, spacing, and timing use design tokens.
  */
 
 /* ==========================================================================
@@ -15,27 +17,21 @@
    ========================================================================== */
 
 :root {
-  /* Base glow colors — aligned with theme status colors */
-  --glow-color-info: var(--color-info, #2196f3);
-  --glow-color-success: var(--color-success, #4caf50);
-  --glow-color-warning: var(--color-warning, #ff9800);
-  --glow-color-error: var(--color-error, #f44336);
-
-  /* Glow shadow colors with alpha */
-  --glow-shadow-info: rgba(33, 150, 243, 0.6);
-  --glow-shadow-success: rgba(76, 175, 80, 0.6);
-  --glow-shadow-warning: rgba(255, 152, 0, 0.6);
-  --glow-shadow-error: rgba(244, 67, 54, 0.6);
+  /* Glow shadow colors — mapped to design system status colors */
+  --glow-shadow-info: color-mix(in srgb, var(--palette-prussian-blue-700) 60%, transparent);
+  --glow-shadow-success: color-mix(in srgb, var(--palette-prussian-blue-800) 60%, transparent);
+  --glow-shadow-warning: color-mix(in srgb, var(--palette-orange-500) 60%, transparent);
+  --glow-shadow-error: color-mix(in srgb, var(--palette-orange-400) 60%, transparent);
 
   /* Intensity multipliers */
   --glow-intensity-subtle: 0.4;
   --glow-intensity-medium: 0.7;
   --glow-intensity-strong: 1;
 
-  /* Animation timing */
-  --glow-duration: 2s;
-  --glow-timing: ease-in-out;
-  --glow-fade-duration: 300ms;
+  /* Animation timing — using design system durations */
+  --glow-duration: var(--duration-slowest);
+  --glow-timing: var(--ease-in-out);
+  --glow-fade-duration: var(--duration-slow);
 }
 
 /* ==========================================================================
@@ -230,11 +226,11 @@
 }
 
 .glow-fade-in {
-  animation: glow-fade-in-anim var(--glow-fade-duration) ease-out forwards;
+  animation: glow-fade-in-anim var(--glow-fade-duration) var(--ease-out) forwards;
 }
 
 .glow-fade-out {
-  animation: glow-fade-out-anim var(--glow-fade-duration) ease-in forwards;
+  animation: glow-fade-out-anim var(--glow-fade-duration) var(--ease-in) forwards;
 }
 
 /* Combined fade-in with pulse (starts fading in, then continues pulsing) */
@@ -242,7 +238,7 @@
 .glow-fade-in.glow-pulse-medium,
 .glow-fade-in.glow-pulse-strong {
   animation:
-    glow-fade-in-anim var(--glow-fade-duration) ease-out,
+    glow-fade-in-anim var(--glow-fade-duration) var(--ease-out),
     glow-pulse var(--glow-duration) var(--glow-timing) infinite var(--glow-fade-duration);
 }
 
@@ -298,7 +294,7 @@
   /* Fade transitions remain but use instant timing */
   .glow-fade-in,
   .glow-fade-out {
-    animation-duration: 0.01ms;
+    animation-duration: var(--duration-instant);
   }
 }
 

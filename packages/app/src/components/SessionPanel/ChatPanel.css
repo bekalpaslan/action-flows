@@ -85,9 +85,9 @@
   gap: var(--space-1);
   font-size: var(--text-xs);
   color: var(--system-teal);
-  background: rgba(57, 210, 192, 0.08);
+  background: color-mix(in srgb, var(--system-teal) 8%, transparent);
   padding: var(--space-0-5) var(--space-2);
-  border-radius: 10px;
+  border-radius: var(--radius-full);
   font-weight: var(--font-medium);
   white-space: nowrap;
 }
@@ -147,7 +147,7 @@
   font-size: var(--text-lg);
   line-height: var(--leading-tight);
   transition: var(--transition-colors);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
 }
 
 .chat-panel__close-btn:hover {
@@ -156,8 +156,8 @@
 }
 
 .chat-panel__close-btn:focus-visible {
-  outline: 2px solid var(--focus-ring-color, rgba(88, 166, 255, 0.5));
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .chat-panel__close-btn:active {
@@ -175,7 +175,7 @@
   gap: var(--space-1-5);
   padding: var(--space-1) var(--space-3);
   background: var(--panel-bg-elevated);
-  border-bottom: 1px solid var(--glass-bg-light);
+  border-bottom: var(--panel-border-default);
   flex-wrap: wrap;
   overflow: hidden;
   min-height: 0;
@@ -223,7 +223,7 @@
   align-items: center;
   padding: var(--space-px) var(--space-1-5);
   border-radius: var(--radius-full, 9999px);
-  background: var(--fill-quaternary, rgba(118, 118, 128, 0.18));
+  background: var(--fill-quaternary);
   color: var(--text-secondary);
   font-size: var(--text-xs);
   font-family: var(--font-mono);
@@ -234,8 +234,8 @@
 }
 
 .chat-panel__info-chip--active {
-  background: rgba(88, 166, 255, 0.15);
-  color: var(--system-blue, #58a6ff);
+  background: color-mix(in srgb, var(--system-blue) 15%, transparent);
+  color: var(--system-blue);
   border: 1px solid var(--glow-color-accent);
 }
 
@@ -260,20 +260,33 @@
 }
 
 .chat-panel-header__session-status--green {
-  background-color: rgba(63, 185, 80, 0.12);
+  background-color: color-mix(in srgb, var(--system-green) 12%, transparent);
   color: var(--system-green);
-  border: 1px solid rgba(63, 185, 80, 0.25);
+  border: 1px solid color-mix(in srgb, var(--system-green) 25%, transparent);
+}
+
+.chat-panel-header__session-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chat-panel-header__session-status--green {
+  background-color: color-mix(in srgb, var(--system-green) 12%, transparent);
+  color: var(--system-green);
+  border: 1px solid color-mix(in srgb, var(--system-green) 25%, transparent);
 }
 
 .chat-panel-header__session-status--green .chat-panel-header__session-dot {
   background-color: var(--system-green);
-  box-shadow: 0 0 6px rgba(63, 185, 80, 0.50);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--system-green) 50%, transparent);
 }
 
 .chat-panel-header__session-status--gray {
-  background-color: rgba(152, 152, 157, 0.12);
+  background-color: color-mix(in srgb, var(--color-text-secondary) 12%, transparent);
   color: var(--text-secondary);
-  border: 1px solid rgba(152, 152, 157, 0.25);
+  border: 1px solid color-mix(in srgb, var(--color-text-secondary) 25%, transparent);
 }
 
 .chat-panel-header__session-status--gray .chat-panel-header__session-dot {
@@ -281,9 +294,9 @@
 }
 
 .chat-panel-header__session-status--red {
-  background-color: rgba(239, 68, 68, 0.15);
+  background-color: color-mix(in srgb, var(--system-red) 15%, transparent);
   color: var(--semantic-error);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  border: 1px solid color-mix(in srgb, var(--system-red) 30%, transparent);
 }
 
 .chat-panel-header__session-status--red .chat-panel-header__session-dot {
@@ -291,9 +304,9 @@
 }
 
 .chat-panel-header__session-status--yellow {
-  background-color: rgba(255, 214, 10, 0.12);
+  background-color: color-mix(in srgb, var(--system-yellow) 12%, transparent);
   color: var(--system-yellow);
-  border: 1px solid rgba(255, 214, 10, 0.25);
+  border: 1px solid color-mix(in srgb, var(--system-yellow) 25%, transparent);
 }
 
 .chat-panel-header__session-status--yellow .chat-panel-header__session-dot {
@@ -349,10 +362,10 @@
   gap: var(--space-0-5);
   max-width: 85%;
   padding: var(--space-2) var(--space-3);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   word-wrap: break-word;
   overflow-wrap: break-word;
-  animation: chat-bubble-in 0.15s ease-out;
+  animation: chat-bubble-in var(--duration-fast) ease-out;
 }
 
 @keyframes chat-bubble-in {
@@ -371,7 +384,7 @@
   align-self: flex-start;
   background: var(--panel-bg-elevated);
   border: var(--panel-border-default);
-  border-bottom-left-radius: 4px;
+  border-bottom-left-radius: var(--radius-xs);
 }
 
 /* User messages - right aligned, blue/accent background */
@@ -379,26 +392,26 @@
   align-self: flex-end;
   background: var(--btn-bg-primary);
   border: var(--panel-border-strong);
-  border-bottom-right-radius: 4px;
+  border-bottom-right-radius: var(--radius-xs);
 }
 
 /* System messages - centered, muted */
 .chat-bubble--system {
   align-self: center;
   background: var(--panel-bg-inset);
-  border: 1px solid var(--glass-bg-light);
+  border: var(--panel-border-default);
   max-width: 90%;
   text-align: center;
   font-size: var(--text-xs);
   color: var(--text-tertiary);
   padding: var(--space-1-5) var(--space-2-5);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 /* Error messages */
 .chat-bubble--error {
-  border-color: rgba(220, 38, 38, 0.35);
-  background: rgba(220, 38, 38, 0.08);
+  border-color: color-mix(in srgb, var(--system-red) 35%, transparent);
+  background: color-mix(in srgb, var(--system-red) 8%, transparent);
 }
 
 .chat-bubble--error .chat-bubble__content {
@@ -411,10 +424,10 @@
   align-items: center;
   gap: var(--space-1);
   font-size: var(--text-xs);
-  color: rgba(229, 229, 16, 1);
-  background: rgba(229, 229, 16, 0.08);
+  color: var(--system-yellow);
+  background: color-mix(in srgb, var(--system-yellow) 8%, transparent);
   padding: var(--space-0-5) var(--space-1-5);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   margin-bottom: var(--space-1);
   font-weight: var(--font-semibold);
 }
@@ -455,9 +468,9 @@
 
 .chat-bubble__spawn-prompt-icon {
   flex-shrink: 0;
-  width: 10px;
+  width: var(--space-2-5);
   font-size: var(--text-xs);
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) ease;
   color: var(--text-tertiary);
 }
 
@@ -518,8 +531,8 @@
 }
 
 .chat-bubble__content pre {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
+  background: var(--glass-bg-dark);
+  border-radius: var(--radius-xs);
   padding: var(--space-2);
   overflow-x: auto;
   font-size: var(--text-xs);
@@ -527,8 +540,8 @@
 }
 
 .chat-bubble__content code {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
+  background: var(--glass-bg-medium);
+  border-radius: var(--radius-2px);
   padding: var(--space-px) var(--space-1);
   font-size: var(--text-xs);
 }
@@ -540,15 +553,15 @@
 
 .chat-bubble__content details {
   margin: var(--space-2) 0;
-  border: 1px solid var(--glass-bg-light);
-  border-radius: 4px;
+  border: var(--glass-border-default);
+  border-radius: var(--radius-xs);
   overflow: hidden;
 }
 
 .chat-bubble__content summary {
   padding: var(--space-1-5) var(--space-2-5);
   cursor: pointer;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--glass-bg-medium);
   font-size: var(--text-xs);
   color: var(--text-secondary);
 }
@@ -575,7 +588,7 @@
   color: var(--text-tertiary);
   background: var(--panel-bg-inset);
   padding: var(--space-px) var(--space-1);
-  border-radius: 3px;
+  border-radius: var(--radius-xs-sm);
 }
 
 /* ============================================================================
@@ -598,11 +611,11 @@
 }
 
 .chat-panel__typing-dot {
-  width: 5px;
-  height: 5px;
+  width: var(--space-1-5);
+  height: var(--space-1-5);
   background: var(--text-tertiary);
   border-radius: 50%;
-  animation: typing-bounce 1.4s ease-in-out infinite;
+  animation: typing-bounce var(--duration-slowest) ease-in-out infinite;
 }
 
 .chat-panel__typing-dot:nth-child(2) {
@@ -634,7 +647,7 @@
   flex-wrap: wrap;
   gap: var(--space-1-5);
   padding: var(--space-2) var(--space-3);
-  border-top: 1px solid var(--glass-bg-light);
+  border-top: var(--glass-border-default);
   background: var(--panel-bg-base);
   overflow-x: auto;
 }
@@ -651,7 +664,7 @@
   background: var(--btn-bg-tertiary);
   color: var(--text-primary);
   border: var(--btn-border-default);
-  border-radius: 16px;
+  border-radius: var(--radius-full);
   box-shadow: var(--btn-glow-default);
   font-size: var(--text-xs);
   font-weight: var(--font-medium);
@@ -674,39 +687,39 @@
 
 /* Category-specific button colors */
 .chat-panel__prompt-btn--approval {
-  border-color: rgba(57, 210, 192, 0.25);
+  border-color: color-mix(in srgb, var(--system-teal) 25%, transparent);
   color: var(--system-teal);
 }
 
 .chat-panel__prompt-btn--approval:hover {
-  background: rgba(78, 201, 176, 0.15);
+  background: color-mix(in srgb, var(--system-teal) 15%, transparent);
 }
 
 .chat-panel__prompt-btn--error-recovery {
-  border-color: rgba(255, 69, 58, 0.25);
+  border-color: color-mix(in srgb, var(--system-red) 25%, transparent);
   color: var(--system-red);
 }
 
 .chat-panel__prompt-btn--error-recovery:hover {
-  background: rgba(255, 69, 58, 0.12);
+  background: color-mix(in srgb, var(--system-red) 12%, transparent);
 }
 
 .chat-panel__prompt-btn--chain-control {
-  border-color: rgba(229, 229, 16, 0.25);
-  color: rgba(229, 229, 16, 1);
+  border-color: color-mix(in srgb, var(--system-yellow) 25%, transparent);
+  color: var(--system-yellow);
 }
 
 .chat-panel__prompt-btn--chain-control:hover {
-  background: rgba(229, 229, 16, 0.12);
+  background: color-mix(in srgb, var(--system-yellow) 12%, transparent);
 }
 
 .chat-panel__prompt-btn--code-action {
-  border-color: rgba(88, 166, 255, 0.25);
+  border-color: color-mix(in srgb, var(--system-blue) 25%, transparent);
   color: var(--system-blue);
 }
 
 .chat-panel__prompt-btn--code-action:hover {
-  background: rgba(88, 166, 255, 0.12);
+  background: color-mix(in srgb, var(--system-blue) 12%, transparent);
 }
 
 /* ============================================================================
@@ -716,24 +729,24 @@
 .chat-panel__quick-responses {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 8px 16px;
-  border-top: 1px solid var(--border-secondary, #333);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-top: var(--panel-border-default);
 }
 
 .chat-panel__quick-response-btn {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid var(--border-primary, #555);
-  background: var(--bg-secondary, #2a2a2a);
-  color: var(--text-primary, #e0e0e0);
+  padding: var(--space-1-5) var(--space-3);
+  border-radius: var(--radius-md);
+  border: var(--panel-border-default);
+  background: var(--panel-bg-elevated);
+  color: var(--text-primary);
   cursor: pointer;
-  font-size: 13px;
-  transition: background 0.15s;
+  font-size: var(--text-xs);
+  transition: background var(--duration-fast);
 }
 
 .chat-panel__quick-response-btn:hover:not(:disabled) {
-  background: var(--bg-tertiary, #3a3a3a);
+  background: var(--btn-hover-tertiary);
 }
 
 .chat-panel__quick-response-btn:disabled {
@@ -749,8 +762,8 @@
 .chat-panel__input-container {
   flex-shrink: 0;
   background: var(--panel-bg-elevated);
-  border: 1px solid var(--panel-border-color-default);
-  border-radius: var(--radius-16px);
+  border: var(--panel-border-default);
+  border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-input);
   margin: var(--space-2) var(--space-3) var(--space-3) var(--space-3);
   overflow: hidden;
@@ -767,8 +780,8 @@
 /* Textarea — PRESERVE class name for E2E tests */
 .chat-panel__input-field {
   flex: 1;
-  min-height: 24px;
-  max-height: 120px;
+  min-height: var(--leading-normal);
+  max-height: var(--space-20);
   padding: 0;
   background: transparent;
   border: none;
@@ -795,20 +808,20 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-3);
-  border-top: 1px solid var(--panel-border-color-subtle);
+  border-top: var(--panel-border-subtle);
 }
 
 /* Add context button (left side) */
 .chat-panel__add-context-btn {
-  width: 32px;
-  height: 32px;
+  width: var(--space-8);
+  height: var(--space-8);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: var(--text-secondary);
   cursor: pointer;
   transition: var(--transition-all);
@@ -840,11 +853,11 @@
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  height: 32px;
+  height: var(--space-8);
   padding: 0 var(--space-2);
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: var(--text-secondary);
   font-size: var(--text-sm);
   font-family: var(--font-sans);
@@ -860,7 +873,7 @@
 .chat-panel__model-selector-trigger:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--focus-ring-glow);
+  box-shadow: var(--glow-spread-md) var(--focus-ring-color);
 }
 
 .chat-panel__model-selector-label {
@@ -868,10 +881,10 @@
 }
 
 .chat-panel__model-selector-caret {
-  width: 16px;
-  height: 16px;
+  width: var(--space-4);
+  height: var(--space-4);
   opacity: 0.6;
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) ease;
 }
 
 .chat-panel__model-selector-trigger[aria-expanded="true"] .chat-panel__model-selector-caret {
@@ -881,15 +894,15 @@
 /* Model dropdown menu */
 .chat-panel__model-selector-dropdown {
   position: absolute;
-  bottom: calc(100% + 4px);
+  bottom: calc(100% + var(--space-1));
   right: 0;
-  min-width: 160px;
+  min-width: var(--space-20);
   background: var(--panel-bg-elevated);
-  border: 1px solid var(--panel-border-color-default);
-  border-radius: var(--radius-8px);
+  border: var(--panel-border-default);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   overflow: hidden;
-  z-index: var(--z-dropdown, 1000);
+  z-index: var(--z-dropdown);
 }
 
 /* Model option button */
@@ -898,7 +911,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 36px;
+  height: var(--space-9);
   padding: 0 var(--space-3);
   background: transparent;
   border: none;
@@ -930,24 +943,24 @@
 }
 
 .chat-panel__model-selector-checkmark {
-  width: 16px;
-  height: 16px;
+  width: var(--space-4);
+  height: var(--space-4);
   flex-shrink: 0;
 }
 
 /* Send button — PRESERVE class name for E2E tests, restyled per Figma */
 .chat-panel__send-btn {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  width: var(--space-8);
+  height: var(--space-8);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   background: var(--afw-color-accent-main);
-  border: 1px solid var(--btn-border-color-default);
-  border-radius: var(--radius-8px);
-  box-shadow: 0 1px 3px var(--glass-bg-dark);
+  border: var(--btn-border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
   color: var(--text-primary);
   cursor: pointer;
   transition: var(--transition-all);
@@ -955,13 +968,13 @@
 
 .chat-panel__send-btn:hover:not(:disabled) {
   background: var(--brand-accent);
-  box-shadow: 0 2px 6px var(--glass-bg-dark);
+  box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
 
 .chat-panel__send-btn:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 1px 3px var(--glass-bg-dark);
+  box-shadow: var(--shadow-sm);
 }
 
 .chat-panel__send-btn:disabled {
@@ -971,8 +984,8 @@
 }
 
 .chat-panel__send-icon {
-  width: 16px;
-  height: 16px;
+  width: var(--space-4);
+  height: var(--space-4);
   color: currentColor;
 }
 
@@ -981,8 +994,8 @@
 }
 
 @keyframes chat-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from { transform: rotate(0); }
+  to { transform: rotate(1turn); }
 }
 
 /* ============================================================================
@@ -990,7 +1003,7 @@
  * ============================================================================ */
 
 .chat-panel__messages::-webkit-scrollbar {
-  width: 6px;
+  width: var(--scrollbar-width);
 }
 
 .chat-panel__messages::-webkit-scrollbar-track {

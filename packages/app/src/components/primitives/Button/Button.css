@@ -16,15 +16,15 @@
 
 /* Variant Styles */
 .afw-button--primary {
-  background: rgba(88, 166, 255, 0.15);
+  background: color-mix(in srgb, var(--system-blue) 15%, transparent);
   color: var(--system-blue);
-  border: 1px solid rgba(88, 166, 255, 0.25);
+  border: 1px solid color-mix(in srgb, var(--system-blue) 25%, transparent);
 }
 
 .afw-button--primary:hover:not(:disabled):not(.afw-button--loading) {
-  background: rgba(88, 166, 255, 0.25);
+  background: color-mix(in srgb, var(--system-blue) 25%, transparent);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(88, 166, 255, 0.2);
+  box-shadow: var(--btn-glow-hover);
 }
 
 .afw-button--secondary {
@@ -36,7 +36,7 @@
 .afw-button--secondary:hover:not(:disabled):not(.afw-button--loading) {
   background: var(--glass-bg-medium);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .afw-button--tertiary {
@@ -48,43 +48,43 @@
 .afw-button--tertiary:hover:not(:disabled):not(.afw-button--loading) {
   background: var(--glass-bg-light);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .afw-button--danger {
-  background: rgba(255, 69, 58, 0.15);
+  background: var(--status-error-bg);
   color: var(--system-red);
-  border: 1px solid rgba(255, 69, 58, 0.25);
+  border: 1px solid var(--status-error-border);
 }
 
 .afw-button--danger:hover:not(:disabled):not(.afw-button--loading) {
-  background: rgba(255, 69, 58, 0.25);
+  background: color-mix(in srgb, var(--status-error-bg) 150%, transparent);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 69, 58, 0.2);
+  box-shadow: var(--btn-glow-hover);
 }
 
 .afw-button--success {
-  background: rgba(63, 185, 80, 0.15);
+  background: var(--status-success-bg);
   color: var(--system-green);
-  border: 1px solid rgba(63, 185, 80, 0.25);
+  border: 1px solid var(--status-success-border);
 }
 
 .afw-button--success:hover:not(:disabled):not(.afw-button--loading) {
-  background: rgba(63, 185, 80, 0.25);
+  background: color-mix(in srgb, var(--status-success-bg) 150%, transparent);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(63, 185, 80, 0.2);
+  box-shadow: var(--btn-glow-hover);
 }
 
 .afw-button--warning {
-  background: rgba(240, 136, 62, 0.15);
+  background: var(--status-warning-bg);
   color: var(--system-orange);
-  border: 1px solid rgba(240, 136, 62, 0.25);
+  border: 1px solid var(--status-warning-border);
 }
 
 .afw-button--warning:hover:not(:disabled):not(.afw-button--loading) {
-  background: rgba(240, 136, 62, 0.25);
+  background: color-mix(in srgb, var(--status-warning-bg) 150%, transparent);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(240, 136, 62, 0.2);
+  box-shadow: var(--btn-glow-hover);
 }
 
 .afw-button--ghost {
@@ -276,7 +276,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.1),
+    color-mix(in srgb, var(--palette-white) 10%, transparent),
     transparent
   );
   background-size: 200% 100%;
@@ -314,8 +314,8 @@
 
 /* Focus Styles */
 .afw-button:focus-visible {
-  outline: 2px solid var(--system-blue);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
 
 /* Reduced Motion */

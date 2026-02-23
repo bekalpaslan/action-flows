@@ -61,9 +61,9 @@
 
 .registry-tabs button.active {
   background: var(--color-accent);
-  color: white;
+  color: var(--btn-text-primary);
   border-color: var(--color-accent);
-  box-shadow: 0 0 8px rgba(10, 132, 255, 0.25);
+  box-shadow: var(--btn-glow-hover);
 }
 
 /* Toolbar Section */
@@ -76,7 +76,7 @@
 .add-custom-prompt-button {
   padding: var(--space-2) var(--space-4);
   background: var(--color-accent);
-  color: white;
+  color: var(--btn-text-primary);
   border: none;
   border-radius: var(--btn-radius-md);
   font-size: var(--text-sm);
@@ -88,7 +88,7 @@
 
 .add-custom-prompt-button:hover {
   background: var(--semantic-info);
-  box-shadow: var(--btn-glow-hover), 0 0 12px rgba(10, 132, 255, 0.25);
+  box-shadow: var(--btn-glow-hover);
   transform: translateY(-1px);
 }
 
@@ -118,7 +118,7 @@
 .search-input:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.08), var(--panel-glow-hover);
+  box-shadow: 0 0 0 3px var(--status-info-bg), var(--panel-glow-hover);
 }
 
 .registry-filters select {
@@ -136,7 +136,7 @@
 .registry-filters select:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.08), var(--panel-glow-hover);
+  box-shadow: 0 0 0 3px var(--status-info-bg), var(--panel-glow-hover);
 }
 
 /* Content Area */
@@ -252,7 +252,7 @@
 
 .entry-card:hover {
   border-color: var(--color-accent);
-  box-shadow: var(--panel-glow-hover), 0 4px 12px rgba(10, 132, 255, 0.12);
+  box-shadow: var(--panel-glow-hover);
   transform: translateY(-2px);
 }
 
@@ -304,12 +304,12 @@
 }
 
 .entry-type.type-modifier {
-  background: rgba(240, 136, 62, 0.15);
-  color: rgba(217, 119, 6, 1);
+  background: var(--status-warning-bg);
+  color: var(--palette-orange-400);
 }
 
 .entry-type.type-pack {
-  background: #dbeafe;
+  background: var(--semantic-blue-light-bg);
   color: var(--system-blue);
 }
 
@@ -321,13 +321,13 @@
 /* Delete Button */
 .entry-delete-button {
   position: absolute;
-  top: -4px;
-  right: -4px;
+  top: calc(var(--space-1) * -1);
+  right: calc(var(--space-1) * -1);
   width: 20px;
   height: 20px;
   border: none;
   background: var(--error-color);
-  color: white;
+  color: var(--btn-text-primary);
   border-radius: 50%;
   font-size: var(--text-base);
   line-height: var(--leading-tight);
@@ -349,7 +349,7 @@
 .entry-delete-button:hover {
   background: var(--error-color-dark, var(--system-red));
   transform: scale(1.1);
-  box-shadow: var(--shadow-md), 0 0 8px rgba(255, 69, 58, 0.25);
+  box-shadow: var(--shadow-md);
 }
 
 .entry-delete-button:active {
@@ -374,7 +374,7 @@
 }
 
 .custom-prompt-details .prompt-preview {
-  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--text-secondary);
   white-space: pre-wrap;
@@ -385,14 +385,14 @@
 .custom-prompt-details .always-show-badge {
   display: inline-block;
   padding: var(--space-1) var(--space-2);
-  background: rgba(10, 132, 255, 0.08);
+  background: var(--status-info-bg);
   color: var(--color-accent);
-  border: 1px solid rgba(10, 132, 255, 0.15);
+  border: 1px solid var(--status-info-border);
   border-radius: var(--panel-radius-sm);
   font-size: var(--text-xs);
   font-weight: var(--font-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--tracking-wide);
   align-self: flex-start;
 }
 
@@ -532,7 +532,7 @@
   height: 16px;
   left: var(--space-px);
   top: var(--space-px);
-  background: white;
+  background: var(--palette-white);
   border-radius: 50%;
   transition: var(--transition-all);
   box-shadow: var(--shadow-sm);
@@ -541,7 +541,7 @@
 .toggle-switch input:checked + .toggle-slider {
   background: var(--success-color);
   border-color: var(--success-color);
-  box-shadow: 0 0 8px rgba(63, 185, 80, 0.25);
+  box-shadow: 0 0 8px var(--glow-success-60);
 }
 
 .toggle-switch input:checked + .toggle-slider::before {
@@ -549,7 +549,7 @@
 }
 
 .toggle-switch input:focus + .toggle-slider {
-  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.15), var(--panel-glow-hover);
+  box-shadow: 0 0 0 3px var(--status-info-bg), var(--panel-glow-hover);
 }
 
 .toggle-label {
@@ -588,7 +588,7 @@
 
 .pack-card:hover {
   border-color: var(--color-accent);
-  box-shadow: var(--panel-glow-hover), 0 4px 12px rgba(10, 132, 255, 0.12);
+  box-shadow: var(--panel-glow-hover);
   transform: translateY(-2px);
 }
 
@@ -669,9 +669,9 @@
 .tag {
   display: inline-block;
   padding: var(--space-1) var(--space-2);
-  background: rgba(10, 132, 255, 0.08);
+  background: var(--status-info-bg);
   color: var(--color-accent);
-  border: 1px solid rgba(10, 132, 255, 0.15);
+  border: 1px solid var(--status-info-border);
   border-radius: var(--panel-radius-sm);
   font-size: var(--text-xs);
   font-weight: var(--font-medium);
@@ -709,7 +709,7 @@
 
 .install-btn {
   background: var(--success-color);
-  color: white;
+  color: var(--btn-text-primary);
   border-color: var(--success-color);
 }
 
@@ -717,32 +717,32 @@
   background: var(--success-color-dark);
   border-color: var(--success-color-dark);
   transform: translateY(-1px);
-  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(63, 185, 80, 0.25);
+  box-shadow: var(--btn-glow-hover);
 }
 
 .uninstall-btn {
   background: transparent;
-  color: var(--error-color);
-  border-color: var(--error-color);
+  color: var(--semantic-error);
+  border-color: var(--semantic-error);
 }
 
 .uninstall-btn:hover {
-  background: var(--error-color);
-  color: white;
+  background: var(--semantic-error);
+  color: var(--btn-text-primary);
   transform: translateY(-1px);
-  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(255, 69, 58, 0.25);
+  box-shadow: var(--btn-glow-hover);
 }
 
 .confirm-uninstall-btn {
-  background: var(--error-color);
-  color: white;
-  border-color: var(--error-color);
+  background: var(--semantic-error);
+  color: var(--btn-text-primary);
+  border-color: var(--semantic-error);
 }
 
 .confirm-uninstall-btn:hover {
   background: var(--error-color-dark);
   border-color: var(--error-color-dark);
-  box-shadow: var(--btn-glow-hover), 0 0 8px rgba(255, 69, 58, 0.25);
+  box-shadow: var(--btn-glow-hover);
 }
 
 .cancel-uninstall-btn {

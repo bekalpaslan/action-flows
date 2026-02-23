@@ -8,12 +8,12 @@
   flex-direction: column;
   width: 350px;
   height: 100%;
-  background-color: white;
+  background-color: var(--palette-white);
   border-left: 1px solid var(--panel-border-color-subtle);
-  box-shadow: -2px 0 8px var(--glass-bg-dark);
+  box-shadow: -2px 0 8px var(--shadow-md);
   animation: slideIn 0.3s ease-out;
   overflow: hidden;
-  z-index: 100;
+  z-index: var(--z-fixed);
 }
 
 .step-inspector-empty {
@@ -64,8 +64,8 @@
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   border: 1px solid var(--light-border-default);
-  border-radius: 4px;
-  background: white;
+  border-radius: var(--radius-xs-sm);
+  background: var(--palette-white);
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
   display: flex;
@@ -123,10 +123,9 @@
   background-color: var(--light-status-info-bg);
   color: var(--light-status-info-text);
   padding: var(--space-1) var(--space-2);
-  border-radius: 4px;
+  border-radius: var(--radius-xs-sm);
   font-size: var(--text-xs);
   font-weight: var(--font-semibold);
-  white-space: nowrap;
 }
 
 .inspector-title h3 {
@@ -149,12 +148,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: var(--radius-xs-sm);
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .inspector-close-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: color-mix(in srgb, var(--palette-white) calc(100% - 5%), var(--palette-black));
   color: var(--text-secondary);
 }
 
@@ -168,7 +167,7 @@
 .inspector-model-badge {
   display: inline-block;
   padding: var(--space-1) var(--space-2);
-  border-radius: 4px;
+  border-radius: var(--radius-xs-sm);
   font-size: var(--text-xs);
   font-weight: var(--font-semibold);
   text-transform: capitalize;
@@ -210,13 +209,13 @@
 }
 
 .model-sonnet {
-  background-color: rgba(163, 113, 247, 0.10);
+  background-color: color-mix(in srgb, var(--system-purple) 10%, transparent);
   color: var(--system-purple);
 }
 
 .model-opus {
-  background-color: rgba(240, 136, 62, 0.10);
-  color: #e65100;
+  background-color: color-mix(in srgb, var(--palette-orange-500) 10%, transparent);
+  color: var(--palette-orange-500);
 }
 
 /* Content */
@@ -288,11 +287,11 @@
 }
 
 .timestamp-value {
-  font-family: 'Monaco', 'Menlo', monospace;
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   background-color: var(--panel-bg-secondary);
   padding: var(--space-1) var(--space-1-5);
-  border-radius: 3px;
+  border-radius: var(--radius-xs-sm);
 }
 
 .duration-value {
@@ -303,7 +302,7 @@
 .description-text {
   margin: 0;
   font-size: var(--text-xs);
-  color: #555;
+  color: var(--text-tertiary);
   line-height: var(--leading-normal);
   word-break: break-word;
 }
@@ -319,7 +318,7 @@
   background-color: var(--light-status-info-bg);
   color: var(--light-status-info-text);
   padding: var(--space-1) var(--space-2);
-  border-radius: 4px;
+  border-radius: var(--radius-xs-sm);
   font-size: var(--text-xs);
   font-weight: var(--font-semibold);
 }
@@ -331,7 +330,7 @@
   gap: var(--space-3);
   background-color: var(--light-bg-primary);
   padding: var(--space-3);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--panel-border-color-subtle);
 }
 
@@ -346,10 +345,10 @@
   font-weight: var(--font-semibold);
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--tracking-wide);
   padding: var(--space-1) var(--space-2);
-  background-color: white;
-  border-radius: 3px;
+  background-color: var(--palette-white);
+  border-radius: var(--radius-xs-sm);
   border-left: 3px solid var(--system-blue);
 }
 
@@ -357,8 +356,8 @@
   font-size: var(--text-xs);
   color: var(--text-secondary);
   padding: var(--space-2);
-  background-color: white;
-  border-radius: 3px;
+  background-color: var(--palette-white);
+  border-radius: var(--radius-xs-sm);
   border: 1px solid var(--panel-border-color-subtle);
   overflow-x: auto;
 }
@@ -369,7 +368,7 @@
 
 .kv-value pre {
   margin: 0;
-  font-family: 'Monaco', 'Menlo', monospace;
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--text-secondary);
   line-height: var(--leading-normal);
@@ -381,7 +380,7 @@
 /* Output Block */
 .output-block {
   padding: var(--space-3);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--panel-border-color-subtle);
 }
 
@@ -396,20 +395,20 @@
 
 .output-success {
   background-color: var(--light-status-success-bg);
-  border-color: #c8e6c9;
+  border-color: var(--status-success-border);
 }
 
 .output-error {
   background-color: var(--light-status-error-bg);
-  border-color: var(--light-status-error-bg);
+  border-color: var(--status-error-border);
 }
 
 .output-content {
   font-size: var(--text-xs);
   color: var(--text-secondary);
-  background-color: white;
+  background-color: var(--palette-white);
   padding: var(--space-2);
-  border-radius: 3px;
+  border-radius: var(--radius-xs-sm);
   overflow-x: auto;
   max-height: 200px;
   overflow-y: auto;
@@ -417,7 +416,7 @@
 
 .output-content pre {
   margin: 0;
-  font-family: 'Monaco', 'Menlo', monospace;
+  font-family: var(--font-mono);
   white-space: pre-wrap;
   word-break: break-word;
   line-height: var(--leading-normal);
@@ -434,7 +433,7 @@
 
 .error-content code {
   color: var(--light-status-error-text);
-  font-family: 'Monaco', 'Menlo', monospace;
+  font-family: var(--font-mono);
   display: block;
   white-space: pre-wrap;
   word-break: break-word;
@@ -443,16 +442,16 @@
 /* Learning Block */
 .learning-block {
   padding: var(--space-3);
-  background-color: rgba(163, 113, 247, 0.10);
-  border: 1px solid #e1bee7;
-  border-radius: 6px;
-  border-left: 4px solid #6a1b9a;
+  background-color: color-mix(in srgb, var(--system-purple) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--system-purple) 30%, transparent);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--system-purple);
 }
 
 .learning-block p {
   margin: 0;
   font-size: var(--text-xs);
-  color: #4a148c;
+  color: var(--system-purple);
   line-height: var(--leading-normal);
   word-break: break-word;
 }

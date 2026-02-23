@@ -88,7 +88,7 @@
   border: none;
   color: var(--text-primary);
   font-size: var(--text-sm);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-sans);
   outline: none;
 }
 
@@ -134,13 +134,13 @@
    ============================================================================ */
 
 .command-center__kbd {
-  background: var(--surface2, #151d2b);
-  border: 1px solid var(--border, rgba(88,166,255,0.08));
+  background: var(--surface2);
+  border: 1px solid var(--panel-border-color-default);
   padding: 1px 6px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-family: 'SF Mono', monospace;
-  color: var(--text-dim, #6e7a8a);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
 }
 
 /* ============================================================================
@@ -192,7 +192,7 @@
 
 .command-center__session-label {
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-sans);
 }
 
 .command-center__session-caret {
@@ -243,7 +243,7 @@
 
 .command-center__session-dropdown::-webkit-scrollbar-thumb {
   background: var(--fill-tertiary);
-  border-radius: 4px;
+  border-radius: var(--radius-xs-sm);
 }
 
 .command-center__session-dropdown::-webkit-scrollbar-thumb:hover {
@@ -284,13 +284,13 @@
 }
 
 .command-center__session-option.selected {
-  background: rgba(10, 132, 255, 0.15);
+  background: var(--status-info-bg);
   color: var(--system-blue);
 }
 
 .command-center__session-option-label {
   flex: 1;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-sans);
 }
 
 .command-center__session-status {
@@ -298,7 +298,7 @@
   font-size: var(--text-xs);
   font-weight: var(--font-semibold);
   text-transform: uppercase;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   background: var(--fill-tertiary);
   color: var(--text-secondary);
 }
@@ -367,23 +367,23 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #3fb950;
-  box-shadow: 0 0 6px rgba(63, 185, 80, 0.5);
+  background: var(--cosmic-gate-passed);
+  box-shadow: 0 0 6px var(--glow-success-60);
   flex-shrink: 0;
 }
 
 .command-center__health-indicator--medium .command-center__health-dot {
-  background: var(--system-yellow, #fdb541);
-  box-shadow: 0 0 6px rgba(253, 181, 65, 0.5);
+  background: var(--cosmic-gate-pending);
+  box-shadow: 0 0 6px var(--glow-warning-60);
 }
 
 .command-center__health-indicator--low .command-center__health-dot {
-  background: var(--system-red, #d68502);
-  box-shadow: 0 0 6px rgba(214, 133, 2, 0.5);
+  background: var(--cosmic-gate-failed);
+  box-shadow: 0 0 6px var(--glow-color-error);
 }
 
 .command-center__health-value {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-sans);
 }
 
 /* Health color states */
@@ -450,10 +450,10 @@
   background: var(--panel-bg-base);
   border: 1px solid var(--cosmic-bridge-glow);
   border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
   color: var(--text-secondary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-elevation-2);
   animation: pulse-glow 2s var(--ease-in-out) infinite;
 }
 
@@ -479,7 +479,7 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-elevation-2);
   }
   50% {
     box-shadow: 0 2px 12px var(--cosmic-bridge-glow), 0 0 20px var(--cosmic-bridge-glow);
