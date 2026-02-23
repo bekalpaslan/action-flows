@@ -11,12 +11,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: var(--space-8);
+  height: var(--space-8);
   padding: 0;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: var(--text-lg);
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
@@ -24,13 +24,13 @@
 }
 
 .star-bookmark:hover:not(:disabled) {
-  background-color: var(--light-bg-inset);
+  background-color: var(--app-bg-secondary);
   color: var(--system-yellow);
   border-color: var(--system-yellow);
 }
 
 .star-bookmark:active:not(:disabled) {
-  background-color: var(--light-text-tertiary);
+  background-color: var(--app-bg-tertiary);
   transform: scale(0.95);
 }
 
@@ -40,7 +40,7 @@
 }
 
 .star-bookmark.starred:hover:not(:disabled) {
-  background-color: rgba(255, 214, 10, 0.15);
+  background-color: var(--status-warning-bg);
 }
 
 .star-bookmark:disabled {
@@ -72,12 +72,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-dark-50);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.2s ease;
+  z-index: var(--z-modal);
+  animation: fadeIn var(--duration-base) var(--ease-in-out);
 }
 
 @keyframes fadeIn {
@@ -94,19 +94,19 @@
 /* ============================================================================ */
 
 .star-bookmark-dialog {
-  background: white;
-  border-radius: 8px;
+  background: var(--palette-white);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-elevation-8);
   max-width: 500px;
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
-  animation: slideUp 0.3s ease;
+  animation: slideUp var(--duration-slow) var(--ease-in-out);
 }
 
 @keyframes slideUp {
   from {
-    transform: translateY(20px);
+    transform: translateY(var(--space-5));
     opacity: 0;
   }
   to {
@@ -120,35 +120,35 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-6);
-  border-bottom: 1px solid var(--light-border-default);
+  border-bottom: 1px solid var(--separator-base);
 }
 
 .star-bookmark-dialog-header h3 {
   margin: 0;
   font-size: var(--text-lg);
   font-weight: var(--font-semibold);
-  color: var(--light-text-primary);
+  color: var(--text-primary);
 }
 
 .close-button {
   background: transparent;
   border: none;
   font-size: var(--text-2xl);
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 0;
-  width: 32px;
-  height: 32px;
+  width: var(--space-8);
+  height: var(--space-8);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .close-button:hover:not(:disabled) {
-  background-color: var(--light-bg-inset);
-  color: var(--light-text-primary);
+  background-color: var(--app-bg-secondary);
+  color: var(--text-primary);
 }
 
 .close-button:disabled {
@@ -167,9 +167,9 @@
 .message-preview {
   margin-bottom: var(--space-5);
   padding: var(--space-3);
-  background-color: #f9f9f9;
-  border-left: 3px solid #ffd700;
-  border-radius: 4px;
+  background-color: var(--app-bg-secondary);
+  border-left: var(--space-1) solid var(--system-yellow);
+  border-radius: var(--radius-sm);
 }
 
 .preview-label {
@@ -178,13 +178,13 @@
   font-weight: var(--font-semibold);
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: var(--tracking-tight);
 }
 
 .preview-content {
   margin: 0;
   font-size: var(--text-sm);
-  color: var(--light-text-primary);
+  color: var(--text-primary);
   line-height: var(--leading-normal);
   word-break: break-word;
 }
@@ -204,7 +204,7 @@ form {
 .form-label {
   font-weight: var(--font-semibold);
   font-size: var(--text-sm);
-  color: var(--light-text-primary);
+  color: var(--text-primary);
 }
 
 /* ============================================================================ */
@@ -226,7 +226,7 @@ form {
 .category-radio input[type='radio'] {
   margin-top: var(--space-1);
   cursor: pointer;
-  accent-color: var(--system-yellow, #ffd700);
+  accent-color: var(--system-yellow);
 }
 
 .category-radio label {
@@ -236,23 +236,23 @@ form {
   cursor: pointer;
   flex: 1;
   padding: var(--space-2);
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-fast) var(--ease-in-out);
 }
 
 .category-radio input[type='radio']:checked + label {
-  background-color: rgba(255, 214, 10, 0.15);
+  background-color: var(--status-warning-bg);
 }
 
 .category-label {
   font-weight: var(--font-medium);
   font-size: var(--text-sm);
-  color: var(--light-text-primary);
+  color: var(--text-primary);
 }
 
 .category-description {
   font-size: var(--text-xs);
-  color: #888;
+  color: var(--text-secondary);
 }
 
 /* ============================================================================ */
@@ -261,24 +261,24 @@ form {
 
 .explanation-input {
   padding: var(--space-2-5) var(--space-3);
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: inherit;
+  border: 1px solid var(--separator-base);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
   font-size: var(--text-sm);
-  color: var(--light-text-primary);
+  color: var(--text-primary);
   resize: vertical;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--duration-fast) var(--ease-in-out);
 }
 
 .explanation-input:focus {
   outline: none;
   border-color: var(--system-yellow);
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 0 var(--space-1) var(--status-warning-bg);
 }
 
 .explanation-input:disabled {
-  background-color: var(--panel-bg-secondary);
-  color: var(--light-text-secondary);
+  background-color: var(--app-bg-secondary);
+  color: var(--text-secondary);
 }
 
 /* ============================================================================ */
@@ -293,30 +293,30 @@ form {
 .tags-input {
   flex: 1;
   padding: var(--space-2-5) var(--space-3);
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: inherit;
+  border: 1px solid var(--separator-base);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
   font-size: var(--text-sm);
-  color: var(--light-text-primary);
-  transition: border-color 0.2s ease;
+  color: var(--text-primary);
+  transition: border-color var(--duration-fast) var(--ease-in-out);
 }
 
 .tags-input:focus {
   outline: none;
   border-color: var(--system-yellow);
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 0 var(--space-1) var(--status-warning-bg);
 }
 
 .tags-input:disabled {
-  background-color: var(--panel-bg-secondary);
-  color: var(--light-text-secondary);
+  background-color: var(--app-bg-secondary);
+  color: var(--text-secondary);
 }
 
 .add-tag-button {
-  padding: var(--space-2-5) 14px;
-  background-color: var(--light-bg-inset);
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: var(--space-2-5) var(--space-3-5);
+  background-color: var(--app-bg-secondary);
+  border: 1px solid var(--separator-base);
+  border-radius: var(--radius-sm);
   font-size: var(--text-base);
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
@@ -324,8 +324,8 @@ form {
 }
 
 .add-tag-button:hover:not(:disabled) {
-  background-color: #e0e0e0;
-  border-color: var(--light-text-secondary);
+  background-color: var(--app-bg-tertiary);
+  border-color: var(--text-secondary);
 }
 
 .add-tag-button:disabled {
@@ -345,32 +345,32 @@ form {
   align-items: center;
   gap: var(--space-1-5);
   padding: var(--space-1-5) var(--space-3);
-  background-color: var(--light-bg-inset);
-  border: 1px solid #ddd;
-  border-radius: 16px;
+  background-color: var(--app-bg-secondary);
+  border: 1px solid var(--separator-base);
+  border-radius: var(--radius-full);
   font-size: var(--text-sm);
-  color: var(--light-text-primary);
+  color: var(--text-primary);
 }
 
 .remove-tag {
   background: transparent;
   border: none;
   font-size: var(--text-sm);
-  color: var(--light-text-secondary);
+  color: var(--text-secondary);
   cursor: pointer;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
+  width: var(--space-4);
+  height: var(--space-4);
+  border-radius: var(--radius-full);
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
 }
 
 .remove-tag:hover:not(:disabled) {
-  background-color: #e0e0e0;
-  color: var(--light-text-primary);
+  background-color: var(--app-bg-tertiary);
+  color: var(--text-primary);
 }
 
 .remove-tag:disabled {
@@ -387,13 +387,13 @@ form {
   gap: var(--space-3);
   justify-content: flex-end;
   padding-top: var(--space-3);
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--separator-base);
 }
 
 .btn {
-  padding: var(--space-2-5) 18px;
+  padding: var(--space-2-5) var(--space-4-5);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   cursor: pointer;
@@ -403,12 +403,12 @@ form {
 
 .btn-primary {
   background-color: var(--system-yellow);
-  color: var(--light-text-primary);
+  color: var(--text-primary);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #ffed4e;
-  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+  background-color: var(--system-yellow);
+  box-shadow: var(--shadow-elevation-4);
 }
 
 .btn-primary:disabled {
@@ -417,13 +417,13 @@ form {
 }
 
 .btn-secondary {
-  background-color: var(--light-bg-inset);
-  color: var(--light-text-primary);
-  border: 1px solid #ddd;
+  background-color: var(--app-bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--separator-base);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: var(--light-text-tertiary);
+  background-color: var(--app-bg-tertiary);
 }
 
 .btn-secondary:disabled {
