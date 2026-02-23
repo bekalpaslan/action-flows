@@ -101,12 +101,12 @@ describe('CommandCenter', () => {
   });
 
   it('renders health status indicator when showHealthStatus is true', () => {
-    render(<CommandCenter showHealthStatus={true} />);
+    render(<CommandCenter />);
     expect(screen.getByTestId('health-display')).toBeInTheDocument();
   });
 
   it('hides health status indicator when showHealthStatus is false', () => {
-    render(<CommandCenter showHealthStatus={false} />);
+    render(<CommandCenter />);
     expect(screen.queryByTestId('health-display')).not.toBeInTheDocument();
   });
 
@@ -231,13 +231,13 @@ describe('CommandCenter', () => {
   });
 
   it('updates health status display dynamically', async () => {
-    const { rerender } = render(<CommandCenter showHealthStatus={true} />);
+    const { rerender } = render(<CommandCenter />);
 
     const healthStatus = screen.getByTestId('health-display');
     expect(healthStatus).toBeInTheDocument();
 
     // Re-render with different context state (mocked)
-    rerender(<CommandCenter showHealthStatus={true} />);
+    rerender(<CommandCenter />);
 
     // Health indicator should still be present
     expect(screen.getByTestId('health-display')).toBeInTheDocument();

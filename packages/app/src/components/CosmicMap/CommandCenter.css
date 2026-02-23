@@ -27,11 +27,11 @@
   justify-content: center;
 }
 
-/* Control row wrapper (input, session, health) */
+/* Control row wrapper — centered input */
 .command-center__controls {
   display: flex;
   align-items: center;
-  gap: var(--gap);
+  justify-content: center;
   width: 100%;
 }
 
@@ -40,8 +40,7 @@
    ============================================================================ */
 
 .command-center__input-section {
-  width: 300px;
-  flex: 0 0 auto;
+  width: min(600px, 100%);
   display: flex;
   align-items: center;
   gap: var(--space-2);

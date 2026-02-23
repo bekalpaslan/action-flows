@@ -160,7 +160,7 @@ vi.mock('../../components/CosmicMap/LiveRegion', () => ({
 }));
 
 vi.mock('../../components/CosmicMap/CommandCenter', () => ({
-  CommandCenter: ({ onCommand, showHealthStatus }: any) => (
+  CommandCenter: ({ onCommand }: any) => (
     <div data-testid="command-center">
       <input type="text" placeholder="Enter command" />
     </div>

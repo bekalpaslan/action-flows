@@ -711,7 +711,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
 
       {/* Layer 2: CommandCenter — app shell level, always visible */}
       {commandCenterEnabled && (
-        <CommandCenter onCommand={(cmd) => console.log('Command:', cmd)} showHealthStatus={true} />
+        <CommandCenter onCommand={(cmd) => console.log('Command:', cmd)} />
       )}
 
 
