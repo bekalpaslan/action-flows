@@ -64,7 +64,7 @@
 .dossier-list__empty-message {
   font-size: var(--text-base);
   font-weight: var(--font-medium);
-  color: rgba(160, 160, 160, 1);
+  color: var(--text-tertiary);
   margin: 0 0 var(--space-2) 0;
 }
 
@@ -84,9 +84,9 @@
   flex-direction: column;
   gap: var(--space-2);
   padding: var(--space-3);
-  background-color: rgba(37, 37, 38, 1);
-  border: 1px solid #3c3c3c;
-  border-radius: 6px;
+  background-color: var(--app-bg-secondary);
+  border: 1px solid var(--panel-border-color-subtle);
+  border-radius: var(--radius-sm);
   margin-bottom: var(--space-2);
   cursor: pointer;
   transition: opacity var(--duration-fast) var(--ease-in-out), color var(--duration-fast) var(--ease-in-out), background-color var(--duration-fast) var(--ease-in-out), border-color var(--duration-fast) var(--ease-in-out), transform var(--duration-fast) var(--ease-in-out);
@@ -95,19 +95,19 @@
 }
 
 .dossier-card:hover {
-  background-color: #2a2a2a;
-  border-color: #4a4a4a;
+  background-color: var(--app-bg-tertiary);
+  border-color: var(--panel-border-color-default);
 }
 
 .dossier-card.selected {
-  background-color: #2d2d44;
-  border-color: #9c27b0;
-  box-shadow: 0 0 0 1px rgba(156, 39, 176, 0.2);
+  background-color: var(--app-bg-secondary);
+  border-color: var(--system-purple);
+  box-shadow: var(--panel-glow-accent);
 }
 
 .dossier-card:focus {
   outline: none;
-  border-color: #9c27b0;
+  border-color: var(--system-purple);
 }
 
 /* Header: Name + Status Dot */
@@ -121,7 +121,7 @@
 .dossier-card__name {
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
-  color: #e0e0e0;
+  color: var(--text-primary);
   margin: 0;
   line-height: var(--leading-normal);
   flex: 1;
@@ -150,11 +150,11 @@
 }
 
 .dossier-card__target-count {
-  color: rgba(160, 160, 160, 1);
+  color: var(--text-tertiary);
 }
 
 .dossier-card__separator {
-  color: #4a4a4a;
+  color: var(--panel-border-color-default);
 }
 
 .dossier-card__updated {
@@ -164,21 +164,21 @@
 /* Analysis Count Badge */
 .dossier-card__badge {
   font-size: var(--text-xs);
-  color: rgba(160, 160, 160, 1);
-  background-color: var(--text-tertiary);
-  padding: 0.125rem 0.375rem;
-  border-radius: 4px;
+  color: var(--text-tertiary);
+  background-color: var(--app-bg-tertiary);
+  padding: var(--space-0-5) var(--space-1-5);
+  border-radius: var(--radius-xs);
   align-self: flex-start;
 }
 
 /* Error Indicator */
 .dossier-card__error-indicator {
   font-size: var(--text-sm);
-  color: #f44336;
-  padding: 0.375rem var(--space-2);
-  background-color: rgba(244, 67, 54, 0.1);
-  border: 1px solid rgba(244, 67, 54, 0.2);
-  border-radius: 4px;
+  color: var(--semantic-error);
+  padding: var(--space-1-5) var(--space-2);
+  background-color: var(--semantic-error-bg-light);
+  border: 1px solid var(--semantic-error-border-light);
+  border-radius: var(--radius-xs);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -197,12 +197,12 @@
 }
 
 .dossier-list__items::-webkit-scrollbar-thumb {
-  background: #3c3c3c;
-  border-radius: 4px;
+  background: var(--panel-border-color-subtle);
+  border-radius: var(--radius-xs);
 }
 
 .dossier-list__items::-webkit-scrollbar-thumb:hover {
-  background: #4a4a4a;
+  background: var(--panel-border-color-default);
 }
 
 /* ============================================================================
