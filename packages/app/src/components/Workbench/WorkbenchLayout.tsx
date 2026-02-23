@@ -277,7 +277,8 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
   const { activeWorkbench, setActiveWorkbench } = useWorkbenchContext();
   const { targetWorkbenchId, universe } = useUniverseContext();
   const { sessions: contextSessions, activeSessionId: contextActiveSessionId, getSession } = useSessionContext();
-  const { sessionId: chatSessionId, closeChat, saveAndSwitch } = useChatWindowContext();
+  const { sessionId: chatSessionId, closeChat, saveAndSwitch, openChat } = useChatWindowContext();
+  const [commandPrompt, setCommandPrompt] = useState<string | null>(null);
   const { saveAndSwitch: saveTerminalSwitch } = useTerminal();
 
   // Enable keyboard shortcuts for chat window
@@ -704,6 +705,7 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
               session={getSession(chatSessionId)}
               showCloseButton={true}
               onClose={closeChat}
+              prefillMessage={commandPrompt ?? undefined}
             />
           )}
         </SlidingChatWindow>
@@ -711,7 +713,14 @@ export function WorkbenchLayout({ children }: WorkbenchLayoutProps) {
 
       {/* Layer 2: CommandCenter — app shell level, always visible */}
       {commandCenterEnabled && (
-        <CommandCenter onCommand={(cmd) => console.log('Command:', cmd)} />
+        <CommandCenter
+          onCommand={async (cmd) => {
+            setCommandPrompt(cmd);
+            await openChat('command-center');
+            // Reset after panel receives the prefill
+            setCommandPrompt(null);
+          }}
+        />
       )}
 
 

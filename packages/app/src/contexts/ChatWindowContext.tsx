@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useRef, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from 'react';
 import type { SessionId, WorkbenchId } from '@afw/shared';
 import { useSessionContext } from './SessionContext';
 import { useWorkbenchContext } from './WorkbenchContext';
@@ -45,6 +45,7 @@ interface ChatWindowProviderProps {
 }
 
 const MODEL_STORAGE_KEY = 'afw-selected-model';
+const SESSION_ID_STORAGE_KEY = 'afw-chat-session-id';
 const FIXED_CHAT_WIDTH = 360; // Fixed width in pixels (matches --chat-w CSS variable)
 const DEFAULT_MODEL = 'sonnet-4.5';
 
@@ -69,7 +70,18 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
   });
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [sessionId, setSessionIdState] = useState<SessionId | null>(null);
+  const [sessionId, setSessionIdRaw] = useState<SessionId | null>(() => {
+    const stored = localStorage.getItem(SESSION_ID_STORAGE_KEY);
+    return stored ? (stored as SessionId) : null;
+  });
+  const setSessionIdState = useCallback((id: SessionId | null) => {
+    setSessionIdRaw(id);
+    if (id) {
+      localStorage.setItem(SESSION_ID_STORAGE_KEY, id);
+    } else {
+      localStorage.removeItem(SESSION_ID_STORAGE_KEY);
+    }
+  }, []);
   const [source, setSource] = useState<string | null>(null);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
@@ -80,11 +92,20 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
   const [workbenchesWithChat, setWorkbenchesWithChat] = useState<WorkbenchId[]>([]);
 
   // Get session context to access sessions and create new ones
-  const { createSession, sessions } = useSessionContext();
+  const { createSession, sessions, isLoading: sessionsLoading } = useSessionContext();
   const { activeWorkbench } = useWorkbenchContext();
 
   // Ref to prevent duplicate session creation on rapid double-clicks
   const creatingSessionRef = useRef<boolean>(false);
+
+  // After sessions load, clear stale sessionId if the session no longer exists
+  useEffect(() => {
+    if (sessionsLoading || !sessionId) return;
+    const exists = sessions.some((s) => s.id === sessionId);
+    if (!exists) {
+      setSessionIdState(null);
+    }
+  }, [sessionsLoading, sessions, sessionId, setSessionIdState]);
 
   const openChat = useCallback(
     async (newSource: string, context?: Record<string, unknown>) => {
@@ -102,12 +123,18 @@ export function ChatWindowProvider({ children }: ChatWindowProviderProps) {
         (s) => s.workbenchId === activeWorkbench
       );
 
+      // Check if the currently selected session belongs to this workbench (or has no workbench)
+      const currentSessionValid = sessionId && sessions.some(
+        (s) => s.id === sessionId && (!s.workbenchId || s.workbenchId === activeWorkbench)
+      );
+
       if (existingWorkbenchSession) {
         // Reuse the existing session for this workbench
         setSessionIdState(existingWorkbenchSession.id);
-      } else if (!sessionId && !creatingSessionRef.current) {
-        // No workbench-scoped session exists — removed cross-workbench fallback to enforce isolation
-        // Auto-create a session scoped to the current workbench
+      } else if (currentSessionValid) {
+        // Already on a valid session for this workbench — keep it
+      } else if (!creatingSessionRef.current) {
+        // No workbench-scoped session exists — auto-create one scoped to the current workbench
         // Guard prevents duplicate creation on rapid double-clicks
         creatingSessionRef.current = true;
         const workbenchLabel = activeWorkbench || 'unknown';

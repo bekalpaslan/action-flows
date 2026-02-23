@@ -12,7 +12,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node packages/hooks/dist/hooks/src/afw-session-start.js",
+            "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-session-start.js",
             "timeout": 10
           }
         ]
@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node packages/hooks/dist/hooks/src/afw-session-end.js",
+            "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-session-end.js",
             "timeout": 10
           }
         ]
@@ -36,12 +36,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node packages/hooks/dist/hooks/src/afw-step-spawned.js",
+            "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-step-spawned.js",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node packages/hooks/dist/hooks/src/afw-control-check.js",
+            "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-control-check.js",
             "timeout": 10
           }
         ]
@@ -53,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node packages/hooks/dist/hooks/src/afw-output-capture.js",
+            "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-output-capture.js",
             "timeout": 10
           }
         ]
@@ -65,12 +65,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node packages/hooks/dist/hooks/src/afw-format-check.js",
+            "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-format-check.js",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "node packages/hooks/dist/hooks/src/afw-chain-parse.js",
+            "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-chain-parse.js",
             "timeout": 10
           }
         ]
@@ -82,7 +82,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node packages/hooks/dist/hooks/src/afw-step-completed.js",
+            "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-step-completed.js",
             "timeout": 10
           }
         ]
