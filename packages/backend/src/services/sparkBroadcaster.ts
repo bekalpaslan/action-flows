@@ -127,14 +127,15 @@ export class SparkBroadcaster extends EventEmitter {
       return;
     }
 
-    // Record bridge traversal for strength calculation
-    try {
-      const { getBridgeStrengthService } = require('./bridgeStrengthService.js');
-      const bridgeStrengthService = getBridgeStrengthService();
-      bridgeStrengthService.recordTraversal(spark.fromRegion, spark.toRegion);
-    } catch (err) {
-      console.warn('[SparkBroadcaster] Failed to record bridge traversal:', err);
-    }
+    // Record bridge traversal for strength calculation (fire-and-forget)
+    import('./bridgeStrengthService.js')
+      .then(({ getBridgeStrengthService }) => {
+        const bridgeStrengthService = getBridgeStrengthService();
+        bridgeStrengthService.recordTraversal(spark.fromRegion, spark.toRegion);
+      })
+      .catch((err) => {
+        console.warn('[SparkBroadcaster] Failed to record bridge traversal:', err);
+      });
 
     // Final broadcast at 100% progress
     spark.progress = 1.0;

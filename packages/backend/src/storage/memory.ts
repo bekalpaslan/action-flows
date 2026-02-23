@@ -1,6 +1,7 @@
 import type { Session, Chain, CommandPayload, SessionId, ChainId, UserId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, BookmarkCategory, PatternType, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId, User } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration, sessionSchema, chainSchema, workspaceEventSchema, validateStorageData, chatMessageSchema, reminderInstanceSchema, telemetryEntrySchema, sessionWindowConfigSchema, errorInstanceSchema } from '@afw/shared';
+import { createHash } from 'crypto';
 import { lifecycleManager } from './lifecycleHooks.js';
 
 /**
@@ -1202,8 +1203,6 @@ export const storage: MemoryStorage = {
 
   // Snapshot/Restore methods for persistence
   snapshot() {
-    const crypto = require('crypto');
-
     // Convert all Maps to serializable structures
     const data = {
       sessions: Array.from(this.sessions.entries()).map(([id, session]) => session),
@@ -1274,7 +1273,7 @@ export const storage: MemoryStorage = {
 
     const timestamp = new Date().toISOString();
     const serialized = JSON.stringify(data);
-    const checksum = crypto.createHash('md5').update(serialized).digest('hex');
+    const checksum = createHash('md5').update(serialized).digest('hex');
 
     return {
       version: 1,
@@ -1292,9 +1291,8 @@ export const storage: MemoryStorage = {
     }
 
     // Validate checksum
-    const crypto = require('crypto');
     const serialized = JSON.stringify(snapshot.data);
-    const computedChecksum = crypto.createHash('md5').update(serialized).digest('hex');
+    const computedChecksum = createHash('md5').update(serialized).digest('hex');
     if (computedChecksum !== snapshot.checksum) {
       console.warn(`[MemoryStorage] Checksum mismatch. Expected ${snapshot.checksum}, got ${computedChecksum}. Skipping restore.`);
       return;
