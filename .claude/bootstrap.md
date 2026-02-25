@@ -1491,8 +1491,10 @@ Do NOT read framework files meant for orchestration:
   - .claude/actionflows/CONTEXTS.md (orchestrator routing)
   - .claude/actionflows/FLOWS.md (orchestrator routing)
   - .claude/actionflows/ACTIONS.md (orchestrator composition)
+  - {user_home}/.claude/projects/{project}/memory/MEMORY.md (orchestrator memory)
 Do NOT delegate work, compile chains, or spawn subagents. Execute your agent.md directly.
 Do NOT use Task(), Skill(), or any spawning utilities. You are the executor, not a coordinator.
+If you find yourself thinking "I should spawn another agent", you are reading the wrong instruction file.
 
 You are executing:
 - agent.md: .claude/actionflows/actions/{action}/agent.md
