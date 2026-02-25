@@ -10,7 +10,7 @@
   max-height: 600px;
   overflow-y: auto;
   padding: var(--space-2) 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans);
 }
 
 /* Custom scrollbar */
@@ -74,7 +74,7 @@
   border-radius: 50%;
   font-size: 14px;
   font-weight: 600;
-  color: white;
+  color: var(--text-primary);
   background-color: var(--snow-accent-blue); /* Default, overridden via style prop */
 }
 
@@ -142,7 +142,7 @@
 }
 
 .activity-feed__action:hover {
-  background-color: rgba(125, 187, 255, 0.1);
+  background-color: color-mix(in srgb, var(--system-blue) 10%, transparent);
 }
 
 .activity-feed__action:active {
@@ -155,15 +155,15 @@
 }
 
 [data-theme='dark'] .activity-feed__item:not(:last-child) {
-  border-bottom-color: rgba(255, 255, 255, 0.08);
+  border-bottom-color: var(--separator-base);
 }
 
 [data-theme='dark'] .activity-feed::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--fill-secondary);
 }
 
 [data-theme='dark'] .activity-feed::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--fill-tertiary);
 }
 
 /* Responsive sizing */

@@ -14,8 +14,8 @@
 /* Main spark dot (bright core) */
 .spark-dot {
   fill: var(--cosmic-spark-core, rgba(255, 240, 100, 0.95));
-  filter: drop-shadow(0 0 4px rgba(255, 240, 100, 0.8))
-          drop-shadow(0 0 8px rgba(255, 240, 100, 0.4));
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--star-active) 80%, transparent))
+          drop-shadow(0 0 8px color-mix(in srgb, var(--star-active) 40%, transparent));
   will-change: transform; /* Hint for GPU acceleration */
 }
 

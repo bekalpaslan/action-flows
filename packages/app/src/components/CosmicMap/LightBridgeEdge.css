@@ -35,22 +35,22 @@
 /* Gate status colors */
 .gate-status-passed {
   background: var(--cosmic-gate-passed);
-  color: #000;
+  color: var(--app-bg-base);
 }
 
 .gate-status-pending {
   background: var(--cosmic-gate-pending);
-  color: #000;
+  color: var(--app-bg-base);
 }
 
 .gate-status-failed {
   background: var(--cosmic-gate-failed);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .gate-status-skipped {
   background: var(--cosmic-gate-skipped);
-  color: #fff;
+  color: var(--text-primary);
 }
 
 /* Traversal count label */

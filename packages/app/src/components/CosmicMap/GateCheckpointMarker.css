@@ -96,10 +96,10 @@
   }
 
   .gate-checkpoint--pass .gate-checkpoint__circle {
-    stroke: #22c55e;
+    stroke: var(--system-green);
   }
 
   .gate-checkpoint--fail .gate-checkpoint__circle {
-    stroke: #ef4444;
+    stroke: var(--system-red);
   }
 }

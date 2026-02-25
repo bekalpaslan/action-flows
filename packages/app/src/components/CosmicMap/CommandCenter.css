@@ -218,7 +218,7 @@
   border-radius: var(--panel-radius-md);
   box-shadow: var(--shadow-elevation-9), var(--panel-glow-accent);
   padding: var(--space-1);
-  z-index: 1000;
+  z-index: var(--z-dropdown);
   animation: slideUpFadeIn var(--duration-normal) var(--ease-in-out);
 }
 

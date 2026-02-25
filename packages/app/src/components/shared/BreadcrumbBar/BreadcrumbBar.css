@@ -12,7 +12,7 @@
   padding: 0 var(--space-5);
   background: var(--snow-bg-1);
   border-bottom: var(--snow-border);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans);
 }
 
 /* Navigation breadcrumbs */
@@ -54,7 +54,7 @@
 }
 
 .breadcrumb-bar__segment--clickable:active {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: var(--fill-primary);
 }
 
 .breadcrumb-bar__segment--current {
@@ -91,7 +91,7 @@
 /* Dark mode support */
 [data-theme='dark'] .breadcrumb-bar {
   background: var(--snow-bg-1);
-  border-bottom-color: rgba(255, 255, 255, 0.08);
+  border-bottom-color: var(--separator-base);
 }
 
 [data-theme='dark'] .breadcrumb-bar__segment--clickable:hover {
@@ -99,7 +99,7 @@
 }
 
 [data-theme='dark'] .breadcrumb-bar__segment--clickable:active {
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: var(--fill-secondary);
 }
 
 /* Responsive sizing */
