@@ -431,30 +431,24 @@ After human approves a learning surface, write to `.claude/actionflows/LEARNINGS
 
 **Format:**
 ```markdown
-### {Action Type}
-
-#### {Issue Title}
-
-**Context:** {when this happens}
-**Problem:** {what goes wrong}
-**Root Cause:** {why it fails}
-**Solution:** {how to prevent}
-**Date:** {YYYY-MM-DD}
-**Source:** {action/} in {chain description}
+### L{NNN}: {Short Title}
+- **Date:** {YYYY-MM-DD}
+- **From:** {action/} ({model}) during {chain description}
+- **Issue:** {what happened}
+- **Root Cause:** {why it fails}
+- **Fix:** {how to prevent}
+- **Status:** {Open | Closed (dissolved) | Closed (lesson logged)}
 ```
 
 **Example:**
 ```markdown
-### code/
-
-#### Missing Type Imports After File Reorganization
-
-**Context:** When moving types from shared/index.ts to shared/types/user.ts
-**Problem:** Other packages fail type check with "Cannot find name 'UserId'"
-**Root Cause:** Imports in consuming files still reference old path (shared/index.ts)
-**Solution:** After moving files, grep globally for ALL references to old paths and update them
-**Date:** 2026-02-08
-**Source:** code/shared/types-split in "Organize shared types by domain" chain
+### L029: Missing Type Imports After File Reorganization
+- **Date:** 2026-02-08
+- **From:** code/ (haiku) during "Organize shared types by domain" chain
+- **Issue:** Other packages fail type check with "Cannot find name 'UserId'" after moving types from shared/index.ts to shared/types/user.ts
+- **Root Cause:** Imports in consuming files still reference old path (shared/index.ts)
+- **Fix:** After moving files, grep globally for ALL references to old paths and update them
+- **Status:** Closed (dissolved)
 ```
 
 ### 11. Human Gate Presentation (Free-Form)
