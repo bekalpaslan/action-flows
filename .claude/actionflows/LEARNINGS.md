@@ -232,7 +232,7 @@
   2. **Structural:** Add build-step type assertion (`type AssertEqual<T, U> = T extends U ? U extends T ? true : false : false`) that verifies each Zod schema's `z.infer<>` type is assignable to/from the corresponding TypeScript interface
   3. **Process:** Add type-schema alignment check to `pnpm type-check` or `pnpm harmony:enforce`
 - **Impact:** Harmony score 38/100. Drift is currently dormant (frontend receives pre-parsed data via WebSocket, never uses contract parsers directly). Becomes live issue if strict schema enforcement is enabled on the parsing pipeline.
-- **Status:** Closed (d863952 + 87952e0) — Schemas aligned, 17/18 type guards active, 59/59 tests passing. 1 remaining: _check_StepCompletion (nextStep type mismatch)
+- **Status:** Closed (d863952 + 87952e0 + ee638c1) — All 18/18 type guards active, 59/59 tests passing. StepCompletion nextStep parser hardened (NaN → null fallback).
 
 ### L026: Health Protocol Reveals Infrastructure Decay + Gate Coverage Gaps
 - **Date:** 2026-02-14

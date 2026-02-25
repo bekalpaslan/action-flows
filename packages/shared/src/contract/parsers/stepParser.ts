@@ -35,7 +35,10 @@ export function parseStepCompletion(text: string): StepCompletionParsed | null {
   const action = match[2] ?? '';
   const result = match[3] ?? '';
   const nextStepRaw = match[4] ?? '';
-  const nextStep = nextStepRaw === 'Done' ? 'Done' : parseInt(nextStepRaw, 10);
+  const nextStepParsed = parseInt(nextStepRaw, 10);
+  const nextStep: number | string | null = nextStepRaw === 'Done'
+    ? 'Done'
+    : isNaN(nextStepParsed) ? null : nextStepParsed;
 
   // 3. Build
   const parsed: StepCompletionParsed = {
