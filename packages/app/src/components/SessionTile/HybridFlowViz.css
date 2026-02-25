@@ -161,7 +161,7 @@
 
 /* Enhance glow effects in dark theme */
 .hybrid-flow-viz .agent-character-card[data-role="orchestrator"] {
-  box-shadow: 0 0 24px color-mix(in srgb, var(--palette-orange-600) 30%, transparent);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--orange) 30%, transparent);
 }
 
 .hybrid-flow-viz .agent-character-card[data-status="working"] {
@@ -173,5 +173,5 @@
 }
 
 .hybrid-flow-viz .agent-character-card[data-status="error"] {
-  box-shadow: 0 0 16px color-mix(in srgb, var(--palette-orange-400) 40%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--orange) 40%, transparent);
 }

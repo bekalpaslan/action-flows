@@ -9,7 +9,7 @@
 }
 
 .virtual-session-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--separator-base);
   padding: 0;
   margin: 0;
 }
@@ -25,7 +25,7 @@
 }
 
 .virtual-tree-row--selected {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--fill-secondary);
 }
 
 .virtual-tree-row__content {
@@ -40,7 +40,7 @@
 }
 
 .virtual-tree-row__content:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--fill-quaternary);
 }
 
 .virtual-tree-row__toggle {
@@ -102,26 +102,26 @@
 .virtual-session-list::-webkit-scrollbar-track,
 .virtual-tree-root::-webkit-scrollbar-track,
 .virtual-chat-history::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--fill-quaternary);
 }
 
 .virtual-session-list::-webkit-scrollbar-thumb,
 .virtual-tree-root::-webkit-scrollbar-thumb,
 .virtual-chat-history::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--fill-tertiary);
   border-radius: 4px;
 }
 
 .virtual-session-list::-webkit-scrollbar-thumb:hover,
 .virtual-tree-root::-webkit-scrollbar-thumb:hover,
 .virtual-chat-history::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--fill-secondary);
 }
 
 /* Firefox scrollbar */
 .virtual-session-list,
 .virtual-tree-root,
 .virtual-chat-history {
-  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+  scrollbar-color: var(--fill-tertiary) var(--fill-quaternary);
   scrollbar-width: thin;
 }

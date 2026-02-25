@@ -67,7 +67,7 @@
   position: sticky;
   top: 0;
   background: var(--background-secondary);
-  z-index: 10;
+  z-index: var(--z-dropdown);
 }
 
 .telemetry-viewer__table-header-cell {
@@ -93,11 +93,11 @@
 }
 
 .telemetry-viewer__table-row--warn {
-  background: rgba(255, 193, 7, 0.1);
+  background: color-mix(in srgb, var(--system-yellow) 10%, transparent);
 }
 
 .telemetry-viewer__table-row--error {
-  background: rgba(244, 67, 54, 0.1);
+  background: color-mix(in srgb, var(--system-red) 10%, transparent);
 }
 
 .telemetry-viewer__table-row:hover {
@@ -111,7 +111,7 @@
 }
 
 .telemetry-viewer__table-cell--timestamp {
-  font-family: monospace;
+  font-family: var(--font-mono);
   color: var(--text-tertiary);
   white-space: nowrap;
 }
@@ -124,23 +124,23 @@
 }
 
 .telemetry-viewer__level--debug {
-  color: #9e9e9e;
+  color: var(--text-tertiary);
 }
 
 .telemetry-viewer__level--info {
-  color: #2196f3;
+  color: var(--system-blue);
 }
 
 .telemetry-viewer__level--warn {
-  color: #ff9800;
+  color: var(--system-orange);
 }
 
 .telemetry-viewer__level--error {
-  color: #f44336;
+  color: var(--system-red);
 }
 
 .telemetry-viewer__table-cell--source {
-  font-family: monospace;
+  font-family: var(--font-mono);
   color: var(--text-secondary);
 }
 

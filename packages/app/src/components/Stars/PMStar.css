@@ -217,7 +217,7 @@
   flex-direction: column;
   background-color: var(--light-bg-base);
   border-radius: var(--space-2);
-  box-shadow: 0 var(--space-px) 3px var(--glass-bg-dark);
+  box-shadow: var(--shadow-xs);
   overflow: hidden;
 }
 
@@ -449,7 +449,7 @@
   flex-direction: column;
   background-color: var(--light-bg-base);
   border-radius: var(--space-2);
-  box-shadow: 0 var(--space-px) 3px var(--glass-bg-dark);
+  box-shadow: var(--shadow-xs);
   overflow: hidden;
 }
 

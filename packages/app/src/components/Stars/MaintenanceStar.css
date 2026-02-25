@@ -305,7 +305,7 @@
 .error-item__timestamp {
   font-size: var(--text-sm);
   color: var(--light-text-secondary);
-  font-family: monospace;
+  font-family: var(--font-mono);
   flex-shrink: 0;
 }
 

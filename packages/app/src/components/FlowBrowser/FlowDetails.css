@@ -195,11 +195,11 @@
 }
 
 .history-item.status-completed {
-  border-left-color: #22c55e;
+  border-left-color: var(--system-green);
 }
 
 .history-item.status-failed {
-  border-left-color: #ef4444;
+  border-left-color: var(--system-red);
 }
 
 .history-item.status-in_progress {
@@ -264,7 +264,7 @@
 
 .flow-details__execute-button:hover:not(:disabled) {
   opacity: 0.9;
-  box-shadow: 0 0 12px rgba(10, 132, 255, 0.3);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
 .flow-details__execute-button:disabled {

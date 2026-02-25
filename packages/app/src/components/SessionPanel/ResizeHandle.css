@@ -7,23 +7,23 @@
 .resize-handle {
   width: 4px;
   height: 100%;
-  background-color: #333333;
+  background-color: var(--app-bg-tertiary);
   cursor: col-resize;
   flex-shrink: 0;
   position: relative;
-  z-index: 10;
+  z-index: var(--z-dropdown);
   transition: background-color 0.15s ease;
 }
 
 /* Hover State */
 .resize-handle:hover {
-  background-color: #4a9eff;
+  background-color: var(--accent);
 }
 
 /* Dragging State */
 .resize-handle.dragging {
-  background-color: #4a9eff;
-  box-shadow: 0 0 8px rgba(74, 158, 255, 0.5);
+  background-color: var(--accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 50%, transparent);
 }
 
 /* Visual Grip (Optional - adds dots for clarity) */
@@ -38,8 +38,8 @@
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    #666666 20%,
-    #666666 80%,
+    var(--text-tertiary) 20%,
+    var(--text-tertiary) 80%,
     transparent 100%
   );
   opacity: 0;
@@ -65,7 +65,7 @@
  * ============================================================================ */
 
 .resize-handle:focus {
-  outline: 2px solid #4a9eff;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 

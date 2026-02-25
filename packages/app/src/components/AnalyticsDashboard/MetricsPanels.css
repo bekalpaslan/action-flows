@@ -137,7 +137,7 @@
 
 .success-fill {
   height: 100%;
-  background: linear-gradient(90deg, #34C759 0%, #22c55e 100%);
+  background: linear-gradient(90deg, var(--system-green) 0%, var(--status-success) 100%);
   border-radius: 3px;
   transition: width var(--transition-fast);
 }

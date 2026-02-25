@@ -54,7 +54,7 @@
 }
 
 .intel-workbench__new-btn:active {
-  background-color: rgba(163, 113, 247, 0.90);
+  background-color: color-mix(in srgb, var(--purple) 90%, transparent);
 }
 
 .intel-workbench__action-btn {
@@ -74,7 +74,7 @@
 }
 
 .intel-workbench__action-btn:active {
-  background-color: rgba(10, 132, 255, 0.90);
+  background-color: color-mix(in srgb, var(--system-blue) 90%, transparent);
 }
 
 /* ============================================================================
@@ -107,7 +107,7 @@
 }
 
 .intel-workbench__error .error-message {
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: var(--text-sm);
   background-color: var(--color-bg-secondary);
   padding: var(--space-2) var(--space-4);
@@ -215,8 +215,8 @@
 
 .dossier-view-placeholder .dossier-error {
   padding: var(--space-4);
-  background-color: rgba(244, 67, 54, 0.1);
-  border: var(--space-px) solid rgba(244, 67, 54, 0.3);
+  background-color: color-mix(in srgb, var(--system-red) 10%, transparent);
+  border: var(--space-px) solid color-mix(in srgb, var(--system-red) 30%, transparent);
   border-radius: var(--space-1-5);
   margin-bottom: var(--space-6);
   color: var(--system-red);

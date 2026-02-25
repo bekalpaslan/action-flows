@@ -419,7 +419,7 @@
 
 /* Version display */
 .settings-version {
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  font-family: var(--font-mono);
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
   padding: var(--space-1) var(--space-2);
@@ -475,7 +475,7 @@
 }
 
 .settings-shortcut__keys {
-  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+  font-family: var(--font-mono);
   font-size: var(--text-sm);
   padding: var(--space-1) var(--space-2);
   background-color: var(--color-bg-tertiary);

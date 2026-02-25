@@ -109,7 +109,7 @@
 .flow-browser__search:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.1);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .flow-browser__search::placeholder {
@@ -162,7 +162,7 @@
   background: var(--color-accent);
   color: white;
   border-color: var(--color-accent);
-  box-shadow: 0 0 8px rgba(10, 132, 255, 0.25);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 .flow-browser__category-tab .count {
@@ -207,7 +207,7 @@
 }
 
 .tags-list .tag:hover {
-  background: rgba(10, 132, 255, 0.1);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
 }
 
 .tags-list .tag.active {
@@ -290,13 +290,13 @@
 .flow-card:hover {
   border-color: var(--color-accent);
   background: var(--glass-bg-medium);
-  box-shadow: 0 0 12px rgba(10, 132, 255, 0.15);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 .flow-card.active {
   border-color: var(--color-accent);
   background: var(--glass-bg-medium);
-  box-shadow: 0 0 16px rgba(10, 132, 255, 0.25);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
 .flow-card__header {

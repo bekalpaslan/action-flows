@@ -25,22 +25,22 @@
 }
 
 .chapter-list__item:hover {
-  background: rgba(139, 92, 246, 0.1);
-  border-color: rgba(139, 92, 246, 0.2);
-  color: var(--cosmic-text-primary, #e8e8f0);
+  background: color-mix(in srgb, var(--purple) 10%, transparent);
+  border-color: color-mix(in srgb, var(--purple) 20%, transparent);
+  color: var(--cosmic-text-primary, var(--text-primary));
 }
 
 .chapter-list__item.active {
-  background: rgba(139, 92, 246, 0.2);
-  border-color: var(--cosmic-glow-accent, #8b5cf6);
-  color: var(--cosmic-text-primary, #e8e8f0);
-  box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
+  background: color-mix(in srgb, var(--purple) 20%, transparent);
+  border-color: var(--cosmic-glow-accent, var(--purple));
+  color: var(--cosmic-text-primary, var(--text-primary));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--purple) 30%, transparent);
 }
 
 .chapter-list__item-number {
   font-weight: 700;
   font-size: 1rem;
-  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  background: linear-gradient(135deg, var(--purple), var(--accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -61,7 +61,7 @@
   display: inline-block;
   margin-top: 0.25rem;
   padding: 0.125rem 0.375rem;
-  background: rgba(139, 92, 246, 0.15);
+  background: color-mix(in srgb, var(--purple) 15%, transparent);
   border-radius: 3px;
   font-size: 0.7rem;
   opacity: 0.7;
