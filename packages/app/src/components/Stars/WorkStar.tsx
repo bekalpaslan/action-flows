@@ -83,13 +83,13 @@ export function WorkStar({
 
   // Calculate metrics for StatCards
   const activeSessions = sessions.filter(s => s.status === 'in_progress' || s.status === 'pending').length;
-  const totalChains = sessions.reduce((acc, s) => acc + (s.chains?.length || 0), 0);
   const completedSteps = sessions.reduce((acc, s) => {
     return acc + (s.chains || []).reduce((chainAcc, chain) => {
       return chainAcc + (chain.steps || []).filter(step => step.status === 'completed').length;
     }, 0);
   }, 0);
-  const healthScore = activeSessions > 0 ? Math.min(100, Math.round((completedSteps / Math.max(1, totalChains * 3)) * 100)) : 0;
+  const chainCount = sessions.reduce((acc, s) => acc + (s.chains?.length || 0), 0);
+  const healthScore = activeSessions > 0 ? Math.min(100, Math.round((completedSteps / Math.max(1, chainCount * 3)) * 100)) : 0;
 
   return (
     <div className="work-workbench">
@@ -120,14 +120,7 @@ export function WorkStar({
             change=""
             accentColor="var(--snow-accent-blue)"
           />
-          <StatCard
-            label="Total Chains"
-            value={totalChains.toString()}
-            trend="neutral"
-            change=""
-            accentColor="var(--snow-accent-purple)"
-          />
-          <StatCard
+<StatCard
             label="Completed Steps"
             value={completedSteps.toString()}
             trend={completedSteps > 0 ? 'up' : 'neutral'}

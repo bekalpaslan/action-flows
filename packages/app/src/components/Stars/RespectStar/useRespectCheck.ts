@@ -42,7 +42,7 @@ const RESPECT_CHECK_SCRIPT = `(() => {
     // ============================================================
     // HIGH PRIORITY ADDITIONS (9 selectors)
     // ============================================================
-    { selector: '.app-sidebar', type: 'sidebar', expected: { width: 240, minWidthCollapsed: 64, height: 'viewport' } },
+    { selector: '.app-sidebar', type: 'sidebar', expected: { width: 260, minWidthCollapsed: 40, heightPercent: 100 } },
     { selector: '.squad-panel-orchestrator .agent-character-card', type: 'card', expected: { width: 200 } },
     { selector: '.squad-panel-side .agent-character-card', type: 'card', expected: { width: 140 } },
     { selector: '.command-palette-backdrop', type: 'fixed-overlay', expected: { width: 'viewport', height: 'viewport' } },

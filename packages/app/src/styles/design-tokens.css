@@ -494,7 +494,7 @@
   --app-sidebar-z-index: 1100;
 
   /* ==========================================================================
-     Layout System — Panel-based Grid
+     Layout System - Panel-based Grid
      ========================================================================== */
 
   --gap: 20px;                /* Universal spacing between all panels */
@@ -505,7 +505,7 @@
   --panel-radius: 10px;       /* Standard panel border radius (matches mock) */
 
   /* ==========================================================================
-     Grid System — 16-Column Figma FLOW V.4.0 Spec
+     Grid System - 16-Column Figma FLOW V.4.0 Spec
      ========================================================================== */
 
   /* Grid Dimensions (1440px viewport basis) */

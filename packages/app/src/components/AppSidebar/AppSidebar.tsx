@@ -229,6 +229,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ onCollapseChange }) => {
               >
                 {group.workbenches.map(workbenchId => {
                   const config = DEFAULT_WORKBENCH_CONFIGS[workbenchId];
+                  if (!config) return null;
                   return (
                     <SidebarNavItem
                       key={workbenchId}

@@ -79,11 +79,11 @@ function parseChainTableRows(text: string): ChainStepParsed[] | null {
     if (match) {
       rows.push({
         stepNumber: parseInt(match[1] ?? '0', 10),
-        action: match[2] ?? '',
-        model: (match[3] ?? 'sonnet') as ModelString,
-        keyInputs: match[4] ?? null,
-        waitsFor: match[5] ?? null,
-        status: (match[6] ?? 'pending') as StatusString,
+        action: (match[2] ?? '').trim(),
+        model: ((match[3] ?? 'sonnet').trim()) as ModelString,
+        keyInputs: match[4]?.trim() ?? null,
+        waitsFor: match[5]?.trim() ?? null,
+        status: ((match[6] ?? 'pending').trim()) as StatusString,
       });
     }
   }
@@ -100,8 +100,8 @@ function parseStepDescriptions(text: string): StepDescription[] | null {
     if (match) {
       descriptions.push({
         stepNumber: parseInt(match[1] ?? '0', 10),
-        action: match[2] ?? '',
-        description: match[3] ?? '',
+        action: (match[2] ?? '').trim(),
+        description: (match[3] ?? '').trim(),
       });
     }
   }
@@ -223,9 +223,9 @@ function parseCompletedSteps(text: string): CompletedStepSummary[] | null {
     if (match) {
       steps.push({
         stepNumber: parseInt(match[1] ?? '0', 10),
-        action: match[2] ?? '',
-        status: (match[3] ?? 'pending') as StatusString,
-        result: match[4] ?? null,
+        action: (match[2] ?? '').trim(),
+        status: ((match[3] ?? 'pending').trim()) as StatusString,
+        result: match[4]?.trim() ?? null,
       });
     }
   }
