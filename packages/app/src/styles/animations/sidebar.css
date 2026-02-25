@@ -133,15 +133,15 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: transparent;
   pointer-events: none;
-  z-index: 999;
+  z-index: calc(var(--z-dropdown) - 1);
   transition:
     background-color var(--sidebar-slide-duration) var(--sidebar-slide-easing);
 }
 
 .sidebar-overlay.active {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: color-mix(in srgb, var(--app-bg-base) 20%, transparent);
   pointer-events: auto;
 }
 

@@ -6,7 +6,7 @@
   gap: var(--space-2);
   border: none;
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--font-sans);
   transition: all var(--duration-fast) var(--ease-in-out);
   position: relative;
   overflow: hidden;
@@ -231,15 +231,15 @@
 
 /* Glow Effects */
 .afw-button--glow-default {
-  box-shadow: 0 0 8px currentColor;
+  box-shadow: var(--shadow-sm);
 }
 
 .afw-button--glow-hover:hover:not(:disabled):not(.afw-button--loading) {
-  box-shadow: 0 0 16px currentColor;
+  box-shadow: var(--shadow-md);
 }
 
 .afw-button--glow-always {
-  box-shadow: 0 0 16px currentColor;
+  box-shadow: var(--shadow-md);
 }
 
 /* Pulse Effect */

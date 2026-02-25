@@ -110,12 +110,12 @@
 }
 
 .afw-panel__body--scrollable::-webkit-scrollbar-thumb {
-  background: rgba(88, 166, 255, 0.15);
+  background: color-mix(in srgb, var(--system-blue) 15%, transparent);
   border-radius: 3px;
 }
 
 .afw-panel__body--scrollable::-webkit-scrollbar-thumb:hover {
-  background: rgba(88, 166, 255, 0.25);
+  background: color-mix(in srgb, var(--system-blue) 25%, transparent);
 }
 
 /* Footer */

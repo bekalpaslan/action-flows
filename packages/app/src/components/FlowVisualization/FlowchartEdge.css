@@ -30,7 +30,7 @@
 
 .afw-flowchart-edge__particle {
   fill: var(--system-yellow);
-  filter: drop-shadow(0 0 3px rgba(255, 214, 0, 0.6));
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--system-yellow) 60%, transparent));
 }
 
 /* Edge label */
@@ -52,7 +52,7 @@
   color: var(--text-secondary);
   white-space: nowrap;
   pointer-events: auto;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-xs);
   display: flex;
   align-items: center;
   justify-content: center;

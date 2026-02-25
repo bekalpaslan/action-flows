@@ -9,11 +9,11 @@
 }
 
 .edge-particle.particle-1 {
-  filter: drop-shadow(0 0 2px rgba(255, 214, 10, 0.8));
+  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--system-yellow) 80%, transparent));
 }
 
 .edge-particle.particle-2 {
-  filter: drop-shadow(0 0 2px rgba(255, 214, 10, 0.6));
+  filter: drop-shadow(0 0 2px color-mix(in srgb, var(--system-yellow) 60%, transparent));
 }
 
 /* Edge labels */
@@ -39,7 +39,7 @@
   border-color: var(--system-yellow);
   background-color: var(--light-status-warning-bg);
   color: var(--light-status-warning-text);
-  box-shadow: 0 1px 4px rgba(255, 214, 10, 0.3);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--system-yellow) 30%, transparent);
 }
 
 /* Edge color transitions */

@@ -11,9 +11,7 @@ body,
 #root {
   width: 100%;
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: var(--app-bg-primary, #1a1a1a);
@@ -61,7 +59,7 @@ textarea:focus-visible,
 select:focus-visible,
 a:focus-visible,
 [role="button"]:focus-visible {
-  box-shadow: var(--focus-ring-glow, 0 0 8px rgba(10, 132, 255, 0.4));
+  box-shadow: var(--focus-ring-glow, 0 0 8px color-mix(in srgb, var(--system-blue) 40%, transparent));
 }
 
 /* Reduced motion: Disable glow effects but keep outline for visibility */

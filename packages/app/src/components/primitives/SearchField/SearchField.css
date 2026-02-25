@@ -65,10 +65,8 @@
   padding: var(--space-1);
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 50;
-  box-shadow: 0px 20px 40px -5px rgba(0, 16, 53, 0.1),
-              0px 10px 10px -5px rgba(0, 16, 53, 0.04),
-              inset 0px 0px 1px 0px rgba(0, 16, 53, 0.16);
+  z-index: var(--z-dropdown);
+  box-shadow: var(--shadow-lg);
   /* Animation */
   opacity: 0;
   transform: translateY(-4px);

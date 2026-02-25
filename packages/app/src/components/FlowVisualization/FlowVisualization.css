@@ -13,12 +13,12 @@
 /* Swimlane background panel */
 .swimlane-panel {
   pointer-events: none;
-  z-index: 0;
+  z-index: var(--z-base);
 }
 
 /* DiscussButton panel */
 .flow-discuss-panel {
-  z-index: 10;
+  z-index: var(--z-dropdown);
 }
 
 .swimlane-background {
@@ -56,7 +56,7 @@
 }
 
 .flow-visualization .react-flow__controls-button {
-  background-color: white;
+  background-color: var(--fill-primary);
   border-bottom: 1px solid var(--panel-border-color-subtle);
   transition: background-color 0.2s ease;
 }
@@ -71,7 +71,7 @@
 
 /* MiniMap styling */
 .flow-visualization .react-flow__minimap {
-  background-color: white;
+  background-color: var(--fill-primary);
   border: 1px solid var(--panel-border-color-subtle);
   border-radius: 8px;
   box-shadow: 0 2px 8px var(--glass-bg-dark);

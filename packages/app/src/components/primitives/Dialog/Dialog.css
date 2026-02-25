@@ -2,8 +2,8 @@
 .afw-dialog__backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.65);
-  z-index: 1000;
+  background-color: color-mix(in srgb, var(--app-bg-base) 65%, transparent);
+  z-index: var(--z-dropdown);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,7 +89,7 @@
 
 .afw-dialog__close-btn:hover {
   color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: var(--fill-quaternary);
 }
 
 .afw-dialog__close-btn:focus-visible {
@@ -114,12 +114,12 @@
 }
 
 .afw-dialog__body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--fill-tertiary);
   border-radius: 4px;
 }
 
 .afw-dialog__body::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--fill-secondary);
 }
 
 /* Dialog Footer */

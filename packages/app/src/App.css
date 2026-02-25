@@ -101,9 +101,9 @@
 }
 
 .app-header .status.connected {
-  background: rgba(63, 185, 80, 0.1);
+  background: color-mix(in srgb, var(--system-green) 10%, transparent);
   color: var(--system-green);
-  border-color: rgba(63, 185, 80, 0.2);
+  border-color: color-mix(in srgb, var(--system-green) 20%, transparent);
 }
 
 .app-header .status.connected::before {
@@ -111,9 +111,9 @@
 }
 
 .app-header .status.error {
-  background: rgba(255, 69, 58, 0.1);
+  background: color-mix(in srgb, var(--system-red) 10%, transparent);
   color: var(--system-red);
-  border-color: rgba(255, 69, 58, 0.2);
+  border-color: color-mix(in srgb, var(--system-red) 20%, transparent);
 }
 
 .app-header .status.error::before {
@@ -121,9 +121,9 @@
 }
 
 .app-header .status.disconnected {
-  background: rgba(240, 136, 62, 0.1);
+  background: color-mix(in srgb, var(--system-orange) 10%, transparent);
   color: var(--system-orange);
-  border-color: rgba(240, 136, 62, 0.2);
+  border-color: color-mix(in srgb, var(--system-orange) 20%, transparent);
 }
 
 .app-header .status.disconnected::before {
@@ -251,7 +251,7 @@
   border-color: var(--color-accent);
   color: var(--app-bg-base);
   font-weight: var(--font-semibold);
-  box-shadow: 0 0 var(--space-2) rgba(10, 132, 255, 0.3);
+  box-shadow: 0 0 var(--space-2) color-mix(in srgb, var(--system-blue) 30%, transparent);
 }
 
 .app-main {
@@ -373,7 +373,7 @@ select:not(:disabled):focus-visible,
 [role="button"]:focus-visible,
 [role="menuitem"]:focus-visible,
 [role="link"]:focus-visible {
-  outline: 2px solid var(--focus-ring-color, #58a6ff);
+  outline: 2px solid var(--focus-ring-color, var(--status-info));
   outline-offset: 2px;
 }
 
@@ -381,7 +381,7 @@ select:not(:disabled):focus-visible,
 [data-vim-target].vim-focused {
   outline: var(--focus-ring-width) solid var(--system-green) !important;
   outline-offset: 2px;
-  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--system-green) 30%, transparent);
 }
 
 /* Skip Link - Hidden by default, visible on focus */
@@ -390,9 +390,9 @@ select:not(:disabled):focus-visible,
   top: -40px;
   left: 0;
   background: var(--system-blue);
-  color: white;
+  color: var(--text-primary);
   padding: var(--space-2) var(--space-4);
-  z-index: 9999;
+  z-index: var(--z-max);
   text-decoration: none;
   border-radius: 0 0 var(--btn-radius-md) 0;
   font-weight: var(--font-semibold);

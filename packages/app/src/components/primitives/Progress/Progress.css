@@ -44,8 +44,8 @@
     45deg,
     transparent,
     transparent 25%,
-    rgba(255, 255, 255, 0.15) 25%,
-    rgba(255, 255, 255, 0.15) 50%,
+    var(--fill-secondary) 25%,
+    var(--fill-secondary) 50%,
     transparent 50%
   );
   animation: afw-progress-stripe var(--duration-slowest) linear infinite;
@@ -118,7 +118,7 @@
 
 .afw-progress__label--circle {
   position: absolute;
-  font-weight: 600;
+  font-weight: var(--font-semibold);
 }
 
 .afw-progress__label--bar {
