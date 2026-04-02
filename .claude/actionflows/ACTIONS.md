@@ -18,21 +18,21 @@ These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 
 | Action | Purpose | Requires Input? | Required Inputs | Model | Contract Output? | Context Affinity | Capability Tags | Routing Hints |
 |--------|---------|-----------------|-----------------|-------|------------------|------------------|-----------------|---------------|
-| analyze/ | Codebase analysis | YES | aspect, scope | sonnet | YES (5.2) | explore, review, maintenance | metrics, pattern-detection, gap-analysis, drift-detection, inventory | `{"scope_preference": "multi-file", "min_confidence": "medium", "parallel_safe": true}` |
-| audit/ | Comprehensive audits | YES | type, scope | opus | NO | review, maintenance | comprehensive-audit, security-audit, violation-detection, remediation | `{"scope_preference": "multi-package", "min_confidence": "high", "parallel_safe": false}` |
+| analyze/ | Codebase analysis | YES | aspect, scope | sonnet | YES (5.2) | explore, review, settings | metrics, pattern-detection, gap-analysis, drift-detection, inventory | `{"scope_preference": "multi-file", "min_confidence": "medium", "parallel_safe": true}` |
+| audit/ | Comprehensive audits | YES | type, scope | opus | NO | review, settings | comprehensive-audit, security-audit, violation-detection, remediation | `{"scope_preference": "multi-package", "min_confidence": "high", "parallel_safe": false}` |
 | brainstorm/ | Interactive ideation facilitation | YES | idea, classification, context | opus | YES (5.3) | work, explore | ideation, interactive-exploration, concept-generation, possibility-mapping | `{"scope_preference": "single-input", "min_confidence": "low", "parallel_safe": true}` |
-| code/ | Implement code changes (generic) | YES | task, context | haiku | NO | work, maintenance | implementation, refactoring, bug-fixing, feature-development | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
-| commit/ | Git commit + push | YES | summary, files | haiku | NO | work, maintenance | git-commit, version-control, change-recording | `{"scope_preference": "multi-package", "min_confidence": "medium", "parallel_safe": false}` |
-| diagnose/ | Root cause analysis for violations | YES | gateId, violationPattern, gateTraces, severityLevel | sonnet | YES (5.4) | maintenance, explore | root-cause-analysis, violation-diagnosis, issue-detection | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
+| code/ | Implement code changes (generic) | YES | task, context | haiku | NO | work, settings | implementation, refactoring, bug-fixing, feature-development | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
+| commit/ | Git commit + push | YES | summary, files | haiku | NO | work, settings | git-commit, version-control, change-recording | `{"scope_preference": "multi-package", "min_confidence": "medium", "parallel_safe": false}` |
+| diagnose/ | Root cause analysis for violations | YES | gateId, violationPattern, gateTraces, severityLevel | sonnet | YES (5.4) | settings, explore | root-cause-analysis, violation-diagnosis, issue-detection | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
 | docs-lookup/ | Query library documentation via Context7 | YES | library, query | haiku | NO | explore | documentation-query, library-reference, api-lookup, context7-integration | `{"scope_preference": "single-library", "min_confidence": "low", "parallel_safe": true}` |
-| isolate/ | Quarantine management (add/remove/list) | YES | subcommand, targetType, targetId, reason | haiku | YES (5.6) | review, maintenance | quarantine-management, issue-isolation, remediation | `{"scope_preference": "single-file", "min_confidence": "high", "parallel_safe": false}` |
+| isolate/ | Quarantine management (add/remove/list) | YES | subcommand, targetType, targetId, reason | haiku | YES (5.6) | review, settings | quarantine-management, issue-isolation, remediation | `{"scope_preference": "single-file", "min_confidence": "high", "parallel_safe": false}` |
 | narrate/ | Write poetic narrative chapters | YES | chapterNumber, analysisPath | opus | NO | explore | narrative-generation, documentation, storytelling, chapter-writing | `{"scope_preference": "multi-file", "min_confidence": "low", "parallel_safe": true}` |
-| notify/ | Send Slack notifications for chain events | YES | message, channel, messageType | haiku | NO | work, maintenance | slack-notification, team-alert, chain-completion, event-notification | `{"scope_preference": "single-message", "min_confidence": "high", "parallel_safe": true}` |
+| notify/ | Send Slack notifications for chain events | YES | message, channel, messageType | haiku | NO | work, settings | slack-notification, team-alert, chain-completion, event-notification | `{"scope_preference": "single-message", "min_confidence": "high", "parallel_safe": true}` |
 | onboarding/ | Facilitate interactive onboarding questionnaire | NO | (none) | opus | NO | explore, settings | interactive-onboarding, questionnaire, user-education, setup-facilitation | `{"scope_preference": "input-only", "min_confidence": "low", "parallel_safe": true}` |
-| plan/ | Implementation planning | YES | requirements, context | sonnet | NO | work, explore, maintenance | implementation-planning, requirements-analysis, design, architecture, task-breakdown | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
-| review/ | Review anything | YES | scope, type | sonnet | YES (5.1) | review, work, maintenance | quality-check, bug-detection, style-validation, contract-compliance | `{"scope_preference": "multi-file", "min_confidence": "low", "parallel_safe": false}` |
-| test/ | Execute tests | YES | scope, type | haiku | NO | work, maintenance, review | test-execution, test-suite-creation, coverage-analysis, test-debugging | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
-| verify-healing/ | Post-healing validation | YES | healingChainId, targetGateId, expectedScore, preHealingScore | sonnet | YES (5.5) | review, maintenance | post-healing-validation, gate-verification, healing-assessment | `{"scope_preference": "multi-package", "min_confidence": "high", "parallel_safe": true}` |
+| plan/ | Implementation planning | YES | requirements, context | sonnet | NO | work, explore, settings | implementation-planning, requirements-analysis, design, architecture, task-breakdown | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
+| review/ | Review anything | YES | scope, type | sonnet | YES (5.1) | review, work, settings | quality-check, bug-detection, style-validation, contract-compliance | `{"scope_preference": "multi-file", "min_confidence": "low", "parallel_safe": false}` |
+| test/ | Execute tests | YES | scope, type | haiku | NO | work, settings, review | test-execution, test-suite-creation, coverage-analysis, test-debugging | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
+| verify-healing/ | Post-healing validation | YES | healingChainId, targetGateId, expectedScore, preHealingScore | sonnet | YES (5.5) | review, settings | post-healing-validation, gate-verification, healing-assessment | `{"scope_preference": "multi-package", "min_confidence": "high", "parallel_safe": true}` |
 
 ## Orchestrator-Executed Actions
 
@@ -46,7 +46,7 @@ These actions are executed directly by the orchestrator using its tool access, N
 - **YES (X.X)** — Action produces structured output defined in CONTRACT.md (format number shown)
 - **NO** — Action output is not contract-defined (internal logs, working files)
 
-Contract-defined outputs are parsed by the dashboard. Deviating from specification causes harmony violations (graceful degradation).
+Contract-defined outputs are parsed by the dashboard. Deviating from specification causes system health violations (graceful degradation).
 
 See `.claude/actionflows/CONTRACT.md` for format specifications.
 
@@ -56,8 +56,8 @@ See `.claude/actionflows/CONTRACT.md` for format specifications.
 
 | Action | Stack | Required Inputs | Model | Context Affinity | Capability Tags | Routing Hints |
 |--------|-------|-----------------|-------|------------------|-----------------|---------------|
-| `code/backend/` | Express 4.18 + TypeScript + Zod | task, context | haiku | work, maintenance | implementation, refactoring, bug-fixing, backend-architecture | `{"scope_preference": "multi-file", "min_confidence": "high", "stack_specific": "backend"}` |
-| `code/frontend/` | React 18.2 + Vite 5 + Electron 28 | task, context | haiku | work, maintenance | implementation, refactoring, bug-fixing, react-components | `{"scope_preference": "multi-file", "min_confidence": "high", "stack_specific": "frontend"}` |
+| `code/backend/` | Express 4.18 + TypeScript + Zod | task, context | haiku | work, settings | implementation, refactoring, bug-fixing, backend-architecture | `{"scope_preference": "multi-file", "min_confidence": "high", "stack_specific": "backend"}` |
+| `code/frontend/` | React 18.2 + Vite 5 + Electron 28 | task, context | haiku | work, settings | implementation, refactoring, bug-fixing, react-components | `{"scope_preference": "multi-file", "min_confidence": "high", "stack_specific": "frontend"}` |
 
 ## Stack-Specific Test Actions
 
@@ -65,7 +65,7 @@ See `.claude/actionflows/CONTRACT.md` for format specifications.
 
 | Action | Stack | Required Inputs | Model | Context Affinity | Capability Tags | Routing Hints |
 |--------|-------|-----------------|-------|------------------|-----------------|---------------|
-| `test/playwright/` | Playwright E2E (browser tests) | target, mode, browser | sonnet | work, maintenance, review | browser-testing, e2e-testing, ui-testing, playwright-automation | `{"scope_preference": "multi-file", "min_confidence": "high", "stack_specific": "frontend"}` |
+| `test/playwright/` | Playwright E2E (browser tests) | target, mode, browser | sonnet | work, settings, review | browser-testing, e2e-testing, ui-testing, playwright-automation | `{"scope_preference": "multi-file", "min_confidence": "high", "stack_specific": "frontend"}` |
 
 ## Code-Backed Actions
 

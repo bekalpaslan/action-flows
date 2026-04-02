@@ -7,12 +7,12 @@
 ## Project
 
 - **Name:** ActionFlows Dashboard
-- **Tagline:** A living universe for human-orchestrator-agent collaboration
+- **Tagline:** Agentic Personal OS -- a workbench-based dashboard for human-orchestrator-agent collaboration
 - **Description:**
-  - **For Coders:** A new IDE paradigm where the orchestrator (brain) coordinates agents (hands) to reshape your codebase (physics). The orchestrator can rewrite the laws of the universe. You express intention; the brain figures out how to modify the code. This is collaborative intelligence.
-  - **For Regular Users:** A natural language interface to software creation. Express what you want; the universe figures out how to build it. The orchestrator reshapes the code (physics) according to your will. No coding required.
-  - **For Everyone:** A journey through a living software universe that grows with you. Unlock new flows, discover agent patterns, and watch the system evolve alongside your needs. This is software as adventure.
-  - **Open Source Template:** This is the creator's proven template universe — a production-ready starting point with defaults learned from real usage. Users have **full sovereignty over all five layers** (including platform code) to modify the physics, reshape the philosophy, rewrite the orchestration model, and evolve the universe to match their workflow. No asterisks. (MIT License — see LICENSE file)
+  - **For Coders:** A new IDE paradigm where the orchestrator (brain) coordinates agents (hands) to reshape your codebase. You express intention; the brain figures out how to modify the code. This is collaborative intelligence.
+  - **For Regular Users:** A natural language interface to software creation. Express what you want; the system figures out how to build it. The orchestrator reshapes the codebase according to your will. No coding required.
+  - **For Everyone:** A productivity system that grows with you. Unlock new flows, discover agent patterns, and watch the system evolve alongside your needs. This is software as adventure.
+  - **Open Source Template:** This is the creator's proven template — a production-ready starting point with defaults learned from real usage. Users have **full sovereignty over all five layers** (including platform code) to modify the framework, reshape the philosophy, rewrite the orchestration model, and evolve the system to match their workflow. No asterisks. (MIT License — see LICENSE file)
 - **Repository:** ActionFlows Dashboard monorepo (pnpm workspaces)
 - **Working Directory:** D:/ActionFlowsDashboard
 
