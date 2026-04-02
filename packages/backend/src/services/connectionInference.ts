@@ -109,6 +109,7 @@ export class ConnectionInferenceService {
         for (let j = i + 1; j < regionsActive.length; j++) {
           const regionA = regionsActive[i];
           const regionB = regionsActive[j];
+          if (!regionA || !regionB) continue;
 
           // Bidirectional key (same as bridge key)
           const key = this.getBridgeKey(regionA, regionB);

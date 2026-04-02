@@ -34,7 +34,7 @@ export async function validateExecuteStep(
 
     // Extract step number if present
     const stepNumberMatch = orchestratorOutput.match(/(?:Spawning|Step|Executing)\s+Step\s+(\d+)/i);
-    const extractedStepNumber = stepNumberMatch ? parseInt(stepNumberMatch[1], 10) : null;
+    const extractedStepNumber = stepNumberMatch && stepNumberMatch[1] ? parseInt(stepNumberMatch[1], 10) : null;
 
     // Extract action type
     const actionMatch = orchestratorOutput.match(/(?:Spawning\s+Step\s+\d+|Executing\s+Step\s+\d+|Step\s+\d+):\s+`?([a-z][a-z0-9-/]*)`?/i);

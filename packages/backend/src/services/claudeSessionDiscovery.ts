@@ -75,7 +75,9 @@ class ClaudeSessionDiscovery {
     const portMatch = filename.match(/^(\d+)\.lock$/);
     if (!portMatch) return null;
 
-    const port = parseInt(portMatch[1], 10);
+    const portStr = portMatch[1];
+    if (!portStr) return null;
+    const port = parseInt(portStr, 10);
     const filePath = path.join(this.ideDir, filename);
 
     let content: string;

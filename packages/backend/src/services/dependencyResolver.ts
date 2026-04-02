@@ -274,7 +274,8 @@ export class DependencyResolverService {
     const batches = this.computeBatches(chain);
 
     // All steps in one batch = fully parallel
-    if (batches.length === 1 && batches[0].stepNumbers.length === chain.steps.length) {
+    const firstBatch = batches[0];
+    if (batches.length === 1 && firstBatch && firstBatch.stepNumbers.length === chain.steps.length) {
       return 'parallel';
     }
 

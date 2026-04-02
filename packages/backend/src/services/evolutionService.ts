@@ -22,6 +22,8 @@ import type {
   TraceEntry,
   ColorShift,
   TraceAccumulation,
+  RegionNode,
+  LightBridge,
 } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { broadcastEvolutionTick, broadcastMapExpanded } from '../ws/universeEvents.js';
@@ -725,8 +727,8 @@ export class EvolutionService {
    * Uses grid snapping and minimum distance enforcement for clean layouts.
    */
   private async calculateNewRegionPosition(
-    existingRegions: Array<{ position: { x: number; y: number } }>,
-    bridges: Array<{ source: string; target: string }>
+    existingRegions: RegionNode[],
+    bridges?: LightBridge[]
   ): Promise<{ x: number; y: number }> {
     try {
       // Dynamic import to avoid circular dependency

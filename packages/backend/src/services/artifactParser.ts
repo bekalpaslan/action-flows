@@ -35,8 +35,11 @@ class ArtifactParser {
 
     let match;
     while ((match = regex.exec(agentOutput)) !== null) {
-      const markerAttrs = this.parseMarkerAttrs(ARTIFACT_START_MARKER + match[1] + '-->');
-      const content = match[2].trim();
+      const matchGroup1 = match[1];
+      const matchGroup2 = match[2];
+      if (matchGroup1 === undefined || matchGroup2 === undefined) continue;
+      const markerAttrs = this.parseMarkerAttrs(ARTIFACT_START_MARKER + matchGroup1 + '-->');
+      const content = matchGroup2.trim();
 
       artifacts.push({
         type: markerAttrs.type,
@@ -66,7 +69,9 @@ class ArtifactParser {
     let match;
     while ((match = attrRegex.exec(content)) !== null) {
       const key = match[1];
+      if (key === undefined) continue;
       const value = match[2] || match[3]; // Quoted or unquoted value
+      if (value === undefined) continue;
       attrs[key] = value;
     }
 

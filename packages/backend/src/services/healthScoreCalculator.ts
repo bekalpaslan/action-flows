@@ -281,7 +281,10 @@ export class HealthScoreCalculator extends EventEmitter {
       if (!groups[trace.gateId]) {
         groups[trace.gateId] = [];
       }
-      groups[trace.gateId].push(trace);
+      const gateGroup = groups[trace.gateId];
+      if (gateGroup) {
+        gateGroup.push(trace);
+      }
     }
 
     return groups;
@@ -380,13 +383,16 @@ export class HealthScoreCalculator extends EventEmitter {
 
     for (const [pattern, data] of patterns.entries()) {
       const timestamps = data.timestamps.sort((a, b) => a - b);
+      const firstTimestamp = timestamps[0];
+      const lastTimestamp = timestamps[timestamps.length - 1];
+      if (firstTimestamp === undefined || lastTimestamp === undefined) continue;
 
       driftPatterns.push({
         pattern,
         gates: Array.from(data.gates),
         frequency: timestamps.length,
-        firstSeen: new Date(timestamps[0]).toISOString() as Timestamp,
-        lastSeen: new Date(timestamps[timestamps.length - 1]).toISOString() as Timestamp,
+        firstSeen: new Date(firstTimestamp).toISOString() as Timestamp,
+        lastSeen: new Date(lastTimestamp).toISOString() as Timestamp,
       });
     }
 
@@ -531,7 +537,10 @@ export class HealthScoreCalculator extends EventEmitter {
         this.scoreHistory = this.scoreHistory.slice(-this.MAX_HISTORY_SIZE);
       }
       if (this.scoreHistory.length > 0) {
-        this.lastSnapshotTime = new Date(this.scoreHistory[this.scoreHistory.length - 1].timestamp).getTime();
+        const lastEntry = this.scoreHistory[this.scoreHistory.length - 1];
+        if (lastEntry) {
+          this.lastSnapshotTime = new Date(lastEntry.timestamp).getTime();
+        }
       }
       console.log(`[HealthScore] Loaded ${this.scoreHistory.length} score history entries`);
     } catch (err) {
