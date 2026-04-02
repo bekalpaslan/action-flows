@@ -71,6 +71,8 @@ import { initBridgeStrengthService } from './services/bridgeStrengthService.js';
 import { initHealingRecommendationEngine, getHealingRecommendationEngine } from './services/healingRecommendations.js';
 import { initHealthScoreCalculator } from './services/healthScoreCalculator.js';
 import { initializeSlackNotifier } from './services/slackNotifier.js';
+import { initSessionManager, sessionManager } from './services/sessionManager.js';
+import { initSessionHealthMonitor, sessionHealthMonitor } from './services/sessionHealthMonitor.js';
 import createHarmonyHealthRouter from './routes/harmonyHealth.js';
 import authRouter from './routes/auth.js';
 import { ensureAdminExists } from './services/userService.js';
@@ -755,6 +757,20 @@ if (isMainModule) {
       }
     }
 
+    // Initialize Session Manager (Phase 6 — Agent SDK sessions)
+    const projectDir = process.cwd();
+    const sm = initSessionManager(wsHub, projectDir);
+    sm.initialize().then(() => {
+      console.log('[Server] SessionManager initialized');
+      // Start health monitor after SessionManager is ready
+      const hm = initSessionHealthMonitor(sm, projectDir);
+      hm.start();
+      console.log('[Server] SessionHealthMonitor started');
+    }).catch((err) => {
+      console.error('[Server] SessionManager initialization failed:', err);
+      // Graceful degradation — server starts but sessions unavailable
+    });
+
     // Initialize default universe graph if not exists
     try {
       const universeGraph = await Promise.resolve(storage.getUniverseGraph());
@@ -849,6 +865,10 @@ if (isMainModule) {
     } catch (error) {
       console.warn('[ConversationWatcher] Error stopping:', error);
     }
+
+    // Shutdown session health monitor and session manager (Phase 6)
+    sessionHealthMonitor?.stop();
+    await sessionManager?.shutdown();
 
     // Shutdown file watchers
     await shutdownAllWatchers();

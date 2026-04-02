@@ -64,6 +64,34 @@ const channelUnsubscribeMessage = z.object({
   channel: z.string().min(1).max(100),
 });
 
+// Session lifecycle messages (Phase 6: Agent SDK sessions)
+const sessionStartMessage = z.object({
+  type: z.literal('session:start'),
+  channel: z.string().min(1).max(100),
+  payload: z.object({ workbenchId: z.string().min(1) }),
+});
+
+const sessionStopMessage = z.object({
+  type: z.literal('session:stop'),
+  channel: z.string().min(1).max(100),
+  payload: z.object({ workbenchId: z.string().min(1) }),
+});
+
+const sessionSwitchMessage = z.object({
+  type: z.literal('session:switch'),
+  channel: z.string().min(1).max(100),
+  payload: z.object({
+    newWorkbenchId: z.string().min(1),
+    previousWorkbenchId: z.string().min(1),
+  }),
+});
+
+const sessionHistoryMessage = z.object({
+  type: z.literal('session:history'),
+  channel: z.string().min(1).max(100),
+  payload: z.object({ workbenchId: z.string().min(1) }),
+});
+
 /**
  * Discriminated union of all valid WebSocket message types
  */
@@ -78,6 +106,10 @@ export const wsMessageSchema = z.discriminatedUnion('type', [
   capabilityErrorMessage,
   channelSubscribeMessage,
   channelUnsubscribeMessage,
+  sessionStartMessage,
+  sessionStopMessage,
+  sessionSwitchMessage,
+  sessionHistoryMessage,
 ]);
 
 /**

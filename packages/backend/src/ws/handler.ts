@@ -8,6 +8,7 @@ import { workspaceEventSchema, validateStorageData } from '@afw/shared';
 import { claudeCliManager } from '../services/claudeCliManager.js';
 import { activityTracker } from '../services/activityTracker.js';
 import { capabilityRegistry } from '../services/capabilityRegistry.js';
+import { sessionManager } from '../services/sessionManager.js';
 import { toCapabilityId } from '@afw/shared';
 
 /**
@@ -306,6 +307,74 @@ export function handleWebSocket(
           };
           ws.send(JSON.stringify(channelUnsubConfirmation));
           console.log(`[WS] Client ${clientId} unsubscribed from channel ${channel}`);
+          break;
+        }
+
+        case 'session:start': {
+          const startPayload = (message as any).payload ?? {};
+          const startWorkbenchId = startPayload.workbenchId as string | undefined;
+          if (!startWorkbenchId || !sessionManager) {
+            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid session:start — workbenchId required' }));
+            break;
+          }
+          try {
+            await sessionManager.startSession(startWorkbenchId);
+            console.log(`[WS] Session started for workbench ${startWorkbenchId} by client ${clientId}`);
+          } catch (err) {
+            console.error(`[WS] Session start failed for ${startWorkbenchId}:`, err);
+            ws.send(JSON.stringify({ type: 'error', payload: `Session start failed: ${(err as Error).message}` }));
+          }
+          break;
+        }
+
+        case 'session:stop': {
+          const stopPayload = (message as any).payload ?? {};
+          const stopWorkbenchId = stopPayload.workbenchId as string | undefined;
+          if (!stopWorkbenchId || !sessionManager) {
+            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid session:stop — workbenchId required' }));
+            break;
+          }
+          try {
+            await sessionManager.stopSession(stopWorkbenchId);
+            console.log(`[WS] Session stopped for workbench ${stopWorkbenchId} by client ${clientId}`);
+          } catch (err) {
+            console.error(`[WS] Session stop failed for ${stopWorkbenchId}:`, err);
+            ws.send(JSON.stringify({ type: 'error', payload: `Session stop failed: ${(err as Error).message}` }));
+          }
+          break;
+        }
+
+        case 'session:switch': {
+          const switchPayload = (message as any).payload ?? {};
+          const newWbId = switchPayload.newWorkbenchId as string | undefined;
+          const prevWbId = switchPayload.previousWorkbenchId as string | undefined;
+          if (!newWbId || !prevWbId || !sessionManager) {
+            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid session:switch — newWorkbenchId and previousWorkbenchId required' }));
+            break;
+          }
+          sessionManager.handleWorkbenchSwitch(newWbId, prevWbId);
+          console.log(`[WS] Workbench switch: ${prevWbId} -> ${newWbId} by client ${clientId}`);
+          break;
+        }
+
+        case 'session:history': {
+          const histPayload = (message as any).payload ?? {};
+          const histWorkbenchId = histPayload.workbenchId as string | undefined;
+          if (!histWorkbenchId || !sessionManager) {
+            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid session:history — workbenchId required' }));
+            break;
+          }
+          try {
+            const sessionHistory = await sessionManager.getSessionHistory(histWorkbenchId);
+            ws.send(JSON.stringify({
+              channel: '_system',
+              type: 'session:history',
+              payload: { workbenchId: histWorkbenchId, messages: sessionHistory },
+              ts: new Date().toISOString(),
+            }));
+          } catch (err) {
+            console.error(`[WS] Session history failed for ${histWorkbenchId}:`, err);
+          }
           break;
         }
 
