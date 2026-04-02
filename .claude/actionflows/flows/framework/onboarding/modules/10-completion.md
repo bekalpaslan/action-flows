@@ -30,10 +30,10 @@ Here's what you learned:
 
 ### Advanced Level ✅
 ```
-├── The contract (harmony bridge)
+├── The contract (validation bridge)
 ├── Format anatomy (structure, types, parsers, components)
-├── Harmony detection (auto-validation)
-└── Living software model (synchronized evolution)
+├── System health detection (auto-validation)
+└── Evolving software model (synchronized evolution)
 ```
 
 ---
@@ -42,13 +42,13 @@ Here's what you learned:
 
 - ✅ How to use ActionFlows safely
 - ✅ How to customize flows and actions
-- ✅ How to evolve the framework without breaking harmony
-- ✅ The philosophy of living software
+- ✅ How to evolve the framework without breaking system health
+- ✅ The philosophy of evolving software
 - ✅ What's sacred vs what's safe
 - ✅ The sin test and orchestrator boundaries
 - ✅ Context routing and flow composition
 - ✅ Review pipeline and second opinions
-- ✅ Contract-based harmony system
+- ✅ Contract-based system health
 
 ---
 
@@ -172,10 +172,10 @@ Add entry to `logs/INDEX.md`:
 2. Approval (you control it)
 3. Execution (trust the system)
 
-**Harmony:**
+**System Health:**
 - Contract keeps orchestrator and dashboard in sync
-- Living software evolves through coordinated updates
-- Harmony detection auto-validates
+- Evolving software adapts through coordinated updates
+- System health detection auto-validates
 
 **Evolution:**
 - Add flows freely (FLOWS.md)
@@ -187,4 +187,4 @@ Add entry to `logs/INDEX.md`:
 
 **Congratulations on completing ActionFlows onboarding!**
 
-You're now equipped to use, customize, and evolve this living software system.
+You're now equipped to use, customize, and evolve this evolving software system.

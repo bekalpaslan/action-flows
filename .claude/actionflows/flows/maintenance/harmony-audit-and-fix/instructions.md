@@ -6,9 +6,9 @@
 
 ## When to Use
 
-- Human says "fix harmony violations"
+- Human says "fix system health violations"
 - Human says "fix Gate N violations" (where N is gate number)
-- Human clicks "Fix Now" in Harmony Health Dashboard
+- Human clicks "Fix Now" in System Health Dashboard
 - Gates report persistent parsing or contract validation failures
 
 ---
@@ -143,7 +143,7 @@ Read your definition in .claude/actionflows/actions/second-opinion/agent.md
 
 Input:
 - review-log: {log path from Step 3}
-- focus: Verify fix resolves harmony violations without regressions. Check: does the format now validate? Are gates passing? Is backward compatibility maintained?
+- focus: Verify fix resolves system health violations without regressions. Check: does the format now validate? Are gates passing? Is backward compatibility maintained?
 ```
 
 **Gate:** Second opinion delivered (CONCUR or DISSENT).
@@ -192,7 +192,7 @@ Step 1 → Step 2 (branching: A | B | C) → Step 3 → Step 4 → Step 5 (verdi
 
 ## Chains With
 
-- ← Triggered from: Harmony Health Dashboard or human request
+- ← Triggered from: System Health Dashboard or human request
 - → `framework-health/` (to verify drift is cleared post-fix)
 - → `code-and-review/` (for additional follow-up work if needed)
 

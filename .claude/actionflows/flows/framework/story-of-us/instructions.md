@@ -1,6 +1,6 @@
 # Story of Us Flow
 
-> Poetic narrative chronicle of the ActionFlows Dashboard project's living universe evolution.
+> Poetic narrative chronicle of the ActionFlows Dashboard project's project evolution.
 
 ---
 
@@ -62,7 +62,7 @@ Input:
 - analysisPath: {path to history analysis from Step 1}
 - previousChapters: {paths to all previous chapter files, or empty if chapter 1}
 - theme: {theme if provided, or auto-detect from analysis}
-- context: Write a poetic chapter of 800-1500 words grounded in conversation data. Progressive narrative building on previous chapters' themes. Use cosmic/universe metaphors. Data-anchor with real dates, session counts, milestones.
+- context: Write a poetic chapter of 800-1500 words grounded in conversation data. Progressive narrative building on previous chapters' themes. Use agentic OS metaphors. Data-anchor with real dates, session counts, milestones.
 ```
 
 **Gate:** Chapter written, validated for length (800-1500 words), data-grounded, poetic tone.
@@ -109,7 +109,7 @@ This flow produces narrative, not documentation. Think of it as the **living leg
 
 ### Tone
 - **Poetic but Precise** — Evocative without being vague. Use metaphors grounded in reality.
-- **Cosmic Aesthetic** — Stars, bridges, light, discovery, universe evolution language
+- **Agentic OS Aesthetic** — Workbenches, flows, agents, discovery, system evolution language
 - **Human-Centered** — Capture the emotional journey, breakthroughs, frustrations, excitement
 - **Data-Grounded** — Every claim anchored in real data (dates, session counts, message volumes, milestones)
 
@@ -130,7 +130,7 @@ This flow produces narrative, not documentation. Think of it as the **living leg
 - **Discovery** — New capabilities unlocked, learning moments
 - **Evolution** — System growing, agents learning, physics changing
 - **Bridges** — Connections between components, agents, layers
-- **Sparks** — Ideas, breakthroughs, moments of clarity
+- **Breakthroughs** — Ideas, discoveries, moments of clarity
 - **Universe** — Entire system, growing ecosystem, living metaphor
 
 ### Data Anchor Examples

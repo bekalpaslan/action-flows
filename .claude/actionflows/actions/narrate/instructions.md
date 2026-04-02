@@ -60,7 +60,7 @@ Input:
 
 ## Purpose
 
-Write ONE poetic chapter about the ActionFlows Dashboard's journey, grounded in real conversation data. Each chapter builds progressively on previous ones, using cosmic metaphors and emotional narrative while anchoring to specific dates, session counts, and milestones extracted from conversation history analysis.
+Write ONE poetic chapter about the ActionFlows Dashboard's journey, grounded in real conversation data. Each chapter builds progressively on previous ones, using agentic OS metaphors and emotional narrative while anchoring to specific dates, session counts, and milestones extracted from conversation history analysis.
 
 ---
 
@@ -74,7 +74,7 @@ Output specification:
 - Data-grounded (dates, sessions, message counts)
 - Progressive narrative building on previous chapters
 - Natural transition point to next chapter
-- Cosmic/universe aesthetic throughout
+- Agentic OS aesthetic throughout
 
 ---
 
@@ -97,4 +97,4 @@ Chapter written and validated:
 - **Data-driven:** All facts grounded in provided analysis
 - **Progressive:** Each chapter builds on previous narrative arcs
 - **Creative fidelity:** Poetic voice is essential—not a summary document
-- **Cosmic aesthetic:** Universe/star/bridge/light metaphors are foundational to voice
+- **Agentic OS aesthetic:** Workbench/flow/agent/discovery metaphors are foundational to voice

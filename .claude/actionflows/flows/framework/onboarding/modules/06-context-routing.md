@@ -33,7 +33,7 @@ CONTEXTS.md defines contexts and routing:
 ### Auto-Target Contexts (2):
 ```
 ├── archive — Completed sessions (📦)
-└── harmony — Violations and remediations (❤️)
+└── system-health — Violations and remediations (❤️)
 ```
 
 ### Manual-Only Context (1):

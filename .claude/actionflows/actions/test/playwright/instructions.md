@@ -71,14 +71,14 @@ browser: chromium
 
 ### Run a specific test file with visual feedback
 ```
-target: cosmic-map-navigation.spec.ts
+target: dashboard-navigation.spec.ts
 mode: headed
 browser: chromium
 ```
 
 ### Test across all browsers
 ```
-target: cosmic-map
+target: dashboard-nav
 mode: headless
 browser: all
 ```
