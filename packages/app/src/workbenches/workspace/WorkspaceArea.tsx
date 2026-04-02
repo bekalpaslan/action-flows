@@ -1,4 +1,4 @@
-import { Group, Panel, Separator, useDefaultLayout, type PanelSize } from 'react-resizable-panels';
+import { Group, Panel, Separator, type PanelSize } from 'react-resizable-panels';
 import type { WorkbenchId } from '@/lib/types';
 import { useUIStore } from '@/stores/uiStore';
 import { cn } from '@/lib/utils';
@@ -29,24 +29,16 @@ export function WorkspaceArea({ workbenchId }: WorkspaceAreaProps) {
   const setPipelineCollapsed = useUIStore((s) => s.setPipelineCollapsed);
   const Page = PAGE_MAP[workbenchId];
 
-  const { defaultLayout, onLayoutChanged } = useDefaultLayout({
-    id: 'workspace-split',
-    storage: localStorage,
-  });
-
   return (
-    <Group
-      orientation="vertical"
-      defaultLayout={defaultLayout}
-      onLayoutChanged={onLayoutChanged}
-    >
+    <Group orientation="vertical">
+
       <Panel
         id="pipeline"
-        defaultSize={30}
-        minSize={15}
-        maxSize={50}
+        defaultSize="30%"
+        minSize="15%"
+        maxSize="50%"
         collapsible
-        collapsedSize={0}
+        collapsedSize="0%"
         onResize={(size: PanelSize) => {
           setPipelineCollapsed(size.asPercentage === 0);
         }}
@@ -63,7 +55,7 @@ export function WorkspaceArea({ workbenchId }: WorkspaceAreaProps) {
           'active:before:bg-accent/30'
         )}
       />
-      <Panel id="content" defaultSize={70} minSize={40}>
+      <Panel id="content" defaultSize="70%" minSize="40%">
         <main className="overflow-y-auto h-full p-6 bg-surface" role="main">
           <Page />
         </main>

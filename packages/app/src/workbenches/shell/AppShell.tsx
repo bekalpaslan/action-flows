@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { Group, Panel, Separator, useDefaultLayout, type PanelImperativeHandle, type PanelSize } from 'react-resizable-panels';
+import { Group, Panel, Separator, type PanelImperativeHandle, type PanelSize } from 'react-resizable-panels';
 import { useUIStore } from '@/stores/uiStore';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
@@ -25,11 +25,6 @@ export function AppShell() {
   const sidebarRef = useRef<PanelImperativeHandle>(null);
   const chatRef = useRef<PanelImperativeHandle>(null);
 
-  const { defaultLayout, onLayoutChanged } = useDefaultLayout({
-    id: 'app-layout',
-    storage: localStorage,
-  });
-
   // Sync refs to module-level handles for command palette access
   useEffect(() => {
     panelHandles.sidebar = sidebarRef.current;
@@ -51,15 +46,15 @@ export function AppShell() {
 
   return (
     <>
-      <Group orientation="horizontal" defaultLayout={defaultLayout} onLayoutChanged={onLayoutChanged} className="h-screen">
+      <Group orientation="horizontal" className="h-screen">
         <Panel
           panelRef={sidebarRef}
           id="sidebar"
-          defaultSize={20}
-          minSize={12}
-          maxSize={30}
+          defaultSize="20%"
+          minSize="12%"
+          maxSize="30%"
           collapsible
-          collapsedSize={4}
+          collapsedSize="4%"
           onResize={(panelSize: PanelSize) => {
             setSidebarCollapsed(panelSize.asPercentage <= 4);
           }}
@@ -67,18 +62,18 @@ export function AppShell() {
           <Sidebar collapsed={sidebarCollapsed} onExpand={handleSidebarExpand} />
         </Panel>
         <Separator className={dragHandleClasses} />
-        <Panel id="workspace" defaultSize={55} minSize={30}>
+        <Panel id="workspace" defaultSize="55%" minSize="30%">
           <WorkspaceArea key={activeWorkbench} workbenchId={activeWorkbench} />
         </Panel>
         <Separator className={dragHandleClasses} />
         <Panel
           panelRef={chatRef}
           id="chat"
-          defaultSize={25}
-          minSize={0}
-          maxSize={40}
+          defaultSize="25%"
+          minSize="0%"
+          maxSize="40%"
           collapsible
-          collapsedSize={0}
+          collapsedSize="0%"
           onResize={(panelSize: PanelSize) => {
             setChatCollapsed(panelSize.asPercentage === 0);
           }}
