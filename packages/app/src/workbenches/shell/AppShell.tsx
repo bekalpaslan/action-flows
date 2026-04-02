@@ -55,9 +55,9 @@ export function AppShell() {
         <Panel
           panelRef={sidebarRef}
           id="sidebar"
-          defaultSize={15}
-          minSize={4}
-          maxSize={25}
+          defaultSize={20}
+          minSize={12}
+          maxSize={30}
           collapsible
           collapsedSize={4}
           onResize={(panelSize: PanelSize) => {
@@ -67,7 +67,7 @@ export function AppShell() {
           <Sidebar collapsed={sidebarCollapsed} onExpand={handleSidebarExpand} />
         </Panel>
         <Separator className={dragHandleClasses} />
-        <Panel id="workspace" defaultSize={60} minSize={35}>
+        <Panel id="workspace" defaultSize={55} minSize={30}>
           <WorkspaceArea key={activeWorkbench} workbenchId={activeWorkbench} />
         </Panel>
         <Separator className={dragHandleClasses} />

@@ -42,8 +42,8 @@ export function WorkspaceArea({ workbenchId }: WorkspaceAreaProps) {
     >
       <Panel
         id="pipeline"
-        defaultSize={25}
-        minSize={10}
+        defaultSize={30}
+        minSize={15}
         maxSize={50}
         collapsible
         collapsedSize={0}
@@ -63,7 +63,7 @@ export function WorkspaceArea({ workbenchId }: WorkspaceAreaProps) {
           'active:before:bg-accent/30'
         )}
       />
-      <Panel id="content" defaultSize={75} minSize={50}>
+      <Panel id="content" defaultSize={70} minSize={40}>
         <main className="overflow-y-auto h-full p-6 bg-surface" role="main">
           <Page />
         </main>
