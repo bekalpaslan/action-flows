@@ -104,9 +104,9 @@ Plans:
   4. All broken cross-references to deleted docs/ paths fixed
   5. Functional gate vocabulary (Pre-Action Gate, Gate 1-14) preserved
   6. Flow reassignment complete: maintenance flows to settings/work, intel flows to explore
-**Plans:** 5 plans
+**Plans:** 1/5 plans executed
 Plans:
-- [ ] 04.1-01-PLAN.md -- Delete docs/, logs/ content, and cosmic/MODEL.md
+- [x] 04.1-01-PLAN.md -- Delete docs/, logs/ content, and cosmic/MODEL.md
 - [ ] 04.1-02-PLAN.md -- Deep rewrite ORCHESTRATOR.md, CONTEXTS.md, FLOWS.md, ACTIONS.md, project.config.md
 - [ ] 04.1-03-PLAN.md -- Deep rewrite CONTRACT.md, CLAUDE.md, actionflows/docs/living/, secondary critical files
 - [ ] 04.1-04-PLAN.md -- Batch update agent.md files, flow instructions, onboarding modules, LEARNINGS.md
