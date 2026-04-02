@@ -66,9 +66,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Status & Notifications
 
-- [ ] **STATUS-01**: Multi-agent status dashboard showing which agents are running, their workbench, status (idle/running/blocked/complete), elapsed time
+- [x] **STATUS-01**: Multi-agent status dashboard showing which agents are running, their workbench, status (idle/running/blocked/complete), elapsed time
 - [x] **STATUS-02**: Toast notification system for agent events (connect, disconnect, completion, errors, validation results)
-- [ ] **STATUS-03**: SubagentStart/SubagentStop hooks feed agent lifecycle into status registry
+- [x] **STATUS-03**: SubagentStart/SubagentStop hooks feed agent lifecycle into status registry
 
 ### Neural Validation (Intelligence Layer)
 
@@ -187,9 +187,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | SESSION-07 | Phase 6 | Pending |
 | SESSION-08 | Phase 6 | Pending |
 | SESSION-09 | Phase 6 | Pending |
-| STATUS-01 | Phase 6 | Pending |
+| STATUS-01 | Phase 6 | Complete |
 | STATUS-02 | Phase 6 | Complete |
-| STATUS-03 | Phase 6 | Pending |
+| STATUS-03 | Phase 6 | Complete |
 | CHAT-01 | Phase 7 | Pending |
 | CHAT-02 | Phase 7 | Pending |
 | CHAT-03 | Phase 7 | Pending |
