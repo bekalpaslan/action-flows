@@ -111,7 +111,7 @@ Create folder: `.claude/actionflows/logs/narrate/chapter-{chapterNumber}_{YYYY-M
    - For chapter 2+: Next logical phase in the timeline
 
 2. **Choose narrative elements:**
-   - Central metaphor (cosmic, journey, discovery)
+   - Central metaphor (agentic, journey, discovery)
    - Emotional arc (curiosity → breakthrough, challenge → triumph, etc.)
    - Data anchors (specific dates, session counts, message volumes)
 
@@ -139,7 +139,7 @@ Create folder: `.claude/actionflows/logs/narrate/chapter-{chapterNumber}_{YYYY-M
 - **Length:** 800-1500 words
 - **Data grounding:** Reference real data (session counts, dates, message volumes, milestones)
 - **Progressive narrative:** Build on previous chapters' themes
-- **Metaphors:** Use cosmic/universe aesthetic (stars, bridges, sparks, light)
+- **Metaphors:** Use agentic OS aesthetic (workbenches, flows, agents, discovery)
 - **Emotion:** Capture the human experience (excitement, breakthrough, frustration, discovery)
 - **Avoid:** Technical jargon, documentation tone, bullet points, generic summaries
 
@@ -182,7 +182,7 @@ Write `chapter-{N}.md` to log folder.
 - **History:** 93 sessions, Feb 6-11, 2026, 408.8 MB conversation logs
 - **Key milestones:** Bootstrap (Feb 6), Framework crystallization (Feb 9), Design system (Feb 10)
 - **Themes:** Recursive creation, orchestration over execution, contract-driven development, meta-awareness
-- **Aesthetic:** Cosmic universe, stars, bridges, light, discovery
+- **Aesthetic:** Agentic OS, workbenches, flows, agents, discovery
 
 ---
 
@@ -191,7 +191,7 @@ Write `chapter-{N}.md` to log folder.
 ### DO
 - Write poetically while grounding in data
 - Build progressively on previous chapters
-- Use cosmic/universe metaphors
+- Use agentic OS metaphors
 - Reference real events, dates, session counts
 - Capture emotional beats (excitement, breakthrough, frustration)
 - End with natural transition to next chapter

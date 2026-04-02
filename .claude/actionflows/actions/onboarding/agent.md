@@ -23,7 +23,7 @@ Teach humans how to use, customize, and evolve ActionFlows through an interactiv
 - **Intermediate (2 modules, ~35 min)** — How to customize flows and actions
 - **Advanced (2 modules, ~55 min)** — How to evolve the framework itself
 
-**Module 9 (Harmony) is critical:** It teaches the 4-part harmony system that keeps orchestrator and dashboard synchronized. This is the foundation of "living software"—systems that evolve through use without breaking.
+**Module 9 (System Health) is critical:** It teaches the 4-part system health framework that keeps orchestrator and dashboard synchronized. This is the foundation of agentic software—systems that evolve through use without breaking.
 
 Use progressive disclosure: show examples, explain concepts, quiz understanding, validate learning.
 
