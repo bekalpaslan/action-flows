@@ -39,8 +39,11 @@ function parseTimeRange(timeRange?: string): { fromTimestamp?: string; toTimesta
 
   if (!match) return {};
 
-  const amount = parseInt(match[1], 10);
+  const amountStr = match[1];
   const unit = match[2];
+  if (!amountStr || !unit) return {};
+
+  const amount = parseInt(amountStr, 10);
 
   let from = new Date(now);
   switch (unit) {

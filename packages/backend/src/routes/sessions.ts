@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import type { Session, Chain, SessionId, WorkspaceEvent } from '@afw/shared';
-import { brandedTypes, Status } from '@afw/shared';
+import { brandedTypes, Status, toUserId } from '@afw/shared';
 import { storage } from '../storage/index.js';
 import { filePersistence } from '../storage/file-persistence.js';
 import { startWatching, stopWatching } from '../services/fileWatcher.js';
@@ -312,6 +312,9 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', writeLimiter, validateBody(updateSessionSchema), async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Missing required parameter: id' });
+    }
     const { status, summary, endReason } = req.body;
 
     const session = await Promise.resolve(storage.getSession(id as SessionId));
@@ -709,10 +712,10 @@ router.get('/users', (req, res) => {
     const users = storage.getUsersWithActiveSessions?.() || [];
 
     const userStats = users.map((userId: string) => {
-      const sessionIds = storage.getSessionsByUser?.(userId as any) || [];
-      const sessions = (sessionIds
-        .map((id: string) => storage.getSession(id as SessionId)) as any[])
-        .filter((s: any): s is Session => s !== undefined && typeof s === 'object' && 'id' in s);
+      const sessionIds = storage.getSessionsByUser?.(toUserId(userId)) || [];
+      const sessions = sessionIds
+        .map((id) => storage.getSession(id))
+        .filter((s): s is Session => s !== undefined && typeof s === 'object' && 'id' in s);
 
       return {
         id: userId,
@@ -747,10 +750,13 @@ router.get('/users', (req, res) => {
 router.get('/users/:userId/sessions', (req, res) => {
   try {
     const { userId } = req.params;
-    const sessionIds = storage.getSessionsByUser?.(userId as any) || [];
-    const sessions = (sessionIds
-      .map((id: string) => storage.getSession(id as SessionId)) as any[])
-      .filter((s: any): s is Session => s !== undefined && typeof s === 'object' && 'id' in s);
+    if (!userId) {
+      return res.status(400).json({ error: 'Missing required parameter: userId' });
+    }
+    const sessionIds = storage.getSessionsByUser?.(toUserId(userId)) || [];
+    const sessions = sessionIds
+      .map((id) => storage.getSession(id))
+      .filter((s): s is Session => s !== undefined && typeof s === 'object' && 'id' in s);
 
     res.json({
       user: userId,

@@ -84,6 +84,10 @@ router.get('/events', (req: Request, res: Response) => {
 router.get('/:resourceType', (req: Request, res: Response) => {
   try {
     const { resourceType } = req.params;
+    if (!resourceType) {
+      res.status(400).json({ error: 'Missing required parameter: resourceType' });
+      return;
+    }
     const { phase, resourceId } = req.query;
 
     // Validate resource type

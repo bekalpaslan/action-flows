@@ -98,6 +98,9 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Missing required parameter: id' });
+    }
     const dossier = await Promise.resolve(storage.getDossier(id));
 
     if (!dossier) {
@@ -124,6 +127,9 @@ router.get('/:id', async (req, res) => {
 router.put('/:id', writeLimiter, validateBody(updateDossierSchema), async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Missing required parameter: id' });
+    }
     const { name, targets, context } = req.body;
 
     const dossier = await Promise.resolve(storage.getDossier(id));
@@ -168,6 +174,9 @@ router.put('/:id', writeLimiter, validateBody(updateDossierSchema), async (req, 
 router.delete('/:id', writeLimiter, async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Missing required parameter: id' });
+    }
 
     const deleted = await Promise.resolve(storage.deleteDossier(id));
 
@@ -205,6 +214,9 @@ router.delete('/:id', writeLimiter, async (req, res) => {
 router.get('/:id/history', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Missing required parameter: id' });
+    }
     const dossier = await Promise.resolve(storage.getDossier(id));
 
     if (!dossier) {
@@ -237,6 +249,9 @@ router.get('/:id/history', async (req, res) => {
 router.post('/:id/analyze', writeLimiter, validateBody(triggerAnalysisSchema), async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Missing required parameter: id' });
+    }
     const { force } = req.body;
 
     const dossier = await Promise.resolve(storage.getDossier(id));

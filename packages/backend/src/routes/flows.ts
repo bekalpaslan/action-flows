@@ -312,7 +312,7 @@ router.delete('/:flowId', async (req: Request, res: Response) => {
 
     // Try to use delete if available, otherwise set to empty string
     if (storage.delete) {
-      await Promise.resolve((storage as any).delete(key));
+      await Promise.resolve(storage.delete(key));
     } else if (storage.set) {
       // Fallback: mark as deleted
       await Promise.resolve(storage.set(key, ''));

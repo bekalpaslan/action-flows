@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import type { WorkspaceEvent, SessionId, StepNumber, ChainCompiledEvent, ChainStartedEvent, ChainCompletedEvent, Chain, ChainStep } from '@afw/shared';
+import type { WorkspaceEvent, SessionId, ChainId, StepNumber, ChainCompiledEvent, ChainStartedEvent, ChainCompletedEvent, Chain, ChainStep } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { storage, isAsyncStorage } from '../storage/index.js';
 import { setActiveStep, clearActiveStep } from '../services/fileWatcher.js';
@@ -28,7 +28,7 @@ const POLLING_RATE_LIMIT_MS = 5000; // 5 seconds
 
 // Active chain tracker for spark animation (Phase 4)
 // Maps sessionId -> chainId
-const activeChainBySession = new Map<SessionId, string>();
+const activeChainBySession = new Map<SessionId, ChainId>();
 
 /**
  * Convert ChainCompiledEvent to Chain domain object
@@ -103,7 +103,7 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
 
     // Store event (handles both async Redis and sync Memory)
     // Registry events may not have a sessionId - skip storage for those
-    if (event.sessionId) {
+    if ('sessionId' in event && event.sessionId) {
       await Promise.resolve(storage.addEvent(event.sessionId, event));
 
       // Track activity for TTL extension
@@ -187,41 +187,42 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
     }
 
     // Update active step for file change attribution (step events always have sessionId)
-    if (event.sessionId) {
+    if ('sessionId' in event && event.sessionId) {
       if (event.type === 'step:spawned' || event.type === 'step:started') {
-        const stepEvent = event as any;
-        if (stepEvent.stepNumber && stepEvent.action) {
-          setActiveStep(event.sessionId, stepEvent.stepNumber, stepEvent.action);
+        if (event.stepNumber && event.action) {
+          setActiveStep(event.sessionId, event.stepNumber, event.action);
           // Track step progress activity
           activityTracker.trackActivity(event.sessionId, 'step_progress');
 
           // Start spark animation for chain execution visualization (Phase 4)
-          if (event.type === 'step:started' && stepEvent.action) {
+          if (event.type === 'step:started' && event.action) {
             try {
               const sparkBroadcaster = getSparkBroadcaster();
               const chainId = activeChainBySession.get(event.sessionId);
 
               if (chainId) {
-                const chain = await Promise.resolve(storage.getChain(chainId as any));
+                const chain = await Promise.resolve(storage.getChain(chainId));
 
                 if (chain) {
                   // Find current step and previous step
                   const currentStepIndex = chain.steps.findIndex(
-                    (s) => s.stepNumber === stepEvent.stepNumber
+                    (s) => s.stepNumber === event.stepNumber
                   );
 
                   if (currentStepIndex > 0) {
                     // Get previous completed step
                     const previousStep = chain.steps[currentStepIndex - 1];
 
-                    // Start spark from previous step to current step
-                    sparkBroadcaster.startSpark(
-                      chain.id,
-                      event.sessionId,
-                      previousStep.action,
-                      stepEvent.action,
-                      3000 // 3 second default animation duration
-                    );
+                    if (previousStep) {
+                      // Start spark from previous step to current step
+                      sparkBroadcaster.startSpark(
+                        chain.id,
+                        event.sessionId,
+                        previousStep.action,
+                        event.action,
+                        3000 // 3 second default animation duration
+                      );
+                    }
                   }
                 }
               }
@@ -240,7 +241,7 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
         if (chainId) {
           try {
             const sparkBroadcaster = getSparkBroadcaster();
-            sparkBroadcaster.completeSpark(chainId as any);
+            sparkBroadcaster.completeSpark(chainId);
           } catch (error) {
             console.warn('[SparkBroadcaster] Failed to complete spark animation:', error);
           }
@@ -261,16 +262,18 @@ router.post('/', writeLimiter, validateBody(createEventSchema), async (req, res)
     }
 
     // Broadcast to clients (WebSocket handler subscribes to Redis pub/sub)
+    const logSessionId = 'sessionId' in event ? event.sessionId : undefined;
+    const logTimestamp = 'timestamp' in event ? event.timestamp : undefined;
     console.log(`[API] Event received and stored:`, {
-      sessionId: event.sessionId,
+      sessionId: logSessionId,
       type: event.type,
-      timestamp: event.timestamp,
+      timestamp: logTimestamp,
     });
 
     res.status(201).json({
       success: true,
-      eventId: (event as any).id,
-      sessionId: event.sessionId,
+      eventId: 'id' in event ? event.id : undefined,
+      sessionId: logSessionId,
     });
   } catch (error) {
     console.error('[API] Error storing event:', error);

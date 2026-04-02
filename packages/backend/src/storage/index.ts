@@ -186,6 +186,7 @@ export interface Storage {
   set?(key: string, value: string, ttlSeconds?: number): Promise<void> | void;
   get?(key: string): Promise<string | null> | string | null;
   keys?(pattern: string): Promise<string[]> | string[];
+  delete?(key: string): Promise<boolean> | boolean;
 
   // User management
   users?: Map<UserId, User>; // Memory only

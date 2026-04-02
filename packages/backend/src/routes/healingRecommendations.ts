@@ -116,6 +116,9 @@ router.post('/analyze', writeLimiter, async (req, res) => {
 router.patch('/:id', writeLimiter, async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Missing required parameter: id' });
+    }
 
     const parsed = updateStatusSchema.safeParse(req.body);
     if (!parsed.success) {

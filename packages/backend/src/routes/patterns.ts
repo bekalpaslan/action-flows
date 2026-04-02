@@ -230,6 +230,9 @@ router.get('/bookmarks/:projectId', async (req, res) => {
 router.delete('/bookmarks/:bookmarkId', writeLimiter, async (req, res) => {
   try {
     const bookmarkId = req.params.bookmarkId;
+    if (!bookmarkId) {
+      return res.status(400).json({ error: 'Missing required parameter: bookmarkId' });
+    }
 
     await Promise.resolve(storage.removeBookmark(bookmarkId));
 

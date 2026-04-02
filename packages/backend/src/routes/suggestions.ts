@@ -132,6 +132,9 @@ router.post('/', writeLimiter, validateBody(createSuggestionSchema), async (req,
 router.delete('/:id', writeLimiter, async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Missing required parameter: id' });
+    }
 
     const deleted = await Promise.resolve(storage.deleteSuggestion(id));
 
@@ -165,6 +168,9 @@ router.delete('/:id', writeLimiter, async (req, res) => {
 router.post('/:id/promote', writeLimiter, async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Missing required parameter: id' });
+    }
 
     const suggestion = await Promise.resolve(storage.getSuggestion(id));
 

@@ -1752,6 +1752,17 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       }
     },
 
+    async delete(key: string): Promise<boolean> {
+      try {
+        const fullKey = `${keyPrefix}${key}`;
+        const result = await redis.del(fullKey);
+        return result > 0;
+      } catch (error) {
+        console.error(`[Redis] Error deleting key ${key}:`, error);
+        return false;
+      }
+    },
+
     // === User Management ===
     async getUser(userId: UserId): Promise<User | undefined> {
       try {
