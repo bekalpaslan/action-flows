@@ -76,6 +76,9 @@ export {
 
 export { RadioGroup, RadioGroupItem } from './radio-group';
 
+export { StatusDot, statusDotVariants } from './status-dot';
+export type { StatusDotProps } from './status-dot';
+
 // Manifest
 export { componentManifest } from './manifest';
 export type { ComponentManifestEntry } from './manifest';

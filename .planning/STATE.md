@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v4.8
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-04-02T22:43:00Z"
+stopped_at: Completed 06-02-PLAN.md
+last_updated: "2026-04-02T20:51:08.755Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 12
   completed_phases: 6
-  total_plans: 27
-  completed_plans: 24
-  percent: 92
+  total_plans: 23
+  completed_plans: 23
+  percent: 91
 ---
 
 # Project State
@@ -27,10 +27,10 @@ See: .planning/PROJECT.md (updated 2026-04-01)
 
 Phase: 06 (agent-sessions-status) — EXECUTING
 Plan: 2 of 4
-Status: Ready to execute
+Status: Executing
 Last activity: 2026-04-02
 
-Progress: [=========.] 92%
+Progress: [=========.] 91%
 
 ## Performance Metrics
 
@@ -73,7 +73,7 @@ Progress: [=========.] 92%
 | Phase 05 P01 | 4min | 2 tasks | 10 files |
 | Phase 05 P02 | 2min | 2 tasks | 6 files |
 | Phase 05 P03 | 6min | 2 tasks | 6 files |
-| Phase 06 P01 | 7min | 3 tasks | 6 files |
+| Phase 06 P02 | 3min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -138,9 +138,10 @@ Recent decisions affecting current work:
 - [Phase 05]: Direct store access via usePipelineStore.getState() for edge lookup to avoid selector re-render
 - [Phase 05]: Inline CSS transition for drawer slide-in (Tailwind animate-in not available)
 - [Phase 05]: 5-second clearPipeline delay on chain:completed cancelled on new chain:compiled
-- [Phase 06]: Agent SDK has no startup() function; used listSessions() for pre-warm instead
-- [Phase 06]: permissionMode bypassPermissions for backend-only agent sessions
-- [Phase 06]: Queue+resolver async generator pattern for streaming input to Agent SDK query()
+- [Phase 06]: statusPanelCollapsed defaults to true per UI-SPEC 'Default state: Collapsed'
+- [Phase 06]: setStatus clears error field when transitioning away from error state
+- [Phase 06]: StatusDot auto-pulses for running/connecting statuses (overridable via explicit pulse prop)
+- [Phase 06]: motion-safe: prefix for pulse animation respects prefers-reduced-motion per UI-SPEC
 
 ### Pending Todos
 
@@ -154,6 +155,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T22:43:00Z
-Stopped at: Completed 06-01-PLAN.md
+Last session: 2026-04-02T22:38:36Z
+Stopped at: Completed 06-02-PLAN.md
 Resume file: None
