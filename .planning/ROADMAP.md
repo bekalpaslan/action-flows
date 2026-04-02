@@ -143,7 +143,7 @@ Plans:
   6. Toast notifications fire for agent lifecycle events (connect, disconnect, completion, errors)
 **Plans:** 4 plans
 Plans:
-- [ ] 06-01-PLAN.md -- Install Agent SDK, shared session event types, backend SessionManager with full lifecycle
+- [x] 06-01-PLAN.md -- Install Agent SDK, shared session event types, backend SessionManager with full lifecycle
 - [ ] 06-02-PLAN.md -- Install sonner, frontend sessionStore zustand, StatusDot component, session-pulse CSS
 - [ ] 06-03-PLAN.md -- Backend health monitor, WS handler session commands, backend startup wiring
 - [ ] 06-04-PLAN.md -- Frontend session hooks, AgentStatusPanel UI, toast integration, WorkspaceArea wiring
@@ -214,7 +214,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 4. Layout & Navigation | 5/5 | Complete | 2026-04-02 |
 | 4.1 Framework & Docs Realignment | 2/5 | In Progress|  |
 | 5. Pipeline Visualization | 0/3 | Planning complete | - |
-| 6. Agent Sessions & Status | 0/4 | Planning complete | - |
+| 6. Agent Sessions & Status | 1/4 | In Progress | - |
 | 7. Chat Panel | 0/? | Not started | - |
 | 8. Neural Validation & Safety | 0/? | Not started | - |
 | 9. Workbenches & Flow Management | 0/? | Not started | - |
