@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: TypeScript Foundation** - Zero compiler errors, branded type hygiene, clean patterns for agents to imitate
 - [ ] **Phase 2: Frontend Scaffold & WebSocket** - Clean workbench architecture, singleton multiplexed WebSocket, Vite/Electron build verified
-- [x] **Phase 3: Design System** - Token system, component library with Radix + Tailwind v4 + CVA, machine-readable manifest (completed 2026-04-02)
+- [x] **Phase 3: Design System** - Token system, component library with Radix + Tailwind v4 + CVA, machine-readable manifest (completed 2026-04-02)
 - [ ] **Phase 4: Layout & Navigation** - 3-panel resizable layout, sidebar with 7 workbenches, workspace split, command palette
 - [ ] **Phase 5: Pipeline Visualization** - Horizontal node-based pipeline with live chain execution, forking/merging, real-time status
 - [ ] **Phase 6: Agent Sessions & Status** - Persistent Claude sessions per workbench, lazy activation, health monitoring, status dashboard
@@ -83,7 +83,12 @@ Plans:
   3. The workspace area splits into pipeline visualizer region (top ~25%) and content area (bottom ~75%)
   4. Panels can be resized by dragging and collapsed/expanded
   5. Command palette opens with Cmd+K / Ctrl+K and supports keyboard navigation through commands
-**Plans**: TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 04-01-PLAN.md -- Install deps (react-resizable-panels, cmdk), extend types with lucide icons, extend uiStore, vitest setup
+- [ ] 04-02-PLAN.md -- Rewrite AppShell with 3-panel PanelGroup, create Sidebar with collapse/expand, migrate WebSocketStatus
+- [ ] 04-03-PLAN.md -- Rebuild WorkspaceArea with vertical pipeline/content split, create PipelinePlaceholder, migrate ChatPlaceholder
+- [ ] 04-04-PLAN.md -- Create command palette (cmdk), keyboard shortcuts hook, wire into AppShell
 **UI hint**: yes
 
 ### Phase 5: Pipeline Visualization
@@ -176,7 +181,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 1. TypeScript Foundation | 0/3 | Planning complete | - |
 | 2. Frontend Scaffold & WebSocket | 0/3 | Planning complete | - |
 | 3. Design System | 4/4 | Complete   | 2026-04-02 |
-| 4. Layout & Navigation | 0/? | Not started | - |
+| 4. Layout & Navigation | 0/4 | Planning complete | - |
 | 5. Pipeline Visualization | 0/? | Not started | - |
 | 6. Agent Sessions & Status | 0/? | Not started | - |
 | 7. Chat Panel | 0/? | Not started | - |
