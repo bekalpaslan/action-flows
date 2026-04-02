@@ -50,7 +50,7 @@ Plans:
   4. Backend services, shared types, and the actionflows framework are preserved and functional
 **Plans:** 3 plans
 Plans:
-- [ ] 02-01-PLAN.md -- Delete cosmic frontend, build new workbench shell with sidebar navigation and zustand state
+- [x] 02-01-PLAN.md -- Delete cosmic frontend, build new workbench shell with sidebar navigation and zustand state
 - [x] 02-02-PLAN.md -- Rebuild backend WebSocket hub with channel-per-workbench multiplexing
 - [ ] 02-03-PLAN.md -- Frontend WebSocket client singleton, status indicator, and build pipeline verification
 **UI hint**: yes
