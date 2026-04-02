@@ -141,7 +141,12 @@ Plans:
   4. A health monitor detects session disconnection within 30 seconds and a resurrection layer recovers from local conversation logs
   5. A multi-agent status dashboard shows which agents are running, their workbench, status (idle/running/blocked/complete), and elapsed time
   6. Toast notifications fire for agent lifecycle events (connect, disconnect, completion, errors)
-**Plans**: TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 06-01-PLAN.md -- Install Agent SDK, shared session event types, backend SessionManager with full lifecycle
+- [ ] 06-02-PLAN.md -- Install sonner, frontend sessionStore zustand, StatusDot component, session-pulse CSS
+- [ ] 06-03-PLAN.md -- Backend health monitor, WS handler session commands, backend startup wiring
+- [ ] 06-04-PLAN.md -- Frontend session hooks, AgentStatusPanel UI, toast integration, WorkspaceArea wiring
 **UI hint**: yes
 
 ### Phase 7: Chat Panel
@@ -209,7 +214,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 4. Layout & Navigation | 5/5 | Complete | 2026-04-02 |
 | 4.1 Framework & Docs Realignment | 2/5 | In Progress|  |
 | 5. Pipeline Visualization | 0/3 | Planning complete | - |
-| 6. Agent Sessions & Status | 0/? | Not started | - |
+| 6. Agent Sessions & Status | 0/4 | Planning complete | - |
 | 7. Chat Panel | 0/? | Not started | - |
 | 8. Neural Validation & Safety | 0/? | Not started | - |
 | 9. Workbenches & Flow Management | 0/? | Not started | - |
