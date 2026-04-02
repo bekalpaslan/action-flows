@@ -4,7 +4,9 @@
 **Last Updated:** 2026-02-09
 **TypeScript Definitions:** `packages/shared/src/contract/`
 
-**⚠️ ENFORCEMENT:** Adding or modifying formats in this contract MUST follow the evolution process in `docs/architecture/CONTRACT_EVOLUTION.md`. Formats without paired parser + frontend implementations create spec-without-implementation drift. See ORCHESTRATOR.md § CONTRACT_EVOLUTION.md Process Validation.
+**ENFORCEMENT:** Adding or modifying formats in this contract MUST follow the contract evolution process (inline summary below). Formats without paired parser + frontend implementations create spec-without-implementation drift. See ORCHESTRATOR.md § Contract Evolution Process Validation.
+
+**Contract Evolution Process:** When adding or modifying a format: (1) Draft spec in this file, (2) Implement TypeScript type, (3) Implement Zod schema, (4) Implement parser, (5) Verify 4-layer alignment via `pnpm run contract:validate`, (6) Implement frontend consumer. Breaking changes increment `CONTRACT_VERSION` with 90-day dual support.
 
 ---
 
@@ -31,11 +33,9 @@ When agents or orchestrator refer to "implementing Format X", the target is 100%
 
 ## Cross-References
 
-**Philosophy & System:** See `.claude/actionflows/docs/living/HARMONY.md`
-**Evolution Process:** See `docs/architecture/CONTRACT_EVOLUTION.md`
+**System Health:** See `.claude/actionflows/docs/living/HARMONY.md`
 **Code API Reference:** See `packages/shared/src/contract/README.md`
 **Parser Priority:** See `packages/app/docs/PARSER_PRIORITY.md`
-**Gate Checkpoints & Verification:** See `docs/architecture/GATE_LOGGING.md`
 **Orchestrator Observability:** See `.claude/actionflows/ORCHESTRATOR_OBSERVABILITY.md`
 
 **Golden Rule:** If the dashboard PARSES it → contract-defined (sacred). If the dashboard READS it → not contract-defined (evolve freely).
@@ -111,7 +111,6 @@ The drift prevention system has 4 enforcement layers:
 ### See Also
 
 - **L021 Learning:** `.claude/actionflows/LEARNINGS.md` § L021 — Why field-level verification is required
-- **Evolution Process:** `docs/architecture/CONTRACT_EVOLUTION.md` — How to evolve contracts safely
 - **Review Methodology:** `.claude/actionflows/actions/review/agent.md` § Contract Change Verification
 
 ---
@@ -124,21 +123,21 @@ All orchestrator outputs defined in this contract are validated at backend gate 
 
 | Format | Gate | Validation | Trace Storage |
 |--------|------|-----------|---|
-| **1.1** Chain Compilation Table | Gate 4 | Parse table structure, validate step counts | Harmony (7d TTL) |
-| **1.2** Chain Execution Start | Gate 7 | Parse step metadata, validate action paths | Harmony (7d TTL) |
-| **2.1** Step Completion Announcement | Gate 6 | Parse completion, check 6-trigger signals | Harmony (7d TTL) |
-| **3.2** Learning Surface Presentation | Gate 13 | Validate Issue/Root/Suggestion structure | Harmony (7d TTL) |
-| **4.1** Registry Update | Gate 12 | Verify INDEX.md entry format | Harmony (7d TTL) |
+| **1.1** Chain Compilation Table | Gate 4 | Parse table structure, validate step counts | System Health (7d TTL) |
+| **1.2** Chain Execution Start | Gate 7 | Parse step metadata, validate action paths | System Health (7d TTL) |
+| **2.1** Step Completion Announcement | Gate 6 | Parse completion, check 6-trigger signals | System Health (7d TTL) |
+| **3.2** Learning Surface Presentation | Gate 13 | Validate Issue/Root/Suggestion structure | System Health (7d TTL) |
+| **4.1** Registry Update | Gate 12 | Verify INDEX.md entry format | System Health (7d TTL) |
 
 **Validation Architecture:**
 - **Orchestrator Role:** Produce contract-compliant outputs naturally (zero burden)
 - **Backend Role:** Parse outputs at gate checkpoints, validate format compliance
-- **Harmony Role:** Store gate traces for auditability, detect violations (→ healing)
+- **System Health Role:** Store gate traces for auditability, detect violations (-> healing)
 - **Frontend Role:** Display gate traces and validation results in dashboard
 
-**Graceful Degradation:** If backend cannot parse an orchestrator output, it logs a violation but does NOT block execution. This creates a maintenance signal (visible in Harmony workbench) rather than a cascade failure.
+**Graceful Degradation:** If backend cannot parse an orchestrator output, it logs a violation but does NOT block execution. This creates a signal (visible in Settings workbench) rather than a cascade failure.
 
-See `docs/architecture/GATE_LOGGING.md` § Zero-Burden Architecture for complete explanation.
+Gate checkpoint validation is implemented in `packages/backend/src/services/gateCheckpoint.ts`. See `.claude/actionflows/ORCHESTRATOR_OBSERVABILITY.md` for the zero-burden architecture explanation.
 
 ---
 
@@ -370,14 +369,14 @@ These formats are produced by the orchestrator. Examples are in ORCHESTRATOR.md.
 
 **Required Fields:**
 - Request brief (string)
-- Context (enum: work | maintenance | explore | review | settings | pm | archive | harmony | editor, or custom workbench IDs — extensible)
+- Context (enum: work | explore | review | settings | pm | archive | studio, or custom workbench IDs -- extensible)
 - Flow (flow name or "Composed from actions" or "No match")
 - Actions (list of actions)
 - Explanation (why this routing)
 - Confidence (number 0.0-1.0, nullable) — Routing confidence score. Higher values indicate stronger keyword match.
 - Disambiguated (boolean) — Whether human disambiguation was required. True if multiple contexts scored equally.
 
-**Note:** Currently NOT produced by orchestrator (internal routing). Legacy name "Department" will be renamed to "Context" in future contract version.
+**Note:** Currently NOT produced by orchestrator (internal routing). Legacy TypeScript name "DepartmentRouting" will be renamed to "ContextRouting" in future contract version.
 
 ---
 
@@ -437,7 +436,7 @@ These formats are produced by agents. Full specifications included because agent
 - `FindingsTable` component renders findings with severity badges
 - `VerdictBanner` component shows APPROVED/NEEDS_CHANGES with score
 
-**Validation:** Harmony detector validates Verdict enum, Score range (0-100), required sections present
+**Validation:** System health detector validates Verdict enum, Score range (0-100), required sections present
 
 ---
 
@@ -641,7 +640,7 @@ LXXX | {date} | {issue-title}
 - `HealingRecommendationPanel` component shows suggested flow and target files
 - `ConfidenceBadge` component shows diagnosis confidence level
 
-**Validation:** Harmony detector validates Classification enum, Confidence enum, Severity enum, required sections present
+**Validation:** System health detector validates Classification enum, Confidence enum, Severity enum, required sections present
 
 **Implementation Status:** Spec: done | Parser: pending | Frontend: pending
 
@@ -771,7 +770,7 @@ LXXX | {date} | {issue-title}
 - `HealthScoreChart` component visualizes before/after comparison
 - `GateComparisonTable` component shows detailed gate-by-gate analysis
 
-**Validation:** Harmony detector validates Verdict enum, health score range (0-100), required sections present
+**Validation:** System health detector validates Verdict enum, health score range (0-100), required sections present
 
 **Implementation Status:** Spec: done | Parser: pending | Frontend: pending
 
@@ -941,7 +940,7 @@ LXXX | {date} | {issue-title}
 - `QuarantineNotification` component alerts user of new quarantines
 - `QuarantineListPanel` component displays all active quarantines
 
-**Validation:** Harmony detector validates Subcommand enum, Target Type enum, required sections present
+**Validation:** System health detector validates Subcommand enum, Target Type enum, required sections present
 
 **Implementation Status:** Spec: done | Parser: pending | Frontend: pending
 
