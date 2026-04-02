@@ -83,12 +83,13 @@ Plans:
   3. The workspace area splits into pipeline visualizer region (top ~25%) and content area (bottom ~75%)
   4. Panels can be resized by dragging and collapsed/expanded
   5. Command palette opens with Cmd+K / Ctrl+K and supports keyboard navigation through commands
-**Plans:** 4/4 plans complete
+**Plans:** 5 plans (4 complete + 1 gap closure)
 Plans:
 - [x] 04-01-PLAN.md -- Install deps (react-resizable-panels, cmdk), extend types with lucide icons, extend uiStore, vitest setup
 - [x] 04-02-PLAN.md -- Rewrite AppShell with 3-panel PanelGroup, create Sidebar with collapse/expand, migrate WebSocketStatus
 - [x] 04-03-PLAN.md -- Rebuild WorkspaceArea with vertical pipeline/content split, create PipelinePlaceholder, migrate ChatPlaceholder
 - [x] 04-04-PLAN.md -- Create command palette (cmdk), keyboard shortcuts hook, wire into AppShell
+- [ ] 04-05-PLAN.md -- Gap closure: fix react-resizable-panels v4.8 API mismatch in AppShell.tsx and WorkspaceArea.tsx type annotation
 **UI hint**: yes
 
 ### Phase 04.1: Framework & Docs Realignment — strip cosmic terminology, update actionflows framework to match 7-workbench model, clean stale docs and tests (INSERTED)
@@ -191,7 +192,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 1. TypeScript Foundation | 0/3 | Planning complete | - |
 | 2. Frontend Scaffold & WebSocket | 0/3 | Planning complete | - |
 | 3. Design System | 4/4 | Complete   | 2026-04-02 |
-| 4. Layout & Navigation | 4/4 | Complete  | 2026-04-02 |
+| 4. Layout & Navigation | 4/5 | Gap closure | - |
 | 5. Pipeline Visualization | 0/? | Not started | - |
 | 6. Agent Sessions & Status | 0/? | Not started | - |
 | 7. Chat Panel | 0/? | Not started | - |
