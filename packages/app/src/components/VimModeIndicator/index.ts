@@ -1,1 +1,0 @@
-export { VimModeIndicator } from './VimModeIndicator';

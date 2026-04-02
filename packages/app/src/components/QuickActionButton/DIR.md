@@ -1,3 +1,0 @@
-# QuickActionButton/
-
-(empty directory)
