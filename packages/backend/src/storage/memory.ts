@@ -308,7 +308,7 @@ export const storage: MemoryStorage = {
     // Filter events since timestamp
     // Events should have a timestamp field
     return events.filter((event: WorkspaceEvent) => {
-      if (event?.timestamp && typeof event.timestamp === 'string') {
+      if ('timestamp' in event && event.timestamp && typeof event.timestamp === 'string') {
         return new Date(event.timestamp) >= new Date(timestamp);
       }
       return true; // Include if no timestamp for safety
@@ -442,7 +442,9 @@ export const storage: MemoryStorage = {
   trackAction(actionType: string, projectId?: ProjectId, userId?: UserId) {
     const key = projectId ? `${projectId}:${actionType}` : actionType;
     const now = new Date().toISOString();
-    const today = now.split('T')[0]; // ISO date string (YYYY-MM-DD)
+    const todayPart = now.split('T')[0];
+    if (todayPart === undefined) return;
+    const today: string = todayPart;
 
     const record = this.frequencies.get(key);
     if (record) {
@@ -639,7 +641,8 @@ export const storage: MemoryStorage = {
     }
 
     // Get last check timestamp
-    const lastCheck = checks[checks.length - 1].timestamp;
+    const lastEntry = checks[checks.length - 1];
+    const lastCheck = lastEntry ? lastEntry.timestamp : brandedTypes.currentTimestamp();
 
     return {
       totalChecks: checks.length,
