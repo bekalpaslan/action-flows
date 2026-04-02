@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v4.8
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 05-03-PLAN.md
+status: executing
+stopped_at: Completed 06-02-PLAN.md
 last_updated: "2026-04-02T20:51:08.755Z"
 last_activity: 2026-04-02
 progress:
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-01)
 
 **Core value:** Agents build with the same components humans see -- consistency is enforced infrastructure, not guidelines
-**Current focus:** Phase 05 — pipeline-visualization
+**Current focus:** Phase 06 — agent-sessions-status
 
 ## Current Position
 
-Phase: 06
-Plan: Not started
-Status: Phase complete — ready for verification
+Phase: 06 (agent-sessions-status) — EXECUTING
+Plan: 2 of 4
+Status: Executing
 Last activity: 2026-04-02
 
 Progress: [=========.] 91%
@@ -73,6 +73,7 @@ Progress: [=========.] 91%
 | Phase 05 P01 | 4min | 2 tasks | 10 files |
 | Phase 05 P02 | 2min | 2 tasks | 6 files |
 | Phase 05 P03 | 6min | 2 tasks | 6 files |
+| Phase 06 P02 | 3min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -137,6 +138,10 @@ Recent decisions affecting current work:
 - [Phase 05]: Direct store access via usePipelineStore.getState() for edge lookup to avoid selector re-render
 - [Phase 05]: Inline CSS transition for drawer slide-in (Tailwind animate-in not available)
 - [Phase 05]: 5-second clearPipeline delay on chain:completed cancelled on new chain:compiled
+- [Phase 06]: statusPanelCollapsed defaults to true per UI-SPEC 'Default state: Collapsed'
+- [Phase 06]: setStatus clears error field when transitioning away from error state
+- [Phase 06]: StatusDot auto-pulses for running/connecting statuses (overridable via explicit pulse prop)
+- [Phase 06]: motion-safe: prefix for pulse animation respects prefers-reduced-motion per UI-SPEC
 
 ### Pending Todos
 
@@ -150,6 +155,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T19:58:34.426Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-04-02T22:38:36Z
+Stopped at: Completed 06-02-PLAN.md
 Resume file: None

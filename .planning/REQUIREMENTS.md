@@ -44,7 +44,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Agent Sessions
 
 - [ ] **SESSION-01**: Persistent Claude session per workbench via Agent SDK (`@anthropic-ai/claude-agent-sdk`)
-- [ ] **SESSION-02**: Lazy session activation — only active workbench holds a live session
+- [x] **SESSION-02**: Lazy session activation — only active workbench holds a live session
 - [ ] **SESSION-03**: Session resume across app restarts via `--resume` with session ID mapping
 - [ ] **SESSION-04**: Session health monitoring with heartbeat-based detection (<30s latency)
 - [ ] **SESSION-05**: Session resurrection using local conversation logs as source of truth
@@ -67,7 +67,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Status & Notifications
 
 - [ ] **STATUS-01**: Multi-agent status dashboard showing which agents are running, their workbench, status (idle/running/blocked/complete), elapsed time
-- [ ] **STATUS-02**: Toast notification system for agent events (connect, disconnect, completion, errors, validation results)
+- [x] **STATUS-02**: Toast notification system for agent events (connect, disconnect, completion, errors, validation results)
 - [ ] **STATUS-03**: SubagentStart/SubagentStop hooks feed agent lifecycle into status registry
 
 ### Neural Validation (Intelligence Layer)
@@ -179,7 +179,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | PIPE-06 | Phase 5 | Complete |
 | PIPE-07 | Phase 5 | Complete |
 | SESSION-01 | Phase 6 | Pending |
-| SESSION-02 | Phase 6 | Pending |
+| SESSION-02 | Phase 6 | Complete |
 | SESSION-03 | Phase 6 | Pending |
 | SESSION-04 | Phase 6 | Pending |
 | SESSION-05 | Phase 6 | Pending |
@@ -188,7 +188,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | SESSION-08 | Phase 6 | Pending |
 | SESSION-09 | Phase 6 | Pending |
 | STATUS-01 | Phase 6 | Pending |
-| STATUS-02 | Phase 6 | Pending |
+| STATUS-02 | Phase 6 | Complete |
 | STATUS-03 | Phase 6 | Pending |
 | CHAT-01 | Phase 7 | Pending |
 | CHAT-02 | Phase 7 | Pending |
