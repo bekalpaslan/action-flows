@@ -33,7 +33,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. `pnpm type-check` passes with zero errors across all packages (backend, app, shared, mcp-server)
   2. All SessionId, ChainId, StepId, and UserId usages go through branded type constructors -- no `as any` bypasses exist in the codebase
   3. A developer (or agent) reading existing code sees consistent TypeScript patterns worth imitating
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 01-01-PLAN.md -- Fix shared artifact types and storage layer TypeScript errors
+- [ ] 01-02-PLAN.md -- Fix all service layer TypeScript errors (16 files)
+- [ ] 01-03-PLAN.md -- Fix routes, CLI, utilities, entry point, and final zero-error verification
 
 ### Phase 2: Frontend Scaffold & WebSocket
 **Goal**: The new frontend architecture exists as a clean workbench shell with a working build pipeline and multiplexed WebSocket connection
@@ -160,7 +164,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
-| 1. TypeScript Foundation | 0/? | Not started | - |
+| 1. TypeScript Foundation | 0/3 | Planning complete | - |
 | 2. Frontend Scaffold & WebSocket | 0/? | Not started | - |
 | 3. Design System | 0/? | Not started | - |
 | 4. Layout & Navigation | 0/? | Not started | - |
