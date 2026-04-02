@@ -160,8 +160,8 @@ export class FilePersistence {
     return {
       totalDates: dates.length,
       totalSessions,
-      oldestDate: dates.length > 0 ? dates[dates.length - 1] : null,
-      newestDate: dates.length > 0 ? dates[0] : null,
+      oldestDate: dates.length > 0 ? dates[dates.length - 1] ?? null : null,
+      newestDate: dates.length > 0 ? dates[0] ?? null : null,
     }
   }
 }
