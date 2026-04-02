@@ -11,7 +11,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **FOUND-01**: TypeScript compiles with zero errors across all packages
 - [x] **FOUND-02**: Branded types (SessionId, ChainId, StepId, UserId) used correctly — no `as any` bypasses
-- [ ] **FOUND-03**: Single WebSocket connection multiplexed across all workbenches (replaces per-component connections)
+- [x] **FOUND-03**: Single WebSocket connection multiplexed across all workbenches (replaces per-component connections)
 - [ ] **FOUND-04**: Frontend rebuilt as clean workbench architecture (preserve backend, shared types, actionflows framework)
 
 ### Layout & Navigation
@@ -158,7 +158,7 @@ Deferred to future release. Tracked but not in current roadmap.
 |-------------|-------|--------|
 | FOUND-01 | Phase 1 | Complete |
 | FOUND-02 | Phase 1 | Complete |
-| FOUND-03 | Phase 2 | Pending |
+| FOUND-03 | Phase 2 | Complete |
 | FOUND-04 | Phase 2 | Pending |
 | DESIGN-01 | Phase 3 | Pending |
 | DESIGN-02 | Phase 3 | Pending |
