@@ -92,15 +92,25 @@ Plans:
 - [x] 04-05-PLAN.md -- Gap closure: fix react-resizable-panels v4.8 API mismatch in AppShell.tsx and WorkspaceArea.tsx type annotation
 **UI hint**: yes
 
-### Phase 04.1: Framework & Docs Realignment — strip cosmic terminology, update actionflows framework to match 7-workbench model, clean stale docs and tests (INSERTED)
+### Phase 04.1: Framework & Docs Realignment (INSERTED)
 
-**Goal:** [Urgent work - to be planned]
-**Requirements**: TBD
+**Goal:** All .claude/actionflows/ framework files use agentic OS vocabulary with zero cosmic remnants, CONTEXTS.md routes to 7 workbenches, stale docs/ and logs/ deleted
+**Requirements**: D-01, D-02, D-03, D-04, D-05, D-06
 **Depends on:** Phase 4
-**Plans:** 5/5 plans complete
-
+**Success Criteria** (what must be TRUE):
+  1. Zero cosmic terminology exists in any .md file under .claude/actionflows/ (excluding logs/)
+  2. CONTEXTS.md routes to exactly 7 workbenches (Work, Explore, Review, PM, Settings, Archive, Studio) plus system-health auto-target and editor manual context
+  3. docs/ directory deleted, actionflows/logs/ content deleted, cosmic/MODEL.md deleted
+  4. All broken cross-references to deleted docs/ paths fixed
+  5. Functional gate vocabulary (Pre-Action Gate, Gate 1-14) preserved
+  6. Flow reassignment complete: maintenance flows to settings/work, intel flows to explore
+**Plans:** 5 plans
 Plans:
-- [ ] TBD (run /gsd:plan-phase 04.1 to break down)
+- [ ] 04.1-01-PLAN.md -- Delete docs/, logs/ content, and cosmic/MODEL.md
+- [ ] 04.1-02-PLAN.md -- Deep rewrite ORCHESTRATOR.md, CONTEXTS.md, FLOWS.md, ACTIONS.md, project.config.md
+- [ ] 04.1-03-PLAN.md -- Deep rewrite CONTRACT.md, CLAUDE.md, actionflows/docs/living/, secondary critical files
+- [ ] 04.1-04-PLAN.md -- Batch update agent.md files, flow instructions, onboarding modules, LEARNINGS.md
+- [ ] 04.1-05-PLAN.md -- Batch replace remaining files and comprehensive verification grep
 
 ### Phase 5: Pipeline Visualization
 **Goal**: Users watch live chain execution as a horizontal node-based pipeline that updates in real-time
@@ -185,14 +195,15 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
 | 1. TypeScript Foundation | 0/3 | Planning complete | - |
 | 2. Frontend Scaffold & WebSocket | 0/3 | Planning complete | - |
 | 3. Design System | 4/4 | Complete   | 2026-04-02 |
-| 4. Layout & Navigation | 4/5 | Gap closure | - |
+| 4. Layout & Navigation | 5/5 | Complete | 2026-04-02 |
+| 4.1 Framework & Docs Realignment | 0/5 | Planning complete | - |
 | 5. Pipeline Visualization | 0/? | Not started | - |
 | 6. Agent Sessions & Status | 0/? | Not started | - |
 | 7. Chat Panel | 0/? | Not started | - |
