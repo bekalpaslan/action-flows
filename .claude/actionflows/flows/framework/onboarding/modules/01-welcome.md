@@ -13,7 +13,7 @@ Welcome to ActionFlows! I'm going to teach you how this framework works through 
 This framework has three parts:
 1. **Orchestrator (coordinator)** — Routes requests, compiles chains, spawns agents
 2. **Dashboard (visualizer)** — Shows real-time progress, logs, and quality metrics
-3. **Contract (harmony bridge)** — Keeps orchestrator output and dashboard parsing in sync
+3. **Contract (system health bridge)** — Keeps orchestrator output and dashboard parsing in sync
 
 We'll go through this in levels:
 - **Beginner (5 modules, ~45 min)** — How to use the framework safely
@@ -22,22 +22,22 @@ We'll go through this in levels:
 
 You can skip levels if you're already familiar, or go back anytime.
 
-**The Living Universe:**
+**The Agentic OS:**
 
-ActionFlows is not just software—it's a **living universe** where these three parts form a symbiotic triad:
+ActionFlows is not just software—it's an **agentic OS** where these three parts form a symbiotic triad:
 
-**The Physics-Brain-Will Triad:**
+**The Codebase-Brain-Will Triad:**
 
-- **Software (Physics)** = The raw laws that govern this universe. The code is imperfect, mutable, the foundation everything runs on.
-- **Orchestrator (Brain)** = The intelligence that understands the physics and **has the power to change them**. The orchestrator can rewrite the code itself.
-- **Agents (Hands)** = The executors that work within the physics, transforming it according to the brain's decisions.
-- **You (Human/Will)** = You set intention and make decisions. You express what you want; the brain figures out how to reshape the physics.
+- **Software (Codebase)** = The raw foundation everything runs on. The code is imperfect, mutable, the substrate agents operate within.
+- **Orchestrator (Brain)** = The intelligence that understands the physics and **has the power to change it**. The orchestrator can rewrite the code itself.
+- **Agents (Hands)** = The executors that work within the codebase, transforming it according to the brain's decisions.
+- **You (Human/Will)** = You set intention and make decisions. You express what you want; the brain figures out how to reshape the codebase.
 
-Together, you form a living organism that **grows through use**. The more you work with ActionFlows, the smarter it becomes—not through configuration, but through **organic evolution**.
+Together, you form a living system that **grows through use**. The more you work with ActionFlows, the smarter it becomes—not through configuration, but through **organic evolution**.
 
 **Your Journey:**
 
-As you progress through these modules, you're not just learning a tool—you're exploring a universe. Some capabilities are revealed immediately. Others you'll discover through use. This is **software as adventure**.
+As you progress through these modules, you're not just learning a tool—you're exploring an agentic OS. Some capabilities are revealed immediately. Others you'll discover through use. This is **software as adventure**.
 
 ---
 

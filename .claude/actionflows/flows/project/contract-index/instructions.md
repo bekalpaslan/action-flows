@@ -225,7 +225,7 @@ Step 1 (Analyze) ──┐
 - → `post-completion/` (after Step 6, to update documentation and notify)
 - ← Triggered by orchestrator when human requests contract creation or updates
 - ← Related to `contract-compliance-audit/` (audit flow validates contracts from this flow)
-- ← Related to `backwards-harmony-audit/` (checks contract alignment with implementation)
+- ← Related to `health-audit-and-fix/` (checks contract alignment with implementation)
 
 ---
 

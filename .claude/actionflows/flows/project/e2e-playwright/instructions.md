@@ -19,7 +19,7 @@
 
 | Input | Description | Example |
 |-------|-------------|---------|
-| scope | What to test — component, feature, or user flow | "Session lifecycle", "Chain execution", "Cosmic map navigation" |
+| scope | What to test — component, feature, or user flow | "Session lifecycle", "Chain execution", "Dashboard navigation" |
 | contracts | Behavioral contract IDs to test or "derive from scope" | "HC-SL-001, HC-SL-002" or "derive from scope" |
 | mode | Execution mode | "create-only" (default) or "create-and-execute" |
 | focus | Narrow focus for test design (optional) | "happy path", "error handling", "accessibility" |
@@ -342,7 +342,7 @@ export const sessionLifecycleTest = {
       name: 'Take initial snapshot',
       tool: 'browser_snapshot',
       params: {},
-      expect: { contains: ['New Session', 'Cosmic Map'] },
+      expect: { contains: ['New Session', 'Dashboard'] },
       screenshot: true,
       onFailure: 'abort',
     },

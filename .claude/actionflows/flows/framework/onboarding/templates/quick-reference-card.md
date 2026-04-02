@@ -66,7 +66,7 @@ Orchestrator:
 Human: "Fix validation error in auth.ts"
 
 Orchestrator:
-- Routing: "fix" → maintenance context → bug-triage/
+- Routing: "fix" → work context → bug-triage/
 - Compiles chain: analyze → code → review → commit
 - Presents for approval
 ```

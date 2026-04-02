@@ -12,6 +12,6 @@ Project-specific flows for ActionFlows Dashboard implementation work.
 - design-system-sync/ → Sync design tokens from Figma variables
 - design-to-code/ → Convert Figma designs to React components
 - e2e-chrome-mcp/ → Browser E2E testing with Chrome MCP
-- intel-analysis/ → Intelligence gathering and analysis
+- intel-analysis/ → Code domain analysis and dossier creation
 - post-completion/ → Post-task documentation updates
 - test-coverage/ → Test coverage analysis and improvement
