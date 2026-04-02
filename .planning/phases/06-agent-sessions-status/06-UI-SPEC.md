@@ -33,23 +33,23 @@ created: 2026-04-02
 
 ## Spacing Scale
 
-Inherited from Phase 3 (03-UI-SPEC.md). No exceptions.
+Inherited from Phase 3 (03-UI-SPEC.md). One documented exception below.
 
 Status panel-specific spacing applications:
 
 | Context | Token | Value | Rationale |
 |---------|-------|-------|-----------|
-| Status panel internal padding | p-3 | 12px | Compact panel -- not a primary content area |
+| Status panel internal padding | p-3 | 12px | 12px exception justified: compact panel context requires tighter spacing than standard 16px to preserve vertical real estate in a secondary status area |
 | Table row height | h-10 | 40px | Comfortable touch target while keeping panel compact |
-| Table cell horizontal padding | px-3 | 12px | Readable column spacing without wasting horizontal space |
+| Table cell horizontal padding | px-3 | 12px | 12px exception justified: compact panel context requires tighter column spacing without wasting horizontal space in a dense table layout |
 | Table header/body gap | gap-0 | 0px | Header and body share continuous border grid |
 | Action button gap | gap-2 | 8px | Tight gap between start/stop icon buttons in action column |
 | Panel collapse handle height | h-8 | 32px | Minimal drag handle matching panel separator pattern |
 | Toast internal padding | p-4 | 16px | Standard component padding per sonner defaults |
-| Toast icon-text gap | gap-3 | 12px | Clear separation between status icon and message text |
+| Toast icon-text gap | gap-3 | 12px | 12px exception justified: compact panel context -- clear separation between status icon and message text in a constrained toast width |
 | Status dot size | w-2 h-2 | 8px | Visible but unobtrusive inline status indicator |
 
-Exceptions: none
+Exceptions: 12px (p-3, px-3, gap-3) is used in this phase as a deliberate exception to the standard 8-point scale. Justification: the status panel is a compact, secondary UI region where 16px creates excessive whitespace and 8px feels too cramped for readable table content. 12px provides the right density for a task-manager-style panel.
 
 ---
 
@@ -74,6 +74,10 @@ Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific role assignments:
 ## Color
 
 Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific color applications:
+
+**Color distribution:** ~60% surface (panel background, table body), ~30% surface-2 (panel header, table header, row hover), ~10% accent/semantic (status dots, running icons, badges, start button).
+
+**Primary focal point:** Status dot column and Loader2 spinner on running rows. These are the highest-contrast elements in the panel, drawing the eye to active session state. The accent-colored dot and spinning icon create the visual anchor for scanning session health at a glance.
 
 ### Session Status Colors
 
@@ -210,7 +214,7 @@ Custom theme matching the design system:
 |-------|-----------|-------|-------------|-------------|
 | Session connected | success | "{Workbench} agent connected" | "Session resumed successfully." or "New session started." | 4s |
 | Session disconnected | warning | "{Workbench} agent disconnected" | "Reconnecting automatically..." | Persistent until reconnected |
-| Session error | error | "{Workbench} agent error" | "{error message, truncated to 120 chars}" | 8s |
+| Session error | error | "{Workbench} agent error" | "{error message, truncated to 120 chars}" -- fallback if error message is null or empty: "An unexpected error occurred. Check session logs for details." | 8s |
 | Session reconnected | success | "{Workbench} agent reconnected" | "Session restored." | 3s |
 | Agent task completed | info | "{Workbench} task complete" | "{brief description of completed work}" | 5s |
 | Session force-stopped | info | "{Workbench} agent stopped" | "Session terminated by user." | 3s |
@@ -280,7 +284,7 @@ Handled by sonner's built-in animations. No custom override needed. sonner uses 
 | Interaction | Behavior |
 |-------------|----------|
 | Click Start (Play icon) | Sends WebSocket message `session:start` with workbenchId. Button shows Loader2 spinner while connecting. Transitions to idle/running once connected. |
-| Click Stop (Square icon) | Opens a confirmation tooltip: "Stop {Workbench} session? This ends the session immediately." with "Stop" (destructive variant, sm size) and "Cancel" (ghost variant, sm size) buttons. On confirm: sends `session:stop` with workbenchId. |
+| Click Stop (Square icon) | Opens a confirmation tooltip: "Stop {Workbench} session? This ends the session immediately." with "Stop Session" (destructive variant, sm size) and "Keep Session" (ghost variant, sm size) buttons. On confirm: sends `session:stop` with workbenchId. |
 | Force-start from non-active workbench | Clicking Start for a workbench that is not currently active starts its session without switching the user's view (D-06). |
 | Grace period visible | Sessions in grace period (after workbench switch) show "suspended" status with a countdown or just the "suspended" label. |
 
@@ -357,8 +361,8 @@ interface SessionState {
 | Primary CTA (start) | Tooltip: "Start session" (Play icon button, no text label) |
 | Secondary CTA (stop) | Tooltip: "Stop session" (Square icon button, no text label) |
 | Stop confirmation | "Stop {Workbench} session? This ends the session immediately." |
-| Stop confirm button | "Stop" |
-| Stop cancel button | "Cancel" |
+| Stop confirm button | "Stop Session" |
+| Stop cancel button | "Keep Session" |
 | Empty panel heading | "No active sessions" |
 | Empty panel body | "Start a session from the chat panel or use the controls above to launch an agent for any workbench." |
 | Empty panel icon | lucide Bot, 24px, text-text-muted, centered above heading |
@@ -367,7 +371,7 @@ interface SessionState {
 | Toast: connected (new) | Title: "{Workbench} agent connected" / Desc: "New session started." |
 | Toast: disconnected | Title: "{Workbench} agent disconnected" / Desc: "Reconnecting automatically..." |
 | Toast: reconnected | Title: "{Workbench} agent reconnected" / Desc: "Session restored." |
-| Toast: error | Title: "{Workbench} agent error" / Desc: "{error message}" |
+| Toast: error | Title: "{Workbench} agent error" / Desc: "{error message}" -- fallback if null or empty: "An unexpected error occurred. Check session logs for details." |
 | Toast: force-stopped | Title: "{Workbench} agent stopped" / Desc: "Session terminated by user." |
 | Toast: task complete | Title: "{Workbench} task complete" / Desc: "{description}" |
 | Toast: suspended | Title: "{Workbench} session suspended" / Desc: "Switched to {NewWorkbench}. Session will close in ~30s." |
