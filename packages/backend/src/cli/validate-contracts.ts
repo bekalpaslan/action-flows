@@ -74,7 +74,7 @@ function parseContractFile(contractPath: string): ContractFile | null {
 
     // Extract Props Contract (between ```typescript and ```)
     const propsMatch = content.match(/## Props Contract\s*\n```typescript\n([\s\S]*?)\n```/);
-    const propsInterface = propsMatch ? propsMatch[1].trim() : '';
+    const propsInterface = propsMatch?.[1]?.trim() ?? '';
 
     // Extract Test Hooks (lines with data-testid=)
     const testHooksMatch = content.match(/## Test Hooks\n([\s\S]*?)(?=\n## |\n$)/);

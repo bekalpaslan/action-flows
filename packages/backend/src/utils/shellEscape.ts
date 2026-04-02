@@ -43,7 +43,7 @@ export function validateCommand(cmd: string, allowlist: string[]): boolean {
 
   // Extract the base command (first part before any space or path separator)
   const baseCmdMatch = cmd.match(/^([^\s\/\\]+)(?:\.exe)?/i);
-  const baseCmd = baseCmdMatch ? baseCmdMatch[1].toLowerCase() : cmd.toLowerCase();
+  const baseCmd = baseCmdMatch?.[1]?.toLowerCase() ?? cmd.toLowerCase();
 
   // Check if command is in allowlist (case-insensitive)
   return allowlist.some(allowed => allowed.toLowerCase() === baseCmd);

@@ -712,7 +712,7 @@ if (isMainModule) {
         // Trigger healing recommendation analysis when threshold exceeded
         if (healingEngine) {
           // Use 'project' as target type for system-wide violations
-          const projectId = 'default-project' as any;  // ProjectId
+          const projectId = 'default-project' as import('@afw/shared').ProjectId;
           healingEngine.analyzeAndRecommend(projectId, 'project').catch((error: any) => {
             console.error('[HealingRecommendations] ❌ Failed to analyze threshold violations:', error);
           });
@@ -747,15 +747,20 @@ if (isMainModule) {
     try {
       const universeGraph = await Promise.resolve(storage.getUniverseGraph());
       if (!universeGraph) {
-        const now = new Date().toISOString();
+        const timestamp = brandedTypes.currentTimestamp();
         const defaultUniverseGraph = {
           metadata: {
-            version: '1.0.0',
-            createdAt: now,
-            lastModifiedAt: now,
+            createdAt: timestamp,
+            lastModifiedAt: timestamp,
+            evolutionHistory: [],
+            totalInteractions: 0,
+            discoveredRegionCount: 0,
+            totalRegionCount: 0,
+            mapBounds: { minX: 0, minY: 0, maxX: 1000, maxY: 1000 },
           },
           regions: [],
           bridges: [],
+          discoveryTriggers: [],
         };
         await Promise.resolve(storage.setUniverseGraph(defaultUniverseGraph));
         console.log('[Init] ✅ Default universe graph initialized');

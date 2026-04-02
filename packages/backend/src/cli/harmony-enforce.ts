@@ -47,11 +47,12 @@ function parseContractFormats(contractText: string): FormatEntry[] {
     const id = match[1];
     const name = match[2];
     const priority = match[3];
+    if (!id || !name || !priority) continue;
 
     // Look ahead for parser name in the next ~10 lines
     const afterMatch = contractText.slice(match.index, match.index + 500);
     const parserMatch = parserRegex.exec(afterMatch);
-    const parserName = parserMatch ? parserMatch[1] : '';
+    const parserName = parserMatch?.[1] ?? '';
 
     formats.push({ id, name, priority, parserName });
   }

@@ -146,6 +146,7 @@ export interface RedisStorage {
   set(key: string, value: string, ttlSeconds?: number): Promise<void>;
   get(key: string): Promise<string | null>;
   keys(pattern: string): Promise<string[]>;
+  delete(key: string): Promise<boolean>;
 
   // Session listing
   listSessions(): Promise<Session[]>;
