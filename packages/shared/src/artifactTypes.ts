@@ -1,5 +1,7 @@
 // Artifact types for Phase 0 — Live Canvas (Thread 4)
 
+import type { SessionId, Timestamp } from './types.js';
+
 /** Identifies an agent-generated artifact */
 export type ArtifactId = string & { readonly __brand: 'ArtifactId' };
 
@@ -49,17 +51,23 @@ export interface ArtifactMarkerAttrs {
 /** WebSocket messages for artifact updates */
 export interface ArtifactCreatedMessage {
   type: 'artifact:created';
+  sessionId: SessionId;
+  timestamp: Timestamp;
   artifact: StoredArtifact;
 }
 
 export interface ArtifactUpdatedMessage {
   type: 'artifact:updated';
+  sessionId: SessionId;
+  timestamp: Timestamp;
   artifactId: ArtifactId;
   data: Record<string, unknown>;
 }
 
 export interface ArtifactArchivedMessage {
   type: 'artifact:archived';
+  sessionId: SessionId;
+  timestamp: Timestamp;
   artifactId: ArtifactId;
 }
 

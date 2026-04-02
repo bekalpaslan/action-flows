@@ -1,5 +1,5 @@
 import { Redis } from 'ioredis';
-import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId } from '@afw/shared';
+import type { Session, Chain, CommandPayload, SessionId, ChainId, WorkspaceEvent, SessionWindowConfig, Bookmark, FrequencyRecord, DetectedPattern, ProjectId, Timestamp, UserId, HarmonyCheck, HarmonyMetrics, HarmonyFilter, IntelDossier, DossierHistoryEntry, SuggestionEntry, ChatMessage, FreshnessMetadata, DurationMs, TelemetryEntry, TelemetryQueryFilter, ReminderDefinition, ReminderInstance, ErrorInstance, UniverseGraph, RegionNode, LightBridge, RegionId, EdgeId, User, StepNumber, ChainStep } from '@afw/shared';
 import type { BookmarkFilter, PatternFilter } from './index.js';
 import { brandedTypes, calculateFreshnessGrade, duration } from '@afw/shared';
 import {
@@ -146,6 +146,18 @@ export interface RedisStorage {
   set(key: string, value: string, ttlSeconds?: number): Promise<void>;
   get(key: string): Promise<string | null>;
   keys(pattern: string): Promise<string[]>;
+
+  // Session listing
+  listSessions(): Promise<Session[]>;
+
+  // Chain step update
+  setChainStep?(chainId: ChainId, stepNumber: StepNumber, step: ChainStep): Promise<void>;
+
+  // User management
+  getUser(userId: UserId): Promise<User | undefined>;
+  setUser(user: User): Promise<void>;
+  deleteUser(userId: UserId): Promise<void>;
+  getUsersByRole(role: string): Promise<User[]>;
 }
 
 /**
@@ -298,7 +310,7 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         return events
           .map((e: string) => JSON.parse(e) as WorkspaceEvent)
           .filter((event: WorkspaceEvent) => {
-            if (event?.timestamp && typeof event.timestamp === 'string') {
+            if ('timestamp' in event && event.timestamp && typeof event.timestamp === 'string') {
               return new Date(event.timestamp).getTime() >= targetTime;
             }
             return true; // Include if no timestamp for safety
@@ -509,7 +521,9 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
       try {
         const key = `${keyPrefix}freq:${projectId ? `${projectId}:` : ''}${actionType}`;
         const now = new Date().toISOString();
-        const today = now.split('T')[0]; // ISO date string (YYYY-MM-DD)
+        const todayPart = now.split('T')[0];
+        if (todayPart === undefined) return;
+        const today: string = todayPart;
 
         // Get existing record or create new one
         const existing = await redis.get(key);
@@ -821,7 +835,8 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         }
 
         // Get last check timestamp (first in list since we LPUSH)
-        const lastCheck = checks[0].timestamp;
+        const firstCheck = checks[0];
+        const lastCheck = firstCheck ? firstCheck.timestamp : brandedTypes.currentTimestamp();
 
         return {
           totalChecks: checks.length,
@@ -1733,6 +1748,69 @@ export function createRedisStorage(redisUrl?: string, prefix?: string): RedisSto
         return result;
       } catch (error) {
         console.error(`[Redis] Error getting keys for pattern ${pattern}:`, error);
+        return [];
+      }
+    },
+
+    // === User Management ===
+    async getUser(userId: UserId): Promise<User | undefined> {
+      try {
+        const key = `${keyPrefix}user:${userId}`;
+        const data = await redis.get(key);
+        return data ? (JSON.parse(data) as User) : undefined;
+      } catch (error) {
+        console.error(`[Redis] Error getting user ${userId}:`, error);
+        return undefined;
+      }
+    },
+
+    async setUser(user: User): Promise<void> {
+      try {
+        const key = `${keyPrefix}user:${user.userId}`;
+        await redis.setex(key, SESSION_TTL, JSON.stringify(user));
+        // Track user by role for getUsersByRole lookups
+        if (user.role) {
+          const roleKey = `${keyPrefix}users:role:${user.role}`;
+          await redis.sadd(roleKey, user.userId);
+          await redis.expire(roleKey, SESSION_TTL);
+        }
+      } catch (error) {
+        console.error(`[Redis] Error setting user ${user.userId}:`, error);
+      }
+    },
+
+    async deleteUser(userId: UserId): Promise<void> {
+      try {
+        // Get user first to clean up role index
+        const userData = await redis.get(`${keyPrefix}user:${userId}`);
+        if (userData) {
+          const user = JSON.parse(userData) as User;
+          if (user.role) {
+            await redis.srem(`${keyPrefix}users:role:${user.role}`, userId);
+          }
+        }
+        const key = `${keyPrefix}user:${userId}`;
+        await redis.del(key);
+      } catch (error) {
+        console.error(`[Redis] Error deleting user ${userId}:`, error);
+      }
+    },
+
+    async getUsersByRole(role: string): Promise<User[]> {
+      try {
+        const roleKey = `${keyPrefix}users:role:${role}`;
+        const userIds = await redis.smembers(roleKey);
+        const users: User[] = [];
+        for (const userId of userIds) {
+          const key = `${keyPrefix}user:${userId}`;
+          const data = await redis.get(key);
+          if (data) {
+            users.push(JSON.parse(data) as User);
+          }
+        }
+        return users;
+      } catch (error) {
+        console.error(`[Redis] Error getting users by role ${role}:`, error);
         return [];
       }
     },
