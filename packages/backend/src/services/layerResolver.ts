@@ -119,8 +119,12 @@ export class LayerResolver {
     // Build layers array and track conflicts
     const layers: Array<{ source: LayerSource; entry: RegistryEntry }> = [];
     const conflicts: string[] = [];
-    let effectiveEntry: RegistryEntry = matchingEntries[0];
-    let effectiveSource: LayerSource = matchingEntries[0].source;
+    const firstEntry = matchingEntries[0];
+    if (!firstEntry) {
+      return undefined;
+    }
+    let effectiveEntry: RegistryEntry = firstEntry;
+    let effectiveSource: LayerSource = firstEntry.source;
 
     for (const entry of matchingEntries) {
       layers.push({ source: entry.source, entry });
@@ -128,9 +132,11 @@ export class LayerResolver {
       // If we already have an entry from a different source, record the conflict
       if (layers.length > 1) {
         const prevLayer = layers[layers.length - 2];
-        conflicts.push(
-          `${entry.source.type} layer overrides ${prevLayer.source.type} layer`
-        );
+        if (prevLayer) {
+          conflicts.push(
+            `${entry.source.type} layer overrides ${prevLayer.source.type} layer`
+          );
+        }
       }
 
       // Higher priority layer wins
@@ -143,7 +149,10 @@ export class LayerResolver {
     if (layers.length > 1) {
       // The effective source overrides all previous layers
       for (let i = 0; i < layers.length - 1; i++) {
-        overriddenBy.push(layers[i].source);
+        const layer = layers[i];
+        if (layer) {
+          overriddenBy.push(layer.source);
+        }
       }
     }
 
@@ -201,17 +210,21 @@ export class LayerResolver {
 
       for (let i = 0; i < entries.length; i++) {
         const entry = entries[i];
+        if (!entry) continue;
         layers.push({ source: entry.source, entry });
 
         if (i > 0) {
           const prevEntry = entries[i - 1];
-          conflicts.push(
-            `${entry.source.type} layer overrides ${prevEntry.source.type} layer`
-          );
+          if (prevEntry) {
+            conflicts.push(
+              `${entry.source.type} layer overrides ${prevEntry.source.type} layer`
+            );
+          }
         }
       }
 
       const effectiveEntry = entries[entries.length - 1];
+      if (!effectiveEntry) continue;
       const overriddenBy: LayerSource[] = layers
         .slice(0, -1)
         .map((l) => l.source);
@@ -254,16 +267,18 @@ export class LayerResolver {
     );
 
     const winner = matchingEntries[0];
+    if (!winner) return [];
     const conflicts: RegistryConflictWithSeverity[] = [];
 
     // Check for pack-pack conflicts (same priority level)
     const packEntries = matchingEntries.filter((e) => e.source.type === 'pack');
-    if (packEntries.length > 1) {
+    const firstPack = packEntries[0];
+    if (packEntries.length > 1 && firstPack) {
       conflicts.push({
         entryId,
         entryName: winner.name,
         sources: packEntries.map((e) => e.source),
-        resolution: packEntries[0].source, // First pack (by install order) wins
+        resolution: firstPack.source, // First pack (by install order) wins
         reason: 'Multiple packs define the same entry; last-installed wins',
         severity: 'warning',
       });
@@ -377,6 +392,7 @@ export class LayerResolver {
           (a, b) => this.layerPriority(b.source) - this.layerPriority(a.source)
         );
         const winner = entries[0];
+        if (!winner) continue;
 
         conflicts.push({
           entryId: winner.id,

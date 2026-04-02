@@ -12,7 +12,7 @@ import type {
   SystemAnalyticsSummary,
   Timestamp,
 } from '@afw/shared';
-import { brandedTypes } from '@afw/shared';
+import { brandedTypes, duration } from '@afw/shared';
 import type { TelemetryEntry } from '@afw/shared';
 
 /**
@@ -157,8 +157,8 @@ export class AnalyticsAggregator {
         successfulSteps: data.successful,
         failedSteps: data.failed,
         successRate: Math.round(successRate * 100) / 100,
-        avgChainDuration: Math.round(avgDuration),
-        avgStepDuration: Math.round(avgDuration / Math.max(1, totalSteps)),
+        avgChainDuration: duration.ms(Math.round(avgDuration)),
+        avgStepDuration: duration.ms(Math.round(avgDuration / Math.max(1, totalSteps))),
       });
     }
 
@@ -239,15 +239,15 @@ export class AnalyticsAggregator {
         flowName: data.name,
         usageCount: data.count,
         successRate: Math.round(successRate * 100) / 100,
-        averageDuration: avgDuration,
-        totalDuration,
+        averageDuration: duration.ms(avgDuration),
+        totalDuration: duration.ms(totalDuration),
         avgStepsPerExecution: avgSteps,
         lastExecutedAt: data.lastExecuted,
         firstExecutedAt: data.firstExecuted,
       });
     }
 
-    return results.sort((a, b) => b.executionCount - a.executionCount);
+    return results.sort((a, b) => b.usageCount - a.usageCount);
   }
 
   /**
@@ -310,7 +310,7 @@ export class AnalyticsAggregator {
         agentId: agentName,
         tasksCompleted: data.count,
         successRate: Math.round(successRate * 100) / 100,
-        averageDuration: avgDuration,
+        averageDuration: duration.ms(avgDuration),
         errorCount: data.failed,
         lastActive: data.lastUsed,
         firstUsedAt: data.firstUsed,
@@ -406,7 +406,7 @@ export class AnalyticsAggregator {
       totalChains: chains.size,
       totalSteps,
       overallSuccessRate: Math.round(successRate * 100) / 100,
-      avgChainDuration: avgDuration,
+      avgChainDuration: duration.ms(avgDuration),
       topFlow,
       topAgent,
       sessionCount24h: sessions24h,

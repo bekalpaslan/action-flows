@@ -116,6 +116,9 @@ export class FrequencyTracker {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - FREQUENCY_CONFIG.retentionDays);
     const cutoffString = cutoffDate.toISOString().split('T')[0];
+    if (!cutoffString) {
+      return record;
+    }
 
     // Filter out daily counts older than cutoff
     const cleanedCounts: Record<string, number> = {};
@@ -139,6 +142,7 @@ export class FrequencyTracker {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
       const dateStr = date.toISOString().split('T')[0];
+      if (dateStr === undefined) continue;
       result.push(record.dailyCounts[dateStr] || 0);
     }
 

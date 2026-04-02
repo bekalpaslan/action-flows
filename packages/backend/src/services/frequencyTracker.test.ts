@@ -74,13 +74,15 @@ describe('FrequencyTracker', () => {
       const projectId = 'proj-123' as ProjectId;
       const actionType = 'button-click';
 
+      const todayStr = new Date().toISOString().split('T')[0];
+      if (!todayStr) throw new Error('Test setup: expected date string');
       const mockRecord: FrequencyRecord = {
         actionType,
         projectId,
         count: 1,
         firstSeen: new Date().toISOString() as any,
         lastSeen: new Date().toISOString() as any,
-        dailyCounts: { [new Date().toISOString().split('T')[0]]: 1 },
+        dailyCounts: { [todayStr]: 1 },
       };
 
       (mockStorage.trackAction as any).mockResolvedValue(undefined);
@@ -95,13 +97,15 @@ describe('FrequencyTracker', () => {
       const projectId = 'proj-123' as ProjectId;
       const actionType = 'button-click';
 
+      const todayStr2 = new Date().toISOString().split('T')[0];
+      if (!todayStr2) throw new Error('Test setup: expected date string');
       const mockRecord: FrequencyRecord = {
         actionType,
         projectId,
         count: 3,
         firstSeen: new Date().toISOString() as any,
         lastSeen: new Date().toISOString() as any,
-        dailyCounts: { [new Date().toISOString().split('T')[0]]: 3 },
+        dailyCounts: { [todayStr2]: 3 },
       };
 
       (mockStorage.trackAction as any).mockResolvedValue(undefined);
@@ -169,9 +173,11 @@ describe('FrequencyTracker', () => {
   describe('getTrend', () => {
     it('should return last 7 days of counts by default', () => {
       const today = new Date().toISOString().split('T')[0];
+      if (!today) throw new Error('Test setup: expected today string');
       const yesterday = new Date(new Date().setDate(new Date().getDate() - 1))
         .toISOString()
         .split('T')[0];
+      if (!yesterday) throw new Error('Test setup: expected yesterday string');
 
       const record: FrequencyRecord = {
         actionType: 'test',
@@ -211,8 +217,10 @@ describe('FrequencyTracker', () => {
       const oldDate = new Date();
       oldDate.setDate(oldDate.getDate() - FREQUENCY_CONFIG.retentionDays - 1);
       const oldDateStr = oldDate.toISOString().split('T')[0];
+      if (!oldDateStr) throw new Error('Test setup: expected old date string');
 
       const recentDate = new Date().toISOString().split('T')[0];
+      if (!recentDate) throw new Error('Test setup: expected recent date string');
 
       const record: FrequencyRecord = {
         actionType: 'test',
@@ -285,7 +293,9 @@ describe('FrequencyTracker', () => {
       });
 
       expect(result).toHaveLength(1);
-      expect(result[0].actionType).toBe('action1');
+      const firstResult = result[0];
+      if (!firstResult) throw new Error('Test setup: expected result[0]');
+      expect(firstResult.actionType).toBe('action1');
     });
 
     it('should sort by count descending by default', async () => {
@@ -316,8 +326,12 @@ describe('FrequencyTracker', () => {
         projectId,
       });
 
-      expect(result[0].count).toBe(10);
-      expect(result[1].count).toBe(5);
+      const sortFirst = result[0];
+      const sortSecond = result[1];
+      if (!sortFirst) throw new Error('Test setup: expected result[0]');
+      if (!sortSecond) throw new Error('Test setup: expected result[1]');
+      expect(sortFirst.count).toBe(10);
+      expect(sortSecond.count).toBe(5);
     });
 
     it('should sort by lastSeen when orderBy is specified', async () => {
@@ -352,8 +366,12 @@ describe('FrequencyTracker', () => {
         orderBy: 'lastSeen',
       });
 
-      expect(result[0].actionType).toBe('action2'); // newest first
-      expect(result[1].actionType).toBe('action1'); // oldest second
+      const newestFirst = result[0];
+      const oldestSecond = result[1];
+      if (!newestFirst) throw new Error('Test setup: expected result[0]');
+      if (!oldestSecond) throw new Error('Test setup: expected result[1]');
+      expect(newestFirst.actionType).toBe('action2'); // newest first
+      expect(oldestSecond.actionType).toBe('action1'); // oldest second
     });
   });
 });
