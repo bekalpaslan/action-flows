@@ -108,7 +108,7 @@ Plans:
 Plans:
 - [x] 04.1-01-PLAN.md -- Delete docs/, logs/ content, and cosmic/MODEL.md
 - [ ] 04.1-02-PLAN.md -- Deep rewrite ORCHESTRATOR.md, CONTEXTS.md, FLOWS.md, ACTIONS.md, project.config.md
-- [ ] 04.1-03-PLAN.md -- Deep rewrite CONTRACT.md, CLAUDE.md, actionflows/docs/living/, secondary critical files
+- [x] 04.1-03-PLAN.md -- Deep rewrite CONTRACT.md, CLAUDE.md, actionflows/docs/living/, secondary critical files
 - [ ] 04.1-04-PLAN.md -- Batch update agent.md files, flow instructions, onboarding modules, LEARNINGS.md
 - [ ] 04.1-05-PLAN.md -- Batch replace remaining files and comprehensive verification grep
 
@@ -203,7 +203,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 2. Frontend Scaffold & WebSocket | 0/3 | Planning complete | - |
 | 3. Design System | 4/4 | Complete   | 2026-04-02 |
 | 4. Layout & Navigation | 5/5 | Complete | 2026-04-02 |
-| 4.1 Framework & Docs Realignment | 1/5 | In Progress|  |
+| 4.1 Framework & Docs Realignment | 2/5 | In Progress|  |
 | 5. Pipeline Visualization | 0/? | Not started | - |
 | 6. Agent Sessions & Status | 0/? | Not started | - |
 | 7. Chat Panel | 0/? | Not started | - |
