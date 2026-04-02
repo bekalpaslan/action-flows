@@ -85,7 +85,7 @@ Plans:
   5. Command palette opens with Cmd+K / Ctrl+K and supports keyboard navigation through commands
 **Plans:** 4 plans
 Plans:
-- [ ] 04-01-PLAN.md -- Install deps (react-resizable-panels, cmdk), extend types with lucide icons, extend uiStore, vitest setup
+- [x] 04-01-PLAN.md -- Install deps (react-resizable-panels, cmdk), extend types with lucide icons, extend uiStore, vitest setup
 - [ ] 04-02-PLAN.md -- Rewrite AppShell with 3-panel PanelGroup, create Sidebar with collapse/expand, migrate WebSocketStatus
 - [ ] 04-03-PLAN.md -- Rebuild WorkspaceArea with vertical pipeline/content split, create PipelinePlaceholder, migrate ChatPlaceholder
 - [ ] 04-04-PLAN.md -- Create command palette (cmdk), keyboard shortcuts hook, wire into AppShell
@@ -191,7 +191,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | 1. TypeScript Foundation | 0/3 | Planning complete | - |
 | 2. Frontend Scaffold & WebSocket | 0/3 | Planning complete | - |
 | 3. Design System | 4/4 | Complete   | 2026-04-02 |
-| 4. Layout & Navigation | 0/4 | Planning complete | - |
+| 4. Layout & Navigation | 1/4 | Executing | - |
 | 5. Pipeline Visualization | 0/? | Not started | - |
 | 6. Agent Sessions & Status | 0/? | Not started | - |
 | 7. Chat Panel | 0/? | Not started | - |
