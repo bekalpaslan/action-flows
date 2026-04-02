@@ -593,3 +593,9 @@ export { DEFAULT_SLACK_CONFIG } from './slack.js';
 // ============================================================================
 export type { WSEnvelope, SystemMessageType } from './ws-envelope.js';
 export { SYSTEM_CHANNEL, BROADCAST_CHANNEL } from './ws-envelope.js';
+
+// ============================================================================
+// Session Lifecycle Events (Phase 6)
+// ============================================================================
+export type { SessionStatus, SessionStatusType, SessionStatusEvent, SessionCommandPayload } from './session-events.js';
+export { SESSION_STATUS_TYPES, WORKBENCH_PERSONALITIES } from './session-events.js';
