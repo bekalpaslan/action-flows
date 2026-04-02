@@ -91,6 +91,16 @@ Plans:
 - [ ] 04-04-PLAN.md -- Create command palette (cmdk), keyboard shortcuts hook, wire into AppShell
 **UI hint**: yes
 
+### Phase 04.1: Framework & Docs Realignment — strip cosmic terminology, update actionflows framework to match 7-workbench model, clean stale docs and tests (INSERTED)
+
+**Goal:** [Urgent work - to be planned]
+**Requirements**: TBD
+**Depends on:** Phase 4
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 04.1 to break down)
+
 ### Phase 5: Pipeline Visualization
 **Goal**: Users watch live chain execution as a horizontal node-based pipeline that updates in real-time
 **Depends on**: Phase 4

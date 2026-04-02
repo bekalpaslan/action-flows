@@ -64,6 +64,10 @@ Progress: [..........] 0%
 
 ## Accumulated Context
 
+### Roadmap Evolution
+
+- Phase 4.1 inserted after Phase 4: Framework & Docs Realignment — strip cosmic terminology, update actionflows framework to match 7-workbench model, clean stale docs and tests (URGENT)
+
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
