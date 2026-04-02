@@ -214,3 +214,14 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 8. Neural Validation & Safety | 0/? | Not started | - |
 | 9. Workbenches & Flow Management | 0/? | Not started | - |
 | 10. Customization & Automation | 0/? | Not started | - |
+
+## Backlog
+
+### Phase 999.1: History & Memory Lifecycle Management (BACKLOG)
+
+**Goal:** Implement 3-layer history model (raw/ledger/canonical) to prevent unbounded growth of gate-traces.jsonl, ActionFlows logs, and LEARNINGS.md. Add TTL for raw operational data, create searchable execution ledger, and establish promotion pipeline from raw to canonical. Fix missing logs/INDEX.md trust gap.
+**Requirements:** TBD
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (promote with /gsd:review-backlog when ready)
