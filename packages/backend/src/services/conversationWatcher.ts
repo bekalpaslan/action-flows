@@ -840,16 +840,20 @@ export class ConversationWatcher {
       const chainId = brandedTypes.chainId(`chain-${sessionPrefix}-${unixTime}`);
       const rawContent = entry.message.content;
 
-      // Skip tool results — they appear as type:"user" but aren't human input
-      if (Array.isArray(rawContent) && rawContent.some((b: any) => b.tool_use_id || b.type === 'tool_result')) {
-        return;
-      }
+      // Determine user message from content
+      let userMessage: string;
 
-      const userMessage = typeof rawContent === 'string'
-        ? rawContent
-        : Array.isArray(rawContent)
-          ? rawContent.map((b: any) => b.text || b.content || '').join(' ')
-          : String(rawContent || '');
+      if (Array.isArray(rawContent)) {
+        // Skip tool results — they appear as type:"user" but aren't human input
+        if (rawContent.some((b: any) => b.tool_use_id || b.type === 'tool_result')) {
+          return;
+        }
+        userMessage = rawContent.map((b: any) => b.text || b.content || '').join(' ');
+      } else if (typeof rawContent === 'string') {
+        userMessage = rawContent;
+      } else {
+        userMessage = String(rawContent || '');
+      }
 
       // Call Gate 1 validator
       await validateUserMessage(userMessage, chainId);

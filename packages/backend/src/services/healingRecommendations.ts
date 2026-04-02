@@ -452,9 +452,10 @@ export class HealingRecommendationEngine extends EventEmitter {
       outcome: 'Violations resolved',
     };
 
-    const estimatedEffort =
-      EFFORT_ESTIMATES[severity][pattern.pattern] ||
-      EFFORT_ESTIMATES[severity].default;
+    const severityEstimates = EFFORT_ESTIMATES[severity];
+    const patternEstimate = severityEstimates ? severityEstimates[pattern.pattern] : undefined;
+    const defaultEstimate = severityEstimates ? severityEstimates.default : undefined;
+    const estimatedEffort = patternEstimate || defaultEstimate || 'medium';
 
     return {
       id: this.generateRecommendationId(),

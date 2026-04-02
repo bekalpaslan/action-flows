@@ -70,7 +70,9 @@ export async function validateContextRouting(
       return;
     }
 
-    const selectedContext = contextMatch[1].toLowerCase();
+    const matchedContext = contextMatch[1];
+    if (!matchedContext) return;
+    const selectedContext = matchedContext.toLowerCase();
     const isValid = VALID_CONTEXTS.includes(selectedContext);
 
     await gateCheckpoint.recordCheckpoint({

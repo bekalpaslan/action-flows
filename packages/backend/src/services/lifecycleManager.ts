@@ -234,6 +234,7 @@ export class LifecycleManager {
 
       // Count by resource type
       const resourceType = key.split(':')[0];
+      if (resourceType === undefined) continue;
       byResourceType[resourceType] = (byResourceType[resourceType] || 0) + 1;
     }
 
@@ -279,7 +280,10 @@ export class LifecycleManager {
     let transitionCount = 0;
 
     for (const [key, state] of this.lifecycleStates.entries()) {
-      const [resourceType, resourceId] = key.split(':');
+      const parts = key.split(':');
+      const resourceType = parts[0];
+      const resourceId = parts[1];
+      if (!resourceType || !resourceId) continue;
       const policy = this.policies.get(resourceType);
 
       if (!policy) {

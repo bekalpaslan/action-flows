@@ -96,7 +96,7 @@ export class StoryService {
       // Extract title from markdown if available
       let title = meta.title;
       const titleMatch = content.match(/^#\s+(.+?)$/m);
-      if (titleMatch) {
+      if (titleMatch && titleMatch[1]) {
         title = titleMatch[1].replace('Chapter \\d+: ', '').trim();
       }
 
