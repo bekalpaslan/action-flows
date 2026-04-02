@@ -122,6 +122,8 @@ Declared values (4px base system, migrated from design-tokens.css --space-* scal
 | 20 | 80px | p-20 | Viewport margins |
 | 24 | 96px | p-24 | Hero spacing |
 
+**Fractional step note:** Tailwind fractional values (0.5/2px, 1.5/6px, 2.5/10px, 3.5/14px) are permitted for fine-grained micro-spacing within components only (badge padding, tooltip offsets, icon-to-label gaps). All structural layout spacing (panels, sections, page margins) uses 4px-multiple values exclusively.
+
 Exceptions: Touch target minimum is 44px (--space-11) for all interactive elements per WCAG 2.5.8.
 
 **Source:** design-tokens.css lines 654-678
@@ -132,20 +134,18 @@ Exceptions: Touch target minimum is 44px (--space-11) for all interactive elemen
 
 | Role | Size | Weight | Line Height | Letter Spacing | Usage |
 |------|------|--------|-------------|----------------|-------|
-| XS | 11px | 400 (normal) | 1.5 | normal | Fine print, badges |
-| Small | 13px | 400 (normal) | 1.5 | normal | Secondary labels, captions |
-| Body | 15px | 400 (normal) | 1.5 | normal | Default body text, paragraphs, inputs |
-| Large | 17px | 400 (normal) | 1.5 | normal | Large body, emphasis text |
-| Heading 3 | 20px | 600 (semibold) | 1.2 | -0.025em | Subheadings, card titles |
-| Heading 2 | 24px | 600 (semibold) | 1.2 | -0.025em | Section headings |
-| Heading 1 | 28px | 600 (semibold) | 1.2 | -0.05em | Page headings |
-| Display | 34px | 700 (bold) | 1.2 | -0.05em | Hero/display text |
+| Label/Caption | 13px | 400 (normal) | 1.5 | normal | Secondary labels, captions, badges, fine print, tab triggers |
+| Body | 15px | 400 (normal) | 1.5 | normal | Default body text, paragraphs, inputs, descriptions |
+| Heading | 20px | 600 (semibold) | 1.2 | -0.025em | Section headings, card titles, page headings |
+| Display | 28px | 600 (semibold) | 1.2 | -0.05em | Hero/display text, major page titles |
 
 **Font families:**
 - `--font-sans`: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif
 - `--font-mono`: "SF Mono", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace
 
-**Constraints for component library:** Components use exactly 2 weights: 400 (normal) for body text and 600 (semibold) for headings/labels. Weight 700 (bold) reserved for display text only. No other weights in the component library.
+**Constraints for component library:** Components use exactly 2 weights: 400 (normal) for body text and 600 (semibold) for headings/display. No other weights in the component library.
+
+**Migration from 8-size scale:** The original design-tokens.css defined 8 sizes (11-34px). This contract collapses them to 4 canonical sizes. Components that previously used removed sizes map as follows: 11px -> 13px (Label/Caption), 17px -> 15px (Body), 24px -> 20px (Heading), 34px -> 28px (Display). Weight 700 (bold) is removed; Display now uses 600 (semibold) for consistency.
 
 **Source:** design-tokens.css lines 608-648
 
@@ -299,11 +299,12 @@ All 12 core components per DESIGN-02/DESIGN-03. Each uses Radix + Tailwind + CVA
 |----------|-------|
 | Radix primitive | @radix-ui/react-slot (asChild pattern) |
 | Variants | primary, secondary, ghost, destructive, outline |
-| Sizes | sm (h-8 px-3 text-13), md (h-10 px-4 text-15), lg (h-12 px-6 text-17), icon (h-10 w-10) |
+| Sizes | sm (h-8 px-3 text-13), md (h-10 px-4 text-15), lg (h-12 px-6 text-15), icon (h-10 w-10) |
 | States | default, hover, active, disabled, focus-visible |
 | Border radius | md (8px) |
 | Primary bg | rgba(62, 103, 191, 0.95) dark / #3e67bf light |
 | Destructive bg | rgba(214, 133, 2, 0.95) dark / #d68502 light |
+| Icon-only a11y | Icon-only buttons (size="icon") must include either an `aria-label` attribute or a visually-hidden `<span className="sr-only">` child describing the action. Components without a label fallback fail accessibility review. |
 
 ### Card
 
@@ -382,7 +383,7 @@ All 12 core components per DESIGN-02/DESIGN-03. Each uses Radix + Tailwind + CVA
 | Padding | px-3 (12px horizontal) |
 | Text | 15px body weight-400 |
 | Placeholder | text-muted color |
-| Sizes | sm (h-8 text-13), md (h-10 text-15), lg (h-12 text-17) |
+| Sizes | sm (h-8 text-13), md (h-10 text-15), lg (h-12 text-15) |
 
 ### Select
 
@@ -425,7 +426,7 @@ All 12 core components per DESIGN-02/DESIGN-03. Each uses Radix + Tailwind + CVA
 |----------|-------|
 | Radix primitive | none (span) |
 | Variants | default (neutral), success, warning, error, info, accent |
-| Sizes | sm (text-11 px-1.5 py-0.5), md (text-13 px-2 py-0.5) |
+| Sizes | sm (text-13 px-1.5 py-0.5), md (text-13 px-2 py-0.5) |
 | Border radius | sm (6px) |
 | Default bg | dark: rgba(138,138,138,0.15) / light: #e5e5e5 |
 | Success bg | dark: rgba(126,153,213,0.15) / light: #beccea |
@@ -582,6 +583,7 @@ The existing 993-line design-tokens.css is deleted after migration. All values m
 | ARIA | All Radix primitives provide correct ARIA roles, states, properties |
 | Keyboard | All interactive components fully keyboard-navigable (Tab, Enter, Space, Escape, Arrow keys where applicable) |
 | Screen reader | All components announce state changes (checked, expanded, selected) |
+| Icon-only buttons | Must include `aria-label` or visually-hidden `<span className="sr-only">` child. No icon-only button without a text alternative. |
 
 ---
 
