@@ -65,7 +65,12 @@ Plans:
   3. The `cn()` utility (clsx + tailwind-merge) is available and used by all components for conflict-free class composition
   4. A machine-readable component manifest exists that agents can consume to know what components exist and how to compose them
   5. No raw CSS exists in any component -- all styling flows through design tokens and CVA variants
-**Plans**: TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 03-01-PLAN.md -- Install deps, create Tailwind v4 token system (theme.css + globals.css), cn() utility, migrate shell CSS
+- [ ] 03-02-PLAN.md -- Build 6 core components: Button, Card, Badge, Avatar, Input, Checkbox
+- [ ] 03-03-PLAN.md -- Build 6 Radix components: Dialog, Tabs, Tooltip, DropdownMenu, Select, RadioGroup
+- [ ] 03-04-PLAN.md -- Barrel export, TypeScript manifest, JSON manifest, full build verification
 **UI hint**: yes
 
 ### Phase 4: Layout & Navigation
@@ -170,7 +175,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 |-------|---------------|--------|-----------|
 | 1. TypeScript Foundation | 0/3 | Planning complete | - |
 | 2. Frontend Scaffold & WebSocket | 0/3 | Planning complete | - |
-| 3. Design System | 0/? | Not started | - |
+| 3. Design System | 0/4 | Planning complete | - |
 | 4. Layout & Navigation | 0/? | Not started | - |
 | 5. Pipeline Visualization | 0/? | Not started | - |
 | 6. Agent Sessions & Status | 0/? | Not started | - |
