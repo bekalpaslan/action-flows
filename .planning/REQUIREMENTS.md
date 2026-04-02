@@ -38,7 +38,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PIPE-03**: Two node shapes: rounded rectangles (steps) and diamonds (decision gates)
 - [x] **PIPE-04**: Support forking (1→N) and merging (N→1) in pipelines
 - [x] **PIPE-05**: Horizontally scrollable for long chains
-- [ ] **PIPE-06**: Real-time status updates via WebSocket (pending → running → complete/failed)
+- [x] **PIPE-06**: Real-time status updates via WebSocket (pending → running → complete/failed)
 - [x] **PIPE-07**: Pipeline state scoped per workbench (switching workbenches shows that workbench's pipeline)
 
 ### Agent Sessions
@@ -176,7 +176,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | PIPE-03 | Phase 5 | Complete |
 | PIPE-04 | Phase 5 | Complete |
 | PIPE-05 | Phase 5 | Complete |
-| PIPE-06 | Phase 5 | Pending |
+| PIPE-06 | Phase 5 | Complete |
 | PIPE-07 | Phase 5 | Complete |
 | SESSION-01 | Phase 6 | Pending |
 | SESSION-02 | Phase 6 | Pending |

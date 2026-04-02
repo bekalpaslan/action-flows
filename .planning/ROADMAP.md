@@ -127,7 +127,7 @@ Plans:
 Plans:
 - [x] 05-01-PLAN.md -- Install @xyflow/react, pipeline types, dagre layout utility, zustand store, CSS keyframes, test infrastructure
 - [x] 05-02-PLAN.md -- Build StepNode, GateNode, PipelineEdge custom components, PipelineView container, PipelineEmptyState
-- [ ] 05-03-PLAN.md -- WebSocket event hook, elapsed time hook, PipelineDrawer, wire into WorkspaceArea, visual checkpoint
+- [x] 05-03-PLAN.md -- WebSocket event hook, elapsed time hook, PipelineDrawer, wire into WorkspaceArea, visual checkpoint
 **UI hint**: yes
 
 ### Phase 6: Agent Sessions & Status
