@@ -13,13 +13,13 @@ export function SidebarItem({ workbench, isActive, collapsed, onSelect }: Sideba
   const Icon = workbench.icon;
 
   const itemClasses = cn(
-    'h-12 rounded-md cursor-pointer transition-colors border-l-[3px]',
+    'rounded-2xl cursor-pointer transition-colors',
     collapsed
-      ? 'flex items-center justify-center px-3'
-      : 'flex items-center gap-3 px-4 py-3',
+      ? 'flex items-center justify-center p-3'
+      : 'flex items-center gap-3 p-3',
     isActive
-      ? 'bg-surface-3 text-text border-l-accent'
-      : 'text-text-dim hover:bg-surface-3 hover:text-text border-l-transparent'
+      ? 'bg-white/[0.08] text-text'
+      : 'text-text-dim hover:bg-white/[0.04] hover:text-text'
   );
 
   const content = (
@@ -29,9 +29,9 @@ export function SidebarItem({ workbench, isActive, collapsed, onSelect }: Sideba
       className={itemClasses}
       onClick={onSelect}
     >
-      <Icon className="h-6 w-6 shrink-0" />
+      <Icon className="h-6 w-6 shrink-0" strokeWidth={isActive ? 2 : 1.5} />
       {!collapsed && (
-        <span className="text-body font-semibold">{workbench.label}</span>
+        <span className="text-sm leading-5 font-normal">{workbench.label}</span>
       )}
     </li>
   );

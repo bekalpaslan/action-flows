@@ -22,30 +22,34 @@ export function Sidebar({ collapsed, onExpand }: SidebarProps) {
       <nav
         aria-label="Workbench navigation"
         className={cn(
-          'flex flex-col h-full bg-surface-2',
-          collapsed ? 'p-3' : 'p-4'
+          'flex flex-col justify-between h-full bg-surface-2 border-r border-border/50',
+          collapsed ? 'px-3 py-7' : 'px-4 py-7'
         )}
       >
-        {!collapsed && (
-          <h2 className="text-heading font-semibold text-text mb-6 text-lg">
-            Workbenches
-          </h2>
-        )}
-        <ul role="list" className="flex flex-col gap-1.5">
-          {WORKBENCHES.map((wb) => (
-            <SidebarItem
-              key={wb.id}
-              workbench={wb}
-              isActive={wb.id === activeWorkbench}
-              collapsed={collapsed}
-              onSelect={() => {
-                setActiveWorkbench(wb.id);
-                if (collapsed && onExpand) onExpand();
-              }}
-            />
-          ))}
-        </ul>
-        <div className="mt-auto flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
+          {!collapsed && (
+            <div className="px-3 pb-4">
+              <h2 className="text-lg font-semibold text-text tracking-tight">
+                ActionFlows
+              </h2>
+            </div>
+          )}
+          <ul role="list" className="flex flex-col gap-1">
+            {WORKBENCHES.map((wb) => (
+              <SidebarItem
+                key={wb.id}
+                workbench={wb}
+                isActive={wb.id === activeWorkbench}
+                collapsed={collapsed}
+                onSelect={() => {
+                  setActiveWorkbench(wb.id);
+                  if (collapsed && onExpand) onExpand();
+                }}
+              />
+            ))}
+          </ul>
+        </div>
+        <div className="flex flex-col gap-3">
           <Button
             variant="ghost"
             size="icon"
@@ -55,9 +59,9 @@ export function Sidebar({ collapsed, onExpand }: SidebarProps) {
             className="self-center"
           >
             {collapsed ? (
-              <ChevronRight className="h-6 w-6" />
+              <ChevronRight className="h-5 w-5" />
             ) : (
-              <ChevronLeft className="h-6 w-6" />
+              <ChevronLeft className="h-5 w-5" />
             )}
           </Button>
           <WebSocketStatus />
