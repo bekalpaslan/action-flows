@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: TypeScript Foundation** - Zero compiler errors, branded type hygiene, clean patterns for agents to imitate
 - [ ] **Phase 2: Frontend Scaffold & WebSocket** - Clean workbench architecture, singleton multiplexed WebSocket, Vite/Electron build verified
-- [ ] **Phase 3: Design System** - Token system, component library with Radix + Tailwind v4 + CVA, machine-readable manifest
+- [x] **Phase 3: Design System** - Token system, component library with Radix + Tailwind v4 + CVA, machine-readable manifest (completed 2026-04-02)
 - [ ] **Phase 4: Layout & Navigation** - 3-panel resizable layout, sidebar with 7 workbenches, workspace split, command palette
 - [ ] **Phase 5: Pipeline Visualization** - Horizontal node-based pipeline with live chain execution, forking/merging, real-time status
 - [ ] **Phase 6: Agent Sessions & Status** - Persistent Claude sessions per workbench, lazy activation, health monitoring, status dashboard
@@ -65,12 +65,12 @@ Plans:
   3. The `cn()` utility (clsx + tailwind-merge) is available and used by all components for conflict-free class composition
   4. A machine-readable component manifest exists that agents can consume to know what components exist and how to compose them
   5. No raw CSS exists in any component -- all styling flows through design tokens and CVA variants
-**Plans:** 1/4 plans executed
+**Plans:** 4/4 plans complete
 Plans:
 - [x] 03-01-PLAN.md -- Install deps, create Tailwind v4 token system (theme.css + globals.css), cn() utility, migrate shell CSS
-- [ ] 03-02-PLAN.md -- Build 6 core components: Button, Card, Badge, Avatar, Input, Checkbox
-- [ ] 03-03-PLAN.md -- Build 6 Radix components: Dialog, Tabs, Tooltip, DropdownMenu, Select, RadioGroup
-- [ ] 03-04-PLAN.md -- Barrel export, TypeScript manifest, JSON manifest, full build verification
+- [x] 03-02-PLAN.md -- Build 6 core components: Button, Card, Badge, Avatar, Input, Checkbox
+- [x] 03-03-PLAN.md -- Build 6 Radix components: Dialog, Tabs, Tooltip, DropdownMenu, Select, RadioGroup
+- [x] 03-04-PLAN.md -- Barrel export, TypeScript manifest, JSON manifest, full build verification
 **UI hint**: yes
 
 ### Phase 4: Layout & Navigation
@@ -175,7 +175,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 |-------|---------------|--------|-----------|
 | 1. TypeScript Foundation | 0/3 | Planning complete | - |
 | 2. Frontend Scaffold & WebSocket | 0/3 | Planning complete | - |
-| 3. Design System | 1/4 | In Progress|  |
+| 3. Design System | 4/4 | Complete   | 2026-04-02 |
 | 4. Layout & Navigation | 0/? | Not started | - |
 | 5. Pipeline Visualization | 0/? | Not started | - |
 | 6. Agent Sessions & Status | 0/? | Not started | - |

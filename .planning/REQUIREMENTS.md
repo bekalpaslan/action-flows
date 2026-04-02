@@ -28,7 +28,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **DESIGN-02**: Component library: Button, Card, Dialog, Tabs, Tooltip, Dropdown, Input, Select, Checkbox, Radio, Badge, Avatar
 - [x] **DESIGN-03**: All components built with Radix primitives + Tailwind v4 + CVA variants
 - [x] **DESIGN-04**: `cn()` utility with clsx + tailwind-merge for conflict-free class composition
-- [ ] **DESIGN-05**: Machine-readable component manifest (registry agents use to know what components exist and how to compose them)
+- [x] **DESIGN-05**: Machine-readable component manifest (registry agents use to know what components exist and how to compose them)
 - [x] **DESIGN-06**: No raw CSS in agent output — component library is the only way agents build UI
 
 ### Pipeline Visualization
@@ -164,7 +164,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | DESIGN-02 | Phase 3 | Complete |
 | DESIGN-03 | Phase 3 | Complete |
 | DESIGN-04 | Phase 3 | Complete |
-| DESIGN-05 | Phase 3 | Pending |
+| DESIGN-05 | Phase 3 | Complete |
 | DESIGN-06 | Phase 3 | Complete |
 | LAYOUT-01 | Phase 4 | Pending |
 | LAYOUT-02 | Phase 4 | Pending |
