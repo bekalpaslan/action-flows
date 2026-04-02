@@ -35,8 +35,8 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A developer (or agent) reading existing code sees consistent TypeScript patterns worth imitating
 **Plans:** 3 plans
 Plans:
-- [ ] 01-01-PLAN.md -- Fix shared artifact types and storage layer TypeScript errors
-- [ ] 01-02-PLAN.md -- Fix all service layer TypeScript errors (16 files)
+- [x] 01-01-PLAN.md -- Fix shared artifact types and storage layer TypeScript errors
+- [x] 01-02-PLAN.md -- Fix all service layer TypeScript errors (16 files)
 - [ ] 01-03-PLAN.md -- Fix routes, CLI, utilities, entry point, and final zero-error verification
 
 ### Phase 2: Frontend Scaffold & WebSocket
