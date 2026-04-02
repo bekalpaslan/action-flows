@@ -48,7 +48,11 @@ Plans:
   2. A single WebSocket connection multiplexes messages across all workbenches (no per-component connections)
   3. `pnpm dev` starts the Vite dev server and `pnpm build` produces a working Electron app with the new frontend
   4. Backend services, shared types, and the actionflows framework are preserved and functional
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 02-01-PLAN.md -- Delete cosmic frontend, build new workbench shell with sidebar navigation and zustand state
+- [ ] 02-02-PLAN.md -- Rebuild backend WebSocket hub with channel-per-workbench multiplexing
+- [ ] 02-03-PLAN.md -- Frontend WebSocket client singleton, status indicator, and build pipeline verification
 **UI hint**: yes
 
 ### Phase 3: Design System
@@ -165,7 +169,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
 | 1. TypeScript Foundation | 0/3 | Planning complete | - |
-| 2. Frontend Scaffold & WebSocket | 0/? | Not started | - |
+| 2. Frontend Scaffold & WebSocket | 0/3 | Planning complete | - |
 | 3. Design System | 0/? | Not started | - |
 | 4. Layout & Navigation | 0/? | Not started | - |
 | 5. Pipeline Visualization | 0/? | Not started | - |
