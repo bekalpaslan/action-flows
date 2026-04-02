@@ -27,11 +27,11 @@ export function Sidebar({ collapsed, onExpand }: SidebarProps) {
         )}
       >
         {!collapsed && (
-          <h2 className="text-heading font-semibold text-text mb-6">
+          <h2 className="text-heading font-semibold text-text mb-6 text-lg">
             Workbenches
           </h2>
         )}
-        <ul role="list" className="flex flex-col gap-2">
+        <ul role="list" className="flex flex-col gap-1.5">
           {WORKBENCHES.map((wb) => (
             <SidebarItem
               key={wb.id}
@@ -55,9 +55,9 @@ export function Sidebar({ collapsed, onExpand }: SidebarProps) {
             className="self-center"
           >
             {collapsed ? (
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-6 w-6" />
             ) : (
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-6 w-6" />
             )}
           </Button>
           <WebSocketStatus />
