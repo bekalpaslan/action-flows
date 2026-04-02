@@ -52,7 +52,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md -- Delete cosmic frontend, build new workbench shell with sidebar navigation and zustand state
 - [x] 02-02-PLAN.md -- Rebuild backend WebSocket hub with channel-per-workbench multiplexing
-- [ ] 02-03-PLAN.md -- Frontend WebSocket client singleton, status indicator, and build pipeline verification
+- [x] 02-03-PLAN.md -- Frontend WebSocket client singleton, status indicator, and build pipeline verification
 **UI hint**: yes
 
 ### Phase 3: Design System
