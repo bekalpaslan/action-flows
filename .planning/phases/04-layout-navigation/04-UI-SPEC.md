@@ -114,6 +114,20 @@ Inherited from Phase 3 design contract. Phase 4 applies colors to specific layou
 
 ---
 
+## Visual Focal Points
+
+Declared focal hierarchy for the main screen so the executor and auditor can verify that user attention is guided correctly.
+
+| Priority | Element | Mechanism | Rationale |
+|----------|---------|-----------|-----------|
+| Primary | Active sidebar item accent left border | 3px solid `--color-accent` (#3e67bf) on the left edge of the active nav item | The only element on the screen using the full accent color at full opacity. The vertical stripe at the far left of the viewport creates an immediate eye anchor that orients the user to their current workbench position. |
+| Secondary | Workspace content area | Dominant surface color (#0c1425) occupying 60%+ of the viewport | The largest contiguous region. After registering the sidebar anchor, the user's eye moves rightward into the content area where all primary work occurs. |
+| Tertiary | Command palette (when open) | Centered overlay with shadow-xl + backdrop-blur-sm + accent focus ring on input | When active, the palette overrides the ambient focal hierarchy and pulls focus to the center of the viewport via contrast, shadow depth, and input auto-focus. |
+
+**Sidebar items at rest** use `--color-text-dim` (#b8b8b8), intentionally below text-primary brightness, so the accent-colored active item stands out without competing visual noise.
+
+---
+
 ## Component Inventory (Phase 4 Specific)
 
 Phase 4 uses 4 components from the Phase 3 library and introduces 4 new layout components.
@@ -298,7 +312,7 @@ Phase 4 uses 4 components from the Phase 3 library and introduces 4 new layout c
 |----------|-------|
 | Max height | 320px (scrollable) |
 | Padding | py-2 (8px top/bottom) |
-| Empty state | "No results found." centered, 13px text-muted, py-6 |
+| Empty state | "No commands match your search -- try 'work', 'explore', or a number key (1-7)." centered, 13px text-muted, py-6 |
 
 **Command item:**
 
@@ -437,7 +451,7 @@ interface UIState {
 | Pipeline placeholder | "Pipeline -- Phase 5" |
 | Chat placeholder | "Chat -- Phase 7" |
 | Command palette placeholder | "Type a command or search..." |
-| Command palette empty | "No results found." |
+| Command palette empty | "No commands match your search -- try 'work', 'explore', or a number key (1-7)." |
 | Sidebar collapse tooltip | "Collapse sidebar" |
 | Sidebar expand tooltip | "Expand sidebar" |
 | Chat collapse tooltip | "Hide chat panel" |
