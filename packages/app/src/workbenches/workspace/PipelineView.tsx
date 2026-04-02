@@ -4,9 +4,11 @@ import '@xyflow/react/dist/style.css';
 import { Maximize2 } from 'lucide-react';
 import { nodeTypes, edgeTypes } from '@/components/pipeline';
 import { usePipelineStore } from '@/stores/pipelineStore';
+import { usePipelineEvents } from '@/hooks/usePipelineEvents';
 import { Button } from '@/components/ui';
 import type { WorkbenchId } from '@/lib/types';
 import { PipelineEmptyState } from './PipelineEmptyState';
+import { PipelineDrawer } from './PipelineDrawer';
 
 interface PipelineViewProps {
   workbenchId: WorkbenchId;
@@ -79,6 +81,9 @@ function PipelineCanvas({ workbenchId }: PipelineViewProps) {
  * Per PIPE-01 (horizontal pipeline) and PIPE-05 (horizontally scrollable).
  */
 export function PipelineView({ workbenchId }: PipelineViewProps) {
+  // Activate WebSocket subscription for pipeline events
+  usePipelineEvents(workbenchId);
+
   return (
     <div
       className="relative h-full w-full bg-surface p-2"
@@ -89,6 +94,7 @@ export function PipelineView({ workbenchId }: PipelineViewProps) {
       <ReactFlowProvider>
         <PipelineCanvas workbenchId={workbenchId} />
       </ReactFlowProvider>
+      <PipelineDrawer workbenchId={workbenchId} />
     </div>
   );
 }

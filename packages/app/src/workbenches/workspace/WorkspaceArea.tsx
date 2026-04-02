@@ -2,7 +2,7 @@ import { Group, Panel, Separator, useDefaultLayout, type PanelSize } from 'react
 import type { WorkbenchId } from '@/lib/types';
 import { useUIStore } from '@/stores/uiStore';
 import { cn } from '@/lib/utils';
-import { PipelinePlaceholder } from './PipelinePlaceholder';
+import { PipelineView } from './PipelineView';
 import { WorkPage } from '../pages/WorkPage';
 import { ExplorePage } from '../pages/ExplorePage';
 import { ReviewPage } from '../pages/ReviewPage';
@@ -51,7 +51,7 @@ export function WorkspaceArea({ workbenchId }: WorkspaceAreaProps) {
           setPipelineCollapsed(size.asPercentage === 0);
         }}
       >
-        <PipelinePlaceholder />
+        <PipelineView workbenchId={workbenchId} />
       </Panel>
       <Separator
         className={cn(
