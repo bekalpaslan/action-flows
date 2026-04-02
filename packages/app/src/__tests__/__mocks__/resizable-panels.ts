@@ -1,13 +1,17 @@
 import React from 'react';
 
-export function PanelGroup({ children, ...props }: any) {
-  return React.createElement('div', { 'data-testid': 'panel-group', 'data-direction': props.direction, ...props }, children);
+export function Group({ children, ...props }: any) {
+  return React.createElement('div', { 'data-testid': 'panel-group', 'data-orientation': props.orientation, ...props }, children);
 }
 
 export function Panel({ children, ...props }: any) {
   return React.createElement('div', { 'data-testid': 'panel', ...props }, children);
 }
 
-export function PanelResizeHandle(props: any) {
-  return React.createElement('div', { 'data-testid': 'panel-resize-handle', role: 'separator', ...props });
+export function Separator(props: any) {
+  return React.createElement('div', { 'data-testid': 'panel-separator', role: 'separator', ...props });
+}
+
+export function useDefaultLayout(_opts: any) {
+  return { defaultLayout: undefined, onLayoutChanged: () => {} };
 }
