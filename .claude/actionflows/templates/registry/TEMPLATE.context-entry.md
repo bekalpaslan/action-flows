@@ -160,7 +160,7 @@ CONTEXTS.md defines routing contexts that organize flows and determine how the o
 
 **Common Auto-Target Contexts:**
 - **archive** — Completed sessions
-- **harmony** — Contract drift/harmony violations
+- **system-health** — Contract drift/system health violations
 
 ---
 
@@ -395,7 +395,7 @@ Create 3-5 realistic user phrases showing:
 |---------|-----------------|-----------|
 | work | project/ | Feature dev and new code |
 | api | api/ | API design and documentation |
-| maintenance | maintenance/ | Bug fixes and housekeeping |
+| settings | settings/, maintenance/ | Bug fixes, config, and housekeeping |
 ```
 
 **Step 3: Routing Guide Examples**
@@ -439,7 +439,7 @@ Choose emojis that are:
 | Documentation | 📚 📝 📄 📖 | explore, docs |
 | Planning | 🎯 📊 🗺️ 🎨 | pm, design |
 | API/Integration | 🔌 🔗 🌐 📡 | api, integrations |
-| Maintenance | 🧹 🔧 ⚠️ 🩹 | maintenance, cleanup |
+| Settings | 🧹 🔧 ⚠️ 🩹 | maintenance, cleanup |
 | Archive | 📦 🗃️ 📁 | archive |
 
 ---

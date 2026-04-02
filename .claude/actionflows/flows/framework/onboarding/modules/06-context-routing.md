@@ -23,17 +23,17 @@ CONTEXTS.md defines contexts and routing:
 ### Routable Contexts (6):
 ```
 ├── work — Active feature development (🔨)
-├── maintenance — Bug fixes and refactoring (🔧)
+├── settings — Bug fixes, refactoring, and configuration (🔧)
 ├── explore — Research and learning (🔍)
 ├── review — Code reviews and audits (👁️)
 ├── settings — Configuration and framework (⚙️)
 └── pm — Project management (📋)
 ```
 
-### Auto-Target Contexts (2):
+### Auto-Target Contexts (1):
 ```
-├── archive — Completed sessions (📦)
-└── system-health — Violations and remediations (❤️)
+├── system-health — Contract violations and system health (📦)
+└──  (❤️)
 ```
 
 ### Manual-Only Context (1):
@@ -46,7 +46,7 @@ CONTEXTS.md defines contexts and routing:
 | Human Says | Context | Flow/Action |
 |------------|---------|-------------|
 | "implement X" | work | code-and-review/ |
-| "fix bug X" | maintenance | bug-triage/ |
+| "fix bug X" | work | bug-triage/ |
 | "audit security" | review | audit-and-fix/ |
 | "I have an idea" | explore | ideation/ |
 ```
@@ -65,7 +65,7 @@ Orchestrator extracts: `["implement", "rate limiting"]`
 ### Step 2: Score contexts
 Based on triggers in CONTEXTS.md:
 - `work` → Match: "implement" (trigger word)
-- `maintenance` → No match
+- `settings` → No match
 - `explore` → No match
 - `review` → No match
 - `settings` → No match

@@ -268,7 +268,7 @@ Implement contract versioning system that allows API format evolution without br
 | 2 | Create version-aware parser wrapper | code/shared/ | 3h | 2h | #1 |
 | 3 | Update all 30 format parsers for versioning | code/shared/ | 6h | 4h | #2 |
 | 4 | Add backward compatibility tests (N-1 version) | test/vitest/ | 4h | 3h | #3 |
-| 5 | Document versioning policy in HARMONY.md | code/ | 2h | 1h | #4 |
+| 5 | Document versioning policy in system health docs | code/ | 2h | 1h | #4 |
 
 ---
 
@@ -355,7 +355,7 @@ After completion, verify:
 2. **Quality:** All 30 parsers pass version-aware tests
 3. **Performance:** Parser overhead < 5% for version checking
 4. **Testing:** 100% parser test coverage for both current and N-1 versions
-5. **Documentation:** Versioning policy is clear in HARMONY.md
+5. **Documentation:** Versioning policy is clear in system health docs
 
 ---
 

@@ -88,7 +88,7 @@ Read your definition in .claude/actionflows/actions/code/agent.md
 Input:
 - task: Write comprehensive intelligence dossier for {domain from human}
 - context: {Dossier outline from Step 2}. Create a living document in docs/ directory following the structure. Use markdown with sections: Overview, Architecture (with diagrams or descriptions), Dependencies (internal + external), Health Indicators (with metrics), Risks (known issues, technical debt), Evolution Opportunities (suggested improvements), Integration Points (how this domain connects to others). Document should be detailed, actionable, and maintainable.
-- target: docs/intel/{domain-kebab-case}.md
+- target: .claude/actionflows/logs/intel/{domain-kebab-case}.md
 ```
 
 **Gate:** Dossier document created and committed to docs.
@@ -105,7 +105,7 @@ Input:
 Read your definition in .claude/actionflows/actions/review/agent.md
 
 Input:
-- scope: docs/intel/{domain-kebab-case}.md
+- scope: .claude/actionflows/logs/intel/{domain-kebab-case}.md
 - type: documentation-review
 - context: Intel dossier for {domain}. Check: completeness of sections, accuracy of architecture description, clarity for future readers, actionable recommendations.
 ```
@@ -116,7 +116,7 @@ Input:
 
 ### Step 6: Commit to Registry
 
-**Final action:** Update `.claude/actionflows/docs/DOSSIERS.md` registry to list the new dossier.
+**Final action:** Update `.claude/actionflows/.claude/actionflows/docs/DOSSIERS.md` registry to list the new dossier.
 
 **Gate:** Dossier registered and live.
 
@@ -141,16 +141,16 @@ Step 1 (analyze) → Step 2 (plan) → Step 3 (human gate)
 ## Chains With
 
 - → `post-completion/` (after dossier approved and registered)
-- ← Triggered from `intel` context with domain keywords
+- ← Triggered from `explore` context with domain keywords
 - ← Can feed into `code-and-review/` when insights surface refactoring opportunities
 
 ---
 
 ## Output
 
-**Primary deliverable:** `docs/intel/{domain-kebab-case}.md`
+**Primary deliverable:** `.claude/actionflows/logs/intel/{domain-kebab-case}.md`
 
-**Registry update:** `docs/DOSSIERS.md` entry added
+**Registry update:** `.claude/actionflows/docs/DOSSIERS.md` entry added
 
 **Example dossier sections:**
 ```
@@ -188,4 +188,4 @@ Step 1 (analyze) → Step 2 (plan) → Step 3 (human gate)
 - Dossiers are **living documents** — they should be updated as the domain evolves
 - Use `intel-analysis/` flow again to update an existing dossier
 - Dossiers support project learning and onboarding
-- Archive old dossiers in `docs/intel/archive/` when they become stale
+- Archive old dossiers in `.claude/actionflows/logs/intel/archive/` when they become stale

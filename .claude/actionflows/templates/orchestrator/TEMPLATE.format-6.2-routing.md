@@ -9,7 +9,7 @@
 ## Required Fields
 
 - `{request_brief}` (string) — Summary of user request
-- `{context}` (enum) — Target context (work, maintenance, explore, review, settings, pm, archive, harmony, editor)
+- `{context}` (enum) — Target context (work, explore, review, settings, pm, archive, studio, system-health, editor)
 - `{flow}` (string) — Recommended flow name or "Composed from actions"
 - `{actions}` (list) — List of actions in the recommended flow
 - `{explanation}` (string) — Why this routing was chosen
@@ -27,7 +27,7 @@
 
 ## Validation Rules
 
-- Context must be from: work | maintenance | explore | review | settings | pm | archive | harmony | editor
+- Context must be from: work | explore | review | settings | pm | archive | studio | system-health | editor
 - Confidence must be between 0.0 and 1.0 if provided
 - Explanation should justify the routing choice
 - Context names are extensible for custom workbenches
@@ -101,15 +101,15 @@ Request contains "How does" and "understand" — learning-focused keywords match
 Ready to explore WebSocket reconnection patterns. Confirm to proceed with analysis + discussion.
 ```
 
-**Maintenance request with disambiguation:**
+**Ambiguous request with disambiguation:**
 ```markdown
 ## Routing: Fix the failing test suite (DISAMBIGUATION)
 
-**Context:** maintenance/ (66% confidence) OR review/ (62% confidence)
+**Context:** work/ (66% confidence) OR review/ (62% confidence)
 
-**Primary Recommendation:** maintenance/
+**Primary Recommendation:** work/
 
-**Actions (maintenance/fix-tests/):**
+**Actions (work/fix-tests/):**
 1. test/vitest/ — Run failing tests and collect error details
 2. code/backend/ — Fix implementation bugs
 3. test/vitest/ — Verify fixes
@@ -118,14 +118,14 @@ Ready to explore WebSocket reconnection patterns. Confirm to proceed with analys
 **Alternative (review/):**
 Would focus on code quality review first, then identify test failures as symptoms.
 
-**Confidence:** 66% for maintenance, 62% for review (too close)
+**Confidence:** 66% for work, 62% for review (too close)
 
 **Explanation:**
-Request uses "fix" (maintenance keyword, 60% match) but context is ambiguous. Could be either fixing broken code (maintenance) or reviewing test coverage (review). Defaulting to maintenance since broken tests indicate code bugs, not quality gaps.
+Request uses "fix" (work keyword, 60% match) but context is ambiguous. Could be either fixing broken code (work) or reviewing test coverage (review). Defaulting to work since broken tests indicate code bugs, not quality gaps.
 
 **Human Input Needed:**
 Which is the primary issue?
-- **Option A:** Code has bugs breaking tests → use maintenance flow
+- **Option A:** Code has bugs breaking tests → use work flow
 - **Option B:** Tests are insufficient for code quality → use review flow
 
 Reply with your interpretation and we'll route accordingly.

@@ -439,4 +439,4 @@ These templates are consumed by:
 - `.claude/actionflows/actions/_abstract/create-log-folder/instructions.md` — Log folder creation standard
 - `.claude/actionflows/CONTRACT.md` — Format specifications for contract-defined outputs
 - `.claude/actionflows/project.config.md` — Project configuration values
-- `docs/architecture/CONTRACT_EVOLUTION.md` — Process for evolving contract formats
+- `.claude/actionflows/CONTRACT.md` — Contract format specifications (includes evolution process)

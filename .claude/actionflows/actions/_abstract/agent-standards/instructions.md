@@ -69,7 +69,7 @@ If your action produces structured output consumed by the dashboard (review repo
 - Dashboard shows **"parsing incomplete"** and degrades gracefully
 - Harmony detector **broadcasts violations** via WebSocket (visible in dashboard)
 
-**Evolution process:** See `docs/architecture/CONTRACT_EVOLUTION.md` for adding/modifying formats
+**Evolution process:** See CONTRACT.md for the evolution process for adding/modifying formats
 
 **Validation command:**
 ```bash

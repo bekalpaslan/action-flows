@@ -78,7 +78,7 @@ browser: chromium
 
 ### Test across all browsers
 ```
-target: dashboard-nav
+target: dashboard
 mode: headless
 browser: all
 ```

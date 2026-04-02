@@ -108,7 +108,7 @@ Any workbench can embed any tool. WORK might embed the Editor to let you edit se
 
 ---
 
-## Data Sources (Moons)
+## Data Sources
 
 ### What They Are
 
@@ -121,7 +121,7 @@ Data sources are external feeds that provide information to workbenches. They're
 - **Databases**  --  Query results from external databases
 - **File Watchers**  --  Filesystem change notifications
 
-A workbench's moons tell you what information it's consuming without entering the view.
+A workbench's data sources tell you what information it's consuming without entering the view.
 
 - **In code:** `MoonOrbit` interface, `data source components` component
 
@@ -251,7 +251,7 @@ This is the visualization of learning. The software adapts in real time.
 
 Over weeks and months:
 - **Ad-hoc chains become flows**  --  When the brain composes the same pattern 3+ times, it's promoted to `FLOWS.md`. What required manual composition becomes a one-step invocation.
-- **New workbenches emerge**  --  Custom stars appear on the map when usage triggers readiness. The system detects "this user needs a specialized space for X" and creates it.
+- **New workbenches emerge**  --  Custom workbenches appear in the sidebar when usage triggers readiness. The system detects "this user needs a specialized space for X" and creates it.
 - **Memory accumulates**  --  `INDEX.md` grows with execution history. `LEARNINGS.md` catalogs root causes and fixes. The brain gets smarter.
 - **Capabilities reveal**  --  Undiscovered capabilities surface when you're ready for them. Contextual emergence, not feature unlock gates.
 

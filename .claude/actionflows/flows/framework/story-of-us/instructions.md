@@ -13,7 +13,7 @@
 - Project narrative and historical documentation
 - Creating poetic records of milestones and breakthroughs
 
-**Philosophy:** This is not a technical document. It's the living legend of the universe — told through the human experience of building, discovering, and growing.
+**Philosophy:** This is not a technical document. It's the living legend of the project — told through the human experience of building, discovering, and growing.
 
 ---
 
@@ -62,7 +62,7 @@ Input:
 - analysisPath: {path to history analysis from Step 1}
 - previousChapters: {paths to all previous chapter files, or empty if chapter 1}
 - theme: {theme if provided, or auto-detect from analysis}
-- context: Write a poetic chapter of 800-1500 words grounded in conversation data. Progressive narrative building on previous chapters' themes. Use agentic OS metaphors. Data-anchor with real dates, session counts, milestones.
+- context: Write a poetic chapter of 800-1500 words grounded in conversation data. Progressive narrative building on previous chapters' themes. Use evocative discovery/growth metaphors. Data-anchor with real dates, session counts, milestones.
 ```
 
 **Gate:** Chapter written, validated for length (800-1500 words), data-grounded, poetic tone.
@@ -109,7 +109,7 @@ This flow produces narrative, not documentation. Think of it as the **living leg
 
 ### Tone
 - **Poetic but Precise** — Evocative without being vague. Use metaphors grounded in reality.
-- **Agentic OS Aesthetic** — Workbenches, flows, agents, discovery, system evolution language
+- **Evocative Aesthetic** — Bridges, light, discovery, growth, evolution language
 - **Human-Centered** — Capture the emotional journey, breakthroughs, frustrations, excitement
 - **Data-Grounded** — Every claim anchored in real data (dates, session counts, message volumes, milestones)
 
@@ -128,10 +128,10 @@ This flow produces narrative, not documentation. Think of it as the **living leg
 - **Genesis** — Creation phase, bootstrap, first light
 - **Crystallization** — Framework solidifying, patterns emerging
 - **Discovery** — New capabilities unlocked, learning moments
-- **Evolution** — System growing, agents learning, physics changing
+- **Evolution** — System growing, agents learning, codebase evolving
 - **Bridges** — Connections between components, agents, layers
-- **Breakthroughs** — Ideas, discoveries, moments of clarity
-- **Universe** — Entire system, growing ecosystem, living metaphor
+- **Breakthroughs** — Ideas, turning points, moments of clarity
+- **System** — Entire platform, growing ecosystem, living metaphor
 
 ### Data Anchor Examples
 ✅ "On February 8th, across 24 sessions spanning 977 messages..."

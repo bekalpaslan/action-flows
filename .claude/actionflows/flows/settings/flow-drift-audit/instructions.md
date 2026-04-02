@@ -16,7 +16,7 @@ This is a deep health check of the flow registry to detect drift between documen
 - Human says "check flow drift"
 - Human says "flow health deep scan"
 - Human says "flow instructions audit"
-- Periodic maintenance (monthly or after significant framework changes)
+- Periodic health check (monthly or after significant framework changes)
 - After creating or modifying multiple flows
 - When flow execution behavior doesn't match instructions.md documentation
 

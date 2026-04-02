@@ -8,7 +8,7 @@
 
 ## Overview
 
-FLOWS.md organizes flows by context (work, maintenance, explore, review, settings, pm, intel). Each flow has a table entry, and complex flows may have an extended H3 specification section.
+FLOWS.md organizes flows by context (work, explore, review, settings, pm, archive, studio). Each flow has a table entry, and complex flows may have an extended H3 specification section.
 
 **Flow Entry Formats:**
 1. **Simple Table Entry** — Basic sequential flows (most common)
@@ -20,7 +20,7 @@ FLOWS.md organizes flows by context (work, maintenance, explore, review, setting
 
 **Use when:** Flow is a straightforward action sequence (no gates, branching, or complex conditionals)
 
-**Location in FLOWS.md:** Under context H2 header (e.g., `## work`, `## maintenance`)
+**Location in FLOWS.md:** Under context H2 header (e.g., `## work`, `## settings`)
 
 **Table Header:**
 ```markdown
@@ -280,10 +280,10 @@ Flows are organized by context under H2 headers:
 **Flow count:** ~3 flows
 **Example flows:** code-and-review/, post-completion/, contract-format-implementation/
 
-### maintenance
-**Purpose:** Bug fixes, refactoring, housekeeping
+### settings
+**Purpose:** Bug fixes, refactoring, configuration, housekeeping
 **Flow count:** ~5 flows
-**Example flows:** bug-triage/, cleanup/, harmony-audit-and-fix/
+**Example flows:** bug-triage/, cleanup/, health-audit-and-fix/
 
 ### explore
 **Purpose:** Research, learning, documentation
@@ -305,10 +305,9 @@ Flows are organized by context under H2 headers:
 **Flow count:** ~2 flows
 **Example flows:** planning/, learning-dissolution/
 
-### intel
-**Purpose:** Code intelligence, search, dependency analysis
-**Flow count:** ~1 flow
-**Example flows:** intel-analysis/
+### archive
+**Purpose:** Completed sessions, historical search
+**Flow count:** ~0 flows (auto-target)
 
 ---
 
