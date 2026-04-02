@@ -1,4 +1,4 @@
-import { Group, Panel, Separator, useDefaultLayout } from 'react-resizable-panels';
+import { Group, Panel, Separator, useDefaultLayout, type PanelSize } from 'react-resizable-panels';
 import type { WorkbenchId } from '@/lib/types';
 import { useUIStore } from '@/stores/uiStore';
 import { cn } from '@/lib/utils';
@@ -47,7 +47,7 @@ export function WorkspaceArea({ workbenchId }: WorkspaceAreaProps) {
         maxSize={50}
         collapsible
         collapsedSize={0}
-        onResize={(size) => {
+        onResize={(size: PanelSize) => {
           setPipelineCollapsed(size.asPercentage === 0);
         }}
       >
