@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v4.8
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-04-PLAN.md
-last_updated: "2026-04-02T22:56:02.703Z"
+stopped_at: Completed 06-03-PLAN.md
+last_updated: "2026-04-02T22:54:35.438Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 12
-  completed_phases: 5
-  total_plans: 28
+  completed_phases: 6
+  total_plans: 27
   completed_plans: 26
   percent: 91
 ---
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-01)
 ## Current Position
 
 Phase: 06 (agent-sessions-status) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-04-02
 
@@ -73,7 +73,8 @@ Progress: [=========.] 91%
 | Phase 05 P01 | 4min | 2 tasks | 10 files |
 | Phase 05 P02 | 2min | 2 tasks | 6 files |
 | Phase 05 P03 | 6min | 2 tasks | 6 files |
-| Phase 06 P04 | 6min | 3 tasks | 11 files |
+| Phase 06 P02 | 3min | 2 tasks | 7 files |
+| Phase 06 P03 | 5min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -138,9 +139,12 @@ Recent decisions affecting current work:
 - [Phase 05]: Direct store access via usePipelineStore.getState() for edge lookup to avoid selector re-render
 - [Phase 05]: Inline CSS transition for drawer slide-in (Tailwind animate-in not available)
 - [Phase 05]: 5-second clearPipeline delay on chain:completed cancelled on new chain:compiled
-- [Phase 06]: useSessionEvents dependency array is [updateSession] only -- statusPanelCollapsed read via getState() to prevent re-subscription churn
-- [Phase 06]: WorkspaceArea changed from 2-panel (30/70) to 3-panel (25/50/25) layout for status panel
-- [Phase 06]: Toaster description styled via classNames.description (Tailwind) not descriptionStyle (not in sonner API)
+- [Phase 06]: statusPanelCollapsed defaults to true per UI-SPEC 'Default state: Collapsed'
+- [Phase 06]: setStatus clears error field when transitioning away from error state
+- [Phase 06]: StatusDot auto-pulses for running/connecting statuses (overridable via explicit pulse prop)
+- [Phase 06]: motion-safe: prefix for pulse animation respects prefers-reduced-motion per UI-SPEC
+- [Phase 06]: Heartbeat interval 15s with 30s stale threshold for worst-case detection within SESSION-04 requirement
+- [Phase 06]: Two-strategy resurrection: resume stored session ID first, then discover from local session list
 
 ### Pending Todos
 
@@ -154,6 +158,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T22:56:02.698Z
-Stopped at: Completed 06-04-PLAN.md
+Last session: 2026-04-02T22:54:35.432Z
+Stopped at: Completed 06-03-PLAN.md
 Resume file: None

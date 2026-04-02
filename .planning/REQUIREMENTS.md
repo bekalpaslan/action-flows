@@ -46,10 +46,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **SESSION-01**: Persistent Claude session per workbench via Agent SDK (`@anthropic-ai/claude-agent-sdk`)
 - [x] **SESSION-02**: Lazy session activation — only active workbench holds a live session
 - [ ] **SESSION-03**: Session resume across app restarts via `--resume` with session ID mapping
-- [ ] **SESSION-04**: Session health monitoring with heartbeat-based detection (<30s latency)
-- [ ] **SESSION-05**: Session resurrection using local conversation logs as source of truth
+- [x] **SESSION-04**: Session health monitoring with heartbeat-based detection (<30s latency)
+- [x] **SESSION-05**: Session resurrection using local conversation logs as source of truth
 - [ ] **SESSION-06**: Backend (SessionManager) is sole owner of Agent SDK calls — frontend communicates via WebSocket only
-- [ ] **SESSION-07**: Session history searchable per workbench via `listSessions()` + `getSessionMessages()`
+- [x] **SESSION-07**: Session history searchable per workbench via `listSessions()` + `getSessionMessages()`
 - [ ] **SESSION-08**: Workbench-scoped agent personality (Review = strict, Explore = curious, PM = strategic)
 - [ ] **SESSION-09**: Session forking — branch a conversation to explore alternatives without losing the original
 
@@ -181,10 +181,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | SESSION-01 | Phase 6 | Pending |
 | SESSION-02 | Phase 6 | Complete |
 | SESSION-03 | Phase 6 | Pending |
-| SESSION-04 | Phase 6 | Pending |
-| SESSION-05 | Phase 6 | Pending |
+| SESSION-04 | Phase 6 | Complete |
+| SESSION-05 | Phase 6 | Complete |
 | SESSION-06 | Phase 6 | Pending |
-| SESSION-07 | Phase 6 | Pending |
+| SESSION-07 | Phase 6 | Complete |
 | SESSION-08 | Phase 6 | Pending |
 | SESSION-09 | Phase 6 | Pending |
 | STATUS-01 | Phase 6 | Complete |
