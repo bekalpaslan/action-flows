@@ -218,7 +218,7 @@ Add entry to `logs/INDEX.md`:
 ## Project Context
 
 - **Project:** ActionFlows Dashboard monorepo
-- **Framework:** Living software—evolves through use
+- **Framework:** Evolving software—adapts through use
 - **Teaching approach:** Progressive disclosure, show-before-tell, interactive validation
 - **Foreground execution:** Human-paced conversation, no timeout pressure
 - **One question at a time:** Critical interaction rule (per MEMORY.md)

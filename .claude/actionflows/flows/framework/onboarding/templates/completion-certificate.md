@@ -22,7 +22,7 @@
 
 ### Advanced Level ✅
 - [x] Module 8: The Contract
-- [x] Module 9: Harmony & The Living Model
+- [x] Module 9: System Health & The Evolving Model
 - [x] Module 10: Completion
 
 ---
@@ -31,13 +31,13 @@
 
 - ✅ How to use ActionFlows safely
 - ✅ How to customize flows and actions
-- ✅ How to evolve the framework without breaking harmony
-- ✅ The philosophy of living software
+- ✅ How to evolve the framework without breaking system health
+- ✅ The philosophy of evolving software
 - ✅ What's sacred vs what's safe
 - ✅ The sin test and orchestrator boundaries
 - ✅ Context routing and flow composition
 - ✅ Review pipeline and second opinions
-- ✅ Contract-based harmony system
+- ✅ Contract-based system health
 
 ---
 
@@ -64,12 +64,12 @@ Watch the orchestrator compile chain, approve, observe execution
 ### 3. Join the evolution loop
 - When agents report learnings, approve fixes
 - Watch framework improve based on usage
-- Contribute to living software model
+- Contribute to evolving software model
 
 ### 4. Explore the contract
 - Read: `.claude/actionflows/CONTRACT.md`
 - Browse all format specifications
-- Understand harmony boundaries
+- Understand system health boundaries
 
 ### 5. Bootstrap another project (if relevant)
 - Copy bootstrap.md to new project
@@ -94,7 +94,7 @@ Watch the orchestrator compile chain, approve, observe execution
 
 **Congratulations on completing ActionFlows onboarding!**
 
-You're now equipped to use, customize, and evolve this living software system.
+You're now equipped to use, customize, and evolve this evolving software system.
 
 ---
 

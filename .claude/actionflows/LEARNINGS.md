@@ -121,7 +121,7 @@
 ### L015: Requirements Validation Against Type Definitions
 - **Date:** 2026-02-11
 - **From:** code/frontend/ (sonnet) during Phase 5 Batch C implementation
-- **Issue:** Requirements specified implementing themes for "squad" and "command" regions that don't exist in the system architecture. The actual 13 navigation targets are defined in `workbenchTypes.ts` as 9 stars + 3 tools + 1 harmony, not an arbitrary list including "squad" and "command".
+- **Issue:** Requirements specified implementing themes for "squad" and "command" regions that don't exist in the system architecture. The actual 13 navigation targets are defined in `workbenchTypes.ts` as 7 workbenches (Work, Explore, Review, PM, Settings, Archive, Studio), not an arbitrary list including "squad" and "command".
 - **Root Cause:** Requirements document was written before verifying the actual `WorkbenchId` type definitions in `packages/shared/src/workbenchTypes.ts`. Plan assumed 13 regions without validating against source of truth.
 - **Fix:** When implementing cross-layer features (themes spanning backend types + frontend styles), always read the shared types first to verify the exact entities that need theming. Don't assume requirements are correct without validation against type definitions.
 - **Status:** Closed (Batch C discovered all themes already implemented correctly per actual types)

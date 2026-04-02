@@ -12,13 +12,13 @@ Welcome to Advanced level!
 
 You've learned to USE and CUSTOMIZE the framework. Now let's learn to EVOLVE it.
 
-We'll start with the CONTRACT—the harmony mechanism that keeps orchestrator and dashboard in sync.
+We'll start with the CONTRACT—the validation mechanism that keeps orchestrator and dashboard in sync.
 
 ---
 
 ## The Concept
 
-ActionFlows is "living software"—it evolves through human-triggered Claude sessions. But evolution needs guardrails:
+ActionFlows is "evolving software"—it evolves through human-triggered Claude sessions. But evolution needs guardrails:
 
 ### Problem without contract:
 ```
@@ -39,7 +39,7 @@ ActionFlows is "living software"—it evolves through human-triggered Claude ses
 │ Orchestrator│ ──────► │ CONTRACT │ ◄────── │ Dashboard │
 │             │ follows │          │ follows │           │
 └─────────────┘         └──────────┘         └───────────┘
-                        (harmony bridge)
+                        (validation bridge)
       ↓ (human changes format)
 ┌─────────────┐         ┌──────────┐         ┌───────────┐
 │ Orchestrator│ ──────► │ CONTRACT │         │ Dashboard │
@@ -47,7 +47,7 @@ ActionFlows is "living software"—it evolves through human-triggered Claude ses
 └─────────────┘         └──────────┘         └───────────┘
                                    ↓
                          Both sides update together
-                         → Harmony maintained ✅
+                         → Validation maintained ✅
 ```
 
 ---
@@ -207,7 +207,7 @@ D. Just start using it—the dashboard will adapt
 "Exactly! The contract requires ALL five parts to stay in sync: structure definition, TypeScript type, parser, ORCHESTRATOR.md example, dashboard component. Miss one and harmony breaks."
 
 ### If Wrong
-"Not quite. Adding a column is a BREAKING change to the contract. You need to update: (1) CONTRACT.md structure, (2) TypeScript interface, (3) parser function, (4) ORCHESTRATOR.md examples, (5) dashboard rendering component. All five must stay in sync or harmony breaks."
+"Not quite. Adding a column is a BREAKING change to the contract. You need to update: (1) CONTRACT.md structure, (2) TypeScript interface, (3) parser function, (4) ORCHESTRATOR.md examples, (5) dashboard rendering component. All five must stay in sync or validation breaks."
 
 ---
 
@@ -221,7 +221,7 @@ The contract is ActionFlows' evolution mechanism:
 **Without contract:** Changes break unpredictably
 **With contract:** Changes are deliberate and synchronized
 
-This is the foundation of "living software"—evolution with guardrails.
+This is the foundation of evolving software—evolution with guardrails.
 
 You can see all formats in:
 `.claude/actionflows/CONTRACT.md`
@@ -230,6 +230,6 @@ You can see all formats in:
 
 ## Transition
 
-"Next module: How harmony detection auto-validates the contract."
+"Next module: How system health detection auto-validates the contract."
 
 Proceed to Module 9.

@@ -1,4 +1,4 @@
-# Module 9: Harmony & The Living Model
+# Module 9: System Health & The Evolving Model
 
 **Level:** Advanced
 **Duration:** ~25 min
@@ -8,9 +8,9 @@
 
 ## Presentation
 
-Final advanced topic: **Harmony**—how the framework detects and maintains sync between orchestrator and dashboard.
+Final advanced topic: **System Health**—how the framework detects and maintains sync between orchestrator and dashboard.
 
-**Harmony means:** Orchestrator output matches contract specification.
+**System health means:** Orchestrator output matches contract specification.
 
 ---
 
@@ -37,9 +37,9 @@ Required fields present?
 - ... ❌ Missing "Key Inputs" column!
 ```
 
-### Step 4: Harmony status
+### Step 4: System health status
 ```
-Parse failed → Harmony ❌
+Parse failed → System Health ❌
 
 Dashboard shows: "Parsing incomplete—some data unavailable"
 Backend logs: "Chain compilation validation failed: missing Key Inputs column"
@@ -51,19 +51,19 @@ Was orchestrator wrong? → Update ORCHESTRATOR.md to include column
 Was contract outdated? → Update CONTRACT.md to make column optional
 
 After fix:
-Parse succeeds → Harmony ✅
+Parse succeeds → System Health ✅
 ```
 
 ---
 
-## Harmony States
+## System Health States
 
-### 1. In Harmony ✅
+### 1. Healthy ✅
 - Orchestrator output matches contract
 - Dashboard parses successfully
 - All features work
 
-### 2. Out of Harmony ❌
+### 2. Degraded ❌
 - Orchestrator output doesn't match contract
 - Dashboard parsing fails (graceful degradation)
 - Some features unavailable
@@ -75,9 +75,9 @@ Parse succeeds → Harmony ✅
 
 ---
 
-## Living Software Model
+## Evolving Software Model
 
-ActionFlows is **LIVING SOFTWARE:**
+ActionFlows is **EVOLVING SOFTWARE:**
 
 ### Traditional software:
 - Human writes code
@@ -86,14 +86,14 @@ ActionFlows is **LIVING SOFTWARE:**
 - Bugs accumulate
 - Quality degrades over time
 
-### Living software:
+### Evolving software:
 - Human triggers Claude to evolve the system
 - System adapts through agent learnings
 - Changes happen via orchestrated chains
 - Quality improves over time
 - Framework evolves based on usage
 
-**The harmony system enables this.**
+**The system health framework enables this.**
 
 ---
 
@@ -141,7 +141,7 @@ Add example showing review/ agents must include risk score.
 <RiskBadge level={report.riskScore} />
 ```
 
-### Step 5: Test harmony
+### Step 5: Test system health
 Run review/ action → Check parsing succeeds → Verify risk badge renders
 
 ### Step 6: Increment CONTRACT_VERSION if needed
@@ -157,7 +157,7 @@ Support both versions for 90 days.
 
 ## Sacred vs Not Sacred
 
-### Sacred (contract-defined, harmony-critical):
+### Sacred (contract-defined, health-critical):
 ```
 ├── Output formats (chain tables, step announcements, reports)
 ├── Branded types (SessionId, ChainId, StepId)
@@ -201,26 +201,26 @@ D. All of the above
 ## Validation Responses
 
 ### If Correct
-"Perfect! Harmony violations need investigation: Was orchestrator wrong? Was contract outdated? Check both sides, decide which needs updating, make coordinated change."
+"Perfect! System health violations need investigation: Was orchestrator wrong? Was contract outdated? Check both sides, decide which needs updating, make coordinated change."
 
 ### If Wrong
-"Close! Harmony violations require investigating BOTH sides. Check: (1) Did orchestrator omit contract-required fields? (2) Is contract specification outdated? Then decide which side needs updating and make the change. Sometimes orchestrator is wrong, sometimes contract is outdated."
+"Close! System health violations require investigating BOTH sides. Check: (1) Did orchestrator omit contract-required fields? (2) Is contract specification outdated? Then decide which side needs updating and make the change. Sometimes orchestrator is wrong, sometimes contract is outdated."
 
 ---
 
 ## Key Takeaway
 
-Harmony is ActionFlows' evolution guardrail:
+System health is ActionFlows' evolution guardrail:
 
-**Living software = Continuous evolution**
-**Harmony system = Synchronized evolution**
+**Evolving software = Continuous evolution**
+**System health = Synchronized evolution**
 
 The contract keeps orchestrator and dashboard in sync while allowing both to evolve freely.
 
 **Key insights:**
 1. Evolution is encouraged (not prevented)
 2. Guardrails ensure changes are deliberate
-3. Harmony detection auto-validates sync
+3. System health detection auto-validates sync
 4. Human decides what needs updating
 
 This is what makes ActionFlows different from traditional frameworks—it's designed to evolve through use, with built-in mechanisms to prevent drift.
