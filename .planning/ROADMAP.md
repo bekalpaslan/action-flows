@@ -86,7 +86,7 @@ Plans:
 **Plans:** 4 plans
 Plans:
 - [x] 04-01-PLAN.md -- Install deps (react-resizable-panels, cmdk), extend types with lucide icons, extend uiStore, vitest setup
-- [x] 04-02-PLAN.md -- Rewrite AppShell with 3-panel PanelGroup, create Sidebar with collapse/expand, migrate WebSocketStatus
+- [ ] 04-02-PLAN.md -- Rewrite AppShell with 3-panel PanelGroup, create Sidebar with collapse/expand, migrate WebSocketStatus
 - [ ] 04-03-PLAN.md -- Rebuild WorkspaceArea with vertical pipeline/content split, create PipelinePlaceholder, migrate ChatPlaceholder
 - [ ] 04-04-PLAN.md -- Create command palette (cmdk), keyboard shortcuts hook, wire into AppShell
 **UI hint**: yes
@@ -96,7 +96,7 @@ Plans:
 **Goal:** [Urgent work - to be planned]
 **Requirements**: TBD
 **Depends on:** Phase 4
-**Plans:** 2/4 plans executed
+**Plans:** 1/4 plans executed
 
 Plans:
 - [ ] TBD (run /gsd:plan-phase 04.1 to break down)
