@@ -1,5 +1,6 @@
 import { useUIStore } from '@/stores/uiStore';
 import { WORKBENCHES } from '@/lib/types';
+import { WebSocketStatus } from '@/status/WebSocketStatus';
 import './SidebarPlaceholder.css';
 
 export function SidebarPlaceholder() {
@@ -20,6 +21,9 @@ export function SidebarPlaceholder() {
           </li>
         ))}
       </ul>
+      <div className="sidebar__status">
+        <WebSocketStatus />
+      </div>
     </nav>
   );
 }

@@ -42,3 +42,7 @@
   color: var(--text-primary);
   background: var(--app-bg-tertiary);
 }
+
+.sidebar__status {
+  margin-top: auto;
+}
