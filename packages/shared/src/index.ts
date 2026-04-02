@@ -587,3 +587,9 @@ export type {
   TestFailureNotification,
 } from './slack.js';
 export { DEFAULT_SLACK_CONFIG } from './slack.js';
+
+// ============================================================================
+// WebSocket Channel Multiplexing
+// ============================================================================
+export type { WSEnvelope, SystemMessageType } from './ws-envelope.js';
+export { SYSTEM_CHANNEL, BROADCAST_CHANNEL } from './ws-envelope.js';
