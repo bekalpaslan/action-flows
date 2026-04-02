@@ -37,6 +37,8 @@ export default defineConfig({
       '../../../monaco-config': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-config.ts'),
       // Mock react-resizable-panels for tests (renders as plain divs)
       'react-resizable-panels': path.resolve(__dirname, './src/__tests__/__mocks__/resizable-panels.ts'),
+      // Mock @xyflow/react for tests (renders as plain divs)
+      '@xyflow/react': path.resolve(__dirname, './src/__tests__/__mocks__/xyflow-react.ts'),
       // Mock monaco-editor and workers for tests to avoid import resolution errors
       'monaco-editor': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-editor.ts'),
       'monaco-editor/esm/vs/editor/editor.worker?worker': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-worker.ts'),
