@@ -122,7 +122,7 @@ interface GateTrace {
                                                           └─────────────────┘
 ```
 
-### Harmony Detection Flow
+### System Health Detection Flow
 
 ```
 Orchestrator Output
@@ -166,13 +166,13 @@ Orchestrator Output
 - **Gate definitions:** `GATE_STRUCTURE.md`
 - **Contract formats:** `CONTRACT.md`
 - **Orchestrator rules:** `ORCHESTRATOR.md`
-- **Healing protocol:** `docs/living/HEALING.md`
-- **System architecture:** `docs/living/SYSTEM.md`
+- **Healing protocol:** `.claude/actionflows/docs/living/HEALING.md`
+- **System architecture:** `.claude/actionflows/docs/living/SYSTEM.md`
 
 ### Implementation
 
 - **Checkpoint service:** `packages/backend/src/services/gateCheckpoint.ts`
-- **Harmony detector:** `packages/backend/src/services/harmonyDetector.ts`
+- **System health detector:** `packages/backend/src/services/harmonyDetector.ts`
 - **Trace types:** `packages/shared/src/types/gateTrace.ts`
 - **Parsers:** `packages/shared/src/contract/parsers/`
 

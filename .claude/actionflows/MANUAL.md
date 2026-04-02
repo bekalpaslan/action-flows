@@ -16,7 +16,7 @@
 7. [Actions Registry](#7-actions-registry)
 8. [Chain Compilation & Response Formats](#8-chain-compilation--response-formats)
 9. [Gate Architecture](#9-gate-architecture)
-10. [Contract & Harmony](#10-contract--harmony)
+10. [Contract & System Health](#10-contract--harmony)
 11. [Observability](#11-observability)
 12. [Routing Engine](#12-routing-engine)
 13. [Logging Standards](#13-logging-standards)
@@ -28,11 +28,11 @@
 
 ActionFlows is an orchestration framework for delegating work to specialized agents. It runs inside Claude Code (CLI) and optionally surfaces observability data to the ActionFlows Dashboard.
 
-**The Living Universe metaphor:**
-- **Software = Physics** — The raw, mutable codebase that everything runs on.
-- **Orchestrator = Brain** — Coordinates agents, compiles chains, ensures harmony.
-- **Human = Will** — Sets intention. The brain figures out how to manifest it.
-- **Agents = Hands** — Specialized workers that execute within the physics.
+**The operational model:**
+- **Code = Foundation**  --  The raw, mutable codebase that everything runs on.
+- **Orchestrator = Brain** -- Coordinates agents, compiles chains, ensures system health.
+- **Human = Will** -- Sets intention. The brain figures out how to execute it.
+- **Agents = Hands** -- Specialized workers that execute within the codebase.
 
 **Three audiences** the orchestrator detects and routes for:
 
@@ -63,7 +63,7 @@ ActionFlows is an orchestration framework for delegating work to specialized age
 
 | Mode | Behavior |
 |------|----------|
-| `cli` | Orchestrator skips health check. Lean and fast. Backend may run independently — still observes via ConversationWatcher. |
+| `cli` | Orchestrator skips health check. Lean and fast. Backend may run independently  --  still observes via ConversationWatcher. |
 | `dashboard` | Orchestrator queries health at session start. Full interactive loop. |
 
 **Current:** `cli`
@@ -85,11 +85,11 @@ ActionFlows is an orchestration framework for delegating work to specialized age
 
 ### Domain Concepts
 
-- **Session** — A user's orchestration session (branded `SessionId`)
-- **Chain** — A sequence of steps within a session (branded `ChainId`)
-- **Step** — An individual action within a chain (branded `StepId`)
-- **Command** — Control instruction: pause, resume, cancel, retry, skip
-- **Event** — State change broadcast via WebSocket
+- **Session**  --  A user's orchestration session (branded `SessionId`)
+- **Chain**  --  A sequence of steps within a session (branded `ChainId`)
+- **Step**  --  An individual action within a chain (branded `StepId`)
+- **Command**  --  Control instruction: pause, resume, cancel, retry, skip
+- **Event**  --  State change broadcast via WebSocket
 
 ### Dev Commands
 
@@ -114,15 +114,15 @@ Slack · Channel: `#cityzen-dev` · Trigger: `chain-complete` · Action: `action
 
 **Before responding to ANY human message**, execute in order:
 
-0. Read `project.config.md` — load project-specific context
-1. Read `CONTEXTS.md` — understand context routing
-2. Read `FLOWS.md` — know what flows exist
-3. Read `logs/INDEX.md` — check for similar past executions
-4. Read `LEARNINGS.md` — check accumulated wisdom
+0. Read `project.config.md`  --  load project-specific context
+1. Read `CONTEXTS.md`  --  understand context routing
+2. Read `FLOWS.md`  --  know what flows exist
+3. Read `logs/INDEX.md`  --  check for similar past executions
+4. Read `LEARNINGS.md`  --  check accumulated wisdom
    - Current request matches known issue pattern → consider suggested fix
    - LEARNINGS.md has entries for target context → understand lessons learned
    - Recent learnings (< 7 days) suggest flow bypass → note for routing decision
-5. **Check system health** (dashboard mode only — skip if `environment: cli`)
+5. **Check system health** (dashboard mode only  --  skip if `environment: cli`)
    - `GET http://localhost:3001/api/harmony/health`
    - If unreachable → skip (non-blocking)
    - If `overall >= 80` → proceed normally
@@ -169,15 +169,15 @@ If ANY column fails → compile a chain.
 
 ### Hard Rules
 
-1. **Delegate Everything** — Don't read code, write code, or run tests above quick-triage threshold. Spawn agents.
-2. **Post-Work Commit** — Every chain with file changes MUST end with `commit/`. Add registry line to `logs/INDEX.md` after commit.
-3. **Post-Commit Verification** — Run `git status --porcelain | grep '^??'` after every commit. Warn on unexpected untracked files.
-4. **Stay Lightweight** — Don't read large files or agent outputs (except during quick triage). Trust agents.
-5. **Actions Are Building Blocks** — Each action has `agent.md` instructions. Point agents to their definition files.
-6. **Fix Root Causes** — Stop → Diagnose → Root cause → Fix source → Document in LEARNINGS.md.
-7. **Surface Agent Learnings** — Check every completion for learnings. Surface to human. Ask approval before fixing.
-8. **Plan First, Execute Second** — Compile chain → present → approve → spawn. Parallel for independent steps, sequential for dependent.
-9. **Framework-First Routing** — All work routes through ActionFlows. Never bypass with external instruction files or skills.
+1. **Delegate Everything**  --  Don't read code, write code, or run tests above quick-triage threshold. Spawn agents.
+2. **Post-Work Commit**  --  Every chain with file changes MUST end with `commit/`. Add registry line to `logs/INDEX.md` after commit.
+3. **Post-Commit Verification**  --  Run `git status --porcelain | grep '^??'` after every commit. Warn on unexpected untracked files.
+4. **Stay Lightweight**  --  Don't read large files or agent outputs (except during quick triage). Trust agents.
+5. **Actions Are Building Blocks**  --  Each action has `agent.md` instructions. Point agents to their definition files.
+6. **Fix Root Causes**  --  Stop → Diagnose → Root cause → Fix source → Document in LEARNINGS.md.
+7. **Surface Agent Learnings**  --  Check every completion for learnings. Surface to human. Ask approval before fixing.
+8. **Plan First, Execute Second**  --  Compile chain → present → approve → spawn. Parallel for independent steps, sequential for dependent.
+9. **Framework-First Routing**  --  All work routes through ActionFlows. Never bypass with external instruction files or skills.
 
 ### Pre-Action Gate
 
@@ -213,19 +213,19 @@ Before ANY tool call, run this checklist:
 
 After EVERY chain completes, execute IN ORDER:
 
-1. **Gate 11 — Completion Summary** — Present "Done:" table (Format #5) with all steps, statuses, results, log paths.
-2. **Gate 12 — Archive & Index** — Add execution entry to `logs/INDEX.md` (Format #9). Registry edit — do directly.
-3. **Gate 13 — Learning Surface** — Check ALL agent outputs for learnings. If any → add to `LEARNINGS.md`.
-4. **Gate 14 — Flow Candidate Detection** — If ad-hoc chain, evaluate reuse potential (clean compose, domain value, reuse likelihood, context fit, autonomy). If ALL met → suggest flow registration.
-5. **Next-Step Anticipation** — Auto-compile follow-up chain.
+1. **Gate 11  --  Completion Summary**  --  Present "Done:" table (Format #5) with all steps, statuses, results, log paths.
+2. **Gate 12  --  Archive & Index**  --  Add execution entry to `logs/INDEX.md` (Format #9). Registry edit  --  do directly.
+3. **Gate 13  --  Learning Surface**  --  Check ALL agent outputs for learnings. If any → add to `LEARNINGS.md`.
+4. **Gate 14  --  Flow Candidate Detection**  --  If ad-hoc chain, evaluate reuse potential (clean compose, domain value, reuse likelihood, context fit, autonomy). If ALL met → suggest flow registration.
+5. **Next-Step Anticipation**  --  Auto-compile follow-up chain.
 
 Steps 1–3 are MANDATORY. Steps 4–5 are conditional.
 
 ### Proactive Coordination
 
-- **Autonomous Follow-Through** — Once approved, execute entire chain without stopping between steps.
-- **Step Boundary Evaluation** — After EVERY step, run six-trigger check: (1) Agent Output Signals, (2) Pattern Recognition, (3) Dependency Discovery, (4) Quality Threshold, (5) Chain Redesign Initiative, (6) Reuse Opportunity.
-- **Contract Change Auto-Validation** — After any chain touching `CONTRACT.md`, `shared/src/contract/`, or `harmonyDetector.ts`, auto-compile: `validate/harmony → analyze/contract-coverage → review/harmony-audit`.
+- **Autonomous Follow-Through**  --  Once approved, execute entire chain without stopping between steps.
+- **Step Boundary Evaluation**  --  After EVERY step, run six-trigger check: (1) Agent Output Signals, (2) Pattern Recognition, (3) Dependency Discovery, (4) Quality Threshold, (5) Chain Redesign Initiative, (6) Reuse Opportunity.
+- **Contract Change Auto-Validation**  --  After any chain touching `CONTRACT.md`, `shared/src/contract/`, or `harmonyDetector.ts`, auto-compile: `validate/harmony → analyze/contract-coverage → review/harmony-audit`.
 
 ### Second Opinion Protocol
 
@@ -251,33 +251,33 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 | Context | Purpose | Key Triggers | Flows |
 |---------|---------|--------------|-------|
 | **work** 🔨 | Active feature development | implement, build, create, add feature, develop | code-and-review/, post-completion/, contract-format-implementation/ |
-| **maintenance** 🔧 | Bug fixes, refactoring | fix bug, refactor, optimize, cleanup, debug | bug-triage/, code-and-review/, cleanup/ |
+| **settings** 🔧 | Config, system health, bug fixes, refactoring | configure, fix bug, refactor, optimize, system health | bug-triage/, code-and-review/, cleanup/, framework-health/ |
 | **explore** 🔍 | Research, learning | explore, investigate, research, how does, story | doc-reorganization/, ideation/, story-of-us/ |
 | **review** 👁️ | Code reviews, audits | review, audit, check quality, security scan, design drift | audit-and-fix/, test-coverage/, e2e-playwright/, ui-design-audit/ |
 | **settings** ⚙️ | Config, framework dev | configure, create flow, onboard me, flow drift | onboarding/, flow-creation/, action-creation/, framework-health/ |
 | **pm** 📋 | Project management | plan, roadmap, what's next, priorities | planning/, learning-dissolution/ |
-| **intel** 🕵️ | Code intelligence, dossiers | dossier, intel, monitor, track, analyze domain | intel-analysis/ |
+| **explore** 🕵️ | Code intelligence, dossiers | dossier, intel, monitor, track, analyze domain | intel-analysis/ |
 
 ### Auto-Target Contexts (not user-routed)
 
-- **archive** 📦 — Completed sessions move here automatically
-- **harmony** ❤️ — Populated by harmony detection system
+- **archive** 📦  --  Completed sessions move here automatically
+- **harmony** ❤️  --  Populated by harmony detection system
 
 ### Manual-Only Context
 
-- **editor** 📝 — Full-screen code editing, never orchestrator-routed
+- **editor** 📝  --  Full-screen code editing, never orchestrator-routed
 
 ### Routing Quick Reference
 
 | Human Says | Context | Flow/Action |
 |------------|---------|-------------|
 | "implement X" / "add feature X" | work | code-and-review/ |
-| "fix bug X" | maintenance | bug-triage/ |
-| "refactor X" | maintenance | code-and-review/ |
-| "clean up X" / "tidy up" | maintenance | cleanup/ |
+| "fix bug X" | settings | bug-triage/ |
+| "refactor X" | settings | code-and-review/ |
+| "clean up X" / "tidy up" | settings | cleanup/ |
 | "audit security" | review | audit-and-fix/ |
 | "review PR" / "check quality" | review | audit-and-fix/ |
-| "run tests" | — | test/ (direct) |
+| "run tests" |  --  | test/ (direct) |
 | "analyze X" / "explore X" | explore | analyze/ (direct) |
 | "create a new flow" | settings | flow-creation/ |
 | "check framework health" | settings | framework-health/ |
@@ -288,7 +288,7 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 | "UI audit" / "design drift" | review | ui-design-audit/ |
 | "audit flows" / "flow drift" | settings | flow-drift-audit/ |
 | "I have an idea" / "brainstorm X" | explore | ideation/ |
-| "create dossier" / "intel on X" | intel | intel-analysis/ |
+| "create dossier" / "intel on X" | explore | intel-analysis/ |
 | "dissolve learnings" / "update docs from learnings" | pm | learning-dissolution/ |
 
 **Special Routing:** Contract format work (mentions "Format X.Y", `contract/`, "harmony parser") → always `contract-format-implementation/`. Single-step code chains prohibited for contract work.
@@ -309,7 +309,7 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 | design-to-code/ | Convert Figma designs to React | figma-extract (orch) → plan → HUMAN GATE → code/frontend/ → figma-map (orch) → review |
 | design-system-sync/ | Sync Figma tokens to frontend | figma-variables (orch) → analyze → plan → HUMAN GATE → code/frontend/ → figma-rules (orch) → review |
 
-### maintenance
+### settings
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
@@ -354,7 +354,7 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 | contract-drift-fix/ | Sync CONTRACT.md | analyze/contract-code-drift → code/update-contract → review/contract-update → second-opinion/ → commit |
 | flow-drift-audit/ | Deep audit of flow instructions | analyze → plan → human gate → code×N → review → second-opinion/ → commit |
 
-### intel
+### explore (continued)
 
 | Flow | Purpose | Chain |
 |------|---------|-------|
@@ -485,7 +485,7 @@ Healing flows are **human-initiated** remediation chains triggered when health d
 ### Model Override
 
 Activate: human says "use haiku for everything", "all agents on sonnet", "point to ollama:X"
-Scope: **session-only** — never persists to ACTIONS.md
+Scope: **session-only**  --  never persists to ACTIONS.md
 Reset: "reset models" / "default models"
 
 ### Spawning Pattern
@@ -532,8 +532,8 @@ Input:
 | 2 | action/ | model | input=value | #1 | Pending |
 
 **What each step does:**
-1. **{Action}** — {What this agent does and produces}
-2. **{Action}** — {What this agent does and produces}
+1. **{Action}**  --  {What this agent does and produces}
+2. **{Action}**  --  {What this agent does and produces}
 
 Execute?
 ```
@@ -610,7 +610,7 @@ Done.
 ```
 ## Error: {Error title}
 
-**Step:** {step number} — {action/}
+**Step:** {step number}  --  {action/}
 **Message:** {error message}
 **Context:** {what was being attempted}
 
@@ -628,7 +628,7 @@ Done.
 | {YYYY-MM-DD} | {Description} | {Pattern} | {Outcome} |
 ```
 
-Example: `| 2026-02-08 | Self-Evolving UI phases 1-4 | code×8 → review → second-opinion → commit | Success — 18 files, APPROVED 92% (1d50f9e) |`
+Example: `| 2026-02-08 | Self-Evolving UI phases 1-4 | code×8 → review → second-opinion → commit | Success  --  18 files, APPROVED 92% (1d50f9e) |`
 
 ### Format 10: LEARNINGS.md Entry
 
@@ -697,7 +697,7 @@ REQUEST_RECEPTION → CHAIN_COMPILATION → CHAIN_EXECUTION → COMPLETION → P
 | Checkpoint service | `packages/backend/src/services/gateCheckpoint.ts` |
 | Gate trace types | `packages/shared/src/gateTrace.ts` |
 | Gate log output | `.claude/actionflows/logs/` |
-| Harmony detector | `packages/backend/src/services/harmonyDetector.ts` |
+| System health detector | `packages/backend/src/services/harmonyDetector.ts` |
 
 ### GateTrace Schema
 
@@ -724,13 +724,13 @@ Storage: Redis · 7-day TTL · Key: `gate:{gateId}:{chainId}:{timestamp}`
 
 ### Immune System Layers (L023)
 
-1. **Prevention** (Gates 1–6, agent standards) → Innate immunity — stops violations before they happen
-2. **Detection** (Gates 7–11, harmony detector, health calculator) → Adaptive immunity — identifies violations in real-time
-3. **Healing** (Gates 12–14, health-protocol, learning capture) → Immunological memory — fixes violations and prevents recurrence
+1. **Prevention** (Gates 1–6, agent standards) → Innate immunity  --  stops violations before they happen
+2. **Detection** (Gates 7–11, harmony detector, health calculator) → Adaptive immunity  --  identifies violations in real-time
+3. **Healing** (Gates 12–14, health-protocol, learning capture) → Immunological memory  --  fixes violations and prevents recurrence
 
 ---
 
-## 10. Contract & Harmony
+## 10. Contract & System Health
 
 **Source:** `CONTRACT.md`
 
@@ -821,11 +821,11 @@ Before committing ANY contract change, verify 4-layer alignment for ALL modified
 - [ ] **Layer 3 (Schema):** Field in Zod schema (`packages/shared/src/contract/validation/schemas.ts`)
 - [ ] **Layer 4 (Parser):** Field extracted by parser (`packages/shared/src/contract/parsers/`)
 - [ ] **Layer 5 (Pattern):** Regex pattern exists if applicable
-- [ ] Run `pnpm run contract:validate` — exit 0 required
+- [ ] Run `pnpm run contract:validate`  --  exit 0 required
 
 ### Contract Evolution
 
-Adding/modifying formats MUST follow `docs/architecture/CONTRACT_EVOLUTION.md`. Breaking changes increment `CONTRACT_VERSION` with 90-day dual support.
+Adding/modifying formats MUST follow the contract evolution process in CONTRACT.md. Breaking changes increment `CONTRACT_VERSION` with 90-day dual support.
 
 ```bash
 pnpm run harmony:check    # Validate contract alignment
@@ -846,7 +846,7 @@ Backend Gate Checkpoint → Parse → Validate → GateTrace (Redis, 7d TTL) →
 WebSocket broadcast → Frontend GateTraceViewer
 ```
 
-### Harmony Detection Flow
+### System Health Detection Flow
 
 ```
 Orchestrator Output
@@ -858,20 +858,20 @@ Gate Checkpoint (gateCheckpoint.ts)
     │         ↓
     │   HarmonyDetector (record + emit)
     │         ↓
-    │   HarmonyHealth (score update)
+    │   System Health (score update)
     └────┬────┘
          ↓
     GateTrace (stored, Redis 7d TTL)
 ```
 
-**Harmony states:**
-- ✅ In harmony (100) — All features work
-- ⚠️ Degraded (60–99) — Partial parse
-- ❌ Out of harmony (< 60) — Graceful degradation
+**System health states:**
+- ✅ Healthy (100)  --  All features work
+- ⚠️ Degraded (60–99)  --  Partial parse
+- ❌ Unhealthy (< 60)  --  Graceful degradation
 
-Graceful degradation means backend logs violations but does NOT block execution — creates a maintenance signal in the Harmony workbench.
+Graceful degradation means backend logs violations but does NOT block execution  --  creates a signal in the Settings workbench (system health view).
 
-**Runtime health vs design-time alignment (L027):** `/api/harmony/health` measures parsing success rate. Design-time score measures spec-type-schema-parser agreement at field level. Both must be 100% for true harmony.
+**Runtime health vs design-time alignment (L027):** `/api/harmony/health` measures parsing success rate. Design-time score measures spec-type-schema-parser agreement at field level. Both must be 100% for true system health alignment.
 
 ---
 
@@ -898,29 +898,29 @@ Confidence thresholds gate routing when score falls below:
 |------|----------|---------|----------|--------|
 | RR001 | 95 | review | security, CVE, auth, injection, xss | audit/ |
 | RR002 | 90 | review, explore | performance, optimization, bottleneck | analyze/ |
-| RR003 | 88 | explore, review, maintenance | architecture, refactor, structure, pattern | analyze/ |
-| RR004 | 85 | maintenance, work | bug, fix, error, crash, exception | code/backend/ |
-| RR005 | 85 | work, maintenance | implement, build, feature, component (frontend scope) | code/frontend/ |
-| RR006 | 80 | work, maintenance | test, coverage, unit, integration, playwright | test/ |
+| RR003 | 88 | explore, review, settings | architecture, refactor, structure, pattern | analyze/ |
+| RR004 | 85 | settings, work | bug, fix, error, crash, exception | code/backend/ |
+| RR005 | 85 | work, settings | implement, build, feature, component (frontend scope) | code/frontend/ |
+| RR006 | 80 | work, settings | test, coverage, unit, integration, playwright | test/ |
 | RR007 | 82 | work, explore | brainstorm, ideate, concept, possibility | brainstorm/ |
 | RR008 | 75 | work | plan, design, architecture, approach | plan/ |
-| RR009 | 78 | review, maintenance | audit, comprehensive, scan, health, status | audit/ |
-| RR010 | 40 | maintenance | (fallback, no keywords) | analyze/ |
+| RR009 | 78 | review, settings | audit, comprehensive, scan, health, status | audit/ |
+| RR010 | 40 | settings | (fallback, no keywords) | analyze/ |
 
 ### Action Routing Priorities
 
 | Action | Routing Priority | Context Affinity |
 |--------|-----------------|-----------------|
-| audit/ | 85 | review, maintenance |
-| code/backend/, code/frontend/ | 85 | work, maintenance |
+| audit/ | 85 | review, settings |
+| code/backend/, code/frontend/ | 85 | work, settings |
 | test/playwright/ | 80 | work, maintenance, review |
-| code/ | 80 | work, maintenance |
-| analyze/ | 70 | explore, review, maintenance |
+| code/ | 80 | work, settings |
+| analyze/ | 70 | explore, review, settings |
 | test/ | 70 | work, maintenance, review |
 | review/, plan/, diagnose/ | 75 | context-specific |
-| commit/ | 50 | work, maintenance |
+| commit/ | 50 | work, settings |
 | second-opinion/ | 50 | review, explore |
-| isolate/ | 60 | review, maintenance |
+| isolate/ | 60 | review, settings |
 | brainstorm/ | 65 | work, explore |
 | narrate/ | 40 | explore |
 | onboarding/ | 35 | explore, settings |
@@ -929,7 +929,7 @@ Confidence thresholds gate routing when score falls below:
 
 **Parallel safe:** analyze/, brainstorm/, code/*, test/*, diagnose/, narrate/, second-opinion/, verify-healing/
 **Sequential (must run alone):** review/, commit/, isolate/
-**Caveat for code/*:** File exclusivity required — no two code/ agents work on same file.
+**Caveat for code/*:** File exclusivity required  --  no two code/ agents work on same file.
 
 ---
 
@@ -969,47 +969,47 @@ Confidence thresholds gate routing when score falls below:
 
 ## 14. Learnings Registry
 
-**Source:** `LEARNINGS.md` — 28 entries (L001–L028)
+**Source:** `LEARNINGS.md`  --  28 entries (L001–L028)
 
 ### Open / In-Progress
 
 | ID | Issue | Status |
 |----|-------|--------|
-| L024 | Output Protection ≠ Input Protection — agent.md files have no checksum/integrity verification for spawn integrity. agentIntegrityService.ts created (SHA-256 checksums) but items 2–4 remain open. | Partially addressed |
-| L026 | Health Protocol reveals infrastructure decay (pnpm version, orphan flows, gate coverage gaps, input protection) — healing applied, pending commit+restart verification. | Open |
-| L027 | Runtime health ≠ design-time alignment — runtime measures parsing success; alignment measures spec-type-schema-parser agreement at field level. | Open (insight logged, no code change yet) |
+| L024 | Output Protection ≠ Input Protection  --  agent.md files have no checksum/integrity verification for spawn integrity. agentIntegrityService.ts created (SHA-256 checksums) but items 2–4 remain open. | Partially addressed |
+| L026 | Health Protocol reveals infrastructure decay (pnpm version, orphan flows, gate coverage gaps, input protection)  --  healing applied, pending commit+restart verification. | Open |
+| L027 | Runtime health ≠ design-time alignment  --  runtime measures parsing success; alignment measures spec-type-schema-parser agreement at field level. | Open (insight logged, no code change yet) |
 
-### Closed Learnings — Key Patterns
+### Closed Learnings  --  Key Patterns
 
 **Agent & Code Quality**
-- **L002** — Deferred fields: use explicit `// TODO:` comments at each hardcoded fallback site
-- **L007 / Code Agent Selector Naming Drift** — Pass EXACT CSS class names/selectors as explicit inputs to code agents; don't rely on inference
-- **L008 / Flat file on Windows** — Use `_abstract/create-log-folder/` before writing; ensures directory tree exists
-- **L014 / Contract Restructuring** — After migrating content to new contract sections, always do a deduplication verification pass
-- **L015 / Requirements vs Type Definitions** — For cross-layer features, always read shared types first to verify actual entities
-- **L028 / "X wins over Y" ambiguity** — Phrase conflict resolution as explicit edit directives: "Update FILE_A to match FILE_B", not "B wins"
+- **L002**  --  Deferred fields: use explicit `// TODO:` comments at each hardcoded fallback site
+- **L007 / Code Agent Selector Naming Drift**  --  Pass EXACT CSS class names/selectors as explicit inputs to code agents; don't rely on inference
+- **L008 / Flat file on Windows**  --  Use `_abstract/create-log-folder/` before writing; ensures directory tree exists
+- **L014 / Contract Restructuring**  --  After migrating content to new contract sections, always do a deduplication verification pass
+- **L015 / Requirements vs Type Definitions**  --  For cross-layer features, always read shared types first to verify actual entities
+- **L028 / "X wins over Y" ambiguity**  --  Phrase conflict resolution as explicit edit directives: "Update FILE_A to match FILE_B", not "B wins"
 
 **Testing & E2E**
-- **L004 / Chrome MCP Profile Lock** — Close all Chrome instances before Chrome MCP tests; single profile directory, no isolation
-- **L005 / Chat messages are frontend-only** — `GET /api/sessions/:id/chat` returns empty; UI messages are React state, not persisted
-- **L006 / New sessions appear in RECENT** — Session status: `pending` → RECENT, `in_progress` → ACTIVE
-- **L009 / CRLF breaks multiline regex** — Add `.gitattributes` with `*.contract.md text eol=lf` for any regex-parsed files on Windows
+- **L004 / Chrome MCP Profile Lock**  --  Close all Chrome instances before Chrome MCP tests; single profile directory, no isolation
+- **L005 / Chat messages are frontend-only**  --  `GET /api/sessions/:id/chat` returns empty; UI messages are React state, not persisted
+- **L006 / New sessions appear in RECENT**  --  Session status: `pending` → RECENT, `in_progress` → ACTIVE
+- **L009 / CRLF breaks multiline regex**  --  Add `.gitattributes` with `*.contract.md text eol=lf` for any regex-parsed files on Windows
 
 **Framework Architecture**
-- **L003 / Bundled commits** — Use `feat:` prefix for primary feature; separate infrastructure fixes or list as secondary bullets
-- **L010 / Stale manifests** — Validate all referenced file paths exist before dispatching batch agents
-- **L011 / Parallel batch collisions** — Ensure file-level exclusivity across all parallel batches; deduplicate at manifest level before dispatch
-- **L012 / Orphan flows** — When registering a flow, always immediately create the `instructions.md` file or queue a flow-creation chain
-- **L013 / Post-chain gates skipped** — Gates 11–14 are MANDATORY post-chain; added prescriptive checklist to ORCHESTRATOR.md
-- **L016 / Severity consistency** — Clarify CRITICAL/HIGH/MEDIUM/LOW upfront in review prompts; defined in `actions/review/agent.md`
-- **L017 / Composite Feature Flags** — `const isActive = globalFlag && localToggle` pattern; backend global + localStorage local
-- **L018 / ResilientStorage wrapper** — When adding optional interface methods, always update: interface → implementations → **ResilientStorage proxy**
-- **L019 / Hook scripts not wired** — Hook implementation = write source + build + **register in settings.json** + verify fires. All 4 required.
-- **L020 / afw-input-inject requires active session** — Re-enable only when dashboard actively manages sessions; currently unwired
-- **L021 / Field-level contract review** — Field-level tracing across all 4 layers (spec → type → schema → parser) required; file-level review misses gaps
-- **L022 / False deployment blockers** — Verify deployment paths (tsx, esbuild) before marking compilation errors as blockers
-- **L023 / Immune system 3-layer model** — Prevention (Gates 1–6) · Detection (Gates 7–11) · Healing (Gates 12–14)
-- **L025 / Type-to-schema drift** — StatusString enum split (`in_progress` vs `running`) across layers; add `AssertEqual<T,U>` build-step assertions
+- **L003 / Bundled commits**  --  Use `feat:` prefix for primary feature; separate infrastructure fixes or list as secondary bullets
+- **L010 / Stale manifests**  --  Validate all referenced file paths exist before dispatching batch agents
+- **L011 / Parallel batch collisions**  --  Ensure file-level exclusivity across all parallel batches; deduplicate at manifest level before dispatch
+- **L012 / Orphan flows**  --  When registering a flow, always immediately create the `instructions.md` file or queue a flow-creation chain
+- **L013 / Post-chain gates skipped**  --  Gates 11–14 are MANDATORY post-chain; added prescriptive checklist to ORCHESTRATOR.md
+- **L016 / Severity consistency**  --  Clarify CRITICAL/HIGH/MEDIUM/LOW upfront in review prompts; defined in `actions/review/agent.md`
+- **L017 / Composite Feature Flags**  --  `const isActive = globalFlag && localToggle` pattern; backend global + localStorage local
+- **L018 / ResilientStorage wrapper**  --  When adding optional interface methods, always update: interface → implementations → **ResilientStorage proxy**
+- **L019 / Hook scripts not wired**  --  Hook implementation = write source + build + **register in settings.json** + verify fires. All 4 required.
+- **L020 / afw-input-inject requires active session**  --  Re-enable only when dashboard actively manages sessions; currently unwired
+- **L021 / Field-level contract review**  --  Field-level tracing across all 4 layers (spec → type → schema → parser) required; file-level review misses gaps
+- **L022 / False deployment blockers**  --  Verify deployment paths (tsx, esbuild) before marking compilation errors as blockers
+- **L023 / Immune system 3-layer model**  --  Prevention (Gates 1–6) · Detection (Gates 7–11) · Healing (Gates 12–14)
+- **L025 / Type-to-schema drift**  --  StatusString enum split (`in_progress` vs `running`) across layers; add `AssertEqual<T,U>` build-step assertions
 
 ---
 
