@@ -203,7 +203,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 2. Frontend Scaffold & WebSocket | 0/3 | Planning complete | - |
 | 3. Design System | 4/4 | Complete   | 2026-04-02 |
 | 4. Layout & Navigation | 5/5 | Complete | 2026-04-02 |
-| 4.1 Framework & Docs Realignment | 0/5 | Planning complete | - |
+| 4.1 Framework & Docs Realignment | 1/5 | In Progress|  |
 | 5. Pipeline Visualization | 0/? | Not started | - |
 | 6. Agent Sessions & Status | 0/? | Not started | - |
 | 7. Chat Panel | 0/? | Not started | - |
