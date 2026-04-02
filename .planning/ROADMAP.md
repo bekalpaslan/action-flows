@@ -144,8 +144,8 @@ Plans:
 **Plans:** 4 plans
 Plans:
 - [x] 06-01-PLAN.md -- Install Agent SDK, shared session event types, backend SessionManager with full lifecycle
-- [ ] 06-02-PLAN.md -- Install sonner, frontend sessionStore zustand, StatusDot component, session-pulse CSS
-- [ ] 06-03-PLAN.md -- Backend health monitor, WS handler session commands, backend startup wiring
+- [x] 06-02-PLAN.md -- Install sonner, frontend sessionStore zustand, StatusDot component, session-pulse CSS
+- [x] 06-03-PLAN.md -- Backend health monitor, WS handler session commands, backend startup wiring
 - [ ] 06-04-PLAN.md -- Frontend session hooks, AgentStatusPanel UI, toast integration, WorkspaceArea wiring
 **UI hint**: yes
 

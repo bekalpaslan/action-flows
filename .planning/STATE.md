@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.8
 milestone_name: milestone
 status: executing
-stopped_at: Completed 06-02-PLAN.md
-last_updated: "2026-04-02T20:51:08.755Z"
+stopped_at: Completed 06-03-PLAN.md
+last_updated: "2026-04-02T22:54:35.438Z"
 last_activity: 2026-04-02
 progress:
   total_phases: 12
   completed_phases: 6
-  total_plans: 23
-  completed_plans: 23
+  total_plans: 27
+  completed_plans: 26
   percent: 91
 ---
 
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-04-01)
 ## Current Position
 
 Phase: 06 (agent-sessions-status) — EXECUTING
-Plan: 2 of 4
-Status: Executing
+Plan: 3 of 4
+Status: Ready to execute
 Last activity: 2026-04-02
 
 Progress: [=========.] 91%
@@ -74,6 +74,7 @@ Progress: [=========.] 91%
 | Phase 05 P02 | 2min | 2 tasks | 6 files |
 | Phase 05 P03 | 6min | 2 tasks | 6 files |
 | Phase 06 P02 | 3min | 2 tasks | 7 files |
+| Phase 06 P03 | 5min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -142,6 +143,8 @@ Recent decisions affecting current work:
 - [Phase 06]: setStatus clears error field when transitioning away from error state
 - [Phase 06]: StatusDot auto-pulses for running/connecting statuses (overridable via explicit pulse prop)
 - [Phase 06]: motion-safe: prefix for pulse animation respects prefers-reduced-motion per UI-SPEC
+- [Phase 06]: Heartbeat interval 15s with 30s stale threshold for worst-case detection within SESSION-04 requirement
+- [Phase 06]: Two-strategy resurrection: resume stored session ID first, then discover from local session list
 
 ### Pending Todos
 
@@ -155,6 +158,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T22:38:36Z
-Stopped at: Completed 06-02-PLAN.md
+Last session: 2026-04-02T22:54:35.432Z
+Stopped at: Completed 06-03-PLAN.md
 Resume file: None
