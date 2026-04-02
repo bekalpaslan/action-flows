@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import type { Edge } from '@xyflow/react';
+import type { Edge, PipelineNode } from '@xyflow/react';
 import type { WorkbenchId } from '../lib/types';
-import type { PipelineNode, PipelineState, StepNodeData, GateNodeData } from '../lib/pipeline-types';
+import type { PipelineNodeData, StepNodeData, GateNodeData } from '../lib/pipeline-types';
 
 interface PipelineStoreState {
   pipelines: Map<WorkbenchId, PipelineState>;

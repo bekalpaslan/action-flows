@@ -1,8 +1,9 @@
 import { app, BrowserWindow, ipcMain, Notification, Tray, Menu, nativeImage } from 'electron'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import { fork, type ChildProcess } from 'child_process'
-import http from 'http'
+import type * as Electron from 'electron'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { fork, type ChildProcess } from 'node:child_process'
+import http from 'node:http'
 import isDev from 'electron-is-dev'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -12,6 +13,7 @@ let mainWindow: BrowserWindow | null = null
 let tray: Tray | null = null
 let backendProcess: ChildProcess | null = null
 let isStoppingBackend = false
+let isQuitting = false
 
 // ---------------------------------------------------------------------------
 // Backend lifecycle management (production only)
@@ -199,13 +201,12 @@ function createWindow() {
   }
 
   // Minimize to tray instead of taskbar
-  mainWindow.on('minimize', (event) => {
-    event.preventDefault()
+  mainWindow.on('minimize', () => {
     mainWindow?.hide()
   })
 
   mainWindow.on('close', (event) => {
-    if (!app.isQuitting) {
+    if (!isQuitting) {
       event.preventDefault()
       mainWindow?.hide()
     }
@@ -229,19 +230,18 @@ app.on('ready', async () => {
   createWindow()
 })
 
-app.on('before-quit', async (event) => {
-  app.isQuitting = true
+app.on('before-quit', (event: Electron.Event) => {
+  isQuitting = true
 
   if (backendProcess && !isStoppingBackend) {
     isStoppingBackend = true
     event.preventDefault()
-    try {
-      await stopBackend()
-    } catch (err) {
+    stopBackend().catch((err) => {
       console.error('[main] Error stopping backend:', err)
-    }
-    // Backend is stopped — now actually quit
-    app.quit()
+    }).finally(() => {
+      // Backend is stopped — now actually quit
+      app.quit()
+    })
   }
 })
 

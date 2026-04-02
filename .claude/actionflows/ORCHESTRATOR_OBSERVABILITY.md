@@ -172,7 +172,7 @@ Orchestrator Output
 ### Implementation
 
 - **Checkpoint service:** `packages/backend/src/services/gateCheckpoint.ts`
-- **System health detector:** `packages/backend/src/services/harmonyDetector.ts`
+- **Harmony detector:** `packages/backend/src/services/harmonyDetector.ts`
 - **Trace types:** `packages/shared/src/types/gateTrace.ts`
 - **Parsers:** `packages/shared/src/contract/parsers/`
 

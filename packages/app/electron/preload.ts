@@ -49,7 +49,7 @@ function safeOn<C extends IPCChannel>(
   if (!validChannels.includes(channel)) {
     return
   }
-  ipcRenderer.on(channel, (event, ...args) => {
+  ipcRenderer.on(channel, (_event, ...args) => {
     listener(...(args as IPCChannelContracts[C]['args']))
   })
 }

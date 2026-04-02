@@ -32,7 +32,7 @@ test/e2e/reports/
 /.playwright/
 .playwright-mcp/
 .ai-providers/
-
+worktrees/
 # Electron
 out/
 

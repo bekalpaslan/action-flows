@@ -1,5 +1,4 @@
 import type { Node, Edge } from '@xyflow/react';
-import type { WorkbenchId } from './types';
 
 export type NodeStatus = 'pending' | 'running' | 'complete' | 'failed' | 'skipped';
 
