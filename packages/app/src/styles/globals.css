@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./theme.css";
+@import "./session.css";
 
 /* Override dark variant to use data-theme attribute instead of prefers-color-scheme */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
