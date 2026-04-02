@@ -3,11 +3,11 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-04-02T14:58:23Z"
+stopped_at: Completed 04-03-PLAN.md
+last_updated: "2026-04-02T15:10:06.420Z"
 last_activity: 2026-04-02
 progress:
-  total_phases: 10
+  total_phases: 11
   completed_phases: 3
   total_plans: 14
   completed_plans: 11
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-04-01)
 ## Current Position
 
 Phase: 4
-Plan: 2 of 4
-Status: Executing
+Plan: 3 of 4
+Status: Ready to execute
 Last activity: 2026-04-02
 
 Progress: [=======...] 79%
@@ -62,6 +62,7 @@ Progress: [=======...] 79%
 | Phase 03 P03 | 2min | 2 tasks | 6 files |
 | Phase 03 P04 | 4min | 2 tasks | 3 files |
 | Phase 04 P01 | 4min | 3 tasks | 11 files |
+| Phase 04 P03 | 6min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -100,6 +101,8 @@ Recent decisions affecting current work:
 - [Phase 03]: manifest.json is a static file (not generated at build time) for simplicity and agent consumption
 - [Phase 04]: Created new packages/app/src/lib/types.ts with simplified 7-workbench WorkbenchId (Phase 4 rebuild, separate from @afw/shared legacy types)
 - [Phase 04]: Added zustand and lucide-react as dependencies alongside react-resizable-panels and cmdk
+- [Phase 04]: Adapted to react-resizable-panels v4.8.0 API (Group/Separator/useDefaultLayout) instead of assumed v0.x API (PanelGroup/PanelResizeHandle/autoSaveId)
+- [Phase 04]: Used onResize with size.asPercentage for collapse detection instead of removed onCollapse/onExpand callbacks
 
 ### Pending Todos
 
@@ -113,6 +116,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T14:58:23Z
-Stopped at: Completed 04-01-PLAN.md
-Resume file: .planning/phases/04-layout-navigation/04-02-PLAN.md
+Last session: 2026-04-02T15:10:06.415Z
+Stopped at: Completed 04-03-PLAN.md
+Resume file: None
