@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { StepNodeData, NodeStatus } from '@/lib/pipeline-types';
+import { useElapsedTime } from '@/hooks/useElapsedTime';
 import './pipeline.css';
 
 type StepNodeType = Node<StepNodeData, 'step'>;
@@ -60,6 +61,8 @@ export function formatElapsed(ms: number): string {
  */
 export function StepNode({ data, selected }: NodeProps<StepNodeType>) {
   const Icon = STATUS_ICONS[data.status];
+  const liveElapsed = useElapsedTime(data.startedAt, data.status === 'running');
+  const displayElapsed = liveElapsed ?? data.elapsedMs;
 
   return (
     <div
@@ -87,7 +90,7 @@ export function StepNode({ data, selected }: NodeProps<StepNodeType>) {
 
       {/* Row 2: Elapsed time */}
       <div className="text-caption text-text-dim mt-1">
-        {data.elapsedMs != null ? formatElapsed(data.elapsedMs) : '--'}
+        {displayElapsed != null ? formatElapsed(displayElapsed) : '--'}
       </div>
 
       {/* Row 3: Agent model (if present) */}
