@@ -123,7 +123,11 @@ Plans:
   4. Long pipelines scroll horizontally without breaking the layout
   5. Node status updates in real-time via WebSocket (pending, running, complete, failed transitions are visible)
   6. Switching workbenches shows that workbench's own pipeline state (not a shared global view)
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 05-01-PLAN.md -- Install @xyflow/react, pipeline types, dagre layout utility, zustand store, CSS keyframes, test infrastructure
+- [ ] 05-02-PLAN.md -- Build StepNode, GateNode, PipelineEdge custom components, PipelineView container, PipelineEmptyState
+- [ ] 05-03-PLAN.md -- WebSocket event hook, elapsed time hook, PipelineDrawer, wire into WorkspaceArea, visual checkpoint
 **UI hint**: yes
 
 ### Phase 6: Agent Sessions & Status
@@ -204,7 +208,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 3. Design System | 4/4 | Complete   | 2026-04-02 |
 | 4. Layout & Navigation | 5/5 | Complete | 2026-04-02 |
 | 4.1 Framework & Docs Realignment | 2/5 | In Progress|  |
-| 5. Pipeline Visualization | 0/? | Not started | - |
+| 5. Pipeline Visualization | 0/3 | Planning complete | - |
 | 6. Agent Sessions & Status | 0/? | Not started | - |
 | 7. Chat Panel | 0/? | Not started | - |
 | 8. Neural Validation & Safety | 0/? | Not started | - |
