@@ -2,9 +2,11 @@ import { useRef, useEffect } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle, type ImperativePanelHandle } from 'react-resizable-panels';
 import { useUIStore } from '@/stores/uiStore';
 import { useWebSocket } from '@/hooks/useWebSocket';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { Sidebar } from '../sidebar/Sidebar';
 import { WorkspaceArea } from '../workspace/WorkspaceArea';
 import { ChatPlaceholder } from '../chat/ChatPlaceholder';
+import { CommandPalette } from '@/components/command-palette/CommandPalette';
 import { cn } from '@/lib/utils';
 
 export const panelHandles = {
@@ -18,6 +20,7 @@ export function AppShell() {
   const setSidebarCollapsed = useUIStore((s) => s.setSidebarCollapsed);
   const setChatCollapsed = useUIStore((s) => s.setChatCollapsed);
   useWebSocket();
+  useKeyboardShortcuts();
 
   const sidebarRef = useRef<ImperativePanelHandle>(null);
   const chatRef = useRef<ImperativePanelHandle>(null);
@@ -42,36 +45,39 @@ export function AppShell() {
   );
 
   return (
-    <PanelGroup direction="horizontal" autoSaveId="app-layout" className="h-screen">
-      <Panel
-        ref={sidebarRef}
-        defaultSize={15}
-        minSize={4}
-        maxSize={25}
-        collapsible
-        collapsedSize={4}
-        onCollapse={() => setSidebarCollapsed(true)}
-        onExpand={() => setSidebarCollapsed(false)}
-      >
-        <Sidebar collapsed={sidebarCollapsed} onExpand={handleSidebarExpand} />
-      </Panel>
-      <PanelResizeHandle className={dragHandleClasses} />
-      <Panel defaultSize={60} minSize={35}>
-        <WorkspaceArea key={activeWorkbench} workbenchId={activeWorkbench} />
-      </Panel>
-      <PanelResizeHandle className={dragHandleClasses} />
-      <Panel
-        ref={chatRef}
-        defaultSize={25}
-        minSize={0}
-        maxSize={40}
-        collapsible
-        collapsedSize={0}
-        onCollapse={() => setChatCollapsed(true)}
-        onExpand={() => setChatCollapsed(false)}
-      >
-        <ChatPlaceholder />
-      </Panel>
-    </PanelGroup>
+    <>
+      <PanelGroup direction="horizontal" autoSaveId="app-layout" className="h-screen">
+        <Panel
+          ref={sidebarRef}
+          defaultSize={15}
+          minSize={4}
+          maxSize={25}
+          collapsible
+          collapsedSize={4}
+          onCollapse={() => setSidebarCollapsed(true)}
+          onExpand={() => setSidebarCollapsed(false)}
+        >
+          <Sidebar collapsed={sidebarCollapsed} onExpand={handleSidebarExpand} />
+        </Panel>
+        <PanelResizeHandle className={dragHandleClasses} />
+        <Panel defaultSize={60} minSize={35}>
+          <WorkspaceArea key={activeWorkbench} workbenchId={activeWorkbench} />
+        </Panel>
+        <PanelResizeHandle className={dragHandleClasses} />
+        <Panel
+          ref={chatRef}
+          defaultSize={25}
+          minSize={0}
+          maxSize={40}
+          collapsible
+          collapsedSize={0}
+          onCollapse={() => setChatCollapsed(true)}
+          onExpand={() => setChatCollapsed(false)}
+        >
+          <ChatPlaceholder />
+        </Panel>
+      </PanelGroup>
+      <CommandPalette />
+    </>
   );
 }

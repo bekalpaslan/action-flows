@@ -16,11 +16,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Layout & Navigation
 
-- [ ] **LAYOUT-01**: 3-panel resizable layout: sidebar (~20%), workspace (~55%), chat panel (~25%)
-- [ ] **LAYOUT-02**: Sidebar navigation with 7 default workbenches (Work, Explore, Review, PM, Settings, Archive, Studio)
+- [x] **LAYOUT-01**: 3-panel resizable layout: sidebar (~20%), workspace (~55%), chat panel (~25%)
+- [x] **LAYOUT-02**: Sidebar navigation with 7 default workbenches (Work, Explore, Review, PM, Settings, Archive, Studio)
 - [x] **LAYOUT-03**: Workspace split: pipeline visualizer (top ~25%) + content area (bottom ~75%)
 - [x] **LAYOUT-04**: Panels resizable with min/max constraints and collapse support
-- [ ] **LAYOUT-05**: Command palette with keyboard navigation (Cmd+K / Cmd+P)
+- [x] **LAYOUT-05**: Command palette with keyboard navigation (Cmd+K / Cmd+P)
 
 ### Design System
 
@@ -166,11 +166,11 @@ Deferred to future release. Tracked but not in current roadmap.
 | DESIGN-04 | Phase 3 | Complete |
 | DESIGN-05 | Phase 3 | Complete |
 | DESIGN-06 | Phase 3 | Complete |
-| LAYOUT-01 | Phase 4 | Pending |
-| LAYOUT-02 | Phase 4 | Pending |
+| LAYOUT-01 | Phase 4 | Complete |
+| LAYOUT-02 | Phase 4 | Complete |
 | LAYOUT-03 | Phase 4 | Complete |
 | LAYOUT-04 | Phase 4 | Complete |
-| LAYOUT-05 | Phase 4 | Pending |
+| LAYOUT-05 | Phase 4 | Complete |
 | PIPE-01 | Phase 5 | Pending |
 | PIPE-02 | Phase 5 | Pending |
 | PIPE-03 | Phase 5 | Pending |
