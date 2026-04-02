@@ -89,7 +89,7 @@ Plans:
 - [x] 04-02-PLAN.md -- Rewrite AppShell with 3-panel PanelGroup, create Sidebar with collapse/expand, migrate WebSocketStatus
 - [x] 04-03-PLAN.md -- Rebuild WorkspaceArea with vertical pipeline/content split, create PipelinePlaceholder, migrate ChatPlaceholder
 - [x] 04-04-PLAN.md -- Create command palette (cmdk), keyboard shortcuts hook, wire into AppShell
-- [ ] 04-05-PLAN.md -- Gap closure: fix react-resizable-panels v4.8 API mismatch in AppShell.tsx and WorkspaceArea.tsx type annotation
+- [x] 04-05-PLAN.md -- Gap closure: fix react-resizable-panels v4.8 API mismatch in AppShell.tsx and WorkspaceArea.tsx type annotation
 **UI hint**: yes
 
 ### Phase 04.1: Framework & Docs Realignment — strip cosmic terminology, update actionflows framework to match 7-workbench model, clean stale docs and tests (INSERTED)
@@ -97,7 +97,7 @@ Plans:
 **Goal:** [Urgent work - to be planned]
 **Requirements**: TBD
 **Depends on:** Phase 4
-**Plans:** 1/4 plans executed
+**Plans:** 5/5 plans complete
 
 Plans:
 - [ ] TBD (run /gsd:plan-phase 04.1 to break down)
