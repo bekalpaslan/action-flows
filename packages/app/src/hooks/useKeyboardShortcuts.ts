@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import type { WorkbenchId } from '@/lib/types';
 import { useUIStore } from '@/stores/uiStore';
+import { useSessionStore } from '@/stores/sessionStore';
 import { panelHandles } from '@/workbenches/shell/AppShell';
 
 function isInputFocused(): boolean {
@@ -25,6 +26,13 @@ export function useKeyboardShortcuts() {
       if (mod && e.key === 'k') {
         e.preventDefault();
         toggleCommandPalette();
+        return;
+      }
+
+      // Ctrl+Shift+S: toggle status panel
+      if (mod && e.shiftKey && e.key === 'S') {
+        e.preventDefault();
+        useSessionStore.getState().toggleStatusPanel();
         return;
       }
 

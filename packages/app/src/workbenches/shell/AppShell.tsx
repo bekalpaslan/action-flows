@@ -1,8 +1,11 @@
 import { useRef, useEffect } from 'react';
 import { Group, Panel, Separator, type PanelImperativeHandle, type PanelSize } from 'react-resizable-panels';
+import { Toaster } from 'sonner';
 import { useUIStore } from '@/stores/uiStore';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useSessionEvents } from '@/hooks/useSessionEvents';
+import { useSessionToasts } from '@/hooks/useSessionToasts';
 import { Sidebar } from '../sidebar/Sidebar';
 import { WorkspaceArea } from '../workspace/WorkspaceArea';
 import { ChatPlaceholder } from '../chat/ChatPlaceholder';
@@ -21,6 +24,8 @@ export function AppShell() {
   const setChatCollapsed = useUIStore((s) => s.setChatCollapsed);
   useWebSocket();
   useKeyboardShortcuts();
+  useSessionEvents();
+  useSessionToasts();
 
   const sidebarRef = useRef<PanelImperativeHandle>(null);
   const chatRef = useRef<PanelImperativeHandle>(null);
@@ -82,6 +87,22 @@ export function AppShell() {
         </Panel>
       </Group>
       <CommandPalette />
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: 'var(--color-surface-3)',
+            border: '1px solid var(--color-border-strong)',
+            borderRadius: 'var(--radius-md)',
+            color: 'var(--color-text)',
+            fontFamily: 'var(--font-sans)',
+            boxShadow: 'var(--shadow-md)',
+          },
+          classNames: {
+            description: 'text-text-dim',
+          },
+        }}
+      />
     </>
   );
 }
