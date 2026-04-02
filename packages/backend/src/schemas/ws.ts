@@ -53,6 +53,17 @@ const capabilityErrorMessage = z.object({
   code: z.string(),
 });
 
+// Channel multiplexing messages (Phase 2: per-workbench channels)
+const channelSubscribeMessage = z.object({
+  type: z.literal('channel:subscribe'),
+  channel: z.string().min(1).max(100),
+});
+
+const channelUnsubscribeMessage = z.object({
+  type: z.literal('channel:unsubscribe'),
+  channel: z.string().min(1).max(100),
+});
+
 /**
  * Discriminated union of all valid WebSocket message types
  */
@@ -65,6 +76,8 @@ export const wsMessageSchema = z.discriminatedUnion('type', [
   capabilityUnregisterMessage,
   capabilityResultMessage,
   capabilityErrorMessage,
+  channelSubscribeMessage,
+  channelUnsubscribeMessage,
 ]);
 
 /**

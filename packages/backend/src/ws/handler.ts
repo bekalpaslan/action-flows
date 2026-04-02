@@ -2,6 +2,7 @@ import type { WebSocket } from 'ws';
 import type { WorkspaceEvent, SessionId, ChatMessageEvent, ChatHistoryEvent, Timestamp, ChatMessage } from '@afw/shared';
 import type { Storage } from '../storage/index.js';
 import { clientRegistry } from './clientRegistry.js';
+import { WebSocketHub } from './hub.js';
 import { wsMessageSchema, type ValidatedWSMessage } from '../schemas/ws.js';
 import { workspaceEventSchema, validateStorageData } from '@afw/shared';
 import { claudeCliManager } from '../services/claudeCliManager.js';
@@ -28,7 +29,8 @@ interface WSBroadcast {
 export function handleWebSocket(
   ws: WebSocket,
   clientId: string,
-  storage: Storage
+  storage: Storage,
+  hub?: WebSocketHub
 ): void {
   // Send connection confirmation
   const confirmation: WSBroadcast = {
@@ -276,6 +278,34 @@ export function handleWebSocket(
               payload: 'Invalid capability error - correlationId and error required',
             }));
           }
+          break;
+        }
+
+        case 'channel:subscribe': {
+          const { channel } = message;
+          if (hub) {
+            hub.subscribe(channel, ws, clientId);
+          }
+          const channelSubConfirmation: WSBroadcast = {
+            type: 'subscription_confirmed',
+            payload: { channel, message: `Subscribed to channel: ${channel}` },
+          };
+          ws.send(JSON.stringify(channelSubConfirmation));
+          console.log(`[WS] Client ${clientId} subscribed to channel ${channel}`);
+          break;
+        }
+
+        case 'channel:unsubscribe': {
+          const { channel } = message;
+          if (hub) {
+            hub.unsubscribe(channel, ws);
+          }
+          const channelUnsubConfirmation: WSBroadcast = {
+            type: 'subscription_confirmed',
+            payload: { channel, message: `Unsubscribed from channel: ${channel}` },
+          };
+          ws.send(JSON.stringify(channelUnsubConfirmation));
+          console.log(`[WS] Client ${clientId} unsubscribed from channel ${channel}`);
           break;
         }
 

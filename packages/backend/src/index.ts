@@ -14,6 +14,7 @@ import { storage as baseStorage, isAsyncStorage } from './storage/index.js';
 import { ResilientStorage } from './storage/resilientStorage.js';
 import { handleWebSocket } from './ws/handler.js';
 import { clientRegistry } from './ws/clientRegistry.js';
+import { WebSocketHub } from './ws/hub.js';
 import { cleanupService } from './services/cleanup.js';
 import { setBroadcastFunction, shutdownAllWatchers } from './services/fileWatcher.js';
 import { claudeCliManager } from './services/claudeCliManager.js';
@@ -248,6 +249,9 @@ const server = createServer(app);
 // Create WebSocket server with max payload limit (1MB) for security
 const wss = new WebSocketServer({ noServer: true, maxPayload: 1024 * 1024 });
 
+// Channel-per-workbench WebSocket hub (Phase 2: works alongside session-based clientRegistry)
+const wsHub = new WebSocketHub();
+
 // Server-side heartbeat interval to keep connections alive
 let heartbeatInterval: NodeJS.Timeout | null = null;
 const HEARTBEAT_INTERVAL_MS = 20000; // 20 seconds
@@ -336,15 +340,17 @@ wss.on('connection', (ws, request) => {
     return;
   }
 
-  handleWebSocket(ws, clientId, storage);
+  handleWebSocket(ws, clientId, storage, wsHub);
 
   ws.on('close', () => {
     console.log(`[WS] Client disconnected: ${clientId}`);
+    wsHub.unsubscribeAll(ws);
     clientRegistry.unregister(ws);
   });
 
   ws.on('error', (error) => {
     console.error(`[WS] Error for client ${clientId}:`, error.message);
+    wsHub.unsubscribeAll(ws);
     clientRegistry.unregister(ws);
   });
 });
@@ -449,6 +455,12 @@ function broadcastSparkEvent(event: any) {
   });
 
   clientRegistry.broadcastToSession(event.sessionId, message);
+}
+
+// Broadcast a message to all subscribers of a specific workbench channel (Phase 2)
+function broadcastToChannel(channel: string, type: string, payload: unknown): void {
+  const envelope = JSON.stringify({ channel, type, payload, ts: new Date().toISOString() });
+  wsHub.broadcast(channel, envelope);
 }
 
 // Initialize Redis Pub/Sub if using Redis storage
