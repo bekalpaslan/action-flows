@@ -34,12 +34,12 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Pipeline Visualization
 
 - [ ] **PIPE-01**: Horizontal node-based pipeline showing live chain execution
-- [ ] **PIPE-02**: Data-driven rendering from configurable data structure (JSON nodes + edges)
+- [x] **PIPE-02**: Data-driven rendering from configurable data structure (JSON nodes + edges)
 - [ ] **PIPE-03**: Two node shapes: rounded rectangles (steps) and diamonds (decision gates)
-- [ ] **PIPE-04**: Support forking (1→N) and merging (N→1) in pipelines
+- [x] **PIPE-04**: Support forking (1→N) and merging (N→1) in pipelines
 - [ ] **PIPE-05**: Horizontally scrollable for long chains
 - [ ] **PIPE-06**: Real-time status updates via WebSocket (pending → running → complete/failed)
-- [ ] **PIPE-07**: Pipeline state scoped per workbench (switching workbenches shows that workbench's pipeline)
+- [x] **PIPE-07**: Pipeline state scoped per workbench (switching workbenches shows that workbench's pipeline)
 
 ### Agent Sessions
 
@@ -172,12 +172,12 @@ Deferred to future release. Tracked but not in current roadmap.
 | LAYOUT-04 | Phase 4 | Complete |
 | LAYOUT-05 | Phase 4 | Complete |
 | PIPE-01 | Phase 5 | Pending |
-| PIPE-02 | Phase 5 | Pending |
+| PIPE-02 | Phase 5 | Complete |
 | PIPE-03 | Phase 5 | Pending |
-| PIPE-04 | Phase 5 | Pending |
+| PIPE-04 | Phase 5 | Complete |
 | PIPE-05 | Phase 5 | Pending |
 | PIPE-06 | Phase 5 | Pending |
-| PIPE-07 | Phase 5 | Pending |
+| PIPE-07 | Phase 5 | Complete |
 | SESSION-01 | Phase 6 | Pending |
 | SESSION-02 | Phase 6 | Pending |
 | SESSION-03 | Phase 6 | Pending |
