@@ -1,3 +1,0 @@
-# Notifications/
-
-(empty directory)

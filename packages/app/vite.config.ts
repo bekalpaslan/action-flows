@@ -55,9 +55,6 @@ export default defineConfig({
           if (id.includes('node_modules/react')) {
             return 'vendor-react';
           }
-          if (id.includes('node_modules/@react-flow') || id.includes('node_modules/reactflow')) {
-            return 'vendor-reactflow';
-          }
 
           // Monaco editor - lazy loaded on demand
           if (id.includes('node_modules/monaco-editor') || id.includes('node_modules/@monaco-editor')) {
@@ -67,14 +64,6 @@ export default defineConfig({
           // xterm terminal - lazy loaded
           if (id.includes('node_modules/xterm')) {
             return 'xterm-vendor';
-          }
-
-          // Application-level code splitting
-          if (id.includes('/CosmicMap/') || id.includes('cosmic')) {
-            return 'cosmic-map';
-          }
-          if (id.includes('/FlowVisualization/')) {
-            return 'flow-viz';
           }
         },
         // Optimize chunk naming for caching
@@ -90,7 +79,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'reactflow'],
+    include: ['react', 'react-dom'],
     exclude: ['monaco-editor', 'electron'],
   },
   // Ensure Monaco Editor workers are correctly loaded
