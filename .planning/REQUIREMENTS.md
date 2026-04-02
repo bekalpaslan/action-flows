@@ -156,86 +156,86 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FOUND-01 | Phase 0 | Pending |
-| FOUND-02 | Phase 0 | Pending |
-| FOUND-03 | Phase 1 | Pending |
-| FOUND-04 | Phase 1 | Pending |
-| LAYOUT-01 | Phase 1 | Pending |
-| LAYOUT-02 | Phase 1 | Pending |
-| LAYOUT-03 | Phase 1 | Pending |
-| LAYOUT-04 | Phase 1 | Pending |
-| LAYOUT-05 | Phase 1 | Pending |
-| DESIGN-01 | Phase 1 | Pending |
-| DESIGN-02 | Phase 1 | Pending |
-| DESIGN-03 | Phase 1 | Pending |
-| DESIGN-04 | Phase 1 | Pending |
-| DESIGN-05 | Phase 1 | Pending |
-| DESIGN-06 | Phase 1 | Pending |
-| PIPE-01 | Phase 2 | Pending |
-| PIPE-02 | Phase 2 | Pending |
-| PIPE-03 | Phase 2 | Pending |
-| PIPE-04 | Phase 2 | Pending |
-| PIPE-05 | Phase 2 | Pending |
-| PIPE-06 | Phase 2 | Pending |
-| PIPE-07 | Phase 2 | Pending |
-| SESSION-01 | Phase 3 | Pending |
-| SESSION-02 | Phase 3 | Pending |
-| SESSION-03 | Phase 3 | Pending |
-| SESSION-04 | Phase 3 | Pending |
-| SESSION-05 | Phase 3 | Pending |
-| SESSION-06 | Phase 3 | Pending |
-| SESSION-07 | Phase 3 | Pending |
-| SESSION-08 | Phase 3 | Pending |
-| SESSION-09 | Phase 3 | Pending |
-| CHAT-01 | Phase 3 | Pending |
-| CHAT-02 | Phase 3 | Pending |
-| CHAT-03 | Phase 3 | Pending |
-| CHAT-04 | Phase 3 | Pending |
-| CHAT-05 | Phase 3 | Pending |
-| CHAT-06 | Phase 3 | Pending |
-| CHAT-07 | Phase 3 | Pending |
-| CHAT-08 | Phase 3 | Pending |
-| STATUS-01 | Phase 3 | Pending |
-| STATUS-02 | Phase 3 | Pending |
-| STATUS-03 | Phase 3 | Pending |
-| NEURAL-01 | Phase 4 | Pending |
-| NEURAL-02 | Phase 4 | Pending |
-| NEURAL-03 | Phase 4 | Pending |
-| NEURAL-04 | Phase 4 | Pending |
-| NEURAL-05 | Phase 4 | Pending |
-| NEURAL-06 | Phase 4 | Pending |
-| NEURAL-07 | Phase 4 | Pending |
-| SAFETY-01 | Phase 4 | Pending |
-| SAFETY-02 | Phase 4 | Pending |
-| SAFETY-03 | Phase 4 | Pending |
-| SAFETY-04 | Phase 4 | Pending |
-| SAFETY-05 | Phase 4 | Pending |
-| FLOW-01 | Phase 5 | Pending |
-| FLOW-02 | Phase 5 | Pending |
-| FLOW-03 | Phase 5 | Pending |
-| FLOW-04 | Phase 5 | Pending |
-| CUSTOM-01 | Phase 5 | Pending |
-| CUSTOM-02 | Phase 5 | Pending |
-| CUSTOM-03 | Phase 5 | Pending |
-| CUSTOM-04 | Phase 5 | Pending |
-| CUSTOM-05 | Phase 5 | Pending |
-| CUSTOM-06 | Phase 5 | Pending |
-| CUSTOM-07 | Phase 5 | Pending |
-| BENCH-01 | Phase 6 | Pending |
-| BENCH-02 | Phase 6 | Pending |
-| BENCH-03 | Phase 6 | Pending |
-| BENCH-04 | Phase 6 | Pending |
-| BENCH-05 | Phase 6 | Pending |
-| BENCH-06 | Phase 6 | Pending |
-| BENCH-07 | Phase 6 | Pending |
-| BENCH-08 | Phase 6 | Pending |
-| BENCH-09 | Phase 6 | Pending |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 2 | Pending |
+| FOUND-04 | Phase 2 | Pending |
+| DESIGN-01 | Phase 3 | Pending |
+| DESIGN-02 | Phase 3 | Pending |
+| DESIGN-03 | Phase 3 | Pending |
+| DESIGN-04 | Phase 3 | Pending |
+| DESIGN-05 | Phase 3 | Pending |
+| DESIGN-06 | Phase 3 | Pending |
+| LAYOUT-01 | Phase 4 | Pending |
+| LAYOUT-02 | Phase 4 | Pending |
+| LAYOUT-03 | Phase 4 | Pending |
+| LAYOUT-04 | Phase 4 | Pending |
+| LAYOUT-05 | Phase 4 | Pending |
+| PIPE-01 | Phase 5 | Pending |
+| PIPE-02 | Phase 5 | Pending |
+| PIPE-03 | Phase 5 | Pending |
+| PIPE-04 | Phase 5 | Pending |
+| PIPE-05 | Phase 5 | Pending |
+| PIPE-06 | Phase 5 | Pending |
+| PIPE-07 | Phase 5 | Pending |
+| SESSION-01 | Phase 6 | Pending |
+| SESSION-02 | Phase 6 | Pending |
+| SESSION-03 | Phase 6 | Pending |
+| SESSION-04 | Phase 6 | Pending |
+| SESSION-05 | Phase 6 | Pending |
+| SESSION-06 | Phase 6 | Pending |
+| SESSION-07 | Phase 6 | Pending |
+| SESSION-08 | Phase 6 | Pending |
+| SESSION-09 | Phase 6 | Pending |
+| STATUS-01 | Phase 6 | Pending |
+| STATUS-02 | Phase 6 | Pending |
+| STATUS-03 | Phase 6 | Pending |
+| CHAT-01 | Phase 7 | Pending |
+| CHAT-02 | Phase 7 | Pending |
+| CHAT-03 | Phase 7 | Pending |
+| CHAT-04 | Phase 7 | Pending |
+| CHAT-05 | Phase 7 | Pending |
+| CHAT-06 | Phase 7 | Pending |
+| CHAT-07 | Phase 7 | Pending |
+| CHAT-08 | Phase 7 | Pending |
+| NEURAL-01 | Phase 8 | Pending |
+| NEURAL-02 | Phase 8 | Pending |
+| NEURAL-03 | Phase 8 | Pending |
+| NEURAL-04 | Phase 8 | Pending |
+| NEURAL-05 | Phase 8 | Pending |
+| NEURAL-06 | Phase 8 | Pending |
+| NEURAL-07 | Phase 8 | Pending |
+| SAFETY-01 | Phase 8 | Pending |
+| SAFETY-02 | Phase 8 | Pending |
+| SAFETY-03 | Phase 8 | Pending |
+| SAFETY-04 | Phase 8 | Pending |
+| SAFETY-05 | Phase 8 | Pending |
+| BENCH-01 | Phase 9 | Pending |
+| BENCH-02 | Phase 9 | Pending |
+| BENCH-03 | Phase 9 | Pending |
+| BENCH-04 | Phase 9 | Pending |
+| BENCH-05 | Phase 9 | Pending |
+| BENCH-06 | Phase 9 | Pending |
+| BENCH-07 | Phase 9 | Pending |
+| BENCH-08 | Phase 9 | Pending |
+| BENCH-09 | Phase 9 | Pending |
+| FLOW-01 | Phase 9 | Pending |
+| FLOW-02 | Phase 9 | Pending |
+| FLOW-03 | Phase 9 | Pending |
+| FLOW-04 | Phase 9 | Pending |
+| CUSTOM-01 | Phase 10 | Pending |
+| CUSTOM-02 | Phase 10 | Pending |
+| CUSTOM-03 | Phase 10 | Pending |
+| CUSTOM-04 | Phase 10 | Pending |
+| CUSTOM-05 | Phase 10 | Pending |
+| CUSTOM-06 | Phase 10 | Pending |
+| CUSTOM-07 | Phase 10 | Pending |
 
 **Coverage:**
-- v1 requirements: 68 total
-- Mapped to phases: 68
+- v1 requirements: 74 total
+- Mapped to phases: 74
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-02*
-*Last updated: 2026-04-02 after initial definition*
+*Last updated: 2026-04-02 after roadmap creation*
