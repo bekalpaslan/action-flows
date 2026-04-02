@@ -24,12 +24,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Design System
 
-- [ ] **DESIGN-01**: Design token system covering color, spacing, typography, elevation, animation
+- [x] **DESIGN-01**: Design token system covering color, spacing, typography, elevation, animation
 - [ ] **DESIGN-02**: Component library: Button, Card, Dialog, Tabs, Tooltip, Dropdown, Input, Select, Checkbox, Radio, Badge, Avatar
 - [ ] **DESIGN-03**: All components built with Radix primitives + Tailwind v4 + CVA variants
-- [ ] **DESIGN-04**: `cn()` utility with clsx + tailwind-merge for conflict-free class composition
+- [x] **DESIGN-04**: `cn()` utility with clsx + tailwind-merge for conflict-free class composition
 - [ ] **DESIGN-05**: Machine-readable component manifest (registry agents use to know what components exist and how to compose them)
-- [ ] **DESIGN-06**: No raw CSS in agent output — component library is the only way agents build UI
+- [x] **DESIGN-06**: No raw CSS in agent output — component library is the only way agents build UI
 
 ### Pipeline Visualization
 
@@ -160,12 +160,12 @@ Deferred to future release. Tracked but not in current roadmap.
 | FOUND-02 | Phase 1 | Complete |
 | FOUND-03 | Phase 2 | Complete |
 | FOUND-04 | Phase 2 | Complete |
-| DESIGN-01 | Phase 3 | Pending |
+| DESIGN-01 | Phase 3 | Complete |
 | DESIGN-02 | Phase 3 | Pending |
 | DESIGN-03 | Phase 3 | Pending |
-| DESIGN-04 | Phase 3 | Pending |
+| DESIGN-04 | Phase 3 | Complete |
 | DESIGN-05 | Phase 3 | Pending |
-| DESIGN-06 | Phase 3 | Pending |
+| DESIGN-06 | Phase 3 | Complete |
 | LAYOUT-01 | Phase 4 | Pending |
 | LAYOUT-02 | Phase 4 | Pending |
 | LAYOUT-03 | Phase 4 | Pending |
