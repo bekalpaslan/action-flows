@@ -13,7 +13,7 @@ rule_id: {unique identifier, format: RR001, RR002, etc.}
 priority: {1-100, higher = checked first; breaks ties by score}
 confidence: {high|medium|low, gates routing if score < threshold}
 condition:
-  context: [{contexts where rule applies, e.g., work, maintenance, review}]
+  context: [{contexts where rule applies, e.g., work, settings, review}]
   keywords: [{trigger keywords that suggest this action}]
   scope_patterns: [{optional file patterns like "packages/backend/**"}]
   input_types: [{optional input field requirements}]
@@ -84,7 +84,7 @@ rule_id: RR003
 priority: 88
 confidence: high
 condition:
-  context: [explore, review, maintenance]
+  context: [explore, review, settings]
   keywords: [architecture, refactor, design, structure, pattern, layer, boundary]
   scope_patterns: [packages/**/src/**, docs/**]
 action: analyze/
@@ -102,7 +102,7 @@ rule_id: RR004
 priority: 85
 confidence: high
 condition:
-  context: [maintenance, work]
+  context: [settings, work]
   keywords: [bug, fix, error, issue, crash, fail, broken, exception]
   scope_patterns: [packages/backend/**, "**/*.test.ts"]
 action: code/backend/
@@ -120,7 +120,7 @@ rule_id: RR005
 priority: 85
 confidence: high
 condition:
-  context: [work, maintenance]
+  context: [work, settings]
   keywords: [implement, build, feature, component, create, add, develop]
   scope_patterns: [packages/app/src/**, "**/*.tsx"]
 action: code/frontend/
@@ -138,7 +138,7 @@ rule_id: RR006
 priority: 80
 confidence: high
 condition:
-  context: [work, maintenance]
+  context: [work, settings]
   keywords: [test, testing, coverage, unit, integration, e2e, playwright, vitest]
   scope_patterns: ["**/*.test.ts", "**/*.spec.ts", "test/**"]
 action: test/
@@ -190,7 +190,7 @@ rule_id: RR009
 priority: 78
 confidence: high
 condition:
-  context: [review, maintenance]
+  context: [review, settings]
   keywords: [audit, comprehensive, scan, check, validate, entire, health, status]
   scope_patterns: [packages/**, "**/*.ts", "**/*.tsx"]
 action: audit/
@@ -201,19 +201,19 @@ rationale: |
   review/ is insufficient for comprehensive health checks.
 ```
 
-### RR010: Default maintenance context routing
+### RR010: Default settings context routing
 
 ```yaml
 rule_id: RR010
 priority: 40
 confidence: low
 condition:
-  context: [maintenance]
+  context: [settings]
   keywords: []
 action: analyze/
 fallback: review/
 rationale: |
-  Fallback rule for maintenance context without specific keywords.
+  Fallback rule for settings context without specific keywords.
   analyze/ to understand current state before deciding on code changes.
   Low priority/confidence; only used if no other rules match.
 ```
@@ -229,7 +229,7 @@ All rules are validated by `pnpm run routing:validate`:
 3. **confidence** — Must be `high|medium|low`
 4. **action format** — Must end with `/` (e.g., `code/backend/`)
 5. **fallback format** — If present, must end with `/`
-6. **context list** — Each must be valid: `work|maintenance|explore|review|settings|pm|intel`
+6. **context list** — Each must be valid: `work|explore|review|settings|pm|archive|studio`
 7. **No circular routing** — Rule A → B and B → A is invalid
 8. **Rationale** — Must be non-empty string
 
@@ -291,12 +291,12 @@ def select_action(context, keywords, scope):
 def get_context_default(context):
     defaults = {
         'work': 'code/',
-        'maintenance': 'code/',
+        'settings': 'plan/',
         'explore': 'analyze/',
         'review': 'review/',
         'settings': 'plan/',
         'pm': 'plan/',
-        'intel': 'analyze/',
+        'studio': 'code/frontend/',
     }
     return defaults.get(context, 'code/')
 ```
@@ -333,7 +333,7 @@ rule_id: RR011
 priority: 85
 confidence: high
 condition:
-  context: [work, maintenance]
+  context: [work, settings]
   keywords: [database, schema, migration, query, sql, data, model]
   scope_patterns: [packages/backend/src/schemas/**, packages/backend/src/storage/**]
 action: code/backend/

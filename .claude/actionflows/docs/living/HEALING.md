@@ -1,6 +1,6 @@
 # Healing Protocol
 
-> Human-initiated, system-wide health remediation — the immune system of the living universe.
+> Human-initiated, system-wide health remediation -- the immune system of the ActionFlows framework.
 
 ---
 
@@ -14,10 +14,10 @@ Healing is the process by which the system recovers when orchestrator outputs dr
 
 ## Why Human-Initiated?
 
-1. **Sovereignty** — Auto-healing could alter system behavior without consent
-2. **Root cause ambiguity** — Is the contract outdated, or is the orchestrator drifting?
-3. **Cascade prevention** — One bad auto-fix could trigger more fixes
-4. **Learning opportunity** — Human review captures patterns for future prevention
+1. **Sovereignty**  --  Auto-healing could alter system behavior without consent
+2. **Root cause ambiguity**  --  Is the contract outdated, or is the orchestrator drifting?
+3. **Cascade prevention**  --  One bad auto-fix could trigger more fixes
+4. **Learning opportunity**  --  Human review captures patterns for future prevention
 
 ---
 
@@ -57,7 +57,7 @@ Healing is the process by which the system recovers when orchestrator outputs dr
 - Calculates health score (0-100)
 
 ### Human: Decide
-- Reviews violations in Harmony Workbench
+- Reviews violations in Settings workbench (system health view)
 - Options: **Fix Now** | **Investigate** | **Ignore**
 - Only human approval triggers healing execution
 
@@ -93,9 +93,9 @@ Human approval acts as a circuit breaker:
 
 ## When Healing Doesn't Apply
 
-- **T0 input validation** — Rejecting invalid user input is not a healing issue
-- **Notifications** — Broadcasting violations is informational, not healing
-- **Auto-recovery** — Transient errors with automatic retry are not healing
+- **T0 input validation**  --  Rejecting invalid user input is not a healing issue
+- **Notifications**  --  Broadcasting violations is informational, not healing
+- **Auto-recovery**  --  Transient errors with automatic retry are not healing
 
 Healing only applies to **contract drift** between orchestrator output and CONTRACT.md spec.
 
@@ -112,10 +112,10 @@ For step-by-step healing scenarios with expected behaviors, see:
 
 ## See Also
 
-- `CONTRACT.md` — Format specifications
-- `FLOWS.md` — Healing flow definitions (harmony-audit-and-fix/, contract-drift-fix/, parser-update/)
-- `SYSTEM.md` — 7-layer architecture and healing cycle
-- `packages/backend/src/services/harmonyDetector.ts` — Implementation
+- `CONTRACT.md`  --  Format specifications
+- `FLOWS.md`  --  Healing flow definitions (harmony-audit-and-fix/, contract-drift-fix/, parser-update/)
+- `SYSTEM.md`  --  Layered system architecture and healing cycle
+- `packages/backend/src/services/harmonyDetector.ts`  --  Implementation
 
 ---
 

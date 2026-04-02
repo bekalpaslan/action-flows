@@ -1,10 +1,10 @@
-# Framework Harmony System
+# System Health Monitoring
 
 **Last Updated:** 2026-02-09
 
 The complete 4-component system that keeps orchestrator and dashboard in sync.
 
-> **Living Universe Context:** Harmony is the **immune system** of a living universe. In static software, drift between output and parsing is a bug. In a living universe, it's an **evolutionary signal**—the system trying to grow beyond its current structure. The harmony system detects these signals and triggers healing or evolution, ensuring the universe expands safely without breaking sync between the brain's expectations and the agents' outputs.
+> System health is the **immune system** of the ActionFlows framework. Drift between output and parsing is an **evolutionary signal** -- the system trying to grow beyond its current structure. The system health layer detects these signals and triggers healing or evolution, ensuring the system grows safely without breaking sync between the brain's expectations and the agents' outputs.
 
 ---
 
@@ -20,7 +20,7 @@ The complete 4-component system that keeps orchestrator and dashboard in sync.
 
 ### 2. Onboarding Questionnaire
 **Location:** `.claude/actionflows/flows/framework/onboarding/modules/09-harmony.md`
-**Purpose:** Interactive teaching of harmony concepts to humans
+**Purpose:** Interactive teaching of system health concepts to humans
 **Trigger:** Run `onboarding/` flow, complete Advanced level
 **Target Audience:** New framework contributors, orchestrator maintainers
 
@@ -29,11 +29,11 @@ The complete 4-component system that keeps orchestrator and dashboard in sync.
 **Purpose:** Automated drift monitoring (real-time parsing validation)
 **Types:** `packages/shared/src/harmonyTypes.ts`
 **Usage:** Runs automatically on every orchestrator output, broadcasts violations via WebSocket
-**Dashboard:** Real-time harmony panel shows parsing status
+**Dashboard:** Real-time system health panel shows parsing status
 
-### 4. Philosophy Documentation
+### 4. Conceptual Documentation
 **Location:** Embedded across ORCHESTRATOR.md (lines 29-58), agent-standards/instructions.md (lines 48-67), onboarding modules
-**Purpose:** Embed harmony concept everywhere it belongs
+**Purpose:** Embed system health concept everywhere it belongs
 **Cross-References:** This document, CONTRACT.md header, onboarding Module 9
 
 ---
@@ -44,7 +44,7 @@ The contract is meaningless without the full system:
 - **Humans** learn via onboarding questionnaire
 - **Orchestrator** follows CONTRACT.md output specifications
 - **Backend** validates via HarmonyDetector service
-- **Dashboard** shows parsing status and harmony violations
+- **Dashboard** shows parsing status and system health violations
 
 This is **synchronized evolution** — not rigid specification.
 
@@ -52,8 +52,8 @@ This is **synchronized evolution** — not rigid specification.
 
 ## Learn More
 
-- **System Architecture:** See `.claude/actionflows/docs/living/SYSTEM.md` for the 7-layer living system architecture
+- **System Architecture:** See `.claude/actionflows/docs/living/SYSTEM.md` for the layered system architecture
 - **Teaching:** Complete `.claude/actionflows/flows/framework/onboarding/` (Module 9)
 - **Implementation:** Read `packages/backend/src/services/harmonyDetector.ts`
-- **Monitoring:** Check dashboard harmony panel (real-time status)
+- **Monitoring:** Check dashboard system health panel (real-time status)
 - **Contract:** See `.claude/actionflows/CONTRACT.md` for format specifications

@@ -35,7 +35,7 @@ routing_priority: {1-100, higher = prefer when scoring tied}
 
 ```yaml
 action: analyze/
-context_affinity: [explore, review, maintenance]
+context_affinity: [explore, review, settings]
 capability_tags: [metrics, pattern-detection, gap-analysis, drift-detection, inventory, dependency-analysis, coverage-analysis, impact-assessment]
 scope_preference:
   single_file: false
@@ -61,7 +61,7 @@ routing_priority: 70
 
 ```yaml
 action: audit/
-context_affinity: [review, maintenance]
+context_affinity: [review, settings]
 capability_tags: [comprehensive-audit, security-audit, violation-detection, remediation, critical-finding-fixing]
 scope_preference:
   single_file: false
@@ -111,7 +111,7 @@ routing_priority: 65
 
 ```yaml
 action: code/
-context_affinity: [work, maintenance]
+context_affinity: [work, settings]
 capability_tags: [implementation, refactoring, bug-fixing, feature-development, code-modification]
 scope_preference:
   single_file: true
@@ -136,7 +136,7 @@ routing_priority: 80
 
 ```yaml
 action: code/backend/
-context_affinity: [work, maintenance]
+context_affinity: [work, settings]
 capability_tags: [implementation, refactoring, bug-fixing, feature-development, backend-architecture]
 scope_preference:
   single_file: true
@@ -161,7 +161,7 @@ routing_priority: 85
 
 ```yaml
 action: code/frontend/
-context_affinity: [work, maintenance]
+context_affinity: [work, settings]
 capability_tags: [implementation, refactoring, bug-fixing, feature-development, react-components]
 scope_preference:
   single_file: true
@@ -186,7 +186,7 @@ routing_priority: 85
 
 ```yaml
 action: commit/
-context_affinity: [work, maintenance]
+context_affinity: [work, settings]
 capability_tags: [git-commit, version-control, change-recording]
 scope_preference:
   single_file: false
@@ -209,7 +209,7 @@ routing_priority: 50
 
 ```yaml
 action: diagnose/
-context_affinity: [maintenance, explore]
+context_affinity: [settings, explore]
 capability_tags: [root-cause-analysis, violation-diagnosis, issue-detection]
 scope_preference:
   single_file: false
@@ -233,7 +233,7 @@ routing_priority: 75
 
 ```yaml
 action: isolate/
-context_affinity: [review, maintenance]
+context_affinity: [review, settings]
 capability_tags: [quarantine-management, issue-isolation, remediation]
 scope_preference:
   single_file: true
@@ -305,7 +305,7 @@ routing_priority: 35
 
 ```yaml
 action: plan/
-context_affinity: [work, explore, maintenance]
+context_affinity: [work, explore, settings]
 capability_tags: [implementation-planning, requirements-analysis, design, architecture, task-breakdown]
 scope_preference:
   single_file: false
@@ -330,7 +330,7 @@ routing_priority: 75
 
 ```yaml
 action: review/
-context_affinity: [review, work, maintenance]
+context_affinity: [review, work, settings]
 capability_tags: [quality-check, bug-detection, style-validation, contract-compliance, code-review]
 scope_preference:
   single_file: true
@@ -355,7 +355,7 @@ routing_priority: 75
 
 ```yaml
 action: test/
-context_affinity: [work, maintenance, review]
+context_affinity: [work, settings, review]
 capability_tags: [test-execution, test-suite-creation, coverage-analysis, test-debugging]
 scope_preference:
   single_file: true
@@ -380,7 +380,7 @@ routing_priority: 70
 
 ```yaml
 action: verify-healing/
-context_affinity: [review, maintenance]
+context_affinity: [review, settings]
 capability_tags: [post-healing-validation, gate-verification, healing-assessment]
 scope_preference:
   single_file: false
@@ -419,7 +419,7 @@ Stack-specific actions inherit metadata from generic `code/` with refinements:
 
 ```yaml
 action: test/playwright/
-context_affinity: [work, maintenance, review]
+context_affinity: [work, settings, review]
 capability_tags: [browser-testing, e2e-testing, ui-testing, playwright-automation]
 scope_preference:
   single_file: true
@@ -508,9 +508,9 @@ Design and implement new features. Direct implementation work.
 
 **Best actions:** `code/`, `code/backend/`, `code/frontend/`, `plan/`, `brainstorm/`, `test/`, `commit/`
 
-### maintenance
+### settings
 
-Bug fixes, refactoring, technical debt. Improving existing code.
+Configuration, system health, bug fixes, refactoring. System maintenance and improvement.
 
 **Best actions:** `code/`, `analyze/`, `audit/`, `diagnose/`, `review/`, `test/`, `verify-healing/`
 
@@ -538,9 +538,9 @@ Project management, planning, roadmapping.
 
 **Best actions:** `plan/`, `analyze/`, `brainstorm/`
 
-### intel
+### explore
 
-Intelligence gathering, requirements analysis, discovery.
+Research, learning, intelligence gathering, requirements analysis.
 
 **Best actions:** `analyze/`, `brainstorm/`, `diagnose/`, `plan/`
 

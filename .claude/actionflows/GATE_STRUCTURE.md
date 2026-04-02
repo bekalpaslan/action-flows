@@ -1,6 +1,6 @@
 # Orchestrator Gate Structure
 
-> Quick reference for orchestrator execution gates. See also: `docs/architecture/GATE_STRUCTURE.md` for detailed I/O contracts and trace specs.
+> Quick reference for orchestrator execution gates. Quick reference for orchestrator execution gates.
 
 ---
 
@@ -62,7 +62,7 @@ REQUEST_RECEPTION → CHAIN_COMPILATION → CHAIN_EXECUTION → COMPLETION → P
 
 - `ORCHESTRATOR.md` — Gate contracts and orchestrator rules
 - `CONTRACT.md` — Format specifications parsed at gates
-- `docs/living/HEALING.md` — Healing protocol for violations
+- `.claude/actionflows/docs/living/HEALING.md` — Healing protocol for violations
 
 ---
 
