@@ -46,6 +46,9 @@ export default defineConfig({
       'monaco-editor/esm/vs/language/css/css.worker?worker': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-worker.ts'),
       'monaco-editor/esm/vs/language/html/html.worker?worker': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-worker.ts'),
       'monaco-editor/esm/vs/language/typescript/ts.worker?worker': path.resolve(__dirname, './src/__tests__/__mocks__/monaco-worker.ts'),
+      // Mock shiki and react-shiki for tests (avoid WASM/worker loading)
+      'shiki': path.resolve(__dirname, './src/__tests__/__mocks__/shiki.ts'),
+      'react-shiki': path.resolve(__dirname, './src/__tests__/__mocks__/react-shiki.ts'),
     },
   },
 });

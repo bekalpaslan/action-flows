@@ -8,8 +8,8 @@ import { workspaceEventSchema, validateStorageData } from '@afw/shared';
 import { claudeCliManager } from '../services/claudeCliManager.js';
 import { activityTracker } from '../services/activityTracker.js';
 import { capabilityRegistry } from '../services/capabilityRegistry.js';
-import { sessionManager } from '../services/sessionManager.js';
 import { toCapabilityId } from '@afw/shared';
+import { sessionManager } from '../services/sessionManager.js';
 
 /**
  * WebSocket message format for server->client
@@ -310,71 +310,51 @@ export function handleWebSocket(
           break;
         }
 
-        case 'session:start': {
-          const startPayload = (message as any).payload ?? {};
-          const startWorkbenchId = startPayload.workbenchId as string | undefined;
-          if (!startWorkbenchId || !sessionManager) {
-            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid session:start — workbenchId required' }));
+        case 'chat:send': {
+          const chatPayload = (message as any).payload ?? {};
+          const chatWorkbenchId = chatPayload.workbenchId as string | undefined;
+          const chatText = chatPayload.text as string | undefined;
+          if (!chatWorkbenchId || !chatText || !sessionManager) {
+            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid chat:send - workbenchId and text required' }));
             break;
           }
-          try {
-            await sessionManager.startSession(startWorkbenchId);
-            console.log(`[WS] Session started for workbench ${startWorkbenchId} by client ${clientId}`);
-          } catch (err) {
-            console.error(`[WS] Session start failed for ${startWorkbenchId}:`, err);
-            ws.send(JSON.stringify({ type: 'error', payload: `Session start failed: ${(err as Error).message}` }));
+          const chatSession = sessionManager.getSessionForWorkbench(chatWorkbenchId);
+          if (!chatSession?.sendMessage) {
+            ws.send(JSON.stringify({ type: 'error', payload: `No active session for workbench ${chatWorkbenchId}` }));
+            break;
           }
+          chatSession.sendMessage(chatText);
+          console.log(`[WS] Chat message sent to ${chatWorkbenchId} session by client ${clientId}`);
           break;
         }
 
-        case 'session:stop': {
-          const stopPayload = (message as any).payload ?? {};
-          const stopWorkbenchId = stopPayload.workbenchId as string | undefined;
-          if (!stopWorkbenchId || !sessionManager) {
-            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid session:stop — workbenchId required' }));
+        case 'chat:ask-user-response': {
+          const askPayload = (message as any).payload ?? {};
+          const askWorkbenchId = askPayload.workbenchId as string | undefined;
+          const askToolCallId = askPayload.toolCallId as string | undefined;
+          const askResponse = askPayload.response;
+          if (!askWorkbenchId || !askToolCallId || askResponse === undefined || !sessionManager) {
+            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid chat:ask-user-response - workbenchId, toolCallId, and response required' }));
             break;
           }
-          try {
-            await sessionManager.stopSession(stopWorkbenchId);
-            console.log(`[WS] Session stopped for workbench ${stopWorkbenchId} by client ${clientId}`);
-          } catch (err) {
-            console.error(`[WS] Session stop failed for ${stopWorkbenchId}:`, err);
-            ws.send(JSON.stringify({ type: 'error', payload: `Session stop failed: ${(err as Error).message}` }));
-          }
-          break;
-        }
-
-        case 'session:switch': {
-          const switchPayload = (message as any).payload ?? {};
-          const newWbId = switchPayload.newWorkbenchId as string | undefined;
-          const prevWbId = switchPayload.previousWorkbenchId as string | undefined;
-          if (!newWbId || !prevWbId || !sessionManager) {
-            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid session:switch — newWorkbenchId and previousWorkbenchId required' }));
+          const askSession = sessionManager.getSessionForWorkbench(askWorkbenchId);
+          if (!askSession?.sendMessage) {
+            ws.send(JSON.stringify({ type: 'error', payload: `No active session for workbench ${askWorkbenchId}` }));
             break;
           }
-          sessionManager.handleWorkbenchSwitch(newWbId, prevWbId);
-          console.log(`[WS] Workbench switch: ${prevWbId} -> ${newWbId} by client ${clientId}`);
-          break;
-        }
-
-        case 'session:history': {
-          const histPayload = (message as any).payload ?? {};
-          const histWorkbenchId = histPayload.workbenchId as string | undefined;
-          if (!histWorkbenchId || !sessionManager) {
-            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid session:history — workbenchId required' }));
-            break;
-          }
-          try {
-            const sessionHistory = await sessionManager.getSessionHistory(histWorkbenchId);
-            ws.send(JSON.stringify({
-              channel: '_system',
-              type: 'session:history',
-              payload: { workbenchId: histWorkbenchId, messages: sessionHistory },
-              ts: new Date().toISOString(),
-            }));
-          } catch (err) {
-            console.error(`[WS] Session history failed for ${histWorkbenchId}:`, err);
-          }
+          // Agent SDK AskUserQuestion response mechanism:
+          // The Agent SDK's AskUserQuestion tool call blocks the conversation turn
+          // waiting for user input. When the user responds, we send the response text
+          // through sendMessage which feeds it into the SDK's input stream. The SDK
+          // treats this as the user's next message, which resolves the pending
+          // AskUserQuestion tool call and allows the conversation to continue.
+          //
+          // NOTE: This uses the sendMessage text input approach. If the Agent SDK
+          // introduces a dedicated resolveToolCall method in a future version,
+          // that would be the preferred approach. For now, sendMessage is the
+          // documented mechanism for providing tool responses.
+          askSession.sendMessage(JSON.stringify(askResponse));
+          console.log(`[WS] AskUserQuestion response sent to ${askWorkbenchId} session by client ${clientId}`);
           break;
         }
 

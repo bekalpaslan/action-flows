@@ -64,32 +64,22 @@ const channelUnsubscribeMessage = z.object({
   channel: z.string().min(1).max(100),
 });
 
-// Session lifecycle messages (Phase 6: Agent SDK sessions)
-const sessionStartMessage = z.object({
-  type: z.literal('session:start'),
-  channel: z.string().min(1).max(100),
-  payload: z.object({ workbenchId: z.string().min(1) }),
-});
-
-const sessionStopMessage = z.object({
-  type: z.literal('session:stop'),
-  channel: z.string().min(1).max(100),
-  payload: z.object({ workbenchId: z.string().min(1) }),
-});
-
-const sessionSwitchMessage = z.object({
-  type: z.literal('session:switch'),
-  channel: z.string().min(1).max(100),
+// Chat messaging (Phase 7: chat panel)
+const chatSendMessage = z.object({
+  type: z.literal('chat:send'),
   payload: z.object({
-    newWorkbenchId: z.string().min(1),
-    previousWorkbenchId: z.string().min(1),
+    workbenchId: z.string().min(1),
+    text: z.string().min(1),
   }),
 });
 
-const sessionHistoryMessage = z.object({
-  type: z.literal('session:history'),
-  channel: z.string().min(1).max(100),
-  payload: z.object({ workbenchId: z.string().min(1) }),
+const chatAskUserResponseMessage = z.object({
+  type: z.literal('chat:ask-user-response'),
+  payload: z.object({
+    workbenchId: z.string().min(1),
+    toolCallId: z.string().min(1),
+    response: z.unknown(),
+  }),
 });
 
 /**
@@ -106,10 +96,8 @@ export const wsMessageSchema = z.discriminatedUnion('type', [
   capabilityErrorMessage,
   channelSubscribeMessage,
   channelUnsubscribeMessage,
-  sessionStartMessage,
-  sessionStopMessage,
-  sessionSwitchMessage,
-  sessionHistoryMessage,
+  chatSendMessage,
+  chatAskUserResponseMessage,
 ]);
 
 /**

@@ -38,37 +38,37 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **PIPE-03**: Two node shapes: rounded rectangles (steps) and diamonds (decision gates)
 - [x] **PIPE-04**: Support forking (1→N) and merging (N→1) in pipelines
 - [x] **PIPE-05**: Horizontally scrollable for long chains
-- [x] **PIPE-06**: Real-time status updates via WebSocket (pending → running → complete/failed)
+- [ ] **PIPE-06**: Real-time status updates via WebSocket (pending → running → complete/failed)
 - [x] **PIPE-07**: Pipeline state scoped per workbench (switching workbenches shows that workbench's pipeline)
 
 ### Agent Sessions
 
 - [ ] **SESSION-01**: Persistent Claude session per workbench via Agent SDK (`@anthropic-ai/claude-agent-sdk`)
-- [x] **SESSION-02**: Lazy session activation — only active workbench holds a live session
+- [ ] **SESSION-02**: Lazy session activation — only active workbench holds a live session
 - [ ] **SESSION-03**: Session resume across app restarts via `--resume` with session ID mapping
-- [x] **SESSION-04**: Session health monitoring with heartbeat-based detection (<30s latency)
-- [x] **SESSION-05**: Session resurrection using local conversation logs as source of truth
+- [ ] **SESSION-04**: Session health monitoring with heartbeat-based detection (<30s latency)
+- [ ] **SESSION-05**: Session resurrection using local conversation logs as source of truth
 - [ ] **SESSION-06**: Backend (SessionManager) is sole owner of Agent SDK calls — frontend communicates via WebSocket only
-- [x] **SESSION-07**: Session history searchable per workbench via `listSessions()` + `getSessionMessages()`
+- [ ] **SESSION-07**: Session history searchable per workbench via `listSessions()` + `getSessionMessages()`
 - [ ] **SESSION-08**: Workbench-scoped agent personality (Review = strict, Explore = curious, PM = strategic)
 - [ ] **SESSION-09**: Session forking — branch a conversation to explore alternatives without losing the original
 
 ### Chat Panel
 
-- [ ] **CHAT-01**: Each workbench has its own independent chat panel (right column)
-- [ ] **CHAT-02**: Chat backed by persistent Claude remote session
-- [ ] **CHAT-03**: Scrollable message history with auto-scroll on new messages
+- [x] **CHAT-01**: Each workbench has its own independent chat panel (right column)
+- [x] **CHAT-02**: Chat backed by persistent Claude remote session
+- [x] **CHAT-03**: Scrollable message history with auto-scroll on new messages
 - [ ] **CHAT-04**: Fixed input row: text input + submit button
 - [ ] **CHAT-05**: Render Claude's AskUserQuestion tool calls as interactive UI components (radio buttons, checkboxes, option cards) from the component library
-- [ ] **CHAT-06**: Capture user selections from interactive tool calls and feed back as tool responses
+- [x] **CHAT-06**: Capture user selections from interactive tool calls and feed back as tool responses
 - [ ] **CHAT-07**: Expandable menu for current workbench's session history
 - [ ] **CHAT-08**: Session connect/disconnect status indicator
 
 ### Status & Notifications
 
-- [x] **STATUS-01**: Multi-agent status dashboard showing which agents are running, their workbench, status (idle/running/blocked/complete), elapsed time
-- [x] **STATUS-02**: Toast notification system for agent events (connect, disconnect, completion, errors, validation results)
-- [x] **STATUS-03**: SubagentStart/SubagentStop hooks feed agent lifecycle into status registry
+- [ ] **STATUS-01**: Multi-agent status dashboard showing which agents are running, their workbench, status (idle/running/blocked/complete), elapsed time
+- [ ] **STATUS-02**: Toast notification system for agent events (connect, disconnect, completion, errors, validation results)
+- [ ] **STATUS-03**: SubagentStart/SubagentStop hooks feed agent lifecycle into status registry
 
 ### Neural Validation (Intelligence Layer)
 
@@ -176,26 +176,26 @@ Deferred to future release. Tracked but not in current roadmap.
 | PIPE-03 | Phase 5 | Complete |
 | PIPE-04 | Phase 5 | Complete |
 | PIPE-05 | Phase 5 | Complete |
-| PIPE-06 | Phase 5 | Complete |
+| PIPE-06 | Phase 5 | Pending |
 | PIPE-07 | Phase 5 | Complete |
 | SESSION-01 | Phase 6 | Pending |
-| SESSION-02 | Phase 6 | Complete |
+| SESSION-02 | Phase 6 | Pending |
 | SESSION-03 | Phase 6 | Pending |
-| SESSION-04 | Phase 6 | Complete |
-| SESSION-05 | Phase 6 | Complete |
+| SESSION-04 | Phase 6 | Pending |
+| SESSION-05 | Phase 6 | Pending |
 | SESSION-06 | Phase 6 | Pending |
-| SESSION-07 | Phase 6 | Complete |
+| SESSION-07 | Phase 6 | Pending |
 | SESSION-08 | Phase 6 | Pending |
 | SESSION-09 | Phase 6 | Pending |
-| STATUS-01 | Phase 6 | Complete |
-| STATUS-02 | Phase 6 | Complete |
-| STATUS-03 | Phase 6 | Complete |
-| CHAT-01 | Phase 7 | Pending |
-| CHAT-02 | Phase 7 | Pending |
-| CHAT-03 | Phase 7 | Pending |
+| STATUS-01 | Phase 6 | Pending |
+| STATUS-02 | Phase 6 | Pending |
+| STATUS-03 | Phase 6 | Pending |
+| CHAT-01 | Phase 7 | Complete |
+| CHAT-02 | Phase 7 | Complete |
+| CHAT-03 | Phase 7 | Complete |
 | CHAT-04 | Phase 7 | Pending |
 | CHAT-05 | Phase 7 | Pending |
-| CHAT-06 | Phase 7 | Pending |
+| CHAT-06 | Phase 7 | Complete |
 | CHAT-07 | Phase 7 | Pending |
 | CHAT-08 | Phase 7 | Pending |
 | NEURAL-01 | Phase 8 | Pending |

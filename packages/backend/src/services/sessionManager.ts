@@ -309,6 +309,11 @@ export class SessionManager {
     }
   }
 
+  /** Get the managed session for a workbench (used by WS handler for chat:send) */
+  getSessionForWorkbench(workbenchId: string): ManagedSession | undefined {
+    return this.store.get(workbenchId);
+  }
+
   /**
    * Fork a session to create a new branch (SESSION-09).
    * Returns the new session ID or null if fork failed.
