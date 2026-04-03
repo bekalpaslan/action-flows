@@ -92,8 +92,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **FLOW-01**: Flow browser per workbench showing registered flows
 - [ ] **FLOW-02**: Archived flows from removed workbenches (Maintenance, Respect) preserved and harvestable
-- [ ] **FLOW-03**: Flows surfaced as executable blueprints (not just instructions)
-- [ ] **FLOW-04**: Flow composition UI — browse, select, execute flows from the dashboard
+- [x] **FLOW-03**: Flows surfaced as executable blueprints (not just instructions)
+- [x] **FLOW-04**: Flow composition UI — browse, select, execute flows from the dashboard
 
 ### Customization & Automation
 
@@ -115,7 +115,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **BENCH-06**: Archive — historical sessions, searchable memory
 - [ ] **BENCH-07**: Studio — preview components, test layouts, live renders
 - [ ] **BENCH-08**: Each workbench agent has its own greeting and work tendency matching its domain
-- [ ] **BENCH-09**: Each workbench displays its registered flows
+- [x] **BENCH-09**: Each workbench displays its registered flows
 
 ## v2 Requirements
 
@@ -218,11 +218,11 @@ Deferred to future release. Tracked but not in current roadmap.
 | BENCH-06 | Phase 9 | Pending |
 | BENCH-07 | Phase 9 | Pending |
 | BENCH-08 | Phase 9 | Pending |
-| BENCH-09 | Phase 9 | Pending |
+| BENCH-09 | Phase 9 | Complete |
 | FLOW-01 | Phase 9 | Pending |
 | FLOW-02 | Phase 9 | Pending |
-| FLOW-03 | Phase 9 | Pending |
-| FLOW-04 | Phase 9 | Pending |
+| FLOW-03 | Phase 9 | Complete |
+| FLOW-04 | Phase 9 | Complete |
 | CUSTOM-01 | Phase 10 | Pending |
 | CUSTOM-02 | Phase 10 | Pending |
 | CUSTOM-03 | Phase 10 | Pending |
