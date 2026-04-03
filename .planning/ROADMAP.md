@@ -177,7 +177,12 @@ Plans:
   3. `/btw` delivers violation signals to workbench agents with severity levels (critical/warning/info), and agents fix critical violations immediately
   4. A checkpoint/rollback UI shows a timeline of checkpoints with one-click revert
   5. Human-in-the-loop approval gates block specific high-risk actions (not entire pipelines), with configurable autonomy levels per workbench
-**Plans**: TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 08-01-PLAN.md -- Design rules module, PreToolUse/PostToolUse hooks, manifest.json, settings.json registration
+- [ ] 08-02-PLAN.md -- Shared validation types, backend checkpoint/approval/validation services and routes
+- [ ] 08-03-PLAN.md -- Frontend validationStore, ViolationToast, useViolationSignals, CheckpointMarker pipeline extension
+- [ ] 08-04-PLAN.md -- ApprovalGateCard in chat panel, autonomy level settings in SettingsPage
 **UI hint**: yes
 
 ### Phase 9: Workbenches & Flow Management
@@ -221,7 +226,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 5. Pipeline Visualization | 0/3 | Planning complete | - |
 | 6. Agent Sessions & Status | 1/4 | In Progress | - |
 | 7. Chat Panel | 0/4 | Planning complete | - |
-| 8. Neural Validation & Safety | 0/? | Not started | - |
+| 8. Neural Validation & Safety | 0/4 | Planning complete | - |
 | 9. Workbenches & Flow Management | 0/? | Not started | - |
 | 10. Customization & Automation | 0/? | Not started | - |
 
