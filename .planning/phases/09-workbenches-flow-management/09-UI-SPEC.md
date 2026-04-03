@@ -91,9 +91,9 @@ Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific role assignments:
 
 Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific color applications:
 
-**Color distribution:** ~60% surface (page background, main content area), ~30% surface-2 (cards, list items, stat boxes, greeting card, tab backgrounds), ~10% accent (Run flow button, active tab indicator, stat highlights, personality accent dots).
+**Color distribution:** ~60% surface (page background, main content area), ~30% surface-2 (cards, list items, stat boxes, greeting card, tab backgrounds), ~10% accent (Run Flow button, active tab indicator, stat highlights, personality accent dots).
 
-**Primary focal point:** The flow card "Run" button. Uses accent color (primary Button variant) as the main CTA per flow card.
+**Primary focal point:** The flow card "Run Flow" button. Uses accent color (primary Button variant) as the main CTA per flow card.
 
 ### Workbench Page Colors
 
@@ -114,7 +114,7 @@ Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific color applications:
 | Flow card description | -- | var(--color-text-dim) | -- |
 | Flow card category badge | Badge default variant | var(--color-text-dim) | -- |
 | Flow card action count badge | Badge info variant | var(--color-info) | -- |
-| Run button | Button primary variant | white | -- |
+| Run Flow button | Button primary variant | white | -- |
 
 ### Content List Colors
 
@@ -149,7 +149,7 @@ Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific color applications:
 | Action item drag handle | -- | var(--color-text-muted) | -- |
 | Action item drag over | rgba(62,103,191,0.12) | -- | -- |
 
-Accent reserved for: Run flow button (primary CTA), active tab indicator, selected action item left border, greeting personality accent dot, stat card highlight values.
+Accent reserved for: Run Flow button (primary CTA), active tab indicator, selected action item left border, greeting personality accent dot, stat card highlight values.
 
 ---
 
@@ -159,9 +159,9 @@ Accent reserved for: Run flow button (primary CTA), active tab indicator, select
 
 | Element | Copy |
 |---------|------|
-| Run flow button (flow card) | "Run" |
+| Run flow button (flow card) | "Run Flow" |
 | Save flow button (composition dialog) | "Save Flow" |
-| Cancel composition button | "Cancel" |
+| Discard composition button | "Discard Flow" |
 | Create flow button (opens composition dialog) | "New Flow" |
 
 ### Workbench Greeting Messages
@@ -233,7 +233,7 @@ This phase has no destructive actions. Flow deletion is deferred to Phase 10 (CU
 |-----------|-----------------|
 | Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter | Flow cards, greeting card, stat cards |
 | Badge | Status badges (running/complete/failed/pending), flow category, action count |
-| Button | Run flow, New Flow, Save Flow, Cancel |
+| Button | Run Flow, New Flow, Save Flow, Discard Flow |
 | Input | Search/filter inputs, flow name input |
 | Select, SelectTrigger, SelectValue, SelectContent, SelectItem | Category filter for flow browser |
 | Tabs, TabsList, TabsTrigger, TabsContent | Workbench content sections (e.g., Work: Active/Recent tabs) |
@@ -385,8 +385,8 @@ FlowBrowser: studio context flows (empty state initially)
 | Interaction | Behavior |
 |-------------|----------|
 | Hover on flow card | border transitions from border to border-strong (Card interactive variant) |
-| Click "Run" button | Sends flow name as chat message to workbench agent. Button shows loading state (disabled + spinner) for 2 seconds. Toast notification: "Flow '{name}' started." |
-| Run button disabled state | Disabled when workbench agent session is disconnected |
+| Click "Run Flow" button | Sends flow name as chat message to workbench agent. Button shows loading state (disabled + spinner) for 2 seconds. Toast notification: "Flow '{name}' started." |
+| Run Flow button disabled state | Disabled when workbench agent session is disconnected |
 
 ### Flow Composition Interactions
 
@@ -397,7 +397,7 @@ FlowBrowser: studio context flows (empty state initially)
 | Click action item | Toggles selection (adds/removes from chain order list) |
 | Drag action in chain list | Reorders the action within the chain sequence |
 | Click "Save Flow" | Validates flow name (non-empty, kebab-case), saves to flow registry, closes dialog, shows success toast |
-| Click "Cancel" | Closes dialog without saving, no confirmation needed |
+| Click "Discard Flow" | Closes dialog without saving, no confirmation needed |
 | Empty flow name submission | Input shows error variant, focus stays on input |
 
 ### Content List Interactions
@@ -423,7 +423,7 @@ Non-interactive. Display-only card showing agent personality greeting. No click,
 | Requirement | Implementation |
 |-------------|---------------|
 | Flow card grid | role="list" on container, role="listitem" on each FlowCard |
-| Run button | Button component handles focus-visible natively. Accessible label: "Run {flow name}" via aria-label |
+| Run Flow button | Button component handles focus-visible natively. Accessible label: "Run {flow name}" via aria-label |
 | Flow composition drag-and-drop | Provide arrow key fallback for reordering (Up/Down to move selected item). aria-label on drag handle: "Drag to reorder" |
 | Tab navigation | Radix Tabs handles arrow key navigation and ARIA roles natively |
 | Search inputs | label element associated via htmlFor, or aria-label if visually hidden label |
@@ -496,7 +496,7 @@ App mount
 ### Flow Execution
 
 ```
-User clicks "Run" on FlowCard
+User clicks "Run Flow" on FlowCard
   -> FlowCard calls chat panel sendMessage(`/run ${flowName}`)
   -> Chat panel delivers message to workbench agent
   -> Agent compiles and executes chain (existing Phase 7 infrastructure)
