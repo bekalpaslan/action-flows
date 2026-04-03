@@ -183,7 +183,7 @@ Plans:
 **Plans:** 5 plans
 Plans:
 - [ ] 09-01-PLAN.md -- Extend WorkbenchMeta with personality fields, create shared components (WorkbenchGreeting, ContentList, ContentListItem, StatCard)
-- [ ] 09-02-PLAN.md -- Backend category enum fix, flow seeder from FLOWS.md, actions endpoint, frontend flowStore
+- [x] 09-02-PLAN.md -- Backend category enum fix, flow seeder from FLOWS.md, actions endpoint, frontend flowStore
 - [ ] 09-03-PLAN.md -- Flow components: FlowCard, FlowBrowser, FlowComposer, ActionListItem
 - [ ] 09-04-PLAN.md -- Workbench pages: Work, Explore, Review, PM with domain-specific content
 - [ ] 09-05-PLAN.md -- Workbench pages: Settings (extend), Archive, Studio with domain-specific content
