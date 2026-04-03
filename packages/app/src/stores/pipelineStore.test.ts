@@ -22,6 +22,7 @@ function makeNodes(count: number): PipelineNode[] {
       suggestion: null,
       fileChanges: null,
       startedAt: null,
+      checkpoint: null,
     },
   }));
 }

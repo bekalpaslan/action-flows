@@ -7,9 +7,11 @@ import {
   SkipForward,
   Circle,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { StepNodeData, NodeStatus } from '@/lib/pipeline-types';
 import { useElapsedTime } from '@/hooks/useElapsedTime';
+import { CheckpointMarker } from './CheckpointMarker';
 import './pipeline.css';
 
 type StepNodeType = Node<StepNodeData, 'step'>;
@@ -64,6 +66,24 @@ export function StepNode({ data, selected }: NodeProps<StepNodeType>) {
   const liveElapsed = useElapsedTime(data.startedAt, data.status === 'running');
   const displayElapsed = liveElapsed ?? data.elapsedMs;
 
+  const handleRevert = async (commitHash: string) => {
+    try {
+      const res = await fetch('/api/checkpoints/revert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ commitHash }),
+      });
+      if (res.ok) {
+        toast.success('Checkpoint reverted successfully');
+      } else {
+        const errData = await res.json();
+        toast.error((errData as { message?: string }).message ?? 'Revert failed');
+      }
+    } catch {
+      toast.error('Revert failed -- the git operation could not complete. Check for uncommitted changes and try again.');
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -105,6 +125,14 @@ export function StepNode({ data, selected }: NodeProps<StepNodeType>) {
         position={Position.Right}
         className="!bg-border-strong !w-2 !h-2"
       />
+
+      {/* Checkpoint marker (below node content) */}
+      {data.checkpoint && (
+        <CheckpointMarker
+          checkpoint={data.checkpoint}
+          onRevert={handleRevert}
+        />
+      )}
     </div>
   );
 }

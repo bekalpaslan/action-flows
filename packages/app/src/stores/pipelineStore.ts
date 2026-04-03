@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { Edge } from '@xyflow/react';
+import type { CheckpointData } from '@afw/shared';
 import type { WorkbenchId } from '../lib/types';
 import type { PipelineNode, PipelineState, StepNodeData, GateNodeData } from '../lib/pipeline-types';
 
@@ -8,6 +9,7 @@ interface PipelineStoreState {
   initChain: (workbenchId: WorkbenchId, chainId: string, nodes: PipelineNode[], edges: Edge[]) => void;
   updateNodeStatus: (workbenchId: WorkbenchId, nodeId: string, data: Partial<StepNodeData> | Partial<GateNodeData>) => void;
   updateEdgeStatus: (workbenchId: WorkbenchId, edgeId: string, data: Partial<Edge>) => void;
+  setCheckpoint: (workbenchId: WorkbenchId, nodeId: string, checkpoint: CheckpointData) => void;
   selectNode: (workbenchId: WorkbenchId, nodeId: string | null) => void;
   clearPipeline: (workbenchId: WorkbenchId) => void;
 }
@@ -57,6 +59,23 @@ export const usePipelineStore = create<PipelineStoreState>((set) => ({
           edge.id === edgeId
             ? { ...edge, ...data }
             : edge
+        ),
+      });
+      return { pipelines: next };
+    }),
+
+  setCheckpoint: (workbenchId, nodeId, checkpoint) =>
+    set((state) => {
+      const pipeline = state.pipelines.get(workbenchId);
+      if (!pipeline) return state;
+
+      const next = new Map(state.pipelines);
+      next.set(workbenchId, {
+        ...pipeline,
+        nodes: (pipeline.nodes as PipelineNode[]).map((node) =>
+          node.id === nodeId
+            ? { ...node, data: { ...node.data, checkpoint } } as PipelineNode
+            : node
         ),
       });
       return { pipelines: next };

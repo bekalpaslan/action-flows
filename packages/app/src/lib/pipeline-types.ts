@@ -1,4 +1,7 @@
 import type { Node, Edge } from '@xyflow/react';
+import type { CheckpointData } from '@afw/shared';
+
+export type { CheckpointData } from '@afw/shared';
 
 export type NodeStatus = 'pending' | 'running' | 'complete' | 'failed' | 'skipped';
 
@@ -16,6 +19,7 @@ export type StepNodeData = {
   suggestion: string | null;
   fileChanges: Array<{ path: string; type: 'created' | 'modified' | 'deleted' }> | null;
   startedAt: string | null;
+  checkpoint: CheckpointData | null;
 };
 
 export type GateNodeData = {

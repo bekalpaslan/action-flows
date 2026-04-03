@@ -111,6 +111,7 @@ export function layoutPipeline(steps: ChainStepSnapshot[]): { nodes: PipelineNod
       suggestion: null,
       fileChanges: null,
       startedAt: null,
+      checkpoint: null,
     };
 
     return {
