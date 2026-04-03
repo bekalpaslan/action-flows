@@ -9,6 +9,7 @@ import { claudeCliManager } from '../services/claudeCliManager.js';
 import { activityTracker } from '../services/activityTracker.js';
 import { capabilityRegistry } from '../services/capabilityRegistry.js';
 import { toCapabilityId } from '@afw/shared';
+import { sessionManager } from '../services/sessionManager.js';
 
 /**
  * WebSocket message format for server->client
@@ -306,6 +307,54 @@ export function handleWebSocket(
           };
           ws.send(JSON.stringify(channelUnsubConfirmation));
           console.log(`[WS] Client ${clientId} unsubscribed from channel ${channel}`);
+          break;
+        }
+
+        case 'chat:send': {
+          const chatPayload = (message as any).payload ?? {};
+          const chatWorkbenchId = chatPayload.workbenchId as string | undefined;
+          const chatText = chatPayload.text as string | undefined;
+          if (!chatWorkbenchId || !chatText || !sessionManager) {
+            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid chat:send - workbenchId and text required' }));
+            break;
+          }
+          const chatSession = sessionManager.getSessionForWorkbench(chatWorkbenchId);
+          if (!chatSession?.sendMessage) {
+            ws.send(JSON.stringify({ type: 'error', payload: `No active session for workbench ${chatWorkbenchId}` }));
+            break;
+          }
+          chatSession.sendMessage(chatText);
+          console.log(`[WS] Chat message sent to ${chatWorkbenchId} session by client ${clientId}`);
+          break;
+        }
+
+        case 'chat:ask-user-response': {
+          const askPayload = (message as any).payload ?? {};
+          const askWorkbenchId = askPayload.workbenchId as string | undefined;
+          const askToolCallId = askPayload.toolCallId as string | undefined;
+          const askResponse = askPayload.response;
+          if (!askWorkbenchId || !askToolCallId || askResponse === undefined || !sessionManager) {
+            ws.send(JSON.stringify({ type: 'error', payload: 'Invalid chat:ask-user-response - workbenchId, toolCallId, and response required' }));
+            break;
+          }
+          const askSession = sessionManager.getSessionForWorkbench(askWorkbenchId);
+          if (!askSession?.sendMessage) {
+            ws.send(JSON.stringify({ type: 'error', payload: `No active session for workbench ${askWorkbenchId}` }));
+            break;
+          }
+          // Agent SDK AskUserQuestion response mechanism:
+          // The Agent SDK's AskUserQuestion tool call blocks the conversation turn
+          // waiting for user input. When the user responds, we send the response text
+          // through sendMessage which feeds it into the SDK's input stream. The SDK
+          // treats this as the user's next message, which resolves the pending
+          // AskUserQuestion tool call and allows the conversation to continue.
+          //
+          // NOTE: This uses the sendMessage text input approach. If the Agent SDK
+          // introduces a dedicated resolveToolCall method in a future version,
+          // that would be the preferred approach. For now, sendMessage is the
+          // documented mechanism for providing tool responses.
+          askSession.sendMessage(JSON.stringify(askResponse));
+          console.log(`[WS] AskUserQuestion response sent to ${askWorkbenchId} session by client ${clientId}`);
           break;
         }
 

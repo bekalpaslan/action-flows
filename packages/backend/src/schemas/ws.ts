@@ -64,6 +64,24 @@ const channelUnsubscribeMessage = z.object({
   channel: z.string().min(1).max(100),
 });
 
+// Chat messaging (Phase 7: chat panel)
+const chatSendMessage = z.object({
+  type: z.literal('chat:send'),
+  payload: z.object({
+    workbenchId: z.string().min(1),
+    text: z.string().min(1),
+  }),
+});
+
+const chatAskUserResponseMessage = z.object({
+  type: z.literal('chat:ask-user-response'),
+  payload: z.object({
+    workbenchId: z.string().min(1),
+    toolCallId: z.string().min(1),
+    response: z.unknown(),
+  }),
+});
+
 /**
  * Discriminated union of all valid WebSocket message types
  */
@@ -78,6 +96,8 @@ export const wsMessageSchema = z.discriminatedUnion('type', [
   capabilityErrorMessage,
   channelSubscribeMessage,
   channelUnsubscribeMessage,
+  chatSendMessage,
+  chatAskUserResponseMessage,
 ]);
 
 /**
