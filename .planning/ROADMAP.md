@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 5: Pipeline Visualization** - Horizontal node-based pipeline with live chain execution, forking/merging, real-time status
 - [ ] **Phase 6: Agent Sessions & Status** - Persistent Claude sessions per workbench, lazy activation, health monitoring, status dashboard
 - [ ] **Phase 7: Chat Panel** - Per-workbench chat backed by persistent sessions, interactive tool call rendering, session history
-- [x] **Phase 8: Neural Validation & Safety** - Hook-based design system enforcement, /btw signaling, approval gates, permission boundaries (completed 2026-04-03)
+- [x] **Phase 8: Neural Validation & Safety** - Hook-based design system enforcement, /btw signaling, approval gates, permission boundaries (completed 2026-04-03)
 - [ ] **Phase 9: Workbenches & Flow Management** - 7 default workbench content pages, flow browser, archived flow harvesting, flow composition
 - [ ] **Phase 10: Customization & Automation** - Self-healing flows, skills, scheduled tasks, custom workbenches, session forking, learning browser
 
@@ -180,7 +180,13 @@ Plans:
   3. Each workbench displays its registered flows in a browseable list
   4. Archived flows from removed workbenches (Maintenance, Respect) are preserved and harvestable
   5. Users can browse, select, and execute flows from a flow composition UI within any workbench
-**Plans**: TBD
+**Plans:** 5 plans
+Plans:
+- [ ] 09-01-PLAN.md -- Extend WorkbenchMeta with personality fields, create shared components (WorkbenchGreeting, ContentList, ContentListItem, StatCard)
+- [ ] 09-02-PLAN.md -- Backend category enum fix, flow seeder from FLOWS.md, actions endpoint, frontend flowStore
+- [ ] 09-03-PLAN.md -- Flow components: FlowCard, FlowBrowser, FlowComposer, ActionListItem
+- [ ] 09-04-PLAN.md -- Workbench pages: Work, Explore, Review, PM with domain-specific content
+- [ ] 09-05-PLAN.md -- Workbench pages: Settings (extend), Archive, Studio with domain-specific content
 **UI hint**: yes
 
 ### Phase 10: Customization & Automation
@@ -212,7 +218,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 6. Agent Sessions & Status | 0/? | Not started | - |
 | 7. Chat Panel | 0/? | Not started | - |
 | 8. Neural Validation & Safety | 1/1 | Complete   | 2026-04-03 |
-| 9. Workbenches & Flow Management | 0/? | Not started | - |
+| 9. Workbenches & Flow Management | 0/5 | Planning complete | - |
 | 10. Customization & Automation | 0/? | Not started | - |
 
 ## Backlog
