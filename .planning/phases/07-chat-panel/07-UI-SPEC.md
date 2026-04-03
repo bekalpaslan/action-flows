@@ -150,7 +150,7 @@ Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific color applications:
 | Background | var(--color-surface-2) |
 | Border | 1px solid var(--color-border) on bottom edge |
 | Content left | StatusDot (Phase 6 component) + workbench name + "Chat" label |
-| Content right | Session history button (History icon, ghost variant, icon size) + overflow menu button (MoreVertical icon, ghost variant, icon size) |
+| Content right | Session history button (History icon, ghost variant, icon size, tooltip: "Session history") + overflow menu button (MoreVertical icon, ghost variant, icon size, tooltip: "More options", aria-label: "Chat panel options") |
 | Padding | px-3 |
 
 ### Message List
@@ -326,7 +326,7 @@ Each option in single_select and multi_select renders as:
 
 | Property | Value |
 |----------|-------|
-| Submit button | "Submit" label, primary variant, sm size. Positioned below options. |
+| Submit button | "Send Response" label, primary variant, sm size. Positioned below options. |
 | Disabled state | Disabled until user makes a selection (single_select/multi_select) or enters text (free_text). |
 | After submission | Options become read-only (disabled state). Selected option highlighted. A small "Submitted" badge (success variant, sm) appears. |
 | Response routing | Captured selection is sent back to the backend via WebSocket as a tool response for the pending AskUserQuestion call. |
@@ -363,7 +363,7 @@ Each option in single_select and multi_select renders as:
 | Content | Session label (first message truncated to 40 chars) + date (text-caption text-text-muted font-mono, relative: "2m ago", "1h ago", "Yesterday", "Apr 2") |
 | Current session | Highlighted with accent left border (2px) and bg-surface-2 |
 | Hover | bg-surface-2 |
-| Click | Loads that session's message history into the chat panel |
+| Click | Loads that session's messages into the chat panel |
 | Empty state | "No previous sessions" centered, text-text-muted |
 
 ### Menu Header
@@ -477,10 +477,10 @@ All animations respect `prefers-reduced-motion: reduce` (durations set to 0ms vi
 | Click option (single_select) | Selects option. Deselects previous. |
 | Click option (multi_select) | Toggles option selection. |
 | Type text (free_text) | Text appears in input field. |
-| Click "Submit" | Sends selection/text as tool response. Options become read-only. Badge shows "Submitted". |
+| Click "Send Response" | Sends selection/text as tool response. Options become read-only. Badge shows "Submitted". |
 | Keyboard: Arrow keys in radio group | Moves selection between options (Radix built-in). |
 | Keyboard: Space on checkbox | Toggles checkbox (Radix built-in). |
-| Keyboard: Enter on Submit | Submits selection. |
+| Keyboard: Enter on "Send Response" | Submits selection. |
 
 ### Session History Interaction
 
@@ -592,7 +592,7 @@ interface ChatState {
 | Tool card (running) | "{ToolName}: Running..." |
 | Tool card (complete) | "{ToolName}: {summary, first 80 chars}" |
 | Tool card (error) | "{ToolName}: Error -- {error message, first 80 chars}" |
-| AskUserQuestion submit button | "Submit" |
+| AskUserQuestion submit button | "Send Response" |
 | AskUserQuestion submitted badge | "Submitted" |
 | AskUserQuestion fallback | "The agent is asking a question:" followed by the raw JSON as a code block |
 | Session history menu header | "Session History" |
@@ -602,6 +602,7 @@ interface ChatState {
 | Scroll-to-bottom tooltip | "Scroll to new messages" |
 | Send disabled tooltip (disconnected) | "Connect to send messages" |
 | Send disabled tooltip (empty) | No tooltip (standard disabled state) |
+| Overflow menu button tooltip | "More options" |
 
 ---
 
@@ -668,8 +669,9 @@ interface ChatState {
 | Keyboard navigation | Tab moves through header buttons, message list, interactive tool calls, input, and send button. Arrow keys navigate radio groups. |
 | Screen reader | Chat panel has role="log" with aria-label="Chat with {Workbench} agent". Messages use role="listitem" semantics within a role="list" container. User messages have aria-label="You said: {content preview}". Agent messages have aria-label="{Workbench} agent said: {content preview}". |
 | Tool cards | role="button" with aria-expanded on collapsed/expanded toggle. aria-label="{ToolName} tool call -- click to expand". |
-| AskUserQuestion | RadioGroup and Checkbox use built-in Radix ARIA. Question text is a visible label with htmlFor linkage. Submit button aria-label="Submit answer". |
+| AskUserQuestion | RadioGroup and Checkbox use built-in Radix ARIA. Question text is a visible label with htmlFor linkage. Submit button aria-label="Send response". |
 | Input | Textarea has aria-label="Message input". Send button has aria-label="Send message". |
+| Overflow menu button | aria-label="Chat panel options". Tooltip: "More options". |
 | Streaming | aria-live="polite" on the streaming message container. Screen reader announces "Agent is responding" at stream start and "Agent response complete" at stream end. |
 | Reduced motion | Streaming cursor blink disabled. Message appear animations disabled. Tool card expand animations disabled. |
 | Touch targets | All buttons meet 32px minimum (icon button = 40px, send button = 40px height). |
