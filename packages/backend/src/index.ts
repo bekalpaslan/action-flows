@@ -57,6 +57,10 @@ import artifactsRouter from './routes/artifacts.js';
 import surfacesRouter from './routes/surfaces.js';
 import slackRouter from './routes/surfaces/slack.js';
 import figmaRouter from './routes/figma.js';
+import validationRouter from './routes/validation.js';
+import checkpointsRouter from './routes/checkpoints.js';
+import approvalsRouter from './routes/approvals.js';
+import { approvalService } from './services/approvalService.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -223,6 +227,9 @@ app.use('/api/artifacts', artifactsRouter);
 app.use('/api/surfaces', surfacesRouter);
 app.use('/api/surfaces/slack', slackRouter);
 app.use('/api/figma', figmaRouter);
+app.use('/api/validation', validationRouter);
+app.use('/api/checkpoints', checkpointsRouter);
+app.use('/api/approvals', approvalsRouter);
 
 // Note: surfaceManager is a singleton and auto-initializes on first import
 console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');
@@ -253,6 +260,9 @@ const wss = new WebSocketServer({ noServer: true, maxPayload: 1024 * 1024 });
 
 // Channel-per-workbench WebSocket hub (Phase 2: works alongside session-based clientRegistry)
 const wsHub = new WebSocketHub();
+
+// Make hub available to Express routes via app.locals
+app.locals.wsHub = wsHub;
 
 // Server-side heartbeat interval to keep connections alive
 let heartbeatInterval: NodeJS.Timeout | null = null;
@@ -855,6 +865,9 @@ if (isMainModule) {
     } catch (error) {
       console.warn('[GateCheckpoint] Not initialized or already shut down');
     }
+
+    // Cleanup ApprovalService (clear pending timeouts)
+    approvalService.cleanup();
 
     // Stop conversation watcher
     try {
