@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v4.8
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 08-04-PLAN.md
-last_updated: "2026-04-03T14:43:42.824Z"
-last_activity: 2026-04-03
+status: executing
+stopped_at: Phase 8 UI-SPEC approved
+last_updated: "2026-04-03T14:17:13.788Z"
+last_activity: 2026-04-03 -- Phase 08 execution started
 progress:
   total_phases: 12
-  completed_phases: 8
-  total_plans: 35
-  completed_plans: 34
+  completed_phases: 7
+  total_plans: 36
+  completed_plans: 31
   percent: 91
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-01)
 
 **Core value:** Agents build with the same components humans see -- consistency is enforced infrastructure, not guidelines
-**Current focus:** Phase 05 — pipeline-visualization
+**Current focus:** Phase 08 — neural-validation-safety
 
 ## Current Position
 
-Phase: 05 (pipeline-visualization) — EXECUTING
-Plan: 3 of 3
-Status: Phase complete — ready for verification
-Last activity: 2026-04-03
+Phase: 08 (neural-validation-safety) — EXECUTING
+Plan: 1 of 4
+Status: Executing Phase 08
+Last activity: 2026-04-03 -- Phase 08 execution started
 
 Progress: [=========.] 91%
 
@@ -72,8 +72,7 @@ Progress: [=========.] 91%
 | Phase 04.1 PP04 | 9min | 2 tasks | 19 files |
 | Phase 05 P01 | 4min | 2 tasks | 10 files |
 | Phase 05 P02 | 2min | 2 tasks | 6 files |
-| Phase 08 P02 | 7min | 2 tasks | 9 files |
-| Phase 08 P04 | 8min | 3 tasks | 6 files |
+| Phase 07 P04 | 5min | 2 tasks | 21 files |
 
 ## Accumulated Context
 
@@ -134,10 +133,9 @@ Recent decisions affecting current work:
 - [Phase 05]: Inner PipelineCanvas component wrapped by ReactFlowProvider for useReactFlow hook access (fitView)
 - [Phase 05]: Module-level nodeTypes/edgeTypes exported from pipeline/index.ts barrel file
 - [Phase 05]: CVA statusBorder variant for left border color on StepNode (5 status variants)
-- [Phase 08]: Used app.locals.wsHub pattern for route access to WebSocketHub
-- [Phase 08]: Default autonomy levels: settings/studio=full, work/explore/pm=supervised, review/archive=restricted
-- [Phase 08]: Created validationStore.ts as new zustand store for per-workbench autonomy levels (referenced in plan but missing)
-- [Phase 08]: ApprovalGateCard uses optimistic UI -- local status updates immediately while API runs in background
+- [Phase 07]: ChatHeader sends session:history WS request on dropdown open for real data loading (CHAT-07)
+- [Phase 07]: ChatPanel calls useChatMessages internally, not at AppShell level, to avoid double-subscription
+- [Phase 07]: Ctrl+Shift+C uses imperative panelHandles.chat matching Ctrl+B sidebar toggle pattern
 
 ### Pending Todos
 
@@ -151,6 +149,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-03T14:43:42.818Z
-Stopped at: Completed 08-04-PLAN.md
-Resume file: None
+Last session: 2026-04-03T12:58:39.066Z
+Stopped at: Phase 8 UI-SPEC approved
+Resume file: .planning/phases/08-neural-validation-safety/08-UI-SPEC.md
