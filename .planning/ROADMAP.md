@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 5: Pipeline Visualization** - Horizontal node-based pipeline with live chain execution, forking/merging, real-time status
 - [ ] **Phase 6: Agent Sessions & Status** - Persistent Claude sessions per workbench, lazy activation, health monitoring, status dashboard
 - [ ] **Phase 7: Chat Panel** - Per-workbench chat backed by persistent sessions, interactive tool call rendering, session history
-- [ ] **Phase 8: Neural Validation & Safety** - Hook-based design system enforcement, /btw signaling, approval gates, permission boundaries
+- [x] **Phase 8: Neural Validation & Safety** - Hook-based design system enforcement, /btw signaling, approval gates, permission boundaries (completed 2026-04-03)
 - [ ] **Phase 9: Workbenches & Flow Management** - 7 default workbench content pages, flow browser, archived flow harvesting, flow composition
 - [ ] **Phase 10: Customization & Automation** - Self-healing flows, skills, scheduled tasks, custom workbenches, session forking, learning browser
 
@@ -211,7 +211,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 5. Pipeline Visualization | 0/3 | Planning complete | - |
 | 6. Agent Sessions & Status | 0/? | Not started | - |
 | 7. Chat Panel | 0/? | Not started | - |
-| 8. Neural Validation & Safety | 0/? | Not started | - |
+| 8. Neural Validation & Safety | 1/1 | Complete   | 2026-04-03 |
 | 9. Workbenches & Flow Management | 0/? | Not started | - |
 | 10. Customization & Automation | 0/? | Not started | - |
 
@@ -221,7 +221,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 
 **Goal:** Implement 3-layer history model (raw/ledger/canonical) to prevent unbounded growth of gate-traces.jsonl, ActionFlows logs, and LEARNINGS.md. Add TTL for raw operational data, create searchable execution ledger, and establish promotion pipeline from raw to canonical. Fix missing logs/INDEX.md trust gap.
 **Requirements:** TBD
-**Plans:** 0 plans
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] TBD (promote with /gsd:review-backlog when ready)

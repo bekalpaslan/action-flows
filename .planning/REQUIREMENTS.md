@@ -72,13 +72,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Neural Validation (Intelligence Layer)
 
-- [ ] **NEURAL-01**: Claude Code hooks (PreToolUse/PostToolUse) validate agent file edits against component library rules
-- [ ] **NEURAL-02**: PreToolUse allowlist hooks block unauthorized patterns (raw CSS, inline styles, non-library components)
-- [ ] **NEURAL-03**: PostToolUse linter hook validates design system compliance on every file write
+- [x] **NEURAL-01**: Claude Code hooks (PreToolUse/PostToolUse) validate agent file edits against component library rules
+- [x] **NEURAL-02**: PreToolUse allowlist hooks block unauthorized patterns (raw CSS, inline styles, non-library components)
+- [x] **NEURAL-03**: PostToolUse linter hook validates design system compliance on every file write
 - [ ] **NEURAL-04**: `/btw` delivers violation signals to workbench agents with severity levels (critical/warning/info)
-- [ ] **NEURAL-05**: Agent decides: fix now (critical) or note for future heal pass (non-critical)
-- [ ] **NEURAL-06**: Prompt-based hooks evaluate semantic design system compliance
-- [ ] **NEURAL-07**: Machine-readable component manifest injected into agent context
+- [x] **NEURAL-05**: Agent decides: fix now (critical) or note for future heal pass (non-critical)
+- [x] **NEURAL-06**: Prompt-based hooks evaluate semantic design system compliance
+- [x] **NEURAL-07**: Machine-readable component manifest injected into agent context
 
 ### Safety & Controls
 
@@ -198,13 +198,13 @@ Deferred to future release. Tracked but not in current roadmap.
 | CHAT-06 | Phase 7 | Pending |
 | CHAT-07 | Phase 7 | Pending |
 | CHAT-08 | Phase 7 | Pending |
-| NEURAL-01 | Phase 8 | Pending |
-| NEURAL-02 | Phase 8 | Pending |
-| NEURAL-03 | Phase 8 | Pending |
+| NEURAL-01 | Phase 8 | Complete |
+| NEURAL-02 | Phase 8 | Complete |
+| NEURAL-03 | Phase 8 | Complete |
 | NEURAL-04 | Phase 8 | Pending |
-| NEURAL-05 | Phase 8 | Pending |
-| NEURAL-06 | Phase 8 | Pending |
-| NEURAL-07 | Phase 8 | Pending |
+| NEURAL-05 | Phase 8 | Complete |
+| NEURAL-06 | Phase 8 | Complete |
+| NEURAL-07 | Phase 8 | Complete |
 | SAFETY-01 | Phase 8 | Pending |
 | SAFETY-02 | Phase 8 | Pending |
 | SAFETY-03 | Phase 8 | Pending |
