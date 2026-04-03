@@ -9,8 +9,12 @@ vi.stubGlobal('crypto', {
 });
 
 // Import AFTER mocking crypto
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { handleSessionMessage } = await import('../useChatMessages');
+
+/** Shared streaming ref used across tests that involve stream events */
+function makeStreamRef() {
+  return { current: null as string | null };
+}
 
 describe('useChatMessages - handleSessionMessage', () => {
   beforeEach(() => {
@@ -48,17 +52,7 @@ describe('useChatMessages - handleSessionMessage', () => {
     addMessageSpy.mockRestore();
   });
 
-  it('Test 2: assistant message with tool_use block (non-AskUserQuestion) calls updateMessage to add toolCall', () => {
-    // First add a message so updateMessage can target it
-    const store = useChatStore.getState();
-    store.addMessage('work', {
-      id: 'existing-msg',
-      role: 'agent',
-      content: 'test',
-      timestamp: '2026-04-03T00:00:00Z',
-      status: 'complete',
-    });
-
+  it('Test 2: assistant message with tool_use block (non-AskUserQuestion) adds message with toolCalls', () => {
     handleSessionMessage({
       channel: '_system',
       type: 'session:message',
@@ -80,7 +74,6 @@ describe('useChatMessages - handleSessionMessage', () => {
       },
     });
 
-    // The handler should have added the message with a toolCalls array
     const chat = useChatStore.getState().getChat('work');
     const toolMsg = chat.messages.find((m) => m.toolCalls && m.toolCalls.length > 0);
     expect(toolMsg).toBeDefined();
@@ -128,22 +121,26 @@ describe('useChatMessages - handleSessionMessage', () => {
 
   it('Test 4: stream_event content_block_start (text) calls addMessage with status=streaming and setStreaming(true)', () => {
     const setStreamingSpy = vi.spyOn(useChatStore.getState(), 'setStreaming');
+    const streamRef = makeStreamRef();
 
-    handleSessionMessage({
-      channel: '_system',
-      type: 'session:message',
-      payload: {
-        workbenchId: 'work',
-        message: {
-          type: 'stream_event',
-          event: {
-            type: 'content_block_start',
-            index: 0,
-            content_block: { type: 'text', text: '' },
+    handleSessionMessage(
+      {
+        channel: '_system',
+        type: 'session:message',
+        payload: {
+          workbenchId: 'work',
+          message: {
+            type: 'stream_event',
+            event: {
+              type: 'content_block_start',
+              index: 0,
+              content_block: { type: 'text', text: '' },
+            },
           },
         },
       },
-    });
+      streamRef
+    );
 
     const chat = useChatStore.getState().getChat('work');
     const streamingMsg = chat.messages.find((m) => m.status === 'streaming');
@@ -154,79 +151,95 @@ describe('useChatMessages - handleSessionMessage', () => {
   });
 
   it('Test 5: stream_event content_block_delta (text_delta) calls appendStreamChunk', () => {
+    const streamRef = makeStreamRef();
+
     // Set up a streaming message first
-    handleSessionMessage({
-      channel: '_system',
-      type: 'session:message',
-      payload: {
-        workbenchId: 'work',
-        message: {
-          type: 'stream_event',
-          event: {
-            type: 'content_block_start',
-            index: 0,
-            content_block: { type: 'text', text: '' },
+    handleSessionMessage(
+      {
+        channel: '_system',
+        type: 'session:message',
+        payload: {
+          workbenchId: 'work',
+          message: {
+            type: 'stream_event',
+            event: {
+              type: 'content_block_start',
+              index: 0,
+              content_block: { type: 'text', text: '' },
+            },
           },
         },
       },
-    });
+      streamRef
+    );
 
     const appendSpy = vi.spyOn(useChatStore.getState(), 'appendStreamChunk');
 
-    handleSessionMessage({
-      channel: '_system',
-      type: 'session:message',
-      payload: {
-        workbenchId: 'work',
-        message: {
-          type: 'stream_event',
-          event: {
-            type: 'content_block_delta',
-            index: 0,
-            delta: { type: 'text_delta', text: 'Hello ' },
+    handleSessionMessage(
+      {
+        channel: '_system',
+        type: 'session:message',
+        payload: {
+          workbenchId: 'work',
+          message: {
+            type: 'stream_event',
+            event: {
+              type: 'content_block_delta',
+              index: 0,
+              delta: { type: 'text_delta', text: 'Hello ' },
+            },
           },
         },
       },
-    });
+      streamRef
+    );
 
     expect(appendSpy).toHaveBeenCalledWith('work', expect.any(String), 'Hello ');
     appendSpy.mockRestore();
   });
 
   it('Test 6: stream_event content_block_stop calls updateMessage with status=complete and setStreaming(false)', () => {
+    const streamRef = makeStreamRef();
+
     // Set up streaming
-    handleSessionMessage({
-      channel: '_system',
-      type: 'session:message',
-      payload: {
-        workbenchId: 'work',
-        message: {
-          type: 'stream_event',
-          event: {
-            type: 'content_block_start',
-            index: 0,
-            content_block: { type: 'text', text: '' },
+    handleSessionMessage(
+      {
+        channel: '_system',
+        type: 'session:message',
+        payload: {
+          workbenchId: 'work',
+          message: {
+            type: 'stream_event',
+            event: {
+              type: 'content_block_start',
+              index: 0,
+              content_block: { type: 'text', text: '' },
+            },
           },
         },
       },
-    });
+      streamRef
+    );
 
     const setStreamingSpy = vi.spyOn(useChatStore.getState(), 'setStreaming');
 
-    handleSessionMessage({
-      channel: '_system',
-      type: 'session:message',
-      payload: {
-        workbenchId: 'work',
-        message: {
-          type: 'stream_event',
-          event: {
-            type: 'content_block_stop',
-            index: 0,
+    handleSessionMessage(
+      {
+        channel: '_system',
+        type: 'session:message',
+        payload: {
+          workbenchId: 'work',
+          message: {
+            type: 'stream_event',
+            event: {
+              type: 'content_block_stop',
+              index: 0,
+            },
           },
         },
       },
-    });
+      streamRef
+    );
 
     const chat = useChatStore.getState().getChat('work');
     const completedMsg = chat.messages.find((m) => m.status === 'complete');
