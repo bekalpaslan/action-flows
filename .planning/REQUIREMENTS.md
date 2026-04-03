@@ -111,9 +111,9 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **BENCH-02**: Explore — navigate codebase, understand before acting
 - [ ] **BENCH-03**: Review — quality gates, approvals, audits
 - [ ] **BENCH-04**: PM — planning, roadmaps, task tracking
-- [ ] **BENCH-05**: Settings — configuration, preferences, system health (absorbed Maintenance)
-- [ ] **BENCH-06**: Archive — historical sessions, searchable memory
-- [ ] **BENCH-07**: Studio — preview components, test layouts, live renders
+- [x] **BENCH-05**: Settings — configuration, preferences, system health (absorbed Maintenance)
+- [x] **BENCH-06**: Archive — historical sessions, searchable memory
+- [x] **BENCH-07**: Studio — preview components, test layouts, live renders
 - [ ] **BENCH-08**: Each workbench agent has its own greeting and work tendency matching its domain
 - [ ] **BENCH-09**: Each workbench displays its registered flows
 
@@ -214,9 +214,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | BENCH-02 | Phase 9 | Pending |
 | BENCH-03 | Phase 9 | Pending |
 | BENCH-04 | Phase 9 | Pending |
-| BENCH-05 | Phase 9 | Pending |
-| BENCH-06 | Phase 9 | Pending |
-| BENCH-07 | Phase 9 | Pending |
+| BENCH-05 | Phase 9 | Complete |
+| BENCH-06 | Phase 9 | Complete |
+| BENCH-07 | Phase 9 | Complete |
 | BENCH-08 | Phase 9 | Pending |
 | BENCH-09 | Phase 9 | Pending |
 | FLOW-01 | Phase 9 | Pending |
