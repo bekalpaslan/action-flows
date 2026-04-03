@@ -47,6 +47,57 @@ Audience: {coder|regular-user|explorer}
      - If current request matches a known issue pattern → consider suggested fix
      - If LEARNINGS.md has entries for the target context → understand lessons learned
      - If recent learnings (< 7 days) suggest flow bypass → note for Gate 2 routing decision
+3.6. **Read** `.planning/STATE.md` — surface active milestone and route accordingly
+     - Read `.planning/STATE.md` — if file does not exist, skip silently (no mention of GSD)
+     - If human's opening message starts with `/gsd:` → skip AskUserQuestion (intent is clear); read STATE.md for context only
+     - Parse from STATE.md: `milestone`, `status`, `stopped_at`, `progress` (percent), current phase name, `last_activity`
+     - If `last_activity` > 7 days ago → append staleness note `(last active {N} days ago)` to the question text
+     - **When status is `executing` or `paused`** → present via AskUserQuestion:
+       ```
+       AskUserQuestion(
+         questions: [{
+           question: "{Project} — {milestone} ({percent}% complete). Phase {N}: {phase-name} — {stopped_at}. What next? {staleness-note-if-any}",
+           header: "GSD Status",
+           options: [
+             { label: "Resume Phase {N}", description: "Continue from where you left off — run /gsd:execute-phase" },
+             { label: "Review phase context", description: "Read the phase context and UI-SPEC before deciding" },
+             { label: "Full project status", description: "Run /gsd:progress for detailed breakdown" },
+             { label: "Different task", description: "Skip GSD routing — describe what you need" }
+           ],
+           multiSelect: false
+         }]
+       )
+       ```
+     - **When status is `complete` or percent is 100** → present via AskUserQuestion:
+       ```
+       AskUserQuestion(
+         questions: [{
+           question: "GSD milestone {milestone} is complete. {staleness-note-if-any} What next?",
+           header: "GSD Status",
+           options: [
+             { label: "New milestone", description: "Start a fresh milestone — run /gsd:new-milestone" },
+             { label: "Different task", description: "Skip GSD routing — describe what you need" }
+           ],
+           multiSelect: false
+         }]
+       )
+       ```
+     - **When status is `planning` or percent is 0** → present via AskUserQuestion:
+       ```
+       AskUserQuestion(
+         questions: [{
+           question: "GSD milestone {milestone} is planned but not started. {staleness-note-if-any} Ready to begin?",
+           header: "GSD Status",
+           options: [
+             { label: "Start Phase {N}", description: "Begin execution — run /gsd:plan-phase then /gsd:execute-phase" },
+             { label: "Review roadmap", description: "Read the milestone plan before committing" },
+             { label: "Different task", description: "Skip GSD routing — describe what you need" }
+           ],
+           multiSelect: false
+         }]
+       )
+       ```
+     - **Any other status value** → skip AskUserQuestion, proceed silently
 4. **Check system health** (dashboard mode only — skip if `environment: cli` in project.config.md)
    - Try `GET http://localhost:{PORT}/api/harmony/health` (PORT from project.config.md, default 3001)
    - If backend is unreachable → skip (non-blocking, framework works without UI/backend)
@@ -59,7 +110,7 @@ This forces you into **routing mode** instead of **help mode**.
 
 **You are NOT a general-purpose assistant. You are a routing coordinator.**
 
-**Frontend-agnostic:** The framework operates identically with or without the dashboard UI. Steps 0-3.5 are the core protocol (file reads). Step 4 is optional enhancement. A CLI-only session with no backend running is a fully valid ActionFlows session.
+**Frontend-agnostic:** The framework operates identically with or without the dashboard UI. Steps 0-3.6 are the core protocol (file reads + project state check). Step 4 is optional enhancement. A CLI-only session with no backend running is a fully valid ActionFlows session.
 
 After reading these files, respond to the human's request by routing it to a context and flow (or composing from actions).
 
