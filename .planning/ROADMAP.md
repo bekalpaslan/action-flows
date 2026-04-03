@@ -161,9 +161,9 @@ Plans:
   5. An expandable menu shows the current workbench's session history, and a status indicator shows connect/disconnect state
 **Plans:** 4 plans
 Plans:
-- [ ] 07-01-PLAN.md -- Install shiki/react-shiki, chat types, chatStore zustand, backend WS handlers for chat:send
+- [x] 07-01-PLAN.md -- Install shiki/react-shiki, chat types, chatStore zustand, backend WS handlers for chat:send
 - [ ] 07-02-PLAN.md -- Build MarkdownRenderer, ToolCallCard, AskUserRenderer, MessageBubble renderers
-- [ ] 07-03-PLAN.md -- Build useChatMessages/useAutoScroll/useChatSend hooks, ChatInput, ChatEmptyState, ScrollToBottom
+- [x] 07-03-PLAN.md -- Build useChatMessages/useAutoScroll/useChatSend hooks, ChatInput, ChatEmptyState, ScrollToBottom
 - [ ] 07-04-PLAN.md -- Build ChatHeader, MessageList, ChatPanel container, AppShell wiring, keyboard shortcut, visual checkpoint
 **UI hint**: yes
 
