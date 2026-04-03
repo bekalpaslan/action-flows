@@ -55,14 +55,14 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Chat Panel
 
-- [x] **CHAT-01**: Each workbench has its own independent chat panel (right column)
-- [x] **CHAT-02**: Chat backed by persistent Claude remote session
-- [x] **CHAT-03**: Scrollable message history with auto-scroll on new messages
-- [x] **CHAT-04**: Fixed input row: text input + submit button
-- [x] **CHAT-05**: Render Claude's AskUserQuestion tool calls as interactive UI components (radio buttons, checkboxes, option cards) from the component library
-- [x] **CHAT-06**: Capture user selections from interactive tool calls and feed back as tool responses
-- [x] **CHAT-07**: Expandable menu for current workbench's session history
-- [x] **CHAT-08**: Session connect/disconnect status indicator
+- [ ] **CHAT-01**: Each workbench has its own independent chat panel (right column)
+- [ ] **CHAT-02**: Chat backed by persistent Claude remote session
+- [ ] **CHAT-03**: Scrollable message history with auto-scroll on new messages
+- [ ] **CHAT-04**: Fixed input row: text input + submit button
+- [ ] **CHAT-05**: Render Claude's AskUserQuestion tool calls as interactive UI components (radio buttons, checkboxes, option cards) from the component library
+- [ ] **CHAT-06**: Capture user selections from interactive tool calls and feed back as tool responses
+- [ ] **CHAT-07**: Expandable menu for current workbench's session history
+- [ ] **CHAT-08**: Session connect/disconnect status indicator
 
 ### Status & Notifications
 
@@ -72,13 +72,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Neural Validation (Intelligence Layer)
 
-- [ ] **NEURAL-01**: Claude Code hooks (PreToolUse/PostToolUse) validate agent file edits against component library rules
-- [ ] **NEURAL-02**: PreToolUse allowlist hooks block unauthorized patterns (raw CSS, inline styles, non-library components)
-- [ ] **NEURAL-03**: PostToolUse linter hook validates design system compliance on every file write
+- [x] **NEURAL-01**: Claude Code hooks (PreToolUse/PostToolUse) validate agent file edits against component library rules
+- [x] **NEURAL-02**: PreToolUse allowlist hooks block unauthorized patterns (raw CSS, inline styles, non-library components)
+- [x] **NEURAL-03**: PostToolUse linter hook validates design system compliance on every file write
 - [ ] **NEURAL-04**: `/btw` delivers violation signals to workbench agents with severity levels (critical/warning/info)
-- [ ] **NEURAL-05**: Agent decides: fix now (critical) or note for future heal pass (non-critical)
-- [ ] **NEURAL-06**: Prompt-based hooks evaluate semantic design system compliance
-- [ ] **NEURAL-07**: Machine-readable component manifest injected into agent context
+- [x] **NEURAL-05**: Agent decides: fix now (critical) or note for future heal pass (non-critical)
+- [x] **NEURAL-06**: Prompt-based hooks evaluate semantic design system compliance
+- [x] **NEURAL-07**: Machine-readable component manifest injected into agent context
 
 ### Safety & Controls
 
@@ -190,21 +190,21 @@ Deferred to future release. Tracked but not in current roadmap.
 | STATUS-01 | Phase 6 | Pending |
 | STATUS-02 | Phase 6 | Pending |
 | STATUS-03 | Phase 6 | Pending |
-| CHAT-01 | Phase 7 | Complete |
-| CHAT-02 | Phase 7 | Complete |
-| CHAT-03 | Phase 7 | Complete |
-| CHAT-04 | Phase 7 | Complete |
-| CHAT-05 | Phase 7 | Complete |
-| CHAT-06 | Phase 7 | Complete |
-| CHAT-07 | Phase 7 | Complete |
-| CHAT-08 | Phase 7 | Complete |
-| NEURAL-01 | Phase 8 | Pending |
-| NEURAL-02 | Phase 8 | Pending |
-| NEURAL-03 | Phase 8 | Pending |
+| CHAT-01 | Phase 7 | Pending |
+| CHAT-02 | Phase 7 | Pending |
+| CHAT-03 | Phase 7 | Pending |
+| CHAT-04 | Phase 7 | Pending |
+| CHAT-05 | Phase 7 | Pending |
+| CHAT-06 | Phase 7 | Pending |
+| CHAT-07 | Phase 7 | Pending |
+| CHAT-08 | Phase 7 | Pending |
+| NEURAL-01 | Phase 8 | Complete |
+| NEURAL-02 | Phase 8 | Complete |
+| NEURAL-03 | Phase 8 | Complete |
 | NEURAL-04 | Phase 8 | Pending |
-| NEURAL-05 | Phase 8 | Pending |
-| NEURAL-06 | Phase 8 | Pending |
-| NEURAL-07 | Phase 8 | Pending |
+| NEURAL-05 | Phase 8 | Complete |
+| NEURAL-06 | Phase 8 | Complete |
+| NEURAL-07 | Phase 8 | Complete |
 | SAFETY-01 | Phase 8 | Pending |
 | SAFETY-02 | Phase 8 | Pending |
 | SAFETY-03 | Phase 8 | Pending |

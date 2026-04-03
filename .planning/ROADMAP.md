@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 5: Pipeline Visualization** - Horizontal node-based pipeline with live chain execution, forking/merging, real-time status
 - [ ] **Phase 6: Agent Sessions & Status** - Persistent Claude sessions per workbench, lazy activation, health monitoring, status dashboard
 - [ ] **Phase 7: Chat Panel** - Per-workbench chat backed by persistent sessions, interactive tool call rendering, session history
-- [ ] **Phase 8: Neural Validation & Safety** - Hook-based design system enforcement, /btw signaling, approval gates, permission boundaries
+- [x] **Phase 8: Neural Validation & Safety** - Hook-based design system enforcement, /btw signaling, approval gates, permission boundaries (completed 2026-04-03)
 - [ ] **Phase 9: Workbenches & Flow Management** - 7 default workbench content pages, flow browser, archived flow harvesting, flow composition
 - [ ] **Phase 10: Customization & Automation** - Self-healing flows, skills, scheduled tasks, custom workbenches, session forking, learning browser
 
@@ -127,7 +127,7 @@ Plans:
 Plans:
 - [x] 05-01-PLAN.md -- Install @xyflow/react, pipeline types, dagre layout utility, zustand store, CSS keyframes, test infrastructure
 - [x] 05-02-PLAN.md -- Build StepNode, GateNode, PipelineEdge custom components, PipelineView container, PipelineEmptyState
-- [x] 05-03-PLAN.md -- WebSocket event hook, elapsed time hook, PipelineDrawer, wire into WorkspaceArea, visual checkpoint
+- [ ] 05-03-PLAN.md -- WebSocket event hook, elapsed time hook, PipelineDrawer, wire into WorkspaceArea, visual checkpoint
 **UI hint**: yes
 
 ### Phase 6: Agent Sessions & Status
@@ -141,12 +141,7 @@ Plans:
   4. A health monitor detects session disconnection within 30 seconds and a resurrection layer recovers from local conversation logs
   5. A multi-agent status dashboard shows which agents are running, their workbench, status (idle/running/blocked/complete), and elapsed time
   6. Toast notifications fire for agent lifecycle events (connect, disconnect, completion, errors)
-**Plans:** 4 plans
-Plans:
-- [x] 06-01-PLAN.md -- Install Agent SDK, shared session event types, backend SessionManager with full lifecycle
-- [x] 06-02-PLAN.md -- Install sonner, frontend sessionStore zustand, StatusDot component, session-pulse CSS
-- [x] 06-03-PLAN.md -- Backend health monitor, WS handler session commands, backend startup wiring
-- [ ] 06-04-PLAN.md -- Frontend session hooks, AgentStatusPanel UI, toast integration, WorkspaceArea wiring
+**Plans**: TBD
 **UI hint**: yes
 
 ### Phase 7: Chat Panel
@@ -159,12 +154,7 @@ Plans:
   3. Claude's AskUserQuestion tool calls render as interactive UI components (radio buttons, checkboxes, option cards) from the component library -- not plain text
   4. User selections from interactive tool calls are captured and fed back as tool responses to the Claude session
   5. An expandable menu shows the current workbench's session history, and a status indicator shows connect/disconnect state
-**Plans:** 4 plans
-Plans:
-- [x] 07-01-PLAN.md -- Install shiki/react-shiki, chat types, chatStore zustand, backend WS handlers for chat:send
-- [ ] 07-02-PLAN.md -- Build MarkdownRenderer, ToolCallCard, AskUserRenderer, MessageBubble renderers
-- [x] 07-03-PLAN.md -- Build useChatMessages/useAutoScroll/useChatSend hooks, ChatInput, ChatEmptyState, ScrollToBottom
-- [ ] 07-04-PLAN.md -- Build ChatHeader, MessageList, ChatPanel container, AppShell wiring, keyboard shortcut, visual checkpoint
+**Plans**: TBD
 **UI hint**: yes
 
 ### Phase 8: Neural Validation & Safety
@@ -177,12 +167,7 @@ Plans:
   3. `/btw` delivers violation signals to workbench agents with severity levels (critical/warning/info), and agents fix critical violations immediately
   4. A checkpoint/rollback UI shows a timeline of checkpoints with one-click revert
   5. Human-in-the-loop approval gates block specific high-risk actions (not entire pipelines), with configurable autonomy levels per workbench
-**Plans:** 4 plans
-Plans:
-- [ ] 08-01-PLAN.md -- Design rules module, PreToolUse/PostToolUse hooks, manifest.json, settings.json registration
-- [ ] 08-02-PLAN.md -- Shared validation types, backend checkpoint/approval/validation services and routes
-- [ ] 08-03-PLAN.md -- Frontend validationStore, ViolationToast, useViolationSignals, CheckpointMarker pipeline extension
-- [ ] 08-04-PLAN.md -- ApprovalGateCard in chat panel, autonomy level settings in SettingsPage
+**Plans**: TBD
 **UI hint**: yes
 
 ### Phase 9: Workbenches & Flow Management
@@ -224,9 +209,9 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 4. Layout & Navigation | 5/5 | Complete | 2026-04-02 |
 | 4.1 Framework & Docs Realignment | 2/5 | In Progress|  |
 | 5. Pipeline Visualization | 0/3 | Planning complete | - |
-| 6. Agent Sessions & Status | 1/4 | In Progress | - |
-| 7. Chat Panel | 0/4 | Planning complete | - |
-| 8. Neural Validation & Safety | 0/4 | Planning complete | - |
+| 6. Agent Sessions & Status | 0/? | Not started | - |
+| 7. Chat Panel | 0/? | Not started | - |
+| 8. Neural Validation & Safety | 1/1 | Complete   | 2026-04-03 |
 | 9. Workbenches & Flow Management | 0/? | Not started | - |
 | 10. Customization & Automation | 0/? | Not started | - |
 
@@ -236,7 +221,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 
 **Goal:** Implement 3-layer history model (raw/ledger/canonical) to prevent unbounded growth of gate-traces.jsonl, ActionFlows logs, and LEARNINGS.md. Add TTL for raw operational data, create searchable execution ledger, and establish promotion pipeline from raw to canonical. Fix missing logs/INDEX.md trust gap.
 **Requirements:** TBD
-**Plans:** 0 plans
+**Plans:** 1/1 plans complete
 
 Plans:
 - [ ] TBD (promote with /gsd:review-backlog when ready)
