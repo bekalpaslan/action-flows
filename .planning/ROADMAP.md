@@ -159,7 +159,12 @@ Plans:
   3. Claude's AskUserQuestion tool calls render as interactive UI components (radio buttons, checkboxes, option cards) from the component library -- not plain text
   4. User selections from interactive tool calls are captured and fed back as tool responses to the Claude session
   5. An expandable menu shows the current workbench's session history, and a status indicator shows connect/disconnect state
-**Plans**: TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 07-01-PLAN.md -- Install shiki/react-shiki, chat types, chatStore zustand, backend WS handlers for chat:send
+- [ ] 07-02-PLAN.md -- Build MarkdownRenderer, ToolCallCard, AskUserRenderer, MessageBubble renderers
+- [ ] 07-03-PLAN.md -- Build useChatMessages/useAutoScroll/useChatSend hooks, ChatInput, ChatEmptyState, ScrollToBottom
+- [ ] 07-04-PLAN.md -- Build ChatHeader, MessageList, ChatPanel container, AppShell wiring, keyboard shortcut, visual checkpoint
 **UI hint**: yes
 
 ### Phase 8: Neural Validation & Safety
@@ -215,7 +220,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 4.1 Framework & Docs Realignment | 2/5 | In Progress|  |
 | 5. Pipeline Visualization | 0/3 | Planning complete | - |
 | 6. Agent Sessions & Status | 1/4 | In Progress | - |
-| 7. Chat Panel | 0/? | Not started | - |
+| 7. Chat Panel | 0/4 | Planning complete | - |
 | 8. Neural Validation & Safety | 0/? | Not started | - |
 | 9. Workbenches & Flow Management | 0/? | Not started | - |
 | 10. Customization & Automation | 0/? | Not started | - |
