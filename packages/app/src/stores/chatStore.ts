@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { WorkbenchId } from '../lib/types';
-import type { ChatMessage, ToolCall, WorkbenchChat } from '../lib/chat-types';
+import type { ChatMessage, ToolCall, WorkbenchChat, ApprovalStatus } from '../lib/chat-types';
 
 const DEFAULT_CHAT: WorkbenchChat = {
   messages: [],
@@ -44,6 +44,9 @@ interface ChatStoreState {
 
   /** Submit a response to an AskUserQuestion */
   submitAskUserResponse: (id: WorkbenchId, msgId: string, response: string) => void;
+
+  /** Resolve an approval request (approved/denied/timed_out) */
+  resolveApproval: (id: WorkbenchId, approvalId: string, status: ApprovalStatus) => void;
 
   /** Replace all messages (load session history) */
   loadSessionHistory: (id: WorkbenchId, messages: ChatMessage[]) => void;
@@ -153,6 +156,29 @@ export const useChatStore = create<ChatStoreState>((set, get) => ({
               ...m.askUserQuestion,
               response,
               submitted: true,
+            },
+          };
+        }),
+      });
+      return { chats: next };
+    }),
+
+  resolveApproval: (id, approvalId, status) =>
+    set((state) => {
+      const chat = state.chats.get(id);
+      if (!chat) return state;
+
+      const next = new Map(state.chats);
+      next.set(id, {
+        ...chat,
+        messages: chat.messages.map((m) => {
+          if (!m.approvalRequest || m.approvalRequest.approvalId !== approvalId) return m;
+          return {
+            ...m,
+            approvalRequest: {
+              ...m.approvalRequest,
+              status,
+              resolvedAt: new Date().toISOString(),
             },
           };
         }),
