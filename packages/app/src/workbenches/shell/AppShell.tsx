@@ -8,7 +8,7 @@ import { useSessionEvents } from '@/hooks/useSessionEvents';
 import { useSessionToasts } from '@/hooks/useSessionToasts';
 import { Sidebar } from '../sidebar/Sidebar';
 import { WorkspaceArea } from '../workspace/WorkspaceArea';
-import { ChatPlaceholder } from '../chat/ChatPlaceholder';
+import { ChatPanel } from '../chat/ChatPanel';
 import { CommandPalette } from '@/components/command-palette/CommandPalette';
 import { cn } from '@/lib/utils';
 
@@ -83,7 +83,7 @@ export function AppShell() {
             setChatCollapsed(panelSize.asPercentage === 0);
           }}
         >
-          <ChatPlaceholder />
+          <ChatPanel />
         </Panel>
       </Group>
       <CommandPalette />

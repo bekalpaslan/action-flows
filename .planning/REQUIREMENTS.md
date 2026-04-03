@@ -59,10 +59,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CHAT-02**: Chat backed by persistent Claude remote session
 - [x] **CHAT-03**: Scrollable message history with auto-scroll on new messages
 - [x] **CHAT-04**: Fixed input row: text input + submit button
-- [ ] **CHAT-05**: Render Claude's AskUserQuestion tool calls as interactive UI components (radio buttons, checkboxes, option cards) from the component library
+- [x] **CHAT-05**: Render Claude's AskUserQuestion tool calls as interactive UI components (radio buttons, checkboxes, option cards) from the component library
 - [x] **CHAT-06**: Capture user selections from interactive tool calls and feed back as tool responses
-- [ ] **CHAT-07**: Expandable menu for current workbench's session history
-- [ ] **CHAT-08**: Session connect/disconnect status indicator
+- [x] **CHAT-07**: Expandable menu for current workbench's session history
+- [x] **CHAT-08**: Session connect/disconnect status indicator
 
 ### Status & Notifications
 
@@ -194,10 +194,10 @@ Deferred to future release. Tracked but not in current roadmap.
 | CHAT-02 | Phase 7 | Complete |
 | CHAT-03 | Phase 7 | Complete |
 | CHAT-04 | Phase 7 | Complete |
-| CHAT-05 | Phase 7 | Pending |
+| CHAT-05 | Phase 7 | Complete |
 | CHAT-06 | Phase 7 | Complete |
-| CHAT-07 | Phase 7 | Pending |
-| CHAT-08 | Phase 7 | Pending |
+| CHAT-07 | Phase 7 | Complete |
+| CHAT-08 | Phase 7 | Complete |
 | NEURAL-01 | Phase 8 | Pending |
 | NEURAL-02 | Phase 8 | Pending |
 | NEURAL-03 | Phase 8 | Pending |

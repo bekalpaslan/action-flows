@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.8
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 07-03-PLAN.md
-last_updated: "2026-04-03T11:29:32.962Z"
+stopped_at: Completed 07-04-PLAN.md (awaiting Task 3 human-verify checkpoint)
+last_updated: "2026-04-03T11:41:53.904Z"
 last_activity: 2026-04-03
 progress:
   total_phases: 12
-  completed_phases: 7
-  total_plans: 31
-  completed_plans: 29
+  completed_phases: 5
+  total_plans: 23
+  completed_plans: 23
   percent: 91
 ---
 
@@ -72,8 +72,7 @@ Progress: [=========.] 91%
 | Phase 04.1 PP04 | 9min | 2 tasks | 19 files |
 | Phase 05 P01 | 4min | 2 tasks | 10 files |
 | Phase 05 P02 | 2min | 2 tasks | 6 files |
-| Phase 07 P01 | 9min | 2 tasks | 15 files |
-| Phase 07 P03 | 7min | 2 tasks | 8 files |
+| Phase 07 P04 | 5min | 2 tasks | 21 files |
 
 ## Accumulated Context
 
@@ -134,12 +133,9 @@ Recent decisions affecting current work:
 - [Phase 05]: Inner PipelineCanvas component wrapped by ReactFlowProvider for useReactFlow hook access (fitView)
 - [Phase 05]: Module-level nodeTypes/edgeTypes exported from pipeline/index.ts barrel file
 - [Phase 05]: CVA statusBorder variant for left border color on StepNode (5 status variants)
-- [Phase 07]: Map<WorkbenchId, WorkbenchChat> pattern for per-workbench chat state isolation (same as pipelineStore)
-- [Phase 07]: sendMessage guard pattern: both chat WS handlers check if (!chatSession?.sendMessage) before calling
-- [Phase 07]: parseAskUserQuestion returns empty array on malformed input for graceful UI fallback
-- [Phase 07]: Extracted handleSessionMessage as standalone exported function for unit testing without React rendering
-- [Phase 07]: Used currentStreamingIdRef parameter to track active streaming message ID across stream_event lifecycle
-- [Phase 07]: WorkbenchId normalization uses VALID_WORKBENCH_IDS string guard array check instead of type assertion
+- [Phase 07]: ChatHeader sends session:history WS request on dropdown open for real data loading (CHAT-07)
+- [Phase 07]: ChatPanel calls useChatMessages internally, not at AppShell level, to avoid double-subscription
+- [Phase 07]: Ctrl+Shift+C uses imperative panelHandles.chat matching Ctrl+B sidebar toggle pattern
 
 ### Pending Todos
 
@@ -153,6 +149,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-03T11:29:32.958Z
-Stopped at: Completed 07-03-PLAN.md
+Last session: 2026-04-03T11:41:53.900Z
+Stopped at: Completed 07-04-PLAN.md (awaiting Task 3 human-verify checkpoint)
 Resume file: None

@@ -50,6 +50,20 @@ export function useKeyboardShortcuts() {
         return;
       }
 
+      // Ctrl+Shift+C: toggle chat panel (imperative panel handle)
+      if (mod && e.shiftKey && e.key === 'C') {
+        e.preventDefault();
+        const panel = panelHandles.chat;
+        if (panel) {
+          if (panel.isCollapsed()) {
+            panel.expand();
+          } else {
+            panel.collapse();
+          }
+        }
+        return;
+      }
+
       // Number keys 1-7: switch workbench (only when no input focused and palette closed)
       if (!mod && !e.altKey && !e.shiftKey && e.key >= '1' && e.key <= '7') {
         if (isInputFocused() || commandPaletteOpen) return;
