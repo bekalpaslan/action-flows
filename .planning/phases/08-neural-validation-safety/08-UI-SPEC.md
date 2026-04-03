@@ -47,7 +47,6 @@ Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific spacing applications:
 | Checkpoint marker offset from node | mt-1 | 4px | Tight coupling below step node |
 | Checkpoint tooltip padding | px-3 py-2 | 12px / 8px | Matches existing tooltip pattern |
 | Approval card internal padding | p-3 | 12px | Matches AskUserRenderer card padding (Phase 7) |
-| Approval card border-left width | border-l-2 | 2px | Matches AskUserRenderer left accent border |
 | Approval button row gap | gap-3 | 12px | Matches confirmation button gap in AskUserRenderer |
 | Violation toast padding | p-3 | 12px | Sonner default with token override |
 | Violation toast icon-to-text gap | gap-2 | 8px | Compact inline layout |
@@ -55,6 +54,8 @@ Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific spacing applications:
 | Autonomy settings label-to-control gap | gap-2 | 8px | Compact label-select pairing |
 
 Exceptions: 12px (p-3, gap-3) reused from Phase 7 precedent for compact interactive cards. No new spacing exceptions introduced.
+
+**Note:** Decorative border widths (border-l-2 on approval cards, border-l-3 on violation toasts) are CSS border-width values, not layout spacing. They are documented in the Color section under their respective element tables.
 
 ---
 
@@ -66,11 +67,11 @@ Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific role assignments:
 |---------|------|--------|-------------|----------------|
 | Checkpoint tooltip label | 13px | 600 (semibold) | 1.5 | text-caption font-semibold |
 | Checkpoint tooltip timestamp | 13px | 400 (normal) | 1.5 | text-caption text-text-muted font-mono |
-| Checkpoint "Revert" button text | 13px | 600 (semibold) | 1.5 | text-caption font-semibold |
+| Checkpoint "Revert changes" button text | 13px | 600 (semibold) | 1.5 | text-caption font-semibold |
 | Approval card heading | 15px | 600 (semibold) | 1.5 | text-body font-semibold |
 | Approval card description | 13px | 400 (normal) | 1.5 | text-caption text-text-dim |
 | Approval card file path | 13px | 400 (normal) | 1.5 | text-caption font-mono |
-| Approve/Deny button text | 13px | 600 (semibold) | 1.5 | text-caption font-semibold (via Button sm) |
+| Approve action / Deny action button text | 13px | 600 (semibold) | 1.5 | text-caption font-semibold (via Button sm) |
 | Violation toast title | 15px | 600 (semibold) | 1.5 | text-body font-semibold |
 | Violation toast description | 13px | 400 (normal) | 1.5 | text-caption text-text-dim |
 | Violation toast file path | 13px | 400 (normal) | 1.5 | text-caption font-mono |
@@ -84,7 +85,7 @@ Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific role assignments:
 
 Inherited from Phase 3 (03-UI-SPEC.md). Phase-specific color applications:
 
-**Color distribution across new surfaces:** The new UI surfaces are small overlays and inline cards within existing panels. They do not shift the overall 60/30/10 split. New elements use semantic status colors (destructive, warning, success, accent) already defined in the token system.
+**60/30/10 color distribution:** 60% dominant surface (var(--color-surface-1)), 30% secondary panels (var(--color-surface-2) for cards, sidebars, nav), 10% accent (var(--color-accent) for primary CTAs and interactive highlights). This split is inherited from Phase 3 and unchanged -- the new surfaces in this phase are small overlays and inline cards that operate within the existing 30% secondary allocation. Semantic status colors (destructive, warning, info) are drawn from the 10% accent budget.
 
 ### Severity Color Mapping
 
@@ -103,8 +104,8 @@ Per CONTEXT.md D-07, three severity levels map to existing semantic tokens:
 | Checkpoint marker (idle) | var(--color-surface-3) | -- | var(--color-border) |
 | Checkpoint marker (hover) | var(--color-accent) | -- | var(--color-accent) |
 | Checkpoint tooltip | var(--color-surface-2) | var(--color-text) | var(--color-border) |
-| Revert button (default) | transparent | var(--color-text) | var(--color-border) |
-| Revert button (hover) | var(--color-destructive)/10% | var(--color-destructive) | var(--color-destructive) |
+| Revert changes button (default) | transparent | var(--color-text) | var(--color-border) |
+| Revert changes button (hover) | var(--color-destructive)/10% | var(--color-destructive) | var(--color-destructive) |
 | Revert confirmation overlay | var(--color-surface-2) | var(--color-text) | var(--color-destructive) |
 
 ### Approval Gate Card Colors
@@ -112,8 +113,8 @@ Per CONTEXT.md D-07, three severity levels map to existing semantic tokens:
 | Element | Background | Text | Border |
 |---------|-----------|------|--------|
 | Approval card container | var(--color-surface-2) | var(--color-text) | border-l-2 border-warning |
-| Approve button | accent (primary Button variant) | white | -- |
-| Deny button | ghost Button variant | var(--color-text) | -- |
+| Approve action button | accent (primary Button variant) | white | -- |
+| Deny action button | ghost Button variant | var(--color-text) | -- |
 | Approved state badge | success Badge variant | var(--color-success) | -- |
 | Denied state badge | error Badge variant | var(--color-destructive) | -- |
 | Timed-out state badge | default Badge variant | var(--color-text-dim) | -- |
@@ -126,7 +127,7 @@ Per CONTEXT.md D-07, three severity levels map to existing semantic tokens:
 | Warning toast | var(--color-surface-2) | var(--color-text) | border-l-3 border-warning |
 | Info toast | var(--color-surface-2) | var(--color-text) | border-l-3 border-info |
 
-**Accent reserved for:** Approve button on approval gates, checkpoint marker hover state, "running" status border on pipeline nodes (existing). Never used for deny actions or severity indicators.
+**Accent reserved for:** Approve action button on approval gates, checkpoint marker hover state, "running" status border on pipeline nodes (existing). Never used for deny actions or severity indicators.
 
 ---
 
@@ -156,7 +157,7 @@ Per CONTEXT.md D-07, three severity levels map to existing semantic tokens:
 | Component | Used For |
 |-----------|----------|
 | Badge | Severity indicators (critical/warning/info), approval state (approved/denied) |
-| Button | Revert action, Approve/Deny actions |
+| Button | Revert action, approve/deny actions |
 | StatusDot | Running/error states on pipeline nodes (existing) |
 | Tooltip | Checkpoint details on hover |
 | Dialog | Revert confirmation dialog |
@@ -179,7 +180,7 @@ Per CONTEXT.md D-07, three severity levels map to existing semantic tokens:
 **Revert flow:**
 1. User hovers checkpoint marker -- tooltip appears (150ms delay)
 2. User clicks "Revert to this point" -- confirmation Dialog opens
-3. Dialog shows: "Revert to checkpoint?" heading, commit message, "This will create a new commit that undoes all changes after this point." body, two buttons: "Revert" (destructive Button variant) and "Cancel" (ghost Button variant)
+3. Dialog shows: "Revert to checkpoint?" heading, commit message, "This will create a new commit that undoes all changes after this point." body, two buttons: "Revert changes" (destructive Button variant) and "Keep changes" (ghost Button variant)
 4. On confirm -- backend executes `git revert`, toast confirms success or shows error
 5. Pipeline nodes after the reverted checkpoint visually reset to pending status
 
@@ -200,12 +201,12 @@ Per CONTEXT.md D-07, three severity levels map to existing semantic tokens:
 - Row 2: Description of the action ("Agent wants to delete 3 files"), text-caption text-text-dim
 - Row 3: File list (if applicable), each file path on its own line, text-caption font-mono
 - Row 4: Workbench name + autonomy level badge, text-caption
-- Row 5: Button row -- "Approve" (primary Button, sm) + "Deny" (ghost Button, sm)
+- Row 5: Button row -- "Approve action" (primary Button, sm) + "Deny action" (ghost Button, sm)
 
 **Interaction flow:**
 1. Backend sends approval_request via WebSocket
 2. Card renders in chat panel at current message position
-3. User clicks "Approve" or "Deny"
+3. User clicks "Approve action" or "Deny action"
 4. Button row replaced with result badge: "Approved" (success Badge) or "Denied" (error Badge)
 5. Card becomes non-interactive (opacity-75, cursor-default) -- same pattern as submitted AskUserRenderer
 
@@ -283,12 +284,12 @@ Per CONTEXT.md D-07, three severity levels map to existing semantic tokens:
 | Element | Copy |
 |---------|------|
 | Primary CTA (checkpoint) | Revert to this point |
-| Primary CTA (approval) | Approve |
-| Secondary CTA (approval) | Deny |
+| Primary CTA (approval) | Approve action |
+| Secondary CTA (approval) | Deny action |
 | Revert confirmation heading | Revert to checkpoint? |
 | Revert confirmation body | This will create a new commit that undoes all changes after this point. Your current work will not be lost. |
-| Revert confirm button | Revert |
-| Revert cancel button | Cancel |
+| Revert confirm button | Revert changes |
+| Revert cancel button | Keep changes |
 | Approval card heading | Approval Required |
 | Approval card action prefix | Agent wants to {action verb} |
 | Approval approved badge | Approved |
@@ -318,8 +319,8 @@ Per CONTEXT.md D-07, three severity levels map to existing semantic tokens:
 | Requirement | Implementation |
 |-------------|---------------|
 | Checkpoint markers | role="button", aria-label="Checkpoint: {commit message}", keyboard focusable (Tab), Enter/Space to open tooltip |
-| Revert confirmation dialog | Focus trapped in dialog, Escape to close, autofocus on Cancel button (safe default) |
-| Approval gate cards | role="group", aria-label="Approval request: {action description}", Approve/Deny buttons keyboard accessible |
+| Revert confirmation dialog | Focus trapped in dialog, Escape to close, autofocus on "Keep changes" button (safe default) |
+| Approval gate cards | role="group", aria-label="Approval request: {action description}", "Approve action"/"Deny action" buttons keyboard accessible |
 | Violation toasts | role="alert" for critical severity, role="status" for warning/info, aria-live="assertive" for critical, "polite" for others |
 | Autonomy settings | Each Select has aria-label="{workbench} autonomy level", fieldset grouping with legend |
 | Timeout progress bar | aria-hidden="true" (decorative), actual timeout communicated via aria-live region when < 30s |
