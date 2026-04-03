@@ -27,7 +27,7 @@ const flowMetadataSchema = z.object({
   id: z.string().min(1, 'Flow ID is required'),
   name: z.string().min(1, 'Flow name is required'),
   description: z.string().min(1, 'Description is required'),
-  category: z.enum(['work', 'maintenance', 'explore', 'review', 'settings', 'pm', 'intel']),
+  category: z.enum(['work', 'maintenance', 'explore', 'review', 'settings', 'pm', 'intel', 'archive', 'studio']),
   tags: z.array(z.string()).default([]),
   version: z.string().default('1.0.0'),
   author: z.string().optional(),
@@ -51,7 +51,7 @@ const updateFlowSchema = z.object({
  * Zod schema for query parameters
  */
 const flowQuerySchema = z.object({
-  category: z.enum(['work', 'maintenance', 'explore', 'review', 'settings', 'pm', 'intel']).optional(),
+  category: z.enum(['work', 'maintenance', 'explore', 'review', 'settings', 'pm', 'intel', 'archive', 'studio']).optional(),
   tag: z.string().optional(),
   limit: z.coerce.number().int().positive().max(100).default(50),
   offset: z.coerce.number().int().nonnegative().default(0),

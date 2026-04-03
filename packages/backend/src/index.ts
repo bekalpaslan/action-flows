@@ -80,6 +80,7 @@ import { initSessionHealthMonitor, sessionHealthMonitor } from './services/sessi
 import createHarmonyHealthRouter from './routes/harmonyHealth.js';
 import authRouter from './routes/auth.js';
 import { ensureAdminExists } from './services/userService.js';
+import { seedFlowsFromMarkdown } from './services/flowSeeder.js';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -555,6 +556,9 @@ if (isMainModule) {
 
     // Initialize registry storage
     await registryStorage.initialize();
+
+    // Seed flows from FLOWS.md if storage is empty
+    seedFlowsFromMarkdown().catch(err => console.error('[FlowSeeder] Seed failed:', err));
 
     // Initialize personality parser (Phase 1 - Agent Personalities)
     try {

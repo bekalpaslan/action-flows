@@ -268,8 +268,8 @@ export interface FlowMetadata {
   /** Full description of what the flow does */
   description: string;
 
-  /** Flow category (work, maintenance, explore, review, settings, pm, intel) */
-  category: 'work' | 'maintenance' | 'explore' | 'review' | 'settings' | 'pm' | 'intel';
+  /** Flow category (7 workbench IDs + legacy categories for backward compat) */
+  category: 'work' | 'maintenance' | 'explore' | 'review' | 'settings' | 'pm' | 'intel' | 'archive' | 'studio';
 
   /** Tags for discovery and filtering */
   tags: string[];
