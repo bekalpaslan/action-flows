@@ -593,3 +593,17 @@ export { DEFAULT_SLACK_CONFIG } from './slack.js';
 // ============================================================================
 export type { WSEnvelope, SystemMessageType } from './ws-envelope.js';
 export { SYSTEM_CHANNEL, BROADCAST_CHANNEL } from './ws-envelope.js';
+
+// ============================================================================
+// Validation Event Types (Neural Validation Layer)
+// ============================================================================
+export type {
+  ViolationSeverity,
+  ViolationSignal,
+  ApprovalStatus,
+  AutonomyLevel,
+  ApprovalRequest,
+  CheckpointData,
+} from './validation-events.js';
+
+export { DEFAULT_AUTONOMY_LEVELS } from './validation-events.js';
