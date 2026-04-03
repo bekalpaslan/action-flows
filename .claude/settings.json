@@ -45,6 +45,16 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-design-validate-pre.js",
+            "timeout": 15
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -55,6 +65,16 @@
             "type": "command",
             "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-output-capture.js",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node D:/ActionFlowsDashboard/packages/hooks/dist/hooks/src/afw-design-validate-post.js",
+            "timeout": 15
           }
         ]
       }
