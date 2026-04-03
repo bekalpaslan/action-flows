@@ -1,12 +1,6 @@
-import { cn } from '@/lib/utils';
-
+// Replaced by ChatPanel.tsx in Phase 7
+// This file is kept to avoid import errors in any stale references.
+// See ChatPanel.tsx for the full chat panel implementation.
 export function ChatPlaceholder() {
-  return (
-    <aside className={cn(
-      'flex items-center justify-center h-full',
-      'bg-surface-2 text-caption text-text-dim'
-    )}>
-      Chat -- Phase 7
-    </aside>
-  );
+  return null;
 }

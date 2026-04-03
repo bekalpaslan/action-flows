@@ -5,7 +5,7 @@ import { useWebSocket } from '@/hooks/useWebSocket';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { Sidebar } from '../sidebar/Sidebar';
 import { WorkspaceArea } from '../workspace/WorkspaceArea';
-import { ChatPlaceholder } from '../chat/ChatPlaceholder';
+import { ChatPanel } from '../chat/ChatPanel';
 import { CommandPalette } from '@/components/command-palette/CommandPalette';
 import { cn } from '@/lib/utils';
 
@@ -83,7 +83,7 @@ export function AppShell() {
             setChatCollapsed(panelSize.asPercentage === 0);
           }}
         >
-          <ChatPlaceholder />
+          <ChatPanel />
         </Panel>
       </Group>
       <CommandPalette />
