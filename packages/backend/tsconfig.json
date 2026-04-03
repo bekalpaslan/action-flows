@@ -6,7 +6,8 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "allowImportingTsExtensions": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "src/**/__tests__"]

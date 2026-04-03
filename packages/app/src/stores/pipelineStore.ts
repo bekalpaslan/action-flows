@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import type { Edge, PipelineNode } from '@xyflow/react';
+import type { Edge } from '@xyflow/react';
 import type { WorkbenchId } from '../lib/types';
-import type { PipelineNodeData, StepNodeData, GateNodeData } from '../lib/pipeline-types';
+import type { PipelineNode, PipelineState, StepNodeData, GateNodeData } from '../lib/pipeline-types';
 
 interface PipelineStoreState {
   pipelines: Map<WorkbenchId, PipelineState>;
@@ -15,7 +15,7 @@ interface PipelineStoreState {
 export const usePipelineStore = create<PipelineStoreState>((set) => ({
   pipelines: new Map(),
 
-  initChain: (workbenchId, chainId, nodes, edges) =>
+  initChain: (workbenchId, chainId, nodes: PipelineNode[], edges: Edge[]) =>
     set((state) => {
       const next = new Map(state.pipelines);
       next.set(workbenchId, {
@@ -36,9 +36,9 @@ export const usePipelineStore = create<PipelineStoreState>((set) => ({
       const next = new Map(state.pipelines);
       next.set(workbenchId, {
         ...pipeline,
-        nodes: pipeline.nodes.map((node) =>
+        nodes: (pipeline.nodes as PipelineNode[]).map((node) =>
           node.id === nodeId
-            ? { ...node, data: { ...node.data, ...data } }
+            ? { ...node, data: { ...node.data, ...data } } as PipelineNode
             : node
         ),
       });
