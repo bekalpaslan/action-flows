@@ -3,6 +3,8 @@ import { cn } from '@/lib/utils';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { ToolCallCard } from './ToolCallCard';
 import { AskUserRenderer } from './AskUserRenderer';
+import { ApprovalGateCard } from './ApprovalGateCard';
+import { useChatStore } from '@/stores/chatStore';
 import type { ChatMessage } from '@/lib/chat-types';
 import type { WorkbenchId } from '@/lib/types';
 import { WORKBENCHES } from '@/lib/types';
@@ -99,6 +101,19 @@ function MessageBubbleInner({ message, workbenchId, onAskUserSubmit }: MessageBu
             submitted={message.askUserQuestion.submitted}
           />
         )}
+
+        {/* Approval Gate */}
+        {message.approvalRequest && (
+          <ApprovalGateCard
+            request={message.approvalRequest}
+            onApprove={(approvalId) => {
+              useChatStore.getState().resolveApproval(workbenchId, approvalId, 'approved');
+            }}
+            onDeny={(approvalId) => {
+              useChatStore.getState().resolveApproval(workbenchId, approvalId, 'denied');
+            }}
+          />
+        )}
       </div>
     </div>
   );
@@ -112,7 +127,8 @@ export const MessageBubble = memo(MessageBubbleInner, (prevProps, nextProps) => 
   return (
     prevProps.message.id === nextProps.message.id &&
     prevProps.message.status === nextProps.message.status &&
-    prevProps.message.content.length === nextProps.message.content.length
+    prevProps.message.content.length === nextProps.message.content.length &&
+    prevProps.message.approvalRequest?.status === nextProps.message.approvalRequest?.status
   );
 });
 

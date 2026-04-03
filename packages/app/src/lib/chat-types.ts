@@ -1,5 +1,21 @@
+import type { ApprovalStatus } from '@afw/shared';
+
+export type { ApprovalStatus } from '@afw/shared';
+
 export type MessageRole = 'user' | 'agent' | 'system';
 export type MessageStatus = 'sending' | 'sent' | 'streaming' | 'complete' | 'error';
+
+export interface ChatApprovalRequest {
+  approvalId: string;
+  action: string;
+  description: string;
+  files?: string[];
+  workbenchId: string;
+  autonomyLevel: string;
+  status: ApprovalStatus;
+  expiresAt: string;
+  resolvedAt?: string;
+}
 
 export interface ToolCall {
   id: string;
@@ -36,6 +52,7 @@ export interface ChatMessage {
   status: MessageStatus;
   toolCalls?: ToolCall[];
   askUserQuestion?: AskUserQuestion;
+  approvalRequest?: ChatApprovalRequest;
 }
 
 export interface WorkbenchChat {
