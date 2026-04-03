@@ -6,6 +6,8 @@ import { useWebSocket } from '@/hooks/useWebSocket';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { useSessionEvents } from '@/hooks/useSessionEvents';
 import { useSessionToasts } from '@/hooks/useSessionToasts';
+import { useViolationSignals } from '@/hooks/useViolationSignals';
+import { useCheckpointSync } from '@/hooks/useCheckpointSync';
 import { Sidebar } from '../sidebar/Sidebar';
 import { WorkspaceArea } from '../workspace/WorkspaceArea';
 import { ChatPanel } from '../chat/ChatPanel';
@@ -26,6 +28,8 @@ export function AppShell() {
   useKeyboardShortcuts();
   useSessionEvents();
   useSessionToasts();
+  useViolationSignals(activeWorkbench);
+  useCheckpointSync(activeWorkbench);
 
   const sidebarRef = useRef<PanelImperativeHandle>(null);
   const chatRef = useRef<PanelImperativeHandle>(null);
