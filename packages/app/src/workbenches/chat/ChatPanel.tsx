@@ -25,8 +25,9 @@ export function ChatPanel() {
   // Get session status
   const sessionStatus = useSessionStore((s) => s.getSession(workbenchId).status);
 
-  // Get chat state
-  const chat = useChatStore((s) => s.getChat(workbenchId));
+  // Get chat state via individual selectors for referential stability
+  const messages = useChatStore((s) => s.getChat(workbenchId).messages);
+  const inputValue = useChatStore((s) => s.getChat(workbenchId).inputValue);
 
   // WebSocket subscription for incoming messages (call once)
   useChatMessages();
@@ -46,19 +47,19 @@ export function ChatPanel() {
   );
 
   const handleSend = useCallback(() => {
-    if (chat.inputValue.trim()) {
-      sendMessage(workbenchId, chat.inputValue.trim());
+    if (inputValue.trim()) {
+      sendMessage(workbenchId, inputValue.trim());
     }
-  }, [chat.inputValue, sendMessage, workbenchId]);
+  }, [inputValue, sendMessage, workbenchId]);
 
   const handleAskUserSubmit = useCallback(
     (messageId: string, response: string | string[]) => {
-      const msg = chat.messages.find((m) => m.id === messageId);
+      const msg = messages.find((m) => m.id === messageId);
       if (msg?.askUserQuestion) {
         sendAskUserResponse(workbenchId, messageId, msg.askUserQuestion.toolCallId, response);
       }
     },
-    [chat.messages, sendAskUserResponse, workbenchId]
+    [messages, sendAskUserResponse, workbenchId]
   );
 
   return (
@@ -69,7 +70,7 @@ export function ChatPanel() {
         sessionStatus={sessionStatus}
       />
       <MessageList
-        messages={chat.messages}
+        messages={messages}
         workbenchId={workbenchId}
         workbenchLabel={workbenchMeta.label}
         connected={connected}
@@ -77,7 +78,7 @@ export function ChatPanel() {
         className="flex-1"
       />
       <ChatInput
-        value={chat.inputValue}
+        value={inputValue}
         onChange={handleInputChange}
         onSend={handleSend}
         disabled={!connected}

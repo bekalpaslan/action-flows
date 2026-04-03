@@ -2,6 +2,13 @@ import { create } from 'zustand';
 import type { WorkbenchId } from '../lib/types';
 import type { ChatMessage, ToolCall, WorkbenchChat } from '../lib/chat-types';
 
+const DEFAULT_CHAT: WorkbenchChat = {
+  messages: [],
+  inputValue: '',
+  isStreaming: false,
+  activeSessionId: null,
+};
+
 function defaultChat(): WorkbenchChat {
   return {
     messages: [],
@@ -49,7 +56,7 @@ export const useChatStore = create<ChatStoreState>((set, get) => ({
   chats: new Map(),
 
   getChat: (id) => {
-    return get().chats.get(id) ?? defaultChat();
+    return get().chats.get(id) ?? DEFAULT_CHAT;
   },
 
   addMessage: (id, msg) =>

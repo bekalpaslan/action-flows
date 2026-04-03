@@ -107,18 +107,11 @@ export function ChatHeader({ workbenchId, workbenchLabel, sessionStatus, classNa
       <div className="flex items-center gap-1">
         {/* Session history dropdown (CHAT-07) */}
         <DropdownMenu onOpenChange={handleHistoryOpen}>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Session history">
-                    <History className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Session history</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Session history" title="Session history">
+              <History className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[280px] max-h-[320px] overflow-y-auto">
             <DropdownMenuLabel className="text-caption font-semibold">Session History</DropdownMenuLabel>
             <DropdownMenuSeparator />
