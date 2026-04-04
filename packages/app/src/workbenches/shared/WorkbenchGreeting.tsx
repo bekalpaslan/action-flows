@@ -1,25 +1,34 @@
+import type { WorkbenchId } from '@/lib/types';
+import { WORKBENCHES } from '@/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
-import { WORKBENCHES, type WorkbenchId } from '@/lib/types';
 
-export interface WorkbenchGreetingProps {
+const GREETINGS: Record<WorkbenchId, string> = {
+  work: 'What needs building?',
+  explore: 'What shall we discover?',
+  review: 'What needs auditing?',
+  pm: "What's the priority?",
+  settings: 'System status: nominal.',
+  archive: 'Search your history.',
+  studio: 'Ready to experiment.',
+};
+
+interface WorkbenchGreetingProps {
   workbenchId: WorkbenchId;
 }
 
 export function WorkbenchGreeting({ workbenchId }: WorkbenchGreetingProps) {
-  const meta = WORKBENCHES.find((w) => w.id === workbenchId);
-
-  if (!meta) {
-    return null;
-  }
+  const meta = WORKBENCHES.find((wb) => wb.id === workbenchId);
+  const greeting = GREETINGS[workbenchId];
 
   return (
-    <Card variant="flat" interactive={false}>
-      <CardContent className="p-4 flex items-center gap-3">
-        <span className="text-accent text-lg">&#x25CF;</span>
-        <div>
-          <p className="text-body font-semibold">{meta.label} Agent</p>
-          <p className="text-body">{meta.greeting}</p>
-        </div>
+    <Card>
+      <CardContent className="p-4">
+        <p className="text-body">
+          <span className="text-body font-semibold">{meta?.label ?? workbenchId}</span>
+          {' agent: '}
+          <span className="text-accent">&bull;</span>{' '}
+          {greeting}
+        </p>
       </CardContent>
     </Card>
   );
