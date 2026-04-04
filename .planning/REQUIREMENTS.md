@@ -90,8 +90,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Flow Management
 
-- [ ] **FLOW-01**: Flow browser per workbench showing registered flows
-- [ ] **FLOW-02**: Archived flows from removed workbenches (Maintenance, Respect) preserved and harvestable
+- [x] **FLOW-01**: Flow browser per workbench showing registered flows
+- [x] **FLOW-02**: Archived flows from removed workbenches (Maintenance, Respect) preserved and harvestable
 - [ ] **FLOW-03**: Flows surfaced as executable blueprints (not just instructions)
 - [ ] **FLOW-04**: Flow composition UI — browse, select, execute flows from the dashboard
 
@@ -219,8 +219,8 @@ Deferred to future release. Tracked but not in current roadmap.
 | BENCH-07 | Phase 9 | Pending |
 | BENCH-08 | Phase 9 | Complete |
 | BENCH-09 | Phase 9 | Pending |
-| FLOW-01 | Phase 9 | Pending |
-| FLOW-02 | Phase 9 | Pending |
+| FLOW-01 | Phase 9 | Complete |
+| FLOW-02 | Phase 9 | Complete |
 | FLOW-03 | Phase 9 | Pending |
 | FLOW-04 | Phase 9 | Pending |
 | CUSTOM-01 | Phase 10 | Pending |

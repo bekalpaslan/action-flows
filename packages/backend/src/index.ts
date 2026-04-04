@@ -48,6 +48,7 @@ import remindersRouter from './routes/reminders.js';
 import errorsRouter from './routes/errors.js';
 import universeRouter from './routes/universe.js';
 import flowsRouter from './routes/flows.js';
+import actionsRouter from './routes/actions.js';
 import analyticsRouter from './routes/analytics.js';
 import capabilitiesRouter from './routes/capabilities.js';
 import createPersonalitiesRouter from './routes/personalities.js';
@@ -80,6 +81,7 @@ import { initSessionHealthMonitor, sessionHealthMonitor } from './services/sessi
 import createHarmonyHealthRouter from './routes/harmonyHealth.js';
 import authRouter from './routes/auth.js';
 import { ensureAdminExists } from './services/userService.js';
+import { seedFlowsFromMarkdown } from './services/flowSeeder.js';
 
 // Middleware imports (Agent A)
 import { authMiddleware } from './middleware/auth.js';
@@ -219,6 +221,7 @@ app.use('/api/routing', routingRouter);
 app.use('/api/contracts', contractsRouter);
 app.use('/api/agent-validator', agentValidatorRouter);
 app.use('/api/flows', flowsRouter);
+app.use('/api/actions', actionsRouter);
 app.use('/api/analytics', analyticsRouter);
 app.use('/api/capabilities', capabilitiesRouter);
 app.use('/api/personalities', createPersonalitiesRouter(personalityParser));
@@ -555,6 +558,9 @@ if (isMainModule) {
 
     // Initialize registry storage
     await registryStorage.initialize();
+
+    // Seed flows from FLOWS.md if storage is empty
+    seedFlowsFromMarkdown().catch(err => console.error('[FlowSeeder] Seed failed:', err));
 
     // Initialize personality parser (Phase 1 - Agent Personalities)
     try {
