@@ -109,6 +109,18 @@ export type {
 export { eventGuards } from './events.js';
 
 // ============================================================================
+// Session Events & Status Types
+// ============================================================================
+export type {
+  SessionStatus,
+  SessionStatusType,
+  SessionStatusEvent,
+  SessionCommandPayload,
+} from './session-events.js';
+
+export { SESSION_STATUS_TYPES, WORKBENCH_PERSONALITIES } from './session-events.js';
+
+// ============================================================================
 // Domain Models
 // ============================================================================
 export type {
