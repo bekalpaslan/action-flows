@@ -107,10 +107,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Workbenches
 
-- [ ] **BENCH-01**: Work — active sessions, ongoing chains, the main hub
-- [ ] **BENCH-02**: Explore — navigate codebase, understand before acting
-- [ ] **BENCH-03**: Review — quality gates, approvals, audits
-- [ ] **BENCH-04**: PM — planning, roadmaps, task tracking
+- [x] **BENCH-01**: Work — active sessions, ongoing chains, the main hub
+- [x] **BENCH-02**: Explore — navigate codebase, understand before acting
+- [x] **BENCH-03**: Review — quality gates, approvals, audits
+- [x] **BENCH-04**: PM — planning, roadmaps, task tracking
 - [ ] **BENCH-05**: Settings — configuration, preferences, system health (absorbed Maintenance)
 - [ ] **BENCH-06**: Archive — historical sessions, searchable memory
 - [ ] **BENCH-07**: Studio — preview components, test layouts, live renders
@@ -198,22 +198,22 @@ Deferred to future release. Tracked but not in current roadmap.
 | CHAT-06 | Phase 7 | Pending |
 | CHAT-07 | Phase 7 | Pending |
 | CHAT-08 | Phase 7 | Pending |
-| NEURAL-01 | Phase 8 | Complete |
-| NEURAL-02 | Phase 8 | Complete |
-| NEURAL-03 | Phase 8 | Complete |
-| NEURAL-04 | Phase 8 | Complete |
-| NEURAL-05 | Phase 8 | Complete |
-| NEURAL-06 | Phase 8 | Complete |
-| NEURAL-07 | Phase 8 | Complete |
-| SAFETY-01 | Phase 8 | Complete |
-| SAFETY-02 | Phase 8 | Complete |
-| SAFETY-03 | Phase 8 | Complete |
-| SAFETY-04 | Phase 8 | Complete |
-| SAFETY-05 | Phase 8 | Complete |
-| BENCH-01 | Phase 9 | Pending |
-| BENCH-02 | Phase 9 | Pending |
-| BENCH-03 | Phase 9 | Pending |
-| BENCH-04 | Phase 9 | Pending |
+| NEURAL-01 | Phase 8 | Pending |
+| NEURAL-02 | Phase 8 | Pending |
+| NEURAL-03 | Phase 8 | Pending |
+| NEURAL-04 | Phase 8 | Pending |
+| NEURAL-05 | Phase 8 | Pending |
+| NEURAL-06 | Phase 8 | Pending |
+| NEURAL-07 | Phase 8 | Pending |
+| SAFETY-01 | Phase 8 | Pending |
+| SAFETY-02 | Phase 8 | Pending |
+| SAFETY-03 | Phase 8 | Pending |
+| SAFETY-04 | Phase 8 | Pending |
+| SAFETY-05 | Phase 8 | Pending |
+| BENCH-01 | Phase 9 | Complete |
+| BENCH-02 | Phase 9 | Complete |
+| BENCH-03 | Phase 9 | Complete |
+| BENCH-04 | Phase 9 | Complete |
 | BENCH-05 | Phase 9 | Pending |
 | BENCH-06 | Phase 9 | Pending |
 | BENCH-07 | Phase 9 | Pending |
