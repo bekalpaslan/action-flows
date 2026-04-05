@@ -199,7 +199,7 @@ Plans:
   3. A scheduled tasks UI shows recurring automations with status, next run time, and execution history per workbench
   4. Users can create custom workbenches beyond the 7 defaults, each with its own session, pipeline, chat, and flows
   5. Session forking UI shows a visual fork point in session history, letting users branch conversations to explore alternatives
-**Plans**: TBD
+**Plans**: 01-foundation-types (complete)
 **UI hint**: yes
 
 ## Progress
@@ -219,6 +219,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 7. Chat Panel | 0/? | Not started | - |
 | 8. Neural Validation & Safety | 1/1 | Complete   | 2026-04-03 |
 | 9. Workbenches & Flow Management | 0/5 | Planning complete | - |
+| 10. Customization & Automation | 1/? | In Progress | - |
 | 10. Customization & Automation | 0/? | Not started | - |
 
 ## Backlog
