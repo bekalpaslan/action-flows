@@ -97,9 +97,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Customization & Automation
 
-- [ ] **CUSTOM-01**: Self-healing flows: validate → signal → fix → re-validate with circuit breaker (max 2 attempts)
-- [ ] **CUSTOM-02**: Per-workbench skills — user-created reusable commands scoped to workbench context
-- [ ] **CUSTOM-03**: Scheduled tasks (cron) UI — recurring automation with status, next run, history per workbench
+- [x] **CUSTOM-01**: Self-healing flows: validate → signal → fix → re-validate with circuit breaker (max 2 attempts)
+- [x] **CUSTOM-02**: Per-workbench skills — user-created reusable commands scoped to workbench context
+- [x] **CUSTOM-03**: Scheduled tasks (cron) UI — recurring automation with status, next run, history per workbench
 - [ ] **CUSTOM-04**: Custom workbench creation — user-defined domains beyond 7 defaults with own session, pipeline, chat, flows
 - [ ] **CUSTOM-05**: Session forking UI — visual fork point in session history tree
 - [ ] **CUSTOM-06**: Learning persistence UI — searchable learnings browser across workbenches
@@ -223,9 +223,9 @@ Deferred to future release. Tracked but not in current roadmap.
 | FLOW-02 | Phase 9 | Pending |
 | FLOW-03 | Phase 9 | Complete |
 | FLOW-04 | Phase 9 | Complete |
-| CUSTOM-01 | Phase 10 | Pending |
-| CUSTOM-02 | Phase 10 | Pending |
-| CUSTOM-03 | Phase 10 | Pending |
+| CUSTOM-01 | Phase 10 | Complete |
+| CUSTOM-02 | Phase 10 | Complete |
+| CUSTOM-03 | Phase 10 | Complete |
 | CUSTOM-04 | Phase 10 | Pending |
 | CUSTOM-05 | Phase 10 | Pending |
 | CUSTOM-06 | Phase 10 | Pending |
