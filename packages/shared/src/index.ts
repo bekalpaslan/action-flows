@@ -619,3 +619,16 @@ export type {
 } from './validation-events.js';
 
 export { DEFAULT_AUTONOMY_LEVELS } from './validation-events.js';
+
+// ============================================================================
+// Phase 10: Customization & Automation Types
+// ============================================================================
+export type { HealingAttemptId, ErrorClass, HealingQuota, HealingAttempt } from './healingTypes.js';
+export { HEALING_ERROR_CLASSES, MAX_HEALING_ATTEMPTS_PER_DAY } from './healingTypes.js';
+export type { SkillId, Skill, SkillInvocation } from './skillTypes.js';
+export type { ScheduledTaskId, ScheduledTask, TaskRun } from './scheduleTypes.js';
+export { MAX_RUN_HISTORY } from './scheduleTypes.js';
+export type { DefaultWorkbenchId, CustomWorkbenchId, CustomWorkbench } from './customWorkbenchTypes.js';
+export { DEFAULT_WORKBENCH_IDS, isDefaultWorkbench, toCustomWorkbenchId } from './customWorkbenchTypes.js';
+// Note: Do NOT re-export WorkbenchId from customWorkbenchTypes to avoid conflict with existing workbenchTypes.ts WorkbenchId
+export type { ForkId, MergeResolution, ForkMetadata } from './forkTypes.js';

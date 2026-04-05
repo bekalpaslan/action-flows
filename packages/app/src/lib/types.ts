@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import type { CustomWorkbenchId } from '@afw/shared';
 import {
   Briefcase,
   Compass,
@@ -9,7 +10,18 @@ import {
   Palette,
 } from 'lucide-react';
 
-export type WorkbenchId = 'work' | 'explore' | 'review' | 'pm' | 'settings' | 'archive' | 'studio';
+/** The 7 default workbench IDs */
+export type DefaultWorkbenchId = 'work' | 'explore' | 'review' | 'pm' | 'settings' | 'archive' | 'studio';
+
+/** Widened WorkbenchId supporting both default and custom workbenches */
+export type WorkbenchId = DefaultWorkbenchId | CustomWorkbenchId;
+
+const DEFAULT_IDS: readonly string[] = ['work', 'explore', 'review', 'pm', 'settings', 'archive', 'studio'];
+
+/** Type guard to check if a WorkbenchId is one of the 7 defaults */
+export function isDefaultWorkbench(id: WorkbenchId): id is DefaultWorkbenchId {
+  return DEFAULT_IDS.includes(id);
+}
 
 export interface WorkbenchMeta {
   id: WorkbenchId;
