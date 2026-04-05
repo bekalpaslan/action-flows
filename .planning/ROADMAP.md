@@ -199,7 +199,15 @@ Plans:
   3. A scheduled tasks UI shows recurring automations with status, next run time, and execution history per workbench
   4. Users can create custom workbenches beyond the 7 defaults, each with its own session, pipeline, chat, and flows
   5. Session forking UI shows a visual fork point in session history, letting users branch conversations to explore alternatives
-**Plans**: TBD
+**Plans:** 7 plans
+Plans:
+- [ ] 10-01-PLAN.md -- Shared types (healing, skill, schedule, workbench, fork), WorkbenchId widening, install croner, DeleteConfirmationDialog
+- [ ] 10-02-PLAN.md -- Per-workbench skills: backend SkillService + routes, skillStore with persist, SkillsPanel/SkillRow/SkillDialog
+- [ ] 10-03-PLAN.md -- Scheduled tasks: backend ScheduledTaskService with Croner, scheduleStore, ScheduledTasksPanel/TaskHistoryList
+- [ ] 10-04-PLAN.md -- Self-healing flows: HealingQuotaTracker, HealingService, healingStore, HealingApprovalCard, CircuitBreakerNotice
+- [ ] 10-05-PLAN.md -- Custom workbenches: CustomWorkbenchService, customWorkbenchStore, CustomWorkbenchesPanel, Sidebar extension
+- [ ] 10-06-PLAN.md -- Session forking: ForkMetadataService, forkStore, ForkButton/Badge/Dialog/Switcher/MergeDialog
+- [ ] 10-07-PLAN.md -- Settings integration: LearningsBrowser, McpConfigPanel, wire all panels into SettingsPage Extensions tabs
 **UI hint**: yes
 
 ## Progress
@@ -219,7 +227,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 7. Chat Panel | 0/? | Not started | - |
 | 8. Neural Validation & Safety | 1/1 | Complete   | 2026-04-03 |
 | 9. Workbenches & Flow Management | 0/5 | Planning complete | - |
-| 10. Customization & Automation | 0/? | Not started | - |
+| 10. Customization & Automation | 0/7 | Planning complete | - |
 
 ## Backlog
 
