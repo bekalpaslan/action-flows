@@ -62,6 +62,8 @@ import validationRouter from './routes/validation.js';
 import checkpointsRouter from './routes/checkpoints.js';
 import approvalsRouter from './routes/approvals.js';
 import { approvalService } from './services/approvalService.js';
+import { ForkMetadataService } from './services/forkMetadataService.js';
+import createForksRouter from './routes/forks.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -233,6 +235,19 @@ app.use('/api/figma', figmaRouter);
 app.use('/api/validation', validationRouter);
 app.use('/api/checkpoints', checkpointsRouter);
 app.use('/api/approvals', approvalsRouter);
+
+// Fork management routes (Phase 10: Customization & Automation)
+const forkMetadataService = new ForkMetadataService();
+// SessionManager is initialized asynchronously inside server.listen().
+// Use a proxy that delegates to the module-level singleton at call time.
+// If sessionManager is not yet initialized, forkSession returns null (graceful 503).
+app.use('/api/forks', createForksRouter(forkMetadataService, {
+  forkSession: async (workbenchId: string) => {
+    const { sessionManager: sm } = await import('./services/sessionManager.js');
+    if (!sm) return null;
+    return sm.forkSession(workbenchId);
+  },
+}));
 
 // Note: surfaceManager is a singleton and auto-initializes on first import
 console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');
