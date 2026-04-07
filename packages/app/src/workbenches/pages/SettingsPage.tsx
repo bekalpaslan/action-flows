@@ -15,7 +15,7 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 
-const AUTONOMY_OPTIONS: AutonomyLevel[] = ['full', 'supervised', 'manual'];
+const AUTONOMY_OPTIONS: AutonomyLevel[] = ['full', 'supervised', 'restricted'];
 
 export function SettingsPage() {
   const activeWorkbench = useUIStore((s) => s.activeWorkbench);
