@@ -101,7 +101,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CUSTOM-02**: Per-workbench skills — user-created reusable commands scoped to workbench context
 - [x] **CUSTOM-03**: Scheduled tasks (cron) UI — recurring automation with status, next run, history per workbench
 - [x] **CUSTOM-04**: Custom workbench creation — user-defined domains beyond 7 defaults with own session, pipeline, chat, flows
-- [ ] **CUSTOM-05**: Session forking UI — visual fork point in session history tree
+- [x] **CUSTOM-05**: Session forking UI — visual fork point in session history tree
 - [ ] **CUSTOM-06**: Learning persistence UI — searchable learnings browser across workbenches
 - [ ] **CUSTOM-07**: MCP server configuration panel in Settings workbench
 
@@ -227,7 +227,7 @@ Deferred to future release. Tracked but not in current roadmap.
 | CUSTOM-02 | Phase 10 | Complete |
 | CUSTOM-03 | Phase 10 | Complete |
 | CUSTOM-04 | Phase 10 | Complete |
-| CUSTOM-05 | Phase 10 | Pending |
+| CUSTOM-05 | Phase 10 | Complete |
 | CUSTOM-06 | Phase 10 | Pending |
 | CUSTOM-07 | Phase 10 | Pending |
 
