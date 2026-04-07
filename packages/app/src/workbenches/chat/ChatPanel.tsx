@@ -2,10 +2,12 @@ import { useCallback } from 'react';
 import { useUIStore } from '@/stores/uiStore';
 import { useSessionStore } from '@/stores/sessionStore';
 import { useChatStore } from '@/stores/chatStore';
+import { useHealingStore } from '@/stores/healingStore';
 import { useChatMessages } from '@/hooks/useChatMessages';
 import { useChatSend } from '@/hooks/useChatSend';
 import { ChatHeader } from './ChatHeader';
 import { MessageList } from './MessageList';
+import { HealingApprovalCard } from './HealingApprovalCard';
 import { ChatInput } from './ChatInput';
 import { WORKBENCHES } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -28,6 +30,11 @@ export function ChatPanel() {
   // Get chat state via individual selectors for referential stability
   const messages = useChatStore((s) => s.getChat(workbenchId).messages);
   const inputValue = useChatStore((s) => s.getChat(workbenchId).inputValue);
+
+  // Healing approval state
+  const pendingApprovalId = useHealingStore((s) => s.pendingApprovalId);
+  const pendingAttempt = useHealingStore((s) => s.pendingAttempt);
+  const resolveApproval = useHealingStore((s) => s.resolveApproval);
 
   // WebSocket subscription for incoming messages (call once)
   useChatMessages();
@@ -77,6 +84,17 @@ export function ChatPanel() {
         onAskUserSubmit={handleAskUserSubmit}
         className="flex-1"
       />
+      {pendingApprovalId && pendingAttempt && (
+        <div className="px-4 pb-2">
+          <HealingApprovalCard
+            attempt={pendingAttempt}
+            approvalId={pendingApprovalId}
+            onResolve={(approvalId, decision) => {
+              resolveApproval(approvalId, decision);
+            }}
+          />
+        </div>
+      )}
       <ChatInput
         value={inputValue}
         onChange={handleInputChange}

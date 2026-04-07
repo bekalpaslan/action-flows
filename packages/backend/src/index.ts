@@ -66,6 +66,9 @@ import { SkillService } from './services/skillService.js';
 import createSkillsRouter from './routes/skills.js';
 import { ScheduledTaskService } from './services/scheduledTaskService.js';
 import createScheduledTasksRouter from './routes/scheduledTasks.js';
+import { HealingQuotaTracker } from './services/healingQuotaTracker.js';
+import { HealingService } from './services/healingService.js';
+import createHealingRouter from './routes/healing.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -245,6 +248,11 @@ app.use('/api/skills', createSkillsRouter(skillService));
 // Scheduled Tasks (Phase 10 — Customization & Automation)
 const scheduledTaskService = new ScheduledTaskService(storage);
 app.use('/api/scheduled-tasks', createScheduledTasksRouter(scheduledTaskService));
+
+// Healing pipeline (Phase 10 — Self-Healing Flows)
+const healingQuotaTracker = new HealingQuotaTracker(storage);
+const healingService = new HealingService(approvalService, healingQuotaTracker, storage);
+app.use('/api/healing', createHealingRouter(healingService, healingQuotaTracker));
 
 // Note: surfaceManager is a singleton and auto-initializes on first import
 console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');
