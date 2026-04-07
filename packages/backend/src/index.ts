@@ -62,6 +62,8 @@ import validationRouter from './routes/validation.js';
 import checkpointsRouter from './routes/checkpoints.js';
 import approvalsRouter from './routes/approvals.js';
 import { approvalService } from './services/approvalService.js';
+import { SkillService } from './services/skillService.js';
+import createSkillsRouter from './routes/skills.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -103,6 +105,9 @@ const snapshotService = new SnapshotService(storage, {
 
 // Initialize health score calculator
 const healthScoreCalculator = initHealthScoreCalculator(storage);
+
+// Initialize skill service (Phase 10 — per-workbench skills)
+const skillService = new SkillService(storage);
 
 // Initialize Slack notifier (MCP integration)
 initializeSlackNotifier();
@@ -233,6 +238,7 @@ app.use('/api/figma', figmaRouter);
 app.use('/api/validation', validationRouter);
 app.use('/api/checkpoints', checkpointsRouter);
 app.use('/api/approvals', approvalsRouter);
+app.use('/api/skills', createSkillsRouter(skillService));
 
 // Note: surfaceManager is a singleton and auto-initializes on first import
 console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');
