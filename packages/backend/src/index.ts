@@ -64,6 +64,8 @@ import approvalsRouter from './routes/approvals.js';
 import { approvalService } from './services/approvalService.js';
 import { SkillService } from './services/skillService.js';
 import createSkillsRouter from './routes/skills.js';
+import { ScheduledTaskService } from './services/scheduledTaskService.js';
+import createScheduledTasksRouter from './routes/scheduledTasks.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -239,6 +241,10 @@ app.use('/api/validation', validationRouter);
 app.use('/api/checkpoints', checkpointsRouter);
 app.use('/api/approvals', approvalsRouter);
 app.use('/api/skills', createSkillsRouter(skillService));
+
+// Scheduled Tasks (Phase 10 — Customization & Automation)
+const scheduledTaskService = new ScheduledTaskService(storage);
+app.use('/api/scheduled-tasks', createScheduledTasksRouter(scheduledTaskService));
 
 // Note: surfaceManager is a singleton and auto-initializes on first import
 console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');
@@ -760,6 +766,14 @@ if (isMainModule) {
       console.error('[HealthScore] ❌ Failed to wire health score events:', error);
     }
 
+    // Load scheduled tasks and register cron jobs (Phase 10)
+    try {
+      await scheduledTaskService.loadAllTasks();
+      console.log('[ScheduledTaskService] ✅ Scheduled tasks loaded');
+    } catch (error) {
+      console.error('[ScheduledTaskService] ❌ Failed to load scheduled tasks:', error);
+    }
+
     // Start cleanup service
     cleanupService.start();
 
@@ -877,6 +891,9 @@ if (isMainModule) {
     } catch (error) {
       console.warn('[GateCheckpoint] Not initialized or already shut down');
     }
+
+    // Stop scheduled task cron jobs (Phase 10)
+    scheduledTaskService.stopAll();
 
     // Cleanup ApprovalService (clear pending timeouts)
     approvalService.cleanup();

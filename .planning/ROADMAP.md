@@ -204,7 +204,7 @@ Plans:
 - [x] 10-00-PLAN.md -- Wave 0 test scaffolds: healingQuotaTracker, skillService, schedulerService
 - [x] 10-01-PLAN.md -- Shared types (healing, skill, schedule, workbench, fork), WorkbenchId widening, install croner, DeleteConfirmationDialog
 - [x] 10-02-PLAN.md -- Per-workbench skills: backend SkillService + routes, skillStore with persist, SkillsPanel/SkillRow/SkillDialog
-- [ ] 10-03-PLAN.md -- Scheduled tasks: backend ScheduledTaskService with Croner, scheduleStore, ScheduledTasksPanel/TaskHistoryList
+- [x] 10-03-PLAN.md -- Scheduled tasks: backend ScheduledTaskService with Croner, scheduleStore, ScheduledTasksPanel/TaskHistoryList
 - [ ] 10-04-PLAN.md -- Self-healing flows: HealingQuotaTracker, HealingService, healingStore, HealingApprovalCard, CircuitBreakerNotice
 - [ ] 10-05-PLAN.md -- Custom workbenches: CustomWorkbenchService, customWorkbenchStore, CustomWorkbenchesPanel, Sidebar extension
 - [ ] 10-06-PLAN.md -- Session forking: ForkMetadataService, forkStore, ForkButton/Badge/Dialog/Switcher/MergeDialog

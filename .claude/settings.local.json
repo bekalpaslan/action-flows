@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(echo === P0 Checks ===:*)",
+      "Bash(cd:*)",
+      "Skill(gsd:next)"
+    ]
+  }
+}
