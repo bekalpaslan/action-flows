@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { WorkbenchGreeting } from '../shared/WorkbenchGreeting';
 import { StatCard } from '../shared/StatCard';
 import { FlowBrowser } from '../shared/FlowBrowser';
+import { CustomWorkbenchesPanel } from '../settings/CustomWorkbenchesPanel';
 import { useValidationStore, type AutonomyLevel } from '@/stores/validationStore';
 import { useSessionStore } from '@/stores/sessionStore';
 import { useUIStore } from '@/stores/uiStore';
@@ -88,6 +89,9 @@ export function SettingsPage() {
           <StatCard label="Uptime" value="--" />
         </div>
       </div>
+
+      {/* Custom Workbenches */}
+      <CustomWorkbenchesPanel />
 
       <FlowBrowser context="settings" />
     </div>
