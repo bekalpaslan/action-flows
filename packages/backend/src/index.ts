@@ -62,6 +62,9 @@ import validationRouter from './routes/validation.js';
 import checkpointsRouter from './routes/checkpoints.js';
 import approvalsRouter from './routes/approvals.js';
 import { approvalService } from './services/approvalService.js';
+import { HealingQuotaTracker } from './services/healingQuotaTracker.js';
+import { HealingService } from './services/healingService.js';
+import createHealingRouter from './routes/healing.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -233,6 +236,11 @@ app.use('/api/figma', figmaRouter);
 app.use('/api/validation', validationRouter);
 app.use('/api/checkpoints', checkpointsRouter);
 app.use('/api/approvals', approvalsRouter);
+
+// Healing pipeline (Phase 10 — Self-Healing Flows)
+const healingQuotaTracker = new HealingQuotaTracker(storage);
+const healingService = new HealingService(approvalService, healingQuotaTracker, storage);
+app.use('/api/healing', createHealingRouter(healingService, healingQuotaTracker));
 
 // Note: surfaceManager is a singleton and auto-initializes on first import
 console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');
