@@ -13,6 +13,13 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { SkillsPanel } from '../settings/SkillsPanel';
+import { ScheduledTasksPanel } from '../settings/ScheduledTasksPanel';
+import { CustomWorkbenchesPanel } from '../settings/CustomWorkbenchesPanel';
+import { HealingHistoryPanel } from '../settings/HealingHistoryPanel';
+import { LearningsBrowser } from '../settings/LearningsBrowser';
+import { McpConfigPanel } from '../settings/McpConfigPanel';
 
 const AUTONOMY_OPTIONS: AutonomyLevel[] = ['full', 'supervised', 'manual'];
 
@@ -21,6 +28,9 @@ export function SettingsPage() {
   const autonomyLevels = useValidationStore((s) => s.autonomyLevels);
   const setAutonomyLevel = useValidationStore((s) => s.setAutonomyLevel);
   const activeCount = useSessionStore((s) => s.getActiveCount());
+
+  const activeWb = WORKBENCHES.find((wb) => wb.id === activeWorkbench);
+  const workbenchLabel = activeWb?.label ?? activeWorkbench;
 
   const handleAutonomyChange = useCallback(
     async (workbenchId: WorkbenchId, level: AutonomyLevel) => {
@@ -87,6 +97,39 @@ export function SettingsPage() {
           <StatCard label="Violations today" value={0} />
           <StatCard label="Uptime" value="--" />
         </div>
+      </div>
+
+      {/* Extensions — Phase 10 */}
+      <div>
+        <h2 className="text-heading font-semibold mb-4">Extensions</h2>
+        <Tabs defaultValue="skills">
+          <TabsList className="gap-2">
+            <TabsTrigger value="skills">Skills</TabsTrigger>
+            <TabsTrigger value="scheduled-tasks">Scheduled Tasks</TabsTrigger>
+            <TabsTrigger value="custom-workbenches">Custom Workbenches</TabsTrigger>
+            <TabsTrigger value="healing">Healing</TabsTrigger>
+            <TabsTrigger value="learnings">Learnings</TabsTrigger>
+            <TabsTrigger value="mcp">MCP</TabsTrigger>
+          </TabsList>
+          <TabsContent value="skills" className="pt-4">
+            <SkillsPanel workbenchId={activeWorkbench} workbenchLabel={workbenchLabel} />
+          </TabsContent>
+          <TabsContent value="scheduled-tasks" className="pt-4">
+            <ScheduledTasksPanel workbenchId={activeWorkbench} workbenchLabel={workbenchLabel} />
+          </TabsContent>
+          <TabsContent value="custom-workbenches" className="pt-4">
+            <CustomWorkbenchesPanel />
+          </TabsContent>
+          <TabsContent value="healing" className="pt-4">
+            <HealingHistoryPanel />
+          </TabsContent>
+          <TabsContent value="learnings" className="pt-4">
+            <LearningsBrowser />
+          </TabsContent>
+          <TabsContent value="mcp" className="pt-4">
+            <McpConfigPanel />
+          </TabsContent>
+        </Tabs>
       </div>
 
       <FlowBrowser context="settings" />
