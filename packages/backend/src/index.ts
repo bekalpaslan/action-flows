@@ -62,6 +62,8 @@ import validationRouter from './routes/validation.js';
 import checkpointsRouter from './routes/checkpoints.js';
 import approvalsRouter from './routes/approvals.js';
 import { approvalService } from './services/approvalService.js';
+import { CustomWorkbenchService } from './services/customWorkbenchService.js';
+import createCustomWorkbenchesRouter from './routes/customWorkbenches.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -233,6 +235,10 @@ app.use('/api/figma', figmaRouter);
 app.use('/api/validation', validationRouter);
 app.use('/api/checkpoints', checkpointsRouter);
 app.use('/api/approvals', approvalsRouter);
+
+// Custom workbenches (Phase 10 — user-created workbenches beyond the 7 defaults)
+const customWorkbenchService = new CustomWorkbenchService();
+app.use('/api/custom-workbenches', createCustomWorkbenchesRouter(customWorkbenchService));
 
 // Note: surfaceManager is a singleton and auto-initializes on first import
 console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');
