@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v4.8
 milestone_name: milestone
 status: executing
-stopped_at: Completed 10-04-PLAN.md
+stopped_at: Completed 10-05-PLAN.md
 last_updated: "2026-04-07T01:16:56.092Z"
 last_activity: 2026-04-07
 progress:
@@ -77,6 +77,7 @@ Progress: [=========.] 93%
 | Phase 10 P02 | 7min | 3 tasks | 7 files |
 | Phase 10 P03 | 14min | 3 tasks | 8 files |
 | Phase 10 P04 | 13min | 2 tasks | 10 files |
+| Phase 10 P05 | 9min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -151,6 +152,8 @@ Recent decisions affecting current work:
 - [Phase 10]: Date-keyed storage keys for healing quota daily reset (no cron)
 - [Phase 10]: Approval-attempt correlation via healingApprovalMap storage keys
 - [Phase 10]: HealingApprovalCard inline between MessageList and ChatInput in ChatPanel
+- [Phase 10]: Used in-memory Map in CustomWorkbenchService instead of Storage generic KV ops (not implemented in MemoryStorage)
+- [Phase 10]: Zustand persist with flat array instead of Map for custom workbenches to avoid serialization issues
 
 ### Pending Todos
 
@@ -165,5 +168,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-04-07T01:16:56.087Z
-Stopped at: Completed 10-04-PLAN.md
+Stopped at: Completed 10-05-PLAN.md
 Resume file: None

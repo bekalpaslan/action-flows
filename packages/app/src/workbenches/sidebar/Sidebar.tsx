@@ -1,5 +1,8 @@
-import { WORKBENCHES } from '@/lib/types';
+import { useEffect } from 'react';
+import { WORKBENCHES, type WorkbenchId } from '@/lib/types';
 import { useUIStore } from '@/stores/uiStore';
+import { useCustomWorkbenchStore } from '@/stores/customWorkbenchStore';
+import { ICON_MAP, DEFAULT_ICON } from '@/lib/iconMap';
 import { Button } from '@/components/ui';
 import { TooltipProvider } from '@/components/ui';
 import { WebSocketStatus } from '@/status/WebSocketStatus';
@@ -16,6 +19,12 @@ export function Sidebar({ collapsed, onExpand }: SidebarProps) {
   const activeWorkbench = useUIStore((s) => s.activeWorkbench);
   const setActiveWorkbench = useUIStore((s) => s.setActiveWorkbench);
   const toggleSidebar = useUIStore((s) => s.toggleSidebar);
+  const customWorkbenches = useCustomWorkbenchStore((s) => s.workbenches);
+
+  // Load custom workbenches on mount
+  useEffect(() => {
+    useCustomWorkbenchStore.getState().loadWorkbenches();
+  }, []);
 
   return (
     <TooltipProvider>
@@ -48,6 +57,44 @@ export function Sidebar({ collapsed, onExpand }: SidebarProps) {
               />
             ))}
           </ul>
+
+          {/* Custom workbenches section */}
+          {customWorkbenches.length > 0 && (
+            <>
+              <div className="border-t border-border my-2" />
+              <div
+                className="px-3 py-1 text-caption text-text-muted uppercase tracking-tight"
+                role="heading"
+                aria-level={2}
+              >
+                Custom
+              </div>
+              <ul role="list" className="flex flex-col gap-1">
+                {customWorkbenches.map((cwb) => {
+                  const Icon = ICON_MAP[cwb.iconName] ?? DEFAULT_ICON;
+                  return (
+                    <SidebarItem
+                      key={cwb.id}
+                      workbench={{
+                        id: cwb.id as WorkbenchId,
+                        label: cwb.name,
+                        icon: Icon,
+                        greeting: cwb.greeting,
+                        tone: cwb.tone,
+                        systemPromptSnippet: cwb.systemPromptSnippet,
+                      }}
+                      isActive={cwb.id === activeWorkbench}
+                      collapsed={collapsed}
+                      onSelect={() => {
+                        setActiveWorkbench(cwb.id as WorkbenchId);
+                        if (collapsed && onExpand) onExpand();
+                      }}
+                    />
+                  );
+                })}
+              </ul>
+            </>
+          )}
         </div>
         <div className="flex flex-col gap-3">
           <Button

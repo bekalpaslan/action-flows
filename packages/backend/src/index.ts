@@ -69,6 +69,8 @@ import createScheduledTasksRouter from './routes/scheduledTasks.js';
 import { HealingQuotaTracker } from './services/healingQuotaTracker.js';
 import { HealingService } from './services/healingService.js';
 import createHealingRouter from './routes/healing.js';
+import { CustomWorkbenchService } from './services/customWorkbenchService.js';
+import createCustomWorkbenchesRouter from './routes/customWorkbenches.js';
 import type { SessionId, FileCreatedEvent, FileModifiedEvent, FileDeletedEvent, TerminalOutputEvent, WorkspaceEvent, RegistryChangedEvent } from '@afw/shared';
 import { brandedTypes } from '@afw/shared';
 import { initializeHarmonyDetector, harmonyDetector } from './services/harmonyDetector.js';
@@ -253,6 +255,10 @@ app.use('/api/scheduled-tasks', createScheduledTasksRouter(scheduledTaskService)
 const healingQuotaTracker = new HealingQuotaTracker(storage);
 const healingService = new HealingService(approvalService, healingQuotaTracker, storage);
 app.use('/api/healing', createHealingRouter(healingService, healingQuotaTracker));
+
+// Custom workbenches (Phase 10 — user-created workbenches beyond the 7 defaults)
+const customWorkbenchService = new CustomWorkbenchService();
+app.use('/api/custom-workbenches', createCustomWorkbenchesRouter(customWorkbenchService));
 
 // Note: surfaceManager is a singleton and auto-initializes on first import
 console.log('[SurfaceManager] ✅ Singleton auto-initialized on import');

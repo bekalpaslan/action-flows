@@ -206,7 +206,7 @@ Plans:
 - [x] 10-02-PLAN.md -- Per-workbench skills: backend SkillService + routes, skillStore with persist, SkillsPanel/SkillRow/SkillDialog
 - [x] 10-03-PLAN.md -- Scheduled tasks: backend ScheduledTaskService with Croner, scheduleStore, ScheduledTasksPanel/TaskHistoryList
 - [x] 10-04-PLAN.md -- Self-healing flows: HealingQuotaTracker, HealingService, healingStore, HealingApprovalCard, CircuitBreakerNotice
-- [ ] 10-05-PLAN.md -- Custom workbenches: CustomWorkbenchService, customWorkbenchStore, CustomWorkbenchesPanel, Sidebar extension
+- [x] 10-05-PLAN.md -- Custom workbenches: CustomWorkbenchService, customWorkbenchStore, CustomWorkbenchesPanel, Sidebar extension
 - [ ] 10-06-PLAN.md -- Session forking: ForkMetadataService, forkStore, ForkButton/Badge/Dialog/Switcher/MergeDialog
 - [ ] 10-07-PLAN.md -- Settings integration: LearningsBrowser, McpConfigPanel, wire all panels into SettingsPage Extensions tabs
 **UI hint**: yes
