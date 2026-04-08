@@ -1,7 +1,9 @@
 /**
  * ForkMetadataService — manages fork metadata lifecycle (create/list/merge/discard).
  *
- * Stores fork metadata in an internal Map (fork IDs are globally unique UUIDs).
+ * Stores fork metadata via Storage key-value interface for persistence across
+ * server restarts. Fork IDs are globally unique UUIDs.
+ *
  * Does NOT handle Agent SDK session forking — that's done by the route layer
  * calling sessionManager.forkSession() separately. This service only manages metadata.
  *
@@ -9,15 +11,16 @@
  */
 import { randomUUID } from 'crypto';
 import type { ForkMetadata, ForkId, MergeResolution } from '@afw/shared';
+import type { Storage } from '../storage/index.js';
+
+/** Storage key prefix for fork metadata */
+const FORK_KEY_PREFIX = 'fork:';
+
+/** Storage key prefix for fork reverse index (forkId -> storage key) */
+const FORK_INDEX_PREFIX = 'forkIndex:';
 
 export class ForkMetadataService {
-  /**
-   * In-memory storage for fork metadata.
-   * Key format: `fork:${parentSessionId}:${forkId}`
-   * Reverse index: `forkIndex:${forkId}` -> storage key for O(1) lookup.
-   */
-  private forkStore = new Map<string, ForkMetadata>();
-  private forkIndex = new Map<string, string>();
+  constructor(private storage: Storage) {}
 
   /**
    * Create fork metadata for a new fork.
@@ -35,7 +38,7 @@ export class ForkMetadataService {
     }
 
     const id = randomUUID() as ForkId;
-    const storageKey = `fork:${opts.parentSessionId}:${id}`;
+    const storageKey = `${FORK_KEY_PREFIX}${opts.parentSessionId}:${id}`;
 
     const metadata: ForkMetadata = {
       id,
@@ -48,8 +51,8 @@ export class ForkMetadataService {
       forkPointMessageId: opts.forkPointMessageId,
     };
 
-    this.forkStore.set(storageKey, metadata);
-    this.forkIndex.set(id, storageKey);
+    await Promise.resolve(this.storage.set!(storageKey, JSON.stringify(metadata)));
+    await Promise.resolve(this.storage.set!(`${FORK_INDEX_PREFIX}${id}`, storageKey));
 
     console.log(`[ForkMetadataService] Created fork ${id} for parent ${opts.parentSessionId}`);
     return metadata;
@@ -59,12 +62,21 @@ export class ForkMetadataService {
    * List all non-abandoned forks for a parent session, sorted by createdAt ascending.
    */
   async listForks(parentSessionId: string): Promise<ForkMetadata[]> {
-    const prefix = `fork:${parentSessionId}:`;
+    const pattern = `${FORK_KEY_PREFIX}${parentSessionId}:*`;
+    const keys = await Promise.resolve(this.storage.keys!(pattern));
     const results: ForkMetadata[] = [];
 
-    for (const [key, metadata] of this.forkStore) {
-      if (key.startsWith(prefix) && metadata.status !== 'abandoned') {
-        results.push(metadata);
+    for (const key of keys) {
+      const raw = await Promise.resolve(this.storage.get!(key));
+      if (raw) {
+        try {
+          const metadata = JSON.parse(raw) as ForkMetadata;
+          if (metadata.status !== 'abandoned') {
+            results.push(metadata);
+          }
+        } catch {
+          console.warn(`[ForkMetadataService] Failed to parse fork from key ${key}`);
+        }
       }
     }
 
@@ -77,9 +89,13 @@ export class ForkMetadataService {
    * Uses reverse index for O(1) lookup.
    */
   async getFork(forkId: ForkId): Promise<ForkMetadata | null> {
-    const storageKey = this.forkIndex.get(forkId);
+    const storageKey = this.storage.get
+      ? await Promise.resolve(this.storage.get(`${FORK_INDEX_PREFIX}${forkId}`))
+      : null;
     if (!storageKey) return null;
-    return this.forkStore.get(storageKey) ?? null;
+
+    const raw = await Promise.resolve(this.storage.get!(storageKey));
+    return raw ? JSON.parse(raw) as ForkMetadata : null;
   }
 
   /**
@@ -91,14 +107,15 @@ export class ForkMetadataService {
       throw new Error('Fork description is required.');
     }
 
-    const storageKey = this.forkIndex.get(forkId);
-    if (!storageKey) return null;
-
-    const metadata = this.forkStore.get(storageKey);
+    const metadata = await this.getFork(forkId);
     if (!metadata) return null;
 
     metadata.description = description.trim();
-    this.forkStore.set(storageKey, metadata);
+
+    const storageKey = await Promise.resolve(this.storage.get!(`${FORK_INDEX_PREFIX}${forkId}`));
+    if (storageKey) {
+      await Promise.resolve(this.storage.set!(storageKey, JSON.stringify(metadata)));
+    }
     return metadata;
   }
 
@@ -116,10 +133,7 @@ export class ForkMetadataService {
     resolution: MergeResolution,
     manualContent?: string,
   ): Promise<ForkMetadata | null> {
-    const storageKey = this.forkIndex.get(forkId);
-    if (!storageKey) return null;
-
-    const metadata = this.forkStore.get(storageKey);
+    const metadata = await this.getFork(forkId);
     if (!metadata) return null;
 
     if (metadata.status !== 'active') {
@@ -147,7 +161,11 @@ export class ForkMetadataService {
 
     metadata.status = 'merged';
     (metadata as ForkMetadata & { resolvedAt?: string }).resolvedAt = new Date().toISOString();
-    this.forkStore.set(storageKey, metadata);
+
+    const storageKey = await Promise.resolve(this.storage.get!(`${FORK_INDEX_PREFIX}${forkId}`));
+    if (storageKey) {
+      await Promise.resolve(this.storage.set!(storageKey, JSON.stringify(metadata)));
+    }
 
     return metadata;
   }
@@ -156,14 +174,15 @@ export class ForkMetadataService {
    * Discard a fork by marking it as abandoned.
    */
   async discardFork(forkId: ForkId): Promise<boolean> {
-    const storageKey = this.forkIndex.get(forkId);
-    if (!storageKey) return false;
-
-    const metadata = this.forkStore.get(storageKey);
+    const metadata = await this.getFork(forkId);
     if (!metadata) return false;
 
     metadata.status = 'abandoned';
-    this.forkStore.set(storageKey, metadata);
+
+    const storageKey = await Promise.resolve(this.storage.get!(`${FORK_INDEX_PREFIX}${forkId}`));
+    if (storageKey) {
+      await Promise.resolve(this.storage.set!(storageKey, JSON.stringify(metadata)));
+    }
 
     console.log(`[ForkMetadataService] Discarded fork ${forkId}`);
     return true;
