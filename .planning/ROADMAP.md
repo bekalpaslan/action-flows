@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 7: Chat Panel** - Per-workbench chat backed by persistent sessions, interactive tool call rendering, session history
 - [x] **Phase 8: Neural Validation & Safety** - Hook-based design system enforcement, /btw signaling, approval gates, permission boundaries (completed 2026-04-03)
 - [ ] **Phase 9: Workbenches & Flow Management** - 7 default workbench content pages, flow browser, archived flow harvesting, flow composition
-- [ ] **Phase 10: Customization & Automation** - Self-healing flows, skills, scheduled tasks, custom workbenches, session forking, learning browser
+- [x] **Phase 10: Customization & Automation** - Self-healing flows, skills, scheduled tasks, custom workbenches, session forking, learning browser (completed 2026-04-08)
 
 ## Phase Details
 
@@ -199,7 +199,7 @@ Plans:
   3. A scheduled tasks UI shows recurring automations with status, next run time, and execution history per workbench
   4. Users can create custom workbenches beyond the 7 defaults, each with its own session, pipeline, chat, and flows
   5. Session forking UI shows a visual fork point in session history, letting users branch conversations to explore alternatives
-**Plans:** 9/10 plans executed
+**Plans:** 10/10 plans complete
 Plans:
 - [x] 10-00-PLAN.md -- Wave 0 test scaffolds: healingQuotaTracker, skillService, schedulerService
 - [x] 10-01-PLAN.md -- Shared types (healing, skill, schedule, workbench, fork), WorkbenchId widening, install croner, DeleteConfirmationDialog
@@ -230,7 +230,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 7. Chat Panel | 0/? | Not started | - |
 | 8. Neural Validation & Safety | 1/1 | Complete   | 2026-04-03 |
 | 9. Workbenches & Flow Management | 0/5 | Planning complete | - |
-| 10. Customization & Automation | 9/10 | In Progress|  |
+| 10. Customization & Automation | 9/10 | Complete    | 2026-04-08 |
 
 ## Backlog
 
