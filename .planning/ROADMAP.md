@@ -210,7 +210,7 @@ Plans:
 - [x] 10-06-PLAN.md -- Session forking: ForkMetadataService, forkStore, ForkButton/Badge/Dialog/Switcher/MergeDialog
 - [x] 10-07-PLAN.md -- Settings integration: LearningsBrowser, McpConfigPanel, wire all panels into SettingsPage Extensions tabs
 - [x] 10-08-PLAN.md -- Gap closure: Wire useHealingWatcher, ForkSwitcher, ForkButton, ForkBadge into ChatPanel/MessageList, fix TS errors
-- [ ] 10-09-PLAN.md -- Gap closure: Return approvalId from healing route, migrate CustomWorkbenchService and ForkMetadataService to Storage
+- [x] 10-09-PLAN.md -- Gap closure: Return approvalId from healing route, migrate CustomWorkbenchService and ForkMetadataService to Storage
 **UI hint**: yes
 
 ## Progress

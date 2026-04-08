@@ -259,11 +259,11 @@ const healingService = new HealingService(approvalService, healingQuotaTracker, 
 app.use('/api/healing', createHealingRouter(healingService, healingQuotaTracker));
 
 // Custom workbenches (Phase 10 — user-created workbenches beyond the 7 defaults)
-const customWorkbenchService = new CustomWorkbenchService();
+const customWorkbenchService = new CustomWorkbenchService(storage);
 app.use('/api/custom-workbenches', createCustomWorkbenchesRouter(customWorkbenchService));
 
 // Fork management routes (Phase 10: Customization & Automation)
-const forkMetadataService = new ForkMetadataService();
+const forkMetadataService = new ForkMetadataService(storage);
 // SessionManager is initialized asynchronously inside server.listen().
 // Use a proxy that delegates to the module-level singleton at call time.
 // If sessionManager is not yet initialized, forkSession returns null (graceful 503).
