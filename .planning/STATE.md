@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.8
 milestone_name: milestone
 status: executing
-stopped_at: Completed 10-07-PLAN.md
-last_updated: "2026-04-07T01:32:41Z"
-last_activity: 2026-04-07
+stopped_at: Completed 10-09-PLAN.md
+last_updated: "2026-04-08T17:03:28.334Z"
+last_activity: 2026-04-08
 progress:
   total_phases: 12
-  completed_phases: 10
-  total_plans: 48
-  completed_plans: 43
+  completed_phases: 9
+  total_plans: 51
+  completed_plans: 49
   percent: 93
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-04-01)
 ## Current Position
 
 Phase: 10
-Plan: 07 of N complete
+Plan: 09 of 10 complete
 Status: Executing Phase 10
-Last activity: 2026-04-07
+Last activity: 2026-04-08
 
 Progress: [=========.] 93%
 
@@ -80,6 +80,7 @@ Progress: [=========.] 93%
 | Phase 10 P05 | 9min | 2 tasks | 10 files |
 | Phase 10 P06 | 13min | 2 tasks | 9 files |
 | Phase 10 P07 | 6min | 2 tasks | 4 files |
+| Phase 10 P09 | 4min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -154,9 +155,10 @@ Recent decisions affecting current work:
 - [Phase 10]: Date-keyed storage keys for healing quota daily reset (no cron)
 - [Phase 10]: Approval-attempt correlation via healingApprovalMap storage keys
 - [Phase 10]: HealingApprovalCard inline between MessageList and ChatInput in ChatPanel
-- [Phase 10]: Used in-memory Map in CustomWorkbenchService instead of Storage generic KV ops (not implemented in MemoryStorage)
+- [Phase 10]: Migrated CustomWorkbenchService from in-memory Map to Storage KV interface with key prefix customWorkbench:
 - [Phase 10]: Zustand persist with flat array instead of Map for custom workbenches to avoid serialization issues
-- [Phase 10]: Used internal Map in ForkMetadataService instead of extending Storage interface (avoids architectural change)
+- [Phase 10]: Migrated ForkMetadataService from in-memory Maps to Storage KV with reverse index (forkIndex:${forkId} -> primary key)
+- [Phase 10]: HealingService returns composite { attempt, approvalId } from onRuntimeError for end-to-end approval correlation
 - [Phase 10]: Proxy pattern for sessionManager in fork routes defers to module singleton at call time (handles late init)
 - [Phase 10]: 503 status with FORK_SESSION_UNAVAILABLE code for structured Phase 6 degradation
 - [Phase 10]: LearningsBrowser shows approved attempts as provisional learnings so list is not empty in early usage
@@ -175,6 +177,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-07T01:32:41Z
-Stopped at: Completed 10-07-PLAN.md
+Last session: 2026-04-08T17:01:12Z
+Stopped at: Completed 10-09-PLAN.md
 Resume file: None
