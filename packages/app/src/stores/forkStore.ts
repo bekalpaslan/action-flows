@@ -5,7 +5,7 @@
  * Tracks per-session forks, active branch, and forkUnavailable degradation flag.
  */
 import { create } from 'zustand';
-import type { ForkMetadata, ForkId, MergeResolution } from '@afw/shared';
+import type { ForkMetadata, MergeResolution } from '@afw/shared';
 
 interface ForkState {
   /** Forks indexed by parent session ID */

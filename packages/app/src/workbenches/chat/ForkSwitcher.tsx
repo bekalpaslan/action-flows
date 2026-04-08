@@ -28,7 +28,7 @@ export interface ForkSwitcherProps {
 /** Maximum visible fork tabs before overflow */
 const MAX_VISIBLE_FORKS = 5;
 
-export function ForkSwitcher({ parentSessionId, workbenchId }: ForkSwitcherProps) {
+export function ForkSwitcher({ parentSessionId, workbenchId: _workbenchId }: ForkSwitcherProps) {
   const forks = useForkStore((s) => s.getForksForSession(parentSessionId));
   const activeBranch = useForkStore((s) => s.getActiveBranch(parentSessionId));
   const switchBranch = useForkStore((s) => s.switchBranch);

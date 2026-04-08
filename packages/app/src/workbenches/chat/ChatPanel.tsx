@@ -5,9 +5,11 @@ import { useChatStore } from '@/stores/chatStore';
 import { useHealingStore } from '@/stores/healingStore';
 import { useChatMessages } from '@/hooks/useChatMessages';
 import { useChatSend } from '@/hooks/useChatSend';
+import { useHealingWatcher } from '@/hooks/useHealingWatcher';
 import { ChatHeader } from './ChatHeader';
 import { MessageList } from './MessageList';
 import { HealingApprovalCard } from './HealingApprovalCard';
+import { ForkSwitcher } from './ForkSwitcher';
 import { ChatInput } from './ChatInput';
 import { WORKBENCHES } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -24,8 +26,9 @@ export function ChatPanel() {
   const workbenchId = useUIStore((s) => s.activeWorkbench);
   const workbenchMeta = WORKBENCHES.find((w) => w.id === workbenchId)!;
 
-  // Get session status
+  // Get session status and ID
   const sessionStatus = useSessionStore((s) => s.getSession(workbenchId).status);
+  const sessionId = useSessionStore((s) => s.getSession(workbenchId).sessionId);
 
   // Get chat state via individual selectors for referential stability
   const messages = useChatStore((s) => s.getChat(workbenchId).messages);
@@ -38,6 +41,9 @@ export function ChatPanel() {
 
   // WebSocket subscription for incoming messages (call once)
   useChatMessages();
+
+  // Wire healing watcher to surface approval cards from runtime errors (CUSTOM-01)
+  useHealingWatcher(workbenchId, sessionId ?? '');
 
   // Send functions
   const { sendMessage, sendAskUserResponse } = useChatSend();
@@ -76,6 +82,9 @@ export function ChatPanel() {
         workbenchLabel={workbenchMeta.label}
         sessionStatus={sessionStatus}
       />
+      {sessionId && (
+        <ForkSwitcher parentSessionId={sessionId} workbenchId={workbenchId} />
+      )}
       <MessageList
         messages={messages}
         workbenchId={workbenchId}
