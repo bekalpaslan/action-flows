@@ -199,7 +199,7 @@ Plans:
   3. A scheduled tasks UI shows recurring automations with status, next run time, and execution history per workbench
   4. Users can create custom workbenches beyond the 7 defaults, each with its own session, pipeline, chat, and flows
   5. Session forking UI shows a visual fork point in session history, letting users branch conversations to explore alternatives
-**Plans:** 10 plans (8 executed, 2 gap closure)
+**Plans:** 9/10 plans executed
 Plans:
 - [x] 10-00-PLAN.md -- Wave 0 test scaffolds: healingQuotaTracker, skillService, schedulerService
 - [x] 10-01-PLAN.md -- Shared types (healing, skill, schedule, workbench, fork), WorkbenchId widening, install croner, DeleteConfirmationDialog
@@ -209,7 +209,7 @@ Plans:
 - [x] 10-05-PLAN.md -- Custom workbenches: CustomWorkbenchService, customWorkbenchStore, CustomWorkbenchesPanel, Sidebar extension
 - [x] 10-06-PLAN.md -- Session forking: ForkMetadataService, forkStore, ForkButton/Badge/Dialog/Switcher/MergeDialog
 - [x] 10-07-PLAN.md -- Settings integration: LearningsBrowser, McpConfigPanel, wire all panels into SettingsPage Extensions tabs
-- [ ] 10-08-PLAN.md -- Gap closure: Wire useHealingWatcher, ForkSwitcher, ForkButton, ForkBadge into ChatPanel/MessageList, fix TS errors
+- [x] 10-08-PLAN.md -- Gap closure: Wire useHealingWatcher, ForkSwitcher, ForkButton, ForkBadge into ChatPanel/MessageList, fix TS errors
 - [ ] 10-09-PLAN.md -- Gap closure: Return approvalId from healing route, migrate CustomWorkbenchService and ForkMetadataService to Storage
 **UI hint**: yes
 
@@ -230,7 +230,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 7. Chat Panel | 0/? | Not started | - |
 | 8. Neural Validation & Safety | 1/1 | Complete   | 2026-04-03 |
 | 9. Workbenches & Flow Management | 0/5 | Planning complete | - |
-| 10. Customization & Automation | 8/10 | Gap closure |  |
+| 10. Customization & Automation | 9/10 | In Progress|  |
 
 ## Backlog
 
