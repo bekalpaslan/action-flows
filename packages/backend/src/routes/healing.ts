@@ -105,12 +105,12 @@ export default function createHealingRouter(
         return;
       }
 
-      const attempt = await healingService.onRuntimeError(
+      const result = await healingService.onRuntimeError(
         { message: errorMessage, errorClass },
         { workbenchId, flowId, sessionId }
       );
 
-      if (!attempt) {
+      if (!result) {
         // Non-healable error class or other filter
         res.status(422).json({
           success: false,
@@ -119,7 +119,7 @@ export default function createHealingRouter(
         return;
       }
 
-      res.status(201).json({ success: true, attempt });
+      res.status(201).json({ success: true, attempt: result.attempt, approvalId: result.approvalId });
     } catch (error) {
       console.error('[Healing] Error creating attempt:', error);
       res.status(500).json({ success: false, error: 'Internal server error' });

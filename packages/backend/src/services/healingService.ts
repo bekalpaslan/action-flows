@@ -45,7 +45,7 @@ export class HealingService {
   async onRuntimeError(
     err: { message: string; errorClass: ErrorClass },
     ctx: { workbenchId: string; flowId: string; sessionId: string }
-  ): Promise<HealingAttempt | null> {
+  ): Promise<{ attempt: HealingAttempt; approvalId: string } | null> {
     // D-01: Only healing-eligible error classes
     if (!HEALING_ERROR_CLASSES.includes(err.errorClass)) {
       console.log(`[HealingService] Skipping non-healable error class: ${err.errorClass}`);
@@ -86,7 +86,7 @@ export class HealingService {
     }
 
     console.log(`[HealingService] Created healing attempt ${attempt.id} for ${err.errorClass}: ${err.message}`);
-    return attempt;
+    return { attempt, approvalId: approval.id };
   }
 
   /**

@@ -1,5 +1,9 @@
 import type { CustomWorkbench, CustomWorkbenchId } from '@afw/shared';
 import { isDefaultWorkbench, toCustomWorkbenchId } from '@afw/shared';
+import type { Storage } from '../storage/index.js';
+
+/** Storage key prefix for custom workbenches */
+const CW_KEY_PREFIX = 'customWorkbench:';
 
 /**
  * Service for managing custom workbenches (CRUD).
@@ -8,10 +12,12 @@ import { isDefaultWorkbench, toCustomWorkbenchId } from '@afw/shared';
  * domains, each with its own session, pipeline, chat, and flows.
  *
  * Default workbenches are protected from modification/deletion (D-11).
+ *
+ * Uses Storage key-value operations (set/get/keys/delete) for persistence
+ * across server restarts.
  */
 export class CustomWorkbenchService {
-  /** In-memory store keyed by CustomWorkbenchId */
-  private workbenches = new Map<CustomWorkbenchId, CustomWorkbench>();
+  constructor(private storage: Storage) {}
 
   /**
    * Create a new custom workbench.
@@ -64,7 +70,7 @@ export class CustomWorkbenchService {
       createdAt: new Date().toISOString(),
     };
 
-    this.workbenches.set(id, workbench);
+    await Promise.resolve(this.storage.set!(`${CW_KEY_PREFIX}${id}`, JSON.stringify(workbench)));
     return workbench;
   }
 
@@ -73,8 +79,21 @@ export class CustomWorkbenchService {
    * (oldest first for stable sidebar order).
    */
   async listWorkbenches(): Promise<CustomWorkbench[]> {
-    const all = Array.from(this.workbenches.values());
-    return all.sort(
+    const keys = await Promise.resolve(this.storage.keys!(`${CW_KEY_PREFIX}*`));
+    const workbenches: CustomWorkbench[] = [];
+
+    for (const key of keys) {
+      const data = await Promise.resolve(this.storage.get!(key));
+      if (data) {
+        try {
+          workbenches.push(JSON.parse(data) as CustomWorkbench);
+        } catch {
+          console.warn(`[CustomWorkbenchService] Failed to parse workbench from key ${key}`);
+        }
+      }
+    }
+
+    return workbenches.sort(
       (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
   }
@@ -83,7 +102,15 @@ export class CustomWorkbenchService {
    * Get a single custom workbench by ID.
    */
   async getWorkbench(id: CustomWorkbenchId): Promise<CustomWorkbench | null> {
-    return this.workbenches.get(id) ?? null;
+    const data = await Promise.resolve(this.storage.get!(`${CW_KEY_PREFIX}${id}`));
+    if (!data) return null;
+
+    try {
+      return JSON.parse(data) as CustomWorkbench;
+    } catch {
+      console.warn(`[CustomWorkbenchService] Failed to parse workbench ${id}`);
+      return null;
+    }
   }
 
   /**
@@ -98,7 +125,7 @@ export class CustomWorkbenchService {
       throw new Error('Cannot modify default workbenches');
     }
 
-    const existing = this.workbenches.get(id);
+    const existing = await this.getWorkbench(id);
     if (!existing) {
       return null;
     }
@@ -121,7 +148,7 @@ export class CustomWorkbenchService {
     }
 
     const updated: CustomWorkbench = { ...existing, ...updates };
-    this.workbenches.set(id, updated);
+    await Promise.resolve(this.storage.set!(`${CW_KEY_PREFIX}${id}`, JSON.stringify(updated)));
     return updated;
   }
 
@@ -135,13 +162,14 @@ export class CustomWorkbenchService {
       throw new Error('Cannot modify default workbenches');
     }
 
-    if (!this.workbenches.has(id)) {
+    const existing = await this.getWorkbench(id);
+    if (!existing) {
       return false;
     }
 
-    this.workbenches.delete(id);
+    const result = await Promise.resolve(this.storage.delete!(`${CW_KEY_PREFIX}${id}`));
     // Cascade delete would clean up skill:${id}:* and schedule:${id}:* keys
     // when those features are wired to storage
-    return true;
+    return result;
   }
 }
