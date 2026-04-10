@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v4.8
 milestone_name: milestone
 status: executing
-stopped_at: Completed 999.1-01-PLAN.md
-last_updated: "2026-04-10T21:17:38.632Z"
+stopped_at: Completed 999.1-06-PLAN.md
+last_updated: "2026-04-10T21:20:40.182Z"
 last_activity: 2026-04-10
 progress:
   total_phases: 12
   completed_phases: 10
   total_plans: 57
-  completed_plans: 51
+  completed_plans: 52
   percent: 93
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-01)
 ## Current Position
 
 Phase: 999.1 (history-and-memory-lifecycle-management) — EXECUTING
-Plan: 2 of 6
+Plan: 3 of 6
 Status: Ready to execute
 Last activity: 2026-04-10
 
@@ -83,6 +83,7 @@ Progress: [=========.] 93%
 | Phase 10 P08 | 3min | 2 tasks | 4 files |
 | Phase 10 P09 | 4min | 2 tasks | 5 files |
 | Phase 999.1 P01 | 8min | 2 tasks | 7 files |
+| Phase 999.1 P06 | 4min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -170,6 +171,7 @@ Recent decisions affecting current work:
 - [Phase 10]: Passed sessionId ?? empty string to useHealingWatcher for null-safe hook invocation
 - [Phase 999.1]: LedgerEntry.outcome tri-state 'pass'|'fail'|'unknown'; LedgerFilter.outcome query axis restricted to 'pass'|'fail'
 - [Phase 999.1]: Wave 0 TDD: test stubs intentionally import missing modules to enforce RED state
+- [Phase 999.1]: [Phase 999.1]: No backfill of legacy log dirs per D-11; INDEX.md mandated only for new log dirs via create-log-folder abstract step 5
 
 ### Pending Todos
 
@@ -183,6 +185,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-10T21:17:20.739Z
-Stopped at: Completed 999.1-01-PLAN.md
+Last session: 2026-04-10T21:20:23.825Z
+Stopped at: Completed 999.1-06-PLAN.md
 Resume file: None
