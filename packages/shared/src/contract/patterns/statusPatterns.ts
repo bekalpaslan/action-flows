@@ -26,6 +26,7 @@ export const ContextRoutingPatterns = {
   flow: /^\*\*Flow:\*\* (.+)$/m,
   actions: /^\*\*Actions:\*\* (.+)$/m,
   disambiguated: /^\*\*Disambiguated:\*\* (true|false)$/mi,
+  explanation: /^\*\*Explanation:\*\* (.+)$/m,
 } as const;
 
 export const StatusPatterns = {

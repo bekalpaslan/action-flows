@@ -451,6 +451,7 @@ export const ContextRoutingSchema = BaseParsedSchema.extend({
   flow: z.string().nullable(),
   actions: z.array(z.string()).nullable(),
   disambiguated: z.boolean(),
+  explanation: z.string().nullable(),
 });
 
 export type ContextRoutingValidated = z.infer<typeof ContextRoutingSchema>;

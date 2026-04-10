@@ -61,6 +61,9 @@ export interface ContextRoutingParsed {
   /** Whether disambiguation was needed */
   disambiguated: boolean;
 
+  /** Explanation of why this routing was chosen */
+  explanation: string | null;
+
   /** Raw text */
   raw: string;
 

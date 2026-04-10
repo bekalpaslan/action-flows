@@ -103,6 +103,7 @@ export function parseContextRouting(text: string): ContextRoutingParsed | null {
   const flowMatch = text.match(StatusPatterns.contextRouting.flow);
   const actionsMatch = text.match(StatusPatterns.contextRouting.actions);
   const disambiguatedMatch = text.match(StatusPatterns.contextRouting.disambiguated);
+  const explanationMatch = text.match(StatusPatterns.contextRouting.explanation);
 
   // Parse actions list
   const actions = actionsMatch?.[1]
@@ -127,6 +128,7 @@ export function parseContextRouting(text: string): ContextRoutingParsed | null {
     flow: flowMatch?.[1] || null,
     actions,
     disambiguated,
+    explanation: explanationMatch?.[1]?.trim() || null,
     raw: text,
     contractVersion: CONTRACT_VERSION,
   };

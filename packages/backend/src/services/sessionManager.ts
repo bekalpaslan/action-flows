@@ -20,6 +20,41 @@ import { WORKBENCH_PERSONALITIES, SYSTEM_CHANNEL } from '@afw/shared';
 /** Grace period before suspending a background workbench session (ms) */
 const GRACE_PERIOD_MS = 30_000;
 
+/**
+ * Known Agent SDK message types that the frontend parser understands.
+ * Narrowed from the full SDKMessage union to the subtypes this backend
+ * actively handles and forwards.
+ */
+type KnownAgentMessage =
+  | { type: 'assistant'; message: unknown; uuid: string; session_id: string }
+  | { type: 'stream_event'; event: unknown; uuid: string; session_id: string }
+  | { type: 'result'; is_error: boolean; uuid: string; session_id: string }
+  | { type: 'system'; subtype: string };
+
+/**
+ * Type predicate: narrows an unknown Agent SDK message to the set of shapes
+ * the frontend parser recognises. Used for observability — a false result
+ * triggers a warning but does NOT suppress the broadcast.
+ */
+function isValidAgentMessage(msg: unknown): msg is KnownAgentMessage {
+  if (typeof msg !== 'object' || msg === null) return false;
+  const m = msg as Record<string, unknown>;
+  if (typeof m['type'] !== 'string') return false;
+
+  switch (m['type']) {
+    case 'assistant':
+      return 'message' in m && typeof m['uuid'] === 'string' && typeof m['session_id'] === 'string';
+    case 'stream_event':
+      return 'event' in m && typeof m['uuid'] === 'string' && typeof m['session_id'] === 'string';
+    case 'result':
+      return typeof m['is_error'] === 'boolean' && typeof m['uuid'] === 'string' && typeof m['session_id'] === 'string';
+    case 'system':
+      return typeof m['subtype'] === 'string';
+    default:
+      return false;
+  }
+}
+
 export class SessionManager {
   private hub: WebSocketHub;
   private store: BackendSessionStore;
@@ -178,6 +213,16 @@ export class SessionManager {
 
         // Update last activity
         session.lastActivity = new Date().toISOString();
+
+        // Guard: warn on unknown message shapes before broadcasting (observability, not enforcement)
+        if (!isValidAgentMessage(message)) {
+          const msgType = (message as Record<string, unknown>)?.['type'];
+          console.warn(
+            `[SessionManager] Unknown Agent SDK message type received for workbench "${workbenchId}":`,
+            typeof msgType === 'string' ? msgType : JSON.stringify(msgType),
+            '— broadcasting anyway for forward compatibility',
+          );
+        }
 
         // Broadcast the raw message to frontend
         this.broadcastEnvelope(SYSTEM_CHANNEL, 'session:message', {

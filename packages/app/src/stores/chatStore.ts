@@ -1,6 +1,66 @@
 import { create } from 'zustand';
+import { z } from 'zod';
 import type { WorkbenchId } from '../lib/types';
 import type { ChatMessage, ToolCall, WorkbenchChat, ApprovalStatus } from '../lib/chat-types';
+
+// ---------------------------------------------------------------------------
+// Zod schemas — mirror the chat-types interfaces for runtime validation.
+// These are kept here rather than in chat-types.ts to avoid introducing a
+// runtime dependency on zod into the shared type module.
+// ---------------------------------------------------------------------------
+
+const ToolCallSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  input: z.string(),
+  output: z.string().nullable(),
+  status: z.enum(['running', 'complete', 'error']),
+});
+
+const ParsedQuestionOptionSchema = z.object({
+  value: z.string(),
+  label: z.string(),
+  description: z.string().optional(),
+});
+
+const ParsedQuestionSchema = z.object({
+  type: z.enum(['single_select', 'multi_select', 'free_text', 'confirmation']),
+  question: z.string(),
+  header: z.string().optional(),
+  options: z.array(ParsedQuestionOptionSchema).optional(),
+  defaultValue: z.union([z.string(), z.array(z.string())]).optional(),
+});
+
+const AskUserQuestionSchema = z.object({
+  toolCallId: z.string(),
+  question: ParsedQuestionSchema,
+  response: z.string().nullable(),
+  submitted: z.boolean(),
+});
+
+const ChatApprovalRequestSchema = z.object({
+  approvalId: z.string(),
+  action: z.string(),
+  description: z.string(),
+  files: z.array(z.string()).optional(),
+  workbenchId: z.string(),
+  autonomyLevel: z.string(),
+  status: z.enum(['pending', 'approved', 'denied', 'timed_out']),
+  expiresAt: z.string(),
+  resolvedAt: z.string().optional(),
+});
+
+const ChatMessageSchema = z.object({
+  id: z.string(),
+  role: z.enum(['user', 'agent', 'system']),
+  content: z.string(),
+  timestamp: z.string(),
+  status: z.enum(['sending', 'sent', 'streaming', 'complete', 'error']),
+  toolCalls: z.array(ToolCallSchema).optional(),
+  askUserQuestion: AskUserQuestionSchema.optional(),
+  approvalRequest: ChatApprovalRequestSchema.optional(),
+});
+
 
 const DEFAULT_CHAT: WorkbenchChat = {
   messages: [],
@@ -64,6 +124,14 @@ export const useChatStore = create<ChatStoreState>((set, get) => ({
 
   addMessage: (id, msg) =>
     set((state) => {
+      const result = ChatMessageSchema.safeParse(msg);
+      if (!result.success) {
+        console.warn(
+          '[chatStore] addMessage: invalid message shape — skipping to prevent UI corruption.',
+          { messageId: (msg as { id?: unknown }).id, issues: result.error.issues }
+        );
+        return state;
+      }
       const next = new Map(state.chats);
       const chat = next.get(id) ?? defaultChat();
       next.set(id, {
