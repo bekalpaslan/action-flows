@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { filePersistence } from '../storage/file-persistence.js';
+import { ledgerService } from '../services/ledgerService.js';
+import type { LedgerFilter } from '@afw/shared';
 
 const router = Router()
 
@@ -98,5 +100,36 @@ router.post('/cleanup', async (_req, res) => {
     res.status(500).json({ error: 'Failed to cleanup old files' })
   }
 })
+
+/**
+ * GET /api/history/ledger
+ * Query the execution ledger (raw → ledger promotions from gate traces).
+ * Filters: gateId, outcome, fromTimestamp, toTimestamp, limit
+ * Per D-05.
+ */
+router.get('/ledger', (req, res) => {
+  try {
+    const filter: LedgerFilter = {};
+    if (typeof req.query.gateId === 'string') filter.gateId = req.query.gateId as LedgerFilter['gateId'];
+    if (req.query.outcome === 'pass' || req.query.outcome === 'fail') {
+      filter.outcome = req.query.outcome;
+    }
+    if (typeof req.query.fromTimestamp === 'string') {
+      filter.fromTimestamp = req.query.fromTimestamp as LedgerFilter['fromTimestamp'];
+    }
+    if (typeof req.query.toTimestamp === 'string') {
+      filter.toTimestamp = req.query.toTimestamp as LedgerFilter['toTimestamp'];
+    }
+    if (typeof req.query.limit === 'string') {
+      const n = parseInt(req.query.limit, 10);
+      if (Number.isFinite(n) && n > 0) filter.limit = n;
+    }
+    const entries = ledgerService.query(filter);
+    res.json({ entries });
+  } catch (error) {
+    console.error('[history/ledger] Query failed:', error);
+    res.status(500).json({ error: 'Failed to query ledger' });
+  }
+});
 
 export default router
