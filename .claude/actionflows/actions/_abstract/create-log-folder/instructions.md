@@ -20,6 +20,7 @@ Create folder: `.claude/actionflows/logs/{action-type}/{description}_{YYYY-MM-DD
 2. **Second:** Get current datetime (YYYY-MM-DD-HH-MM-SS format)
 3. **Third:** Construct the FULL path string with all variables substituted
 4. **Fourth:** Pass the completed string to mkdir -p
+5. **Fifth:** Immediately after `mkdir -p` succeeds, create an `INDEX.md` file inside the new folder with the required fields below (D-11, D-12).
 
 **Shell Substitution Warning:**
 
@@ -40,6 +41,37 @@ mkdir -p "$folder"
 Substitute ALL variables BEFORE constructing the path string.
 
 Use `mkdir -p` to create. Write all outputs into this folder.
+
+### Step 5: Create INDEX.md (REQUIRED)
+
+Per phase 999.1 (D-11, D-12), every new log session directory MUST contain an `INDEX.md` written immediately after the folder is created. This is non-optional. Old directories without an INDEX.md are accepted as legacy and are NOT backfilled.
+
+**Minimum required fields:**
+
+1. **Session dir name** — the folder name from step 3 (e.g., `auth-changes_2026-02-05-14-30-45`)
+2. **Action type** — the action being executed (e.g., `code`, `review`, `audit`, `analyze`, `plan`)
+3. **Timestamp** — ISO 8601 datetime (e.g., `2026-02-05T14:30:45Z`)
+4. **Description** — one-line summary derived from the task input (the same kebab-case text used in step 1, expanded into a sentence)
+
+**Bash recipe (extends the variables already defined above):**
+
+```bash
+# Variables description, datetime, folder are already set from steps 1-3
+action_type="review"   # set per the action being executed
+iso_timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+one_line_desc="Review of auth changes for login endpoint"
+
+cat > "$folder/INDEX.md" <<EOF
+# ${description}
+
+- **Session dir:** ${description}_${datetime}
+- **Action type:** ${action_type}
+- **Timestamp:** ${iso_timestamp}
+- **Description:** ${one_line_desc}
+EOF
+```
+
+**Verification:** After writing, `ls "$folder/INDEX.md"` must succeed. If it does not, the action MUST abort and surface the failure — this is a contract gate, not a soft warning.
 
 ## Critical Warnings
 
@@ -66,6 +98,7 @@ This abstract extends all agent contracts with:
 **Output Contract additions:**
 - Primary output location: `.claude/actionflows/logs/{action-type}/{description}_{datetime}/`
 - Folder naming: `{description}` = kebab-case summary, `{datetime}` = YYYY-MM-DD-HH-MM-SS
+- Required artifact: `{folder}/INDEX.md` with fields {session-dir, action-type, ISO-timestamp, one-line description} per D-11/D-12
 
 **Trace Contract additions:**
 - All trace files written within the agent's log folder
