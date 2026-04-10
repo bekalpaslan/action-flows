@@ -277,8 +277,8 @@ describe('Parser Edge Cases - Phase A, Step 3', () => {
 Execute?`;
       const parsed = parseChainCompilation(text);
       expect(parsed).not.toBeNull();
-      // Note: Parser captures trailing space before pipe (greedy [^|]+ pattern)
-      expect(parsed?.steps?.[0]?.keyInputs).toBe('input=a,b,c ');
+      // Note: Parser trims captured value; trailing space before pipe is stripped
+      expect(parsed?.steps?.[0]?.keyInputs).toBe('input=a,b,c');
     });
 
     it('should parse ExecutionComplete with pipes in result field', () => {

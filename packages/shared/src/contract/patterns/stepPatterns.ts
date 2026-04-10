@@ -19,7 +19,7 @@ export const DualOutputPatterns = {
   heading: /^### Dual Output: ([a-z\-_/]+) \+ Second Opinion$/m,
   originalLabel: /^\*\*Original \(([a-z\-_/]+)\):\*\*$/m,
   originalContent: /^(.+)$/m,
-  secondOpinionLabel: /^\*\*Second Opinion \((.+) via Ollama\):\*\*$/m,
+  secondOpinionLabel: /^\*\*Second Opinion \((.+?)(?:\s+via\s+.+)?\):\*\*$/m,
   secondOpinionSummary: /^(.+)$/m,
   missedIssues: /^- Missed issues: (\d+)$/m,
   disagreements: /^- Disagreements: (\d+)$/m,

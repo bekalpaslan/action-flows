@@ -29,7 +29,7 @@ export const ChainExecutionStartPatterns = {
  * Format 1.3: Chain Status Update
  */
 export const ChainStatusUpdatePatterns = {
-  heading: /^## Chain Status: (.+)$/m,
+  heading: /^## Chain: (.+) -- Updated$/m,
   changes: /^\*\*Changes:\*\* (.+)$/m,
   tableHeader: /^\| # \| Action \| Model \| Key Inputs \| Waits For \| Status \|$/m,
 } as const;

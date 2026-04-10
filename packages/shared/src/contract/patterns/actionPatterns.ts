@@ -41,7 +41,7 @@ export const AnalysisReportPatterns = {
  * Format 5.3: Brainstorm Session Transcript
  */
 export const BrainstormTranscriptPatterns = {
-  heading: /^# Brainstorming Session: (.+)$/m,
+  heading: /^# Brainstorm(?:ing Session)?: (.+)$/m,
   ideaHeading: /^## Idea$/m,
   idea: /^(.+)$/m,
   classificationHeading: /^## Classification$/m,
