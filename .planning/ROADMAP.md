@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 7: Chat Panel** - Per-workbench chat backed by persistent sessions, interactive tool call rendering, session history
 - [x] **Phase 8: Neural Validation & Safety** - Hook-based design system enforcement, /btw signaling, approval gates, permission boundaries (completed 2026-04-03)
 - [ ] **Phase 9: Workbenches & Flow Management** - 7 default workbench content pages, flow browser, archived flow harvesting, flow composition
-- [x] **Phase 10: Customization & Automation** - Self-healing flows, skills, scheduled tasks, custom workbenches, session forking, learning browser (completed 2026-04-08)
+- [x] **Phase 10: Customization & Automation** - Self-healing flows, skills, scheduled tasks, custom workbenches, session forking, learning browser (completed 2026-04-08)
 - [ ] **Phase 11: Test Stub Realignment & Doc Cleanup** - Realign 3 stale Wave 0 test stubs to match real APIs, refresh REQUIREMENTS.md checkboxes, generate Phase 04.1 VERIFICATION.md, flip 999.1 Nyquist flags (gap closure from v4.8 audit)
 
 ## Phase Details
@@ -225,7 +225,10 @@ Plans:
   3. .planning/phases/04.1-framework-docs-realignment-.../04.1-VERIFICATION.md exists with passed status
   4. .planning/phases/999.1-history-and-memory-lifecycle-management/999.1-VALIDATION.md frontmatter shows nyquist_compliant: true and wave_0_complete: true
   5. pnpm --filter @afw/backend test exits 0 (no failing tests in backend package)
-**Plans**: TBD (run /gsd:plan-phase 11)
+**Plans:** 2 plans
+Plans:
+- [ ] 11-01-PLAN.md -- Test stub cleanup: delete stale schedulerService.test.ts, rewrite 5 failing skillService tests against real API, fix healingQuotaTracker mock storage regex bug
+- [ ] 11-02-PLAN.md -- Doc staleness cleanup: flip 32 REQUIREMENTS.md checkboxes for verified phase 6/7/8 requirements, synthesize Phase 04.1 VERIFICATION.md from 5 SUMMARY files, flip Phase 999.1 VALIDATION.md Nyquist frontmatter flags
 
 
 ## Progress
@@ -246,7 +249,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 8. Neural Validation & Safety | 1/1 | Complete   | 2026-04-03 |
 | 9. Workbenches & Flow Management | 0/5 | Planning complete | - |
 | 10. Customization & Automation | 9/10 | Complete    | 2026-04-08 |
-| 11. Test Stub Realignment & Doc Cleanup | 0/? | Not started | - |
+| 11. Test Stub Realignment & Doc Cleanup | 0/2 | Planning complete | - |
 
 ## Backlog
 
