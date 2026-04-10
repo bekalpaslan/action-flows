@@ -177,6 +177,14 @@ See Input Contract above for input parameters.
 5. List findings with: file path, line number, severity (critical/high/medium/low), description, fix suggestion
 6. Calculate quality score: (files without issues / total files) * 100
 
+### FRESH EYE Passage Re-Read Requirement
+
+Before declaring any FRESH EYE gap finding, re-read the exact raw passage in full from the file. Direct file content must be quoted in the finding, not paraphrased from session memory or earlier checks. Cached mental models from preceding checks must be re-verified against source text at the point of discovery. Rationale: a prior review formed a gap finding by reading line content only up to the first sentence boundary and then reasoning about a gap from its cached partial view — the gap did not exist (L033).
+
+### Algorithm Fidelity for Corpus Scans
+
+When verifying a detection algorithm in a post-fix verification review, the review's own corpus scan for that violation class MUST use the IDENTICAL algorithm being validated. Either invoke the lint tool directly, or carefully replicate its exact boundary rules. Never use a "good enough approximation" — if you certify a tool works, use that same tool to verify the corpus. Rationale: a prior review validated a per-block lint algorithm in Check 2, then ran Check 6 against the corpus using a narrower boundary, producing 5 false positives out of 8 reported violations (L034).
+
 2. Apply Fixes (if mode = review-and-fix)
 
 If the orchestrator provided `mode: review-and-fix`:
@@ -214,11 +222,18 @@ See Output Contract above. Write contract-compliant review-report.md to log fold
 
 This lets humans quickly prioritize which findings need their input vs which can be auto-triaged.
 
+### Baseline Reconciliation (Post-Fix Verification Reviews)
+
+Post-fix-verification reviews MUST include a one-line baseline reconciliation statement near the top of the report: "Pre-fix corpus had N violations (per prior review at {path}). This fix addresses M of them. Remaining N-M violations are [listed or unchanged]." This makes the scoping decision explicit and links the review to the audit trail. Rationale: a prior review reported "zero real violations corpus-wide" without reconciling with a preceding review's 8-violation list, leaving readers to guess at scoping decisions (L036).
+
 ```markdown
 # Review Report: {scope}
 
 ## Verdict: {APPROVED | NEEDS_CHANGES}
 ## Score: {X}%
+
+## Baseline Reconciliation (post-fix-verification only)
+Pre-fix corpus had N violations (per prior review at {path}). This fix addresses M of them. Remaining N-M violations are [listed or unchanged].
 
 ## Summary
 {2-3 sentence overview}
