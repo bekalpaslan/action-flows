@@ -259,3 +259,12 @@
 - **Fix:** When spawning code agents to resolve source-of-truth conflicts, always phrase the instruction as an explicit edit directive: "Update FILE_A to match FILE_B" — not "B wins over A." Ambiguity about which file is the target of the edit causes agents to choose wrong.
 - **Pattern:** "B wins" → agent updates A to look like B. Instead say: "Edit CONTRACT.md pattern to match ORCHESTRATOR.md heading `## Chain: {title} -- Updated`."
 - **Status:** Closed (manually triaged — template and CONTRACT.md corrected)
+
+### L029: Uniform Violations Mean the Template Is the Source — Always Check the Generator
+- **Date:** 2026-04-10
+- **From:** orchestrator during spawn-prompt-discipline-audit/ chain
+- **Issue:** Audit found 20 byte-identical identity-patch blocks across 7 `flows/**/instructions.md` files. Initial fix chain stripped the 20 instances but would have left the root cause intact — `templates/TEMPLATE.instructions.md` itself contained the boilerplate and was propagating it into every new flow via copy-paste.
+- **Root Cause:** When fixing uniform, widespread violations it's tempting to treat each instance as an independent edit. If the violations are byte-identical, they almost always share a single upstream source (template, generator, scaffold, snippet). Fixing only the leaves leaves the propagation source alive; the next new flow reintroduces the violation.
+- **Fix:** When an audit surfaces N identical violations across N files, the first follow-up question is always: "Where did this text come from?" Grep the template directory, scaffolding scripts, and snippet libraries for the exact violating string before declaring the fix complete. Fix the generator in the same commit as (or immediately after) the leaves.
+- **Pattern:** Uniformity ⇒ shared ancestor. Judgment-free mechanical fixes across many files = look upstream.
+- **Status:** Closed (TEMPLATE.instructions.md fixed in 43a0c50, flow registered as spawn-prompt-discipline-audit/)
