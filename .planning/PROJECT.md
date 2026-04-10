@@ -96,16 +96,33 @@ TBD — run `/gsd:new-milestone` to define next milestone's requirements.
 | Deferred promotion pattern (raw → ledger at TTL expiry) | Auto-promote during CleanupService daily sweep instead of real-time | ✓ Good — no race conditions with in-memory traceBuffer |
 | 50-entry LEARNINGS.md cap with year-scoped archives | Active file stays fast to load; history preserved | ✓ Good — keeps agent-readable in single context load |
 
-## Next Milestone Goals
+## Current Milestone: v4.9 Feature Re-wiring
 
-**TBD** — run `/gsd:new-milestone` to define the next milestone.
+**Goal:** Complete the v4.8 rebuild by re-wiring half-shipped features where backend exists but frontend is stubbed, restoring the FlowBrowser regression from parallel-execution collision, and cleaning up ~30 ghost backend routes inherited from the cosmic UI era.
 
-Potential areas (deferred from v4.8):
-- Search UI for ledger entries
+**Target features:**
+
+1. **Terminal Integration** — xterm panel in workbench UI, input endpoint (`POST /api/terminal/:sessionId/input`), WebSocket stream consumer, buffer retrieval on reconnect
+2. **File Explorer** — Real FileTree component in ExplorePage, live tree updates via file watcher → WebSocket
+3. **FlowBrowser Restoration** — Recover the 100-line FlowBrowser implementation from commit `e4db03b` that was regressed by commit `2dad3c7` during Phase 9 parallel execution; complete search/filter/New Flow UX across all 7 workbench pages
+4. **Session Persistence & Archive** — Backend session metadata storage, `GET /api/sessions/archived` with filters, wire ArchivePage to real data, session resume from archive
+5. **History & Checkpoint UIs** — Frontend consumer for `GET /api/history/ledger` (ledger browser), checkpoint timeline component (SAFETY-04 unfulfilled promise from v4.8), ledger→canonical promotion UI
+6. **Backend Cleanup** — Audit ~30 orphaned backend routes from the cosmic UI era, delete truly dead ones, add missing `/api/mcp/servers` route (reverse gap — frontend calls non-existent backend), document ones still used internally
+7. **Stub Page Completion** — StudioPage preview tab (live component render + variants playground), WorkPage real stats (completed today, failed), remaining placeholder cleanup
+
+**Key context:**
+- v4.8 left frontend stubs when the cosmic UI was torn down — backend services survived but the UI layer wasn't re-connected
+- FlowBrowser is a real regression: Plan 09-03 committed a 100-line implementation (commit `e4db03b`), Plan 09-05 ran in parallel from an older worktree and committed a 21-line stub (commit `2dad3c7`) that overwrote it during merge
+- The `/api/mcp/servers` frontend call is a reverse gap (frontend `McpConfigPanel.tsx:32` calls a backend route that doesn't exist — gets 404)
+- This milestone is brownfield integration work — known surfaces, known contracts, mostly wiring and regression recovery
+- No new design system components needed — all UI composes from existing library
+
+**Next Milestone Goals (v5.0+, deferred from v4.8/v4.9):**
+- Search UI for ledger entries (beyond basic ledger browser in v4.9)
 - Bulk review/approval interface for ledger → canonical promotions
 - Visualization of gate health score over time from ledger data
 - Ledger real-time bridge (promote gate traces to ledger at checkpoint fire, not daily sweep)
-- Frontend consumer for `GET /api/history/ledger`
+- Collaboration primitives (multi-user sessions, shared workbenches)
 
 ## Evolution
 
@@ -125,4 +142,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-11 after v4.8 milestone shipped — 13 phases, 74/74 requirements satisfied, shipped as "Agentic Personal OS"*
+*Last updated: 2026-04-11 — v4.8 shipped (13 phases, 74/74 requirements, "Agentic Personal OS"). v4.9 "Feature Re-wiring" milestone started.*
