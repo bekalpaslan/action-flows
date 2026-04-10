@@ -268,3 +268,66 @@
 - **Fix:** When an audit surfaces N identical violations across N files, the first follow-up question is always: "Where did this text come from?" Grep the template directory, scaffolding scripts, and snippet libraries for the exact violating string before declaring the fix complete. Fix the generator in the same commit as (or immediately after) the leaves.
 - **Pattern:** Uniformity ⇒ shared ancestor. Judgment-free mechanical fixes across many files = look upstream.
 - **Status:** Closed (TEMPLATE.instructions.md fixed in 43a0c50, flow registered as spawn-prompt-discipline-audit/)
+
+### L030: Spawn Prompt Discipline Has Two Failure Modes, Not One
+- **Date:** 2026-04-11
+- **From:** analyze/ (opus) during spawn-prompt-discipline-audit/ re-run
+- **Issue:** The 2026-04-10 fix focused on over-provisioning (identity-patch boilerplate propagated by a bad template). The 2026-04-11 re-run verified zero residual over-provisioning but discovered 3 under-provisioned spawn blocks in `project/test-coverage/instructions.md` — free-form prose prompts missing the mandatory `Read your definition in .claude/actionflows/actions/{action}/agent.md` directive and structured Input block.
+- **Root Cause:** Spawn prompt discipline has TWO failure modes: (1) over-provisioning (too much boilerplate, duplicating agent.md content), (2) under-provisioning (missing read directive, missing Input block). The original audit only detected class 1. Agents spawned without reading agent.md never learn their mission, contracts, or output format — arguably worse than over-provisioning.
+- **Fix:** Extended `spawn-prompt-discipline-audit/` with Rule 7 (Complete Spawn Prompt Structure) covering both classes. Added `framework-health/` Step 4 lint for marker-without-directive detection. Migrated the 3 test-coverage spawn blocks to TEMPLATE structure. Added TEMPLATE convention comment clarifying Project Context injection is OPTIONAL (default: omit).
+- **Pattern:** When defining a discipline rule, always enumerate both "too much" and "too little" failure modes. Detection should be symmetric.
+- **Status:** Closed (0eb0c23)
+
+### L031: Post-Fix Reviews Must Process Code Agent Anomalies Before Awarding 100%
+- **Date:** 2026-04-11
+- **From:** second-opinion/ (sonnet) during spawn-prompt-discipline-audit/ chain
+- **Issue:** Step 3 code agent explicitly flagged an open anomaly: `test/agent.md` existence was not verified. Step 4 review awarded 100% on 7/7 checks without acknowledging or resolving this anomaly. If `test/` action is not registered, the 3 "fixed" spawn blocks in `test-coverage/instructions.md` are structurally compliant but functionally broken.
+- **Root Cause:** Review scoped itself strictly to its seven explicit checks. The code agent's anomalies section was not treated as an implicit check surface. 100% score masked an open question.
+- **Fix:** For post-fix verification reviews, add an implicit standard: read the anomalies section of the preceding code agent output and require each anomaly to be either (a) resolved with evidence, or (b) explicitly accepted with documented rationale, before awarding 100%. Update `review/agent.md` checklist for post-fix-verification type.
+- **Pattern:** A verification report with unresolved upstream anomalies should never score 100%, even if all explicit checks pass.
+- **Status:** Open — pending follow-up chain
+
+### L032: Per-File Lint Hides Per-Block Mixed-Compliance Violations
+- **Date:** 2026-04-11
+- **From:** second-opinion/ (sonnet) during spawn-prompt-discipline-audit/ chain
+- **Issue:** The framework-health Step 4 lint checks whether a file containing `**Spawn` also contains `Read your definition in` somewhere in the file. A flow with one compliant spawn block and one non-compliant prose spawn block passes the lint clean. The current check is incidentally correct only because every flow file today has either all-compliant or all-non-compliant spawn blocks.
+- **Root Cause:** File-granularity lint is structurally weaker than block-granularity lint. The chosen implementation traded robustness for simplicity of grep. It will fail silently when a mixed-compliance file appears.
+- **Fix:** Migrate the lint from per-file grep to per-block parsing — iterate each `**Spawn` marker and verify the directive appears in its associated code fence or adjacent content. Consider a small Python/bash parser that reads from marker to next blank line or closing code fence.
+- **Pattern:** When detecting repeating structures inside a file, prefer per-structure lint over per-file grep, even if the test corpus is incidentally 1:1 today.
+- **Status:** Closed (3f61cf3)
+
+### L033: Review Agents Must Re-Read Full Passages Before Declaring Gaps
+- **Date:** 2026-04-11
+- **From:** second-opinion/ (sonnet) during spawn-prompt-discipline-audit follow-up chain
+- **Issue:** A review agent formed a FRESH EYE finding ("INPUT BLOCK DEFINITION has a `context:` loophole") by reading line 129 only to the first sentence boundary and then reasoning about a gap from its cached partial view. The full line 129 already contained the exact clarification the review recommended adding. The gap did not exist in the committed file.
+- **Root Cause:** The review quoted line 129 partially in Check 1, then carried that partial mental model into the FRESH EYE section without re-reading the full raw passage. "The text says X" was based on session memory of the truncated quote, not on file content.
+- **Fix:** Update review/agent.md § FRESH EYE procedure: before declaring any gap finding, re-read the exact raw passage in full from the file. Direct file content must be quoted in the finding, not paraphrased from prior checks.
+- **Pattern:** FRESH EYE findings that contradict or extend earlier checks must cite direct file evidence re-read at the point of discovery, not cached from a preceding check.
+- **Status:** Open — review/agent.md update pending
+
+### L034: Review Corpus Scans Must Use Identical Algorithm to Lint Being Validated
+- **Date:** 2026-04-11
+- **From:** second-opinion/ (sonnet) during spawn-prompt-discipline-audit follow-up chain
+- **Issue:** A review validated a per-block lint algorithm in Check 2 ("scan forward from marker to next blank line OR closing triple-backtick fence") then ran Check 6 against the corpus using a narrower boundary ("scan forward from marker to next blank line" only). Result: 5 of 8 reported violations were false positives because the narrower window excluded `Read your definition in` lines that sat between the marker and the opening fence.
+- **Root Cause:** The review's Check 6 used a simpler scan implementation than the algorithm Check 2 validated. This is a reproducibility gap: the review's own corpus scan doesn't match the lint it verified.
+- **Fix:** When a review validates a detection algorithm, the review's own corpus scan for that class of violation MUST use the identical algorithm. Either invoke the lint tool directly, or carefully replicate its boundary rules. Never use a "good enough approximation" for verification scans.
+- **Pattern:** If you certify a tool works, use that same tool to verify the corpus. Otherwise you're testing a different thing.
+- **Status:** Open — review/agent.md update pending
+
+### L035: Rule 7 Doesn't Distinguish Template-Parameterized Blocks from Prose Under-Provisioning
+- **Date:** 2026-04-11
+- **From:** second-opinion/ (sonnet) during Rule 7 backlog fix chain
+- **Issue:** Migrated Block 1 in `audit-and-fix/instructions.md` has `type: {check type from step table above}` — a runtime template variable for multi-spawn dispatch across parallel checks. Rule 7's INPUT BLOCK DEFINITION currently defines "task-specific key" as carrying "concrete parameterized information (file paths, action targets, constraint values)". A brace-substitution placeholder is parameterized at runtime but not at the source-code level. A future audit agent reading Block 1 statically could interpret the `type` value as "prose-like" (single word placeholder with no concrete type) and flag a compliant block as under-provisioned.
+- **Root Cause:** Rule 7 was written with concrete single-invocation spawn blocks in mind. Template-parameterized blocks (which the multi-step parallel dispatch pattern requires) are a structural variant not addressed by the rule.
+- **Fix:** Extend Rule 7's INPUT BLOCK DEFINITION with an explicit template-parameterization clause: "Brace-substitution placeholder values (e.g., `{type from step table above}`, `{focus if provided, else 'default'}`) are acceptable task-specific keys when the enclosing flow uses a multi-spawn dispatch pattern. Static parameterization at the flow level satisfies Rule 7; runtime substitution handles the per-invocation specificity."
+- **Pattern:** When extending a discipline rule, enumerate structural variants (single invocation, multi-spawn dispatch, parallel batch) and ensure the rule text accommodates each.
+- **Status:** Open — Rule 7 text extension pending
+
+### L036: Post-Fix Reviews Should Include Baseline Reconciliation Statement
+- **Date:** 2026-04-11
+- **From:** second-opinion/ (sonnet) during Rule 7 backlog fix chain
+- **Issue:** A post-fix-verification review reported "zero real violations corpus-wide" after the backlog fix but did not explicitly reconcile with the previous review's 8-violation list. The previous review's 5 false positives had been identified by a different second-opinion, but the current review's PASS verdict didn't address how the pre-existing backlog was resolved. The conclusion was correct but the evidence trail left readers guessing at scoping decisions.
+- **Root Cause:** Post-fix verification reviews focus on the fixed items and implicitly treat the pre-existing backlog as context without stating the baseline explicitly. This creates ambiguity about corpus-wide vs. changed-files-only scoping when multiple reviews in the same chain report different violation counts.
+- **Fix:** Post-fix verification review reports should include a one-line baseline statement near the top: "Pre-fix corpus had N violations (per prior review at {path}). This fix addresses M of them. Remaining N-M violations are [listed or unchanged]." This makes the scoping decision explicit and links the review to the audit trail.
+- **Pattern:** When multiple reviews in a chain report on overlapping corpus state, each review's scope must explicitly reconcile with its predecessor's baseline.
+- **Status:** Open — review/agent.md update pending
