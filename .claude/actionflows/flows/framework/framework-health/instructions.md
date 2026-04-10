@@ -109,7 +109,8 @@ Read your definition in .claude/actionflows/actions/analyze/agent.md
 Input:
 - aspect: spawn-block-lint
 - scope: .claude/actionflows/flows/**/instructions.md
-- context: For every instructions.md file under flows/, check whether any line matches the pattern "**Spawn" (the spawn block header marker). For each file that contains such a marker, verify it also contains the string "Read your definition in". Files that have a "**Spawn" marker but lack "Read your definition in" are under-provisioned spawn blocks — flag each as a health violation with the file path. Emit a clean bill if no violations found.
+- context: For every instructions.md file under flows/, scan for all lines that match the pattern "**Spawn" (the spawn block header marker). For EACH individual `**Spawn` marker found, scan forward from that marker to the next blank line OR closing triple-backtick fence, and verify the string "Read your definition in" appears within that region. A spawn block that contains `**Spawn` but whose forward-scan region does not contain "Read your definition in" is an under-provisioned spawn block. Record each non-compliant spawn block as a separate violation with the file path AND the line number of the offending `**Spawn` marker. A file with two spawn blocks where one is compliant and one is not produces one violation record (not a clean bill). Emit a clean bill only if every individual spawn block in every file is compliant.
+- notes: Current detection covers `**Spawn with:**`, `**Spawn after N:**`, and similar `**Spawn` prefixed variants. Alternative markers (e.g., `**Execute:**`, `**Run:**`) are NOT detected by this lint. If a new marker convention is introduced in flows, update the pattern here.
 ```
 
 **Gate:** Lint report delivered listing any under-provisioned spawn block files, or confirming zero violations.
