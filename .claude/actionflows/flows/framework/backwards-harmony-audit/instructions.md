@@ -57,9 +57,20 @@ Waits for Steps 1-3. Reads all three layer reports and cross-references:
 
 Categorizes findings: CRITICAL → HIGH → MEDIUM → LOW
 
-### Step 5: Second Opinion (second-opinion/, haiku)
+### Step 5: Second Opinion (second-opinion/, sonnet)
 
-Waits for Step 4. Critiques audit findings via Ollama.
+Waits for Step 4. Independent critique of audit findings.
+
+**Spawn:**
+```
+Read your definition in .claude/actionflows/actions/second-opinion/agent.md
+
+Input:
+- actionType: audit/
+- targetReport: {log path from Step 4 audit report}
+- originalInput: {focus and depth from flow inputs}
+- focus: Verify harmony audit findings are accurate and complete. Check: spec-parser-frontend drift correctly identified, severity classifications reasonable, no critical coverage gaps missed.
+```
 
 ## Dependencies
 

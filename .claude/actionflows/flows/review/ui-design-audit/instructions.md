@@ -177,7 +177,16 @@ Input:
 **Model:** sonnet
 **Waits for:** Step 4
 
-Auto-inserted per second opinion protocol (review context).
+**Spawn after Step 4:**
+```
+Read your definition in .claude/actionflows/actions/second-opinion/agent.md
+
+Input:
+- actionType: review/
+- targetReport: {log path from Step 4}
+- originalInput: UI design audit — {referenceType}, {auditType}
+- focus: Verify fixes correctly address audit findings. Check: each finding resolved, no regressions, design tokens used where applicable, accessibility fixes follow WCAG 2.1 AA.
+```
 
 **Gate:** Second opinion delivered.
 

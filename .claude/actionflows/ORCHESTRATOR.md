@@ -215,7 +215,7 @@ Auto-inserts `second-opinion/` step after `review/` and `audit/` (always). Opt-i
 
 **Step insertion:** Insert `second-opinion/` immediately after the triggering action. **Critical: commit waits for the ORIGINAL action, NOT the second-opinion step.** Second opinion is informational and never blocks workflow.
 
-**Spawning inputs:** `actionType` (action being critiqued), `claudeOutputPath` (absolute path to output file), `originalInput` (scope given to original action). Use standard spawning pattern with `second-opinion/agent.md`.
+**Spawning inputs:** `actionType` (action being critiqued), `targetReport` (absolute path to the report file to critique), `originalInput` (scope given to original action), `focus` (optional — specific concern to prioritize). Use standard spawning pattern with `second-opinion/agent.md`.
 
 ### 8. Compose First, Propose Later
 No flow matches? Compose from existing actions. Propose new flow only if pattern recurs 2+ times.
@@ -582,31 +582,16 @@ Input:
 
 ### Model Override
 
-The human can request a model override at any time during a session. See ACTIONS.md "Model Override" section for full syntax, model types, and action compatibility.
+The human can request a model override at any time during a session. See ACTIONS.md "Model Override" section for full syntax and action compatibility.
 
-**Three agent classes** (see ACTIONS.md "Agent Capability Classes"):
-- **Hands** (Claude models) — Full tool access. Spawned via Task tool. Autonomous.
-- **Eyes** (Local models) — Text-in, text-out. Spawned via Bash. Orchestrator pre-reads all context.
-- **Hybrid** (Claude + Local) — Claude shell with tool access, delegates reasoning to local model mid-workflow. Spawned via Task tool with `localModel` input.
-
-**Local model tier mapping** (see ACTIONS.md "Local Models" section):
-- opus-tier → `ollama:qwen3:14b` (14B, ~9 GB, fits in GPU)
-- sonnet-tier → `ollama:qwen2.5-coder:7b` (7B, ~4.7 GB, fits in GPU)
-- haiku-tier → `ollama:gemma3:4b` (4B, ~3.3 GB, fits in GPU)
-
-When human says "use local models" without specifying which, auto-map each action's Claude tier to its local equivalent using the table above.
+All agents are Claude-backed (haiku, sonnet, opus) and spawned via the Task tool with `model="{resolved}"`.
 
 **When override is active:**
-1. **Resolve model** = If override covers this action, use override model. If "use local models" (blanket), map the action's default Claude tier to local equivalent. Otherwise, use default from ACTIONS.md.
-2. **Check compatibility** = If action is ❌ for the resolved class (see ACTIONS.md table), auto-fallback to default Claude model and note it.
-3. **Determine execution path:**
-   - **Hands** (haiku/sonnet/opus) → Task tool with `model="{resolved}"`
-   - **Eyes** (ollama:X / local:X) → Orchestrator pre-reads all files → writes prompt to temp file → Bash: `ollama run {model} < /tmp/af-agent-prompt-{stepN}.txt` → captures stdout
-   - **Hybrid** (haiku+ollama:X) → Task tool with `model="haiku"` + `localModel: {ollama model}` in spawn prompt inputs. Agent handles the local model delegation internally.
-4. **For ⚠️ actions** (code/ with Eyes) → After capturing Eyes output, orchestrator applies returned code blocks using Edit/Write tools. This is an orchestrator-assist step, not a sin — the orchestrator is applying agent output, not producing content.
-5. **Chain compilation** = Show resolved model in table + add `**Model Override:** {mode} → {model}` and `**Agent Class:** Hands | Eyes | Hybrid` lines after Source.
-6. **Override is session-scoped** — do NOT persist to ACTIONS.md or any file. It lives only in orchestrator memory for the current session.
-7. **Reset** = When human says "reset models" / "default models", clear the override and resume using ACTIONS.md defaults.
+1. **Resolve model** = If override covers this action, use override model. Otherwise, use default from ACTIONS.md.
+2. **Spawn** = Task tool with `model="{resolved}"`.
+3. **Chain compilation** = Show resolved model in table + add `**Model Override:** {mode} → {model}` line after Source.
+4. **Override is session-scoped** — do NOT persist to ACTIONS.md or any file. It lives only in orchestrator memory for the current session.
+5. **Reset** = When human says "reset models" / "default models", clear the override and resume using ACTIONS.md defaults.
 
 ### Config Injection Rule
 

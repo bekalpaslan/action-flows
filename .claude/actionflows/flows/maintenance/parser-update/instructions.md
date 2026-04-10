@@ -121,14 +121,16 @@ Input:
 ### Step 5: Second Opinion
 
 **Action:** `.claude/actionflows/actions/second-opinion/`
-**Model:** opus
+**Model:** sonnet
 
 **Spawn after Step 4:**
 ```
 Read your definition in .claude/actionflows/actions/second-opinion/agent.md
 
 Input:
-- review-log: {log path from Step 4}
+- actionType: review/
+- targetReport: {log path from Step 4}
+- originalInput: parser update for {gate_id or parser name}
 - focus: Verify parser handles new format without breaking backward compatibility. Check: both format variants parse, edge cases covered, type safety maintained.
 ```
 

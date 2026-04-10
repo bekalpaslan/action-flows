@@ -225,7 +225,7 @@ From ACTIONS.md lines 33-38:
 
 **Example:**
 ```markdown
-| second-opinion/ | Ollama critique of agent output | packages/second-opinion/ | actionType, claudeOutputPath, originalInput | haiku |
+| second-opinion/ | Independent critique of agent output | (direct sonnet action) | actionType, targetReport, originalInput | sonnet |
 ```
 
 **Validation Rules:**
@@ -301,7 +301,7 @@ Reference from ACTIONS.md § Model Selection Guidelines:
 
 | Model | Use When | Examples |
 |-------|----------|----------|
-| haiku | Fast execution, simple tasks, orchestration | code/, commit/, second-opinion/ |
+| haiku | Fast execution, simple tasks, orchestration | code/, commit/ |
 | sonnet | Judgment required, review, analysis | analyze/, review/, audit/, test/ |
 | opus | Complex reasoning, teaching, deep analysis | brainstorm/, onboarding/, plan/ (complex) |
 

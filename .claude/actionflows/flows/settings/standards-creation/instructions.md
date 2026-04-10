@@ -140,12 +140,12 @@ Input:
 
 ### Step 5: Second Opinion
 
-**Action:** `.claude/actionflows/actions/review/second-opinion/`
-**Model:** opus
+**Action:** `.claude/actionflows/actions/second-opinion/`
+**Model:** sonnet
 
 **Spawn after Step 4:**
 ```
-Read your definition in .claude/actionflows/actions/review/second-opinion/agent.md
+Read your definition in .claude/actionflows/actions/second-opinion/agent.md
 
 IMPORTANT: You are a spawned subagent executor.
 Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
@@ -160,9 +160,10 @@ Project Context:
 - Ports: backend=3001, vite=5173
 
 Input:
-- scope: .claude/actionflows/templates/{template-file}
-- context: Template review report from Step 4
-- contract-ref: {contract-ref from human input, or "none"}
+- actionType: review/
+- targetReport: {log path from Step 4 review}
+- originalInput: template review for {template-type} — {requirements}
+- focus: {contract-ref from human input, or "Template consistency with existing conventions"}
 ```
 
 **Gate:** Second opinion delivered. If consensus APPROVED → proceed to commit. If NEEDS_CHANGES → loop back to code/ with feedback.

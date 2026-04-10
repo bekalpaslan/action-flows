@@ -12,7 +12,7 @@ Now let's talk about quality—how ActionFlows maintains high standards through 
 
 The system has TWO quality layers:
 1. **Primary review** (review/ or audit/ agent)
-2. **Second opinion** (local AI critiques primary review)
+2. **Second opinion** (independent agent critiques primary review)
 
 Let me show you how this works:
 
@@ -69,7 +69,7 @@ Score: 95%
 
 Summary: Code implements rate limiting correctly. Clean, well-tested, follows conventions.
 
-**Second Opinion (llama3:70b via Ollama):**
+**Second Opinion (sonnet):**
 Key findings:
 - Missed issues: 2 (error message inconsistency, missing edge case test)
 - Disagreements: 0
@@ -88,14 +88,12 @@ Continuing to Step 4...
 
 Primary review (Claude) catches 95% of issues.
 
-Second opinion (local LLM) catches what Claude might miss:
+An independent second agent catches what the first pass might miss:
 - Different perspective
-- Different training data
-- Different biases
+- Fresh read of the output
+- Less anchoring to initial conclusions
 
 **Result:** Higher quality, better learning surface for humans.
-
-**Cost:** ~30 seconds per review (runs locally via Ollama)
 
 ---
 
@@ -112,7 +110,7 @@ Orchestrator removes second-opinion/ steps.
 **Use when:**
 - Trivial changes
 - Time-sensitive fixes
-- Ollama not available
+- Stakes are low enough that a single review is sufficient
 
 ---
 

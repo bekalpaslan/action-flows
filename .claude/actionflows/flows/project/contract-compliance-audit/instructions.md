@@ -328,9 +328,18 @@ Input:
 ### Step 8: Second Opinion
 
 **Action:** `.claude/actionflows/actions/second-opinion/`
-**Model:** haiku
+**Model:** sonnet
 
-Auto-inserted after Step 7. Critiques review findings.
+**Spawn after Step 7:**
+```
+Read your definition in .claude/actionflows/actions/second-opinion/agent.md
+
+Input:
+- actionType: review/
+- targetReport: {log path from Step 7}
+- originalInput: contract compliance audit — {scope}
+- focus: Verify contract fixes are complete and accurate. Check: all P0/P1 issues addressed, compliance tests cover the right rules, no regressions.
+```
 
 **Gate:** Second opinion delivered.
 

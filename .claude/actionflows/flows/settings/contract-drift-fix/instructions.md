@@ -93,14 +93,16 @@ Input:
 ### Step 4: Second Opinion
 
 **Action:** `.claude/actionflows/actions/second-opinion/`
-**Model:** opus
+**Model:** sonnet
 
 **Spawn after Step 3:**
 ```
 Read your definition in .claude/actionflows/actions/second-opinion/agent.md
 
 Input:
-- review-log: {log path from Step 3}
+- actionType: review/
+- targetReport: {log path from Step 3}
+- originalInput: contract drift fix for {context or "all formats"}
 - focus: Verify CONTRACT.md now matches reality. Check: documented formats align with orchestrator output, no critical formats missed, examples are accurate.
 ```
 

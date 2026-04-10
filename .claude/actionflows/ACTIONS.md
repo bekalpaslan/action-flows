@@ -33,6 +33,7 @@ These are atomic verbs. They know HOW to do their job, but need WHAT to work on.
 | review/ | Review anything | YES | scope, type | sonnet | YES (5.1) | review, work, settings | quality-check, bug-detection, style-validation, contract-compliance | `{"scope_preference": "multi-file", "min_confidence": "low", "parallel_safe": false}` |
 | test/ | Execute tests | YES | scope, type | haiku | NO | work, settings, review | test-execution, test-suite-creation, coverage-analysis, test-debugging | `{"scope_preference": "multi-file", "min_confidence": "high", "parallel_safe": true}` |
 | verify-healing/ | Post-healing validation | YES | healingChainId, targetGateId, expectedScore, preHealingScore | sonnet | YES (5.5) | review, settings | post-healing-validation, gate-verification, healing-assessment | `{"scope_preference": "multi-package", "min_confidence": "high", "parallel_safe": true}` |
+| second-opinion/ | Independent critique of agent output | YES | actionType, targetReport, originalInput | sonnet | NO | review, explore | critique, quality-assessment, independent-review, alternative-perspective | `{"scope_preference": "single-input", "min_confidence": "low", "parallel_safe": true}` |
 
 ## Orchestrator-Executed Actions
 
@@ -77,7 +78,6 @@ See `.claude/actionflows/CONTRACT.md` for format specifications.
 
 | Action | Purpose | Code Package | Required Inputs | Model | Context Affinity | Capability Tags | Routing Hints |
 |--------|---------|--------------|-----------------|-------|------------------|-----------------|---------------|
-| second-opinion/ | Ollama critique of agent output | packages/second-opinion/ | actionType, claudeOutputPath, originalInput | haiku | review, explore | critique, quality-assessment, ollama-evaluation, alternative-perspective | `{"scope_preference": "single-input", "min_confidence": "low", "parallel_safe": true}` |
 
 ## Action Modes
 
@@ -104,74 +104,20 @@ Certain actions automatically trigger follow-up steps:
 
 ## Model Selection Guidelines
 
-### Claude Models (Hands / Hybrid shell)
-
 | Action Type | Default Model | Why |
 |-------------|---------------|-----|
 | code, code/backend, code/frontend, test, commit | haiku | Fast, simple execution |
 | review, analyze, plan | sonnet | Needs judgment |
 | audit, brainstorm, onboarding | opus | Deep analysis or interactive teaching needed |
-| second-opinion | haiku | Lightweight CLI wrapper |
+| second-opinion | sonnet | Independent critique agent |
 
-### Local Models
-
-**Hardware:** RTX 5070 Ti (16GB GDDR7) — Models >14B spill to CPU RAM (slow)
-
-| Ollama Model | Params | VRAM | Speed | Claude Tier | Use Cases |
-|-------------|--------|------|-------|-------------|-----------|
-| `qwen3:14b` | 14B | 9GB | 20-35 tok/s | opus | audit, brainstorm, deep analysis |
-| `qwen2.5-coder:7b` | 7B | 4.7GB | 40-60 tok/s | sonnet | review, analyze, plan, code reasoning |
-| `gemma3:4b` | 4B | 3.3GB | 60-80 tok/s | haiku | fast tasks, second-opinion, quick checks |
-| `llama3.2:latest` | 3B | 2GB | 80+ tok/s | haiku-alt | fastest, lightweight tasks |
+All actions run on Claude models via the Task tool.
 
 ## Model Override
 
 The human can override models at session level. When active, the override replaces the default Model column for all actions in the chain.
 
-**Activation:** Human says "use haiku for everything", "all agents on sonnet", "point everything to ollama qwen2.5-coder:7b", etc.
+**Activation:** Human says "use haiku for everything", "all agents on sonnet", "all agents on opus", etc.
 **Scope:** Current session only. Does not persist across sessions.
 **Deactivation:** Human says "reset models", "use default models", "back to normal", etc.
-
-### Agent Capability Classes
-
-| Class | Model Types | Tools? | Edit Files? | Gate Traceable? | Spawned Via |
-|-------|-------------|--------|-------------|-----------------|-------------|
-| **Hands** | Claude (haiku, sonnet, opus) | ✅ | ✅ | ✅ | Task tool |
-| **Eyes** | Local (ollama:*, local:*) | ❌ | ❌ | ❌ | Bash (CLI) |
-| **Hybrid** | Claude + Local | ✅ | ✅ | ✅ | Task tool |
-
-- **Hands:** Full autonomy, reads agent.md, produces log folders + contract outputs + gate traces
-- **Eyes:** Text-in/text-out, orchestrator pre-injects context, NO logs/traces/learnings (dark to system)
-- **Hybrid:** Hands shell + local reasoning, full observability at reduced cost (e.g., `second-opinion/`)
-
-### Action Compatibility
-
-| Action | Hands | Eyes | Hybrid | Notes |
-|--------|:-----:|:----:|:------:|-------|
-| analyze/ | ✅ | ✅ | ✅ | Hybrid: Claude reads files, local model reasons about them |
-| audit/ | ✅ | ✅ | ✅ | Hybrid: Claude gathers evidence, local model evaluates |
-| brainstorm/ | ✅ | ✅ | ✅ | Hybrid: Claude fetches context, local model generates ideas |
-| code/ | ✅ | ⚠️ | ✅ | Hybrid: Claude navigates codebase, local model generates code, Claude applies |
-| code/backend/ | ✅ | ⚠️ | ✅ | Same as code/ |
-| code/frontend/ | ✅ | ⚠️ | ✅ | Same as code/ |
-| commit/ | ✅ | ❌ | ❌ | Requires git commands — Hands only |
-| diagnose/ | ✅ | ✅ | ✅ | Hybrid: Claude reads traces, local model diagnoses |
-| isolate/ | ✅ | ❌ | ✅ | Hybrid: local model decides, Claude applies quarantine edits |
-| narrate/ | ✅ | ✅ | ✅ | Pure text generation — all classes work |
-| onboarding/ | ✅ | ❌ | ❌ | Requires interactive tool use (AskUserQuestion) — Hands only |
-| plan/ | ✅ | ✅ | ✅ | Hybrid: Claude reads codebase, local model designs plan |
-| review/ | ✅ | ✅ | ✅ | Hybrid: Claude reads files, local model reviews |
-| second-opinion/ | ✅ | ✅ | ✅ | Already a Hybrid (haiku wrapper + Ollama reasoning) |
-| test/ | ✅ | ❌ | ✅ | Hybrid: local model generates test code, Claude runs tests |
-| verify-healing/ | ✅ | ✅ | ✅ | Hybrid: Claude reads data, local model validates |
-
-**Legend:** ✅ = native support | ⚠️ = works with orchestrator assist | ❌ = incompatible
-
-### Model Types
-
-| Type | Examples | Execution Path | Agent Class |
-|------|----------|----------------|-------------|
-| **Claude** | haiku, sonnet, opus | Task tool with `model="{model}"` | Hands |
-| **Local (Ollama)** | ollama:qwen2.5-coder:7b, ollama:codellama:13b | Bash: `ollama run {model}` | Eyes |
-| **Local (other)** | local:{command} | Bash: `{command}` | Eyes |
-| **Claude + Local** | haiku+ollama:qwen2.5-coder:7b | Task tool (Claude shell) + Bash (local reasoning) | Hybrid |
+**Model Types:** `haiku`, `sonnet`, `opus` — spawned via Task tool with `model="{resolved}"`.

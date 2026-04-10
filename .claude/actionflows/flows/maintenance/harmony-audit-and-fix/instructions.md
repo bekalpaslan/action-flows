@@ -135,14 +135,16 @@ Input:
 ### Step 4: Second Opinion
 
 **Action:** `.claude/actionflows/actions/second-opinion/`
-**Model:** opus
+**Model:** sonnet
 
 **Spawn after Step 3:**
 ```
 Read your definition in .claude/actionflows/actions/second-opinion/agent.md
 
 Input:
-- review-log: {log path from Step 3}
+- actionType: review/
+- targetReport: {log path from Step 3}
+- originalInput: harmony fix applied to {gate_id or "all gates"}
 - focus: Verify fix resolves system health violations without regressions. Check: does the format now validate? Are gates passing? Is backward compatibility maintained?
 ```
 

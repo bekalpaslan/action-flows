@@ -435,7 +435,7 @@ Healing flows are **human-initiated** remediation chains triggered when health d
 
 | Action | Purpose | Package |
 |--------|---------|---------|
-| second-opinion/ | Ollama critique of agent output | packages/second-opinion/ |
+| second-opinion/ | Independent critique of agent output | (direct sonnet action) |
 
 ### Orchestrator-Executed Actions (not spawned as agents)
 
@@ -451,40 +451,11 @@ Healing flows are **human-initiated** remediation chains triggered when health d
 | audit/ | audit-only | audit-and-remediate |
 | analyze/ | analyze-only | analyze-and-correct |
 
-### Agent Capability Classes
-
-| Class | Model Types | Tools? | Edit Files? | Spawned Via |
-|-------|-------------|--------|-------------|-------------|
-| **Hands** | Claude (haiku, sonnet, opus) | ✅ | ✅ | Task tool |
-| **Eyes** | Local (ollama:*) | ❌ | ❌ | Bash (CLI) |
-| **Hybrid** | Claude + Local | ✅ | ✅ | Task tool |
-
-### Local Models (RTX 5070 Ti, 16GB GDDR7)
-
-| Ollama Model | Params | VRAM | Speed | Claude Tier |
-|-------------|--------|------|-------|-------------|
-| `qwen3:14b` | 14B | 9GB | 20–35 tok/s | opus |
-| `qwen2.5-coder:7b` | 7B | 4.7GB | 40–60 tok/s | sonnet |
-| `gemma3:4b` | 4B | 3.3GB | 60–80 tok/s | haiku |
-| `llama3.2:latest` | 3B | 2GB | 80+ tok/s | haiku-alt |
-
-### Action Compatibility
-
-| Action | Hands | Eyes | Hybrid |
-|--------|:-----:|:----:|:------:|
-| analyze/ | ✅ | ✅ | ✅ |
-| audit/ | ✅ | ✅ | ✅ |
-| code/ / code/backend/ / code/frontend/ | ✅ | ⚠️* | ✅ |
-| commit/ | ✅ | ❌ | ❌ |
-| onboarding/ | ✅ | ❌ | ❌ |
-| review/ | ✅ | ✅ | ✅ |
-| test/ | ✅ | ❌ | ✅ |
-
-*code/ with Eyes: orchestrator applies returned code blocks via Edit/Write (orchestrator-assist, not a sin)
-
 ### Model Override
 
-Activate: human says "use haiku for everything", "all agents on sonnet", "point to ollama:X"
+All agents are Claude-backed (haiku, sonnet, opus) and spawned via the Task tool.
+
+Activate: human says "use haiku for everything", "all agents on sonnet", etc.
 Scope: **session-only**  --  never persists to ACTIONS.md
 Reset: "reset models" / "default models"
 

@@ -12,7 +12,7 @@
 - **Fix Options:**
   1. Add `mkdir -p` (or `fs.mkdir recursive`) inside the CLI before writing output
   2. Harden `create-log-folder` to verify directory exists before passing path to CLI
-- **Status:** Closed (dissolved) — `packages/second-opinion/src/cli.ts` has `mkdir(dirname(args.outputPath), { recursive: true })` before writeFile
+- **Status:** Closed (obsolete) — `packages/second-opinion/` was deleted during the Ollama removal refactor; second-opinion is now a direct sonnet action with no separate CLI process, so this failure mode no longer exists.
 
 ### L002: Deferred Field Implementation Creates Silent Behavior Gaps
 - **Date:** 2026-02-09

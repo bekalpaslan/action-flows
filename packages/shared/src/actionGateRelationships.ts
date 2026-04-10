@@ -427,11 +427,10 @@ export const ACTION_GATE_RELATIONSHIPS: Record<string, ActionGateMapping> = {
     action: 'second-opinion',
     gates: ['gate-07', 'gate-08'] as const,
     metadata: {
-      model: 'haiku',
+      model: 'sonnet',
       contractOutput: null,
       autoTriggers: [],
-      codeBacked: true,
-      codeBackedPackage: 'packages/second-opinion',
+      codeBacked: false,
       stackSpecific: false,
     },
   },

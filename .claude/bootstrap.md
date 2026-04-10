@@ -312,7 +312,7 @@ Auto-inserts `second-opinion/` step after `review/` and `audit/` (always). Opt-i
 
 **Step insertion:** Insert `second-opinion/` immediately after the triggering action. **Critical: commit waits for the ORIGINAL action, NOT the second-opinion step.** Second opinion is informational and never blocks workflow.
 
-**Spawning inputs:** `actionType` (action being critiqued), `claudeOutputPath` (absolute path to output file), `originalInput` (scope given to original action). Use standard spawning pattern with `second-opinion/agent.md`.
+**Spawning inputs:** `actionType` (action being critiqued), `targetReport` (path to the report file), `originalInput` (scope given to original action), optional `focus`. Use standard spawning pattern with `second-opinion/agent.md`.
 
 ### Rule 8 Application: Compose First, Propose Later (Gap Handling)
 
@@ -797,7 +797,7 @@ This catalog describes every action type available in the framework. The bootstr
 | Needs metrics or gap analysis | + analyze/ |
 | Needs root cause analysis | + diagnose/ |
 | Needs quarantine management | + isolate/, verify-healing/ |
-| Wants local model critique | + second-opinion/ |
+| Wants independent critique of agent output | + second-opinion/ |
 | Wants ideation sessions | + brainstorm/ |
 | Wants interactive onboarding | + onboarding/ |
 | Wants narrative documentation | + narrate/ |
@@ -1018,20 +1018,20 @@ Create sub-actions when the project has 2+ deployment targets.
 
 ---
 
-### 4.12 second-opinion/ — Local Model Critique (Code-Backed)
+### 4.12 second-opinion/ — Independent Critique
 
-**Purpose:** Run a local Ollama model to critique agent output.
-**When to include:** Projects that want cost-effective dual assessment.
-**Model:** haiku (wrapper)
-**Code Package:** `packages/second-opinion/`
+**Purpose:** Independent sonnet-based critique of another action's output.
+**When to include:** Projects that want dual assessment of agent work.
+**Model:** sonnet
 
 | Input | Required | Description |
 |-------|----------|-------------|
 | actionType | YES | Which action to critique |
-| claudeOutputPath | YES | Path to Claude's output file |
+| targetReport | YES | Path to the report file to critique |
 | originalInput | YES | Scope given to original action |
+| focus | NO | Specific concerns to focus on |
 
-**Output:** Critique report from local model.
+**Output:** Independent critique report.
 
 ---
 
@@ -1127,62 +1127,18 @@ Create sub-actions when the project has 2+ deployment targets.
 
 ---
 
-### Agent Capability Classes (Local Model / Agent Class System)
-
-Three agent classes exist for different execution contexts:
-
-| Class | Model Types | Tools? | Edit Files? | Gate Traceable? | Spawned Via |
-|-------|-------------|--------|-------------|-----------------|-------------|
-| **Hands** | Claude (haiku, sonnet, opus) | Yes | Yes | Yes | Task tool |
-| **Eyes** | Local (ollama:*, local:*) | No | No | No | Bash (CLI) |
-| **Hybrid** | Claude + Local | Yes | Yes | Yes | Task tool |
-
-- **Hands:** Full autonomy, reads agent.md, produces log folders + contract outputs + gate traces
-- **Eyes:** Text-in/text-out, orchestrator pre-injects context, NO logs/traces/learnings (dark to system)
-- **Hybrid:** Hands shell + local reasoning, full observability at reduced cost
-
-**Local model tier mapping:**
-
-| Ollama Model | Params | VRAM | Claude Tier | Use Cases |
-|-------------|--------|------|-------------|-----------|
-| `qwen3:14b` | 14B | 9GB | opus | audit, brainstorm, deep analysis |
-| `qwen2.5-coder:7b` | 7B | 4.7GB | sonnet | review, analyze, plan |
-| `gemma3:4b` | 4B | 3.3GB | haiku | fast tasks, second-opinion |
-| `llama3.2:latest` | 3B | 2GB | haiku-alt | fastest, lightweight |
-
-When human says "use local models" without specifying which, auto-map each action's Claude tier to its local equivalent.
-
-**Action Compatibility:**
-
-| Action | Hands | Eyes | Hybrid | Notes |
-|--------|:-----:|:----:|:------:|-------|
-| analyze/ | Yes | Yes | Yes | |
-| audit/ | Yes | Yes | Yes | |
-| brainstorm/ | Yes | Yes | Yes | |
-| code/ | Yes | Caution | Yes | Eyes needs orchestrator-assist to apply code |
-| commit/ | Yes | No | No | Requires git — Hands only |
-| diagnose/ | Yes | Yes | Yes | |
-| isolate/ | Yes | No | Yes | |
-| narrate/ | Yes | Yes | Yes | Pure text generation |
-| onboarding/ | Yes | No | No | Requires interactive tools |
-| plan/ | Yes | Yes | Yes | |
-| review/ | Yes | Yes | Yes | |
-| second-opinion/ | Yes | Yes | Yes | Already Hybrid |
-| test/ | Yes | No | Yes | |
-| verify-healing/ | Yes | Yes | Yes | |
-
-**Model Override:** Human can override models at session level. Session-scoped only, not persisted.
-
----
-
 ### Model Selection Guidelines
+
+All agents are Claude-backed (haiku, sonnet, opus) and spawned via the Task tool.
 
 | Action Type | Default Model | Why |
 |-------------|---------------|-----|
 | code, code/backend, code/frontend, test, commit, notify, cleanup | haiku | Fast, simple execution |
 | review, analyze, plan, diagnose, verify-healing | sonnet | Needs judgment |
 | audit, brainstorm, onboarding, narrate | opus | Deep analysis or interactive |
-| second-opinion | haiku | Lightweight CLI wrapper |
+| second-opinion | sonnet | Independent critique agent |
+
+**Model Override:** Human can override models at session level. Session-scoped only, not persisted.
 
 
 ---
@@ -1511,21 +1467,12 @@ Input:
 
 **Model Override:**
 
-The human can request a model override at any time during a session.
-
-**Three agent classes:**
-- **Hands** (Claude models) -- Full tool access. Spawned via Task tool. Autonomous.
-- **Eyes** (Local models) -- Text-in, text-out. Spawned via Bash. Orchestrator pre-reads all context.
-- **Hybrid** (Claude + Local) -- Claude shell with tool access, delegates reasoning to local model mid-workflow. Spawned via Task tool with `localModel` input.
+The human can request a model override at any time during a session. All agents are Claude-backed (haiku, sonnet, opus) and spawned via the Task tool.
 
 **When override is active:**
-1. **Resolve model** = If override covers this action, use override model. If "use local models" (blanket), map the action default Claude tier to local equivalent. Otherwise, use default from ACTIONS.md.
-2. **Check compatibility** = If action is incompatible for the resolved class, auto-fallback to default Claude model and note it.
-3. **Determine execution path:**
-   - **Hands** (haiku/sonnet/opus) -> Task tool with `model="{resolved}"`
-   - **Eyes** (ollama:X / local:X) -> Orchestrator pre-reads all files -> writes prompt to temp file -> Bash: `ollama run {model} < /tmp/af-agent-prompt-{stepN}.txt` -> captures stdout
-   - **Hybrid** (haiku+ollama:X) -> Task tool with `model="haiku"` + `localModel: {ollama model}` in spawn prompt inputs.
-4. **Override is session-scoped** -- do NOT persist to ACTIONS.md. Reset when human says "reset models" / "default models".
+1. **Resolve model** = If override covers this action, use override model. Otherwise, use default from ACTIONS.md.
+2. **Spawn** = Task tool with `model="{resolved}"`.
+3. **Override is session-scoped** -- do NOT persist to ACTIONS.md. Reset when human says "reset models" / "default models".
 
 **Config Injection Rule:**
 
@@ -1832,20 +1779,6 @@ Some actions are executed directly by the orchestrator using its tool access, NO
 | playwright-test | Execute Playwright E2E tests | Orchestrator runs Playwright commands via Bash |
 
 **Prerequisites:** Verify backend + frontend running before test. Check for Chrome MCP availability.
-
----
-
-## Code-Backed Actions
-
-Code-backed actions have real TypeScript packages backing them. Unlike generic actions where Claude IS the tool, these actions wrap existing code packages.
-
-| Action | Purpose | Code Package |
-|--------|---------|--------------|
-| second-opinion/ | Ollama critique of agent output | packages/second-opinion/ |
-
-**Key distinction:**
-- **Generic Actions:** Pure Claude instructions. Claude performs all logic.
-- **Code-Backed Actions:** Claude spawns and orchestrates code from packages/. The heavy lifting happens in the package.
 
 ---
 

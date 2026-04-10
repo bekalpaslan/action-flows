@@ -161,14 +161,16 @@ Input:
 ### Step 6: Second Opinion
 
 **Action:** `.claude/actionflows/actions/second-opinion/`
-**Model:** opus
+**Model:** sonnet
 
 **Spawn after Step 5:**
 ```
 Read your definition in .claude/actionflows/actions/second-opinion/agent.md
 
 Input:
-- review-log: {log path from Step 5}
+- actionType: review/
+- targetReport: {log path from Step 5}
+- originalInput: flow drift remediation for {focus or "all flows"}
 - focus: Verify flow drift remediation complete. Check: all flows now consistent between instructions.md and FLOWS.md, no missing actions, registry accurate, abstract extensions correct.
 ```
 

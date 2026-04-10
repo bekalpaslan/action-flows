@@ -448,7 +448,7 @@ routing_priority: 80
 ```yaml
 action: second-opinion/
 context_affinity: [review, explore]
-capability_tags: [critique, quality-assessment, ollama-evaluation, alternative-perspective]
+capability_tags: [critique, quality-assessment, independent-review, alternative-perspective]
 scope_preference:
   single_file: true
   multi_file: true
@@ -458,7 +458,7 @@ parallel_safe: true
 dependencies: [code/, review/, audit/]
 output_types: [No contract output]
 triggers:
-  keywords: [second-opinion, critique, review, feedback, ollama, alternative]
+  keywords: [second-opinion, critique, review, feedback, alternative]
   patterns: []
   situations:
     - lightweight critique after code/review/audit

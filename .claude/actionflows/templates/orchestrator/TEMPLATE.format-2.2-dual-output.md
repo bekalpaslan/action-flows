@@ -17,7 +17,7 @@ These fields MUST be present in every dual output:
 2. **Step Complete** — `>> Step {N} complete: {action}/ -- {result}.`
 3. **Original Label** — `**Original ({review|audit}):**`
 4. **Original Result** — Content between original label and second opinion label
-5. **Second Opinion Label** — `**Second Opinion ({model} via Ollama):**`
+5. **Second Opinion Label** — `**Second Opinion ({model}):**`
 6. **Second Opinion Summary** — Content between second opinion label and missed issues
 7. **Missed Issues Count** — `- Missed issues: {N}`
 8. **Disagreements Count** — `- Disagreements: {N}`
@@ -47,7 +47,7 @@ These fields are optional:
 
 {Original action result — verdict, score, key findings}
 
-**Second Opinion ({model-name} via Ollama):**
+**Second Opinion ({model-name}):**
 
 {Second opinion summary — what the critique agent found}
 
@@ -99,8 +99,8 @@ Continuing to Step {N}...
 ### Second Opinion Label
 
 - **Pattern:** `**Second Opinion ({model})**`
-- **Model Name:** Name of the model used for second opinion (e.g., "Haiku 3.5", "Sonnet 3.7")
-- **Example:** `**Second Opinion (Haiku 3.5)**`
+- **Model Name:** Name of the model used for second opinion (e.g., "Sonnet 4.5", "Sonnet 3.7")
+- **Example:** `**Second Opinion (Sonnet 4.5)**`
 
 ### Second Opinion Summary
 
@@ -201,7 +201,7 @@ Found 3 issues:
 - 1 critical: Missing input validation in auth middleware
 - 2 high: JWT verification doesn't check expiration, error messages expose internals
 
-**Second Opinion (Haiku 3.5 via Ollama):**
+**Second Opinion (Sonnet 4.5):**
 
 The original review correctly identified the critical input validation issue and JWT expiration check. However, it missed two additional security concerns:
 
