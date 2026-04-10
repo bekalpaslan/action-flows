@@ -607,6 +607,52 @@ export type { WSEnvelope, SystemMessageType } from './ws-envelope.js';
 export { SYSTEM_CHANNEL, BROADCAST_CHANNEL } from './ws-envelope.js';
 
 // ============================================================================
+// WebSocket Payload Validation Schemas (CF-2)
+// ============================================================================
+export type {
+  SessionStatusPayload,
+  SessionStartedPayload,
+  SessionEndedPayload,
+  SessionUpdatedPayload,
+  ChatMessagePayload,
+  ChatHistoryPayload,
+  ChainCompiledPayload,
+  ChainStartedPayload,
+  ChainCompletedPayload,
+  StepSpawnedPayload,
+  StepStartedPayload,
+  StepCompletedPayload,
+  StepFailedPayload,
+  ErrorOccurredPayload,
+  SystemErrorPayload,
+  KnownPayloadType,
+  WSPayloadValidationResult,
+} from './ws-envelope-schemas.js';
+
+export {
+  BaseEventSchema,
+  SessionStatusPayloadSchema,
+  SessionStartedPayloadSchema,
+  SessionEndedPayloadSchema,
+  SessionUpdatedPayloadSchema,
+  ChatMessagePayloadSchema,
+  ChatHistoryPayloadSchema,
+  ChainStepSnapshotSchema,
+  ChainCompiledPayloadSchema,
+  ChainStartedPayloadSchema,
+  ChainCompletedPayloadSchema,
+  StepSpawnedPayloadSchema,
+  StepStartedPayloadSchema,
+  StepCompletedPayloadSchema,
+  StepFailedPayloadSchema,
+  ErrorOccurredPayloadSchema,
+  SystemErrorPayloadSchema,
+  WSEnvelopeSchema,
+  validateWSPayload,
+  validateWSEnvelope,
+} from './ws-envelope-schemas.js';
+
+// ============================================================================
 // Validation Event Types (Neural Validation Layer)
 // ============================================================================
 export type {
@@ -632,3 +678,8 @@ export type { DefaultWorkbenchId, CustomWorkbenchId, CustomWorkbench } from './c
 export { DEFAULT_WORKBENCH_IDS, isDefaultWorkbench, toCustomWorkbenchId } from './customWorkbenchTypes.js';
 // Note: Do NOT re-export WorkbenchId from customWorkbenchTypes to avoid conflict with existing workbenchTypes.ts WorkbenchId
 export type { ForkId, MergeResolution, ForkMetadata } from './forkTypes.js';
+
+// ============================================================================
+// Phase 999.1: Ledger Types (History & Memory Lifecycle)
+// ============================================================================
+export * from './ledger.js';
