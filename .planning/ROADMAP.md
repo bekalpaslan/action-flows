@@ -238,10 +238,10 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 
 **Goal:** Implement 3-layer history model (raw/ledger/canonical) to prevent unbounded growth of gate-traces.jsonl, ActionFlows logs, and LEARNINGS.md. Add TTL for raw operational data, create searchable execution ledger, establish promotion pipeline from raw to canonical, and fix missing logs/INDEX.md trust gap.
 **Requirements:** D-01..D-12 (defined in 999.1-CONTEXT.md)
-**Plans:** 6 plans
+**Plans:** 1/6 plans executed
 
 Plans:
-- [ ] 999.1-01-PLAN.md -- Shared LedgerEntry type + Wave 0 failing test stubs
+- [x] 999.1-01-PLAN.md -- Shared LedgerEntry type + Wave 0 failing test stubs
 - [ ] 999.1-02-PLAN.md -- LedgerService (append/query) + summarizeTrace pure function
 - [ ] 999.1-03-PLAN.md -- HealthScoreCalculator.prune() + CleanupService raw->ledger promotion wiring
 - [ ] 999.1-04-PLAN.md -- LearningsArchiver (50-entry cap, year-scoped archive) + CleanupService wiring
