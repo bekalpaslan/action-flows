@@ -53,6 +53,7 @@
 | health-audit-and-fix/ | Remediate format drift and contract violations | analyze/health-violation -> code/fix-parser OR code/update-orchestrator OR code/update-contract -> review/health-fix -> second-opinion/ -> commit |
 | health-protocol/ | 7-phase immune response for contract violations | analyze (detect) -> analyze (classify) -> isolate (conditional) -> diagnose -> human gate -> healing flow -> verify-healing -> analyze (learn) |
 | parser-update/ | Update backend parser for evolved formats | analyze/parser-gap -> code/backend/parser -> test/parser -> review -> second-opinion/ -> commit |
+| spawn-prompt-discipline-audit/ | Audit flows for ad-hoc spawn-prompt constraint patching and strip violations | analyze -> human gate -> code -> review || commit |
 
 ## pm
 
