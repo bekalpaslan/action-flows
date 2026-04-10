@@ -1,2 +1,4 @@
 # Enforce LF line endings for contract files (test regex requires LF)
 *.contract.md text eol=lf
+.claude/actionflows/LEARNINGS.md text eol=lf
+.claude/actionflows/LEARNINGS-archive-*.md text eol=lf
