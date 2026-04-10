@@ -90,6 +90,40 @@ export class HealthScoreCalculator extends EventEmitter {
   }
 
   /**
+   * Prune traces older than 7 days. Returns the pruned traces so the caller
+   * (CleanupService) can promote them to the ledger before they're dropped.
+   * Per D-01 (7-day TTL) and D-06 (raw → ledger promotion at TTL).
+   */
+  public prune(): GateTrace[] {
+    const cutoff = Date.now() - this.WINDOW_7D_MS;
+    const survivors: GateTrace[] = [];
+    const pruned: GateTrace[] = [];
+    for (const t of this.traceBuffer) {
+      const ts = new Date(t.timestamp).getTime();
+      if (Number.isFinite(ts) && ts >= cutoff) survivors.push(t);
+      else pruned.push(t);
+    }
+    this.traceBuffer = survivors;
+
+    // Atomic rewrite of the on-disk JSONL fallback
+    try {
+      const dir = path.dirname(this.traceFilePath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      const tmpPath = this.traceFilePath + '.tmp';
+      const content = survivors.length
+        ? survivors.map(t => JSON.stringify(t)).join('\n') + '\n'
+        : '';
+      fs.writeFileSync(tmpPath, content);
+      fs.renameSync(tmpPath, this.traceFilePath);
+    } catch (err) {
+      console.warn('[HealthScore] Prune file rewrite failed:', err);
+    }
+
+    console.log(`[HealthScore] Pruned ${pruned.length} trace(s), ${survivors.length} retained`);
+    return pruned;
+  }
+
+  /**
    * Ingest a gate trace into the in-memory buffer.
    * Called from index.ts when gateCheckpoint emits 'gate:checkpoint'.
    */
