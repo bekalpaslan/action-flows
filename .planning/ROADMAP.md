@@ -22,6 +22,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 8: Neural Validation & Safety** - Hook-based design system enforcement, /btw signaling, approval gates, permission boundaries (completed 2026-04-03)
 - [ ] **Phase 9: Workbenches & Flow Management** - 7 default workbench content pages, flow browser, archived flow harvesting, flow composition
 - [x] **Phase 10: Customization & Automation** - Self-healing flows, skills, scheduled tasks, custom workbenches, session forking, learning browser (completed 2026-04-08)
+- [ ] **Phase 11: Test Stub Realignment & Doc Cleanup** - Realign 3 stale Wave 0 test stubs to match real APIs, refresh REQUIREMENTS.md checkboxes, generate Phase 04.1 VERIFICATION.md, flip 999.1 Nyquist flags (gap closure from v4.8 audit)
 
 ## Phase Details
 
@@ -213,10 +214,24 @@ Plans:
 - [x] 10-09-PLAN.md -- Gap closure: Return approvalId from healing route, migrate CustomWorkbenchService and ForkMetadataService to Storage
 **UI hint**: yes
 
+### Phase 11: Test Stub Realignment & Doc Cleanup
+**Goal**: Wave 0 test stubs from Phase 10 realigned to match real APIs; doc staleness (REQUIREMENTS.md checkboxes, Phase 04.1 verification, Phase 999.1 Nyquist flags) cleared before v4.8 milestone archival.
+**Depends on**: Phase 10, Phase 999.1
+**Gap Closure**: Closes residual cleanup identified in v4.8-MILESTONE-AUDIT.md (2026-04-11 correction)
+**Requirements**: None (cleanup-only, all requirements already satisfied)
+**Success Criteria** (what must be TRUE):
+  1. All 3 stale Wave 0 test stubs in packages/backend/src/services/__tests__/ pass or are replaced: schedulerService.test.ts, skillService.test.ts, healingQuotaTracker.test.ts
+  2. REQUIREMENTS.md traceability table reflects Phase 6/7/8 requirements as Satisfied with [x] checkboxes (28 requirements updated)
+  3. .planning/phases/04.1-framework-docs-realignment-.../04.1-VERIFICATION.md exists with passed status
+  4. .planning/phases/999.1-history-and-memory-lifecycle-management/999.1-VALIDATION.md frontmatter shows nyquist_compliant: true and wave_0_complete: true
+  5. pnpm --filter @afw/backend test exits 0 (no failing tests in backend package)
+**Plans**: TBD (run /gsd:plan-phase 11)
+
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 999.1 -> 11
 
 | Phase | Plans Complete | Status | Completed |
 |-------|---------------|--------|-----------|
@@ -231,6 +246,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 4.1 -> 5 -> 6 -> 7 -> 8 -> 
 | 8. Neural Validation & Safety | 1/1 | Complete   | 2026-04-03 |
 | 9. Workbenches & Flow Management | 0/5 | Planning complete | - |
 | 10. Customization & Automation | 9/10 | Complete    | 2026-04-08 |
+| 11. Test Stub Realignment & Doc Cleanup | 0/? | Not started | - |
 
 ## Backlog
 
