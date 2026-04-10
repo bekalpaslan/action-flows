@@ -59,10 +59,6 @@ DETECT → CLASSIFY → ISOLATE → DIAGNOSE → HEAL → VERIFY → LEARN
 ```
 Read your definition in .claude/actionflows/actions/analyze/agent.md
 
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
-
 Project Context:
 - Name: ActionFlows Dashboard
 - Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
@@ -95,10 +91,6 @@ Input:
 **Spawn:**
 ```
 Read your definition in .claude/actionflows/actions/analyze/agent.md
-
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
 
 Project Context:
 - Name: ActionFlows Dashboard
@@ -138,10 +130,6 @@ Input:
 ```
 Read your definition in .claude/actionflows/actions/isolate/agent.md
 
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
-
 Project Context:
 - Name: ActionFlows Dashboard
 - Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
@@ -173,10 +161,6 @@ Input:
 **Spawn:**
 ```
 Read your definition in .claude/actionflows/actions/diagnose/agent.md
-
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
 
 Project Context:
 - Name: ActionFlows Dashboard
@@ -246,10 +230,6 @@ After Step 4 completes, orchestrator:
 ```
 Read your definition in .claude/actionflows/actions/verify-healing/agent.md
 
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
-
 Project Context:
 - Name: ActionFlows Dashboard
 - Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
@@ -292,10 +272,6 @@ Input:
 **Spawn:**
 ```
 Read your definition in .claude/actionflows/actions/analyze/agent.md
-
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
 
 Project Context:
 - Name: ActionFlows Dashboard

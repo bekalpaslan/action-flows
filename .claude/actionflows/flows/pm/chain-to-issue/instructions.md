@@ -56,10 +56,6 @@ POST /api/linear/projects (cached projects)
 ```
 Read your definition in .claude/actionflows/actions/analyze/agent.md
 
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
-
 Project Context:
 - Name: ActionFlows Dashboard
 - Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
@@ -111,10 +107,6 @@ POST /api/linear/issues (with new issue data)
 **Spawn to create confirmation doc:**
 ```
 Read your definition in .claude/actionflows/actions/code/agent.md
-
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
 
 Project Context:
 - Name: ActionFlows Dashboard

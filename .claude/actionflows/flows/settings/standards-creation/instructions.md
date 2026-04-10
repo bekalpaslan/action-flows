@@ -34,10 +34,6 @@
 ```
 Read your definition in .claude/actionflows/actions/analyze/agent.md
 
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
-
 Project Context:
 - Name: ActionFlows Dashboard
 - Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
@@ -71,10 +67,6 @@ Present the template structure analysis for approval. Human reviews the proposed
 
 ```
 Read your definition in .claude/actionflows/actions/code/framework/agent.md
-
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
 
 Project Context:
 - Name: ActionFlows Dashboard
@@ -110,10 +102,6 @@ Input:
 ```
 Read your definition in .claude/actionflows/actions/review/agent.md
 
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
-
 Project Context:
 - Name: ActionFlows Dashboard
 - Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
@@ -147,10 +135,6 @@ Input:
 ```
 Read your definition in .claude/actionflows/actions/second-opinion/agent.md
 
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
-
 Project Context:
 - Name: ActionFlows Dashboard
 - Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
@@ -178,10 +162,6 @@ Input:
 **Spawn after Step 5 approves:**
 ```
 Read your definition in .claude/actionflows/actions/commit/agent.md
-
-IMPORTANT: You are a spawned subagent executor.
-Do NOT read .claude/actionflows/ORCHESTRATOR.md — it is not for you.
-Do NOT delegate work or compile chains. Execute your agent.md directly.
 
 Project Context:
 - Name: ActionFlows Dashboard
