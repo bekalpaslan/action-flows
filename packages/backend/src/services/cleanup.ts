@@ -1,5 +1,6 @@
 import { filePersistence } from '../storage/file-persistence.js';
 import { summarizeTrace } from './gateTraceSummarizer.js';
+import type { LearningsArchiver } from './learningsArchiver.js';
 import type { LedgerEntry } from '@afw/shared';
 
 // Forward type to avoid circular import — actual instance injected via setPruneDeps
@@ -23,10 +24,16 @@ const CLEANUP_INTERVAL_MS = 24 * 60 * 60 * 1000 // 24 hours
 export class CleanupService {
   private intervalId: NodeJS.Timeout | null = null
   private pruneDeps: PruneDeps | null = null
+  private learningsArchiver: LearningsArchiver | null = null
 
   setPruneDeps(deps: PruneDeps): void {
     this.pruneDeps = deps;
     console.log('[Cleanup] Prune dependencies wired (HealthScoreCalculator + LedgerService)');
+  }
+
+  setLearningsArchiver(archiver: LearningsArchiver): void {
+    this.learningsArchiver = archiver;
+    console.log('[Cleanup] LearningsArchiver wired');
   }
 
   /**
@@ -76,6 +83,8 @@ export class CleanupService {
 
       await this.pruneGateTraces();
 
+      await this.archiveLearnings();
+
       // Log storage stats after cleanup
       const stats = await filePersistence.getStats()
       console.log('[Cleanup] Storage stats:', {
@@ -85,6 +94,18 @@ export class CleanupService {
       })
     } catch (error) {
       console.error('[Cleanup] Error during cleanup:', error)
+    }
+  }
+
+  private async archiveLearnings(): Promise<void> {
+    if (!this.learningsArchiver) {
+      console.log('[Cleanup] archiveLearnings skipped — archiver not wired');
+      return;
+    }
+    try {
+      this.learningsArchiver.archiveIfNeeded();
+    } catch (err) {
+      console.error('[Cleanup] Learnings archive failed:', err);
     }
   }
 

@@ -16,6 +16,7 @@ import { handleWebSocket } from './ws/handler.js';
 import { clientRegistry } from './ws/clientRegistry.js';
 import { WebSocketHub } from './ws/hub.js';
 import { cleanupService } from './services/cleanup.js';
+import { learningsArchiver } from './services/learningsArchiver.js';
 import { setBroadcastFunction, shutdownAllWatchers } from './services/fileWatcher.js';
 import { claudeCliManager } from './services/claudeCliManager.js';
 import { registryStorage } from './services/registryStorage.js';
@@ -806,6 +807,9 @@ if (isMainModule) {
 
     // Wire prune dependencies before starting cleanup service (D-02, D-06)
     cleanupService.setPruneDeps({ healthScoreCalculator, ledgerService });
+
+    // Wire learnings archiver (D-08, D-09, D-10)
+    cleanupService.setLearningsArchiver(learningsArchiver);
 
     // Start cleanup service
     cleanupService.start();
