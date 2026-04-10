@@ -19,8 +19,18 @@ function createMockStorage() {
     get: vi.fn((key: string) => data.get(key) ?? null),
     set: vi.fn((key: string, value: string) => { data.set(key, value); }),
     keys: vi.fn((pattern: string) => {
-      const prefix = pattern.replace('*', '');
-      return [...data.keys()].filter(k => k.startsWith(prefix));
+      // Convert a glob-style pattern (with one or more `*` wildcards) to a regex.
+      // The healing quota tracker calls keys('healingQuota:*:*:${date}'), which has
+      // multiple wildcards — a naive String.prototype.replace('*', '') only handles
+      // the first wildcard and produces an unmatched literal `*` mid-string.
+      // Production storage implementations (Memory, Redis) match multi-wildcard
+      // patterns correctly; this mock now mirrors that behaviour.
+      const regexSource = pattern
+        .split('*')
+        .map(segment => segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+        .join('.*');
+      const regex = new RegExp(`^${regexSource}$`);
+      return [...data.keys()].filter(k => regex.test(k));
     }),
     delete: vi.fn((key: string) => data.delete(key)),
   };
