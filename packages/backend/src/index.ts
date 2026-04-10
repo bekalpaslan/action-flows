@@ -86,6 +86,7 @@ import { initConversationWatcher, getConversationWatcher } from './services/conv
 import { initBridgeStrengthService } from './services/bridgeStrengthService.js';
 import { initHealingRecommendationEngine, getHealingRecommendationEngine } from './services/healingRecommendations.js';
 import { initHealthScoreCalculator } from './services/healthScoreCalculator.js';
+import { ledgerService } from './services/ledgerService.js';
 import { initializeSlackNotifier } from './services/slackNotifier.js';
 import { initSessionManager, sessionManager } from './services/sessionManager.js';
 import { initSessionHealthMonitor, sessionHealthMonitor } from './services/sessionHealthMonitor.js';
@@ -802,6 +803,9 @@ if (isMainModule) {
     } catch (error) {
       console.error('[ScheduledTaskService] ❌ Failed to load scheduled tasks:', error);
     }
+
+    // Wire prune dependencies before starting cleanup service (D-02, D-06)
+    cleanupService.setPruneDeps({ healthScoreCalculator, ledgerService });
 
     // Start cleanup service
     cleanupService.start();
