@@ -43,32 +43,32 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Agent Sessions
 
-- [ ] **SESSION-01**: Persistent Claude session per workbench via Agent SDK (`@anthropic-ai/claude-agent-sdk`)
-- [ ] **SESSION-02**: Lazy session activation — only active workbench holds a live session
-- [ ] **SESSION-03**: Session resume across app restarts via `--resume` with session ID mapping
-- [ ] **SESSION-04**: Session health monitoring with heartbeat-based detection (<30s latency)
-- [ ] **SESSION-05**: Session resurrection using local conversation logs as source of truth
-- [ ] **SESSION-06**: Backend (SessionManager) is sole owner of Agent SDK calls — frontend communicates via WebSocket only
-- [ ] **SESSION-07**: Session history searchable per workbench via `listSessions()` + `getSessionMessages()`
-- [ ] **SESSION-08**: Workbench-scoped agent personality (Review = strict, Explore = curious, PM = strategic)
-- [ ] **SESSION-09**: Session forking — branch a conversation to explore alternatives without losing the original
+- [x] **SESSION-01**: Persistent Claude session per workbench via Agent SDK (`@anthropic-ai/claude-agent-sdk`)
+- [x] **SESSION-02**: Lazy session activation — only active workbench holds a live session
+- [x] **SESSION-03**: Session resume across app restarts via `--resume` with session ID mapping
+- [x] **SESSION-04**: Session health monitoring with heartbeat-based detection (<30s latency)
+- [x] **SESSION-05**: Session resurrection using local conversation logs as source of truth
+- [x] **SESSION-06**: Backend (SessionManager) is sole owner of Agent SDK calls — frontend communicates via WebSocket only
+- [x] **SESSION-07**: Session history searchable per workbench via `listSessions()` + `getSessionMessages()`
+- [x] **SESSION-08**: Workbench-scoped agent personality (Review = strict, Explore = curious, PM = strategic)
+- [x] **SESSION-09**: Session forking — branch a conversation to explore alternatives without losing the original
 
 ### Chat Panel
 
-- [ ] **CHAT-01**: Each workbench has its own independent chat panel (right column)
-- [ ] **CHAT-02**: Chat backed by persistent Claude remote session
-- [ ] **CHAT-03**: Scrollable message history with auto-scroll on new messages
-- [ ] **CHAT-04**: Fixed input row: text input + submit button
-- [ ] **CHAT-05**: Render Claude's AskUserQuestion tool calls as interactive UI components (radio buttons, checkboxes, option cards) from the component library
-- [ ] **CHAT-06**: Capture user selections from interactive tool calls and feed back as tool responses
-- [ ] **CHAT-07**: Expandable menu for current workbench's session history
-- [ ] **CHAT-08**: Session connect/disconnect status indicator
+- [x] **CHAT-01**: Each workbench has its own independent chat panel (right column)
+- [x] **CHAT-02**: Chat backed by persistent Claude remote session
+- [x] **CHAT-03**: Scrollable message history with auto-scroll on new messages
+- [x] **CHAT-04**: Fixed input row: text input + submit button
+- [x] **CHAT-05**: Render Claude's AskUserQuestion tool calls as interactive UI components (radio buttons, checkboxes, option cards) from the component library
+- [x] **CHAT-06**: Capture user selections from interactive tool calls and feed back as tool responses
+- [x] **CHAT-07**: Expandable menu for current workbench's session history
+- [x] **CHAT-08**: Session connect/disconnect status indicator
 
 ### Status & Notifications
 
-- [ ] **STATUS-01**: Multi-agent status dashboard showing which agents are running, their workbench, status (idle/running/blocked/complete), elapsed time
-- [ ] **STATUS-02**: Toast notification system for agent events (connect, disconnect, completion, errors, validation results)
-- [ ] **STATUS-03**: SubagentStart/SubagentStop hooks feed agent lifecycle into status registry
+- [x] **STATUS-01**: Multi-agent status dashboard showing which agents are running, their workbench, status (idle/running/blocked/complete), elapsed time
+- [x] **STATUS-02**: Toast notification system for agent events (connect, disconnect, completion, errors, validation results)
+- [x] **STATUS-03**: SubagentStart/SubagentStop hooks feed agent lifecycle into status registry
 
 ### Neural Validation (Intelligence Layer)
 
@@ -178,38 +178,38 @@ Deferred to future release. Tracked but not in current roadmap.
 | PIPE-05 | Phase 5 | Complete |
 | PIPE-06 | Phase 5 | Pending |
 | PIPE-07 | Phase 5 | Complete |
-| SESSION-01 | Phase 6 | Pending |
-| SESSION-02 | Phase 6 | Pending |
-| SESSION-03 | Phase 6 | Pending |
-| SESSION-04 | Phase 6 | Pending |
-| SESSION-05 | Phase 6 | Pending |
-| SESSION-06 | Phase 6 | Pending |
-| SESSION-07 | Phase 6 | Pending |
-| SESSION-08 | Phase 6 | Pending |
-| SESSION-09 | Phase 6 | Pending |
-| STATUS-01 | Phase 6 | Pending |
-| STATUS-02 | Phase 6 | Pending |
-| STATUS-03 | Phase 6 | Pending |
-| CHAT-01 | Phase 7 | Pending |
-| CHAT-02 | Phase 7 | Pending |
-| CHAT-03 | Phase 7 | Pending |
-| CHAT-04 | Phase 7 | Pending |
-| CHAT-05 | Phase 7 | Pending |
-| CHAT-06 | Phase 7 | Pending |
-| CHAT-07 | Phase 7 | Pending |
-| CHAT-08 | Phase 7 | Pending |
-| NEURAL-01 | Phase 8 | Pending |
-| NEURAL-02 | Phase 8 | Pending |
-| NEURAL-03 | Phase 8 | Pending |
-| NEURAL-04 | Phase 8 | Pending |
-| NEURAL-05 | Phase 8 | Pending |
-| NEURAL-06 | Phase 8 | Pending |
-| NEURAL-07 | Phase 8 | Pending |
-| SAFETY-01 | Phase 8 | Pending |
-| SAFETY-02 | Phase 8 | Pending |
-| SAFETY-03 | Phase 8 | Pending |
-| SAFETY-04 | Phase 8 | Pending |
-| SAFETY-05 | Phase 8 | Pending |
+| SESSION-01 | Phase 6 | Complete |
+| SESSION-02 | Phase 6 | Complete |
+| SESSION-03 | Phase 6 | Complete |
+| SESSION-04 | Phase 6 | Complete |
+| SESSION-05 | Phase 6 | Complete |
+| SESSION-06 | Phase 6 | Complete |
+| SESSION-07 | Phase 6 | Complete |
+| SESSION-08 | Phase 6 | Complete |
+| SESSION-09 | Phase 6 | Complete |
+| STATUS-01 | Phase 6 | Complete |
+| STATUS-02 | Phase 6 | Complete |
+| STATUS-03 | Phase 6 | Complete |
+| CHAT-01 | Phase 7 | Complete |
+| CHAT-02 | Phase 7 | Complete |
+| CHAT-03 | Phase 7 | Complete |
+| CHAT-04 | Phase 7 | Complete |
+| CHAT-05 | Phase 7 | Complete |
+| CHAT-06 | Phase 7 | Complete |
+| CHAT-07 | Phase 7 | Complete |
+| CHAT-08 | Phase 7 | Complete |
+| NEURAL-01 | Phase 8 | Complete |
+| NEURAL-02 | Phase 8 | Complete |
+| NEURAL-03 | Phase 8 | Complete |
+| NEURAL-04 | Phase 8 | Complete |
+| NEURAL-05 | Phase 8 | Complete |
+| NEURAL-06 | Phase 8 | Complete |
+| NEURAL-07 | Phase 8 | Complete |
+| SAFETY-01 | Phase 8 | Complete |
+| SAFETY-02 | Phase 8 | Complete |
+| SAFETY-03 | Phase 8 | Complete |
+| SAFETY-04 | Phase 8 | Complete |
+| SAFETY-05 | Phase 8 | Complete |
 | BENCH-01 | Phase 9 | Pending |
 | BENCH-02 | Phase 9 | Pending |
 | BENCH-03 | Phase 9 | Pending |
@@ -234,8 +234,9 @@ Deferred to future release. Tracked but not in current roadmap.
 **Coverage:**
 - v1 requirements: 74 total
 - Mapped to phases: 74
+- Satisfied: 66 / 74
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-02*
-*Last updated: 2026-04-02 after roadmap creation*
+*Last updated: 2026-04-11 (Phase 11 cleanup — flipped 32 traceability rows + 20 bullet checkboxes for verified phase 6/7/8 requirements; NEURAL/SAFETY bullets were already [x] from prior phases)*
