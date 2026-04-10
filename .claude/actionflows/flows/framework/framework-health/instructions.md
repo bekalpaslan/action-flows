@@ -97,20 +97,40 @@ Input:
 
 ---
 
+### Step 4: Spawn Block Structure Lint
+
+**Action:** `.claude/actionflows/actions/analyze/`
+**Model:** sonnet
+
+**Spawn:**
+```
+Read your definition in .claude/actionflows/actions/analyze/agent.md
+
+Input:
+- aspect: spawn-block-lint
+- scope: .claude/actionflows/flows/**/instructions.md
+- context: For every instructions.md file under flows/, check whether any line matches the pattern "**Spawn" (the spawn block header marker). For each file that contains such a marker, verify it also contains the string "Read your definition in". Files that have a "**Spawn" marker but lack "Read your definition in" are under-provisioned spawn blocks — flag each as a health violation with the file path. Emit a clean bill if no violations found.
+```
+
+**Gate:** Lint report delivered listing any under-provisioned spawn block files, or confirming zero violations.
+
+---
+
 ## Dependencies
 
 ```
-┌─────────────────────────┐
-│  Parallel Group 1       │
-│  (all run together)     │
-├─────────────────────────┤
-│  Step 1: Registry Drift │
-│  Step 2: Cross-Refs     │
-│  Step 3: Derivation     │
-└─────────────────────────┘
+┌─────────────────────────────────┐
+│  Parallel Group 1               │
+│  (all run together)             │
+├─────────────────────────────────┤
+│  Step 1: Registry Drift         │
+│  Step 2: Cross-Refs             │
+│  Step 3: Derivation             │
+│  Step 4: Spawn Block Lint       │
+└─────────────────────────────────┘
 ```
 
-**Parallel groups:** Steps 1, 2, and 3 are independent and run in parallel.
+**Parallel groups:** Steps 1, 2, 3, and 4 are independent and run in parallel.
 
 ---
 

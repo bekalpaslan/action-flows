@@ -44,8 +44,12 @@ This flow adapts based on inputs:
 
 **Spawn:**
 ```
-Run tests with coverage for {scope}.
-Report: pass/fail counts, coverage %, uncovered areas.
+Read your definition in .claude/actionflows/actions/test/agent.md
+
+Input:
+- scope: {scope}
+- type: coverage
+- context: Report pass/fail counts, coverage %, and uncovered areas
 ```
 
 ---
@@ -58,8 +62,12 @@ Report: pass/fail counts, coverage %, uncovered areas.
 
 **Spawn:**
 ```
-Compare coverage {Step 1 result} against threshold {threshold}.
-List gaps sorted by file, with line numbers.
+Read your definition in .claude/actionflows/actions/analyze/agent.md
+
+Input:
+- aspect: coverage-gap
+- scope: {Step 1 result}
+- context: threshold={threshold}, list gaps sorted by file with line numbers
 ```
 
 ---
@@ -72,9 +80,12 @@ List gaps sorted by file, with line numbers.
 
 **Spawn:**
 ```
-Generate test stubs for uncovered code.
-Follow existing test patterns in the codebase.
-Focus on gaps from Step 2.
+Read your definition in .claude/actionflows/actions/code/agent.md
+
+Input:
+- task: Generate test stubs for uncovered code
+- context: gaps from Step 2
+- component: backend or frontend per gap location
 ```
 
 ---

@@ -43,13 +43,17 @@ If any prerequisite fails → Flow errors. Human must fix and re-run.
 ```
 Read your definition in .claude/actionflows/actions/{action-name}/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
-- Frontend: React 18.2 + Vite 5 + Electron 28 + ReactFlow + Monaco + xterm
-- Shared: Branded types, discriminated unions, ES modules
-- Paths: backend=packages/backend/, frontend=packages/app/, shared=packages/shared/
-- Ports: backend=3001, vite=5173
+# Project Context injection is OPTIONAL — include only when the agent needs
+# stack-specific details (paths, ports, framework versions) not already in
+# its agent.md. Default: omit. Do not add it "just in case".
+#
+# Project Context:
+# - Name: ActionFlows Dashboard
+# - Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
+# - Frontend: React 18.2 + Vite 5 + Electron 28 + ReactFlow + Monaco + xterm
+# - Shared: Branded types, discriminated unions, ES modules
+# - Paths: backend=packages/backend/, frontend=packages/app/, shared=packages/shared/
+# - Ports: backend=3001, vite=5173
 
 Input:
 - {input-name}: {value or reference to previous step output}
@@ -70,13 +74,17 @@ Input:
 ```
 Read your definition in .claude/actionflows/actions/{action-name}/agent.md
 
-Project Context:
-- Name: ActionFlows Dashboard
-- Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
-- Frontend: React 18.2 + Vite 5 + Electron 28 + ReactFlow + Monaco + xterm
-- Shared: Branded types, discriminated unions, ES modules
-- Paths: backend=packages/backend/, frontend=packages/app/, shared=packages/shared/
-- Ports: backend=3001, vite=5173
+# Project Context injection is OPTIONAL — include only when the agent needs
+# stack-specific details (paths, ports, framework versions) not already in
+# its agent.md. Default: omit. Do not add it "just in case".
+#
+# Project Context:
+# - Name: ActionFlows Dashboard
+# - Backend: Express 4.18 + TypeScript + ws 8.14.2 + ioredis 5.3 + Zod
+# - Frontend: React 18.2 + Vite 5 + Electron 28 + ReactFlow + Monaco + xterm
+# - Shared: Branded types, discriminated unions, ES modules
+# - Paths: backend=packages/backend/, frontend=packages/app/, shared=packages/shared/
+# - Ports: backend=3001, vite=5173
 
 Input:
 - {input-name}: {output from Step 1 or human input}
