@@ -141,7 +141,6 @@ datetime=$(date +%Y-%m-%d-%H-%M-%S)
 - `.claude/actionflows/logs/review/api-refactor_2026-01-20-08-15-30/`
 
 **Intentional variations:**
-- `narrate/`: Uses `chapter-{N}_{datetime}/` (chapter tracking)
 - `test/playwright/`: Uses `{target}_{datetime}/` (test target tracking)
 - `onboarding/`: Uses `completion_{datetime}/` (session milestone)
 
@@ -159,7 +158,6 @@ Each action type has a canonical primary file:
 | code/* | `changes.md` | Implementation summary |
 | diagnose | `root-cause-analysis.md` | RCA findings |
 | isolate | `quarantine-record.md` | Quarantine tracking |
-| narrate | `chapter-{N}.md` | Narrative chapter |
 | onboarding | Multiple files | Progressive disclosure |
 | plan | `plan.md` | Planning document |
 | review | `review-report.md` | Code review findings |
@@ -209,7 +207,7 @@ All agents document trace requirements in their `agent.md`:
 
 **Maturity:** ✅ **PRODUCTION**
 
-**Coverage:** 16/17 agents (94%)
+**Coverage:** 15/16 agents (94%)
 
 **Survey Date:** 2026-02-13
 

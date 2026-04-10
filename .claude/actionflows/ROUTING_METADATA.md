@@ -253,30 +253,6 @@ triggers:
 routing_priority: 60
 ```
 
-### narrate/
-
-```yaml
-action: narrate/
-context_affinity: [explore]
-capability_tags: [narrative-generation, documentation, storytelling, chapter-writing]
-scope_preference:
-  single_file: false
-  multi_file: true
-  multi_package: false
-confidence_threshold: low
-parallel_safe: true
-dependencies: [analyze/]
-output_types: [No contract output]
-triggers:
-  keywords: [narrate, story, chapter, document, write, describe, explain]
-  patterns: ["docs/**", "**/*.md"]
-  situations:
-    - document analysis findings as narrative
-    - write chapter in documentation
-    - poetic technical documentation
-routing_priority: 40
-```
-
 ### onboarding/
 
 ```yaml
@@ -482,7 +458,7 @@ Thresholds gate routing when rule score falls below threshold:
   - Use when choice benefits from human discretion
 
 - **low** — Score must be 0.0+ (always route)
-  - Actions: `brainstorm/`, `onboarding/`, `narrate/`, `second-opinion/`
+  - Actions: `brainstorm/`, `onboarding/`, `second-opinion/`
   - Use for discovery/learning actions
 
 ---
@@ -490,7 +466,7 @@ Thresholds gate routing when rule score falls below threshold:
 ## Parallel Safety
 
 **Parallel safe actions** can run in parallel with others:
-- `analyze/`, `brainstorm/`, `code/*`, `test/*`, `diagnose/`, `narrate/`, `second-opinion/`, `verify-healing/`
+- `analyze/`, `brainstorm/`, `code/*`, `test/*`, `diagnose/`, `second-opinion/`, `verify-healing/`
 - **Caveat:** `code/*` parallel execution requires **file exclusivity** — no two code/ agents work on same file
 
 **Sequential actions** must run alone:
@@ -518,7 +494,7 @@ Configuration, system health, bug fixes, refactoring. System maintenance and imp
 
 Research, learning, understanding. Discovery and analysis work.
 
-**Best actions:** `analyze/`, `plan/`, `diagnose/`, `narrate/`, `brainstorm/`, `second-opinion/`
+**Best actions:** `analyze/`, `plan/`, `diagnose/`, `brainstorm/`, `second-opinion/`
 
 ### review
 

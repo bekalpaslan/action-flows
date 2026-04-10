@@ -245,13 +245,13 @@ analyze/backwards-compatibility → plan → code → review
 
 ### 7. Nested Parentheticals
 ```markdown
-→ (narrate → human gate)×
+→ (action → human gate)×
 ```
 Repeated interactive step.
 
 **Example:**
 ```markdown
-brainstorm → (narrate → human gate)× → plan
+brainstorm → (brainstorm → human gate)× → plan
 ```
 
 ---
@@ -288,7 +288,7 @@ Flows are organized by context under H2 headers:
 ### explore
 **Purpose:** Research, learning, documentation
 **Flow count:** ~3 flows
-**Example flows:** doc-reorganization/, ideation/, story-of-us/
+**Example flows:** doc-reorganization/, ideation/, intel-analysis/
 
 ### review
 **Purpose:** QA, audits, validation

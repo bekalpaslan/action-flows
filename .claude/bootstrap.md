@@ -800,7 +800,6 @@ This catalog describes every action type available in the framework. The bootstr
 | Wants independent critique of agent output | + second-opinion/ |
 | Wants ideation sessions | + brainstorm/ |
 | Wants interactive onboarding | + onboarding/ |
-| Wants narrative documentation | + narrate/ |
 | Wants library docs lookup | + docs-lookup/ |
 | Multiple deployment targets | + stack-specific code/ variants |
 
@@ -1066,22 +1065,7 @@ Create sub-actions when the project has 2+ deployment targets.
 
 ---
 
-### 4.15 narrate/ — Poetic Narrative
-
-**Purpose:** Write narrative chapters about the project journey.
-**When to include:** Projects that want storytelling documentation.
-**Model:** opus
-
-| Input | Required | Description |
-|-------|----------|-------------|
-| chapterNumber | YES | Which chapter to write |
-| analysisPath | YES | Path to analysis data for the chapter |
-
-**Output:** Written narrative chapter.
-
----
-
-### 4.16 docs-lookup/ — Library Documentation Query
+### 4.15 docs-lookup/ — Library Documentation Query
 
 **Purpose:** Query external library documentation via Context7 MCP.
 **When to include:** Projects using complex external libraries.
@@ -1096,7 +1080,7 @@ Create sub-actions when the project has 2+ deployment targets.
 
 ---
 
-### 4.17 cleanup/ — Cleanup (Optional)
+### 4.16 cleanup/ — Cleanup (Optional)
 
 **Purpose:** Clean temporary files, old logs, and stale data.
 **When to include:** Projects that accumulate log files or temporary artifacts.
@@ -1111,7 +1095,7 @@ Create sub-actions when the project has 2+ deployment targets.
 
 ---
 
-### 4.18 status-update/ — Status Update (Optional)
+### 4.17 status-update/ — Status Update (Optional)
 
 **Purpose:** Update project progress/status tracking files.
 **When to include:** Projects with progress tracking documents.
@@ -1135,7 +1119,7 @@ All agents are Claude-backed (haiku, sonnet, opus) and spawned via the Task tool
 |-------------|---------------|-----|
 | code, code/backend, code/frontend, test, commit, notify, cleanup | haiku | Fast, simple execution |
 | review, analyze, plan, diagnose, verify-healing | sonnet | Needs judgment |
-| audit, brainstorm, onboarding, narrate | opus | Deep analysis or interactive |
+| audit, brainstorm, onboarding | opus | Deep analysis or interactive |
 | second-opinion | sonnet | Independent critique agent |
 
 **Model Override:** Human can override models at session level. Session-scoped only, not persisted.
@@ -1153,7 +1137,7 @@ All agents are Claude-backed (haiku, sonnet, opus) and spawned via the Task tool
 |---------|---------|----------|-------|
 | **work** | Active feature development and new code | implement, build, create, add feature, develop, code | code-and-review/, post-completion/, contract-format-implementation/, design-to-code/, design-system-sync/ |
 | **maintenance** | Bug fixes, refactoring, housekeeping | fix bug, refactor, optimize, cleanup, debug, repair | bug-triage/, code-and-review/, cleanup/, design-token-migration/, harmony-audit-and-fix/, health-protocol/, parser-update/ |
-| **explore** | Research, codebase exploration, learning | explore, investigate, research, how does, story, narrative | doc-reorganization/, ideation/, story-of-us/ |
+| **explore** | Research, codebase exploration, learning | explore, investigate, research, how does | doc-reorganization/, ideation/ |
 | **review** | Code reviews, audits, quality checks | review, audit, check quality, security scan, UI audit, design audit | audit-and-fix/, test-coverage/, backwards-harmony-audit/, cli-integration-test/, e2e-playwright/, contract-index/, contract-compliance-audit/, ui-design-audit/ |
 | **settings** | Configuration, framework development, onboarding | configure, create flow, create action, onboard me, framework health, flow drift | onboarding/, flow-creation/, action-creation/, action-deletion/, standards-creation/, framework-health/, contract-drift-fix/, flow-drift-audit/ |
 | **pm** | Project management, planning, coordination | plan, roadmap, organize, what's next, priorities | planning/, learning-dissolution/ |
@@ -1193,7 +1177,6 @@ All agents are Claude-backed (haiku, sonnet, opus) and spawned via the Task tool
 | "run E2E tests" / "playwright test" | review | e2e-playwright/ |
 | "implement format" / "format X.Y" | work | contract-format-implementation/ |
 | "I have an idea" / "brainstorm X" | explore | ideation/ |
-| "tell me a story" / "story of us" | explore | story-of-us/ |
 | "create dossier" / "intel on X" | intel | intel-analysis/ |
 | "dissolve learnings" / "process learnings" | pm | learning-dissolution/ |
 | "audit flows" / "check flow drift" | settings | flow-drift-audit/ |
@@ -1233,7 +1216,6 @@ All agents are Claude-backed (haiku, sonnet, opus) and spawned via the Task tool
 |------|---------|-------|
 | doc-reorganization/ | Reorganize documentation | analyze -> human gate -> plan -> human gate -> code -> review -> second-opinion/ |
 | ideation/ | Structured ideation sessions | classify (human gate) -> analyze -> brainstorm -> code (summary) |
-| story-of-us/ | Poetic narrative of project journey | analyze -> narrate -> human gate -> (narrate -> human gate) x |
 
 ### review
 

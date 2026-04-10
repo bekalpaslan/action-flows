@@ -252,7 +252,7 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 |---------|---------|--------------|-------|
 | **work** 🔨 | Active feature development | implement, build, create, add feature, develop | code-and-review/, post-completion/, contract-format-implementation/ |
 | **settings** 🔧 | Config, system health, bug fixes, refactoring | configure, fix bug, refactor, optimize, system health | bug-triage/, code-and-review/, cleanup/, framework-health/ |
-| **explore** 🔍 | Research, learning | explore, investigate, research, how does, story | doc-reorganization/, ideation/, story-of-us/ |
+| **explore** 🔍 | Research, learning | explore, investigate, research, how does | doc-reorganization/, ideation/ |
 | **review** 👁️ | Code reviews, audits | review, audit, check quality, security scan, design drift | audit-and-fix/, test-coverage/, e2e-playwright/, ui-design-audit/ |
 | **settings** ⚙️ | Config, framework dev | configure, create flow, onboard me, flow drift | onboarding/, flow-creation/, action-creation/, framework-health/ |
 | **pm** 📋 | Project management | plan, roadmap, what's next, priorities | planning/, learning-dissolution/ |
@@ -326,7 +326,6 @@ Request → Keyword Extraction → Context Scoring → Selection or Disambiguati
 |------|---------|-------|
 | doc-reorganization/ | Reorganize documentation | analyze → human gate → plan → human gate → code → review → second-opinion/ |
 | ideation/ | Structured ideation | classify (human gate) → analyze → brainstorm → code (summary) |
-| story-of-us/ | Poetic narrative | analyze → narrate → human gate → (narrate → human gate)× |
 
 ### review
 
@@ -408,7 +407,6 @@ Healing flows are **human-initiated** remediation chains triggered when health d
 | diagnose/ | Root cause analysis | sonnet | YES (5.4) | Yes |
 | docs-lookup/ | Query Context7 documentation | haiku | NO | Yes |
 | isolate/ | Quarantine management | haiku | YES (5.6) | No |
-| narrate/ | Write poetic narrative | opus | NO | Yes |
 | notify/ | Send Slack notifications | haiku | NO | Yes |
 | onboarding/ | Interactive onboarding | opus | NO | Yes |
 | plan/ | Implementation planning | sonnet | NO | Yes |
@@ -861,7 +859,7 @@ Final ranking: Sort by (score DESC, routing_priority DESC)
 Confidence thresholds gate routing when score falls below:
 - **high** → 0.8+ (actions: audit/, code/*, test/*, plan/, verify-healing/)
 - **medium** → 0.5+ (actions: analyze/, commit/, review/)
-- **low** → 0.0+ (actions: brainstorm/, onboarding/, narrate/, second-opinion/)
+- **low** → 0.0+ (actions: brainstorm/, onboarding/, second-opinion/)
 
 ### Routing Rules
 
@@ -893,12 +891,11 @@ Confidence thresholds gate routing when score falls below:
 | second-opinion/ | 50 | review, explore |
 | isolate/ | 60 | review, settings |
 | brainstorm/ | 65 | work, explore |
-| narrate/ | 40 | explore |
 | onboarding/ | 35 | explore, settings |
 
 ### Parallel Safety
 
-**Parallel safe:** analyze/, brainstorm/, code/*, test/*, diagnose/, narrate/, second-opinion/, verify-healing/
+**Parallel safe:** analyze/, brainstorm/, code/*, test/*, diagnose/, second-opinion/, verify-healing/
 **Sequential (must run alone):** review/, commit/, isolate/
 **Caveat for code/*:** File exclusivity required  --  no two code/ agents work on same file.
 

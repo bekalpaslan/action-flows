@@ -401,17 +401,6 @@ export const ACTION_GATE_RELATIONSHIPS: Record<string, ActionGateMapping> = {
       stackSpecific: false,
     },
   },
-  narrate: {
-    action: 'narrate',
-    gates: ['gate-07', 'gate-08', 'gate-09'] as const,
-    metadata: {
-      model: 'opus',
-      contractOutput: null,
-      autoTriggers: [],
-      codeBacked: false,
-      stackSpecific: false,
-    },
-  },
   onboarding: {
     action: 'onboarding',
     gates: ['gate-07', 'gate-08', 'gate-09'] as const,

@@ -19,7 +19,6 @@
 |------|---------|-------|
 | doc-reorganization/ | Reorganize documentation | analyze -> human gate -> plan -> human gate -> code -> review -> second-opinion/ |
 | ideation/ | Structured ideation sessions | classify (human gate) -> analyze -> brainstorm -> code (summary) |
-| story-of-us/ | Poetic narrative of project journey | analyze -> narrate -> human gate -> (narrate -> human gate)x |
 | intel-analysis/ | Create living dossiers of code domains | analyze -> plan -> human gate -> code -> review -> second-opinion/ -> commit |
 
 ## review

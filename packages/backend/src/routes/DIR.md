@@ -24,7 +24,6 @@
 - routing.ts — exports: default
 - sessions.ts — exports: default — Note: POST /sessions accepts `name` and `workbenchId`; GET /sessions response includes `name` and `workbenchId` on each session object
 - sessionWindows.ts — exports: default
-- story.ts — exports: default
 - suggestions.ts — exports: default
 - telemetry.ts — exports: default
 - terminal.ts — exports: default, setBroadcastTerminalFunction

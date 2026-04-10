@@ -29,7 +29,6 @@ const LAYER_ASSIGNMENTS: Record<StarId, 'platform' | 'template' | 'philosophy' |
   archive: 'experience',
   intel: 'experience',
   pm: 'experience',
-  story: 'experience',
   cosmic: 'experience',              // The universe viewer itself
 
   // Physics Layer (execution workbenches)
@@ -69,7 +68,6 @@ const INITIAL_POSITIONS: Record<StarId, { x: number; y: number }> = {
   review: { x: 300, y: 200 },
   pm: { x: -200, y: 350 },
   archive: { x: 200, y: 350 },
-  story: { x: 0, y: 350 },
   cosmic: { x: 0, y: -450 },        // Upper anchor — the universe viewer
 };
 
@@ -92,7 +90,6 @@ const INITIAL_FOG_STATES: Record<StarId, FogState> = {
   pm: FogState.HIDDEN,               // Unlocked after planning activity
   intel: FogState.HIDDEN,            // Unlocked after dossier creation
   respect: FogState.HIDDEN,          // Unlocked after boundary check
-  story: FogState.HIDDEN,            // Unlocked after narrative creation
   cosmic: FogState.REVEALED,         // Always visible — it's the map itself
 };
 
@@ -175,10 +172,6 @@ const DEFAULT_CONNECTIONS: Array<[StarId, StarId]> = [
   // PM bridges
   ['work', 'pm'],
   ['explore', 'pm'],
-
-  // Story bridges
-  ['explore', 'story'],
-  ['archive', 'story'],
 ];
 
 /**
@@ -312,14 +305,6 @@ function createDiscoveryTriggers(): DiscoveryTrigger[] {
     regionId: brandedTypes.regionId('region-coverage'),
     condition: { type: 'chain_completed', action: 'test/' },
     description: 'Run tests to unlock Coverage',
-    triggered: false,
-  });
-
-  // Story unlocks after narrative creation
-  triggers.push({
-    regionId: brandedTypes.regionId('region-story'),
-    condition: { type: 'chain_completed', action: 'narrate/' },
-    description: 'Create a narrative to unlock Story',
     triggered: false,
   });
 

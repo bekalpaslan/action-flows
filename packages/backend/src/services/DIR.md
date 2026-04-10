@@ -33,6 +33,5 @@
 - slackNotifier.ts — exports: SlackNotifier, slackNotifier, initializeSlackNotifier
 - snapshotService.ts — exports: SnapshotService
 - sparkBroadcaster.ts — exports: SparkBroadcaster, SparkTravelingEvent, getSparkBroadcaster, initSparkBroadcaster
-- storyService.ts — exports: StoryService, storyService
 - telemetry.ts — exports: TelemetryStats, telemetry
 - terminalBuffer.ts — exports: terminalBuffer
