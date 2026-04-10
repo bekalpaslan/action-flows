@@ -52,27 +52,13 @@
 
 **Spawn:**
 ```
-Analyze existing CLI integration tests in the ActionFlows Dashboard.
+Read your definition in .claude/actionflows/actions/analyze/agent.md
 
-Focus areas:
-- {focus if provided, else "all CLI test coverage"}
-
-Inventory:
-1. Existing test files in packages/backend/src/__tests__/ and services/__tests__/
-2. Current test coverage by category:
-   - CLI process lifecycle (spawn, stdin, stdout, exit)
-   - Stream-json parsing (JSONL buffering, content extraction)
-   - WebSocket event broadcasting
-   - Session management (create, retrieve, stop)
-   - stdin communication (message formatting, validation)
-   - Error scenarios (crashes, malformed JSON, failures)
-3. Gap analysis (what's missing in each category)
-4. Test patterns used (mocking strategy, fixtures, helpers)
-
-Output as structured report:
-- Current coverage summary
-- Gap list with priority (CRITICAL, HIGH, MEDIUM, LOW)
-- Recommended tests to write
+Input:
+- task: Inventory existing CLI integration tests and produce a structured gap analysis with prioritized recommendations
+- scope: packages/backend/src/__tests__/ and packages/backend/src/services/__tests__/ — coverage categories: CLI process lifecycle, stream-json parsing, WebSocket event broadcasting, session management, stdin communication, error scenarios
+- focus: {focus if provided, else "all CLI test coverage"}
+- output-format: structured report with current coverage summary, gap list (CRITICAL/HIGH/MEDIUM/LOW priority), recommended tests to write, test patterns in use
 ```
 
 **Gate:** Analysis complete. Gap report delivered.
@@ -130,18 +116,12 @@ Requirements:
 
 **Spawn:**
 ```
-Run CLI integration tests and report results.
+Read your definition in .claude/actionflows/actions/test/agent.md
 
-Execute:
-- pnpm -F @afw/backend test src/services/__tests__/claudeCliSession.test.ts
-- pnpm -F @afw/backend test src/services/__tests__/claudeCliManager.test.ts
-- pnpm -F @afw/backend test src/__tests__/claudeCli.integration.test.ts
-
-Report:
-- Pass/fail counts for each file
-- Failed test names and error messages
-- Coverage metrics for CLI-related code
-- Any timeout or resource warnings
+Input:
+- task: Run CLI integration tests and report pass/fail counts, failed test names, coverage metrics, and timeout/resource warnings
+- files: packages/backend/src/services/__tests__/claudeCliSession.test.ts, packages/backend/src/services/__tests__/claudeCliManager.test.ts, packages/backend/src/__tests__/claudeCli.integration.test.ts
+- commands: pnpm -F @afw/backend test src/services/__tests__/claudeCliSession.test.ts, pnpm -F @afw/backend test src/services/__tests__/claudeCliManager.test.ts, pnpm -F @afw/backend test src/__tests__/claudeCli.integration.test.ts
 ```
 
 **Gate:** Test results captured.

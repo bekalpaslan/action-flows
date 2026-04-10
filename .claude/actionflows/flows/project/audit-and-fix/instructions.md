@@ -60,14 +60,12 @@ All run with **Model:** haiku (except docs: sonnet)
 
 **Spawn (each check):**
 ```
-Run {type} check for project health.
+Read your definition in .claude/actionflows/actions/audit/agent.md
 
-Output as structured JSON:
-{
-  "status": "pass" | "warn" | "fail",
-  "issues": [...],
-  "summary": "..."
-}
+Input:
+- type: {check type from step table above, e.g., "deps", "tests", "docs", "build", "git", "bundle"}
+- scope: {scope from human input}
+- output-format: structured JSON with keys: status ("pass" | "warn" | "fail"), issues (array), summary (string)
 ```
 
 **Gate:** All checks complete.
@@ -82,23 +80,13 @@ Output as structured JSON:
 
 **Spawn:**
 ```
-Compile audit findings into prioritized action plan:
+Read your definition in .claude/actionflows/actions/plan/agent.md
 
-Findings:
-- Dependencies: {Step 1}
-- Tests: {Step 2}
-- Documentation: {Step 3}
-- Build: {Step 4}
-- Git: {Step 5}
-- Bundle: {Step 6}
-
-Prioritize:
-1. CRITICAL — Security vulnerabilities, failing tests, build errors
-2. HIGH — Outdated major versions, doc mismatches
-3. MEDIUM — Outdated minor versions, lint warnings
-4. LOW — Style, minor cleanup
-
-Output executable chain for orchestrator.
+Input:
+- task: Compile audit findings from all parallel checks into a prioritized, executable action plan for the orchestrator
+- findings: deps={Step 1 output}, tests={Step 2 output}, docs={Step 3 output}, build={Step 4 output}, git={Step 5 output}, bundle={Step 6 output}
+- priority-tiers: CRITICAL (security vulnerabilities, failing tests, build errors), HIGH (outdated major versions, doc mismatches), MEDIUM (outdated minor versions, lint warnings), LOW (style, minor cleanup)
+- output-format: executable chain ready for orchestrator
 ```
 
 **Gate:** Action plan generated.
