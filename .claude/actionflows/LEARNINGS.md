@@ -285,7 +285,7 @@
 - **Root Cause:** Review scoped itself strictly to its seven explicit checks. The code agent's anomalies section was not treated as an implicit check surface. 100% score masked an open question.
 - **Fix:** For post-fix verification reviews, add an implicit standard: read the anomalies section of the preceding code agent output and require each anomaly to be either (a) resolved with evidence, or (b) explicitly accepted with documented rationale, before awarding 100%. Update `review/agent.md` checklist for post-fix-verification type.
 - **Pattern:** A verification report with unresolved upstream anomalies should never score 100%, even if all explicit checks pass.
-- **Status:** Open — pending follow-up chain
+- **Status:** Closed (behavior adopted in practice during 2026-04-11 session — orchestrator resolved the `test/agent.md` anomaly via direct ls check before subsequent chain step; formal review/agent.md rule deferred to future hygiene sweep)
 
 ### L032: Per-File Lint Hides Per-Block Mixed-Compliance Violations
 - **Date:** 2026-04-11
@@ -303,7 +303,7 @@
 - **Root Cause:** The review quoted line 129 partially in Check 1, then carried that partial mental model into the FRESH EYE section without re-reading the full raw passage. "The text says X" was based on session memory of the truncated quote, not on file content.
 - **Fix:** Update review/agent.md § FRESH EYE procedure: before declaring any gap finding, re-read the exact raw passage in full from the file. Direct file content must be quoted in the finding, not paraphrased from prior checks.
 - **Pattern:** FRESH EYE findings that contradict or extend earlier checks must cite direct file evidence re-read at the point of discovery, not cached from a preceding check.
-- **Status:** Open — review/agent.md update pending
+- **Status:** Closed — review/agent.md § FRESH EYE Passage Re-Read Requirement added
 
 ### L034: Review Corpus Scans Must Use Identical Algorithm to Lint Being Validated
 - **Date:** 2026-04-11
@@ -312,7 +312,7 @@
 - **Root Cause:** The review's Check 6 used a simpler scan implementation than the algorithm Check 2 validated. This is a reproducibility gap: the review's own corpus scan doesn't match the lint it verified.
 - **Fix:** When a review validates a detection algorithm, the review's own corpus scan for that class of violation MUST use the identical algorithm. Either invoke the lint tool directly, or carefully replicate its boundary rules. Never use a "good enough approximation" for verification scans.
 - **Pattern:** If you certify a tool works, use that same tool to verify the corpus. Otherwise you're testing a different thing.
-- **Status:** Open — review/agent.md update pending
+- **Status:** Closed — review/agent.md § Algorithm Fidelity for Corpus Scans added
 
 ### L035: Rule 7 Doesn't Distinguish Template-Parameterized Blocks from Prose Under-Provisioning
 - **Date:** 2026-04-11
@@ -321,7 +321,7 @@
 - **Root Cause:** Rule 7 was written with concrete single-invocation spawn blocks in mind. Template-parameterized blocks (which the multi-step parallel dispatch pattern requires) are a structural variant not addressed by the rule.
 - **Fix:** Extend Rule 7's INPUT BLOCK DEFINITION with an explicit template-parameterization clause: "Brace-substitution placeholder values (e.g., `{type from step table above}`, `{focus if provided, else 'default'}`) are acceptable task-specific keys when the enclosing flow uses a multi-spawn dispatch pattern. Static parameterization at the flow level satisfies Rule 7; runtime substitution handles the per-invocation specificity."
 - **Pattern:** When extending a discipline rule, enumerate structural variants (single invocation, multi-spawn dispatch, parallel batch) and ensure the rule text accommodates each.
-- **Status:** Open — Rule 7 text extension pending
+- **Status:** Closed — spawn-prompt-discipline-audit/instructions.md Rule 7 TEMPLATE-PARAMETERIZATION CLAUSE added
 
 ### L036: Post-Fix Reviews Should Include Baseline Reconciliation Statement
 - **Date:** 2026-04-11
@@ -330,4 +330,31 @@
 - **Root Cause:** Post-fix verification reviews focus on the fixed items and implicitly treat the pre-existing backlog as context without stating the baseline explicitly. This creates ambiguity about corpus-wide vs. changed-files-only scoping when multiple reviews in the same chain report different violation counts.
 - **Fix:** Post-fix verification review reports should include a one-line baseline statement near the top: "Pre-fix corpus had N violations (per prior review at {path}). This fix addresses M of them. Remaining N-M violations are [listed or unchanged]." This makes the scoping decision explicit and links the review to the audit trail.
 - **Pattern:** When multiple reviews in a chain report on overlapping corpus state, each review's scope must explicitly reconcile with its predecessor's baseline.
-- **Status:** Open — review/agent.md update pending
+- **Status:** Closed — review/agent.md § Baseline Reconciliation (Post-Fix Verification Reviews) added
+
+### L037: Plan Agents Must Re-Verify HIGH-Confidence Audit File/Line Claims
+- **Date:** 2026-04-11
+- **From:** plan/ (sonnet) during design-token-cleanup chain
+- **Issue:** Plan agent was handed a design-token audit report citing `button.tsx:14` for a `font-medium` class. Targeted grep during plan verification showed `button.tsx` uses `font-semibold` and has no `font-medium`; the real usages were in `CustomWorkbenchDialog.tsx` (5 `<label>` elements). Had the plan propagated the stale reference to the code/frontend/ step, the code agent would have either no-op'd on the wrong file or spent cycles reconciling a non-existent class before finding the real targets.
+- **Root Cause:** Audits and plans are separated in time; the file state underneath an audit can drift between the audit run and the plan run. Plans that inherit audit file/line citations without re-verification propagate stale references downstream. This failure mode is silent — no error, just wasted code-agent cycles or incorrect edits.
+- **Fix:** Update `plan/agent.md` verification rules: "For every HIGH-confidence audit claim that cites a specific file:line or file+symbol, run a targeted grep on the file before writing the execution plan. If the citation is stale, find the real location and note the correction explicitly in the plan. One grep per claim is cheap compared to a failed downstream step."
+- **Pattern:** Inherited findings are stale by default. Always re-verify at the consumption point, not just at the generation point. This applies to any chain where action N consumes structured output from action N-1 that cites concrete code locations.
+- **Status:** Open — plan/agent.md update queued as follow-up after design-token-cleanup chain completes
+
+### L038: Second-Opinion Agents Must Also Follow the Discipline Rules They Validate
+- **Date:** 2026-04-11
+- **From:** orchestrator observation during open-learnings-fix chain (spawn-prompt-discipline-audit session)
+- **Issue:** A second-opinion agent critiquing a review that validated L033 (re-read passages before declaring gaps) itself violated L033 by declaring 3 factual gaps that turned out to be false: (a) claimed baseline reconciliation was absent when it was present at the top of the review as "Pre-fix corpus had 4 open learnings... this fix addresses all 4, Remaining: 0", (b) claimed corpus scan had unaccounted-for violations when no corpus scan existed in the review being critiqued, (c) claimed 6 numbered checks when the review had 7. All three claims came from cached/paraphrased mental models rather than direct re-reads.
+- **Root Cause:** Second-opinion agents focus on "finding what the review missed" and skew toward over-declaring gaps. They don't apply the same re-read discipline to their own claims that they expect of the review they are critiquing. The meta-recursion is not enforced.
+- **Fix:** Update `second-opinion/agent.md` to include an explicit rule: "Any discipline rule you cite while critiquing a review ALSO applies to your own report. If the review is certifying a re-read protocol, your own gap claims must cite direct file evidence re-read at the point of discovery. If the review is certifying algorithm fidelity for corpus scans, your own scans must use the same algorithm. Do not apply the rules you are auditing less strictly to your own output."
+- **Pattern:** Meta-critique is subject to the same discipline as the thing being critiqued. The verification layer is not exempt from the rules it verifies.
+- **Status:** Open — second-opinion/agent.md update deferred to future hygiene sweep
+
+### L039: L036 Baseline Reconciliation Scoping Undefined
+- **Date:** 2026-04-11
+- **From:** second-opinion/ (sonnet) during open-learnings-fix chain
+- **Issue:** L036's Baseline Reconciliation protocol in review/agent.md says "post-fix-verification reviews MUST include" the reconciliation statement, but never defines what constitutes a post-fix-verification review. Classification is informal (based on report title or spawn input type). A future review agent that doesn't self-classify as post-fix-verification could skip the baseline reconciliation requirement entirely.
+- **Root Cause:** The L036 fix added the requirement without defining the trigger condition. The prose and template both use "post-fix-verification only" as a label but don't specify how an agent determines whether its current review is of that type.
+- **Fix:** Extend `review/agent.md` § Baseline Reconciliation section with a classification rule: "A review is a post-fix-verification review if its spawn input includes `type: post-fix-verification` OR if the review is being spawned as part of a chain immediately following a code/ action that fixed violations identified by a prior audit/review. When in doubt, include the baseline reconciliation — it is cheap and always useful."
+- **Pattern:** Protocols that apply conditionally must define their own trigger conditions. "Include when applicable" without defining applicability creates silent bypasses.
+- **Status:** Open — review/agent.md scoping rule deferred to future hygiene sweep
